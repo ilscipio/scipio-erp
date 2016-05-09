@@ -22,6 +22,10 @@ under the License.
 <#include "component://accounting/webapp/accounting/common/creditcardfields.ftl">
 -->
 
+<#if !ccfParams??>
+  <#assign ccfParams = parameters>
+</#if>
+
 <#-- Cato: Do this on individual field-by-field basis instead
 <#if !creditCard?has_content>
     <#assign creditCard = requestParameters>
@@ -35,16 +39,16 @@ under the License.
 <#-- Cato: include fieldset in parent if desired
 <@fieldset>
 -->
-    <@field type="input" size="30" maxlength="60" name="${fieldNamePrefix}companyNameOnCard" value=(parameters["${fieldNamePrefix}companyNameOnCard"]!(creditCard.companyNameOnCard)!(ccfFallbacks.companyNameOnCard)!) label=uiLabelMap.AccountingCompanyNameCard/>     
+    <@field type="input" size="30" maxlength="60" name="${fieldNamePrefix}companyNameOnCard" value=(ccfParams["${fieldNamePrefix}companyNameOnCard"]!(creditCard.companyNameOnCard)!(ccfFallbacks.companyNameOnCard)!) label=uiLabelMap.AccountingCompanyNameCard/>     
 
-    <@personalTitleField name="${fieldNamePrefix}titleOnCard" personalTitle=((creditCard.titleOnCard)!(ccfFallbacks.titleOnCard)!"") label=uiLabelMap.AccountingPrefixCard /> 
+    <@personalTitleField params=ccfParams name="${fieldNamePrefix}titleOnCard" personalTitle=((creditCard.titleOnCard)!(ccfFallbacks.titleOnCard)!"") label=uiLabelMap.AccountingPrefixCard /> 
 
-    <@field type="input" size="20" maxlength="60" name="${fieldNamePrefix}firstNameOnCard" value=(parameters["${fieldNamePrefix}firstNameOnCard"]!(creditCard.firstNameOnCard)!(ccfFallbacks.firstNameOnCard)!) label=uiLabelMap.AccountingFirstNameCard required=true/>     
-    <@field type="input" size="15" maxlength="60" name="${fieldNamePrefix}middleNameOnCard" value=(parameters["${fieldNamePrefix}middleNameOnCard"]!(creditCard.middleNameOnCard)!(ccfFallbacks.middleNameOnCard)!) label=uiLabelMap.AccountingMiddleNameCard />    
-    <@field type="input" size="20" maxlength="60" name="${fieldNamePrefix}lastNameOnCard" value=(parameters["${fieldNamePrefix}lastNameOnCard"]!(creditCard.lastNameOnCard)!(ccfFallbacks.lastNameOnCard)!) label=uiLabelMap.AccountingLastNameCard required=true />  
+    <@field type="input" size="20" maxlength="60" name="${fieldNamePrefix}firstNameOnCard" value=(ccfParams["${fieldNamePrefix}firstNameOnCard"]!(creditCard.firstNameOnCard)!(ccfFallbacks.firstNameOnCard)!) label=uiLabelMap.AccountingFirstNameCard required=true/>     
+    <@field type="input" size="15" maxlength="60" name="${fieldNamePrefix}middleNameOnCard" value=(ccfParams["${fieldNamePrefix}middleNameOnCard"]!(creditCard.middleNameOnCard)!(ccfFallbacks.middleNameOnCard)!) label=uiLabelMap.AccountingMiddleNameCard />    
+    <@field type="input" size="20" maxlength="60" name="${fieldNamePrefix}lastNameOnCard" value=(ccfParams["${fieldNamePrefix}lastNameOnCard"]!(creditCard.lastNameOnCard)!(ccfFallbacks.lastNameOnCard)!) label=uiLabelMap.AccountingLastNameCard required=true />  
     <@field type="select" name="${fieldNamePrefix}suffixOnCard" label=uiLabelMap.AccountingSuffixCard>
         <option value="">${uiLabelMap.CommonSelectOne}</option>
-        <#assign ccfSuffixOnCard = parameters["${fieldNamePrefix}suffixOnCard"]!(creditCard.suffixOnCard)!(ccfFallbacks.suffixOnCard)!"">
+        <#assign ccfSuffixOnCard = ccfParams["${fieldNamePrefix}suffixOnCard"]!(creditCard.suffixOnCard)!(ccfFallbacks.suffixOnCard)!"">
         <option<#if ccfSuffixOnCard == "Jr."> selected="selected"</#if>>Jr.</option>
         <option<#if ccfSuffixOnCard == "Sr."> selected="selected"</#if>>Sr.</option>
         <option<#if ccfSuffixOnCard == "I"> selected="selected"</#if>>I</option>
@@ -54,8 +58,8 @@ under the License.
         <option<#if ccfSuffixOnCard == "V"> selected="selected"</#if>>V</option>
     </@field>
     <@field type="select" name="${fieldNamePrefix}cardType" label=uiLabelMap.AccountingCardType required=true>
-        <#if parameters["${fieldNamePrefix}cardType"]??>
-          <option value="${parameters["${fieldNamePrefix}cardType"]}">${parameters["${fieldNamePrefix}cardType"]}</option>
+        <#if ccfParams["${fieldNamePrefix}cardType"]??>
+          <option value="${ccfParams["${fieldNamePrefix}cardType"]}">${ccfParams["${fieldNamePrefix}cardType"]}</option>
           <option>---</option>
         <#elseif (creditCard.cardType)??>
           <option value="${creditCard.cardType}">${creditCard.cardType}</option>
@@ -64,7 +68,7 @@ under the License.
         <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
     </@field>
    
-    <#assign cardNumber = parameters["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!>
+    <#assign cardNumber = ccfParams["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!>
     <#if cardNumber?has_content>
         <#if cardNumberMinDisplay?has_content>
             <#-- create a display version of the card where all but the last four digits are * -->
@@ -107,8 +111,8 @@ under the License.
     <@field type="generic" label=uiLabelMap.AccountingExpirationDate required=true>
       <@fields type="default">
         <@field type="select" inline=true name="${fieldNamePrefix}expMonth" required=true>
-          <#if parameters["${fieldNamePrefix}expMonth"]??>
-            <#assign ccExprMonth = parameters["${fieldNamePrefix}expMonth"]>
+          <#if ccfParams["${fieldNamePrefix}expMonth"]??>
+            <#assign ccExprMonth = ccfParams["${fieldNamePrefix}expMonth"]>
           <#elseif creditCard?has_content && expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#elseif (ccfFallbacks.expMonth)??>
@@ -122,8 +126,8 @@ under the License.
           <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
         </@field>
         <@field type="select" inline=true name="${fieldNamePrefix}expYear" required=true>
-          <#if parameters["${fieldNamePrefix}expYear"]??>
-            <#assign ccExprYear = parameters["${fieldNamePrefix}expYear"]>
+          <#if ccfParams["${fieldNamePrefix}expYear"]??>
+            <#assign ccExprYear = ccfParams["${fieldNamePrefix}expYear"]>
           <#elseif creditCard?has_content && expYear?has_content>
             <#assign ccExprYear = expYear>
           <#elseif (ccfFallbacks.expYear)??>
@@ -139,7 +143,7 @@ under the License.
       </@fields>
     </@field>
 
-    <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}description" value=(parameters["${fieldNamePrefix}description"]!(paymentMethod.description)!(ccfFallbacks.description)!) label=uiLabelMap.CommonDescription containerClass="+${styles.field_extra!}"/>
+    <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}description" value=(ccfParams["${fieldNamePrefix}description"]!(paymentMethod.description)!(ccfFallbacks.description)!) label=uiLabelMap.CommonDescription containerClass="+${styles.field_extra!}"/>
 
 <#--
 </@fieldset>

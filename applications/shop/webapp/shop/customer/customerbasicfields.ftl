@@ -19,38 +19,42 @@ under the License.
 
 <#include "customercommon.ftl">
 
+<#if !cbfParams??>
+  <#assign cbfParams = parameters>
+</#if>
+
 <#-- Cato: NOTE: fields duplicated from old checkout custsettings.ftl -->
 <#-- FIXME: these only source from parameters map, need more fallbacks/sources... -->
 
-    <@personalTitleField name="${fieldNamePrefix}personalTitle" label=uiLabelMap.CommonTitle />
+    <@personalTitleField params=cbfParams name="${fieldNamePrefix}personalTitle" label=uiLabelMap.CommonTitle />
 
-    <@field type="input" name="${fieldNamePrefix}firstName" value=(parameters["${fieldNamePrefix}firstName"]!) required=true label=uiLabelMap.PartyFirstName/>
-    <@field type="input" name="${fieldNamePrefix}middleName" value=(parameters["${fieldNamePrefix}middleName"]!) label=uiLabelMap.PartyMiddleInitial/>
-    <@field type="input" name="${fieldNamePrefix}lastName" value=(parameters["${fieldNamePrefix}lastName"]!) required=true label=uiLabelMap.PartyLastName/>
-    <@field type="input" name="${fieldNamePrefix}suffix" value=(parameters["${fieldNamePrefix}suffix"]!) label=uiLabelMap.PartySuffix containerClass="+${styles.field_extra!}"/>
+    <@field type="input" name="${fieldNamePrefix}firstName" value=(cbfParams["${fieldNamePrefix}firstName"]!) required=true label=uiLabelMap.PartyFirstName/>
+    <@field type="input" name="${fieldNamePrefix}middleName" value=(cbfParams["${fieldNamePrefix}middleName"]!) label=uiLabelMap.PartyMiddleInitial/>
+    <@field type="input" name="${fieldNamePrefix}lastName" value=(cbfParams["${fieldNamePrefix}lastName"]!) required=true label=uiLabelMap.PartyLastName/>
+    <@field type="input" name="${fieldNamePrefix}suffix" value=(cbfParams["${fieldNamePrefix}suffix"]!) label=uiLabelMap.PartySuffix containerClass="+${styles.field_extra!}"/>
 
-    <input type="hidden" name="${fieldNamePrefix}homePhoneContactMechId" value="${parameters["${fieldNamePrefix}homePhoneContactMechId"]!}"/>
+    <input type="hidden" name="${fieldNamePrefix}homePhoneContactMechId" value="${cbfParams["${fieldNamePrefix}homePhoneContactMechId"]!}"/>
     <@telecomNumberField label=uiLabelMap.PartyHomePhone required=true 
         countryCodeName="${fieldNamePrefix}homeCountryCode" areaCodeName="${fieldNamePrefix}homeAreaCode" contactNumberName="${fieldNamePrefix}homeContactNumber" extensionName="${fieldNamePrefix}homeExt">
       <@fields type="default-compact" ignoreParentField=true>
-        <@allowSolicitationField name="${fieldNamePrefix}homeSol" allowSolicitation="" containerClass="+${styles.field_extra!}" />
+        <@allowSolicitationField params=cbfParams name="${fieldNamePrefix}homeSol" allowSolicitation="" containerClass="+${styles.field_extra!}" />
       </@fields>
     </@telecomNumberField>
 
-    <input type="hidden" name="${fieldNamePrefix}workPhoneContactMechId" value="${parameters["${fieldNamePrefix}workPhoneContactMechId"]!}"/>
+    <input type="hidden" name="${fieldNamePrefix}workPhoneContactMechId" value="${cbfParams["${fieldNamePrefix}workPhoneContactMechId"]!}"/>
     <@telecomNumberField label=uiLabelMap.PartyBusinessPhone required=false containerClass="+${styles.field_extra!}"
         countryCodeName="${fieldNamePrefix}workCountryCode" areaCodeName="${fieldNamePrefix}workAreaCode" contactNumberName="${fieldNamePrefix}workContactNumber" extensionName="${fieldNamePrefix}workExt">
       <@fields type="default-compact" ignoreParentField=true>
-        <@allowSolicitationField name="${fieldNamePrefix}workSol" allowSolicitation="" />
+        <@allowSolicitationField params=cbfParams name="${fieldNamePrefix}workSol" allowSolicitation="" />
       </@fields>
     </@telecomNumberField>
 
-    <input type="hidden" name="${fieldNamePrefix}emailContactMechId" value="${parameters["${fieldNamePrefix}emailContactMechId"]!}"/>
+    <input type="hidden" name="${fieldNamePrefix}emailContactMechId" value="${cbfParams["${fieldNamePrefix}emailContactMechId"]!}"/>
     <@field type="generic" label=uiLabelMap.PartyEmailAddress required=true>
-      <@field type="input" name="${fieldNamePrefix}emailAddress" value=(parameters["${fieldNamePrefix}emailAddress"]!) required=true />
+      <@field type="input" name="${fieldNamePrefix}emailAddress" value=(cbfParams["${fieldNamePrefix}emailAddress"]!) required=true />
     
       <@fields type="default-compact" ignoreParentField=true>
-        <@allowSolicitationField name="${fieldNamePrefix}emailSol" allowSolicitation="" />
+        <@allowSolicitationField params=cbfParams name="${fieldNamePrefix}emailSol" allowSolicitation="" />
       </@fields>
     </@field>
 

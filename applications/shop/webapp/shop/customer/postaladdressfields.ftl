@@ -20,8 +20,13 @@ under the License.
 
 <#-- Cato: migrated from editcontactmech.ftl -->
 
-<#if parameters["${fieldNamePrefix}stateProvinceGeoId"]??>    
-  <#assign defaultStateProvinceGeoId = parameters["${fieldNamePrefix}stateProvinceGeoId"]>
+<#if !pafParams??>
+  <#assign pafParams = parameters>
+</#if>
+
+
+<#if pafParams["${fieldNamePrefix}stateProvinceGeoId"]??>    
+  <#assign defaultStateProvinceGeoId = pafParams["${fieldNamePrefix}stateProvinceGeoId"]>
 <#elseif (postalAddress??) && (postalAddress.stateProvinceGeoId??)>
   <#assign defaultStateProvinceGeoId = postalAddress.stateProvinceGeoId>
 <#elseif (pafFallbacks.stateProvinceGeoId)??>
@@ -53,15 +58,15 @@ jQuery(document).ready(function() {
 
 </#if>
 
-  <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="${fieldNamePrefix}toName" value=(parameters["${fieldNamePrefix}toName"]!(postalAddressData.toName)!(pafFallbacks.toName)!) />
-  <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(parameters["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) containerClass="+${styles.field_extra!}"/>
-  <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="${fieldNamePrefix}address1" value=(parameters["${fieldNamePrefix}address1"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
-  <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="${fieldNamePrefix}address2" value=(parameters["${fieldNamePrefix}address2"]!(postalAddressData.address2)!(pafFallbacks.address2)!) />
-  <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(parameters["${fieldNamePrefix}city"]!(postalAddressData.city)!(pafFallbacks.city)!) />    
-  <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(parameters["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
+  <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="${fieldNamePrefix}toName" value=(pafParams["${fieldNamePrefix}toName"]!(postalAddressData.toName)!(pafFallbacks.toName)!) />
+  <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(pafParams["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) containerClass="+${styles.field_extra!}"/>
+  <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="${fieldNamePrefix}address1" value=(pafParams["${fieldNamePrefix}address1"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
+  <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="${fieldNamePrefix}address2" value=(pafParams["${fieldNamePrefix}address2"]!(postalAddressData.address2)!(pafFallbacks.address2)!) />
+  <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(pafParams["${fieldNamePrefix}city"]!(postalAddressData.city)!(pafFallbacks.city)!) />    
+  <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(pafParams["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
   <@field type="select" label="${uiLabelMap.CommonCountry}" name="${fieldNamePrefix}countryGeoId" id="${fieldIdPrefix}countryGeoId">
-      <#if parameters["${fieldNamePrefix}countryGeoId"]??>    
-        <#assign currentCountryGeoId = parameters["${fieldNamePrefix}countryGeoId"]>
+      <#if pafParams["${fieldNamePrefix}countryGeoId"]??>    
+        <#assign currentCountryGeoId = pafParams["${fieldNamePrefix}countryGeoId"]>
       <#elseif (postalAddress??) && (postalAddress.countryGeoId??)>
         <#assign currentCountryGeoId = postalAddress.countryGeoId>
       <#elseif (pafFallbacks.countryGeoId)??>

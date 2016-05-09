@@ -20,15 +20,19 @@ under the License.
 
 <#-- Cato: Based on editcreditcard.ftl -->
 
+<#if !bapfParams??>
+  <#assign bapfParams = parameters>
+</#if>
+
 <#if useScripts && useNewAddr && newAddrInline && 
     newAddrContentId?has_content && pickFieldClass?has_content && 
     newAddrFieldId?has_content>
-<@script>
+  <@script>
 
-<@initItemSelectionWithContentFormScript itemFieldClass=pickFieldClass 
-    contentItems=[{"fieldId":newAddrFieldId, "contentId":newAddrContentId}] />
+  <@initItemSelectionWithContentFormScript itemFieldClass=pickFieldClass 
+      contentItems=[{"fieldId":newAddrFieldId, "contentId":newAddrContentId}] />
 
-</@script>
+  </@script>
 </#if>
 
 <@fields type="default" ignoreParentField=true>
@@ -39,8 +43,8 @@ under the License.
 
   <#assign hasCurrent = curPostalAddress?has_content />
 
-  <#if parameters["${fieldNamePrefix}contactMechId"]??>
-    <#assign selectedContactMechId = parameters["${fieldNamePrefix}contactMechId"]>
+  <#if bapfParams["${fieldNamePrefix}contactMechId"]??>
+    <#assign selectedContactMechId = bapfParams["${fieldNamePrefix}contactMechId"]>
   <#elseif hasCurrent>
     <#assign selectedContactMechId = curContactMechId>
   <#elseif (bapfFallbacks.contactMechId)??>
@@ -121,7 +125,8 @@ under the License.
                     "pafFieldNamePrefix":newAddrFieldNamePrefix,
                     "pafFieldIdPrefix":newAddrFieldIdPrefix,
                     "pafUseScripts":useScripts,
-                    "pafFallbacks":(bapfNewAddrFallbacks!{})
+                    "pafFallbacks":(bapfNewAddrFallbacks!{}),
+                    "pafParams":bapfParams
                     }/>
             </@fields>
           </div>       

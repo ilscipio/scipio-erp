@@ -250,37 +250,46 @@ jQuery(document).ready(function() {
   </div>
 </#macro>
 
-<#macro telecomNumberField label="" fieldNamePrefix="" required=false tooltip=false inlineArgs...>
+<#macro telecomNumberField params=true label="" fieldNamePrefix="" required=false tooltip=false inlineArgs...>
+  <#if params?is_boolean>
+    <#local params = parameters>
+  </#if>
   <#local args = inlineArgs>
   <#local countryCodeName = (args.countryCodeName)!"${fieldNamePrefix}countryCode">
   <#local areaCodeName = (args.areaCodeName)!"${fieldNamePrefix}areaCode">
   <#local contactNumberName = (args.contactNumberName)!"${fieldNamePrefix}contactNumber">
   <#local extensionName = (args.extensionName)!"${fieldNamePrefix}extension">
   <@field type="generic" label=label tooltip=tooltip required=required args=args>
-      <@field type="input" inline=true size="4" maxlength="10" name="${countryCodeName}" value=((parameters[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="${areaCodeName}" value=((parameters[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="${contactNumberName}" value=((parameters[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
-      &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="${extensionName}" value=((parameters[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension />
+      <@field type="input" inline=true size="4" maxlength="10" name="${countryCodeName}" value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="${areaCodeName}" value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="${contactNumberName}" value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
+      &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="${extensionName}" value=((params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension />
     <#nested>
   </@field>
 </#macro>
 
-<#macro allowSolicitationField name="" inlineArgs...>
+<#macro allowSolicitationField params=true name="" inlineArgs...>
+  <#if params?is_boolean>
+    <#local params = parameters>
+  </#if>
   <#local args = inlineArgs>
   <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name=name args=args>
     <option></option><#-- NOTE: Empty must be allowed? -->
-    <option value="Y"<#if (parameters[name]!(args.allowSolicitation)!) == "Y"> selected="selected"</#if>>${uiLabelMap.CommonYes}</option>
-    <option value="N"<#if (parameters[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
+    <option value="Y"<#if (params[name]!(args.allowSolicitation)!) == "Y"> selected="selected"</#if>>${uiLabelMap.CommonYes}</option>
+    <option value="N"<#if (params[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
   </@field>
 </#macro>
 
-<#macro personalTitleField name="" label="" inlineArgs...>
+<#macro personalTitleField params=true name="" label="" inlineArgs...>
+  <#if params?is_boolean>
+    <#local params = parameters>
+  </#if>
     <#local args = inlineArgs>
     <@field type="select" name=name label=label>
         <#-- Cato: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
             This is probably an error because the values read from DB become hard to re-localize.
             It is better to store these as values coded in english (and localize on print only). -->
-        <#assign personalTitle = parameters[name]!(args.personalTitle)!"">
+        <#assign personalTitle = params[name]!(args.personalTitle)!"">
         <#if personalTitle?has_content>
           <#local localizedPersTitle = getLocalizedPersonalTitle(personalTitle)!false>
           <#if localizedPersTitle?is_boolean>

@@ -184,6 +184,9 @@ body {
   .slick-list {
     margin: 0 -10px;
   }
+  
+  .slider { display: none; }
+  .slider.slick-initialized { display: block; }
     
 /*FOOTER*/
 footer {

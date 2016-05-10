@@ -235,7 +235,7 @@ under the License.
             <#-- tax adjustments -->
               <@tr valign="top">
                 <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
-                <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
+                <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency()/></@td>
                 <@td>&nbsp;</@td>
               </@tr>
             

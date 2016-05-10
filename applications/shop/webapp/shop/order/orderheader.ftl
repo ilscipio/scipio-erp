@@ -142,6 +142,12 @@ under the License.
             <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
                 <@section title=uiLabelMap.AccountingPaymentInformation>
                     <@table type="fields">
+                        <#macro paymentMethodAmount paymentMethodId>
+                          <#if (paymentMethodAmountMap[paymentMethodId])?has_content>
+                            <br/><strong><@ofbizCurrency amount=(paymentMethodAmountMap[paymentMethodId]!0) isoCode=((paymentMethodAmountMap[paymentMethodId].currencyUomId)!currencyUomId)/></strong>
+                          </#if>
+                        </#macro>
+
                         <#-- Cato: NOTE: a bugfix was applied to stock here: 
                             paymentMethod?has_content -> paymentMethods?has_content 
                             May change test results -->
@@ -172,10 +178,12 @@ under the License.
                                       <#if orderHeader?has_content && !printable>
                                         <@alert type="info" closable=false>
                                           ${offPayTitle}
+                                          <@paymentMethodAmount paymentMethodId="EXT_OFFLINE" />
                                           ${offPayDesc}
                                         </@alert>
                                       <#else>
                                         ${offPayTitle}
+                                        <@paymentMethodAmount paymentMethodId="EXT_OFFLINE" />
                                         ${offPayDesc}
                                       </#if>
                                     </@td>
@@ -183,7 +191,8 @@ under the License.
                             <#else>
                                 <@tr>
                                     <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentVia}</@td>
-                                    <@td colspan="3">${paymentMethodType.get("description",locale)}</@td>
+                                    <@td colspan="3">${paymentMethodType.get("description",locale)}
+                                      <@paymentMethodAmount paymentMethodId=paymentMethodType.paymentMethodTypeId /></@td>
                                 </@tr>
                             </#if>
 
@@ -202,7 +211,8 @@ under the License.
                                 <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
                                     <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingCreditCard}</@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingCreditCard}
+                                          <@paymentMethodAmount paymentMethodId=paymentMethod.paymentMethodId/></@td>
                                         <@td colspan="3">
                                           <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
                                         </@td>
@@ -212,7 +222,8 @@ under the License.
                                 <#-- Gift Card info -->
                                 <#if "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}</@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}
+                                          <@paymentMethodAmount paymentMethodId=paymentMethod.paymentMethodId/></@td>
                                         <@td colspan="3"><@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod /></@td>
                                     </@tr>
                                 </#if>
@@ -223,6 +234,7 @@ under the License.
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">
                                             ${uiLabelMap.AccountingEFTAccount}
+                                            <@paymentMethodAmount paymentMethodId=paymentMethod.paymentMethodId/>
                                         </@td>
                                         <@td>
                                             <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
@@ -244,7 +256,9 @@ under the License.
                         <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
                             <#if billingAccount?has_content>
                                 <@tr>
-                                    <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingBillingAccount}</@td>
+                                    <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingBillingAccount}
+                                      <@paymentMethodAmount paymentMethodId="EXT_BILLACT"/>
+                                    </@td>
                                     <@td colspan="3">
                                       <@formattedBillingAccountDetail billingAccount=billingAccount />
                                     </@td>

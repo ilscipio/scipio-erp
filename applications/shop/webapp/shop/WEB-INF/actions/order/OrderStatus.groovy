@@ -225,4 +225,7 @@ if (orderHeader) {
     // CATO: Get emails (includes both party's contact emails and additional order emails)
     context.orderEmailList = orderReadHelper.getOrderEmailList();
     
+    // CATO: exact payment amounts for all pay types
+    context.paymentMethodAmountMap = orderReadHelper.getOrderPaymentPreferenceTotalsByIdOrType();
+
 }

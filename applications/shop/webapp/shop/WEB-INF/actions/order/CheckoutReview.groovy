@@ -128,3 +128,8 @@ context.orderDate = cart.getOrderDate() ?: nowTimestamp;
 
 // CATO: Get emails (all combined)
 context.orderEmailList = cart.getOrderEmailList();
+
+// CATO: exact payment amounts for all pay types
+context.paymentMethodAmountMap = cart.getPaymentAmountsByIdOrType();
+
+

@@ -2,7 +2,7 @@
 <#-- Cato: common shop-wide helper definitions and macros -->
 
 <#macro formattedAddress address emphasis=false updateLink="" abbrev=false verbose=true>
-  <#if address.toName?has_content><#if emphasis><b></#if>${uiLabelMap.CommonTo}:<#if emphasis></b></#if>&nbsp;${address.toName}<br /></#if>
+  <#if address.toName?has_content><#if emphasis><b></#if>${uiLabelMap.CommonTo}<#if emphasis></b></#if>&nbsp;${address.toName}<br /></#if>
   <#if address.attnName?has_content><#if emphasis><b></#if>${uiLabelMap.PartyAddrAttnName}:<#if emphasis></b></#if>&nbsp;${address.attnName}<br /></#if>
   <#if address.address1?has_content>${address.address1}<br /></#if>
   <#if address.address2?has_content>${address.address2}<br /></#if>
@@ -13,7 +13,7 @@
   <#if address.countryGeoId?has_content><br /><#rt>
     <#if verbose>${(delegator.findOne("Geo", {"geoId", address.countryGeoId}, true).get("geoName", locale))!address.countryGeoId}<#else>${address.countryGeoId}</#if></#if><#lt>
   <#if updateLink?has_content>
-    <a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+    <br/><br/><a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
   </#if>
 </#macro>
 

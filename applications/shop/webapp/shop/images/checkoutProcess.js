@@ -536,7 +536,7 @@ function initCartProcessObservers() {
         showEditCartPanel();
         updateShippingSummary();
     });
-    var inputs = cartForm.find('input[type=text]');
+    var inputs = cartForm.find('input[type=text],select,.validate-number');
     inputs.each(function(e) {
         if(this.id != 'productPromoCode' && this.id != undefined) {
             jQuery(this).change(function() {

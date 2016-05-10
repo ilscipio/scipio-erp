@@ -25,12 +25,13 @@ under the License.
     <@table type="data-list" responsive=false id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">
       <@thead>
         <@tr>
-          <@th id="orderItem">${uiLabelMap.OrderItem}</@th>
-          <@th id="description">${uiLabelMap.CommonDescription}</@th>
-          <@th id="unitPrice">${uiLabelMap.EcommerceUnitPrice}</@th>
-          <@th id="quantity">${uiLabelMap.OrderQuantity}</@th>
-          <@th id="adjustment">${uiLabelMap.EcommerceAdjustments}</@th>
-          <@th id="itemTotal">${uiLabelMap.EcommerceItemTotal}</@th>
+          <@th width="25%" id="orderItem">${uiLabelMap.ProductProduct}</@th>
+          <@th width="15%" id="description" class="${styles.text_right!}"></@th>
+          <@th width="10%" id="unitPrice" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
+          <@th width="15%" id="quantity" class="${styles.text_right!}">${uiLabelMap.CommonQuantity}</@th>
+          <@th width="15%" id="adjustment" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
+          <@th width="15%" id="itemTotal" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
+          <@td>&nbsp;</@td>
         </@tr>
       </@thead>
       <@tbody>
@@ -52,39 +53,64 @@ under the License.
               ${cartLine.getProductId()!}
             </@td>
             <@td headers="description">${cartLine.getName()!}</@td>
-            <@td headers="unitPrice">${cartLine.getDisplayPrice()}</@td>
-            <@td headers="quantity"><span id="completedCartItemQty_${cartLine_index}">${cartLine.getQuantity()?string.number}</span></@td>
-            <@td headers="adjustment"><span id="completedCartItemAdjustment_${cartLine_index}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></span></@td>
-            <@td headers="itemTotal" align="right"><span id="completedCartItemSubTotal_${cartLine_index}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency() /></span></@td>
-          </@tr>
+            <@td headers="unitPrice" class="${styles.text_right!}">${cartLine.getDisplayPrice()}</@td>
+            <@td headers="quantity" class="${styles.text_right!}"><span id="completedCartItemQty_${cartLine_index}">${cartLine.getQuantity()?string.number}</span></@td>
+            <@td headers="adjustment" class="${styles.text_right!}"><span id="completedCartItemAdjustment_${cartLine_index}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></span></@td>
+            <@td headers="itemTotal" align="right" class="${styles.text_right!}"><span id="completedCartItemSubTotal_${cartLine_index}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency() /></span></@td>
+            <@td>&nbsp;</@td>
+            </@tr>
         </#list>
-      </@tbody>
-      <@tfoot>
+        <#--Cato: styling issues: 
+        </@tbody>
+        <@tfoot>-->
+        <@tr>
+            <@td colspan="5"></@td>
+            <@td colspan="1"><hr /></@td>
+            <@td>&nbsp;</@td>
+        </@tr>
         <@tr id="completedCartSubtotalRow">
-          <@th id="subTotal" scope="row" colspan="5">${uiLabelMap.CommonSubtotal}</@th>
-          <@td headers="subTotal" id="completedCartSubTotal"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=shoppingCart.getCurrency() /></@td>
+          <@td id="subTotal" scope="row" colspan="5" class="${styles.text_right!}">${uiLabelMap.CommonSubtotal}</@td>
+          <@td headers="subTotal" id="completedCartSubTotal" nowrap="nowrap" class="${styles.text_right!}"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=shoppingCart.getCurrency() /></@td>
+          <@td>&nbsp;</@td>
         </@tr>
         <#assign orderAdjustmentsTotal = 0 />
         <#list shoppingCart.getAdjustments() as cartAdjustment>
           <#assign orderAdjustmentsTotal = orderAdjustmentsTotal + Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) />
         </#list>
         <@tr id="completedCartDiscountRow">
-          <@th id="productDiscount" scope="row" colspan="5">${uiLabelMap.ProductDiscount}</@th>
-          <@td headers="productDiscount" id="completedCartDiscount"><input type="hidden" value="${orderAdjustmentsTotal}" id="initializedCompletedCartDiscount" /><@ofbizCurrency amount=orderAdjustmentsTotal isoCode=shoppingCart.getCurrency() /></@td>
+          <@td id="productDiscount" scope="row" colspan="5" class="${styles.text_right!}">${uiLabelMap.ProductDiscount}</@td>
+          <@td headers="productDiscount" id="completedCartDiscount" nowrap="nowrap" class="${styles.text_right!}"><input type="hidden" value="${orderAdjustmentsTotal}" id="initializedCompletedCartDiscount" /><@ofbizCurrency amount=orderAdjustmentsTotal isoCode=shoppingCart.getCurrency() /></@td>
+          <@td>&nbsp;</@td>
         </@tr>
         <@tr>
-          <@th id="shippingAndHandling" scope="row" colspan="5">${uiLabelMap.OrderShippingAndHandling}</@th>
-          <@td headers="shippingAndHandling" id="completedCartTotalShipping"><@ofbizCurrency amount=shoppingCart.getTotalShipping() isoCode=shoppingCart.getCurrency() /></@td>
+          <@td id="shippingAndHandling" scope="row" colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderShippingAndHandling}</@td>
+          <@td headers="shippingAndHandling" id="completedCartTotalShipping" nowrap="nowrap" class="${styles.text_right!}"><@ofbizCurrency amount=shoppingCart.getTotalShipping() isoCode=shoppingCart.getCurrency() /></@td>
+          <@td>&nbsp;</@td>
+        </@tr>
+        <#-- tax adjustments -->
+        <#if (shoppingCart.getDisplayTaxIncluded() > 0.0)>
+          <@tr valign="top">
+            <@td id="salesTax" scope="row" colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
+            <@td nowrap="nowrap" class="${styles.text_right!}" headers="salesTax" id="completedCartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
+            <@td>&nbsp;</@td>
+          </@tr>
+        </#if>
+        
+        <@tr>
+            <@td colspan="5"></@td>
+            <@td colspan="1"><hr /></@td>
+            <@td>&nbsp;</@td>
         </@tr>
         <@tr>
-          <@th id="salesTax" scope="row" colspan="5">${uiLabelMap.OrderSalesTax}</@th>
-          <@td headers="salesTax" id="completedCartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency() /></@td>
+          <@td id="grandTotal" scope="row" colspan="5" class="${styles.text_right!}"><strong>${uiLabelMap.CommonTotal}</strong></@td>
+          <@td headers="grandTotal" id="completedCartDisplayGrandTotal" nowrap="nowrap" class="${styles.text_right!}">
+                <strong><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency() /></strong>
+           </@td>
+           <@td>&nbsp;</@td>     
         </@tr>
-        <@tr>
-          <@th id="grandTotal" scope="row" colspan="5">${uiLabelMap.OrderGrandTotal}</@th>
-          <@td headers="grandTotal" id="completedCartDisplayGrandTotal"><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency() /></@td>
-        </@tr>
-      </@tfoot>
+      <#--Cato: styling issues: 
+      </@tfoot>-->
+        </@tbody>
     </@table>
   </div>
   <div id="editCartPanel">
@@ -100,13 +126,13 @@ under the License.
         <@table type="data-list" responsive=false id="editCartPanel_cartItems">
           <@thead>
             <@tr>
-              <@th id="editOrderItem">${uiLabelMap.OrderItem}</@th>
-              <@th id="editDescription">${uiLabelMap.CommonDescription}</@th>
-              <@th id="editUnitPrice">${uiLabelMap.EcommerceUnitPrice}</@th>
-              <@th id="editQuantity">${uiLabelMap.OrderQuantity}</@th>
-              <@th id="editAdjustment">${uiLabelMap.EcommerceAdjustments}</@th>
-              <@th id="editItemTotal">${uiLabelMap.EcommerceItemTotal}</@th>
-              <@th id="removeItem">${uiLabelMap.FormFieldTitle_removeButton}</@th>
+              <@th width="25%" id="editOrderItem">${uiLabelMap.ProductProduct}</@th>
+              <@th width="15%" id="editDescription" class="${styles.text_right!}"></@th>
+              <@th width="10%" id="editUnitPrice" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
+              <@th width="15%" id="editQuantity" class="${styles.text_right!}">${uiLabelMap.CommonQuantity}</@th>
+              <@th width="15%" id="editAdjustment" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
+              <@th width="15%" id="editItemTotal" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
+              <@th id="removeItem" class="${styles.text_right!}"></@th>
             </@tr>
           </@thead>
           <@tbody id="updateBody">
@@ -137,57 +163,106 @@ under the License.
                   ${cartLine.getProductId()!}
                 </@td>
                 <@td headers="editDescription">${cartLine.getName()!}</@td>
-                <@td headers="editUnitPrice" id="itemUnitPrice_${cartLine_index}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency() /></@td>
-                <@td headers="editQuantity">
-                  <#if cartLine.getIsPromo()>
-                    ${cartLine.getQuantity()?string.number}
-                  <#else>
-                    <input type="hidden" name="cartLineProductId" id="cartLineProductId_${cartLine_index}" value="${cartLine.getProductId()}" />
-                    <@field type="input" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" value="${cartLine.getQuantity()?string.number}" required=true class="+validate-number" />
-                    <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                    <span id="advice-validate-number-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonPleaseEnterValidNumberInThisField}) </span>
-                  </#if>
+                <@td headers="editUnitPrice" id="itemUnitPrice_${cartLine_index}" class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency() /></@td>
+                <@td headers="editQuantity" class="${styles.text_right!}">
+                  <#compress>
+                        <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
+                            ${cartLine.getQuantity()?string.number}
+                        <#else><#-- Is Promo or Shoppinglist -->
+                                <input type="hidden" name="cartLineProductId" id="cartLineProductId_${cartLine_index}" value="${cartLine.getProductId()}" /> 
+                                <@field type="select" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" required=true class="+validate-number">
+                                    <#list 1..99 as x>
+                                        <#if cartLine.getQuantity()==x>
+                                            <#assign selected = true/>
+                                        <#else>
+                                            <#assign selected = false/>
+                                        </#if>
+                                        <@field type="option" value="${x}" selected=selected>${x}</@field>
+                                    </#list>
+                                </@field>
+                                <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
+                                <span id="advice-validate-number-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonPleaseEnterValidNumberInThisField}) </span>
+                        </#if>
+                    </#compress>
                 </@td>
                 <#if !cartLine.getIsPromo()>
-                  <@td headers="editAdjustment" id="addPromoCode_${cartLine_index}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></@td>
+                  <@td headers="editAdjustment" id="addPromoCode_${cartLine_index}" class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></@td>
                 <#else>
-                  <@td headers="editAdjustment"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></@td>
+                  <@td headers="editAdjustment" class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></@td>
                 </#if>
-                <@td headers="editItemTotal" id="displayItem_${cartLine_index}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency() /></@td>
+                <@td headers="editItemTotal" id="displayItem_${cartLine_index}" class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency() /></@td>
                 <#if !cartLine.getIsPromo()>
-                  <@td><a id="removeItemLink_${cartLine_index}" href="javascript:void(0);" style="font-size: 24px;"><i class="fa fa-times"></i></a></@td>
+                  <@td class="${styles.text_center!}"><a id="removeItemLink_${cartLine_index}" href="javascript:void(0);" style="font-size: 20px;" title="${uiLabelMap.FormFieldTitle_removeButton}"><i class="fa fa-trash-o"></i></a></@td>
                 </#if>
               </@tr>
             </#list>
-          </@tbody>
-          <@tfoot>
+            <#--Cato: styling issues: 
+            </@tbody>
+            <@tfoot>-->
             <@tr>
-              <@th scope="row" colspan="6">${uiLabelMap.CommonSubtotal}</@th>
-              <@td id="cartSubTotal"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=shoppingCart.getCurrency() /></@td>
+                <@td colspan="5"></@td>
+                <@td colspan="1"><hr /></@td>
+                <@td>&nbsp;</@td>
             </@tr>
+
             <@tr>
-              <@th scope="row" colspan="6">${uiLabelMap.ProductDiscount}</@th>
-              <@td id="cartDiscountValue">
-                <#assign orderAdjustmentsTotal = 0  />
-                <#list shoppingCart.getAdjustments() as cartAdjustment>
-                  <#assign orderAdjustmentsTotal = orderAdjustmentsTotal + Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) />
-                </#list>
-                <@ofbizCurrency amount=orderAdjustmentsTotal isoCode=shoppingCart.getCurrency() />
-              </@td>
+                <@td colspan="5" class="${styles.text_right!}">
+                    ${uiLabelMap.CommonSubTotal}
+                </@td>
+                <@td nowrap="nowrap" class="${styles.text_right!}" id="cartSubTotal">
+                    <@ofbizCurrency amount=shoppingCart.getDisplaySubTotal() isoCode=shoppingCart.getCurrency()/>
+                </@td>
+                <@td>&nbsp;</@td>
             </@tr>
+
+           <#-- other adjustments -->
+            <#list shoppingCart.getAdjustments() as cartAdjustment>
+                <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true) />
+                <@tr valign="top">
+                    <@td colspan="5" class="${styles.text_right!}">
+                        ${uiLabelMap.OrderPromotion}: ${cartAdjustment.description!""}
+                    </@td>
+                    <@td nowrap="nowrap" class="${styles.text_right!}" id="cartDiscountValue"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></@td>
+                    <@td>&nbsp;</@td>
+                </@tr>
+            </#list>
+
+            <#-- Shipping and handling -->
             <@tr>
-              <@th scope="row" colspan="6">${uiLabelMap.OrderShippingAndHandling}</@th>
-              <@td id="cartTotalShipping"><@ofbizCurrency amount=shoppingCart.getTotalShipping() isoCode=shoppingCart.getCurrency() /></@td>
+              <@td scope="row" colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderShippingAndHandling}</@td>
+              <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalShipping"><@ofbizCurrency amount=shoppingCart.getTotalShipping() isoCode=shoppingCart.getCurrency() /></@td>
+              <@td>&nbsp;</@td>
             </@tr>
-            <@tr>
-              <@th scope="row" colspan="6">${uiLabelMap.OrderSalesTax}</@th>
-              <@td id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency() /></@td>
+
+            <#-- tax adjustments -->
+            <#if (shoppingCart.getDisplayTaxIncluded() > 0.0)>
+              <@tr valign="top">
+                <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
+                <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
+                <@td>&nbsp;</@td>
+              </@tr>
+            </#if>
+            
+            <#-- grand total -->
+            <@tr valign="top">
+                <@td colspan="5"></@td>
+                <@td colspan="1"><hr /></@td>
+                <@td>&nbsp;</@td>
             </@tr>
-            <@tr>
-              <@th scope="row" colspan="6">${uiLabelMap.OrderGrandTotal}</@th>
-              <@td id="cartDisplayGrandTotal"><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency() /></@td>
+            <@tr valign="top">
+                <@td colspan="5" class="${styles.text_right!}">
+                    <strong>${uiLabelMap.CommonTotal}</strong>
+                </@td>
+                <@td nowrap="nowrap" class="${styles.text_right!}" id="cartDisplayGrandTotal">
+                    <strong><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/></strong>
+                </@td>
+                <@td>&nbsp;</@td>
             </@tr>
-          </@tfoot>
+
+            <#--
+            Cato: styling issues: 
+            </@tfoot>-->
+            </@tbody>
         </@table>
       </fieldset>
       <#--<fieldset id="productPromoCodeFields">-->

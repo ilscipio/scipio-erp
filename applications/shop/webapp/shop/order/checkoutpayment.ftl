@@ -173,6 +173,30 @@ jQuery(document).ready(function(){
       <#-- return nothing otherwise -->
     </#function>
 
+    <#macro payMethAmountField payMethId>
+      <#assign curPayAmountStr = "">
+      <#assign fieldValue = "">
+      <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
+      <#if parameters["amount_${payMethId}"]??>
+        <#assign fieldValue = parameters["amount_${payMethId}"]>
+      <#else>
+        <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
+            and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
+        <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(payMethId)!0) > 0)>${cart.getPaymentOrigAmount(payMethId)?string("##0.00")}</#if></#assign>
+        <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
+            Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
+            FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
+                offers no way to distinguish between user-entered and validation-determined amounts. -->
+        <#if cart.isPaymentsAdequate()>
+          <#assign fieldValue = curPayAmountStr>
+        </#if>
+      </#if>
+      <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
+          Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
+      <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="amount_${payMethId}" name="amount_${payMethId}" 
+        value=fieldValue tooltip=fieldTooltip />    
+    </#macro>
+
     <#-- Cato: Payment method content and markup.
         This pattern allows to avoid duplicating the control/loop/ordering logic and keeps the definitions for each pay method together so easier to follow alongside the original.
         The macro is invoked in steps with a different type each time. 
@@ -203,6 +227,7 @@ jQuery(document).ready(function(){
             <@section containerId="content_OFFLINE" containerClass="+pay-meth-content" containerStyle="display:none;" title=methodLabel>
               <#-- Cato: TODO?: These descriptions could probably be integrated into the entity values using get("xxx", locale)... -->
               <p>${uiLabelMap.OrderPaymentDescOffline}</p>
+              <@payMethAmountField payMethId="EXT_OFFLINE"/>
             </@section>
           </#if>
         </#if>
@@ -216,6 +241,7 @@ jQuery(document).ready(function(){
           <#if showDetails>
             <@section containerId="content_COD" containerClass="+pay-meth-content" containerStyle="display:none;" title=methodLabel>
               <p>${uiLabelMap.OrderPaymentDescCOD}</p>
+              <@payMethAmountField payMethId="EXT_COD"/>
             </@section>
           </#if>
         </#if>
@@ -291,27 +317,7 @@ jQuery(document).ready(function(){
                   <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
                   <#if (paymentMethod.get("description", locale))?has_content>(${paymentMethod.get("description", locale)})</#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                  <#assign curPayAmountStr = "">
-                  <#assign fieldValue = "">
-                  <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-                  <#if parameters["amount_${paymentMethod.paymentMethodId}"]??>
-                    <#assign fieldValue = parameters["amount_${paymentMethod.paymentMethodId}"]>
-                  <#else>
-                    <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
-                        and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
-                    <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
-                    <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
-                        Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
-                        FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
-                            offers no way to distinguish between user-entered and validation-determined amounts. -->
-                    <#if cart.isPaymentsAdequate()>
-                      <#assign fieldValue = curPayAmountStr>
-                    </#if>
-                  </#if>
-                  <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
-                      Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-                  <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" 
-                    value=fieldValue tooltip=fieldTooltip />
+                  <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
             </#list>
@@ -397,11 +403,8 @@ jQuery(document).ready(function(){
                   <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
                   <#if paymentMethod.get("description", locale)?has_content><p>(${paymentMethod.get("description", locale)})</p></#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                  <#-- Cato: This field was added by us, was missing for EFT accounts -->
-                  <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-                  <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
-                      Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-                  <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="${paymentMethod.paymentMethodId}_amount" value=(parameters.newEftAccount_amount!) tooltip=fieldTooltip />
+                  <#-- Cato: NOTE: This field was added by us, was missing for EFT accounts -->
+                  <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
             </#list>
@@ -534,26 +537,7 @@ jQuery(document).ready(function(){
                   <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
                   <#if paymentMethod.get("description", locale)?has_content>(${paymentMethod.get("description", locale)})</#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                  <#assign curPayAmountStr = "">
-                  <#assign fieldValue = "">
-                  <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-                  <#if newGiftCardParams["amount_${paymentMethod.paymentMethodId}"]??>
-                    <#assign fieldValue = newGiftCardParams["amount_${paymentMethod.paymentMethodId}"]>  
-                  <#else>
-                    <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
-                        and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
-                    <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
-                    <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
-                        Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
-                        FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
-                            offers no way to distinguish between user-entered and validation-determined amounts. -->
-                    <#if cart.isPaymentsAdequate()>
-                      <#assign fieldValue = curPayAmountStr>
-                    </#if>
-                  </#if>
-                  <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
-                      Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-                  <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue tooltip=fieldTooltip />
+                  <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
             </#list>

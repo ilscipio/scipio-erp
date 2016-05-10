@@ -84,12 +84,14 @@ context.partyGroup = partyGroup;
 
 
 // Cato: Need a list of ALL payment meths selected in cart
+// WARN: Th
 checkOutPaymentIdSet = [] as Set;
 if (cart) {
     if (cart.getPaymentMethodIds()) {
         checkOutPaymentIdSet.addAll(cart.getPaymentMethodIds());
-    } else if (cart.getPaymentMethodTypeIds()) {
-        checkOutPaymentIdSet.addAll(cart.getPaymentMethodTypeIds());
+    } 
+    if (cart.getPaymentMethodTypeIds()) {
+        checkOutPaymentIdSet.addAll(cart.getPaymentMethodTypeIdsNoPaymentMethodIds());
     }
 }
 context.checkOutPaymentIdSet = checkOutPaymentIdSet;

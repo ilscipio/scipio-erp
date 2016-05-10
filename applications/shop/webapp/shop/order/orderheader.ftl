@@ -148,16 +148,13 @@ under the License.
                           </#if>
                         </#macro>
 
-                        <#-- Cato: NOTE: a bugfix was applied to stock here: 
-                            paymentMethod?has_content -> paymentMethods?has_content 
-                            May change test results -->
-                        <#if !paymentMethods?has_content && paymentMethodType?has_content>
+                        <#if !paymentMethod?has_content && paymentMethodType?has_content>
                         
                             <#-- offline payment -->
                             <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
                                 <@tr>
-                                    <@td colspan="4">
-                                      <#assign offPayTitle><p>${uiLabelMap.AccountingOfflinePayment}</p></#assign>
+                                      <#assign offPayTitle>${uiLabelMap.AccountingOfflinePayment}
+                                        <@paymentMethodAmount paymentMethodId="EXT_OFFLINE" /></#assign>
                                       <#assign offPayDesc>
                                         <#if orderHeader?has_content && paymentAddress?has_content>
                                           <strong>${uiLabelMap.OrderSendPaymentTo}:</strong></br>
@@ -174,30 +171,30 @@ under the License.
                                         </#if>
                                       </#assign>
 
+                                    <@td class="${styles.grid_large!}2">${offPayTitle}</@td>
+                                    <@td colspan="3">
                                       <#-- Cato: only show alert after placed and not printable -->
                                       <#if orderHeader?has_content && !printable>
                                         <@alert type="info" closable=false>
-                                          ${offPayTitle}
-                                          <@paymentMethodAmount paymentMethodId="EXT_OFFLINE" />
                                           ${offPayDesc}
                                         </@alert>
                                       <#else>
-                                        ${offPayTitle}
-                                        <@paymentMethodAmount paymentMethodId="EXT_OFFLINE" />
                                         ${offPayDesc}
                                       </#if>
                                     </@td>
                                 </@tr>
                             <#else>
+                                <#-- ${uiLabelMap.AccountingPaymentVia} -->
                                 <@tr>
-                                    <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentVia}</@td>
-                                    <@td colspan="3">${paymentMethodType.get("description",locale)}
+                                    <@td class="${styles.grid_large!}2">${paymentMethodType.get("description",locale)}
                                       <@paymentMethodAmount paymentMethodId=paymentMethodType.paymentMethodTypeId /></@td>
+                                    <@td colspan="3"></@td>
                                 </@tr>
                             </#if>
+                        </#if>
 
-
-                        <#elseif paymentMethods?has_content>
+                        <#-- Cato: changed: <#elseif paymentMethods?has_content>-->
+                        <#if paymentMethods?has_content>
                             <#list paymentMethods as paymentMethod>
                                 <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
                                   <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>

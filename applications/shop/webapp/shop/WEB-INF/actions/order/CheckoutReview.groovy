@@ -63,8 +63,15 @@ context.paymentMethods = cart.getPaymentMethods();
 paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 paymentMethodType = null;
 paymentMethodTypeId = null;
+/* Cato: This contradicts OrderStatus.groovy. paymentMethodType should only be set to a 
 if (paymentMethodTypeIds) {
     paymentMethodTypeId = paymentMethodTypeIds[0];
+    paymentMethodType = from("PaymentMethodType").where("paymentMethodTypeId", paymentMethodTypeId).queryOne();
+    context.paymentMethodType = paymentMethodType;
+}*/
+paymentMethodTypeIdsNoPaymentMethodIds = cart.getPaymentMethodTypeIdsNoPaymentMethodIds();
+if (paymentMethodTypeIdsNoPaymentMethodIds) {
+    paymentMethodTypeId = paymentMethodTypeIdsNoPaymentMethodIds[0];
     paymentMethodType = from("PaymentMethodType").where("paymentMethodTypeId", paymentMethodTypeId).queryOne();
     context.paymentMethodType = paymentMethodType;
 }

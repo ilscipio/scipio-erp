@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -1044,6 +1045,32 @@ public class OrderReadHelper {
             }
         }
         return total;
+    }
+    
+    /**
+     * Cato: Get the total payment preference amount for each payment method or type.
+     */
+    public Map<String, BigDecimal> getOrderPaymentPreferenceTotalsByIdOrType() {
+        Map<String, BigDecimal> totals = new HashMap<String, BigDecimal>();
+        for (GenericValue preference : getPaymentPreferences()) {
+            if (preference.get("maxAmount") == null) continue;
+            if (UtilValidate.isNotEmpty(preference.getString("paymentMethodId"))) {
+                BigDecimal total = totals.get(preference.getString("paymentMethodId"));
+                if (total == null) {
+                    total = BigDecimal.ZERO;
+                }
+                total = total.add(preference.getBigDecimal("maxAmount")).setScale(scale, rounding);
+                totals.put(preference.getString("paymentMethodId"), total);
+            } else if (UtilValidate.isNotEmpty(preference.getString("paymentMethodTypeId"))) {
+                BigDecimal total = totals.get(preference.getString("paymentMethodTypeId"));
+                if (total == null) {
+                    total = BigDecimal.ZERO;
+                }
+                total = total.add(preference.getBigDecimal("maxAmount")).setScale(scale, rounding);
+                totals.put(preference.getString("paymentMethodTypeId"), total);
+            }
+        }
+        return totals;
     }
 
     public BigDecimal getCreditCardPaymentPreferenceTotal() {

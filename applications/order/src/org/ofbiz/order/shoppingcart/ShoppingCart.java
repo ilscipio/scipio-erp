@@ -1619,6 +1619,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return foundRecords;
     }
 
+    /** Cato: Returns all payment infos  */
+    public List<CartPaymentInfo> getPaymentInfos() {
+        return paymentInfo;
+    }
+    
     /** Locates an existing CartPaymentInfo object by index */
     public CartPaymentInfo getPaymentInfo(int index) {
         return paymentInfo.get(index);
@@ -1706,6 +1711,32 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      */
     public BigDecimal getPaymentOrigAmount(String id) {
         return this.getPaymentInfo(id).origAmount;
+    }
+    
+    /** Cato: Returns all payment amounts */
+    public Map<String, BigDecimal> getPaymentAmountsByIdOrType() {
+        // BASED ON OrderReadHelper.getOrderPaymentPreferenceTotalsByIdOrType
+        // NOTE: Summing may be redundant but should not hurt...
+        Map<String, BigDecimal> totals = new HashMap<String, BigDecimal>();
+        for(CartPaymentInfo info : paymentInfo) {
+            if (info.amount == null) continue;
+            if (UtilValidate.isNotEmpty(info.paymentMethodId)) {
+                BigDecimal total = totals.get(info.paymentMethodId);
+                if (total == null) {
+                    total = BigDecimal.ZERO;
+                }
+                total = total.add(info.amount).setScale(scale, rounding);
+                totals.put(info.paymentMethodId, total);
+            } else if (UtilValidate.isNotEmpty(info.paymentMethodTypeId)) {
+                BigDecimal total = totals.get(info.paymentMethodTypeId);
+                if (total == null) {
+                    total = BigDecimal.ZERO;
+                }
+                total = total.add(info.amount).setScale(scale, rounding);
+                totals.put(info.paymentMethodTypeId, total);
+            }
+        }
+        return totals;
     }
 
     public void addPaymentRef(String id, String ref, String authCode) {

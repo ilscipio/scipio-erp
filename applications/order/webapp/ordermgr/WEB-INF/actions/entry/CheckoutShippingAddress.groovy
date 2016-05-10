@@ -53,3 +53,27 @@ context.shoppingCart = cart;
 context.userLogin = userLogin;
 context.productStoreId = productStoreId;
 context.shippingContactMechList = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+
+// CATO: SPECIAL CASE:
+// It is possible that a new address was created during event and committed even though a later error occurred
+// So to handle this we need a special check to avoid a resubmission of address and to select the newly-created
+context.newShipAddrParams = parameters;
+if (parameters.shipping_contact_mech_id == "_NEW_") {
+    newShipContactMechInfo = parameters.newShipContactMechInfoMap?._NEW_;
+    if (newShipContactMechInfo && context.shippingContactMechList) {
+        // make sure it appears in contact mech list
+        for(cm in context.shippingContactMechList) {
+            if (cm.contactMechId == newShipContactMechInfo.contactMechId) {
+                parameters.shipping_contact_mech_id = newShipContactMechInfo.contactMechId;
+                // Prevent filling the new ship info fields
+                context.newShipAddrParams = [:];
+                break;
+            }
+        }
+    }
+}
+
+
+
+
+

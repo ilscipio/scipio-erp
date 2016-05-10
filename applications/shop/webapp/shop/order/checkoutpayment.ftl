@@ -45,6 +45,13 @@ function submitForm(form, mode, value) {
             jQuery('#singleUsePayment__NEW_EFT_ACCOUNT_').val("Y");
         }
         
+        <#-- Cato: must process some checkboxes -->
+        if (jQuery('#newGiftCard_saveToAccount').is(":checked")) {
+            jQuery('#singleUseGiftCard').val("N");
+        } else {
+            jQuery('#singleUseGiftCard').val("Y");
+        }
+        
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
@@ -341,7 +348,8 @@ jQuery(document).ready(function(){
                         "firstNameOnCard":firstNameOnCard, 
                         "middleNameOnCard":middleNameOnCard, 
                         "lastNameOnCard":lastNameOnCard
-                    }
+                    },
+                    "ccfParams":newCreditCardParams!parameters
                   }/>
               <@field type="generic" label=uiLabelMap.PartyBillingAddress>
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
@@ -353,20 +361,21 @@ jQuery(document).ready(function(){
                         "bapfFieldNamePrefix":"newCreditCard_",
                         "bapfNewAddrContentId":"newcreditcard_newbilladdrcontent",
                         "bapfPickFieldClass":"new-cc-bill-addr-pick-radio",
-                        "bapfNewAddrFieldId":"newcreditcard_newaddrradio"
+                        "bapfNewAddrFieldId":"newcreditcard_newaddrradio",
+                        "bapfParams":newCreditCardParams!parameters
                         }/>
               </@field>
 
               <#if userHasAccount>
                 <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
                 <@field type="checkbox" checkboxType="simple-standard" id="newCreditCard_saveToAccount" name="saveToAccount__NEW_CREDIT_CARD_" value="Y" 
-                    checked=((parameters.singleUsePayment__NEW_CREDIT_CARD_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
+                    checked=((newCreditCardParams.singleUsePayment__NEW_CREDIT_CARD_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_CREDIT_CARD_" name="singleUsePayment__NEW_CREDIT_CARD_" value="" />
               </#if>
               <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
                   Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_CREDIT_CARD_" value=(parameters.amount__NEW_CREDIT_CARD_!) tooltip=fieldTooltip/>
+              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_CREDIT_CARD_" value=(newCreditCardParams.amount__NEW_CREDIT_CARD_!) tooltip=fieldTooltip/>
             </@section>
           </#if>
         </#if>
@@ -418,7 +427,8 @@ jQuery(document).ready(function(){
               <@render resource="component://shop/widget/CustomerScreens.xml#eftAccountFields" 
                 ctxVars={
                     "eafFieldNamePrefix": "newEftAccount_",
-                    "eafFallbacks":{"nameOnAccount":nameOnAccount}
+                    "eafFallbacks":{"nameOnAccount":nameOnAccount},
+                    "eafParams":newEftAccountParams!parameters
                     } />
               <@field type="generic" label=uiLabelMap.PartyBillingAddress>
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
@@ -430,20 +440,21 @@ jQuery(document).ready(function(){
                         "bapfFieldNamePrefix":"newEftAccount_",
                         "bapfNewAddrContentId":"neweftaccount_newbilladdrcontent",
                         "bapfPickFieldClass":"new-eft-bill-addr-pick-radio",
-                        "bapfNewAddrFieldId":"neweftaccount_newaddrradio"
+                        "bapfNewAddrFieldId":"neweftaccount_newaddrradio",
+                        "bapfParams":newEftAccountParams!parameters
                         }/>
               </@field>
 
               <#if userHasAccount>
                 <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
                 <@field type="checkbox" checkboxType="simple-standard" id="newEftAccount_saveToAccount" name="saveToAccount__NEW_EFT_ACCOUNT_" 
-                    value="Y" checked=((parameters.singleUsePayment__NEW_EFT_ACCOUNT_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
+                    value="Y" checked=((newEftAccountParams.singleUsePayment__NEW_EFT_ACCOUNT_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_EFT_ACCOUNT_" name="singleUsePayment__NEW_EFT_ACCOUNT_" value="" />
               </#if>
               <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
                   Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_EFT_ACCOUNT_" value=(parameters.amount__NEW_EFT_ACCOUNT_!) tooltip=fieldTooltip />
+              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_EFT_ACCOUNT_" value=(newEftAccountParams.amount__NEW_EFT_ACCOUNT_!) tooltip=fieldTooltip />
             </@section>
           </#if>
         </#if>
@@ -526,8 +537,8 @@ jQuery(document).ready(function(){
                   <#assign curPayAmountStr = "">
                   <#assign fieldValue = "">
                   <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-                  <#if parameters["amount_${paymentMethod.paymentMethodId}"]??>
-                    <#assign fieldValue = parameters["amount_${paymentMethod.paymentMethodId}"]>  
+                  <#if newGiftCardParams["amount_${paymentMethod.paymentMethodId}"]??>
+                    <#assign fieldValue = newGiftCardParams["amount_${paymentMethod.paymentMethodId}"]>  
                   <#else>
                     <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
                         and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
@@ -549,25 +560,36 @@ jQuery(document).ready(function(){
           </#if>
 
           <#-- Gift card not on file -->
-          <#-- TODO: select this if gift card only, also set addGiftCard_main=Y for params to remember -->
-          <#-- NOTE: Should have empty value -->
+          <#-- Cato: NOTE: This was initially implemented in stock code and is not 1-for-1 equivalent to our new inline
+              forms for CC && EFT above... 
+              TODO?: Reimplement using _NEW_GIFT_CARD_ hook --> 
           <#if showSupplemental>
             <#if showSelect>
               <#-- MUST SUBMIT EMPTY VALUE FOR checkOutPaymentId -->
               <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_addGiftCard${primSupplSuffix}", "contentId":"content__NEW_GIFT_CARD_${primSupplSuffix}"})>
-              <@field type="checkbox" id="checkOutPaymentId_addGiftCard${primSupplSuffix}" name="addGiftCard" value="Y" checked=((selectedCheckOutPaymentIdList?seq_contains("_NEW_GIFT_CARD_")) || ((parameters.addGiftCard!) == "Y")) 
+              <@field type="checkbox" id="checkOutPaymentId_addGiftCard${primSupplSuffix}" name="addGiftCard" value="Y" checked=((selectedCheckOutPaymentIdList?seq_contains("_NEW_GIFT_CARD_")) || ((newGiftCardParams.addGiftCard!) == "Y")) 
                 class="+pay-select-checkbox pay-select-field" label=uiLabelMap.AccountingUseGiftCardNotOnFile /><#--tooltip=(getPayMethTypeDesc("GIFT_CARD")!) -->
             </#if>
           </#if>
           <#if showDetails && showSupplemental>
             <@section containerId="content__NEW_GIFT_CARD_${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
-              <input type="hidden" name="singleUseGiftCard" value="Y" />
-              <@field type="input" size="15" id="giftCardNumber${primSupplSuffix}" name="giftCardNumber" value=((parameters.giftCardNumber)!) label=uiLabelMap.AccountingNumber/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+              
+              <@field type="input" size="15" id="giftCardNumber${primSupplSuffix}" name="giftCardNumber" value=((newGiftCardParams.giftCardNumber)!) label=uiLabelMap.AccountingNumber
+                tooltip="DemoCustomer: test: 123412341234 or 432143214321"/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               <#if cart.isPinRequiredForGC(delegator)>
-                <@field type="input" size="10" id="giftCardPin${primSupplSuffix}" name="giftCardPin" value=((parameters.giftCardPin)!) label=uiLabelMap.AccountingPIN/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+                <@field type="input" size="10" id="giftCardPin${primSupplSuffix}" name="giftCardPin" value=((newGiftCardParams.giftCardPin)!) label=uiLabelMap.AccountingPIN/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               </#if>
               <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-              <@field type="input" size="6" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" value=((parameters.giftCardAmount)!) label=uiLabelMap.AccountingAmount tooltip=fieldTooltip/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+              <@field type="input" size="6" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" value=((newGiftCardParams.giftCardAmount)!) label=uiLabelMap.AccountingAmount tooltip=fieldTooltip/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+
+              <#-- Cato: Unhardcode the single-use flag so it follows our new inlines above
+              <input type="hidden" name="singleUseGiftCard" value="Y" /> -->
+              <#if userHasAccount>
+                <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
+                <@field type="checkbox" checkboxType="simple-standard" id="newGiftCard_saveToAccount" name="saveToAccount__NEW_GIFT_CARD_" 
+                    value="Y" checked=((singleUseGiftCard!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
+                <input type="hidden" id="singleUseGiftCard" name="singleUseGiftCard" value="N" />
+              </#if>
             </@section>
           </#if>
         </#if>

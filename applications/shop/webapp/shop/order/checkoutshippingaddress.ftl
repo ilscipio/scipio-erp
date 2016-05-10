@@ -88,9 +88,11 @@ function toggleBillingAccount(box) {
     <#-- Cato: FIXME?: splitship currently will not work for anon users. 
         This is a limitation of combining the personal info into the ship address page.
         However, it is probably acceptable to require an account for more advanced shipping features. -->
+  <#-- TODO?: Implement split ship page and uncomment here
     <#if userHasAccount>
       <@menuitem type="link" href=makeOfbizUrl("splitship") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.OrderSplitShipment />
     </#if>
+  -->
     <#-- Cato: This old link becomes redundant with the addition of an inlined form (below). 
     <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
     -->
@@ -163,7 +165,8 @@ function toggleBillingAccount(box) {
           <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
                 ctxVars={
                     "pafFieldNamePrefix":"newShipAddr_",
-                    "pafUseScripts":true}/>
+                    "pafUseScripts":true,
+                    "pafParams":newShipAddrParams!parameters}/>
         </#macro>
     
         <#if shippingContactMechList?has_content>

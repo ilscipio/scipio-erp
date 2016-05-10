@@ -716,3 +716,14 @@ input::-moz-focus-inner {
 }
 
 
+/*Radio and checkbox item long label wrapping workaround
+.radio-item, .checkbox-item {
+    white-space : nowrap;
+}
+.radio-item input, .checkbox-item input {
+    vertical-align: top;
+}
+.radio-item > *, .checkbox-item > * {
+    white-space : normal;
+}
+*/

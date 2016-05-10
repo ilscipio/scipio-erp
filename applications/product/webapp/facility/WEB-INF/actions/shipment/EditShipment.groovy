@@ -17,8 +17,8 @@
  * under the License.
  */
 
+import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.*
-import org.ofbiz.widget.renderer.html.HtmlFormWrapper
 
 shipmentId = parameters.shipmentId;
 shipment = from("Shipment").where("shipmentId", shipmentId).queryOne();
@@ -31,10 +31,18 @@ if (!shipment) {
 }
 orderHeader = from("OrderHeader").where("orderId" : primaryOrderId).queryOne();
 
-if (orderHeader) {
-    productStoreFacilityList = delegator.findByAnd("ProductStoreFacilityByOrder", ["orderId" : orderHeader.orderId], null, false);
-    context.productStoreFacilityList = productStoreFacilityList;
-}    
+facilityList = [];
+if (orderHeader) {    
+    if (orderHeader.productStoreId) {
+        productStoreFacilityList = delegator.findByAnd("ProductStoreFacilityByOrder", ["orderId" : orderHeader.orderId, "productStoreId" : orderHeader.productStoreId], null, false);
+        context.productStoreFacilityList = productStoreFacilityList;
+        context.productStoreId = orderHeader.productStoreId;
+    }
+} 
+facilityList = delegator.findByAnd("Facility", null, null, false);
+
+context.facilityList = facilityList;
+Debug.log("facilityList =========> " + facilityList);
 
 // the kind of StatusItem to use is based on the type of order
 statusItemTypeId = "SHIPMENT_STATUS";
@@ -49,6 +57,9 @@ context.shipment = shipment;
 shipmentTypeList = from("ShipmentType").queryList();
 context.shipmentTypeList = shipmentTypeList;
 
+uomList = from("Uom").where(["uomTypeId" : "CURRENCY_MEASURE"]).orderBy("description").queryList();
+context.uomList = uomList;
+
 if (shipment) {
     currentStatus = shipment.getRelatedOne("StatusItem", false);
     originPostalAddress = shipment.getRelatedOne("OriginPostalAddress", false);
@@ -57,10 +68,6 @@ if (shipment) {
     destinationTelecomNumber = shipment.getRelatedOne("DestinationTelecomNumber", false);
     
     statusList = from("StatusValidChangeToDetail").where(["statusId" : shipment.statusId]).queryList();
-
-    if (orderHeader) {
-        context.productStoreId = orderHeader.productStoreId;
-    }
 
     context.currentStatus = currentStatus;
     context.originPostalAddress = originPostalAddress;

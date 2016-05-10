@@ -16,6 +16,8 @@
   specific language governing permissions and limitations
   under the License.
   -->
+<#include "catalogcommon.ftl">
+
 <#--
 <@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
 <@script src=makeOfbizContentUrl("/images/jquery/ui/js/jquery.cookie-1.4.0.js") />-->

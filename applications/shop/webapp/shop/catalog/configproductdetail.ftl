@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "catalogcommon.ftl">
+
 <#-- variable setup -->
 <#assign productContentWrapper = productContentWrapper!>
 <#assign price = priceMap!>
@@ -110,35 +112,33 @@ ${virtualJavaScript!}
             toggleAmt(checkAmtReq(sku));
         }
     }
- </@script>
 
-<@script>
+    jQuery(document).ready(function () {
+        jQuery('#configFormId').change(getConfigDetails)
+    });
+    
+    function getConfigDetails(event) {
+            jQuery.ajax({
+                url: '<@ofbizUrl>getConfigDetailsEvent</@ofbizUrl>',
+                type: 'POST',
+                data: jQuery('#configFormId').serialize(),
+                success: function(data) {
+                      var totalPrice = data.totalPrice;
+                      var configId = data.configId;
+                      document.getElementById('totalPrice').innerHTML = totalPrice;
+                      document.addToShoppingList.configId.value = configId;
+                      event.stop();
+                }
+            });
+    }
 
-jQuery(document).ready(function () {
-    jQuery('#configFormId').change(getConfigDetails)
-});
-
-function getConfigDetails(event) {
-        jQuery.ajax({
-            url: '<@ofbizUrl>getConfigDetailsEvent</@ofbizUrl>',
-            type: 'POST',
-            data: jQuery('#configFormId').serialize(),
-            success: function(data) {
-                  var totalPrice = data.totalPrice;
-                  var configId = data.configId;
-                  document.getElementById('totalPrice').innerHTML = totalPrice;
-                  document.addToShoppingList.configId.value = configId;
-                  event.stop();
-            }
-        });
-}
 </@script>
 
 <div id="productdetail">
 
 <@table type="generic">
 
-  <#-- Category next/previous -->
+  <#-- Category next/previous
   <#if category??>
     <@tr>
       <@td colspan="2" align="right">
@@ -154,7 +154,7 @@ function getConfigDetails(event) {
   </#if>
 
   <@tr><@td colspan="2"></@td></@tr>
-
+ -->
   <#-- Product image/name/price -->
   <@tr>
     <@td valign="top" width="0">
@@ -563,7 +563,8 @@ function getConfigDetails(event) {
   </@tr>
 
 
-  <#-- Product Reviews -->
+  <#-- Cato: Not for now
+  <#- Product Reviews ->
   <@tr>
     <@td colspan="2">
       <div>${uiLabelMap.OrderCustomerReviews}:</div>
@@ -579,7 +580,7 @@ function getConfigDetails(event) {
       <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)!>
       <@tr>
         <@td colspan="2">
-          <@table type="generic"> <#-- orig: border="0" cellpadding="0" cellspacing="0" -->
+          <@table type="generic"> <#- orig: border="0" cellpadding="0" cellspacing="0" ->
             <@tr>
               <@td>${uiLabelMap.CommonBy}: <#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if>
               </@td>
@@ -616,76 +617,12 @@ function getConfigDetails(event) {
         <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
       </@td>
     </@tr>
-</#if>
+  </#if>
+  -->
 </@table>
 
-<#-- Upgrades/Up-Sell/Cross-Sell -->
-  <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
-  <#assign targetRequest = "product">
-  <#if targetRequestName?has_content>
-    <#assign targetRequest = targetRequestName>
-  </#if>
-  <#if assocProducts?has_content>
-    <@tr><@td>&nbsp;</@td></@tr>
-    <@tr><@td colspan="2"><@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</@heading></@td></@tr>
+<@section>
+    <@commonAssociatedProducts productValue=product commonFeatureResultIds=(commonFeatureResultIds!)/>
+</@section>
 
-    <#list assocProducts as productAssoc>
-      <@tr><@td>
-          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
-            ${productAssoc.productIdTo!}
-          </a>
-          - ${productAssoc.reason!}
-      </@td></@tr>
-      <#assign dummy = setRequestAttribute("optProductId", productAssoc.productIdTo)>
-      <#assign dummy = setRequestAttribute("listIndex", listIndex)>
-      <#assign dummy = setRequestAttribute("formNamePrefix", formNamePrefix)>
-      <#if targetRequestName?has_content>
-        <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)>
-      </#if>
-      <@tr>
-        <@td>
-          <@render resource=productsummaryScreen />
-        </@td>
-      </@tr>
-      <#local listIndex = listIndex + 1>
-
-    </#list>
-    <#assign dummy = setRequestAttribute("optProductId", "")>
-    <#assign dummy = setRequestAttribute("formNamePrefix", "")>
-    <#assign dummy = setRequestAttribute("targetRequestName", "")>
-  </#if>
-</#macro>
-<#assign productValue = product>
-<#assign listIndex = 1>
-<#assign dummy = setRequestAttribute("productValue", productValue)>
-
-<@table type="generic">
-  <#-- obsolete -->
-  <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
-  <#-- cross sell -->
-  <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
-  <#-- up sell -->
-  <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
-  <#-- obsolescence -->
-  <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
-</@table>
-
-<#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
-<#if commonFeatureResultIds?has_content>
-  <@heading>Similar Products That Might Interest You...</@heading>
-
-
-  <#list commonFeatureResultIds as commonFeatureResultId>
-    <div>
-      <#assign dummy = setRequestAttribute("optProductId", commonFeatureResultId)>
-      <#assign dummy = setRequestAttribute("listIndex", commonFeatureResultId_index)>
-      <#assign dummy = setRequestAttribute("formNamePrefix", "cfeatcssl")>
-      <#-- <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)> -->
-      <@render resource=productsummaryScreen />
-    </div>
-    <#if commonFeatureResultId_has_next>
-      <hr />
-    </#if>
-  </#list>
-</#if>
 </div>

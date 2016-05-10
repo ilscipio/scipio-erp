@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "catalogcommon.ftl">
+
 <#if miniProduct??>
     <#if solrProduct?has_content && solrProduct.mediumImage??>    
         <#assign smallImageUrl = solrProduct.mediumImage>

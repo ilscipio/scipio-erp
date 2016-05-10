@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#-- Cato: TODO: Convert -->
 <@section title=uiLabelMap.EcommerceMyAccount>
     <form id="newUserForm" method="post" action="<@ofbizUrl>createCustomerProfile</@ofbizUrl>">
       <fieldset class="left center">

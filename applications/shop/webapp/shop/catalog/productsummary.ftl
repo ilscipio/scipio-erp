@@ -1,3 +1,5 @@
+<#include "catalogcommon.ftl">
+
 <#if requestAttributes.solrProduct??>
     <#assign solrProduct = requestAttributes.solrProduct>
 </#if>
@@ -99,9 +101,9 @@
         <#if productDescription?has_content>
         <@pli type="description">
             ${productDescription!""}       
-         </@pli>
-         </#if>
-         <@pli type="price">
+        </@pli>
+        </#if>
+        <@pli type="price">
             ${productPrice!""}
         </@pli>
         <@pli type="button">

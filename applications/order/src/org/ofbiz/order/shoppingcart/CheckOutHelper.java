@@ -1561,8 +1561,14 @@ public class CheckOutHelper {
 
         // payment by billing account only requires more checking
         List<String> paymentMethods = cart.getPaymentMethodIds();
+        
+        // Cato: Patched: We want to consider the pay meths that have no paymentMethodIds!
+        // WARN: we are changing the definition of paymentMethods by doing this; some code may need to use paymentMethodsWithPaymentMethodId instead
+        List<String> paymentMethodsWithPaymentMethodId = cart.getPaymentMethodIds();
+        paymentMethods.addAll(cart.getPaymentMethodTypeIdsNoPaymentMethodIds()); // add offline, cod, etc, so they can auto calculate totals
+        
         List<String> paymentTypes = cart.getPaymentMethodTypeIds();
-        if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && paymentMethods.size() == 0) {
+        if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && (paymentMethods.size() == 0 || (paymentMethods.size() == 1 && paymentMethods.contains("EXT_BILLACT")))) { // Cato: length 1 check added
             if (cart.getGrandTotal().compareTo(availableAmount) > 0) {
                 errMsg = UtilProperties.getMessage(resource_error, "checkevents.insufficient_credit_available_on_account", (cart != null ? cart.getLocale() : Locale.getDefault()));
                 return ServiceUtil.returnError(errMsg);

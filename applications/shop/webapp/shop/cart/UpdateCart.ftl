@@ -88,13 +88,11 @@ under the License.
           <@td>&nbsp;</@td>
         </@tr>
         <#-- tax adjustments -->
-        <#if (shoppingCart.getDisplayTaxIncluded() > 0.0)>
           <@tr valign="top">
             <@td id="salesTax" scope="row" colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
             <@td nowrap="nowrap" class="${styles.text_right!}" headers="salesTax" id="completedCartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
             <@td>&nbsp;</@td>
           </@tr>
-        </#if>
         
         <@tr>
             <@td colspan="5"></@td>
@@ -170,7 +168,7 @@ under the License.
                             ${cartLine.getQuantity()?string.number}
                         <#else><#-- Is Promo or Shoppinglist -->
                                 <input type="hidden" name="cartLineProductId" id="cartLineProductId_${cartLine_index}" value="${cartLine.getProductId()}" /> 
-                                <@field type="select" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" required=true class="+validate-number">
+                                <@field type="select" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" class="+validate-number">
                                     <#list 1..99 as x>
                                         <#if cartLine.getQuantity()==x>
                                             <#assign selected = true/>
@@ -235,13 +233,11 @@ under the License.
             </@tr>
 
             <#-- tax adjustments -->
-            <#if (shoppingCart.getDisplayTaxIncluded() > 0.0)>
               <@tr valign="top">
                 <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
                 <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
                 <@td>&nbsp;</@td>
               </@tr>
-            </#if>
             
             <#-- grand total -->
             <@tr valign="top">

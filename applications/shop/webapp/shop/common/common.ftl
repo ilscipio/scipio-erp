@@ -13,7 +13,7 @@
   <#if address.countryGeoId?has_content><br /><#rt>
     <#if verbose>${(delegator.findOne("Geo", {"geoId", address.countryGeoId}, true).get("geoName", locale))!address.countryGeoId}<#else>${address.countryGeoId}</#if></#if><#lt>
   <#if updateLink?has_content>
-    <br/><br/><a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+    <br/><br/><a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.link_nav_inline!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
   </#if>
 </#macro>
 

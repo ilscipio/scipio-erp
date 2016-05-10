@@ -1876,6 +1876,17 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
         return pmt;
     }
+    
+    /** Cato: Returns the Payment Method Ids that have no paymentMethodIds */
+    public List<String> getPaymentMethodTypeIdsNoPaymentMethodIds() {
+        List<String> pmt = FastList.newInstance();
+        for (CartPaymentInfo inf : paymentInfo) {
+            if (inf.paymentMethodId == null && inf.paymentMethodTypeId != null) {
+                pmt.add(inf.paymentMethodTypeId);
+            }
+        }
+        return pmt;
+    }
 
     /** Returns a list of PaymentMethod value objects selected in the cart */
     public List<GenericValue> getPaymentMethods() {

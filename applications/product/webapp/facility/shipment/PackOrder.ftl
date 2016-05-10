@@ -140,7 +140,9 @@ under the License.
                         <#if carrier != "_NA_">
                             <font color="${color}">${carrier}</font>&nbsp;
                         </#if>
-                        <#assign description = (delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":orderItemShipGroup.shipmentMethodTypeId}, false)).description>
+                        <#if orderItemShipGroup.shipmentMethodTypeId?has_content>
+                            <#assign description = (delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":orderItemShipGroup.shipmentMethodTypeId}, false)).description>
+                        </#if>
                         ${description!"??"}<br/>
                         ${uiLabelMap.ProductEstimatedShipCostForShipGroup}<br />
                         <#if shipmentCostEstimateForShipGroup?exists>

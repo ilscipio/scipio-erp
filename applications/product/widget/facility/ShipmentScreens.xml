@@ -192,10 +192,12 @@ under the License.
     <screen name="EditShipment">
         <section>
             <actions>
-                <set field="titleProperty" value="ProductEditShipment"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>                
                 <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="EditShipment"/>
+                <set field="shipmentId" from-field="parameters.shipmentId"/>
                 <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+                <set field="title" value="${uiLabelMap.FacilityShipment} ${shipmentId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipment.groovy"/>
             </actions>
             <widgets>
@@ -213,10 +215,10 @@ under the License.
     <screen name="EditShipmentItems">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditShipmentItems"/>
-                <set field="activeMainMenuItem" value="shipment"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditShipmentItems"/>
-
+                <set field="shipmentId" from-field="parameters.shipmentId"/>
+                <set field="title" value="${uiLabelMap.FacilityShipmentItems} ${shipmentId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentItems.groovy"/>
             </actions>
             <widgets>
@@ -233,10 +235,9 @@ under the License.
     <screen name="EditShipmentPlan">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditShipmentPlan"/>
-                <set field="activeMainMenuItem" value="shipment"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditShipmentPlan"/>
-
+                <set field="title" value="${uiLabelMap.PageTitleEditShipmentPlan} ${shipmentId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentPlan.groovy"/>
             </actions>
             <widgets>
@@ -322,7 +323,7 @@ under the License.
                 <set field="shipmentId" from-field="parameters.shipmentId" />        
                 <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="AddItemsFromOrder"/>        
-                <set field="title" value="${uiLabelMap.PageTitleAddItemsFromOrder} ${shipmentId}"/>
+                <set field="title" value="${uiLabelMap.ProductAddItemsShipment} ${shipmentId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/AddItemsFromOrder.groovy"/>
             </actions>
             <widgets>

@@ -40,9 +40,7 @@ if (orderHeader) {
     }
 } 
 facilityList = delegator.findByAnd("Facility", null, null, false);
-
 context.facilityList = facilityList;
-Debug.log("facilityList =========> " + facilityList);
 
 // the kind of StatusItem to use is based on the type of order
 statusItemTypeId = "SHIPMENT_STATUS";
@@ -67,7 +65,7 @@ if (shipment) {
     originTelecomNumber = shipment.getRelatedOne("OriginTelecomNumber", false);
     destinationTelecomNumber = shipment.getRelatedOne("DestinationTelecomNumber", false);
     
-    statusList = from("StatusValidChangeToDetail").where(["statusId" : shipment.statusId]).queryList();
+    
 
     context.currentStatus = currentStatus;
     context.originPostalAddress = originPostalAddress;
@@ -75,7 +73,4 @@ if (shipment) {
     context.originTelecomNumber = originTelecomNumber;
     context.destinationTelecomNumber = destinationTelecomNumber;
 
-} else {
-    statusList = from("StatusItem").where(["statusTypeId" : statusItemTypeId]).queryList();
 }
-context.statusList = statusList;

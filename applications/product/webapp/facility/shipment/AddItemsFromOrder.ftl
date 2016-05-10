@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
+<#--
 <@section>
     <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -25,12 +26,12 @@ under the License.
         <@field type="submit" text=uiLabelMap.CommonSelect class="${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>
-
-<@section title="${uiLabelMap.ProductAddItemsShipment}: [${shipmentId!}]; ${uiLabelMap.ProductFromAnOrder}: [${orderId!}], ${uiLabelMap.ProductOrderShipGroupId}: [${shipGroupSeqId!}]">
+-->
+<@section>
     <#if orderId?has_content && !orderHeader??>
         <@commonMsg type="error"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</@commonMsg>
     </#if>
-    <#if orderHeader??>
+    <#-- <#if orderHeader??>
         <#if orderHeader.orderTypeId == "SALES_ORDER" && (shipment.shipmentTypeId!) != "SALES_SHIPMENT">
             <@heading class="+${styles.text_color_alert!}">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotSalesShipment}.</@heading>
         <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && (shipment.shipmentTypeId!) != "PURCHASE_SHIPMENT" && (shipment.shipmentTypeId!) != "DROP_SHIPMENT">
@@ -51,7 +52,7 @@ under the License.
         <#else>
             <@heading class="+${styles.text_color_alert!}">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</@heading>
         </#if>
-    </#if>
+    </#if> -->
 
     <#if orderItemDatas??>
         <#assign rowCount = 0>
@@ -104,37 +105,22 @@ under the License.
                         </#if>
                     </@td>
                     <@td>
-                            <#if isSalesOrder>
-                                <#if (totalQuantityIssuedAndReserved != orderItemAndShipGroupAssoc.quantity)>
-                                <span class="${styles.text_color_alert!}">
-                                <#else>
-                                <span>
-                                </#if>
-                                    [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
-                                    <b>
-                                        <#if (totalQuantityIssuedAndReserved > orderItemAndShipGroupAssoc.quantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItemAndShipGroupAssoc.quantity)>&lt;<#else>=</#if></#if>
-                                        ${orderItemAndShipGroupAssoc.quantity}
-                                    </b>
-                                </span>
-                            <#else>
-                                <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.quantity)>
-                                <span class="${styles.text_color_alert!}">
-                                <#else>
-                                <span>
-                                </#if>
-                                    ${totalQuantityIssued}
-                                    <b>
-                                        <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.quantity)>&gt;<#else><#if (totalQuantityIssued < orderItemAndShipGroupAssoc.quantity)>&lt;<#else>=</#if></#if>
-                                        ${orderItemAndShipGroupAssoc.quantity}
-                                    </b>
-                                </span>
-                            </#if>
+                        <#if isSalesOrder>
+                            [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
+                            <strong>
+                                <#if (totalQuantityIssuedAndReserved > orderItemAndShipGroupAssoc.quantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItemAndShipGroupAssoc.quantity)>&lt;<#else>=</#if></#if>
+                                ${orderItemAndShipGroupAssoc.quantity}
+                            </strong>
+                        <#else>
+                            ${totalQuantityIssued}
+                            <strong>
+                                <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.quantity)>&gt;<#else><#if (totalQuantityIssued < orderItemAndShipGroupAssoc.quantity)>&lt;<#else>=</#if></#if>
+                                ${orderItemAndShipGroupAssoc.quantity}
+                            </strong>
+                        </#if>
                     </@td>
                     <#if isSalesOrder>
-                        <@td>&nbsp;</@td>
-                        <@td>&nbsp;</@td>
-                        <@td>&nbsp;</@td>
-                        <@td>&nbsp;</@td>
+                        <@td colspan=4>&nbsp;</@td>                        
                     <#else>
                         <#assign quantityNotIssued = orderItemAndShipGroupAssoc.quantity - totalQuantityIssued>
                         <#if (quantityNotIssued > 0)>
@@ -145,7 +131,7 @@ under the License.
                                 <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemAndShipGroupAssoc.orderItemSeqId}"/>
                                 <input type="text" size="5" name="quantity_o_${rowCount}" value="${quantityNotIssued}"/>
                             </@td>
-                            <@td align="right">
+                            <@td>
                               <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
                             </@td>
                             <#assign rowCount = rowCount + 1>
@@ -168,12 +154,12 @@ under the License.
                             <@td>&nbsp;</@td>
                             <@td>&nbsp;</@td>
                             <@td>
-                                    ${orderItemShipGrpInvRes.inventoryItemId}
-                                    <#if inventoryItem.facilityId?has_content>
-                                        <span<#if originFacility?? && originFacility.facilityId != inventoryItem.facilityId> class="${styles.text_color_alert!}"</#if>>[${(inventoryItemFacility.facilityName)!inventoryItem.facilityId}]</span>
-                                    <#else>
-                                        <span class="${styles.text_color_alert!}">[${uiLabelMap.ProductNoFacility}]</span>
-                                    </#if>
+                                ${orderItemShipGrpInvRes.inventoryItemId}
+                                <#if inventoryItem.facilityId?has_content>
+                                    <span<#if originFacility?? && originFacility.facilityId != inventoryItem.facilityId> class="${styles.text_color_alert!}"</#if>>[${(inventoryItemFacility.facilityName)!inventoryItem.facilityId}]</span>
+                                <#else>
+                                    <span class="${styles.text_color_alert!}">[${uiLabelMap.ProductNoFacility}]</span>
+                                </#if>
                             </@td>
                             <@td>&nbsp;</@td>
                             <@td>${orderItemShipGrpInvRes.quantity}</@td>
@@ -187,7 +173,7 @@ under the License.
                                     <input type="hidden" name="inventoryItemId_o_${rowCount}" value="${orderItemShipGrpInvRes.inventoryItemId}"/>
                                     <input type="text" size="5" name="quantity_o_${rowCount}" value="${(orderItemShipGrpInvResData.shipmentPlanQuantity)!availableQuantity}"/>
                                 </@td>
-                                <@td align="right">
+                                <@td>
                                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
                                 </@td>
                                 <#assign rowCount = rowCount + 1>

@@ -183,29 +183,37 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ShipmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="EditShipment" selected-menuitem-context-field-name="subTabButtonItem">
-        <!-- <menu-item name="ViewShipment" title="${uiLabelMap.CommonView}">
-            <link target="ViewShipment">
-                <parameter param-name="shipmentId"/>
+    <menu name="ShipmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="facility" title="${uiLabelMap.ProductFacilities}">
+            <condition><if-empty field="shipment" /></condition>
+            <link target="FindFacility">
+                <parameter param-name="noConditionFind" value="Y"/>
             </link>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="EditShipment" title="${uiLabelMap.FacilityShipment}" sort-mode="off">
             <link target="EditShipment">
                 <parameter param-name="shipmentId"/>
             </link>
         </menu-item>
         <menu-item name="AddItemsFromInventory" title="${uiLabelMap.ProductOrderItems}">
-            <condition>
-                <and>
-                    <not><if-empty field="shipment"/></not>
-                    <or>
-                        <if-compare operator="equals" field="shipment.shipmentTypeId" value="PURCHASE_RETURN" />
-                        <if-compare operator="equals" field="shipment.shipmentTypeId" value="SALES_SHIPMENT" />
-                    </or>
+            <condition>          
+                <and>      
+                    <not><if-empty field="shipment"/></not>                
+                    <if-compare operator="equals" field="shipment.shipmentTypeId" value="PURCHASE_RETURN" />
                 </and>
             </condition>
             <link target="AddItemsFromInventory">
+                <parameter param-name="shipmentId"/>
+            </link>
+        </menu-item>
+        <menu-item name="AddItemsFromOrder" title="${uiLabelMap.ProductOrderItems}">
+            <condition>
+                <and>
+                    <not><if-empty field="shipment"/></not>
+                    <if-compare operator="equals" field="shipment.shipmentTypeId" value="SALES_SHIPMENT" />
+                </and>
+            </condition>
+            <link target="AddItemsFromOrder">
                 <parameter param-name="shipmentId"/>
             </link>
         </menu-item>

@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if shipment??>
-    <@section title=uiLabelMap.PageTitleEditShipmentItems>
+    <@section>
         <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
             <@tr class="header-row">

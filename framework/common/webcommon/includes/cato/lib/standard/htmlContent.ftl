@@ -1401,7 +1401,7 @@ Creates a slider wrapper.
   * Related *
     @slide
 -->
-<#assign chart_defaultArgs = {
+<#assign slider_defaultArgs = {
   "title":"", "library":"","id":"","class":"","controls":true,"indicator":true, "jsOptions":"","passArgs":{}
 }>
 <#macro slider args={} inlineArgs...>
@@ -1414,7 +1414,7 @@ Creates a slider wrapper.
   <#local dummy = setRequestVar("catoSliderIdNum", sliderIdNum)>
   <#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>
     
-  <@slider_markup sliderId=id!sliderId sliderIdNum=sliderIdNum class=class title=title library=library controls=controls indicator=indicator
+  <@slider_markup sliderId=(id!sliderId) sliderIdNum=sliderIdNum class=class title=title library=library controls=controls indicator=indicator
         jsOptions=jsOptions origArgs=origArgs passArgs=passArgs><#nested></@slider_markup>
 </#macro>
 
@@ -1422,7 +1422,7 @@ Creates a slider wrapper.
 <#macro slider_markup title="" sliderId="" sliderIdNum=0 class="" library="" controls=true indicator=true 
         jsOptions="" origArgs={} passArgs={} catchArgs...>
     <#if !sliderId?has_content><#local sliderId = "cato_slider_${sliderIdNum}"/></#if>
-    <#if title?has_content><@heading>${title!}</@heading></#if>
+    <#if title?has_content><@heading>${title}</@heading></#if>
     <#switch library>
         <#case "owl">    
             <div class="owl-carousel" class="${class}" id="${sliderId}">
@@ -1430,7 +1430,7 @@ Creates a slider wrapper.
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
-                  $("#${sliderId!""}").owlCarousel({${jsOptions}});
+                  $("#${sliderId}").owlCarousel({${jsOptions}});
                 });
             </script>
           <#break>
@@ -1449,7 +1449,7 @@ Creates a slider wrapper.
                 <#t>navigation_arrows:${controls?string("true","false")!"true"}; bullets:${indicator?string("true","false")!"true"};slide_number:false;
             </#local>
             
-            <div class="${class!""} ${styles.slider_container!""}" data-orbit id="${sliderId!""}" <#if dataOptions?has_content>data-options="${dataOptions!""}"</#if>>
+            <div class="${class} ${styles.slider_container!""}" data-orbit id="${sliderId}"<#if dataOptions?has_content> data-options="${dataOptions}"</#if>>
               <#nested/>
             </div>
     </#switch>
@@ -1511,28 +1511,28 @@ Slider data entry - a single slide.
     <#local dummy = setRequestVar("catoSlideIdNum", slideIdNum)>
     <#local slideId = "slide_${renderSeqNumber!}_${slideIdNum!}"/>
     <#if library=="owl" || library=="slick">
-        <div id="${slideId!}" class="item">
+        <div id="${slideId}" class="item">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
             <div>
             <#if title?has_content><h2>${title!}</h2></#if>
             <#if image?has_content>
-            <img src="${image!}"/>
+            <img src="${image}"/>
             </#if>
-                  <#local nestedContent><#nested></#local>
-                  <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
+              <#local nestedContent><#nested></#local>
+              <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
             </div>
             <#if link?has_content></a></#if>
         </div>
     <#else>
-        <div data-orbit-slide="${slideId!}" class="${styles.slide_container!}">
+        <div data-orbit-slide="${slideId}" class="${styles.slide_container!}">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
             <div>
-            <#if title?has_content><h2>${title!}</h2></#if>
-            <#if image?has_content>
-            <img src="${image!}"/>
-            </#if>
-                  <#local nestedContent><#nested></#local>
-                  <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
+            <#if title?has_content><h2>${title}</h2></#if>
+              <#if image?has_content>
+                <img src="${image}"/>
+              </#if>
+              <#local nestedContent><#nested></#local>
+              <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
             </div>
             <#if link?has_content></a></#if>
         </div>

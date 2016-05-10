@@ -1,3 +1,10 @@
+
+<#-- Cato: TODO: show some cases only if debug mode is on -->
+<#if debugMode>
+<p>Debug mode: ON</p>
+</#if>
+
+
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
@@ -627,6 +634,98 @@
       <@field type="checkbox" name="checkbox5" label="Checkbox 5" value="Y" currentValue="N" tooltip="this is checkbox option 5"/>
       <@field type="checkbox" name="checkbox6" label="Checkbox 6" value="Y" defaultValue="Y" />
       <@field type="checkbox" name="checkbox7" label="Checkbox 7" value="Y" defaultValue="N" />
+
+      <@field type="generic" label="Radios in generic field">
+        <@fields inlineItems=false>
+        <@field type="radio" name="radio22" label="Radio 22" value="TEST1" />
+        <@field type="radio" name="radio22" label="Radio 23" value="TEST2" />
+        <#assign veryLongLabel>
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+        </#assign>
+        <@field type="radio" name="radio22" label=veryLongLabel value="TEST3" />
+        <@field type="radio" name="radio22" label="Radio 24" value="TEST4" />
+        </@fields>
+      </@field>
+  
+      <@field type="generic" label="Checkboxes (default markup, one per line) in generic field">
+        <@fields inlineItems=false>
+        <@field type="checkbox" name="checkbox22" label="Checkbox 22" value="TEST1" />
+        <@field type="checkbox" name="checkbox23" label="Checkbox 23" value="TEST2" />
+        <#assign veryLongLabel>
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+        </#assign>
+        <@field type="checkbox" name="checkbox24" label=veryLongLabel value="TEST3" />
+        <@field type="checkbox" name="checkbox24" label="Checkbox 24" value="TEST4" />
+        </@fields>
+      </@field>
+      
+      <@field type="generic" label="Checkboxes (simple-standard - forced, one per line) in generic field">
+        <@fields inlineItems=false checkboxType="simple-standard">
+        <@field type="checkbox" name="checkbox32" label="Checkbox 32" value="TEST1" />
+        <@field type="checkbox" name="checkbox33" label="Checkbox 33" value="TEST2" />
+        <#assign veryLongLabel>
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+        </#assign>
+        <@field type="checkbox" name="checkbox34" label=veryLongLabel value="TEST3" />
+        <@field type="checkbox" name="checkbox34" label="Checkbox 34" value="TEST4" />
+        </@fields>
+      </@field>
+
+      <@field type="generic" label="Checkboxes (simple - forced, one per line) in generic field">
+        <@fields inlineItems=false checkboxType="simple">
+        <@field type="checkbox" name="checkbox52" label="Checkbox 52" value="TEST1" />
+        <@field type="checkbox" name="checkbox53" label="Checkbox 53" value="TEST2" />
+        <#assign veryLongLabel>
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+            This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
+        </#assign>
+        <@field type="checkbox" name="checkbox54" label=veryLongLabel value="TEST3" />
+        <@field type="checkbox" name="checkbox54" label="Checkbox 54" value="TEST4" />
+        </@fields>
+      </@field>
 
       <@field type="textarea" name="textarea1" label="Textarea 1" />
       <@field type="textarea" name="textarea2" label="Textarea 2 (readonly)" readonly=true text="test"/>

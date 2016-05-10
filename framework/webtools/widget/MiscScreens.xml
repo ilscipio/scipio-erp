@@ -50,6 +50,8 @@ under the License.
         -->
         <section>
             <actions>
+                <set field="debugMode" from-field="parameters.debugMode" type="Boolean" default-value="false" />
+            
                 <set field="testtest" value="test ' asdf ' &gt; asdf &lt; asdfasdf" />
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsLayoutDemo"/>

@@ -402,6 +402,20 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
+        <menu-item name="LayoutDemoDebug" title="Layout Demo (Debug)">
+            <condition>
+                <if-compare field="debugMode" operator="not-equals" value="true" />
+            </condition>
+            <link target="${demoTargetUrl}">
+                <parameter param-name="debugMode" value="true"/>
+            </link>
+        </menu-item>
+        <menu-item name="LayoutDemo" title="Layout Demo (Reg)">
+            <condition>
+                <if-compare field="debugMode" operator="equals" value="true" />
+            </condition>
+            <link target="${demoTargetUrl}"/>
+        </menu-item>
     </menu>
     
     <!-- Cato: DemoDataGenerator sidebar menu -->

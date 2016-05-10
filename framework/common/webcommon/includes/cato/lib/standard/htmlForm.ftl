@@ -924,6 +924,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     widgetPostfixCombined   = ((boolean), default: -markup decision, usually true-) Overridable setting to force or prevent widget and postfix having their own sub-container
                               It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
                               the default is usually true unless prevented by other settings.
+    labelSmallDiffColumns   = ((int), fallback default: 1) Difference between large and small columns of the label area (added to label area columns for "small" container)
+                              By default, this setting is set to 1 so that on small screens the label area gets a slightly larger size.
+                              Sometimes it is needed to set this to zero for custom markup.
     class                   = ((css-class)) CSS classes for the field element (NOT the cell container!)
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -985,8 +988,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               Theme should act on this style to prevent taking up all the width.
                               In addition, this will force {{{labelArea}}} false and any label specified will use the inlined label (area).
     norows                  = ((boolean), default: false) If true, render without the rows-container
+                              NOTE: This is a low-level control for advanced markup cases and global style presets (@fields).
     nocells                 = ((boolean), default: false) If true, render without the cells-container
+                              NOTE: This is a low-level control for advanced markup cases and global style presets (@fields).
     container               = ((boolean), default: true) If false, sets norows=true and nocells=true
+                              NOTE: This is a low-level control for advanced markup cases and global style presets (@fields).
+                                  In most cases you should use {{{widgetOnly}}} parameter in templates if you want to omit container.
     ignoreParentField       = ((boolean), default: false) If true causes a child field to act as if it had no parent field. Rarely needed
     required                = ((boolean), default: false) Marks a required input
     requiredClass           = ((css-class)) CSS classes, default required class name
@@ -1215,7 +1222,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
-  "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
+  "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "labelSmallDiffColumns":"",
   "tooltip":"", "totalColumns":"", "widgetPostfixColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "widgetOnly":"", "containerId":"", "containerClass":"", "containerStyle":"",
   "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixColumns":"", "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
   "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "labelAreaConsume":"", "inlineLabelArea":"", "inlineLabel":false,
@@ -1589,7 +1596,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     preWidgetContent=preWidgetContent postWidgetContent=postWidgetContent preLabelContent=preLabelContent postLabelContent=postLabelContent prePostfixContent=prePostfixContent postPostfixContent=postPostfixContent
     labelAreaContentArgs=labelAreaContentArgs postfixContentArgs=postfixContentArgs prePostContentArgs=prePostContentArgs
     widgetAreaClass=widgetAreaClass labelAreaClass=labelAreaClass postfixAreaClass=postfixAreaClass widgetPostfixAreaClass=widgetPostfixAreaClass
-    inverted=inverted origArgs=origArgs passArgs=passArgs>
+    inverted=inverted labelSmallDiffColumns=labelSmallDiffColumns origArgs=origArgs passArgs=passArgs>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1930,7 +1937,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" containerStyle=""
     preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
     labelAreaContentArgs={} postfixContentArgs={} prePostContentArgs={}
-    widgetAreaClass="" labelAreaClass="" postfixAreaClass="" widgetPostfixAreaClass="" inverted=false
+    widgetAreaClass="" labelAreaClass="" postfixAreaClass="" widgetPostfixAreaClass="" inverted=false labelSmallDiffColumns=""
     origArgs={} passArgs={} catchArgs...>
   <#local rowClass = containerClass>
 
@@ -1954,7 +1961,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local defaultGridStyles = getDefaultFieldGridStyles({"totalColumns":totalColumns, "widgetPostfixColumns":widgetPostfixColumns, 
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":labelArea, 
     "labelInRow":labelInRow, "postfix":postfix, "postfixColumns":postfixColumns,
-    "fieldsType":fieldsType })>
+    "fieldsType":fieldsType, "labelSmallDiffColumns":labelSmallDiffColumns})>
   <#-- NOTE: For inverted, we don't swap the defaultGridStyles grid classes, only the user-supplied and identifying ones -->
 
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
@@ -2127,7 +2134,7 @@ NOTE: This is used both internally by @field and in some cases is also needed in
 -->
 <#assign getDefaultFieldGridStyles_defaultArgs = {
   "totalColumns":"", "widgetPostfixColumns":"", "labelArea":true, "labelInRow":true,
-  "postfix":false, "postfixColumns":"", "isLargeParent":"", "labelSmallColDiff":"",
+  "postfix":false, "postfixColumns":"", "isLargeParent":"", "labelSmallDiffColumns":"",
   "widgetPostfixCombined":false, "fieldsType":""
 }>
 <#function getDefaultFieldGridStyles args={} catchArgs...>
@@ -2146,8 +2153,8 @@ NOTE: This is used both internally by @field and in some cases is also needed in
   <#if !postfixColumns?has_content>
     <#local postfixColumns = styles["fields_" + fieldsType + "_postfixsize"]!styles["fields_default_postfixsize"]!1>
   </#if>
-  <#if !labelSmallColDiff?has_content>
-    <#local labelSmallColDiff = styles["fields_" + fieldsType + "_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
+  <#if !labelSmallDiffColumns?has_content>
+    <#local labelSmallDiffColumns = styles["fields_" + fieldsType + "_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
   </#if>
   <#-- NOTE: It's better to set the diff in styles (probably?) -->
   <#if !widgetPostfixColumns?has_content>
@@ -2191,9 +2198,9 @@ NOTE: This is used both internally by @field and in some cases is also needed in
     <#local columnslabelarea = totalColumns>
   </#if>
 
-  <#local labelAreaClass><#if labelArea>${styles.grid_small!}<#if labelInRow>${columnslabelarea + labelSmallColDiff}<#else>${columnslabelarea}</#if><#if isLargeParent> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
-  <#local widgetPostfixAreaClass><#if labelArea && labelInRow>${styles.grid_small!}${widgetPostfixColumns - labelSmallColDiff}<#else>${styles.grid_small!}${widgetPostfixColumns}</#if><#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
-  <#local widgetAreaClass><#if labelArea && labelInRow && !widgetPostfixCombined>${styles.grid_small!}${columnswidget - labelSmallColDiff}<#else>${styles.grid_small!}${columnswidget}</#if><#if isLargeParent> ${styles.grid_large!}${columnswidget}</#if></#local>
+  <#local labelAreaClass><#if labelArea>${styles.grid_small!}<#if labelInRow>${columnslabelarea + labelSmallDiffColumns}<#else>${columnslabelarea}</#if><#if isLargeParent> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
+  <#local widgetPostfixAreaClass><#if labelArea && labelInRow>${styles.grid_small!}${widgetPostfixColumns - labelSmallDiffColumns}<#else>${styles.grid_small!}${widgetPostfixColumns}</#if><#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
+  <#local widgetAreaClass><#if labelArea && labelInRow && !widgetPostfixCombined>${styles.grid_small!}${columnswidget - labelSmallDiffColumns}<#else>${styles.grid_small!}${columnswidget}</#if><#if isLargeParent> ${styles.grid_large!}${columnswidget}</#if></#local>
   <#local postfixAreaClass><#if postfix>${styles.grid_small!}${columnspostfix}<#if isLargeParent> ${styles.grid_large!}${columnspostfix}</#if></#if></#local>
   
   <#-- This is last if in separate row -->

@@ -490,7 +490,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if widgetPostfixColumns?is_boolean>
     <#local widgetPostfixColumns = "">
   </#if>
-  <#local labelSmallColDiff = styles["fields_formwidget_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
+  <#local labelSmallDiffColumns = styles["fields_formwidget_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
   <#if !widgetPostfixColumns?has_content>
     <#local widgetPostfixColumns = totalColumns - widgetPostfixColumnsDiff>
   </#if>
@@ -501,7 +501,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if !isActionField>
       <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
       <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}")>
-      <#local titleAreaClassDefault>${styles.grid_small!}${titleAreaColumns + labelSmallColDiff}<#if isLargeParent> ${styles.grid_large!}${titleAreaColumns}</#if></#local>
+      <#local titleAreaClassDefault>${styles.grid_small!}${titleAreaColumns + labelSmallDiffColumns}<#if isLargeParent> ${styles.grid_large!}${titleAreaColumns}</#if></#local>
       <#-- NOTE: using explicit version for compatibility! -->
       <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
         <#-- TODO: currently not making use of:
@@ -520,7 +520,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local innerClass = addClassArg(innerClass, "${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <#local innerClassDefault>${styles.grid_small!}${widgetPostfixColumns - labelSmallColDiff}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
+      <#local innerClassDefault>${styles.grid_small!}${widgetPostfixColumns - labelSmallDiffColumns}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
   <#else>
       <#-- Cato: NOTE: This must be 12 hardcoded, NOT totalColumns -->
       <#local innerClassDefault>${styles.grid_small!}12<#if isLargeParent> ${styles.grid_large!}12</#if></#local>

@@ -324,7 +324,7 @@ function setAlternateGwp(field) {
                         <strong>${uiLabelMap.CommonTotal}</strong>
                     </@td>
                     <@td nowrap="nowrap" class="${styles.text_right!}">
-                        <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
+                        <strong><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/></strong>
                     </@td>
                     <@td>&nbsp;</@td>
                 </@tr>

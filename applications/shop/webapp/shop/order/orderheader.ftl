@@ -330,8 +330,9 @@ under the License.
 
                                 </@td>
                             </@tr>
-                                  
-                            
+                              
+                          <#-- Cato: Make no sense if no shipping! -->    
+                          <#if (shipmentMethodType.shipmentMethodTypeId)?has_content && shipmentMethodType.shipmentMethodTypeId != "NO_SHIPPING">
                             <#-- tracking number -->
                             <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
                                 <@tr>
@@ -383,6 +384,7 @@ under the License.
                                     </@td>
                                 </@tr>
                               </#if>
+                          </#if>
 
                               <#-- gift settings -->
                               <#if orderHeader?has_content>

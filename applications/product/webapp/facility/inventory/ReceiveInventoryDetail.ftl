@@ -28,7 +28,7 @@
                         <input type="hidden" name="purchaseOrderId" value="${(item.orderId)!}"/>
                         <input type="hidden" name="facilityId" value="${facilityId!}"/>
                         <@tr>
-                            <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.link_nav_info_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
+                            <@td><a href="<@ofbizUrl>EditShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.link_nav_info_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
                             <@td>${item.receiptId}</@td>
                             <@td>${item.getString("datetimeReceived").toString()}</@td>
                             <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${item.orderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a></@td>

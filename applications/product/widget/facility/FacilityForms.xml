@@ -269,7 +269,7 @@ under the License.
         </field>
         <field name="orderItemSeqId" position="2"><display/></field>
         <field name="shipmentId" widget-style="${styles.link_nav_info_id}" position="2">
-            <hyperlink target="ViewShipment" description="${shipmentId}" >
+            <hyperlink target="EditShipment" description="${shipmentId}" >
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
@@ -325,7 +325,7 @@ under the License.
         </field>
         <field name="orderItemSeqId" position="2"><display/></field>
         <field name="shipmentId" widget-style="${styles.link_nav_info_id}" position="2">
-            <hyperlink target="ViewShipment" description="${shipmentId}" >
+            <hyperlink target="EditShipment" description="${shipmentId}" >
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
@@ -377,7 +377,7 @@ under the License.
         </field>
         <field name="orderItemSeqId"><display/></field>
         <field name="shipmentId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="ViewShipment" description="${shipmentId}" >
+            <hyperlink target="EditShipment" description="${shipmentId}" >
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
@@ -483,7 +483,7 @@ under the License.
     <form name="SchedulingList" type="multi" use-row-submit="true" list-name="shipmentRouteSegments" title="${uiLabelMap.PageTitlePackageShipmentScheduling}" target="BatchScheduleShipmentRouteSegments?facilityId=${facilityId}"
         odd-row-style="alternate-row" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="ViewShipment" description="${shipmentId}">
+            <hyperlink target="EditShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
@@ -525,7 +525,7 @@ under the License.
     <form name="Labels" type="multi" use-row-submit="true" list-name="shipmentPackageRouteSegments" title="" target="BatchPrintShippingLabels" separate-columns="true"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="ViewShipment" description="${shipmentId}">
+            <hyperlink target="EditShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>

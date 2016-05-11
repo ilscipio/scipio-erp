@@ -808,7 +808,7 @@ under the License.
     <form name="listShipmentPlans" type="list" target="" title="" list-name="shipmentPlans"
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="shipmentId" widget-style="${styles.link_nav_info_id}" sort-field="true">
-            <hyperlink target="/facility/control/ViewShipment" target-type="inter-app" description="${shipmentId}">
+            <hyperlink target="/facility/control/EditShipment" target-type="inter-app" description="${shipmentId}">
                 <parameter param-name="shipmentId" from-field="shipmentId"/>
             </hyperlink>
         </field>

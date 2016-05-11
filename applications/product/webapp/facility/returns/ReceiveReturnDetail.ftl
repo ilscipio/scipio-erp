@@ -72,7 +72,7 @@ under the License.
                                 <@td>
                                     <@heading>
                                         ${uiLabelMap.ProductReceiveReturn} <a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">#${returnHeader.returnId}</a>
-                                        <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${parameters.shipmentId}</a></#if>
+                                        <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>EditShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${parameters.shipmentId}</a></#if>
                                     </@heading>
                                 </@td>
                                 <@td align="right">

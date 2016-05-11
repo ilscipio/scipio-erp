@@ -99,7 +99,7 @@ under the License.
             <@row>
                 <@cell>
                     <#list shipments as shipment>
-                        ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                        ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
                     </#list>
                 </@cell>
             </@row>

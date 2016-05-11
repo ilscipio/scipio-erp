@@ -552,7 +552,7 @@ under the License.
                             <#list orderShipments as orderShipment>
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
-                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
+                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
                                     </@td>
                                     <@td align="center">
                                         ${orderShipment.quantity?string.number}&nbsp;
@@ -569,7 +569,7 @@ under the License.
                                 <@td colspan="2">
                                     <#if itemIssuance.shipmentId?has_content>
                                         ${uiLabelMap.OrderIssuedToShipmentItem}&nbsp;
-                                        <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
+                                        <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${itemIssuance.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
                                     <#else>
                                         ${uiLabelMap.OrderIssuedWithoutShipment}
                                     </#if>
@@ -612,7 +612,7 @@ under the License.
                                     <@td colspan="2">
                                         <#if shipmentReceipt.shipmentId?has_content>
                                             ${uiLabelMap.OrderShipmentReceived}&nbsp;
-                                            <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${shipmentReceipt.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
+                                            <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${shipmentReceipt.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
                                         </#if>
                                         &nbsp;<#if shipmentReceipt.datetimeReceived?has_content><@formattedDateTime date=shipmentReceipt.datetimeReceived /></#if>&nbsp;
                                         ${uiLabelMap.CommonInventory}&nbsp;

@@ -133,7 +133,8 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="ViewShipment">
+    <!-- Cato: Deprecated in favor to EditShipment -->
+   <!--  <screen name="ViewShipment">
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
@@ -188,7 +189,7 @@ under the License.
                 </section>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
     <screen name="EditShipment">
         <section>
             <actions>
@@ -205,7 +206,7 @@ under the License.
                     <decorator-section name="body">
                          <!-- <include-form name="EditShipment" location="component://product/widget/facility/ShipmentForms.xml"/> -->
                          <platform-specific>
-                             <html><html-template location="component://product/webapp/facility/shipment/ViewShipment.ftl"/></html>
+                             <html><html-template location="component://product/webapp/facility/shipment/EditShipment.ftl"/></html>
                          </platform-specific>
                     </decorator-section>
                 </decorator-screen>

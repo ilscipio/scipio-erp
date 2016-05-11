@@ -92,7 +92,7 @@ under the License.
                       <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
                           <#if orderType == "SALES_ORDER">
                               <#list orderShipments as orderShipment>
-                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                               </#list>
                           <#elseif orderType == "PURCHASE_ORDER">
                               <#list orderShipments as orderShipment>

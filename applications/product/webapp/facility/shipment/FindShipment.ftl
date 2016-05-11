@@ -20,7 +20,7 @@ under the License.
 function lookupShipments() {
     shipmentIdValue = document.lookupShipmentForm.shipmentId.value;
     if (shipmentIdValue.length > 1) {
-        document.lookupShipmentForm.action = "<@ofbizUrl>ViewShipment</@ofbizUrl>";
+        document.lookupShipmentForm.action = "<@ofbizUrl>EditShipment</@ofbizUrl>";
     } else {
         document.lookupShipmentForm.action = "<@ofbizUrl>FindShipment</@ofbizUrl>";
     }

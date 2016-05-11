@@ -319,8 +319,9 @@ under the License.
         </field>
     </form>
     
-    <form name="ViewShipment" type="single" default-map-name="shipment"
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+    <!-- Cato: ViewShipment form moved to /cato-foundation/applications/product/widget/facility/ShipmentScreens.xml#ViewShipment (they have been merged actually) -->
+    <!-- <form name="ViewShipment" type="single" default-map-name="shipment"
+        header-row-style="header-row"> orig: default-table-style=-style="basic-table"
         <actions>
             <script location="component://product/webapp/facility/WEB-INF/actions/shipment/orgAddressFormatted.groovy"/>
             <script location="component://product/webapp/facility/WEB-INF/actions/shipment/destAddressFormatted.groovy"/>
@@ -395,5 +396,5 @@ under the License.
         <field name="lastModifiedByUserLogin" position="2">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
         </field>
-    </form>
+    </form> -->
 </forms>

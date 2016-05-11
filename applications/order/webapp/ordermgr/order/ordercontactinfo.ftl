@@ -118,7 +118,7 @@ under the License.
                     <#list shipGroupShipments as shipment>
                           <@row>
                             <@cell columns=6>
-                          ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                          ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
                                                           (<a target="_BLANK" href="<@ofbizInterWebappUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
                           </@cell>
                         </@row>

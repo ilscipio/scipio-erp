@@ -196,7 +196,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="shipmentId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="ViewShipment" description="${shipmentId}" >
+            <hyperlink target="EditShipment" description="${shipmentId}" >
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>

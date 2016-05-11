@@ -18,6 +18,15 @@ under the License.
 -->
 
 <#if shipment??>
+    <@section text=uiLabelMap.ProductNewItem>
+        <form action="<@ofbizUrl>createShipmentItem</@ofbizUrl>" method="post" name="createShipmentItemForm">
+            <input type="hidden" name="shipmentId" value="${shipmentId}"/>            
+            <@field type="lookup" label=uiLabelMap.ProductProductId formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>   
+            <@field type="input" label=uiLabelMap.CommonQty name="quantity" size="5" value="0"/>
+            <@field type="textarea" label=uiLabelMap.ProductProductDescription name="shipmentContentDescription" size="30" maxlength="255"/>   
+            <@field type="submit" submitType="link" href="javascript:document.createShipmentItemForm.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />            
+        </form>
+    </@section>
     <@section>
         <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
@@ -118,24 +127,6 @@ under the License.
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
         </#list>
-        <@tr>
-            <form action="<@ofbizUrl>createShipmentItem</@ofbizUrl>" method="post" name="createShipmentItemForm">
-                <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-                <@td>${uiLabelMap.ProductNewItem}</@td>
-                <@td colspan="2">
-                  <@field type="lookup" label=uiLabelMap.ProductProductId formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                </@td>
-                <@td>
-                  <@field type="input" label=uiLabelMap.CommonQty name="quantity" size="5" value="0"/>
-                </@td>
-                <@td colspan="2">
-                  <@field label=uiLabelMap.ProductProductDescription name="shipmentContentDescription" size="30" maxlength="255"/>
-                </@td>
-                <@td>
-                  <@field type="submit" submitType="link" href="javascript:document.createShipmentItemForm.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
-                </@td>
-            </form>
-        </@tr>
       </@table>
   </@section>
 <#else>

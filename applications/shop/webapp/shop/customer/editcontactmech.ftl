@@ -101,7 +101,8 @@ under the License.
               <#if purposeTypes?has_content>
                 <@tr>
                   <@td>
-                    <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose?DONE_PAGE=${donePage}</@ofbizUrl>" name="newpurposeform">
+                    <#-- for this, always forward back to current page -->
+                    <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose?DONE_PAGE=${donePage}&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</@ofbizUrl>" name="newpurposeform">
                       <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                       <input type="hidden" name="useValues" value="true"/>
                         <@field type="select" name="contactMechPurposeTypeId">
@@ -120,7 +121,13 @@ under the License.
         </@field>
     </#if>
     
-  <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+  <#-- Cato: NOTE: The target depends on whether creating or updating. When creating, want to return, whereas updating want to get redirected to donepage. -->  
+  <#if contactMech??>
+    <#assign targetParamStr>&amp;targetPageResponse=redirect-done</#assign>
+  <#else>
+    <#assign targetParamStr>&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</#assign>
+  </#if>
+  <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}${targetParamStr}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
     
     <#if !contactMech??>
       <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />

@@ -980,21 +980,26 @@ context.styles = [
     "fields_label" : "prefix",
     
     /* checkbox type styles */
-    "field_checkbox_default" : "switch small",          /* default checkbox styles */
-    "field_checkbox_default_labeltype" : "extralabel",  /* FIXME? this should really be "standard" and the CSS made to cooperate with "standard" mode - see checkbox markup macro for issues */
+    "field_checkbox_default" : "switch small checkbox-type-switch",         /* default checkbox styles */
+    "field_checkbox_default_type" : "checkbox-type-switch",                 /* normally already included in previous, but can reference individually with this */
+    "field_checkbox_default_labeltype" : "extralabel",                      /* FIXME? this should really be "standard" and the CSS made to cooperate with "standard" mode - see checkbox markup macro for issues */
     "field_checkbox_default_labelposition" : "after",
-    "field_checkbox_simple" : "",                       /* default simple checkbox styles */
-    "field_checkbox_simple_labeltype" : "spanonly",     /* FIXME? this should be "standard", but because "extralabel" is implemented oddly, currently need "spanonly" to make label look the same */
+    "field_checkbox_simple" : "checkbox-type-simple",                       /* default simple checkbox styles */
+    "field_checkbox_simple_type" : "checkbox-type-simple",
+    "field_checkbox_simple_labeltype" : "spanonly",                         /* FIXME? this should be "standard", but because "extralabel" is implemented oddly, currently need "spanonly" to make label look the same */
     "field_checkbox_simple_labelposition" : "after",
-    "field_checkbox_simple_standard" : "",               /* explicitly standard, simple checkbox styles */
+    "field_checkbox_simple_standard" : "checkbox-type-simple-standard",    /* explicitly standard, simple checkbox styles */
+    "field_checkbox_simple_standard_type" : "checkbox-type-simple-standard",
     "field_checkbox_simple_standard_labeltype" : "standard",
     "field_checkbox_simple_standard_labelposition" : "after",
     
     /* radio type styles */
-    "field_radio_default" : "",
+    "field_radio_default" : "radio-type-default",
+    "field_radio_default_type" : "radio-type-default",
     "field_radio_default_labeltype" : "standard",
     "field_radio_default_labelposition" : "after",
-    "field_radio_simple_standard" : "",
+    "field_radio_simple_standard" : "radio-type-simple-standard",
+    "field_radio_simple_standard_type" : "radio-type-simple-standard",
     "field_radio_simple_standard_labeltype" : "standard",
     "field_radio_simple_standard_labelposition" : "after",
     

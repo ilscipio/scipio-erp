@@ -144,24 +144,34 @@ Creates a panel box.
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     style                   = Legacy HTML style attribute for outermost container (for compatibility)
+    topContent              = ((directive)|(string)) Additional content directly inside panel container at top (before title)
+    topContentArgs          = ((map)) Additional args for topContent
+    bottomContent           = ((directive)|(string)) Additional content directly inside panel container at bottom (after body)
+    bottomContentArgs       = ((map)) Additional args for bottomContent
 -->
 <#assign panel_defaultArgs = {
-  "type":"", "title":"", "id":"", "class":"", "style":"", "passArgs":{}
+  "type":"", "title":"", "id":"", "class":"", "style":"", 
+  "topContent":false, "topContentArgs":{}, "bottomContent":false, "bottomContentArgs":{},
+  "passArgs":{}
 }>
 <#macro panel args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.panel_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@panel_markup type=type title=title id=id class=class style=style origArgs=origArgs passArgs=passArgs><#nested></@panel_markup>
+  <@panel_markup type=type title=title id=id class=class style=style bottomContent=bottomContent
+    origArgs=origArgs passArgs=passArgs><#nested></@panel_markup>
 </#macro>
 
 <#-- @panel main markup - theme override -->
-<#macro panel_markup type="" title="" id="" class="" style="" origArgs={} passArgs={} catchArgs...>
+<#macro panel_markup type="" title="" id="" class="" style="" 
+    topContent=false topContentArgs={}  bottomContent=false bottomContentArgs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.panel_wrap!"")>
   <#local class = addClassArg(class, type)>
   <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
+    <#if !topContent?is_boolean><@contentArgRender content=topContent args=topContentArgs /></#if>
     <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
     <div<@compiledClassAttribStr class=(styles.panel_body!)/>><#nested></div>
+    <#if !bottomContent?is_boolean><@contentArgRender content=bottomContent args=bottomContentArgs /></#if>
   </div>
 </#macro>
 

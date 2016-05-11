@@ -219,9 +219,11 @@ translates to:
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
     text                    = ((string)) Text
                               If a string is not specified, uses nested content instead.
+    closable                = ((boolean), default: -from global styles-) Whether the message should be closable
+                              NOTE: This is not implemented for all types and defaults vary, but if unsure and need to prevent closing, best to specify explicit false.
 -->
 <#assign commonMsg_defaultArgs = {
-  "type":"", "class":"", "id":"", "text":true, "passArgs":{}
+  "type":"", "class":"", "id":"", "text":true, "closable":"", "passArgs":{}
 }>
 <#macro commonMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.commonMsg_defaultArgs)>
@@ -233,11 +235,11 @@ translates to:
   <#local styleNamePrefix = "commonmsg_" + type?replace("-", "_")>
   <#local defaultClass = styles[styleNamePrefix]!styles["commonmsg_default"]>
   <#local class = addClassArgDefault(class, defaultClass)>
-  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${text}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
+  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id closable=closable origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${text}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
 </#macro>
 
 <#-- @commonMsg main markup - theme override -->
-<#macro commonMsg_markup type="" styleNamePrefix="" class="" id="" origArgs={} passArgs={} catchArgs...>
+<#macro commonMsg_markup type="" styleNamePrefix="" class="" id="" closable="" origArgs={} passArgs={} catchArgs...>
   <#if type == "result" || type?starts_with("result-") || type == "info">
     <#local nestedContent><#nested></#local>
     <#local nestedContent = nestedContent?trim> <#-- helpful in widgets -->
@@ -247,13 +249,13 @@ translates to:
     <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>${nestedContent}</p>
   <#elseif type == "error" || type?starts_with("error-")>
     <#-- NOTE: here we must resolve class arg before passing to @alert and make additive only -->
-    <@alert type="error" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
+    <@alert type="error" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
   <#elseif type == "fail">
-    <@alert type="error" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
+    <@alert type="error" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
   <#elseif type == "warning">
-    <@alert type="warning" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
+    <@alert type="warning" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
   <#elseif type == "info-important">
-    <@alert type="info" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
+    <@alert type="info" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
   <#else>
     <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
   </#if>

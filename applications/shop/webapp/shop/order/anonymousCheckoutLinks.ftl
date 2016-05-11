@@ -16,6 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+<#-- Cato: DEPRECATED TEMPLATE -->
+
+
 <#-- Cato: DEPRECATED old (preserve for links) Superseded by checkoutstepsfull.ftl
 <@script>
 function submitForm(form) {

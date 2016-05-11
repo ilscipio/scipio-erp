@@ -44,3 +44,6 @@ context.orderHeaderList = orderHeaderList;
 // Cato: order by ProductContent.sequenceNum
 downloadOrderRoleAndProductContentInfoList = from("OrderRoleAndProductContentInfo").where("partyId", userLogin?.partyId, "roleTypeId", "PLACING_CUSTOMER", "productContentTypeId", "DIGITAL_DOWNLOAD", "statusId", "ITEM_COMPLETED").orderBy("sequenceNum ASC").queryList();
 context.downloadOrderRoleAndProductContentInfoList = downloadOrderRoleAndProductContentInfoList;
+
+// Cato: Flag
+context.hasOrderDownloads = downloadOrderRoleAndProductContentInfoList ? true : false;

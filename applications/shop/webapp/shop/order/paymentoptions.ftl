@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- Cato: DEPRECATED TEMPLATE -->
+
 <@section><#-- title=uiLabelMap.AccountingPaymentInformation-->
   <#-- initial screen show a list of options -->
   <form id="editPaymentOptions" method="post" action="<@ofbizUrl>setPaymentInformation</@ofbizUrl>" name="${parameters.formNameValue}">

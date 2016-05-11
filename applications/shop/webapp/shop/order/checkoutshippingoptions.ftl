@@ -65,7 +65,7 @@ function submitForm(form, mode, value) {
             <#-- Cato: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
             <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
-            <@field type="generic" label=uiLabelMap.OrderShippingMethod required=true>
+            <@field type="generic" label="<strong>${uiLabelMap.OrderShippingMethod}</strong>" required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
                 <#-- Cato: For shop, will not show ship methods whose shipping estimates returned an error.
@@ -97,6 +97,7 @@ function submitForm(form, mode, value) {
             </@fields>
             </@field>
 
+            <br/>
             <#--<hr />-->
               
             <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">

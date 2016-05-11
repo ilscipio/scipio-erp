@@ -1,7 +1,13 @@
 
 <#-- Cato: common shop-wide helper definitions and macros -->
 
-<#macro formattedAddress address emphasis=false updateLink="" abbrev=false verbose=true>
+<#macro addressUpdateLink address updateLink class="">
+  <#local class = addClassArg(class, styles.action_update!)>
+  <#local class = addClassArgDefault(class, styles.link_nav_inline!)>
+  <a href="${escapeFullUrl(updateLink, 'html')}"<@compiledClassAttribStr class=class />>${uiLabelMap.CommonUpdate}</a><#t>
+</#macro>
+
+<#macro formattedAddressBasic address emphasis=false abbrev=false verbose=true>
   <#if address.toName?has_content><#if emphasis><b></#if>${uiLabelMap.CommonTo}<#if emphasis></b></#if>&nbsp;${address.toName}<br /></#if>
   <#if address.attnName?has_content><#if emphasis><b></#if>${uiLabelMap.PartyAddrAttnName}:<#if emphasis></b></#if>&nbsp;${address.attnName}<br /></#if>
   <#if address.address1?has_content>${address.address1}<br /></#if>
@@ -12,8 +18,47 @@
   <#if address.postalCode?has_content><br />${address.postalCode}</#if>
   <#if address.countryGeoId?has_content><br /><#rt>
     <#if verbose>${(delegator.findOne("Geo", {"geoId", address.countryGeoId}, true).get("geoName", locale))!address.countryGeoId}<#else>${address.countryGeoId}</#if></#if><#lt>
-  <#if updateLink?has_content>
-    <br/><br/><a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.link_nav_inline!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+</#macro>
+
+<#-- high-level address formatting macro -->
+<#macro formattedAddress address emphasis=false updateLink="" abbrev=false verbose=true usePanel=false 
+    partyContactMechPurposes=[] title="">
+  <#if usePanel>
+    <@panel class="+address-panel">
+      <#if title?has_content><div><b>${title}</b></div></#if>
+      <div>
+        <@formattedAddressBasic address=address emphasis=emphasis abbrev=abbrev verbose=verbose/>
+      </div>
+    <#list partyContactMechPurposes as partyContactMechPurpose>
+      <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
+      <div>
+        <em>
+        ${contactMechPurposeType.get("description",locale)!}
+        <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate})</#if>
+        </em>
+      </div>
+    </#list>
+    </@panel>
+    <#if updateLink?has_content>
+      <@addressUpdateLink address=address updateLink=updateLink class="+${styles.float_right!}"/><#-- with right button: class="${styles.link_nav!} ${styles.float_right!}" -->
+    </#if>
+  <#else>
+    <#if title?has_content><div><b>${title}</b></div></#if>
+    <div>
+      <@formattedAddressBasic address=address emphasis=emphasis abbrev=abbrev verbose=verbose/>
+    </div>
+    <#list partyContactMechPurposes as partyContactMechPurpose>
+      <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
+      <div>
+        <em>
+        ${contactMechPurposeType.get("description",locale)!}
+        <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate})</#if>
+        </em>
+      </div>
+    </#list>
+    <#if updateLink?has_content>
+      <br/><br/><@addressUpdateLink address=address updateLink=updateLink />
+    </#if>
   </#if>
 </#macro>
 
@@ -40,6 +85,12 @@
     <#-- stock ofbiz method -->
     ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}<#t>
   </#if>
+</#macro>
+
+<#macro formattedPayMethGeneralDetail paymentMethod={}>
+    <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
+    <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
+    <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
 </#macro>
 
 <#macro formattedCreditCardDetail creditCard paymentMethod={}>
@@ -193,7 +244,13 @@ jQuery(document).ready(function() {
 <#-- Cato: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: You can set labelContentFieldsType="default-compact" for a different default look
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType -->
-<#macro commonInvField type="generic" labelContentFieldsType="default" postfixColumns="" labelContent="" labelContentArgs={} widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
+<#macro commonInvField args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, {
+        "type":"generic", "labelContentFieldsType":"default", "postfixColumns":"", "labelContent":"", "labelContentArgs":{}, "widgetAreaClass":"",
+        "widgetPostfixColumns":"", "postfixContent":"", "postfix":false
+    })>
+    <#local dummy = localsPutAll(args)>
+
 <#--
   <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixColumns":postfixColumns, "widgetPostfixCombined":false})>
   <@row>
@@ -223,9 +280,9 @@ jQuery(document).ready(function() {
     <#local labelContentArgs = {"labelContentFieldsType":labelContentFieldsType, "labelContent":labelContent, "labelContentArgs":labelContentArgs}>
     <#local labelContent = commonInvFieldLabelRender>
   </#if>
-  <@field type=type inverted=true args=inlineArgs widgetAreaClass=widgetAreaClass postfix=postfix
+  <@field inverted=true args=args postfix=postfix
     labelContent=labelContent labelContentArgs=labelContentArgs
-    postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
+    widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
 </#macro>
 
 <#-- this is an ugly kludge needed due to only having one #nested in freemarker -->
@@ -233,6 +290,20 @@ jQuery(document).ready(function() {
   <@fields type=args.labelContentFieldsType ignoreParentField=true>
     <@contentArgRender content=args.labelContent args=args.labelContentArgs />
   </@fields>
+</#macro>
+
+<#-- Almost same as commonInvField currently, except we assume it's a radio or checkbox and set widget area size to 1 column -->
+<#macro checkAddressInvField args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, {
+        "widgetPostfixColumns":""
+    })>
+    <#local dummy = localsPutAll(args)>
+  <#if !widgetPostfixColumns?has_content>
+    <#local widgetPostfixColumns = 11>
+  </#if>
+    <#-- FORCE this to zero -->
+    <#local labelSmallDiffColumns = 0>
+    <@commonInvField widgetPostfixColumns=widgetPostfixColumns labelSmallDiffColumns=labelSmallDiffColumns args=inlineArgs />
 </#macro>
 
 <#macro addressList>

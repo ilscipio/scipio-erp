@@ -127,9 +127,9 @@ function toggleBillingAccount(box) {
             </#if>
             <#assign postfixContent></#assign>
             <#assign labelContent>
-              <@formattedAddress address=shippingAddress updateLink="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" emphasis=true />
+              <@formattedAddress usePanel=true address=shippingAddress updateLink="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" emphasis=true />
             </#assign>
-            <@commonInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
+            <@checkAddressInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
             </@addressEntry>
           </#list>
 
@@ -143,8 +143,8 @@ function toggleBillingAccount(box) {
             <#assign checkThisAddress = (!shippingContactMechList?has_content)>
           </#if>
           <@addressEntry ownLine=true>
-            <@commonInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
-               id="newshipaddrradio" class="+addr-select-radio" label=uiLabelMap.PartyAddNewAddress/><#--labelContent=newAddrFormFieldContent-->
+            <@checkAddressInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
+               id="newshipaddrradio" class="+addr-select-radio" labelContent=uiLabelMap.PartyAddNewAddress/><#--label=uiLabelMap.PartyAddNewAddress labelContent=newAddrFormFieldContent-->
           </@addressEntry>
         </#if>
     
@@ -181,49 +181,72 @@ function toggleBillingAccount(box) {
           <@newAddrFormFieldContent />
         <#else>
           <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
+            <input type="hidden" name="shipping_contact_mech_id" value="_NEW_" />
             <#-- Cato: title is not needed; implied
             <@heading>${uiLabelMap.PartyAddNewAddress}</@heading>-->
-            <input type="hidden" name="shipping_contact_mech_id" value="_NEW_" />
             <@newAddrFormContent />
           </div>
         </#if>
     
     </@section>
 
+  <#-- TODO: Uncomment this once template OK
+  <#if userIsBusiness>-->
+  <#if true>
     <#-- Party Tax Info -->
-    <@section title=uiLabelMap.PartyTaxIdentification>
-      <#-- Cato: NOTE: Can simply add this around to change the look:
-      <@fields type="default-compact"> -->
+    <@section>
+    <@row>
+      <@cell columns=5>
+        <strong>${uiLabelMap.PartyTaxIdentification}</strong>
+      </@cell>
+      <@cell columns=7>
+        <@section>
+        <#-- Cato: NOTE: Can simply add this around to change the look:
+        <@fields type="default-compact"> -->
         <@render resource="component://shop/widget/OrderScreens.xml#customertaxinfo" /> 
-      <#--</@fields>-->
+        <#--</@fields>-->
+        </@section>
+      </@cell>
+    </@row>
     </@section>
 
   <#-- Cato: NOTE: Agreements only show if they are defined in the data for the specific customer.
       e.g. there are none for anon user by default. -->
   <#if agreements?has_content>
-    <@section title=uiLabelMap.AccountingAgreementInformation>
-      <#-- Cato: for shop, use only radios; can't link to anything with select -->
-      <#if false && agreements.size() != 1>
-          <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
-            <#list agreements as agreement>
-              <option value="${agreement.agreementId!}">${agreement.agreementId} - ${agreement.description!}</option>
-            </#list>
-          </@field>
-      <#else>
-        <@field type="generic" label=uiLabelMap.AccountingAgreement name="agreementId">
-            <#list agreements as agreement>
-              <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
-              <#assign fieldLabel>${agreement.description!} will be used for this order. 
-                <@modal id="agreement_info_${agreement.agreementId!}" label=uiLabelMap.CommonClickHereDetails>
-                    <#-- Cato: TODO: This needs to go through the agreement terms. In stock data there is little text to show. -->
-                    ${agreement.description!}
-                </@modal>
-              </#assign>
-              <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=fieldLabel />
-            </#list>
-        </@field>
-      </#if>
+    <@section>
+    <@row>
+      <@cell columns=5>
+        <strong>${uiLabelMap.AccountingAgreementInformation}</strong>
+      </@cell>
+      <@cell columns=7>
+        <@section>
+          <#-- Cato: for shop, use only radios; can't link to anything with select -->
+          <#if false && agreements.size() != 1>
+              <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
+                <#list agreements as agreement>
+                  <option value="${agreement.agreementId!}">${agreement.agreementId} - ${agreement.description!}</option>
+                </#list>
+              </@field>
+          <#else>
+            <@field type="generic" label=uiLabelMap.AccountingAgreement name="agreementId">
+                <#list agreements as agreement>
+                  <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
+                  <#assign fieldLabel>${agreement.description!} will be used for this order. 
+                    <@modal id="agreement_info_${agreement.agreementId!}" label=uiLabelMap.CommonClickHereDetails>
+                        <#-- Cato: TODO: This needs to go through the agreement terms. In stock data there is little text to show. -->
+                        ${agreement.description!}
+                    </@modal>
+                  </#assign>
+                  <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=fieldLabel />
+                </#list>
+            </@field>
+          </#if>
+        </@section>
+      </@cell>
+    </@row>
     </@section>
+  </#if>
+
   </#if>
 
   <#--</fieldset>-->

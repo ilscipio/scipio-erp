@@ -57,7 +57,7 @@ under the License.
 
 <ul class="tabs" data-tab>
   <li class="tab-title active"><a href="#panel1"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyPersonalInformation}</a></li>
-  <li class="tab-title"><a href="#panel2"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}</a></li>
+  <li class="tab-title"><a href="#panel2"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.EcommerceAccountInformation}</a></li><#--${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}-->
   <li class="tab-title"><a href="#panel3"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyContactInformation}</a></li>
   <li class="tab-title"><a href="#panel4"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.AccountingPaymentMethodInformation}</a></li>
   <li class="tab-title"><a href="#panel5"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.EcommerceDefaultShipmentMethod}</a></li>
@@ -75,19 +75,19 @@ under the License.
         <@section title=uiLabelMap.PartyPersonalInformation menuContent=menuContent>
             <#if person??>
               <#-- Cato: This was a table, not illogical but will look better as fields -->
-              <@field type="display" label="${uiLabelMap.PartyName}">${person.personalTitle!} ${person.firstName!} ${person.middleName!} ${person.lastName!} ${person.suffix!}</@field>
-              <#if person.nickname?has_content><@field type="display" label="${uiLabelMap.PartyNickName}">${person.nickname}</@field></#if>
-              <#if person.gender?has_content><@field type="display" label="${uiLabelMap.PartyGender}">${person.gender}</@field></#if>
-              <#if person.birthDate??><@field type="display" label="${uiLabelMap.PartyBirthDate}">${person.birthDate.toString()}</@field></#if>
-              <#if person.height??><@field type="display" label="${uiLabelMap.PartyHeight}">${person.height}</@field></#if>
-              <#if person.weight??><@field type="display" label="${uiLabelMap.PartyWeight}">${person.weight}</@field></#if>
-              <#if person.mothersMaidenName?has_content><@field type="display" label="${uiLabelMap.PartyMaidenName}">${person.mothersMaidenName}</@field></#if>
-              <#if person.maritalStatus?has_content><@field type="display" label="${uiLabelMap.PartyMaritalStatus}">${person.maritalStatus}</@field></#if>
-              <#if person.socialSecurityNumber?has_content><@field type="display" label="${uiLabelMap.PartySocialSecurityNumber}">${person.socialSecurityNumber}</@field></#if>
-              <#if person.passportNumber?has_content><@field type="display" label="${uiLabelMap.PartyPassportNumber}">${person.passportNumber}</@field></#if>
-              <#if person.passportExpireDate??><@field type="display" label="${uiLabelMap.PartyPassportExpireDate}">${person.passportExpireDate.toString()}</@field></#if>
-              <#if person.totalYearsWorkExperience??><@field type="display" label="${uiLabelMap.PartyYearsWork}">${person.totalYearsWorkExperience}</@field></#if>
-              <#if person.comments?has_content><@field type="display" label="${uiLabelMap.CommonComments}">${person.comments}</@field></#if>
+              <@field type="display" label=uiLabelMap.PartyName>${person.personalTitle!} ${person.firstName!} ${person.middleName!} ${person.lastName!} ${person.suffix!}</@field>
+              <#if person.nickname?has_content><@field type="display" label=uiLabelMap.PartyNickName>${person.nickname}</@field></#if>
+              <#if person.gender?has_content><@field type="display" label=uiLabelMap.PartyGender>${person.gender}</@field></#if>
+              <#if person.birthDate??><@field type="display" label=uiLabelMap.PartyBirthDate>${person.birthDate.toString()}</@field></#if>
+              <#if person.height??><@field type="display" label=uiLabelMap.PartyHeight>${person.height}</@field></#if>
+              <#if person.weight??><@field type="display" label=uiLabelMap.PartyWeight>${person.weight}</@field></#if>
+              <#if person.mothersMaidenName?has_content><@field type="display" label=uiLabelMap.PartyMaidenName>${person.mothersMaidenName}</@field></#if>
+              <#if person.maritalStatus?has_content><@field type="display" label=uiLabelMap.PartyMaritalStatus>${person.maritalStatus}</@field></#if>
+              <#if person.socialSecurityNumber?has_content><@field type="display" label=uiLabelMap.PartySocialSecurityNumber>${person.socialSecurityNumber}</@field></#if>
+              <#if person.passportNumber?has_content><@field type="display" label=uiLabelMap.PartyPassportNumber>${person.passportNumber}</@field></#if>
+              <#if person.passportExpireDate??><@field type="display" label=uiLabelMap.PartyPassportExpireDate>${person.passportExpireDate.toString()}</@field></#if>
+              <#if person.totalYearsWorkExperience??><@field type="display" label=uiLabelMap.PartyYearsWork>${person.totalYearsWorkExperience}</@field></#if>
+              <#if person.comments?has_content><@field type="display" label=uiLabelMap.CommonComments>${person.comments}</@field></#if>
             <#else>
               <@commonMsg type="result-norecord">${uiLabelMap.PartyPersonalInformationNotFound}</@commonMsg>
             </#if>
@@ -101,11 +101,17 @@ under the License.
                 <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
             </@menu>
         </#macro>
-        <@section title="${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}" menuContent=menuContent>
+        <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}" -->
             <#-- Cato: This was a table, not illogical but will look better as fields -->
-            <@field type="display" label="${uiLabelMap.CommonUsername}">
-              ${userLogin.userLoginId}
-            </@field>
+              
+              <@field type="display" label=uiLabelMap.AccountingAccountType>
+                <#if userIsBusiness>
+                  ${getLabel("DataCategory.categoryName.BUSINESS", "ContentEntityLabels")}
+                <#else>
+                  ${getLabel("DataCategory.categoryName.PERSONAL", "ContentEntityLabels")}
+                </#if>
+              </@field>
+            <@field type="display" label=uiLabelMap.CommonUsername>${userLogin.userLoginId}</@field>
         </@section>
     </div>
     
@@ -138,22 +144,15 @@ under the License.
                     </@td>
                     <@td>
                       <#list partyContactMechValueMap.partyContactMechPurposes! as partyContactMechPurpose>
-                        <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
+                        <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)! />
                         <div>
-                          <#if contactMechPurposeType??>
-                          <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION"><span style="white-space:nowrap;"></#if>
+                          <#if contactMechPurposeType?has_content>
+                            <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION"><span style="white-space:nowrap;"></#if>
                             ${contactMechPurposeType.get("description",locale)}
                             <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (((profiledefs.defaultShipAddr)!"") == contactMech.contactMechId)>
                               <span><strong>[${uiLabelMap.EcommerceIsDefault}]</strong></span>
-                            <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
-                              <form name="defaultShippingAddressForm" style="display:inline;" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
-                                <input type="hidden" name="productStoreId" value="${productStoreId}" />
-                                <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
-                                <input type="hidden" name="partyId" value="${party.partyId}" />
-                                <input type="submit" style="display:inline;" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
-                              </form>
                             </#if>
-                          <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION"></span></#if>
+                            <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION"></span></#if>
                           <#else>
                             ${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"
                           </#if>
@@ -208,9 +207,33 @@ under the License.
                       <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>-->
                       <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
                     </@td>
-                    <@td>(${partyContactMech.allowSolicitation!})</@td>
                     <@td>
+                      <#if (partyContactMech.allowSolicitation!) == "Y">
+                        ${uiLabelMap.CommonYes}
+                      <#elseif (partyContactMech.allowSolicitation!) == "N">
+                        ${uiLabelMap.CommonNo}
+                      <#elseif !partyContactMech.allowSolicitation?has_content>
+                        (${uiLabelMap.ProductNotSet})
+                      <#else>
+                        (${uiLabelMap.PartyUnknown})
+                      </#if>
+                    </@td>
+                    <@td class="+${styles.text_right!}">
                       <@menu type="button">
+                        <#-- Cato: NOTE: this should list one non-expired SHIPPING_LOCATION at most. We also correct this to prevent showing button for expired ones. -->
+                        <#list partyContactMechValueMap.partyContactMechPurposes! as partyContactMechPurpose>
+                          <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)! />
+                          <#if !partyContactMechPurpose.thruDate?? && ((contactMechPurposeType.contactMechPurposeTypeId)!) == "SHIPPING_LOCATION" && (((profiledefs.defaultShipAddr)!"") != contactMech.contactMechId)>
+                            <@menuitem type="generic"> 
+                              <form name="defaultShippingAddressForm" style="display:inline;" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
+                                <input type="hidden" name="productStoreId" value="${productStoreId}" />
+                                <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
+                                <input type="hidden" name="partyId" value="${party.partyId}" />
+                                <input type="submit" style="display:inline;" value="${uiLabelMap.EcommerceSetDefault} ${uiLabelMap.OrderShippingAddress}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
+                              </form>
+                            </@menuitem>
+                          </#if>
+                        </#list>
                         <@menuitem type="link" href=makeOfbizUrl("editcontactmech?contactMechId=${contactMech.contactMechId}") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
                         <@menuitem type="link" href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="+${styles.action_run_sys!} ${styles.action_terminate!}" text=uiLabelMap.CommonExpire>
                           <form name="deleteContactMech_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>">
@@ -240,86 +263,60 @@ under the License.
         </#macro>
         <@section title=uiLabelMap.AccountingPaymentMethodInformation menuContent=menuContent>
           <#if paymentMethodValueMaps?has_content>
-              <@table type="fields"> <#-- orig: width="100%" cellpadding="2" cellspacing="0" border="0" -->
+              <@table type="data-complex"> <#-- orig: width="100%" cellpadding="2" cellspacing="0" border="0" -->
                 <#list paymentMethodValueMaps as paymentMethodValueMap>
                   <#assign paymentMethod = paymentMethodValueMap.paymentMethod! />
                   <#assign creditCard = paymentMethodValueMap.creditCard! />
                   <#assign giftCard = paymentMethodValueMap.giftCard! />
                   <#assign eftAccount = paymentMethodValueMap.eftAccount! />
+            <#-- Cato: FIXME?: don't support listing any others yet -->
+            <#if creditCard?has_content || giftCard?has_content || eftAccount?has_content>
                   <@tr>
+                    <#assign updateLink = "">
+                    <@td>
                     <#if (paymentMethod.paymentMethodTypeId!) == "CREDIT_CARD">
-                    <@td valign="top">
                         ${uiLabelMap.AccountingCreditCard}:
-                        <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}&nbsp;</#if>
-                        <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
-                        ${creditCard.firstNameOnCard}&nbsp;
-                        <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp;</#if>
-                        ${creditCard.lastNameOnCard}
-                        <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
-                        &nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
-                        <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                        <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
-                        <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                    </@td>
-                    <@td>&nbsp;</@td>
-                    <@td align="right" valign="top">
-                      <a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                    </@td>
+                        <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
+                        <@formattedPayMethGeneralDetail paymentMethod=paymentMethod />
+                        <#assign updateLink = makeOfbizUrl("editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}")>
                     <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
-                      <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                        <#assign giftCardNumber = "" />
-                        <#assign pcardNumber = giftCard.cardNumber />
-                        <#if pcardNumber?has_content>
-                          <#assign psize = pcardNumber?length - 4 />
-                          <#if (0 < psize)>
-                            <#list 0 .. psize-1 as foo>
-                              <#assign giftCardNumber = giftCardNumber + "*" />
-                            </#list>
-                             <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
-                          <#else>
-                             <#assign giftCardNumber = pcardNumber />
-                          </#if>
-                        </#if>
-                      </#if>
-        
-                      <@td valign="top">
-                          ${uiLabelMap.AccountingGiftCard}: ${giftCardNumber}
-                          <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                          <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
-                          <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                      </@td>
-                      <@td>&nbsp;</@td>
-                      <@td align="right" valign="top">
-                        <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                      </@td>
-                      <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
-                      <@td valign="top">
-                          ${uiLabelMap.AccountingEFTAccount}: ${eftAccount.nameOnAccount!} - <#if eftAccount.bankName?has_content>${uiLabelMap.AccountingBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if>
-                          <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                          <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
-                          <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                      </@td>
-                      <@td>&nbsp;</@td>
-                      <@td align="right" valign="top">
-                        <a href="<@ofbizUrl>editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                      </@td>
+                        ${uiLabelMap.AccountingGiftCard}: 
+                        <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
+                        <@formattedPayMethGeneralDetail paymentMethod=paymentMethod />
+                        <#assign updateLink = makeOfbizUrl("editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}")>
+                    <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
+                        ${uiLabelMap.AccountingEFTAccount}: 
+                        <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
+                        <@formattedPayMethGeneralDetail paymentMethod=paymentMethod />
+                      <#assign updateLink = makeOfbizUrl("editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}")>
                     </#if>
-                    <@td align="right" valign="top">
-                     <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
+                        <#if ((profiledefs.defaultPayMeth)!"") == paymentMethod.paymentMethodId>
+                          <br/><strong>[${uiLabelMap.EcommerceIsDefault}]</strong>
+                        </#if>
                     </@td>
-                    <@td align="right" valign="top">
-                      <#if ((profiledefs.defaultPayMeth)!"") == paymentMethod.paymentMethodId>
-                        <span class="${styles.link_run_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
-                      <#else>
-                        <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
-                          <input type="hidden" name="productStoreId" value="${productStoreId}" />
-                          <input type="hidden" name="defaultPayMeth" value="${paymentMethod.paymentMethodId}" />
-                          <input type="hidden" name="partyId" value="${party.partyId}" />
-                          <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
-                        </form>
-                      </#if>
+                    <@td class="+${styles.text_right!}">
+                      <@menu type="button">
+                        <#--<#if ((profiledefs.defaultPayMeth)!"") == paymentMethod.paymentMethodId>
+                          <@menuitem type="text" class="+${styles.action_run_sys!} ${styles.action_updatestatus!}" text="[${uiLabelMap.EcommerceIsDefault}]" />
+                        <#else>-->
+                        <#if ((profiledefs.defaultPayMeth)!"") != paymentMethod.paymentMethodId>
+                          <@menuitem type="generic" class="+${styles.action_run_sys!} ${styles.action_updatestatus!}">
+                            <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
+                              <input type="hidden" name="productStoreId" value="${productStoreId}" />
+                              <input type="hidden" name="defaultPayMeth" value="${paymentMethod.paymentMethodId}" />
+                              <input type="hidden" name="partyId" value="${party.partyId}" />
+                              <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
+                            </form>
+                          </@menuitem>
+                        </#if>
+                        <#if updateLink?has_content>
+                          <@menuitem type="link" href=updateLink  class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
+                        </#if>
+                        <@menuitem type="link" href=makeOfbizUrl("deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}") class="+${styles.action_run_sys!} ${styles.action_terminate!}" text=uiLabelMap.CommonExpire />
+                      </@menu>
                     </@td>
                   </@tr>
+            </#if>
                 </#list>
               </@table>
           <#else>
@@ -390,7 +387,7 @@ under the License.
             <@td>${(mimeType.description)!}</@td>
             <@td>${(status.get("description",locale))!}</@td>
             <@td>${contentRole.fromDate!}</@td>
-            <@td align="right">
+            <@td class="+${styles.text_right!}">
               <form name="removeContent_${contentRole.contentId}" method="post" action="removePartyAsset">
                 <input name="partyId" type="hidden" value="${userLogin.partyId}"/>
                 <input name="contentId" type="hidden" value="${contentRole.contentId}"/>
@@ -539,9 +536,9 @@ under the License.
         <#assign survey = surveyAppl.getRelatedOne("Survey", false) />
         <@tr>
           <@td>&nbsp;</@td>
-          <@td valign="top">${survey.surveyName!}&nbsp;-&nbsp;${survey.description!}</@td>
+          <@td>${survey.surveyName!}&nbsp;-&nbsp;${survey.description!}</@td>
           <@td>&nbsp;</@td>
-          <@td valign="top">
+          <@td>
             <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
             <#if (responses < 1)>${uiLabelMap.EcommerceNotCompleted}<#else>${uiLabelMap.EcommerceCompleted}</#if>
           </@td>
@@ -550,7 +547,7 @@ under the License.
             <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
               <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey />
             </#if>
-            <@td align="right"><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="${styles.link_nav!}">${surveyLabel}</a></@td>
+            <@td class="+${styles.text_right!}"><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="${styles.link_nav!}">${surveyLabel}</a></@td>
           <#else>
           &nbsp;
           </#if>

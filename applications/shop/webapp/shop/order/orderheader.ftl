@@ -218,6 +218,7 @@ under the License.
 
                                 <#-- Gift Card info -->
                                 <#if "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
+                                    <#-- Cato: TODO: SHOW GIFT CARD BALANCE -->
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}
                                           <@paymentMethodAmount paymentMethodId=paymentMethod.paymentMethodId/></@td>

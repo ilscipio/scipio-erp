@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- Cato: DEPRECATED TEMPLATE -->
+
 <@script>
     var clicked = 0;
     function processOrder() {

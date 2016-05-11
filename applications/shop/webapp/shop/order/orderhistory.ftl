@@ -91,7 +91,16 @@ under the License.
   </#if>
 </@section>
 
-<#assign sectionTitle><a href="<@ofbizUrl uri="orderdownloads"/>" class="${styles.link_nav_info!}">${uiLabelMap.EcommerceDownloadsAvailableTitle}</a></#assign>
-<@section title=sectionTitle>
-    <@render resource="component://shop/widget/OrderScreens.xml#orderdownloadswidget" />
-</@section>
+<#if hasOrderDownloads>
+  <#assign sectionTitle>${uiLabelMap.EcommerceDownloadsAvailableTitle}</#assign>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+      <@menuitem type="link" href=makeOfbizUrl("orderdownloads") class="+${styles.action_nav!} ${styles.action_export!}" text=uiLabelMap.EcommerceViewAll />
+    </@menu>
+  </#macro>
+  <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
+    <#-- Cato: NOTE: Here we currently render the full widget. 
+        Alternatively, we could show a smaller summary here and leave full details to the dedicated page. -->
+    <@render resource="component://shop/widget/OrderScreens.xml#orderdownloadscontent" />
+  </@section>
+</#if>

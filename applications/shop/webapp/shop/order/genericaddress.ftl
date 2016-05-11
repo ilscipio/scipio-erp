@@ -17,6 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#-- Cato: TODO: Review what is still using this, if any, generalize -->
+
+
 <#-- generic address information -->
 <#assign toName = (parameters.toName)!>
 <#if !toName?has_content && person?? && person?has_content>

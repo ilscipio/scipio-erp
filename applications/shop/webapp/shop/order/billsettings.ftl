@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- Cato: DEPRECATED TEMPLATE -->
+
 <@script>
 function shipBillAddr() {
     <#if (requestParameters.singleUsePayment!"N") == "Y">
@@ -86,7 +88,7 @@ function shipBillAddr() {
 
         <#if cart.getShippingContactMechId()?? && paymentMethodType != "GC">
           <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
-          <@commonInvField type="checkbox" checkboxType="simple" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) labelContent=labelContent />
+          <@checkAddressInvField type="checkbox" checkboxType="simple" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) labelContent=labelContent />
 
           <hr />
    
@@ -159,25 +161,25 @@ function shipBillAddr() {
         <input type="hidden" name="createNew" value="Y" />
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingCheckGiftCard}</#assign>
-          <@commonInvField type="checkbox" name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") labelContent=labelContent />
+          <@checkAddressInvField type="checkbox" name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
           <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
-          <@commonInvField type="radio" name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") labelContent=labelContent />
+          <@checkAddressInvField type="radio" name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
-          <@commonInvField type="radio" name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") labelContent=labelContent />
+          <@checkAddressInvField type="radio" name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
           <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
-          <@commonInvField type="radio" name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") labelContent=labelContent />
+          <@checkAddressInvField type="radio" name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") labelContent=labelContent />
 
         </#if>
 

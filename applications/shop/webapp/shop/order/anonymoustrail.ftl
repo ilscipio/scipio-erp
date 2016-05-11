@@ -17,6 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#-- Cato: DEPRECATED TEMPLATE -->
+
 <#-- Cato: NOTE: this omits the top @menu; the including template must provide its own -->
 <#if shipAddr??>
   <#if anontrailMenuArgs?has_content>

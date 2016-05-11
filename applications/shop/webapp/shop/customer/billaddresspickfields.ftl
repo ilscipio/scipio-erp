@@ -57,26 +57,16 @@ under the License.
   <#if hasCurrent>
 
     <#macro addrContent args={}>
-        <b>${uiLabelMap.PartyUseCurrentAddress}:</b>
-        <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
-          <#assign curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
-          <div>
-            ${curContactMechPurposeType.get("description",locale)!}
-            <#if curPartyContactMechPurpose.thruDate??>
-              ((${uiLabelMap.CommonExpire}: ${curPartyContactMechPurpose.thruDate.toString()})
-            </#if>
-          </div>
-        </#list>
-        <div>
-          <@formattedAddress address=curPostalAddress emphasis=false updateLink=(useUpdate?string(updateLink!,""))/>
-        </div>
-      <#if showVerbose>
-        <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</div>
-        <#if curPartyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</div></#if>
-      </#if>
+        <@formattedAddress usePanel=true address=curPostalAddress emphasis=false updateLink=(useUpdate?string(updateLink!,"")) 
+            title="${uiLabelMap.PartyUseCurrentAddress}:">
+          <#if showVerbose>
+            <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</div>
+            <#if curPartyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</div></#if>
+          </#if>
+        </@formattedAddress>
     </#macro>
     <@addressEntry>
-    <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=curContactMechId 
+    <@checkAddressInvField type="radio" name="${fieldNamePrefix}contactMechId" value=curContactMechId 
         labelContent=addrContent checked=(selectedContactMechId == curContactMechId) class="+${pickFieldClass}"  />
     </@addressEntry>
   <#else>
@@ -93,23 +83,19 @@ under the License.
     <#assign postalAddress = postalAddressInfo.postalAddress />
     <#assign partyContactMech = postalAddressInfo.partyContactMech />
     <#macro addrContent args={}>
-        <#list partyContactMechPurposes as partyContactMechPurpose>
-          <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
-          <div>
-            ${contactMechPurposeType.get("description",locale)!}
-            <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate})</#if>
-          </div>
-        </#list>
         <div>
-          <@formattedAddress address=postalAddress emphasis=false updateLink=(useUpdate?string(rawString(updateLink!)?replace('_CONTACT_MECH_ID_', contactMech.contactMechId),"")) />
+          <@formattedAddress usePanel=true address=postalAddress emphasis=false 
+            updateLink=(useUpdate?string(rawString(updateLink!)?replace('_CONTACT_MECH_ID_', contactMech.contactMechId),"")) 
+            partyContactMechPurposes=partyContactMechPurposes>
+            <#if showVerbose>
+              <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>
+              <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
+            </#if>
+          </@formattedAddress>
         </div>
-      <#if showVerbose>
-        <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>
-        <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
-      </#if>
     </#macro>
     <@addressEntry>
-      <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=contactMech.contactMechId 
+      <@checkAddressInvField type="radio" name="${fieldNamePrefix}contactMechId" value=contactMech.contactMechId 
           labelContent=addrContent checked=(selectedContactMechId == contactMech.contactMechId) class="+${pickFieldClass}" />
     </@addressEntry>
   </#list>
@@ -133,8 +119,8 @@ under the License.
         </#if>
     </#macro>
     <@addressEntry ownLine=true>
-      <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value="_NEW_" checked=(selectedContactMechId == "_NEW_") 
-          class="+${pickFieldClass}" id=(newAddrFieldId!) label=uiLabelMap.PartyCreateNewBillingAddress/><#--labelContent=addrContent -->
+      <@checkAddressInvField type="radio" name="${fieldNamePrefix}contactMechId" value="_NEW_" checked=(selectedContactMechId == "_NEW_") 
+          class="+${pickFieldClass}" id=(newAddrFieldId!) labelContent=uiLabelMap.PartyCreateNewBillingAddress/><#--label=uiLabelMap.PartyCreateNewBillingAddress labelContent=addrContent -->
     </@addressEntry>
   </#if>
   </@addressList>

@@ -118,7 +118,7 @@ under the License.
                 <set field="checkoutAllowAnonUnknown" from-field="checkoutAllowAnonUnknown" type="Boolean" default-value="false" />
                 <set field="checkoutAllowEmptyCart" from-field="checkoutAllowEmptyCart" type="Boolean" default-value="false" />
                 <!-- These are also set in main-decorator, but need to get values early -->
-                <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonPermChecks.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonUserChecks.groovy"/>
             </actions>
             <widgets>
                 <section>
@@ -582,7 +582,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet>
-                                    <include-screen name="orderdownloadswidget" />
+                                    <include-screen name="orderdownloadscontent" />
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -595,7 +595,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="orderdownloadswidget">
+    <screen name="orderdownloadscontent">
         <section>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderdownloads.ftl"/></html></platform-specific>

@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- Cato: TODO: Convert and review -->
+
 <@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {

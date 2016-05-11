@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- Cato: DEPRECATED TEMPLATE -->
+
 <#macro fieldErrors fieldName>
   <#if errorMessageList?has_content>
     <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName, true, errorMessageList)>

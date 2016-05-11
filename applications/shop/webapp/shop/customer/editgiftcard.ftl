@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
+<#-- Cato: TODO: SHOW GIFT CARD BALANCE -->
+
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
   <@menu type="button">
@@ -30,7 +32,7 @@ under the License.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
 <#-- Cato: FIXME -->
-<@commonMsg type="warning">WARNING: This form currently bypasses gift card product store settings and validation (for testing purposes).</@commonMsg>
+<@commonMsg type="warning">${uiLabelMap.CommonWarning}: This form currently bypasses gift card product store settings and validation (for testing purposes).</@commonMsg>
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>

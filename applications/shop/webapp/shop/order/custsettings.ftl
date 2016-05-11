@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- Cato: DEPRECATED TEMPLATE -->
+
 <@section title=uiLabelMap.EcommerceYourNamePhoneAndEmail>
 <form id="editCustomerNamePhoneAndEmail" name="${parameters.formNameValue}" method="post" action="<@ofbizUrl>processCustomerSettings</@ofbizUrl>">
   <input type="hidden" name="partyId" value="${parameters.partyId!}"/>

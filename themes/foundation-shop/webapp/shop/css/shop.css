@@ -202,10 +202,21 @@ footer {
     vertical-align: top;
     width: 20em;
     margin-bottom: 1em;
+    margin-right: 4em;
 }
 
 .address-list .address-entry-ownline {
     display: block;
+}
+
+.address-panel {
+    /* this was for button
+    margin-bottom: 0;
+    */
+    /*
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+    */
 }
 
 /*

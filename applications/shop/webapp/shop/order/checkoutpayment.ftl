@@ -18,8 +18,10 @@ under the License.
 -->
 <#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutpayment.ftl -->
 
-<#-- FIXME: SINGLE USE GIFT CARD INCONSISTENT WITH CC && EFT (SINGLE-USE FORCED) -->
 <#-- TODO: PAYPAL, IDEAL, WORLDPAY -->
+<#-- TODO: SHOW GIFT CARD BALANCE -->
+<#-- TODO?: Amount boxes could pre-calculate and adjust automatically, but it's not clear if the leave-empty
+    logic is exactly replicable in JS (must be exact) or might require AJAX calls -->
 
 <#include "ordercommon.ftl">
 
@@ -173,28 +175,54 @@ jQuery(document).ready(function(){
       <#-- return nothing otherwise -->
     </#function>
 
-    <#macro payMethAmountField payMethId>
-      <#assign curPayAmountStr = "">
-      <#assign fieldValue = "">
-      <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-      <#if parameters["amount_${payMethId}"]??>
-        <#assign fieldValue = parameters["amount_${payMethId}"]>
-      <#else>
-        <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
-            and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
-        <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(payMethId)!0) > 0)>${cart.getPaymentOrigAmount(payMethId)?string("##0.00")}</#if></#assign>
-        <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
-            Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
-            FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
-                offers no way to distinguish between user-entered and validation-determined amounts. -->
-        <#if cart.isPaymentsAdequate()>
-          <#assign fieldValue = curPayAmountStr>
-        </#if>
+    <#macro payMethAmountField type="pay-meth" payMethId="" params=true id=true name=true>
+      <#if params?is_boolean>
+        <#local params = parameters>
       </#if>
+      <#if name?is_boolean>
+        <#local name = "amount_${payMethId}">
+      </#if>
+      <#if id?is_boolean>
+        <#local id = name>
+      </#if>
+      <#assign realCurPayAmount = "">
+      <#if type == "simple" || type == "new-pay-meth">
+          <#assign fieldValue = params[name]!>
+      <#else>
+          <#assign curPayAmountStr = "">
+          <#assign fieldValue = "">
+          <#if params[name]??>
+            <#assign fieldValue = params[name]>
+          <#else>
+            <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
+                and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
+            <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(payMethId)!0) > 0)>${cart.getPaymentOrigAmount(payMethId)?string("##0.00")}</#if></#assign>
+            <#-- Also get the real current amount, but we'll only show it in tooltip (if use this amount as value, sometimes resubmission issues when going back pages) -->
+            <#if ((cart.getPaymentAmount(payMethId)!0) > 0)>
+              <#assign realCurPayAmount = cart.getPaymentAmount(payMethId)>
+            </#if>
+            <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
+                Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
+                FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
+                    offers no way to distinguish between user-entered and validation-determined amounts. -->
+            <#if cart.isPaymentsAdequate()>
+              <#assign fieldValue = curPayAmountStr>
+            </#if>
+          </#if>
+      </#if> 
+      <#assign fieldDescription = uiLabelMap.AccountingLeaveEmptyFullRemainingAmount>
+      <#assign realCurPayAmountFullStr = "">
+      <#if realCurPayAmount?has_content>
+        <#assign realCurPayAmountFullStr>${uiLabelMap.CommonCurrent}: <@ofbizCurrency amount=realCurPayAmount isoCode=cart.getCurrency()/></#assign>
+      </#if>
+
+      <#assign postfixContent>
+        <@commonMsg type="info-important" closable=false>${fieldDescription}</@commonMsg>
+      </#assign>
       <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
           Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-      <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="amount_${payMethId}" name="amount_${payMethId}" 
-        value=fieldValue tooltip=fieldTooltip />    
+      <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="${id}" name="${name}" value=fieldValue 
+        tooltip=realCurPayAmountFullStr postfix=true collapsePostfix=false postfixColumns=8 postfixContent=postfixContent />  
     </#macro>
 
     <#-- Cato: Payment method content and markup.
@@ -314,9 +342,16 @@ jQuery(document).ready(function(){
               </#if>
               <#if showDetails>
                 <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard>
-                  <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
-                  <#if (paymentMethod.get("description", locale))?has_content>(${paymentMethod.get("description", locale)})</#if>
-                  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <@row>
+                    <@cell columns=5>
+                    <@panel>
+                      <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
+                      <#if (paymentMethod.get("description", locale))?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
+                    </@panel>
+                    <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav_inline!} ${styles.action_update!} ${styles.float_right!}">${uiLabelMap.CommonUpdate}</a>
+                    </@cell>
+                  </@row>
+                  <br/>
                   <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
@@ -378,10 +413,7 @@ jQuery(document).ready(function(){
                     checked=((newCreditCardParams.singleUsePayment__NEW_CREDIT_CARD_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_CREDIT_CARD_" name="singleUsePayment__NEW_CREDIT_CARD_" value="" />
               </#if>
-              <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-              <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
-                  Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_CREDIT_CARD_" value=(newCreditCardParams.amount__NEW_CREDIT_CARD_!) tooltip=fieldTooltip/>
+              <@payMethAmountField payMethId="_NEW_CREDIT_CARD_" type="new-pay-meth" params=newCreditCardParams />
             </@section>
           </#if>
         </#if>
@@ -400,9 +432,16 @@ jQuery(document).ready(function(){
               </#if>
               <#if showDetails>
                 <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount>
-                  <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
-                  <#if paymentMethod.get("description", locale)?has_content><p>(${paymentMethod.get("description", locale)})</p></#if>
-                  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <@row>
+                    <@cell columns=5>
+                    <@panel>
+                      <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
+                      <#if paymentMethod.get("description", locale)?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
+                    </@panel>
+                    <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav_inline!} ${styles.action_update!} ${styles.float_right!}">${uiLabelMap.CommonUpdate}</a>
+                    </@cell>
+                  </@row>
+                  <br/>                  
                   <#-- Cato: NOTE: This field was added by us, was missing for EFT accounts -->
                   <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
@@ -454,10 +493,7 @@ jQuery(document).ready(function(){
                     value="Y" checked=((newEftAccountParams.singleUsePayment__NEW_EFT_ACCOUNT_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_EFT_ACCOUNT_" name="singleUsePayment__NEW_EFT_ACCOUNT_" value="" />
               </#if>
-              <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-              <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
-                  Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_EFT_ACCOUNT_" value=(newEftAccountParams.amount__NEW_EFT_ACCOUNT_!) tooltip=fieldTooltip />
+              <@payMethAmountField payMethId="_NEW_EFT_ACCOUNT_" params=newEftAccountParams type="new-pay-meth" />
             </@section>
           </#if>
         </#if>
@@ -510,8 +546,7 @@ jQuery(document).ready(function(){
                         <#lt><@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
                     </#list>
                   </@field>
-                  <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-                  <@field type="input" size="5" id="billingAccountAmount${primSupplSuffix}" name="billingAccountAmount" value=(parameters.billingAccountAmount!) label=uiLabelMap.OrderBillUpTo tooltip=fieldTooltip />
+                  <@payMethAmountField name="billingAccountAmount" id="billingAccountAmount${primSupplSuffix}" params=parameters simple=true /><#-- label=uiLabelMap.OrderBillUpTo -->
                 </@section>
               </#if>
           </#if>
@@ -534,9 +569,16 @@ jQuery(document).ready(function(){
               </#if>
               <#if showDetails && showSupplemental>
                 <@section containerId="content_${paymentMethod.paymentMethodId}${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
-                  <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
-                  <#if paymentMethod.get("description", locale)?has_content>(${paymentMethod.get("description", locale)})</#if>
-                  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <@row>
+                    <@cell columns=5>
+                      <@panel>
+                        <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
+                        <#if paymentMethod.get("description", locale)?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
+                      </@panel>
+                      <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav_inline!} ${styles.action_update!} ${styles.float_right!}">${uiLabelMap.CommonUpdate}</a>
+                    </@cell>
+                  </@row>
+                  <br/>
                   <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
@@ -563,8 +605,8 @@ jQuery(document).ready(function(){
               <#if cart.isPinRequiredForGC(delegator)>
                 <@field type="input" size="10" id="giftCardPin${primSupplSuffix}" name="giftCardPin" value=((newGiftCardParams.giftCardPin)!) label=uiLabelMap.AccountingPIN/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               </#if>
-              <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
-              <@field type="input" size="6" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" value=((newGiftCardParams.giftCardAmount)!) label=uiLabelMap.AccountingAmount tooltip=fieldTooltip/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+
+              <@payMethAmountField type="new-pay-meth" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" params=newGiftCardParams/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
 
               <#-- Cato: Unhardcode the single-use flag so it follows our new inlines above
               <input type="hidden" name="singleUseGiftCard" value="Y" /> -->
@@ -588,7 +630,8 @@ jQuery(document).ready(function(){
 <div id="paymethselection" class="pay-meth-selection">
   <@section containerId="paymeth_primary" containerClass="+pay-meth-options-all-content pay-meth-primary">
     <div id="paymethselect_primary" class="pay-meth-options">
-      <@field type="generic" label="<strong>${uiLabelMap.AccountingPaymentMethod}</strong>" required=true>
+      <#assign fieldLabel><strong>${uiLabelMap.AccountingPaymentMethod}</strong></#assign>
+      <@field type="generic" label=fieldLabel required=true>
         <@paymentMethodContent showPrimary=true showSelect=true />
       </@field>
     </div>
@@ -599,7 +642,8 @@ jQuery(document).ready(function(){
 
   <@section containerId="paymeth_supplemental" containerClass="+pay-meth-options-all-content pay-meth-supplemental"><#-- always show now: style="display:none;" -->
     <div id="paymethselect_supplemental" class="pay-meth-options">
-      <@field type="generic" label="<strong>${uiLabelMap.AccountingAdditionalPaymentMethods}</strong>">
+      <#assign fieldLabel><strong>${uiLabelMap.AccountingAdditionalPaymentMethods}</strong></#assign>
+      <@field type="generic" label=fieldLabel>
         <@paymentMethodContent showSupplemental=true showSelect=true />
       </@field>
     </div>

@@ -2,7 +2,11 @@
  * Cato: Common permission checks that any store screen may need.
  */
 
-final module = "CommonPermChecks.groovy";
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
+ 
+final module = "CommonUserChecks.groovy";
 
 userLogin = context.userLogin; // (could be missing entirely)
 permChecksSetGlobal = context.remove("permChecksSetGlobal");
@@ -34,7 +38,25 @@ targetCtx.userIsAnonUnknown = userIsAnonUnknown;
 userIsKnown = (userHasAccount || userIsAnonKnown);
 targetCtx.userIsKnown = userIsKnown;
 
+// Get the user party
+userParty = null;
+if (userLogin?.partyId) {
+    userParty = EntityQuery.use(delegator).from("Party").where("partyId", userLogin.partyId).queryOne();
+}
+targetCtx.userParty = userParty;
 
+userIsBusiness = false;
+if (userParty?.partyTypeId) {
+    // FIXME?: Currently do a simplistic partyTypeId check to see if business rep.
+    // By default we assume personal unless has a partyTypeId that is non-PERSON
+    if (userParty.partyTypeId != "PERSON" && userParty.partyTypeId != "FAMILY") {
+        userIsBusiness = true;
+    }
+}
+targetCtx.userIsBusiness = userIsBusiness;
+
+userIsPersonal = !userIsBusiness;
+targetCtx.userIsPersonal = userIsPersonal;
 
 
 

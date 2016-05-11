@@ -10691,16 +10691,12 @@ input::-moz-focus-inner {
 }
 
 /*Radio and checkbox item long label wrapping workaround
-.radio-item, .checkbox-item {
-    white-space : nowrap;
-}
-.radio-item input, .checkbox-item input {
-    vertical-align: top;
-}
-.radio-item > *, .checkbox-item > * {
-    white-space : normal;
-}
 */
+/* line 722, ../scss/_base.scss */
+input[type="radio"] + label {
+  display: inline;
+}
+
 /* line 1, ../scss/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;

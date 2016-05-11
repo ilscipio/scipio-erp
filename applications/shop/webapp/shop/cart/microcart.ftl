@@ -24,8 +24,18 @@ under the License.
 </#if>
 <#assign microCartMenuItem = microCartMenuItem!false>
 
-<#-- 2016-04-21: Quick access to checkout; set to true for testing -->
-<#assign microCartQuickMenu = microCartQuickMenu!false>
+<#-- 2016-04-21: Quick access to checkout; set to true for testing 
+    THIS NOW SUPPORTS A DEBUGGING OPTION, use ?microCartQuickMenu=true on any request to turn it on,
+    e.g.,
+      /shop/control/main?microCartQuickMenu=true
+      /shop/control/main?microCartQuickMenu=false
+    NOTE: context setting overrides it if present. -->
+<#if (requestParameters.microCartQuickMenu!) == "true" || (requestParameters.microCartQuickMenu!) == "Y">
+  <#assign dummy = (session.setAttribute("microCartQuickMenu", true))!>
+<#elseif (requestParameters.microCartQuickMenu!) == "false" || (requestParameters.microCartQuickMenu!) == "N">
+  <#assign dummy = (session.setAttribute("microCartQuickMenu", false))!>
+</#if>
+<#assign microCartQuickMenu = microCartQuickMenu!(session.getAttribute("microCartQuickMenu"))!false>
 
 <#if microCartMenuItem>
   <li<#if microCartQuickMenu && (shoppingCartSize > 0)> class="has-dropdown not-click"</#if>>

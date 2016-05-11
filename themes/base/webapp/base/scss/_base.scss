@@ -719,6 +719,6 @@ input::-moz-focus-inner {
 /*Radio and checkbox item long label wrapping workaround
 */
 
-input[type="radio"] + label {
+input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox"] + label {
   display: inline;
 }

@@ -30,6 +30,8 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://metro-theme/includes/appbar.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://metro-theme/includes/appbarOpen.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://metro-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://metro-theme/includes/themeStyles.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://metro-theme/includes/themeTemplate.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/metro-theme/images/favicon.ico" sequenceId="01"/>
 
     <!-- Cato: The following includes can be used to override specific default pages

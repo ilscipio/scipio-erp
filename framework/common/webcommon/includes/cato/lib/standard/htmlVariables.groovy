@@ -824,9 +824,9 @@ context.styles = [
 
   /* Panels */
     "panel_wrap" : "panel",
-    "panel_head" : "",
-    "panel_title" : "",
-    "panel_body" : "",
+    "panel_head" : "panel-head",
+    "panel_title" : "panel-title",
+    "panel_body" : "panel-body",
     "login_wrap" : "large-3 login-box",                  /* the login box is a special form of a panel in this case */
     "login_header": "",
     "login_body" : "signup-panel right-solid",

@@ -853,9 +853,25 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <@field attr="" />
     </@fields>
     
-    <@fields type="default-manual"> <#- use @field as low-level control ->
+    <@fields type="default-compact"> <#- compactified arrangement ->
+      <@field attr="" />
+    </@fields>
+    
+    <@fields type="default-manual"> <#- use @field as low-level control (also possible: type="generic") ->
       <@field attr="" labelArea=true label="My Label" />
     </@fields>    
+    
+    <@row> <#- widget-only field: no containers, label area or postfix area, and label automatically inlines as widget label (checkbox label); do everything yourself ->
+      <@cell columns=3>My Text</@cell>
+      <@cell columns=9>
+        <@field type="checkbox" widgetOnly=true label="My Checkbox" name="check1" /> 
+      </@cell>
+    </@row>
+    
+    <p>My <@field type="input" inline=true name="check1" value="inlined" /> field</p> <#- inlined field: no containers, label area or postfix area, display:inline, no width spanning ->
+    
+    <@field attr="" label="My Label" class="+${styles.field_inline!}" /> <#- special form of regular field where the widget element alone is inlined and no spanning, but still has label area and container; widget element receives an inlining class ->
+    
     
   * Parameters *
     * General *
@@ -987,6 +1003,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               In other words, turns it into a logically inline element (traditionally, CSS "display: inline;").
                               Theme should act on this style to prevent taking up all the width.
                               In addition, this will force {{{labelArea}}} false and any label specified will use the inlined label (area).
+                              NOTE: If you want to have a widget-only containerless field without inlining, use {{{widgetOnly=true}}}.
+                                  If you want a regular field with containers where only the widget element is inlined (i.e. not full-width-spanning),
+                                  use {{{class="+${styles.field_inline}"}}}.
     norows                  = ((boolean), default: false) If true, render without the rows-container
                               NOTE: This is a low-level control for advanced markup cases and global style presets (@fields).
     nocells                 = ((boolean), default: false) If true, render without the cells-container

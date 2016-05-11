@@ -382,13 +382,14 @@
         <value xml:lang="zh">产品店铺（ProductStore） ${productStore.productStoreId} 没有预留库存；无法使用快速送货</value>
         <value xml:lang="zh_TW">產品商店(ProductStore) ${productStore.productStoreId} 沒有預留庫存;無法使用快速送貨</value>
     </property>
-    <property key="FacilityNoQuickShipForMultipleFacilities">
-        <value xml:lang="en">ProductStore ${productStore.productStoreId} allows multiple facilities; cannot use Quick Ship</value>
-        <value xml:lang="it">Negozio ${productStore.productStoreId} permette stabilimenti multipli; non puoi usare spedizione veloce</value>
-        <value xml:lang="ja">製品店舗 ${productStore.productStoreId} は複数拠点を許可しています。クイック発送は使用できません</value>
-        <value xml:lang="vi">Kho hàng ${productStore.productStoreId} phân phối tại nhiều Chi nhánh / Cơ sở nên không thể sử dụng tính năng Vận chuyển nhanh</value>
-        <value xml:lang="zh">产品店铺（ProductStore） ${productStore.productStoreId} 允许多个场所；无法使用快速送货</value>
-        <value xml:lang="zh_TW">產品商店(ProductStore) ${productStore.productStoreId} 允許多個場所;無法使用快速送貨</value>
+    <property key="FacilityShipmentPackages">
+        <value xml:lang="en">Shipment Packages</value>        
+    </property>
+    <property key="FacilityPackageContent">
+        <value xml:lang="en">Shipment Content</value>
+    </property>
+    <property key="FacilityPackageContents">
+        <value xml:lang="en">Shipment Contents</value>
     </property>
     <property key="FacilityReceiveInventoryProduct">
         <value xml:lang="en">Tried to receive a serialized inventory item with serialNumber ${parameters.serialNumber} or inventoryItemId ${parameters.currentInventoryItemId} passed in and quantityAccepted ${parameters.quantityAccepted} was greater than 1; we don't know what to do with that!</value>

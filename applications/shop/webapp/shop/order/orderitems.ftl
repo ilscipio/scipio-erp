@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- CATO: NOTE: DO NOT COMMENT STUFF, USE FLAGS INSTEAD -->
+
 <#-- CATO: Extra toggle for (some of the) detailed info (some other detailed is required) 
     FIXME: some of the detail can only be turned off with maySelect=false currently, but it may also disable needed functionality -->
 <#assign showDetailed = showDetailed!true>
@@ -133,9 +135,11 @@ under the License.
             </@section>
           </@modal>-->
         </#macro>
-        <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
-        <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
-
+        <#assign mayCancelItem = false>
+        <#if maySelect>
+          <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
+          <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
+        </#if>
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
           <@td>
             ${htmlContentString(orderItem.itemDescription!"")} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
@@ -149,8 +153,8 @@ under the License.
             <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
               <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
                 <#assign dlAvail = ((orderHeader.statusId!) == "ORDER_COMPLETED")>
-                <a href="<#if dlAvail><@ofbizUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
-                    <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>${uiLabelMap.ContentDownload}</a><#lt/>
+                <a href="<#if dlAvail><@ofbizUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
+                    <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[${uiLabelMap.ContentDownload}]</a><#lt/>
               </#if>
             </#if>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>

@@ -52,6 +52,8 @@ under the License.
       </#if>
       -->
       <#-- Cato: Always show it here: <#if maySelect>-->
+      <#-- NOTE: The order may actually have more than one invoice available. On this page, show only this one for now, because the
+          others don't become available until after order is completed and stuff. -->
       <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${uiLabelMap.CommonInvoice} (${uiLabelMap.CommonPdf})" />
       <#--</#if>-->
       <#if maySelect && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">

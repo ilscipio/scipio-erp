@@ -42,15 +42,16 @@ under the License.
           <#-- invoices -->
           <#assign invoices = delegator.findByAnd("OrderItemBilling", {"orderId":"${orderHeader.orderId}"}, Static["org.ofbiz.base.util.UtilMisc"].toList("invoiceId"), false) />
           <#assign distinctInvoiceIds = Static["org.ofbiz.entity.util.EntityUtil"].getFieldListFromEntityList(invoices, "invoiceId", true)>
-          <#if distinctInvoiceIds?has_content>
-            <@td>
+          <@td>
+            <#-- Cato: NOTE: There is more than one kind of invoice, the PDF accessible upon creation, and additional invoices
+                created upon order completion. Just show it all for now (final invoice may have more information). -->
+            <a href="<@ofbizUrl>order.pdf?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${orderHeader.orderId} (${uiLabelMap.CommonPdf})</a>
+            <#if distinctInvoiceIds?has_content>
               <#list distinctInvoiceIds as invoiceId>
-                 <a href="<@ofbizUrl>invoice.pdf?invoiceId=${invoiceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">(${invoiceId} PDF) </a>
+                <a href="<@ofbizUrl>invoice.pdf?invoiceId=${invoiceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${invoiceId} (${uiLabelMap.CommonPdf})</a>
               </#list>
-            </@td>
-          <#else>
-            <@td></@td>
-          </#if>
+            </#if>
+          </@td>
           <@td><a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
         </@tr>
       </#list>

@@ -15210,4 +15210,8 @@
         <value xml:lang="de">Karte</value>
         <value xml:lang="en">Cart</value>
     </property>
+    <property key="OrderOrderItemCancelled">
+        <value xml:lang="de">Auftragsposition wurde abgebrochen.</value>
+        <value xml:lang="en">Order item has been cancelled.</value>
+    </property>
 </resource>

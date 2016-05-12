@@ -1778,7 +1778,20 @@ public class OrderServices {
                 createOrderAdjContext.put("shipGroupSeqId", "_NA_");
                 createOrderAdjContext.put("description", "Tax adjustment due to order change");
                 createOrderAdjContext.put("amount", orderTaxDifference);
-                createOrderAdjContext.put("userLogin", userLogin);
+                
+                // CATO: STOCK BUGFIX: createOrderAdjustment performs a strict perm check and will fail when
+                // called from storefront. We already do a perm check in this service, so run as system user.
+                //createOrderAdjContext.put("userLogin", userLogin);
+                try {
+                    GenericValue systemLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
+                    createOrderAdjContext.put("userLogin", systemLogin);
+                } catch (GenericEntityException e) {
+                    String createOrderAdjErrMsg = UtilProperties.getMessage(resource_error, 
+                            "OrderErrorCallingCreateOrderAdjustmentService", locale);
+                    Debug.logError(e, createOrderAdjErrMsg, module);
+                    return ServiceUtil.returnError(createOrderAdjErrMsg);
+                }
+
                 Map<String, Object> createOrderAdjResponse = null;
                 try {
                     createOrderAdjResponse = dispatcher.runSync("createOrderAdjustment", createOrderAdjContext);

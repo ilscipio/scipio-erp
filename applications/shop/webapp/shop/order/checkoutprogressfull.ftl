@@ -21,11 +21,11 @@ under the License.
 <@section>
 <#if checkoutMode == "primary">
     <@nav type="steps" activeElem=(activeStep!"cart")>
-        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>Cart</@step>
-        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("checkoutshippingaddress")>Shipping Address</@step>
-        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("checkoutshippingoptions")>Shipping Options</@step>
-        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("checkoutpayment")>Billing</@step>
-        <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
+        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>${uiLabelMap.OrderCart}</@step>
+        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("checkoutshippingaddress")>${uiLabelMap.OrderShippingAddress}</@step>
+        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("checkoutshippingoptions")>${uiLabelMap.PageTitleShippingOptions}</@step>
+        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("checkoutpayment")>${uiLabelMap.AccountingBilling}</@step>
+        <@step name="orderReview" icon="fa fa-info" href=makeOfbizUrl("checkoutreview")>${uiLabelMap.OrderConfirmOrder}</@step>
     </@nav>
 <#else>
     <#-- Cato: Migrated from anonymousCheckoutLinks.ftl -->

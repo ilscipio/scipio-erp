@@ -49,8 +49,7 @@ under the License.
     <@commonMsg type="result-norecord">(${uiLabelMap.CommonNone})</@commonMsg><#--${uiLabelMap.EcommerceDownloadNotFound}-->
   </#if>
 
-  <#-- Cato: TODO: Localize -->
-  <p><em>NOTE: Downloads for orders pending payment or approval will appear here once the order is completed.</em></p>
+  <@commonMsg type="info"><em>${uiLabelMap.CommonNote}: ${uiLabelMap.ShopDownloadsHereOnceOrderCompleted}</em></@commonMsg>
 <#--</@section>-->
 
 

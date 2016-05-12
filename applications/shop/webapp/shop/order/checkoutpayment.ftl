@@ -210,20 +210,57 @@ jQuery(document).ready(function(){
             </#if>
           </#if>
       </#if> 
-      <#assign fieldDescription = uiLabelMap.AccountingLeaveEmptyFullRemainingAmount>
+      <#assign fieldDescription = uiLabelMap.AccountingLeaveEmptyForMaximumAmount + ".">
       <#assign realCurPayAmountFullStr = "">
       <#if realCurPayAmount?has_content>
         <#assign realCurPayAmountFullStr>${uiLabelMap.CommonCurrent}: <@ofbizCurrency amount=realCurPayAmount isoCode=cart.getCurrency()/></#assign>
       </#if>
 
       <#assign postfixContent>
-        <@commonMsg type="info-important" closable=false>${fieldDescription}</@commonMsg>
+        <@row>
+          <@cell small=8><#-- class="+${styles.float_right!}"-->
+            <@commonMsg type="info-important" closable=false>${fieldDescription}</@commonMsg>
+          </@cell>
+        </@row>
       </#assign>
       <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
           Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
       <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="${id}" name="${name}" value=fieldValue 
-        tooltip=realCurPayAmountFullStr postfix=true collapsePostfix=false postfixColumns=8 postfixContent=postfixContent />  
+        tooltip=realCurPayAmountFullStr postfix=true collapsePostfix=false postfixColumns=9 postfixContent=postfixContent />  
     </#macro>
+
+    <#macro payMethInfoPanel title updateAction="">
+      <#-- this currently looks strange, so just show one after the other for now
+      <@row>
+        <@cell columns=5>
+          <@heading>${title}</@heading>
+        </@cell>
+        <@cell columns=7>
+      -->
+      <@heading>${title}</@heading>
+        <@row>
+          <@cell small=5>
+        
+          <div class="pay-meth-info-panel-container">
+            <#assign bottomContent = false>
+            <#if updateAction?has_content>
+              <#assign bottomContent>
+                <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), '${updateAction}', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!} panel-update-link">${uiLabelMap.CommonUpdate}</a>
+              </#assign>
+            </#if>
+            <@panel bottomContent=bottomContent class="+pay-meth-info-panel">
+              <#nested>
+            </@panel>
+          </div>
+          </@cell>
+        </@row>
+      <#--
+        </@cell>
+      </@row>
+      -->
+      <#--<br/>-->
+    </#macro>
+
 
     <#-- Cato: Payment method content and markup.
         This pattern allows to avoid duplicating the control/loop/ordering logic and keeps the definitions for each pay method together so easier to follow alongside the original.
@@ -252,9 +289,11 @@ jQuery(document).ready(function(){
               class="+pay-select-radio pay-select-field" label=methodLabel /><#--tooltip=(getPayMethTypeDesc("EXT_OFFLINE")!)-->
           </#if>
           <#if showDetails>
-            <@section containerId="content_OFFLINE" containerClass="+pay-meth-content" containerStyle="display:none;" title=methodLabel>
-              <#-- Cato: TODO?: These descriptions could probably be integrated into the entity values using get("xxx", locale)... -->
-              <p>${uiLabelMap.OrderPaymentDescOffline}</p>
+            <@section containerId="content_OFFLINE" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=methodLabel -->
+              <@payMethInfoPanel title=methodLabel>
+                <#-- Cato: TODO?: These descriptions could probably be integrated into the entity values using get("xxx", locale)... -->
+                <p>${uiLabelMap.OrderPaymentDescOffline}</p>
+              </@payMethInfoPanel>
               <@payMethAmountField payMethId="EXT_OFFLINE"/>
             </@section>
           </#if>
@@ -267,8 +306,10 @@ jQuery(document).ready(function(){
               class="+pay-select-radio pay-select-field" label=methodLabel /><#--tooltip=(getPayMethTypeDesc("EXT_COD")!)-->
           </#if>
           <#if showDetails>
-            <@section containerId="content_COD" containerClass="+pay-meth-content" containerStyle="display:none;" title=methodLabel>
-              <p>${uiLabelMap.OrderPaymentDescCOD}</p>
+            <@section containerId="content_COD" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=methodLabel-->
+              <@payMethInfoPanel title=methodLabel>
+                <p>${uiLabelMap.OrderPaymentDescCOD}</p>
+              </@payMethInfoPanel>
               <@payMethAmountField payMethId="EXT_COD"/>
             </@section>
           </#if>
@@ -282,8 +323,10 @@ jQuery(document).ready(function(){
               class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithPayPal /><#--tooltip=(getPayMethTypeDesc("EXT_PAYPAL")!) -->
           </#if>
           <#if showDetails>
-            <@section containerId="content_PAYPAL" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithPayPal>
-              <p>${uiLabelMap.OrderPaymentDescPaypal}</p>
+            <@section containerId="content_PAYPAL" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithPayPal-->
+              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithPayPal>
+                <p>${uiLabelMap.OrderPaymentDescPaypal}</p>
+              </@payMethInfoPanel>
             </@section>
           </#if>
         </#if>
@@ -297,8 +340,10 @@ jQuery(document).ready(function(){
               class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithWorldPay /><#--tooltip=(getPayMethTypeDesc("EXT_WORLDPAY")!)-->
           </#if>
           <#if showDetails>
-            <@section containerId="content_WORLDPAY" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithWorldPay>
-              <p>${uiLabelMap.OrderPaymentDescWorldpay}</p>
+            <@section containerId="content_WORLDPAY" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithWorldPay-->
+              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithWorldPay>
+                <p>${uiLabelMap.OrderPaymentDescWorldpay}</p>
+              </@payMethInfoPanel>
             </@section>
           </#if>
         </#if>
@@ -312,8 +357,10 @@ jQuery(document).ready(function(){
               class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithiDEAL /><#--tooltip=(getPayMethTypeDesc("EXT_IDEAL")!) -->
           </#if>
           <#if showDetails>
-            <@section containerId="content_IDEAL" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithiDEAL>
-              <p>${uiLabelMap.OrderPaymentDescIdeal}</p>
+            <@section containerId="content_IDEAL" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithiDEAL-->
+              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithiDEAL>
+                <p>${uiLabelMap.OrderPaymentDescIdeal}</p>
+              </@payMethInfoPanel>
               <#if issuerList?has_content>
                 <@field type="select" name="issuer" id="issuer" label=uiLabelMap.AccountingBank>
                   <#list issuerList as issuer>
@@ -341,17 +388,11 @@ jQuery(document).ready(function(){
                   class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
               </#if>
               <#if showDetails>
-                <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard>
-                  <@row>
-                    <@cell columns=5>
-                    <@panel>
-                      <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
-                      <#if (paymentMethod.get("description", locale))?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
-                    </@panel>
-                    <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav_inline!} ${styles.action_update!} ${styles.float_right!}">${uiLabelMap.CommonUpdate}</a>
-                    </@cell>
-                  </@row>
-                  <br/>
+                <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;"><#--title=uiLabelMap.AccountingCreditCard-->
+                  <@payMethInfoPanel title=uiLabelMap.AccountingCreditCard updateAction='EC'>
+                    <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
+                    <#if (paymentMethod.get("description", locale))?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
+                  </@payMethInfoPanel>
                   <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
@@ -431,17 +472,11 @@ jQuery(document).ready(function(){
                   class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
               </#if>
               <#if showDetails>
-                <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount>
-                  <@row>
-                    <@cell columns=5>
-                    <@panel>
-                      <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
-                      <#if paymentMethod.get("description", locale)?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
-                    </@panel>
-                    <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav_inline!} ${styles.action_update!} ${styles.float_right!}">${uiLabelMap.CommonUpdate}</a>
-                    </@cell>
-                  </@row>
-                  <br/>                  
+                <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;"><#--title=uiLabelMap.AccountingEFTAccount-->
+                  <@payMethInfoPanel title=uiLabelMap.AccountingEFTAccount updateAction='EE'>
+                    <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
+                    <#if paymentMethod.get("description", locale)?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
+                  </@payMethInfoPanel>
                   <#-- Cato: NOTE: This field was added by us, was missing for EFT accounts -->
                   <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
@@ -568,17 +603,11 @@ jQuery(document).ready(function(){
                 </#if>
               </#if>
               <#if showDetails && showSupplemental>
-                <@section containerId="content_${paymentMethod.paymentMethodId}${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
-                  <@row>
-                    <@cell columns=5>
-                      <@panel>
-                        <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
-                        <#if paymentMethod.get("description", locale)?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
-                      </@panel>
-                      <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav_inline!} ${styles.action_update!} ${styles.float_right!}">${uiLabelMap.CommonUpdate}</a>
-                    </@cell>
-                  </@row>
-                  <br/>
+                <@section containerId="content_${paymentMethod.paymentMethodId}${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;"><#--title=uiLabelMap.AccountingGiftCard -->
+                  <@payMethInfoPanel title=uiLabelMap.AccountingGiftCard updateAction='EG'>
+                    <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
+                    <#if paymentMethod.get("description", locale)?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
+                  </@payMethInfoPanel>
                   <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
@@ -606,8 +635,6 @@ jQuery(document).ready(function(){
                 <@field type="input" size="10" id="giftCardPin${primSupplSuffix}" name="giftCardPin" value=((newGiftCardParams.giftCardPin)!) label=uiLabelMap.AccountingPIN/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               </#if>
 
-              <@payMethAmountField type="new-pay-meth" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" params=newGiftCardParams/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
-
               <#-- Cato: Unhardcode the single-use flag so it follows our new inlines above
               <input type="hidden" name="singleUseGiftCard" value="Y" /> -->
               <#if userHasAccount>
@@ -616,6 +643,8 @@ jQuery(document).ready(function(){
                     value="Y" checked=((singleUseGiftCard!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUseGiftCard" name="singleUseGiftCard" value="N" />
               </#if>
+
+              <@payMethAmountField type="new-pay-meth" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" params=newGiftCardParams/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
             </@section>
           </#if>
         </#if>

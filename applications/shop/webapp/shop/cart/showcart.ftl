@@ -291,12 +291,13 @@ function setAlternateGwp(field) {
                         <@td>&nbsp;</@td>
                     </@tr>
 
-               <#-- other adjustments -->
+                <#-- other adjustments -->
                 <#list shoppingCart.getAdjustments() as cartAdjustment>
                     <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true) />
                     <@tr valign="top">
                         <@td colspan="5" class="${styles.text_right!}">
-                            ${uiLabelMap.OrderPromotion}: ${cartAdjustment.description!""}
+                            <#--${uiLabelMap.OrderPromotion}: ${cartAdjustment.description!""}-->
+                            ${adjustmentType.get("description", locale)!}: ${cartAdjustment.get("description", locale)!}
                         </@td>
                         <@td nowrap="nowrap" class="${styles.text_right!}"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></@td>
                         <@td>&nbsp;</@td>

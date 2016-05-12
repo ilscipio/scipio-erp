@@ -8,6 +8,7 @@
 </#macro>
 
 <#macro formattedAddressBasic address emphasis=false abbrev=false verbose=true>
+  <#-- NOTE: This must NEVER end with a <br/>. only use between elements. -->
   <#if address.toName?has_content><#if emphasis><b></#if>${uiLabelMap.CommonTo}<#if emphasis></b></#if>&nbsp;${address.toName}<br /></#if>
   <#if address.attnName?has_content><#if emphasis><b></#if>${uiLabelMap.PartyAddrAttnName}:<#if emphasis></b></#if>&nbsp;${address.attnName}<br /></#if>
   <#if address.address1?has_content>${address.address1}<br /></#if>
@@ -23,38 +24,48 @@
 <#-- high-level address formatting macro -->
 <#macro formattedAddress address emphasis=false updateLink="" abbrev=false verbose=true usePanel=false 
     partyContactMechPurposes=[] title="">
-  <#if usePanel>
-    <@panel class="+address-panel">
-      <#if title?has_content><div><b>${title}</b></div></#if>
-      <div>
-        <@formattedAddressBasic address=address emphasis=emphasis abbrev=abbrev verbose=verbose/>
-      </div>
-    <#list partyContactMechPurposes as partyContactMechPurpose>
-      <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
-      <div>
-        <em>
-        ${contactMechPurposeType.get("description",locale)!}
-        <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate})</#if>
-        </em>
-      </div>
-    </#list>
-    </@panel>
+  <#if usePanel>   
+    <#local bottomContent = false> 
     <#if updateLink?has_content>
-      <@addressUpdateLink address=address updateLink=updateLink class="+${styles.float_right!}"/><#-- with right button: class="${styles.link_nav!} ${styles.float_right!}" -->
+      <#-- NOTE: This is currently using absolute positioning; also possible was float:right on button
+          with manipulating panel padding and exploiting text wrapping to save space, but the wrapping did not work out well -->
+      <#local bottomContent><@addressUpdateLink address=address updateLink=updateLink class="${styles.link_nav!} panel-update-link" /></#local>
     </#if>
-  <#else>
-    <#if title?has_content><div><b>${title}</b></div></#if>
-    <div>
-      <@formattedAddressBasic address=address emphasis=emphasis abbrev=abbrev verbose=verbose/>
-    </div>
+    <@panel class="+address-panel ${styles.float_clearfix!}" bottomContent=bottomContent>
+      <#-- NOTE: use spans only for now!! -->
+      <#if title?has_content><span class="address-panel-content"><b>${title}</b></span><br/></#if>
+      <span class="address-panel-content">
+        <@formattedAddressBasic address=address emphasis=emphasis abbrev=abbrev verbose=verbose/>
+      </span>
     <#list partyContactMechPurposes as partyContactMechPurpose>
       <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
-      <div>
+      <br/>
+      <span class="address-panel-content">
         <em>
         ${contactMechPurposeType.get("description",locale)!}
         <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate})</#if>
         </em>
-      </div>
+      </span>
+    </#list>
+    <#--
+    <#if updateLink?has_content>
+      <@addressUpdateLink address=address updateLink=updateLink class="${styles.link_nav!} panel-update-link" />
+    </#if>-->
+    </@panel>
+  <#else>
+    <#if title?has_content><span><b>${title}</b></span><br/></#if>
+    <span>
+      <@formattedAddressBasic address=address emphasis=emphasis abbrev=abbrev verbose=verbose/>
+    </span>
+    <#list partyContactMechPurposes as partyContactMechPurpose>
+      <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
+      <br/>
+      <span>
+        <em>
+        ${contactMechPurposeType.get("description",locale)!}
+        <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate})</#if>
+        </em>
+      </span>
     </#list>
     <#if updateLink?has_content>
       <br/><br/><@addressUpdateLink address=address updateLink=updateLink />

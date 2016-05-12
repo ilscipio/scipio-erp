@@ -533,6 +533,11 @@ under the License.
 
     <!--End Anonymous Checkout 3 steps entry -->
 
+    <!-- Cato: direct request to refresh/redirect to checkout review cleanly -->
+    <request-map uri="checkoutreview">
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <response name="success" type="request" value="calcShipping" />
+    </request-map>
     <request-map uri="checkoutpayment">
         <!-- Cato: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->

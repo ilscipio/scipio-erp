@@ -18,48 +18,63 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
-<#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
-<#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
+<#-- CATO: Extra toggle for (some of the) detailed info (some other detailed is required) 
+    FIXME: some of the detail can only be turned off with maySelect=false currently, but it may also disable needed functionality -->
+<#assign showDetailed = showDetailed!true>
 
 <#assign maySelect = ((maySelectItems!"N") == "Y")>
 <#assign printable = printable!false>
 
-<#assign numColumns = 8>
-<#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
+<#-- CATO: TODO?: Create shopping list from order (commented) -->
+
+<#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
+<#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
+<#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
+
+
+<#-- Cato: extra dummy column by default
+<#assign numColumns = 8>-->
+<#assign numColumns = 9>
+<#if maySelect && (roleTypeId!) == "PLACING_CUSTOMER">
   <#assign numColumns = 11>
 </#if>
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <#if ((maySelectItems!"N") == "Y") && ((roleTypeId!) == "PLACING_CUSTOMER")>
+      <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddCheckedToCart />
-          <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />
+          <#-- Cato: TODO?: At current time this is the only link to shopping list we had, makes no sense to show while user menu provides no other shopping list management options
+          <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
       </#if>
     </@menu>
 </#macro>
 <@section title=uiLabelMap.OrderOrderItems menuContent=menuContent>
-  <@table type="data-complex">
+  <@table type="data-complex" class="+order-detail-items">
     <@thead>
     <@tr>
-      <@th>${uiLabelMap.OrderProduct}</@th>
-      <#if (maySelectItems!"N") == "Y">
-        <@th>${uiLabelMap.OrderQtyOrdered}</@th>
-        <@th>${uiLabelMap.OrderQtyPicked}</@th>
-        <@th>${uiLabelMap.OrderQtyShipped}</@th>
-        <@th>${uiLabelMap.OrderQtyCanceled}</@th>
+      <#if maySelect>
+        <@th width="25%">${uiLabelMap.OrderProduct}</@th>
+        <@th width="10%">${uiLabelMap.OrderQtyOrdered}</@th>
+        <@th width="10%">${uiLabelMap.OrderQtyPicked}</@th>
+        <@th width="10%">${uiLabelMap.OrderQtyShipped}</@th>
+        <@th width="10%">${uiLabelMap.OrderQtyCanceled}</@th>
+        <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       <#else>
+        <@th width="45%">${uiLabelMap.OrderProduct}</@th>
         <@th></@th>
         <@th></@th>
         <@th></@th>
-        <@th>${uiLabelMap.OrderQtyOrdered}</@th>
+        <@th width="15%">${uiLabelMap.CommonQuantity}</@th><#--${uiLabelMap.OrderQtyOrdered}-->
+        <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       </#if>
-      <@th>${uiLabelMap.EcommerceUnitPrice}</@th>
-      <@th>${uiLabelMap.OrderAdjustments}</@th>
-      <@th>${uiLabelMap.CommonSubtotal}</@th>
-      <#if ((maySelectItems!"N") == "Y") && ((roleTypeId!) == "PLACING_CUSTOMER")>
+      <@th width="15%">${uiLabelMap.OrderAdjustments}</@th>
+      <@th width="15%">${uiLabelMap.EcommerceItemTotal}</@th><#--${uiLabelMap.CommonSubtotal}-->
+      <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
         <@th colspan="3"></@th>
+      <#else>
+        <#-- Cato: even if maySelect false, add extra column to standardize look -->
+        <@th>&nbsp;</@th>
       </#if>
     </@tr>
     </@thead>
@@ -86,9 +101,44 @@ under the License.
       </#if>
       <@tr><@td colspan="${numColumns}"></@td></@tr>
       <@tr>
+        <#-- Cato: Workaround for access from macros -->
+        <#assign orderItem = orderItem>
+
+        <#-- Cato: Use a cancel link form toggle to prevent cluttering up things by default -->
+        <#assign cancelItemLabel = getLabel("StatusValidChange.transitionName.ITEM_APPROVED.ITEM_CANCELLED", "CommonEntityLabels")?replace(" ", "&nbsp;")>
+        <#macro cancelItemForm>
+            <#-- Cato: FIXME: -->
+            <@alert type="warning">${uiLabelMap.CommonWarning}: Cancel may fail for some payment methods</@alert>
+            
+            <@field type="select" name="irm_${orderItem.orderItemSeqId}" label=uiLabelMap.OrderReturnReason>
+              <#-- Cato: Usually stores want a reason...<option value=""></option>-->
+              <#list orderItemChangeReasons as reason>
+                <option value="${reason.enumId}"<#if (parameters["irm_${orderItem.orderItemSeqId}"]!) == reason.enumId> selected="selected"</#if>>${reason.get("description",locale)!(reason.enumId)}</option>
+              </#list>
+            </@field>
+            <@field type="text" name="icm_${orderItem.orderItemSeqId}" value=(parameters["icm_${orderItem.orderItemSeqId}"]!) size="30" maxlength="60" label=uiLabelMap.CommonComments/>
+            <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
+                class="${styles.link_run_sys!} ${styles.action_terminate!}" text=cancelItemLabel />
+            <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
+            <#-- Cato: Extra hidden input to help with hide/show logic -->
+            <input type="hidden" name="cancelitem_${orderItem.orderItemSeqId}" value="Y"/>
+        </#macro>
+
+        <#macro cancelLinkContent>
+          <#-- Cato: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
+          <a href="javascript:jQuery('#row_orderitem_cancel_${orderItem.orderItemSeqId}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
+          <#--<@modal id="row_orderitem_cancel_${orderItem.orderItemSeqId}" label="[${cancelItemLabel}]">
+            <@section title="${cancelItemLabel}: ${orderItem.itemDescription!}">
+              <@cancelItemForm />
+            </@section>
+          </@modal>-->
+        </#macro>
+        <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
+        <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
+
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
           <@td>
-            ${htmlContentString(orderItem.itemDescription!"")}
+            ${htmlContentString(orderItem.itemDescription!"")} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
           </@td>
         <#else>
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
@@ -100,11 +150,11 @@ under the License.
               <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
                 <#assign dlAvail = ((orderHeader.statusId!) == "ORDER_COMPLETED")>
                 <a href="<#if dlAvail><@ofbizUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
-                    <#if !dlAvail> title="Downloads will be available once the order is completed."</#if>>${uiLabelMap.ContentDownload}</a><#lt/>
+                    <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>${uiLabelMap.ContentDownload}</a><#lt/>
               </#if>
             </#if>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
-            <#if orderItemAttributes?has_content>
+            <#if showDetailed && orderItemAttributes?has_content>
                 <ul>
                 <#list orderItemAttributes as orderItemAttribute>
                     <li>
@@ -113,7 +163,7 @@ under the License.
                 </#list>
                 </ul>
             </#if>
-            <#if product?has_content>
+            <#if showDetailed && product?has_content>
               <#if product.piecesIncluded?? && product.piecesIncluded?long != 0>
                   [${uiLabelMap.OrderPieces}: ${product.piecesIncluded}]
               </#if>
@@ -138,7 +188,7 @@ under the License.
                   [${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}]
               </#if>
             </#if>
-            <#if (maySelectItems!"N") == "Y">
+            <#if maySelect>
               <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
               <#if returns?has_content>
                 <#list returns as return>
@@ -154,8 +204,9 @@ under the License.
                 </#list>
               </#if>
             </#if>
+            <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
           </@td>
-          <#if !((maySelectItems!"N") == "Y")>
+          <#if !(maySelect)>
             <@td></@td>
             <@td></@td>
             <@td></@td>
@@ -163,7 +214,7 @@ under the License.
           <@td>
             ${orderItem.quantity?string.number}
           </@td>
-          <#if (maySelectItems!"N") == "Y">
+          <#if maySelect>
           <@td>
             <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
             <#if (pickedQty > 0) && orderHeader.statusId == "ORDER_APPROVED">${(pickedQty!0)?string.number}<#else>${(pickedQty!0)?string.number}</#if>
@@ -190,31 +241,39 @@ under the License.
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem) isoCode=currencyUomId/>
             </#if>
           </@td>
-          <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
+          <#if maySelect && (roleTypeId!) == "PLACING_CUSTOMER">
             <@td></@td>
             <@td>
               <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox"/>
             </@td>
             <@td></@td>
+          <#else>
+            <@td></@td>
           </#if>
         </#if>
       </@tr>
       <#-- now cancel reason and comment field -->
-      <#if !printable && (maySelectItems!"N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
-        <@tr>
+      <#-- CATO: Inlined cancel item form -->
+      <#if !printable && maySelect && mayCancelItem>
+        <#assign style = "">
+        <#-- only display initially if there was an attempt to cancel (which presumably failed, otherwise mayCancelItem will go false) -->
+        <#if (parameters["cancelitem_${orderItem.orderItemSeqId}"]!) != "Y">
+          <#assign style = "display:none;">
+        </#if>
+        <@tr id="row_orderitem_cancel_${orderItem.orderItemSeqId}" style=style>
           <@td colspan="7">
-              <@fields type="default-compact">
-                <@field type="select" name="irm_${orderItem.orderItemSeqId}" label=uiLabelMap.OrderReturnReason>
-                  <option value=""></option>
-                  <#list orderItemChangeReasons as reason>
-                    <option value="${reason.enumId}">${reason.get("description",locale)!(reason.enumId)}</option>
-                  </#list>
-                </@field>
-                <@field type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60" label=uiLabelMap.CommonComments/>
-              </@fields>
+            <@row>
+              <@cell small=2>
+                <strong>${cancelItemLabel}:</strong>
+              </@cell>
+              <@cell small=10>
+                <@fields type="default-compact">
+                  <@cancelItemForm />
+                </@fields>
+              </@cell>
+            </@row>
           </@td>
-          <@td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${getLabel("StatusValidChange.transitionName.ITEM_APPROVED.ITEM_CANCELLED", "CommonEntityLabels")}</a>
-            <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
+          <@td colspan="4">
           </@td>
         </@tr>
       </#if>
@@ -226,21 +285,25 @@ under the License.
       </#if>
       <#-- now show adjustment details per line item -->
       <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
+      <#if showDetailed>
       <#list itemAdjustments as orderItemAdjustment>
         <@tr>
           <@td>
-            ${uiLabelMap.EcommerceAdjustment}: ${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}
+            <#--${uiLabelMap.EcommerceAdjustment}: ${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}-->
+            <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
+            ${uiLabelMap.EcommerceAdjustment}: ${adjustmentType.get("description",locale)!}
+            
             <#-- Cato: WARN: description here potentially unsafe, but may contain HTML, allow for now -->
-            <#if orderItemAdjustment.description?has_content>: ${htmlContentString(orderItemAdjustment.description)}</#if>
+            <#if orderItemAdjustment.description?has_content>: ${htmlContentString(orderItemAdjustment.get("description",locale))}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
               <#if orderItemAdjustment.primaryGeoId?has_content>
                 <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
                 <#if primaryGeo.geoName?has_content>
-                  ${uiLabelMap.OrderJurisdiction}: ${primaryGeo.geoName} [${primaryGeo.abbreviation!}]
+                  ${uiLabelMap.OrderJurisdiction}: ${primaryGeo.geoName!primaryGeo.abbreviation!}<#-- [${primaryGeo.abbreviation!}]-->
                 </#if>
                 <#if orderItemAdjustment.secondaryGeoId?has_content>
                   <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
-                  (${uiLabelMap.CommonIn}: ${secondaryGeo.geoName} [${secondaryGeo.abbreviation!}])
+                  (${uiLabelMap.CommonIn}: ${secondaryGeo.geoName!secondaryGeo.abbreviation!}<#--  [${secondaryGeo.abbreviation!}])-->
                 </#if>
               </#if>
               <#if orderItemAdjustment.sourcePercentage??>${uiLabelMap.EcommerceRate}: ${orderItemAdjustment.sourcePercentage}</#if>
@@ -253,12 +316,13 @@ under the License.
             <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/>
           </@td>
           <@td></@td>
-          <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+          <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
         </@tr>
       </#list>
+      </#if>
       <#-- show the order item ship group info -->
       <#assign orderItemShipGroupAssocs = orderItem.getRelated("OrderItemShipGroupAssoc", null, null, false)!>
-      <#if orderItemShipGroupAssocs?has_content>
+      <#if showDetailed && orderItemShipGroupAssocs?has_content>
         <#list orderItemShipGroupAssocs as shipGroupAssoc>
           <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup", false)!>
           <#assign shipGroupAddress = (shipGroup.getRelatedOne("PostalAddress", false))!>
@@ -268,7 +332,7 @@ under the License.
             </@td>
             <@td>
               <#-- Cato: Don't show this if maySelect false because in that case there's no header and the quantity comes out of thin air. -->
-            <#if (maySelectItems!"N") == "Y">
+            <#if maySelect>
               ${shipGroupAssoc.quantity?string.number}
             </#if>
             </@td>
@@ -278,49 +342,73 @@ under the License.
       </#if>
     </#list>
     <#if orderItems?size == 0 || !orderItems?has_content>
-      <@tr><@td colspan="${numColumns}"><@commonMsg type="error">${uiLabelMap.OrderSalesOrderLookupFailed}</@commonMsg></@td></@tr>
+      <@tr type="meta"><@td colspan="${numColumns}"><@commonMsg type="error">${uiLabelMap.OrderSalesOrderLookupFailed}</@commonMsg></@td></@tr>
     </#if>
     <@tr><@td colspan="${numColumns}"></@td></@tr>
+
+    <#-- Cato: styling issues
     </@tbody>
-    <@tfoot>
+    <@tfoot>-->
+
     <@tr>
-      <@th colspan="7">${uiLabelMap.CommonSubtotal}</@th>
-      <@td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></@td>
-      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+        <@td colspan="7"></@td>
+        <@td colspan="1"><hr /></@td>
+        <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
     </@tr>
+    
+    <@tr class="summary-row">
+      <@td colspan="7">${uiLabelMap.CommonSubTotal}</@td>
+      <@td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></@td>
+      <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
+    </@tr>
+
     <#list headerAdjustmentsToShow as orderHeaderAdjustment>
-      <@tr>
-        <@th colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</@th>
+      <@tr class="summary-row">
+        <#--<@td colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</@td>-->
+        <@td colspan="7">
+            <#assign adjustmentType = orderHeaderAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
+            ${adjustmentType.get("description", locale)!}: ${orderHeaderAdjustment.get("description", locale)!}
+        </@td>
         <@td><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></@td>
-        <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+        <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
       </@tr>
     </#list>
-    <@tr>
-      <@th colspan="7">${uiLabelMap.OrderShippingAndHandling}</@th>
+
+    <@tr class="summary-row">
+      <@td colspan="7">${uiLabelMap.OrderShippingAndHandling}</@td>
       <@td><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></@td>
-      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+      <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
     </@tr>
-    <@tr>
-      <@th colspan="7">${uiLabelMap.OrderSalesTax}</@th>
+
+    <@tr class="summary-row">
+      <@td colspan="7">${uiLabelMap.OrderSalesTax}</@td>
       <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
-      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+      <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
     </@tr>
+
     <@tr>
       <@td colspan="3"></@td>
-      <#if (maySelectItems!"N") == "Y">
-        <@td colspan="${numColumns - 6}"></@td>
+      <#if maySelect>
+        <@td colspan="${numColumns - 7}"></@td>
+        <@td><hr /></@td>
         <@td colspan="3"></@td>
       <#else>
-        <@td colspan="${numColumns - 3}"></@td>
+        <@td colspan="${numColumns - 5}"></@td>
+        <@td><hr /></@td>
+        <@td></@td>
       </#if>
     </@tr>
-    <@tr>
-      <@th colspan="7">${uiLabelMap.OrderGrandTotal}</@th>
+
+    <@tr class="summary-row">
+      <@td colspan="7"><strong>${uiLabelMap.OrderTotal}</strong></@td>
       <@td>
         <@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/>
       </@td>
-      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+      <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
     </@tr>
-    </@tfoot>
+
+    <#--
+    </@tfoot>-->
+    </@tbody>
   </@table>
 </@section>

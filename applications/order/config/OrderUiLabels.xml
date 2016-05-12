@@ -15198,4 +15198,16 @@
         <value xml:lang="de">Bezahlen extern mit iDEAL. Sie werden Ihre Bestellung später umgeleitet zurück zu überprüfen.</value>
         <value xml:lang="en">Pay with iDEAL externally. You will be redirected back to review your order afterward.</value>
     </property>
+    <property key="OrderConfirmOrder">
+        <value xml:lang="de">Bestellung bestätigen</value>
+        <value xml:lang="en">Confirm Order</value>
+    </property>
+    <property key="OrderConfirmOrder">
+        <value xml:lang="de">Bestellung bestätigen</value>
+        <value xml:lang="en">Confirm Order</value>
+    </property>
+    <property key="OrderCart">
+        <value xml:lang="de">Karte</value>
+        <value xml:lang="en">Cart</value>
+    </property>
 </resource>

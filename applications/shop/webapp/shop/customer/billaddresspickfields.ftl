@@ -119,8 +119,9 @@ under the License.
         </#if>
     </#macro>
     <@addressEntry ownLine=true>
+      <#assign labelContent><span class="new-address-radio-label">${uiLabelMap.PartyCreateNewBillingAddress}</span></#assign>
       <@checkAddressInvField type="radio" name="${fieldNamePrefix}contactMechId" value="_NEW_" checked=(selectedContactMechId == "_NEW_") 
-          class="+${pickFieldClass}" id=(newAddrFieldId!) labelContent=uiLabelMap.PartyCreateNewBillingAddress/><#--label=uiLabelMap.PartyCreateNewBillingAddress labelContent=addrContent -->
+          class="+${pickFieldClass}" id=(newAddrFieldId!) labelContent=labelContent/><#--label=uiLabelMap.PartyCreateNewBillingAddress labelContent=addrContent -->
     </@addressEntry>
   </#if>
   </@addressList>

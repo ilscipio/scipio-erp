@@ -263,7 +263,7 @@ under the License.
                 <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilitySettingsDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <platform-specific>
@@ -283,19 +283,10 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacilityLocation.groovy"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="title" value="${uiLabelMap.PageTitleNewFacilityLocation}"/>
+                <set field="title" value="${uiLabelMap.ProductLocation} ${facilityId}"/>
                 <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
-                <section>
-                    <condition>
-                        <not><if-empty field="locationSeqId"/></not>
-                    </condition>
-                    <actions>
-                        <set field="title" value="${uiLabelMap.PageTitleEditFacilityLocation}"/>
-                    </actions>
-                    <widgets/>
-                </section>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
@@ -763,7 +754,7 @@ under the License.
                 <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilitySettingsDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
                     <decorator-section name="body">
                         <container style="button-bar button-style-1">
                             <section>
@@ -1466,6 +1457,7 @@ under the License.
     <screen name="EditFacilityGeoPoint">
         <section>
             <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditFacilityGeoPoint"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
@@ -1478,14 +1470,13 @@ under the License.
                 <set field="geoChart.height" value="500px"/>
                 <set field="geoChart.points" from-field="geoPoints"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="title" value="${uiLabelMap.PageTitleFacilityGeoLocation} - ${facility.facilityName}"/>
+                <set field="title" value="${uiLabelMap.CommonGeoLocation} ${facilityId}"/>
                 <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title"><label text="${title}"/></container>
-                        <screenlet id="edit-facility-geopoint" title="${uiLabelMap.ProductEditFacilityGeoLocation}" collapsible="true" initially-collapsed="true">
+                        <screenlet>
                             <include-form name="EditFacilityGeoPoint" location="component://product/widget/facility/FacilityForms.xml"/>
                         </screenlet>
                         <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>

@@ -18,21 +18,7 @@ under the License.
 -->
 
 <#if shipment??>
-    <#-- Cato FIXME: Does makes sense to show this if all items have been packed already? -->
-    <@section>
-        <form name="createShipmentPackageContentForm${shipmentPackageData_index}" method="post" action="<@ofbizUrl>createShipmentPackageContent</@ofbizUrl>">
-            <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-            <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>            
-            <@field type="select" name="shipmentItemSeqId" label=uiLabelMap.ProductAddFromItem>
-                <#list shipmentItems as shipmentItem>
-                    <option>${shipmentItem.shipmentItemSeqId}</option>
-                </#list>
-            </@field>        
-            <@field type="input" name="quantity" size="5" value="0" label=uiLabelMap.ProductQuantity/>
-            <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a>            
-        </form>
-    </@section>
-    <#-- -->
+    
 
     <@section>
         <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
@@ -133,6 +119,22 @@ under the License.
         <@modal id="shipmentPackageContent_${shipmentPackageData_index}">
             <#assign sectionTitle="${uiLabelMap.ProductPackage} ${uiLabelMap.ContentContents}"/>
             <@section title=sectionTitle>
+                <#-- Cato FIXME: Does makes sense to show this if all items have been packed already? -->
+                <@section>
+                    <form name="createShipmentPackageContentForm${shipmentPackageData_index}" method="post" action="<@ofbizUrl>createShipmentPackageContent</@ofbizUrl>">
+                        <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+                        <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>            
+                        <@field type="select" name="shipmentItemSeqId" label=uiLabelMap.ProductAddFromItem>
+                            <#list shipmentItems as shipmentItem>
+                                <option>${shipmentItem.shipmentItemSeqId}</option>
+                            </#list>
+                        </@field>        
+                        <@field type="input" name="quantity" size="5" value="0" label=uiLabelMap.ProductQuantity/>
+                        <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a>            
+                    </form>
+                </@section>
+                <#-- -->
+
                 <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                     <@thead>
                         <@tr>

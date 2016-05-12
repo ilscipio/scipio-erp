@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
-                <set field="activeMainMenuItem" value="Campaign"/>
+                <set field="activeMainMenuItem" value="Marketing"/>
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
             </actions>
             <widgets>
@@ -44,7 +44,8 @@ under the License.
                                 <include-menu name="MarketingCampaignSideBar" location="component://marketing/widget/MarketingCampaignMenus.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                                <include-menu location="component://marketing/widget/sfa/SfaMenus.xml" name="SfaAppSideBar"/>
+                                <!-- <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/> -->
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -102,35 +103,61 @@ under the License.
             </widgets>
         </section>
     </screen>
-
-    <screen name="ListMarketingCampaign">
+    
+    
+    <screen name="FindMarketingCampaign">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListMarketingCampaign" />
-                <set field="labelTitleProperty" value="PageTitleListMarketingCampaign" />
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="FindMarketingCampaign" />
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
                 <set field="entityName" value="MarketingCampaign" />
+                <set field="activeSubMenuItem" value="Marketing"/>
+                <set field="title" value="${uiLabelMap.MarketingCampaign} ${marketingCampaignId}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonMarketingCampaignDecorator">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap[titleProperty]}" />
-                        </container>
-                        <container style="button-bar">
-                            <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.link_nav} ${styles.action_add}">
-                                <parameter param-name="DONE_PAGE" from-field="donePage" />
-                            </link>
-                        </container>
-                        <include-form name="ListMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" />
+                        <section>
+                            <condition>
+                                 <if-has-permission permission="MARKETING" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+				              <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+				                  <decorator-section name="menu-bar">
+				                      <section>
+				                          <widgets>
+				                              <container style="button-bar"><link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.link_nav} ${styles.action_add}"/></container>
+				                          </widgets>
+				                      </section>
+				                  </decorator-section>
+				                  <decorator-section name="search-options">
+				                      <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/FindMarketingCampaing.ftl"/></html></platform-specific>
+				                  </decorator-section>
+				                  <decorator-section name="search-results">
+				                      <include-screen name="MarketingCampaignSearchResults"/>                        
+				                  </decorator-section>
+				              </decorator-screen>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>                    
+        </section>
+    </screen>
+
+    <screen name="MarketingCampaignSearchResults">
+        <section>
+            <actions>
+                <script location="component://marketing/webapp/marketing/WEB-INF/actions/campaign/FindMarketingCampaign.groovy"/>
+            </actions>
+            <widgets>                 		
+				<include-form name="ListMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" />				
             </widgets>
         </section>
     </screen>
 
-    <screen name="EditMarketingCampaignRoles">
+    <!-- CATO: To be removed -->
+    <!-- <screen name="EditMarketingCampaignRoles">
         <section>
             <actions>
                 <set field="titleProperty" value="MarketingCampaignRoleCreate" />
@@ -150,9 +177,9 @@ under the License.
                             <label text="${uiLabelMap[titleProperty]}" />
                         </container>
                         <include-form name="EditMarketingCampaignRoles" location="component://marketing/widget/MarketingCampaignForms.xml" />
-                        <!-- 
+                        
                         <label style="heading" text="${uiLabelMap.CommonStatusHistory}" />
-                         -->
+                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -186,5 +213,5 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    -->
 </screens>

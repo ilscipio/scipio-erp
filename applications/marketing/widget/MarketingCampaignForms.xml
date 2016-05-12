@@ -66,7 +66,12 @@ under the License.
    <form name="ListMarketingCampaign" type="list" paginate-target="listMarketingCampaign"
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
-            <entity-condition entity-name="MarketingCampaign"/>
+            <entity-condition entity-name="MarketingCampaign">
+                <condition-expr field-name="marketingCampaignId" from-field="parameters.marketingCampaignId" />
+                <condition-expr field-name="campaignName" from-field="parameters.campaignName" />
+                <condition-expr field-name="parentCampaignId" from-field="parameters.parentCampaignId" /> 
+                <!-- <condition-expr field-name="statusId" from-field="parameters.statusId" /> -->
+            </entity-condition>
         </actions>
         <field name="marketingCampaignId" widget-style="${styles.link_nav_info_id}" title="${uiLabelMap.MarketingCampaignId}">
             <hyperlink target="EditMarketingCampaign" description="${marketingCampaignId}" also-hidden="false">
@@ -80,8 +85,9 @@ under the License.
         <field name="parentCampaignId" title="${uiLabelMap.MarketingParentCampaignId}"><display/></field>
     </form>
 
-   <form name="ListMarketingCampaignRoles" type="list" paginate-target="listMarketingCampaignGeo"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- CATO: To be removed -->
+   <!-- <form name="ListMarketingCampaignRoles" type="list" paginate-target="listMarketingCampaignGeo"
+        odd-row-style="alternate-row" header-row-style="header-row-2"> orig: default-table-style=-style="basic-table hover-bar"
         <actions>
         <entity-and entity-name="MarketingCampaignRole">
             <field-map field-name="marketingCampaignId" from-field="marketingCampaignId"/>
@@ -97,7 +103,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-<!-- Currently not working for PartyGroup
+Currently not working for PartyGroup
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="&quot;${groupName}&quot;!=null">
             <display-entity entity-name="PartyNameView" description="${groupName}" also-hidden="true">
                 <sub-hyperlink target="/partymgr/control/viewProfile" description="${partyId}" link-style="${styles.link_nav_info_id}">
@@ -105,13 +111,13 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        -->
+       
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
             <display-entity entity-name="RoleType" description="${description}" also-hidden="true"/>
-                <!--<sub-hyperlink target="/partymgr/control/viewProfile" description="${partyId}" link-style="${styles.link_nav_info_id}">
+                <sub-hyperlink target="/partymgr/control/viewProfile" description="${partyId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
-            </display-entity>-->
+            </display-entity>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeMarketingCampaignRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -123,7 +129,7 @@ under the License.
     </form>
 
     <form name="EditMarketingCampaignRoles" type="single" target="createMarketingCampaignRole" title="" default-map-name="marketingCampaignRole"
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row"> orig: default-table-style=-style="basic-table"
         <auto-fields-service service-name="createMarketingCampaignRole"/>
         <field use-when="marketingCampaign!=null" name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="marketingCampaign==null&amp;&amp;marketingCampaignId==null" name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}"><ignored/></field>
@@ -143,5 +149,5 @@ under the License.
                 <parameter param-name="marketingCampaignId"/>
             </hyperlink>
         </field>
-    </form>
+    </form> -->
 </forms>

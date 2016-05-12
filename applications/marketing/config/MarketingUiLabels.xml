@@ -939,6 +939,21 @@
         <value xml:lang="zh">欢迎使用市场管理程序！</value>
         <value xml:lang="zh_TW">歡迎使用行銷管理程式！</value>
     </property>
+    <property key="MarketingMarketing">
+        <value xml:lang="en">Marketing</value>
+    </property>
+    <property key="SfaAnalytics">
+        <value xml:lang="en">Analytics</value>
+    </property>
+    <property key="SfaCalendar">
+        <value xml:lang="en">Calendar</value>
+    </property>
+    <property key="SfaSales">
+        <value xml:lang="en">Sales</value>
+    </property>
+    <property key="SfaServices">
+        <value xml:lang="en">Services</value>
+    </property>
     <property key="MarketingNoOfEmployees">
         <value xml:lang="de">Anzahl Angestellte</value>
         <value xml:lang="en">No of Employees</value>

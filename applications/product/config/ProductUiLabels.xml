@@ -13329,7 +13329,7 @@
         <value xml:lang="zh_TW">做這個產品的第一個評論者</value>
     </property>
     <property key="ProductBestSellingProductsOf">
-        <value xml:lang="de">Top-Produkte am</value>
+        <value xml:lang="de">Meist verkaufte Produkte am</value>
         <value xml:lang="en">Best Selling Products of</value>
         <value xml:lang="fr">Meilleures ventes du</value>
         <value xml:lang="it">Migliori prodotti venduti il</value>
@@ -13340,6 +13340,7 @@
         <value xml:lang="zh_TW">最佳銷售產品於</value>
     </property>
     <property key="ProductBestSellingProductsFrom">
+    	<value xml:lang="de">Meist verkaufte Produkte vom</value>
         <value xml:lang="en">Best Selling Products From</value>
     </property>
     <property key="ProductBillingWeightUom">

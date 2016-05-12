@@ -279,7 +279,7 @@
         <value xml:lang="zh_TW">新建行銷活動</value>
     </property>
     <property key="MarketingCampaignId">
-        <value xml:lang="de">Marketing Kampagne ID</value>
+        <value xml:lang="de">Kampagnen ID</value>
         <value xml:lang="en">Marketing Campaign Id</value>
         <value xml:lang="es">Campaña</value>
         <value xml:lang="fr">Réf. de campagne marketing</value>
@@ -943,9 +943,11 @@
         <value xml:lang="en">Marketing</value>
     </property>
     <property key="SfaAnalytics">
+    	<value xml:lang="de">Analyse</value>
         <value xml:lang="en">Analytics</value>
     </property>
     <property key="SfaCalendar">
+    	<value xml:lang="de">Kalender</value>
         <value xml:lang="en">Calendar</value>
     </property>
     <property key="SfaSales">

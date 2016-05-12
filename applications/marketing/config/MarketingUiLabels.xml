@@ -137,7 +137,7 @@
         <value xml:lang="zh_TW">預測金額</value>
     </property>
     <property key="FormFieldTitle_internalPartyId">
-        <value xml:lang="de">Interne Akteur-Nr.</value>
+        <value xml:lang="de">Interne Nutzer-Nr.</value>
         <value xml:lang="en">Internal Party Id</value>
         <value xml:lang="fr">Réf. d'acteur interne</value>
         <value xml:lang="it">Soggetto interno</value>
@@ -649,7 +649,7 @@
         <value xml:lang="zh_TW">擁有者團體識別</value>
     </property>
     <property key="MarketingContactListParty">
-        <value xml:lang="de">Kontaktliste Akteur</value>
+        <value xml:lang="de">Kontaktliste Nutzer</value>
         <value xml:lang="en">Contact List Party</value>
         <value xml:lang="es">Participantes</value>
         <value xml:lang="fr">Abonné à la liste de contact</value>
@@ -664,7 +664,7 @@
         <value xml:lang="zh_TW">聯絡清單團體</value>
     </property>
     <property key="MarketingContactListPartyCreate">
-        <value xml:lang="de">Neuen Kontaktlisten-Akteur erstellen</value>
+        <value xml:lang="de">Neuen Kontaktlistennutzer erstellen</value>
         <value xml:lang="en">Create New Contact List Party</value>
         <value xml:lang="es">Asociar participante</value>
         <value xml:lang="fr">Créer un nouvel abonné à  la liste de contact</value>
@@ -694,7 +694,7 @@
         <value xml:lang="zh_TW">團體識別</value>
     </property>
     <property key="MarketingContactListPartiesImport">
-        <value xml:lang="de">Akteure importieren</value>
+        <value xml:lang="de">Nutzer importieren</value>
         <value xml:lang="en">Import Parties</value>
         <value xml:lang="fr">Import d'acteurs</value>
         <value xml:lang="ja">取引先をインポート</value>
@@ -996,7 +996,7 @@
         <value xml:lang="zh_TW">上級活動識別</value>
     </property>
     <property key="MarketingPartyStatusReport">
-        <value xml:lang="de">Statusbericht Akteur</value>
+        <value xml:lang="de">Statusbericht Nutzer</value>
         <value xml:lang="en">Party Status Report</value>
         <value xml:lang="fr">Rapport du statut des acteurs</value>
         <value xml:lang="it">Report stato soggetti</value>
@@ -1737,7 +1737,7 @@
         <value xml:lang="zh_TW">聯絡方式類型</value>
     </property>
     <property key="MarketingTrackingCodeVisitPartyId">
-        <value xml:lang="de">Tracking-Code Akteur</value>
+        <value xml:lang="de">Tracking-Code Nutzer</value>
         <value xml:lang="en">Party Id</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Réf. de l'acteur</value>
@@ -2095,7 +2095,7 @@
         <value xml:lang="zh_TW">編輯聯絡列表通訊事件</value>
     </property>
     <property key="PageTitleEditContactListParty">
-        <value xml:lang="de">Kontaktliste Akteure bearbeiten</value>
+        <value xml:lang="de">Kontaktlistennutzer bearbeiten</value>
         <value xml:lang="en">Edit Contact List Party</value>
         <value xml:lang="es">Añadir participante</value>
         <value xml:lang="fr">Modifier l'abonné à la liste de contact</value>
@@ -2299,7 +2299,7 @@
         <value xml:lang="zh_TW">尋找結合的通訊事件</value>
     </property>
     <property key="PageTitleFindContactListParty">
-        <value xml:lang="de">Kontaktlisten-Akteure suchen</value>
+        <value xml:lang="de">Kontaktlistennutzer suchen</value>
         <value xml:lang="en">Find Contact List Parties</value>
         <value xml:lang="es">Buscar participantes</value>
         <value xml:lang="fr">Rechercher les abonnés à la liste de contact</value>
@@ -2313,7 +2313,7 @@
         <value xml:lang="zh_TW">尋找聯絡列表團體</value>
     </property>
     <property key="PageTitleFindImportContactListParties">
-        <value xml:lang="de">Kontaktlisten-Akteure importieren</value>
+        <value xml:lang="de">Kontaktlistennutzer importieren</value>
         <value xml:lang="en">Find Import Contact List Parties</value>
         <value xml:lang="fr">Rechercher des acteurs importés sur une liste de contact</value>
         <value xml:lang="ja">インポート連絡リスト取引先を検索</value>
@@ -2442,7 +2442,7 @@
         <value xml:lang="zh_TW">聯絡列表通訊事件清單</value>
     </property>
     <property key="PageTitleListContactListParty">
-        <value xml:lang="de">Kontaktlisten-Akteure auflisten</value>
+        <value xml:lang="de">Kontaktlistennutzer auflisten</value>
         <value xml:lang="en">List Contact List Parties</value>
         <value xml:lang="es">Mostrar participantes</value>
         <value xml:lang="fr">Liste des abonnés à la liste de contact</value>

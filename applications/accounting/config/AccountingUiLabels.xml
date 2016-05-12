@@ -456,7 +456,7 @@
         <value xml:lang="zh_TW">增加固定資產儀表讀數</value>
     </property>
     <property key="AccountingAddFixedAssetPartyAssignment">
-        <value xml:lang="de">Akteurszuweisung zu Anlage hinzufügen</value>
+        <value xml:lang="de">Nutzerzuweisung zu Anlage hinzufügen</value>
         <value xml:lang="en">Add Party Fixed Asset Assignment</value>
         <value xml:lang="fr">Ajouter une tâche d'un acteur à une immobilisation</value>
         <value xml:lang="hi_IN">अचल संपत्ति में नियत कार्य करने के लिए पार्टी जोड़ें</value>
@@ -3010,7 +3010,7 @@
         <value xml:lang="zh_TW">佣金金額</value>
     </property>
     <property key="AccountingCommissionInvoicesCreated">
-        <value xml:lang="de">Provisionsabrechnungen wurden für alle Akteure, die Provisionen erhalten, erstellt ${invoicesCreated}</value>
+        <value xml:lang="de">Provisionsabrechnungen wurden für alle Nutzer, die Provisionen erhalten, erstellt ${invoicesCreated}</value>
         <value xml:lang="en">Created Commission invoices for each commission receiving parties ${invoicesCreated}</value>
         <value xml:lang="fr">Création des commissions sur facture pour les acteurs concernés</value>
         <value xml:lang="it">Create fatture provvigioni per ogni provvigione ricevuta dai soggetti ${invoicesCreated}</value>
@@ -6547,7 +6547,7 @@
     </property>
     <property key="AccountingFixedAssetParties">
         <value xml:lang="ar">أدوار الطرف</value>
-        <value xml:lang="de">Akteursrollen</value>
+        <value xml:lang="de">Nutzerrollen</value>
         <value xml:lang="en">Party Roles</value>
         <value xml:lang="es">Roles de grupo</value>
         <value xml:lang="fr">Acteurs et rôles</value>
@@ -6806,7 +6806,7 @@
     </property>
     <property key="AccountingFromParty">
         <value xml:lang="ar">من الطرف</value>
-        <value xml:lang="de">von Akteur</value>
+        <value xml:lang="de">von Nutzer</value>
         <value xml:lang="en">From Party</value>
         <value xml:lang="es">Grupo de origen</value>
         <value xml:lang="fr">De l'acteur</value>
@@ -6824,7 +6824,7 @@
     </property>
     <property key="AccountingFromPartyId">
         <value xml:lang="ar">من دليل الطرف</value>
-        <value xml:lang="de">von Akteur-Nr.</value>
+        <value xml:lang="de">von Nutzer ID</value>
         <value xml:lang="en">From Party ID</value>
         <value xml:lang="es">Id Grupo de origen</value>
         <value xml:lang="fr">De l'acteur réf.</value>
@@ -6842,7 +6842,7 @@
     </property>
     <property key="AccountingFromPartySameToParty">
         <value xml:lang="ar">على الأقل 'من' طرف يجب أن تكون مماثلة ل 'إلى' الطرف للتسديد الآخر</value>
-        <value xml:lang="de">Der 'von' Akteur sollte gleich dem 'an' Akteur der anderen Zahlung sein</value>
+        <value xml:lang="de">Der 'von' Nutzer sollte gleich dem 'an' Nutzer der anderen Zahlung sein</value>
         <value xml:lang="en">At least the 'from' party should be the same as the 'to' party of the other payment</value>
         <value xml:lang="es">Al menos el grupo 'origen' debe ser el mismo que  el grupo 'destino' del otro pago</value>
         <value xml:lang="fr">L'acteur "de" doit être le même que l'acteur "vers" de l'autre paiement</value>
@@ -9518,7 +9518,7 @@
     </property>
     <property key="AccountingNewTaxAuthorityPartyInfo">
         <value xml:lang="ar">معلومات جديدة لطرف السلطة الضريبية</value>
-        <value xml:lang="de">Neue Akteursinformation zu Steuerbehörde</value>
+        <value xml:lang="de">Neue Nutzerinformation zu Steuerbehörde</value>
         <value xml:lang="en">New Tax Authority Party Info</value>
         <value xml:lang="es">Nueva Información de Grupo de Autoridad Fiscal</value>
         <value xml:lang="fr">Ajouter un élément d'information à l'administration fiscale (acteur)</value>
@@ -9751,7 +9751,7 @@
     </property>
     <property key="AccountingNoGenBilAddressFound">
         <value xml:lang="ar">لا عنوان عام/فوترة موجود للطرف</value>
-        <value xml:lang="de">Keine Allgemeine-/Rechnungsadresse für Akteur gefunden:</value>
+        <value xml:lang="de">Keine Allgemeine-/Rechnungsadresse für Nutzer gefunden:</value>
         <value xml:lang="en">No general/billing address found for party:</value>
         <value xml:lang="es">No dirección general/facturación encontrada para grupo:</value>
         <value xml:lang="fr">Aucune adresse générale/ de facturation n'a été trouvée pour l'acteur:</value>
@@ -10402,7 +10402,7 @@
     <property key="AccountingOrganizationPartyId">
         <value xml:lang="ar">تعريف طرف المؤسسة</value>
         <value xml:lang="cs">Organizační složka</value>
-        <value xml:lang="de">Akteur ID (Org.)</value>
+        <value xml:lang="de">Nutzer ID (Org.)</value>
         <value xml:lang="en">Organization Party Id</value>
         <value xml:lang="es">Id Grupo de Organización</value>
         <value xml:lang="fr">Réf. acteur de type Organisation</value>
@@ -10627,7 +10627,7 @@
         <value xml:lang="zh_TW">分配</value>
     </property>
     <property key="AccountingPartyGlAccounts">
-        <value xml:lang="de">Akteurs-Konten</value>
+        <value xml:lang="de">Nutzerkonten</value>
         <value xml:lang="en">Party Gl Accounts</value>
         <value xml:lang="fr">Comptes de tiers</value>
         <value xml:lang="hi_IN">पार्टी जीएल(Gl) खाता</value>
@@ -10642,7 +10642,7 @@
     </property>
     <property key="AccountingPartyIdFrom">
         <value xml:lang="ar">تعريف الطرف المرسل</value>
-        <value xml:lang="de">Akteur-Nr von</value>
+        <value xml:lang="de">Nutzer ID von</value>
         <value xml:lang="en">Party Id From</value>
         <value xml:lang="es">Id Grupo Origen</value>
         <value xml:lang="fr">Réf. acteur (de)</value>
@@ -10660,7 +10660,7 @@
     </property>
     <property key="AccountingPartyIdTo">
         <value xml:lang="cs">Příjemce</value>
-        <value xml:lang="de">Akteurs-Nr-zu</value>
+        <value xml:lang="de">Nutzer ID zu</value>
         <value xml:lang="en">Party Id To</value>
         <value xml:lang="es">Id Grupo destino</value>
         <value xml:lang="fr">Réf. acteur (à)</value>
@@ -10678,7 +10678,7 @@
     </property>
     <property key="AccountingPartyMustBeInternalOrganization">
         <value xml:lang="ar">الطرف يجب أن يكون مؤسسة داخلية (تغيير دور الطرف)</value>
-        <value xml:lang="de">Akteur muss die Rolle 'Interne Organisation' besitzen</value>
+        <value xml:lang="de">Nutzer muss die Rolle 'Interne Organisation' besitzen</value>
         <value xml:lang="en">Party must be an Internal Organization (set in PartyRole)</value>
         <value xml:lang="es">Grupo debe ser una Organización Interna, (definida en RolGrupo)</value>
         <value xml:lang="fr">L'acteur doit être une organisation interne (défini dans les rôles d'acteurs)</value>
@@ -10696,7 +10696,7 @@
     </property>
     <property key="AccountingPartyRoleAdd">
         <value xml:lang="ar">اضافة دور الطرف جديد</value>
-        <value xml:lang="de">Neue Akteurs-Rolle hinzufügen</value>
+        <value xml:lang="de">Neue Nutzerrolle hinzufügen</value>
         <value xml:lang="en">Add a new Party Role</value>
         <value xml:lang="es">Agregar un nuevo Rol de Grupo</value>
         <value xml:lang="fr">Ajouter un rôle d'acteur</value>
@@ -10714,7 +10714,7 @@
     </property>
     <property key="AccountingPartyRoleList">
         <value xml:lang="ar">قائمة أدوار الطرف</value>
-        <value xml:lang="de">Liste der Akteurs-Rollen</value>
+        <value xml:lang="de">Liste der Nutzerrollen</value>
         <value xml:lang="en">Party Role List</value>
         <value xml:lang="es">Lista Grupo de Rol</value>
         <value xml:lang="fr">Liste des rôles d'acteurs</value>
@@ -14287,7 +14287,7 @@
     </property>
     <property key="AccountingTaxAuthorityParty">
         <value xml:lang="ar">طرف السلطة الضريبية</value>
-        <value xml:lang="de">Steuerbehörde (Akteur)</value>
+        <value xml:lang="de">Steuerbehörde (Nutzer)</value>
         <value xml:lang="en">Tax Authority Party</value>
         <value xml:lang="es">Grupo de autoridad fiscal</value>
         <value xml:lang="fr">Réf. d'acteur de l'Administration fiscale</value>
@@ -14508,7 +14508,7 @@
         <value xml:lang="zh_TW">送往團體</value>
     </property>
     <property key="AccountingToPartyId">
-        <value xml:lang="de">An Akteur ID</value>
+        <value xml:lang="de">An Nutzer ID</value>
         <value xml:lang="en">To Party Id</value>
         <value xml:lang="es">Id a grupo</value>
         <value xml:lang="fr">A l'acteur réf.</value>
@@ -15934,7 +15934,7 @@
     </property>
     <property key="AcctgGlPartyLabel">
         <value xml:lang="ar">الطرف المحاسبي :</value>
-        <value xml:lang="de">HB Akteur : </value>
+        <value xml:lang="de">HB Nutzer : </value>
         <value xml:lang="en">GL Party : </value>
         <value xml:lang="es">Grupo LM :</value>
         <value xml:lang="fr">Acteur Grand Livre: </value>
@@ -21158,7 +21158,7 @@
         <value xml:lang="zh_TW">編輯稅務機關總帳科目</value>
     </property>
     <property key="PageTitleEditTaxAuthorityPartyInfo">
-        <value xml:lang="de">Steuerbehörde Akteur-Info bearbeiten</value>
+        <value xml:lang="de">Informationen der Steuerbehörde bearbeiten</value>
         <value xml:lang="en">Edit Tax Authority Party Info</value>
         <value xml:lang="es">Editar Info de Grupo de Autoridad Fiscal</value>
         <value xml:lang="fr">Modifier les informations d'une administration fiscale</value>

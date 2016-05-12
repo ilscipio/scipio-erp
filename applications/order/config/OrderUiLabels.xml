@@ -60,7 +60,7 @@
         <value xml:lang="zh_TW">自動訂單貨運清單識別</value>
     </property>
     <property key="FormFieldTitle_billToCustomerPartyId">
-        <value xml:lang="de">Rechnung an Kunde Akteur ID</value>
+        <value xml:lang="de">Rechnung an Kunde Nutzer ID</value>
         <value xml:lang="en">Bill To Customer Party Id</value>
         <value xml:lang="es">Facturar a cliente con código</value>
         <value xml:lang="fr">Réf. de facture client</value>
@@ -6142,7 +6142,7 @@
         <value xml:lang="zh_TW">沒有找到訂單</value>
     </property>
     <property key="OrderNoOrderFoundForParty">
-        <value xml:lang="de">Keine Aufträge gefunden für Akteur ID</value>
+        <value xml:lang="de">Keine Aufträge gefunden für Nutzer ID</value>
         <value xml:lang="en">No orders found for partyId</value>
         <value xml:lang="es">No se han encontrado pedidos para este participante</value>
         <value xml:lang="fr">Aucune commande trouvés pour réf. d'acteur</value>
@@ -6839,7 +6839,7 @@
         <value xml:lang="zh_TW">訂單</value>
     </property>
     <property key="OrderOrderBillFromParty">
-        <value xml:lang="de">Rechnung von Akteur</value>
+        <value xml:lang="de">Rechnung von Nutzer</value>
         <value xml:lang="en">Bill From Party</value>
         <value xml:lang="es">Participante que factura</value>
         <value xml:lang="fr">Acteur crédité</value>
@@ -6856,7 +6856,7 @@
         <value xml:lang="zh_TW">帳單來自團體</value>
     </property>
     <property key="OrderOrderBillToParty">
-        <value xml:lang="de">Rechnung an Akteur</value>
+        <value xml:lang="de">Rechnung an Nutzer</value>
         <value xml:lang="en">Bill To Party</value>
         <value xml:lang="es">Participante a quien se factura</value>
         <value xml:lang="fr">Acteur débité</value>
@@ -8929,7 +8929,7 @@
         <value xml:lang="zh_TW">已支付的銷售細項 (包括促銷)</value>
     </property>
     <property key="OrderPartyDontWish">
-        <value xml:lang="de">Keine weiteren Akteure hinzufügen.</value>
+        <value xml:lang="de">Keine weiteren Nutzer hinzufügen.</value>
         <value xml:lang="en">I do not wish to add additional parties.</value>
         <value xml:lang="es">No quiero añadir participantes adicionales.</value>
         <value xml:lang="fr">Je ne souhaite pas ajouter d'acteurs supplémentaires</value>
@@ -8961,7 +8961,7 @@
         <value xml:lang="zh_TW">沒有找到名稱</value>
     </property>
     <property key="OrderPartySelectRoleForParty">
-        <value xml:lang="de">Rolle für Akteur wählen</value>
+        <value xml:lang="de">Rolle für Nutzer wählen</value>
         <value xml:lang="en">Select Role(s) For Party</value>
         <value xml:lang="es">Elija rol para el participante</value>
         <value xml:lang="fr">Choisir le ou les rôles pour l'acteur</value>
@@ -10988,7 +10988,7 @@
         <value xml:lang="zh_TW">請求的回應</value>
     </property>
     <property key="OrderRequestingParty">
-        <value xml:lang="de">Anfragender Akteur</value>
+        <value xml:lang="de">Anfragender Nutzer</value>
         <value xml:lang="en">Requesting Party</value>
         <value xml:lang="es">Participante solicitante</value>
         <value xml:lang="fr">Acteur émettant une demande</value>
@@ -11346,7 +11346,7 @@
         <value xml:lang="zh_TW">退貨細項來自訂單</value>
     </property>
     <property key="OrderReturnFromParty">
-        <value xml:lang="de">Retoure von Akteur</value>
+        <value xml:lang="de">Retoure von Nutzer</value>
         <value xml:lang="en">Return From Party</value>
         <value xml:lang="es">Participante de origen</value>
         <value xml:lang="fr">Acteur d'origine</value>
@@ -12153,7 +12153,7 @@
         <value xml:lang="zh_TW">選擇禮物金額</value>
     </property>
     <property key="OrderSelectPartyToOrder">
-        <value xml:lang="de">Wählen Sie einen Akteurtyp aus, um ihn dem Auftrag zuzuordnen</value>
+        <value xml:lang="de">Wählen Sie einen Nutzertyp aus, um ihn dem Auftrag zuzuordnen</value>
         <value xml:lang="en">Select type of party to associate to order</value>
         <value xml:lang="es">Seleccione el tipo de participante a asociar al pedido</value>
         <value xml:lang="fr">Sélectionnez le type d'acteurs à associer à la commande</value>
@@ -12690,7 +12690,7 @@
         <value xml:lang="zh_TW">送至</value>
     </property>
     <property key="OrderShipToAnotherParty">
-        <value xml:lang="de">Versand an anderen Akteur</value>
+        <value xml:lang="de">Versand an anderen Nutzer</value>
         <value xml:lang="en">Ship to Another Party</value>
         <value xml:lang="es">Enviar a otro participante</value>
         <value xml:lang="fr">Envoyer vers un autre acteur</value>
@@ -12718,7 +12718,7 @@
         <value xml:lang="zh_TW">送貨至國家</value>
     </property>
     <property key="OrderShipToParty">
-        <value xml:lang="de">Versand an Akteur</value>
+        <value xml:lang="de">Versand an Nutzer</value>
         <value xml:lang="en">Ship to Party</value>
         <value xml:lang="es">Enviar a participante</value>
         <value xml:lang="fr">Destinataire</value>

@@ -2022,7 +2022,7 @@
     </property>
     <property key="Enumeration.description.PPIP_PARTY_CLASS">
         <value xml:lang="ar">تصنيف الطرف</value>
-        <value xml:lang="de">Akteur Klassifizierung</value>
+        <value xml:lang="de">Nutzerklassifizierung</value>
         <value xml:lang="en">Party Classification</value>
         <value xml:lang="es">Clasificación participante</value>
         <value xml:lang="fr">Classification des acteurs</value>
@@ -2039,7 +2039,7 @@
     </property>
     <property key="Enumeration.description.PPIP_PARTY_GRP_MEM">
         <value xml:lang="ar">عضو مجموعة الأطراف</value>
-        <value xml:lang="de">Akteurgruppe Mitglied</value>
+        <value xml:lang="de">Nutzergruppe Mitglied</value>
         <value xml:lang="en">Party Group Member</value>
         <value xml:lang="es">Miembro de grupo de participantes</value>
         <value xml:lang="fr">Membre d'un groupe d'acteur</value>
@@ -2056,7 +2056,7 @@
     </property>
     <property key="Enumeration.description.PPIP_PARTY_ID">
         <value xml:lang="ar">طرف</value>
-        <value xml:lang="de">Akteur</value>
+        <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">Party</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteur</value>
@@ -2740,7 +2740,7 @@
     </property>
     <property key="Enumeration.description.PRIP_PARTY_CLASS">
         <value xml:lang="ar">تصنيف الطرف</value>
-        <value xml:lang="de">Akteur Klassifizierung</value>
+        <value xml:lang="de">Nutzerklassifizierung</value>
         <value xml:lang="en">Party Classification</value>
         <value xml:lang="es">Clasificación de participantes</value>
         <value xml:lang="fr">Classification d'acteurs</value>
@@ -2756,7 +2756,7 @@
     </property>
     <property key="Enumeration.description.PRIP_PARTY_GRP_MEM">
         <value xml:lang="ar">عضو مجموعة الأطراف</value>
-        <value xml:lang="de">Akteurgruppe Mitglied</value>
+        <value xml:lang="de">Nutzergruppe Mitglied</value>
         <value xml:lang="en">Party Group Member</value>
         <value xml:lang="es">Miembro de grupo de marticipantes</value>
         <value xml:lang="fr">Membre d'un groupe d'acteurs</value>
@@ -2773,7 +2773,7 @@
     </property>
     <property key="Enumeration.description.PRIP_PARTY_ID">
         <value xml:lang="ar">طرف</value>
-        <value xml:lang="de">Akteur</value>
+        <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">Party</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteur</value>
@@ -9413,7 +9413,7 @@
     </property>
     <property key="StatusItem.description.COM_UNKNOWN_PARTY">
         <value xml:lang="ar">طرف غير معروف</value>
-        <value xml:lang="de">Unbekannter Akteur</value>
+        <value xml:lang="de">Unbekannter Nutzer</value>
         <value xml:lang="en">Unknown Party</value>
         <value xml:lang="es">Participante desconocido</value>
         <value xml:lang="fr">Acteur inconnu</value>
@@ -13259,7 +13259,7 @@
         <value xml:lang="zh_TW">通訊事件</value>
     </property>
     <property key="StatusType.description.CONTACTLST_PARTY">
-        <value xml:lang="de">Kontaktliste Akteur</value>
+        <value xml:lang="de">Kontaktliste Nutzer</value>
         <value xml:lang="en">Contact List Party</value>
         <value xml:lang="es">Lista de contactos Participante</value>
         <value xml:lang="fr">Acteur de liste de contact</value>
@@ -13560,7 +13560,7 @@
         <value xml:lang="zh_TW">產品執行狀態</value>
     </property>
     <property key="StatusType.description.PRTYASGN_STATUS">
-        <value xml:lang="de">Akteur</value>
+        <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">Party</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteur</value>

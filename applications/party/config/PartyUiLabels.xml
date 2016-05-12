@@ -486,7 +486,7 @@
         <value xml:lang="zh_TW">名字(原名)</value>
     </property>
     <property key="FormFieldTitle_fromPartyId">
-        <value xml:lang="de">Von Akteur ID</value>
+        <value xml:lang="de">Von Nutzer ID</value>
         <value xml:lang="en">From User Id</value>
         <value xml:lang="es">Código Participante origen</value>
         <value xml:lang="fr">Expéditeur</value>
@@ -1115,7 +1115,7 @@
     </property>
     <property key="FormFieldTitle_partyClassificationGroupId">
         <value xml:lang="cs">Id klasifikační skupiny partnera</value>
-        <value xml:lang="de">Akteur Klassifizierungsgruppe ID</value>
+        <value xml:lang="de">Nutzer Klassifizierungsgruppe ID</value>
         <value xml:lang="en">User Classification Group Id</value>
         <value xml:lang="es">Código Grupo de clasificación</value>
         <value xml:lang="fr">Classification d'acteur</value>
@@ -1132,7 +1132,7 @@
         <value xml:lang="zh_TW">團體分類群組</value>
     </property>
     <property key="FormFieldTitle_partyClassificationTypeId">
-        <value xml:lang="de">Akteur Klassifizierungstyp ID</value>
+        <value xml:lang="de">Nutzer Klassifizierungstyp ID</value>
         <value xml:lang="en">User Classification Type Id</value>
         <value xml:lang="es">Codigo Tipo de clasificación</value>
         <value xml:lang="fr">Type de classification d'acteur</value>
@@ -1163,7 +1163,7 @@
     <property key="FormFieldTitle_partyId">
         <value xml:lang="ar">تعريف الطرف</value>
         <value xml:lang="cs">ID partnera</value>
-        <value xml:lang="de">Akteur ID</value>
+        <value xml:lang="de">Nutzer ID</value>
         <value xml:lang="en">User Id</value>
         <value xml:lang="es">Id Grupo</value>
         <value xml:lang="fr">Acteur</value>
@@ -1181,7 +1181,7 @@
     </property>
     <property key="FormFieldTitle_partyIdFrom">
         <value xml:lang="cs">Od partnera ID</value>
-        <value xml:lang="de">Akteur ID von</value>
+        <value xml:lang="de">Nutzer ID von</value>
         <value xml:lang="en">From User ID</value>
         <value xml:lang="es">Id Grupo Origen</value>
         <value xml:lang="fr">De l'acteur</value>
@@ -1199,7 +1199,7 @@
     </property>
     <property key="FormFieldTitle_partyIdTo">
         <value xml:lang="cs">Partnerovi ID</value>
-        <value xml:lang="de">Akteur ID zu</value>
+        <value xml:lang="de">Nutzer ID zu</value>
         <value xml:lang="en">To User ID</value>
         <value xml:lang="es">Id Grupo Destino</value>
         <value xml:lang="fr">Vers l'acteur</value>
@@ -1238,7 +1238,7 @@
         <value xml:lang="zh_TW">識別類型</value>
     </property>
     <property key="FormFieldTitle_partyInvitationId">
-        <value xml:lang="de">Akteur Einladung ID</value>
+        <value xml:lang="de">Nutzer Einladung ID</value>
         <value xml:lang="en">User Invitation Id</value>
         <value xml:lang="es">Código Invitación de participante</value>
         <value xml:lang="fr">Invitation d'acteur</value>
@@ -1253,7 +1253,7 @@
         <value xml:lang="zh_TW">團體邀請識別</value>
     </property>
     <property key="FormFieldTitle_partyRelationshipName">
-        <value xml:lang="de">Akteur Beziehungsname</value>
+        <value xml:lang="de">Nutzer Beziehungsname</value>
         <value xml:lang="en">User Relationship Name</value>
         <value xml:lang="es">Nombre de relación</value>
         <value xml:lang="fr">Nom de la relation</value>
@@ -1270,7 +1270,7 @@
         <value xml:lang="zh_TW">團體關連名稱</value>
     </property>
     <property key="FormFieldTitle_partyRelationshipTypeId">
-        <value xml:lang="de">Akteur Beziehungstyp ID</value>
+        <value xml:lang="de">Nutzer Beziehungstyp ID</value>
         <value xml:lang="en">User Relationship Type Id</value>
         <value xml:lang="es">Código de relación</value>
         <value xml:lang="fr">Type de relation</value>
@@ -1288,7 +1288,7 @@
     </property>
     <property key="FormFieldTitle_partyTaxId">
         <value xml:lang="cs">DIČ</value>
-        <value xml:lang="de">Akteur Steuer ID</value>
+        <value xml:lang="de">Nutzer Steuer ID</value>
         <value xml:lang="en">User Tax Id</value>
         <value xml:lang="es">CIF/NIF</value>
         <value xml:lang="fr">Taxe d'acteur</value>
@@ -1461,7 +1461,7 @@
         <value xml:lang="zh_TW">優先幣別</value>
     </property>
     <property key="FormFieldTitle_quickAssignPartyId">
-        <value xml:lang="de">Akteur ID rasch zuweisen</value>
+        <value xml:lang="de">Nutzer ID rasch zuweisen</value>
         <value xml:lang="en">Quick Assign User Id</value>
         <value xml:lang="fr">Assoc. rapide de l'acteur</value>
         <value xml:lang="hi_IN">जल्दी पार्टी क्रमांक आवंटित करे</value>
@@ -1687,7 +1687,7 @@
         <value xml:lang="zh_TW">後綴名</value>
     </property>
     <property key="FormFieldTitle_taxAuthPartyId">
-        <value xml:lang="de">Steuerbehörde Akteur</value>
+        <value xml:lang="de">Steuerbehörde des Nutzers</value>
         <value xml:lang="en">Tax Authority User</value>
         <value xml:lang="es">Código de la Autoridad Tributaria</value>
         <value xml:lang="fr">Administration fiscale</value>
@@ -1884,7 +1884,7 @@
         <value xml:lang="zh_TW">受雇年數</value>
     </property>
     <property key="PageTitleAddPartyContent">
-        <value xml:lang="de">Akteur Inhalt hinzufügen</value>
+        <value xml:lang="de">Nutzer Inhalt hinzufügen</value>
         <value xml:lang="en">Add User Content</value>
         <value xml:lang="es">Agregar contenido de participante</value>
         <value xml:lang="fr">Ajouter l'acteur de contenu</value>
@@ -1900,7 +1900,7 @@
         <value xml:lang="zh_TW">增加團體內容</value>
     </property>
     <property key="PageTitleAddPartyInvitationGroupAssoc">
-        <value xml:lang="de">Akteur Einladung Gruppe Verbindung hinzufügen</value>
+        <value xml:lang="de">Nutzer Einladung Gruppe Verbindung hinzufügen</value>
         <value xml:lang="en">Add User Invitation Group Assoc</value>
         <value xml:lang="es">Añadir asociación de grupo a invitación de participante</value>
         <value xml:lang="fr">Ajoutez le groupe d'association d'invitation de l'acteur</value>
@@ -1915,7 +1915,7 @@
         <value xml:lang="zh_TW">增加團體邀請群組結合</value>
     </property>
     <property key="PageTitleAddPartyInvitationRoleAssoc">
-        <value xml:lang="de">Akteur Einladung Rolle Verbindung hinzufügen </value>
+        <value xml:lang="de">Nutzer Einladung Rolle Verbindung hinzufügen </value>
         <value xml:lang="en">Add User Invitation Role Assoc</value>
         <value xml:lang="es">Añadir asociación de rol a invitación de participante</value>
         <value xml:lang="fr">Ajoutez le rôle d'association d'invitation de l'acteur</value>
@@ -1930,7 +1930,7 @@
         <value xml:lang="zh_TW">增加團體邀請角色結合</value>
     </property>
     <property key="PageTitleAddPartySegmentRoles">
-        <value xml:lang="de">Akteur Segment Rolle hinzufügen</value>
+        <value xml:lang="de">Nutzer Segment Rolle hinzufügen</value>
         <value xml:lang="en">Add User Segment Role</value>
         <value xml:lang="es">Añadir rol de segmento de participante</value>
         <value xml:lang="fr">Ajoutez un rôle de segmentation</value>
@@ -1944,7 +1944,7 @@
         <value xml:lang="zh_TW">增加團體分區角色</value>
     </property>
     <property key="PageTitleAddPartyTaxAuthInfos">
-        <value xml:lang="de">Informationen zur Steuerbehörde Akteur hinzufügen</value>
+        <value xml:lang="de">Informationen zur Steuerbehörde des Nutzers hinzufügen</value>
         <value xml:lang="en">Add User Tax Authority Info</value>
         <value xml:lang="es">Añadir informacion de Autoridad Tributaria de participante</value>
         <value xml:lang="fr">Ajoutez des informations sur l'administration fiscale</value>
@@ -2018,7 +2018,7 @@
         <value xml:lang="zh_TW">通訊事件</value>
     </property>
     <property key="PageTitleCreateNewPartyDetail">
-        <value xml:lang="de">Neuen Akteur erstellen</value>
+        <value xml:lang="de">Neuen Nutzer erstellen</value>
         <value xml:lang="en">Create New User Detail</value>
         <value xml:lang="es">Crear nuevo participante</value>
         <value xml:lang="fr">Création nouv. acteur</value>
@@ -2177,7 +2177,7 @@
         <value xml:lang="zh_TW">編輯群組資訊</value>
     </property>
     <property key="PageTitleEditPartyAttribute">
-        <value xml:lang="de">Akteur Attribute bearbeiten</value>
+        <value xml:lang="de">Nutzer Attribute bearbeiten</value>
         <value xml:lang="en">Edit User Attribute</value>
         <value xml:lang="es">Editar atributos</value>
         <value xml:lang="fr">Modifier les attributs de l'acteur</value>
@@ -2194,7 +2194,7 @@
         <value xml:lang="zh_TW">修改團體屬性</value>
     </property>
     <property key="PageTitleEditPartyClassificationGroup">
-        <value xml:lang="de">Akteur Klassifizierung bearbeiten</value>
+        <value xml:lang="de">Nutzer Klassifizierung bearbeiten</value>
         <value xml:lang="en">Edit User Classification Group</value>
         <value xml:lang="es">Editar grupo de clasificación</value>
         <value xml:lang="fr">Modifier la classification de l'acteur</value>
@@ -2211,7 +2211,7 @@
         <value xml:lang="zh_TW">修改團體分類群組</value>
     </property>
     <property key="PageTitleEditPartyClassificationGroupParties">
-        <value xml:lang="de">Klassifizierungsgruppen für Akteure bearbeiten</value>
+        <value xml:lang="de">Klassifizierungsgruppen für Nutzere bearbeiten</value>
         <value xml:lang="en">Edit Classification Group Parties</value>
         <value xml:lang="es">Editar grupos de clasificación</value>
         <value xml:lang="fr">Modifier les classifications de l'acteurs</value>
@@ -2242,7 +2242,7 @@
         <value xml:lang="zh_TW">修改團體邀請群組結合</value>
     </property>
     <property key="PageTitleEditPartyInvitationRoleAssoc">
-        <value xml:lang="de">Verbindung Rolle Einladung Akteur bearbeiten</value>
+        <value xml:lang="de">Verbindung Rolle Einladung Nutzer bearbeiten</value>
         <value xml:lang="en">Edit User Invitation RoleAssoc</value>
         <value xml:lang="es">Editar asociación de rol de invitación de participante</value>
         <value xml:lang="fr">Modifier l'association du rôle d'invitation de l'acteur</value>
@@ -2257,7 +2257,7 @@
         <value xml:lang="zh_TW">修改團體邀請角色結合</value>
     </property>
     <property key="PageTitleEditPartyRates">
-        <value xml:lang="de">Akteur Ansätze bearbeiten</value>
+        <value xml:lang="de">Nutzer Ansätze bearbeiten</value>
         <value xml:lang="en">Edit User Rates</value>
         <value xml:lang="es">Editar tasas de participación</value>
         <value xml:lang="fr">Modifier le taux de l'acteur</value>
@@ -2274,7 +2274,7 @@
         <value xml:lang="zh_TW">修改團體稅率</value>
     </property>
     <property key="PageTitleEditPartyRelationships">
-        <value xml:lang="de">Akteur Beziehungen bearbeiten</value>
+        <value xml:lang="de">Nutzer Beziehungen bearbeiten</value>
         <value xml:lang="en">Edit User Relationships</value>
         <value xml:lang="es">Editar relaciones de participantes</value>
         <value xml:lang="fr">Modifier les relations entre acteurs</value>
@@ -2291,7 +2291,7 @@
         <value xml:lang="zh_TW">修改團體關連</value>
     </property>
     <property key="PageTitleEditPartyTaxAuthInfos">
-        <value xml:lang="de">Informationen Steuerbehörde Akteur bearbeiten</value>
+        <value xml:lang="de">Informationen Steuerbehörde des Nutzers bearbeiten</value>
         <value xml:lang="en">Edit User Tax Authority Info</value>
         <value xml:lang="es">Editar información de impuestos</value>
         <value xml:lang="fr">Modifier l'information sur l'administration fiscale de l'acteur </value>
@@ -2378,7 +2378,7 @@
     </property>
     <property key="PageTitleFindParty">
         <value xml:lang="cs">Vyhledat partnera</value>
-        <value xml:lang="de">Akteur(e) suchen</value>
+        <value xml:lang="de">Nutzer suchen</value>
         <value xml:lang="en">Find User(s)</value>
         <value xml:lang="es">Buscar participante(s)</value>
         <value xml:lang="fr">Recherche d'acteur(s)</value>
@@ -2396,7 +2396,7 @@
         <value xml:lang="zh_TW">查詢團體</value>
     </property>
     <property key="PageTitleFindPartyClassificationGroups">
-        <value xml:lang="de">Akteur Klassifizierungsgruppen suchen</value>
+        <value xml:lang="de">Nutzer Klassifizierungsgruppen suchen</value>
         <value xml:lang="en">Find User Classification Groups</value>
         <value xml:lang="es">Buscar grupos de clasificación</value>
         <value xml:lang="fr">Rechercher les classification de l'acteur</value>
@@ -2413,7 +2413,7 @@
         <value xml:lang="zh_TW">尋找團體分類群組</value>
     </property>
     <property key="PageTitleFindPartyInvitation">
-        <value xml:lang="de">Akteur Einladung suchen</value>
+        <value xml:lang="de">Nutzer Einladung suchen</value>
         <value xml:lang="en">Find User Invitation</value>
         <value xml:lang="es">Buscar invitación de participante</value>
         <value xml:lang="fr">Rechercher l'invitation de l'acteur</value>
@@ -2480,7 +2480,7 @@
         <value xml:lang="zh_TW">列出通訊</value>
     </property>
     <property key="PageTitleListCommunicationsRelatedParties">
-        <value xml:lang="de">Kommunikationsliste zugehöriger Akteure</value>
+        <value xml:lang="de">Kommunikationsliste zugehöriger Nutzer</value>
         <value xml:lang="en">List Communications of related parties</value>
         <value xml:lang="it">Lista comunicazioni dei soggetti relazionati</value>
         <value xml:lang="ja">関連取引先の通信を一覧表示</value>
@@ -2525,7 +2525,7 @@
         <value xml:lang="zh_TW">未知來源的通訊</value>
     </property>
     <property key="PageTitleNewPartyNote">
-        <value xml:lang="de">Neue Notiz zum Akteur</value>
+        <value xml:lang="de">Neue Notiz zum Nutzer</value>
         <value xml:lang="en">New User Note</value>
         <value xml:lang="es">Nueva nota de participante</value>
         <value xml:lang="fr">Nouvelle note</value>
@@ -2542,7 +2542,7 @@
         <value xml:lang="zh_TW">新的團體便箋</value>
     </property>
     <property key="PageTitlePartyCarrierAccount">
-        <value xml:lang="de">Akteur Spediteur Konto bearbeiten</value>
+        <value xml:lang="de">Nutzer Spediteur Konto bearbeiten</value>
         <value xml:lang="en">Edit User Carrier Account</value>
         <value xml:lang="es">Editar cuenta de participante transportista</value>
         <value xml:lang="fr">Modifier le compte du transporteur</value>
@@ -2557,7 +2557,7 @@
         <value xml:lang="zh_TW">修改團體快遞帳戶</value>
     </property>
     <property key="PageTitlePartyGeoLocation">
-        <value xml:lang="de">Akteur Geolokalisierung</value>
+        <value xml:lang="de">Nutzer Geolokalisierung</value>
         <value xml:lang="en">User GeoLocation</value>
         <value xml:lang="fr">Géolocalisation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी भू स्थान</value>
@@ -2569,7 +2569,7 @@
         <value xml:lang="zh_TW">團體的地理位置</value>
     </property>
     <property key="PageTitlePartyInvitation">
-        <value xml:lang="de">Akteur Einladung</value>
+        <value xml:lang="de">Nutzer Einladung</value>
         <value xml:lang="en">User Invitation</value>
         <value xml:lang="es">Invitación de participante</value>
         <value xml:lang="fr">Invitation de l'acteur</value>
@@ -2686,7 +2686,7 @@
         <value xml:lang="zh_TW">檢視通訊事件資訊</value>
     </property>
     <property key="PageTitleViewPartyClassificationGroupParties">
-        <value xml:lang="de">Akteur-Klassifizierungsgruppe des Akteurs anzeigen</value>
+        <value xml:lang="de">Nutzer-Klassifizierungsgruppe des Nutzers anzeigen</value>
         <value xml:lang="en">View User Classification Group Parties</value>
         <value xml:lang="es">Ver grupo de clasificación del participante</value>
         <value xml:lang="fr">Afficher les classification de l'acteur</value>
@@ -2701,7 +2701,7 @@
         <value xml:lang="zh_TW">檢視團體分類群組團體</value>
     </property>
     <property key="PageTitleViewPartyClassifications">
-        <value xml:lang="de">Akteur Klassifizierung anzeigen</value>
+        <value xml:lang="de">Nutzer Klassifizierung anzeigen</value>
         <value xml:lang="en">View User Classifications</value>
         <value xml:lang="es">Ver clasificaciones</value>
         <value xml:lang="fr">Afficher les classifications de l'acteur</value>
@@ -2718,7 +2718,7 @@
         <value xml:lang="zh_TW">檢視團體分類</value>
     </property>
     <property key="PageTitleViewPartyPreferences">
-        <value xml:lang="de">Akteur-Präferenzen anzeigen</value>
+        <value xml:lang="de">Nutzer-Präferenzen anzeigen</value>
         <value xml:lang="en">View User Preference</value>
         <value xml:lang="hi_IN">पार्टी वरीयता देखें</value>
         <value xml:lang="it">Mostra preferenze soggetto</value>
@@ -2729,7 +2729,7 @@
         <value xml:lang="zh_TW">檢視團體偏好</value>
     </property>
     <property key="PageTitleViewPartyProfile">
-        <value xml:lang="de">Akteur Profil anzeigen</value>
+        <value xml:lang="de">Nutzer Profil anzeigen</value>
         <value xml:lang="en">View User Profile</value>
         <value xml:lang="es">Ver perfil de participante</value>
         <value xml:lang="fr">Affichage du détail de l'acteur</value>
@@ -2747,7 +2747,7 @@
         <value xml:lang="zh_TW">檢視團體檔案</value>
     </property>
     <property key="PageTitleViewPartyRole">
-        <value xml:lang="de">Akteur Rollen anzeigen</value>
+        <value xml:lang="de">Nutzer Rollen anzeigen</value>
         <value xml:lang="en">View User Roles</value>
         <value xml:lang="es">Ver roles</value>
         <value xml:lang="fr">Affichage des rôles de l'acteur</value>
@@ -2765,7 +2765,7 @@
         <value xml:lang="zh_TW">檢視團體角色</value>
     </property>
     <property key="PageTitleViewPartySegmentRoles">
-        <value xml:lang="de">Akteur Segment Rollen anzeigen</value>
+        <value xml:lang="de">Nutzer Segment Rollen anzeigen</value>
         <value xml:lang="en">View User Segment Roles</value>
         <value xml:lang="es">Ver segmento de roles</value>
         <value xml:lang="fr">Afficher les rôles de segmentation de l'acteur</value>
@@ -2782,7 +2782,7 @@
         <value xml:lang="zh_TW">檢視團體分區角色</value>
     </property>
     <property key="PageTitleViewVendorParty">
-        <value xml:lang="de">Verkäufer Akteur Informationen anzeigen</value>
+        <value xml:lang="de">Informationen über Verkäufer anzeigen</value>
         <value xml:lang="en">View Vendor User Info</value>
         <value xml:lang="es">Ver información de vendedor</value>
         <value xml:lang="fr">Affichage info vendeur</value>
@@ -2982,7 +2982,7 @@
         <value xml:lang="zh_TW">新建個人資訊</value>
     </property>
     <property key="PartyAddOtherRelationship">
-        <value xml:lang="de">Weitere Akteur Verbindung hinzufügen</value>
+        <value xml:lang="de">Weitere Nutzerverbindung hinzufügen</value>
         <value xml:lang="en">Add other user relationship user ${partyId}</value>
         <value xml:lang="fr">Ajouter une autre relation entre acteurs</value>
         <value xml:lang="hi_IN">अन्य पार्टी के रिश्ते जोड़ें</value>
@@ -3137,7 +3137,7 @@
         <value xml:lang="zh_TW">增加到購物清單</value>
     </property>
     <property key="PartyAdditionalPartyEntry">
-        <value xml:lang="de">Zusätzlicher Akteureintrag</value>
+        <value xml:lang="de">Zusätzlicher Nutzereintrag</value>
         <value xml:lang="en">Additional User Entry</value>
         <value xml:lang="es">Entrada adicional de participante</value>
         <value xml:lang="fr">Ajout d'un acteur supplémentaire</value>
@@ -3154,7 +3154,7 @@
         <value xml:lang="zh_TW">額外的團體記錄</value>
     </property>
     <property key="PartyAdditionalPartyListing">
-        <value xml:lang="de">Zusätzliche Auflistung Akteur</value>
+        <value xml:lang="de">Zusätzliche Auflistung Nutzer</value>
         <value xml:lang="en">Additional User Listing</value>
         <value xml:lang="es">Listado de participante adicional</value>
         <value xml:lang="fr">Liste des autres destinataires</value>
@@ -3634,7 +3634,7 @@
     </property>
     <property key="PartyAttribute">
         <value xml:lang="cs">Atribut partnera</value>
-        <value xml:lang="de">Akteur Attribut</value>
+        <value xml:lang="de">Nutzerattribut</value>
         <value xml:lang="en">User Attribute</value>
         <value xml:lang="es">Atributo</value>
         <value xml:lang="fr">Attribut de l'acteur</value>
@@ -3652,7 +3652,7 @@
     </property>
     <property key="PartyAttributes">
         <value xml:lang="cs">Attributy partnera</value>
-        <value xml:lang="de">Akteur Attribute</value>
+        <value xml:lang="de">Nutzerattribute</value>
         <value xml:lang="en">User Attribute(s)</value>
         <value xml:lang="es">Atributo(s)</value>
         <value xml:lang="fr">Attribut(s) de l'acteur</value>
@@ -3883,7 +3883,7 @@
         <value xml:lang="zh_TW">團體識別和使用者登入識別都是空的.</value>
     </property>
     <property key="PartyCannotLinkPartyToItSelf">
-        <value xml:lang="de">Akteur kann nicht mit sich selbst verknüpft werden</value>
+        <value xml:lang="de">Nutzer kann nicht mit sich selbst verknüpft werden</value>
         <value xml:lang="en">Cannot link the same user with itself</value>
         <value xml:lang="it">Non è possibile collegare lo stesso soggetto a se stesso</value>
         <value xml:lang="ja">同じ取引先自身をリンクできません。</value>
@@ -3892,7 +3892,7 @@
         <value xml:lang="zh_TW">不能把相同團體和它自己連結在一起</value>
     </property>
     <property key="PartyCannotMergeDisabledParty">
-        <value xml:lang="de">Dies Zusammenführung von Datensätzen in deaktivierten Akteur ist nicht möglich!</value>
+        <value xml:lang="de">Diese Zusammenführung von Datensätzen deaktivierter Nutzer ist nicht möglich!</value>
         <value xml:lang="en">Cannot merge records into a disabled user!</value>
         <value xml:lang="it">Non è possibile fondere i soggetti se il soggetto è disabilitato!</value>
         <value xml:lang="ja">無効な取引先にレコードをマージできません!</value>
@@ -3901,7 +3901,7 @@
         <value xml:lang="zh_TW">無法把記錄合併給一個已停用的團體！</value>
     </property>
     <property key="PartyCannotUpdateContactBecauseNotWithSpecifiedParty">
-        <value xml:lang="de">FEHLER: Kann die Kontaktinformationen nicht aktualisieren da sie nicht zum angegeben Akteur gehören.</value>
+        <value xml:lang="de">FEHLER: Kann die Kontaktinformationen nicht aktualisieren da sie nicht zum angegeben Nutzer gehören.</value>
         <value xml:lang="en">ERROR: Cannot update specified contact info because it does not correspond to the specified user.</value>
         <value xml:lang="es">ERROR: No se pudo actualizar la información ya que no pertenece al participante especificado</value>
         <value xml:lang="fr">Erreur: détail des coordonnées non mises à jour, elles ne correspondent pas à l'acteur spécifié.</value>
@@ -3919,7 +3919,7 @@
         <value xml:lang="zh_TW">錯誤:不能更新指定的聯絡資訊,因為它沒有與指定的團體關連起來.</value>
     </property>
     <property key="PartyChangeParty">
-        <value xml:lang="de">Akteur wechseln</value>
+        <value xml:lang="de">Nutzer wechseln</value>
         <value xml:lang="en">Change User</value>
         <value xml:lang="es">Cambiar participante</value>
         <value xml:lang="fr">Changer d'acteur</value>
@@ -4058,7 +4058,7 @@
         <value xml:lang="zh_TW">分類群組識別</value>
     </property>
     <property key="PartyClassificationGroupParties">
-        <value xml:lang="de">Klassifizierungsgruppe Akteure</value>
+        <value xml:lang="de">Klassifizierungsgruppe Nutzer</value>
         <value xml:lang="en">Classification Group Parties</value>
         <value xml:lang="es">Participantes del grupo</value>
         <value xml:lang="fr">Classification d'acteurs</value>
@@ -4308,7 +4308,7 @@
         <value xml:lang="zh_TW">通訊事件角色</value>
     </property>
     <property key="PartyCommEventSubject">
-        <value xml:lang="de">Akteur Kommunikationsereignis Thema</value>
+        <value xml:lang="de">Nutzer Kommunikationsereignis Thema</value>
         <value xml:lang="en">User Comm Event Subject</value>
         <value xml:lang="es">Asunto del evento de comunicación</value>
         <value xml:lang="fr">Objet d'événement de communication de l'acteur</value>
@@ -4399,9 +4399,11 @@
         <value xml:lang="zh_TW">通訊事件識別:沒有找到${parameters.commnicationEventId}</value>
     </property>
     <property key="PartyCommunication">
+    	<value xml:lang="de">Kommunikation</value>
         <value xml:lang="en">Communication</value>
     </property>
     <property key="PartyLastCommunication">
+    	<value xml:lang="de">Jüngste Ereignisse</value>
         <value xml:lang="en">Last Communication</value>
     </property>
     <property key="PartyCommunications">
@@ -4423,7 +4425,7 @@
         <value xml:lang="zh_TW">通訊</value>
     </property>
     <property key="PartyCommunicationsOfParty">
-        <value xml:lang="de">Akteur Kommunikationen</value>
+        <value xml:lang="de">Kommunikation der Nutzer</value>
         <value xml:lang="en">Communications of user</value>
         <value xml:lang="fr">Communications de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी के संचार</value>
@@ -4453,7 +4455,7 @@
         <value xml:lang="zh_TW">通訊與</value>
     </property>
     <property key="PartyCompanyName">
-        <value xml:lang="de">CATO - Akteur Manager</value>
+        <value xml:lang="de">CATO - Nutzer Manager</value>
         <value xml:lang="en">CATO - User Manager</value>
         <value xml:lang="es">CATO - Gestión de participantes</value>
         <value xml:lang="fr">CATO - : Gestionnaire d'acteur</value>
@@ -4658,7 +4660,7 @@
         <value xml:lang="zh_TW">聯絡資訊</value>
     </property>
     <property key="PartyContactListPartyCreate">
-        <value xml:lang="de">Akteur zur Kontaktliste hinzufügen</value>
+        <value xml:lang="de">Nutzer zur Kontaktliste hinzufügen</value>
         <value xml:lang="en">Add User to Contact List</value>
         <value xml:lang="es">Añadir participante</value>
         <value xml:lang="fr">Ajouter un acteur à la liste de contacts</value>
@@ -4710,7 +4712,7 @@
         <value xml:lang="zh_TW">沒有聯絡方法識別</value>
     </property>
     <property key="PartyContactMechNotFoundCannotDelete">
-        <value xml:lang="de">FEHLER: Kontaktinformation konnte nicht gelöscht werden (Akteur Kontakt Mechanismus nicht gefunden)</value>
+        <value xml:lang="de">FEHLER: Kontaktinformation konnte nicht gelöscht werden (Nutzer Kontakt Mechanismus nicht gefunden)</value>
         <value xml:lang="en">ERROR: Could not delete contact info (user contact mech not found)</value>
         <value xml:lang="es">ERROR: No se pudo borrar la información de contacto</value>
         <value xml:lang="fr">Erreur: coordonnées de l'acteur non trouvées, suppression impossible.</value>
@@ -5001,7 +5003,7 @@
         <value xml:lang="zh_TW">辦公室電話號碼</value>
     </property>
     <property key="PartyContent">
-        <value xml:lang="de">Akteur Inhalt</value>
+        <value xml:lang="de">Nutzer Inhalt</value>
         <value xml:lang="en">User Content</value>
         <value xml:lang="es">Contenido de participante</value>
         <value xml:lang="fr">Contenu de l'acteur</value>
@@ -5062,7 +5064,7 @@
         <value xml:lang="zh_TW">無法建新的目的,已經存在一個那種類型的目的了</value>
     </property>
     <property key="PartyCreateAddEmail">
-        <value xml:lang="de">Email zu Akteur erstellen/hinzufügen</value>
+        <value xml:lang="de">Email zu Nutzer erstellen/hinzufügen</value>
         <value xml:lang="en">Create/Add Email to User</value>
         <value xml:lang="es">Crear/añadir correo electrónico para participante</value>
         <value xml:lang="fr">Associer le mél à l'acteur</value>
@@ -5351,7 +5353,7 @@
         <value xml:lang="zh_TW">新建禮物卡</value>
     </property>
     <property key="PartyCreateNewParty">
-        <value xml:lang="de">Neuen Akteur erstellen - Details</value>
+        <value xml:lang="de">Neuen Nutzer erstellen - Details</value>
         <value xml:lang="en">Create New User Detail</value>
         <value xml:lang="es">Nuevo participante</value>
         <value xml:lang="fr">Choisir un type d'acteur</value>
@@ -5369,7 +5371,7 @@
         <value xml:lang="zh_TW">建立新團體細項</value>
     </property>
     <property key="PartyCreateNewPartyClassificationGroup">
-        <value xml:lang="de">Neue Akteur Klassifizierungsgruppe erstellen</value>
+        <value xml:lang="de">Neue Nutzer Klassifizierungsgruppe erstellen</value>
         <value xml:lang="en">Create New User Classification Group</value>
         <value xml:lang="es">Crear nuevo grupo de clasificación</value>
         <value xml:lang="fr">Créer une nouvelle classification</value>
@@ -5386,7 +5388,7 @@
         <value xml:lang="zh_TW">新建團體分類群組</value>
     </property>
     <property key="PartyCreateNewPartyGroup">
-        <value xml:lang="de">Neue Akteurgruppe erstellen</value>
+        <value xml:lang="de">Neue Nutzergruppe erstellen</value>
         <value xml:lang="en">Create New User Group</value>
         <value xml:lang="es">Nuevo grupo de participantes</value>
         <value xml:lang="fr">Créer un nouveau groupe d'acteurs</value>
@@ -5572,7 +5574,7 @@
         <value xml:lang="zh_TW">安全錯誤: 要執行 createVendor,你必須具有 PARTYMGR_CREATE 或 PARTYMGR_ADMIN 權限</value>
     </property>
     <property key="PartyCreatedDate">
-        <value xml:lang="de">Akteur Erstellungsdatum</value>
+        <value xml:lang="de">Nutzer Erstellungsdatum</value>
         <value xml:lang="en">User Created Date</value>
         <value xml:lang="es">Fecha de creación de participante</value>
         <value xml:lang="fr">Date de création</value>
@@ -5589,7 +5591,7 @@
         <value xml:lang="zh_TW">團體建立日期</value>
     </property>
     <property key="PartyCurrency">
-        <value xml:lang="de">Akteur-Währung</value>
+        <value xml:lang="de">Nutzer-Währung</value>
         <value xml:lang="en">In user currency</value>
         <value xml:lang="hi_IN">पार्टी की मुद्रा</value>
         <value xml:lang="it">Nella valuta del soggetto</value>
@@ -6178,7 +6180,7 @@
         <value xml:lang="zh_TW">電子郵件位址</value>
     </property>
     <property key="PartyEmailFromUnknownParties">
-        <value xml:lang="de">E-Mail von unbekanntem Akteur</value>
+        <value xml:lang="de">E-Mail von unbekanntem Nutzer</value>
         <value xml:lang="en">Email from unknown parties</value>
         <value xml:lang="es">Correo electrónico de participantes desconocidos</value>
         <value xml:lang="fr">Courriel depuis un acteur inconnu</value>
@@ -6192,7 +6194,7 @@
         <value xml:lang="zh_TW">來自未知團體的電子郵件</value>
     </property>
     <property key="PartyEmailMessage">
-        <value xml:lang="de">Diese Nachricht zu einem neuen oder existierenden Akteur hinzufügen und E-Mail Adresse hinzufügen</value>
+        <value xml:lang="de">Diese Nachricht zu einem neuen oder existierenden Nutzer hinzufügen und E-Mail Adresse hinzufügen</value>
         <value xml:lang="en">Allocate this message to a existing or new user and add an email address</value>
         <value xml:lang="fr">Associer ce message a un acteur présent ou nouveau puis lui ajouter l'adresse électronique</value>
         <value xml:lang="hi_IN">इस संदेश को एक मौजूदा या नई पार्टी को आवंटित करे और एक ईमेल पता जोड़ें|</value>
@@ -6457,7 +6459,7 @@
         <value xml:lang="zh_TW">按訂單查詢通訊</value>
     </property>
     <property key="PartyFindParty">
-        <value xml:lang="de">Akteur suchen</value>
+        <value xml:lang="de">Nutzer suchen</value>
         <value xml:lang="en">Find User</value>
         <value xml:lang="es">Buscar participante</value>
         <value xml:lang="fr">Recherche d'acteur</value>
@@ -6474,7 +6476,7 @@
         <value xml:lang="zh_TW">查詢團體</value>
     </property>
     <property key="PartyFindPartyInvitations">
-        <value xml:lang="de">Akteur Einladungen suchen</value>
+        <value xml:lang="de">Nutzer Einladungen suchen</value>
         <value xml:lang="en">Find User Invitations</value>
         <value xml:lang="es">Buscar invitación de participante</value>
         <value xml:lang="fr">Rechercher les invitations de l'acteur</value>
@@ -6759,7 +6761,7 @@
         <value xml:lang="zh_TW">員工人數無效</value>
     </property>
     <property key="PartyGroupPartyId">
-        <value xml:lang="de">Akteur Gruppen ID</value>
+        <value xml:lang="de">Nutzer Gruppen ID</value>
         <value xml:lang="en">Group User ID</value>
         <value xml:lang="es">Código de grupo de participante</value>
         <value xml:lang="fr">Groupe d'acteur</value>
@@ -7097,7 +7099,7 @@
         <value xml:lang="zh_TW">邀請</value>
     </property>
     <property key="PartyInvitationAccAndDecPermissionError">
-        <value xml:lang="de">Sie haben keine Berechtigung eine Akteur Einladung anzunehmen oder abzulehen</value>
+        <value xml:lang="de">Sie haben keine Berechtigung eine Nutzereinladung anzunehmen oder abzulehen</value>
         <value xml:lang="en">You do not have permission to accept or decline User Invitation</value>
         <value xml:lang="es">No dispone de privilegios para aceptar o denegar invitaciones de participantes</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'accepter ou de décliner l'invitation de l'acteur</value>
@@ -7112,7 +7114,7 @@
         <value xml:lang="zh_TW">你沒有權限來接受或拒絕團體邀請</value>
     </property>
     <property key="PartyInvitationCancelPermissionError">
-        <value xml:lang="de">Sie haben keine Berechtigung eine Akteur Einladung zu annullieren.</value>
+        <value xml:lang="de">Sie haben keine Berechtigung eine Nutzereinladung zu annullieren.</value>
         <value xml:lang="en">You do not have permission to cancel the User Invitation</value>
         <value xml:lang="es">No dispone de privilegios para cancelar la invitacion de participante</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'annuler l'invitation de l'acteur</value>
@@ -7143,7 +7145,7 @@
     </property>
     <property key="PartyInvitationGroupAssocPartyIdTo">
         <value xml:lang="cs">Příjemce</value>
-        <value xml:lang="de">Akteur ID an</value>
+        <value xml:lang="de">Nutzer ID an</value>
         <value xml:lang="en">User Id To</value>
         <value xml:lang="es">Codigo Participante a</value>
         <value xml:lang="fr">Acteur dest.</value>
@@ -7173,7 +7175,7 @@
         <value xml:lang="zh_TW">上次邀請日期</value>
     </property>
     <property key="PartyInvitationNewPartyInvitation">
-        <value xml:lang="de">Neue Akteur Einladung</value>
+        <value xml:lang="de">Neue Nutzereinladung</value>
         <value xml:lang="en">New User Invitation</value>
         <value xml:lang="es">Nueva invitación de participante</value>
         <value xml:lang="fr">Nouvelle invitation pour l'acteur</value>
@@ -7202,7 +7204,7 @@
         <value xml:lang="zh_TW">新建的邀請秩序</value>
     </property>
     <property key="PartyInvitationNotValidError">
-        <value xml:lang="de">Dies ist keine gültige Akteur Einladung</value>
+        <value xml:lang="de">Dies ist keine gültige Nutzereinladung</value>
         <value xml:lang="en">This is not a valid User Invitation</value>
         <value xml:lang="es">Esto no es una invitación de participante válida</value>
         <value xml:lang="fr">Ceci n'est pas une invitation valable</value>
@@ -7245,7 +7247,7 @@
         <value xml:lang="zh_TW">發票尚未(完全)申報</value>
     </property>
     <property key="PartyInvoicesOtherParties">
-        <value xml:lang="de">Rechnungen anderer Akteure durch Zahlung von</value>
+        <value xml:lang="de">Rechnungen anderer Nutzer durch Zahlung von</value>
         <value xml:lang="en">Invoices of other parties paid by payments from</value>
         <value xml:lang="fr">Factures d'autres acteurs payées par des paiements de</value>
         <value xml:lang="hi_IN">अन्य पार्टियों से भुगतान के द्वारा भुगतान के चालान</value>
@@ -7409,7 +7411,7 @@
         <value xml:lang="zh_TW">請輸入姓氏(lastName)</value>
     </property>
     <property key="PartyLeaveEmpty">
-        <value xml:lang="de">Leer lassen für neuen Akteur</value>
+        <value xml:lang="de">Leer lassen für neuen Nutzer</value>
         <value xml:lang="en">Leave empty for new 'User'</value>
         <value xml:lang="fr">Laisser vide pour les nouveaux acteurs</value>
         <value xml:lang="hi_IN">नई 'पार्टी' के लिए खाली छोड़ दें</value>
@@ -7421,7 +7423,7 @@
         <value xml:lang="zh_TW">將新的團體保持為空白</value>
     </property>
     <property key="PartyLink">
-        <value xml:lang="de">Akteur verknüpfen</value>
+        <value xml:lang="de">Nutzer verknüpfen</value>
         <value xml:lang="en">Link User</value>
         <value xml:lang="es">Asociar participante</value>
         <value xml:lang="fr">Lier l'acteur</value>
@@ -7438,7 +7440,7 @@
         <value xml:lang="zh_TW">連結團體</value>
     </property>
     <property key="PartyLinkExplanation">
-        <value xml:lang="de">Dies setzt den status des Akteurs auf 'Inaktiv' auch wenn es eine Verbindung im Feld 'partyTo' der Akteur Attribute gibt</value>
+        <value xml:lang="de">Dies setzt den status des Nutzers auf 'Inaktiv' auch wenn es eine Verbindung im Feld 'partyTo' der Nutzer Attribute gibt</value>
         <value xml:lang="en">This will set the status of 'partyId' to disabled however will link it to 'partyTo' in the user Attributes</value>
         <value xml:lang="fr">Désactive l'acteur sélectionné (gauche), et lie ses données vers l'acteur sélectionné à droite</value>
         <value xml:lang="ja">これは'取引先ID'のステータスを無効に設定しますが、取引先属性で'取引先(先)'にリンクします</value>
@@ -7447,7 +7449,7 @@
         <value xml:lang="zh_TW">這會把團體識別('partyId')的狀態設定為停用,而且會在團體屬性中把它連結到'partyTo'</value>
     </property>
     <property key="PartyLinkMessage1">
-        <value xml:lang="de">WARNUNG: Dies kann nicht rückgängig gemacht werden. Bestätigen Sie bitte, dass Sie die beiden unten aufgeführten Akteure verknüpfen möchten. </value>
+        <value xml:lang="de">WARNUNG: Dies kann nicht rückgängig gemacht werden. Bestätigen Sie bitte, dass Sie die beiden unten aufgeführten Nutzer verknüpfen möchten. </value>
         <value xml:lang="en">WARNING: This cannot be un-done, confirm you wish to link the two user records listed below.</value>
         <value xml:lang="es">Advertencia: Esto no se puede deshacer, confirme que desea enlazar los dos participantes listados abajo.</value>
         <value xml:lang="fr">ATTENTION: Ceci ne peut pas être défait, confirmez votre souhait de lier les deux enregistrements de l'acteur énumérés ci-dessous.</value>
@@ -7639,7 +7641,7 @@
         <value xml:lang="zh_TW">已登入的使用者</value>
     </property>
     <property key="PartyLookupAccount">
-        <value xml:lang="de">Akteur mit Rolle 'Konto' suchen</value>
+        <value xml:lang="de">Nutzer mit Rolle 'Konto' suchen</value>
         <value xml:lang="en">Lookup User with the role Account</value>
         <value xml:lang="fr">Consultation de l'acteur ayant le role "compte"</value>
         <value xml:lang="hi_IN">खाता भूमिका के साथ पार्टी लुकअप</value>
@@ -7652,7 +7654,7 @@
         <value xml:lang="zh_TW">按角色帳戶尋找團體</value>
     </property>
     <property key="PartyLookupContact">
-        <value xml:lang="de">Akteur mit Rolle 'Kontakt' suchen</value>
+        <value xml:lang="de">Nutzer mit Rolle 'Kontakt' suchen</value>
         <value xml:lang="en">Lookup User with the role Contact</value>
         <value xml:lang="fr">Consultation de l'acteur ayant le rôle "contact"</value>
         <value xml:lang="hi_IN">संपर्क भूमिका के साथ पार्टी लुकअप</value>
@@ -7693,7 +7695,7 @@
         <value xml:lang="zh_TW">尋找內部組織</value>
     </property>
     <property key="PartyLookupLead">
-        <value xml:lang="de">Akteur mit Rolle 'Lead' suchen</value>
+        <value xml:lang="de">Nutzer mit Rolle 'Lead' suchen</value>
         <value xml:lang="en">Lookup User with the role Lead</value>
         <value xml:lang="it">Ricerca soggetto con il ruolo di leader</value>
         <value xml:lang="ja">ロールで取引先引合を検索</value>
@@ -7703,7 +7705,7 @@
         <value xml:lang="zh_TW">尋找具有線索角色的團體</value>
     </property>
     <property key="PartyLookupParty">
-        <value xml:lang="de">Akteur suchen</value>
+        <value xml:lang="de">Nutzer suchen</value>
         <value xml:lang="en">Lookup User</value>
         <value xml:lang="es">Buscar participante</value>
         <value xml:lang="fr">Consultation d'acteur(s)</value>
@@ -7720,7 +7722,7 @@
         <value xml:lang="zh_TW">尋找團體</value>
     </property>
     <property key="PartyLookupPartyAndUserLoginAndPerson">
-        <value xml:lang="de">Akteur und Benutzeranmeldung suchen</value>
+        <value xml:lang="de">Nutzer und Benutzeranmeldung suchen</value>
         <value xml:lang="en">Lookup PartyAndUserLoginAndPerson</value>
         <value xml:lang="es">Buscar participante y conexion</value>
         <value xml:lang="fr">Rechercher un ou des  acteurs et identifiants de connexion</value>
@@ -7738,7 +7740,7 @@
     </property>
     <property key="PartyLookupPartyByName">
         <value xml:lang="cs">Vyhledat partnera podle jména</value>
-        <value xml:lang="de">Akteur mit Name suchen</value>
+        <value xml:lang="de">Nutzer mit Name suchen</value>
         <value xml:lang="en">Lookup User by Name</value>
         <value xml:lang="es">Buscar participante por nombre</value>
         <value xml:lang="fr">Consultation de l'acteur par son nom</value>
@@ -7755,7 +7757,7 @@
         <value xml:lang="zh_TW">按名稱尋找團體</value>
     </property>
     <property key="PartyLookupPartyClassificationGroup">
-        <value xml:lang="de">Akteur Klassifizierungsgruppe suchen</value>
+        <value xml:lang="de">Nutzer Klassifizierungsgruppe suchen</value>
         <value xml:lang="en">Lookup User Classification Group</value>
         <value xml:lang="es">Buscar grupo de clasificación de participante</value>
         <value xml:lang="fr">Rechercher un ou des classification(s) d'acteur</value>
@@ -7832,7 +7834,7 @@
         <value xml:lang="zh_TW">尋找州省地理(StateProvinceGeo)時出錯:${errMessage}</value>
     </property>
     <property key="PartyLookupPartyError">
-        <value xml:lang="de">Fehler bei Akteur suche, Rückabwicklung der Transaktion: ${errMessage}</value>
+        <value xml:lang="de">Fehler bei Nutzersuche, Rückabwicklung der Transaktion: ${errMessage}</value>
         <value xml:lang="en">Failure in user find operation, rolling back transaction: ${errMessage}</value>
         <value xml:lang="it">Fallita l'operazione di ricerca soggetto, transazione annullata: ${errMessage}</value>
         <value xml:lang="ja">取引先検索時にエラー。トランザクションをロールバックします: ${errMessage}</value>
@@ -7841,7 +7843,7 @@
         <value xml:lang="zh_TW">進行尋找團體操作時失敗,回轉交易:${errMessage}</value>
     </property>
     <property key="PartyLookupPartyTypeError">
-        <value xml:lang="de">Fehler bei der Suche nach Akteur-Typ: ${errMessage}</value>
+        <value xml:lang="de">Fehler bei der Suche nach Nutzer-Typ: ${errMessage}</value>
         <value xml:lang="en">Error looking up PartyTypes: ${errMessage}</value>
         <value xml:lang="it">Errore durante la ricerca del tipo soggetto: ${errMessage}</value>
         <value xml:lang="ja">取引先種類の検索時にエラー: ${errMessage}</value>
@@ -7859,7 +7861,7 @@
         <value xml:lang="zh_TW">尋找角色類型(RoleTypes)時出錯:${errMessage}</value>
     </property>
     <property key="PartyLookupUserLoginAndPartyDetails">
-        <value xml:lang="de">Benutzeranmeldung und Akteur suchen</value>
+        <value xml:lang="de">Benutzeranmeldung und Nutzer suchen</value>
         <value xml:lang="en">Lookup User Login And User Details</value>
         <value xml:lang="es">Buscar conexión y detalles de participante</value>
         <value xml:lang="fr">Rechercher un ou des identifiants de connexion et détails de l'acteur</value>
@@ -7924,7 +7926,7 @@
         <value xml:lang="zh_TW">主要角色</value>
     </property>
     <property key="PartyManager">
-        <value xml:lang="de">Akteur Manager Anwendung</value>
+        <value xml:lang="de">Nutzer Manager</value>
         <value xml:lang="en">User Manager</value>
         <value xml:lang="es">Gestión de participantes</value>
         <value xml:lang="fr">Application de gestion des acteurs</value>
@@ -7942,7 +7944,7 @@
         <value xml:lang="zh_TW">團體管理</value>
     </property>
     <property key="PartyManagerApplication">
-        <value xml:lang="de">Akteur Manager Anwendung</value>
+        <value xml:lang="de">Nutzer Manager Anwendung</value>
         <value xml:lang="en">User Manager Application</value>
         <value xml:lang="es">Gestión de participantes</value>
         <value xml:lang="fr">Application de gestion des acteurs</value>
@@ -8877,7 +8879,7 @@
         <value xml:lang="zh_TW">沒有名稱 (群組)</value>
     </property>
     <property key="PartyNoNotesForParty">
-        <value xml:lang="de">Keine Notizen für diesen Akteur gefunden</value>
+        <value xml:lang="de">Keine Notizen für diesen Nutzer gefunden</value>
         <value xml:lang="en">No notes for this user.</value>
         <value xml:lang="es">No existen notas para este participante</value>
         <value xml:lang="fr">Aucune note pour cet acteur</value>
@@ -8913,7 +8915,7 @@
     </property>
     <property key="PartyNoPartiesFound">
         <value xml:lang="cs">Nenalezen žádný partner.</value>
-        <value xml:lang="de">Keine Akteure gefunden.</value>
+        <value xml:lang="de">Keine Nutzer gefunden.</value>
         <value xml:lang="en">No parties found.</value>
         <value xml:lang="es">No se encontraron participantes</value>
         <value xml:lang="fr">Aucun acteur trouvé.</value>
@@ -8931,7 +8933,7 @@
         <value xml:lang="zh_TW">沒有找到團體.</value>
     </property>
     <property key="PartyNoPartyAttributesFound">
-        <value xml:lang="de">Keine Akteur Attribute gefunden.</value>
+        <value xml:lang="de">Keine Nutzerattribute gefunden.</value>
         <value xml:lang="en">No user attributes found.</value>
         <value xml:lang="es">No se han encontrado atributos de participante.</value>
         <value xml:lang="fr">Aucun attribut n'a été trouvé.</value>
@@ -8949,7 +8951,7 @@
     </property>
     <property key="PartyNoPartyForCurrentUserName">
         <value xml:lang="cs">Nenalezen žádný současný uživatel s uživatelským jménem</value>
-        <value xml:lang="de">Finde keine Akteur-Information für den aktuellen Nutzer mit Nutzernamen</value>
+        <value xml:lang="de">Finde keine Nutzerinformation für den aktuellen Nutzer mit Nutzernamen</value>
         <value xml:lang="en">No user found for current user with user name</value>
         <value xml:lang="es">No hay un actor associado a este nombre de usuario</value>
         <value xml:lang="fr">Aucun acteur associé au nom d'utilisateur</value>
@@ -8967,7 +8969,7 @@
         <value xml:lang="zh_TW">沒有找到與當前使用者名稱一致的團體</value>
     </property>
     <property key="PartyNoPartyForUpdateCustomer">
-        <value xml:lang="de">Keine Akteur ID angegeben, Kunde kann nicht aktualisiert werden</value>
+        <value xml:lang="de">Keine Nutzer ID angegeben, Kunde kann nicht aktualisiert werden</value>
         <value xml:lang="en">No partyId passed, cannot Update Customer</value>
         <value xml:lang="fr">Aucune ref. d'acteur fournie, impossible de mettre à jour le client</value>
         <value xml:lang="hi_IN">कोई पार्टी कोड सही नही, खरीदार बदला नही जा सकता</value>
@@ -8982,7 +8984,7 @@
         <value xml:lang="zh_TW">沒有指定團體識別,無法更新客戶</value>
     </property>
     <property key="PartyNoPartyFoundWithPartyId">
-        <value xml:lang="de">Kein Akteur gefunden mit der Akteur ID</value>
+        <value xml:lang="de">Kein Nutzer gefunden mit der Nutzer ID</value>
         <value xml:lang="en">No user found with the partyId of</value>
         <value xml:lang="es">No se encontró participantes con esa referencia</value>
         <value xml:lang="fr">Pas d'acteur trouvé pour la référence</value>
@@ -9026,7 +9028,7 @@
         <value xml:lang="zh_TW">沒有找到關連.</value>
     </property>
     <property key="PartyNoPartyRolesFound">
-        <value xml:lang="de">Keine Akteur Rollen gefunden.</value>
+        <value xml:lang="de">Keine Nutzerrollen gefunden.</value>
         <value xml:lang="en">No user roles found.</value>
         <value xml:lang="es">No se encontraron roles</value>
         <value xml:lang="fr">Aucun rôle trouvé pour cet acteur.</value>
@@ -9062,7 +9064,7 @@
         <value xml:lang="zh_TW">沒有存檔的付款條件資訊.</value>
     </property>
     <property key="PartyNoProductStoreFoundForThisParty">
-        <value xml:lang="de">Kein Laden für diesen Akteur gefunden.</value>
+        <value xml:lang="de">Kein Laden für diesen Nutzer gefunden.</value>
         <value xml:lang="en">No product store(s) found for this user.</value>
         <value xml:lang="fr">Aucun centre de profit trouvé pour cet acteur</value>
         <value xml:lang="ja">この取引先に製品店舗はありません。</value>
@@ -9087,7 +9089,7 @@
         <value xml:lang="zh_TW">沒有找到這個訪問的伺服器點擊資料</value>
     </property>
     <property key="PartyNoShoppingCartSavedForParty">
-        <value xml:lang="de">Kein Warenkorb gespeichert für diesen Akteur.</value>
+        <value xml:lang="de">Kein Warenkorb gespeichert für diesen Nutzer.</value>
         <value xml:lang="en">No shopping cart saved for user</value>
         <value xml:lang="es">No se encontraron carros de compra</value>
         <value xml:lang="fr">Aucun panier d'achats enregistré pour cet acteur</value>
@@ -9104,7 +9106,7 @@
         <value xml:lang="zh_TW">沒有已保存的購物車,團體</value>
     </property>
     <property key="PartyNoShoppingListsParty">
-        <value xml:lang="de">Keine Einkaufsliste vorhanden für diesen Akteur</value>
+        <value xml:lang="de">Keine Einkaufsliste vorhanden für diesen Nutzer</value>
         <value xml:lang="en">No Shopping lists for user</value>
         <value xml:lang="es">No se encontraron listas de compra</value>
         <value xml:lang="fr">Aucune liste d'achats pour cet acteur </value>
@@ -9181,7 +9183,7 @@
         <value xml:lang="zh_TW">無法新建便箋:${errorString}</value>
     </property>
     <property key="PartyNoUserLogin">
-        <value xml:lang="de">Keine Benutzeranmeldung gefunden für diesen Akteur.</value>
+        <value xml:lang="de">Keine Benutzeranmeldung gefunden für diesen Nutzer.</value>
         <value xml:lang="en">No UserLogin(s) found for this user.</value>
         <value xml:lang="es">No se encontró usuario para este participante</value>
         <value xml:lang="fr">Pas d'identifiant de connexion pour cet acteur</value>
@@ -9199,7 +9201,7 @@
         <value xml:lang="zh_TW">沒有找到使用者登入.</value>
     </property>
     <property key="PartyNoVisitFound">
-        <value xml:lang="de">Keine Webseiten-Besuche gefunden für diesen Akteur.</value>
+        <value xml:lang="de">Für diesen Nutzer wurden keine Webseiten-Besuche gefunden.</value>
         <value xml:lang="en">No Visit(s) found for this user.</value>
         <value xml:lang="es">El participante no tiene visitas</value>
         <value xml:lang="fr">Aucune visite trouvée pour cet acteur.</value>
@@ -9251,7 +9253,7 @@
         <value xml:lang="zh_TW">修改個人資訊通知郵件</value>
     </property>
     <property key="PartyNotificationMailCreate">
-        <value xml:lang="de">Akteur Konto-Eröffnungsbenachrichtigung</value>
+        <value xml:lang="de">Nutzer Kontoeröffnungsbenachrichtigung</value>
         <value xml:lang="en">User Account Creation Notification Mail</value>
         <value xml:lang="hi_IN">पार्टी खाता निर्माण अधिसूचना मेल</value>
         <value xml:lang="it">Mail di notifica creazione utenza</value>
@@ -9274,7 +9276,7 @@
         <value xml:lang="zh_TW">電子郵件位址驗證</value>
     </property>
     <property key="PartyOfParty">
-        <value xml:lang="de">des Akteurs</value>
+        <value xml:lang="de">des Nutzers</value>
         <value xml:lang="en">of User</value>
         <value xml:lang="fr">de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी के</value>
@@ -9362,7 +9364,7 @@
         <value xml:lang="zh_TW">訂單——上次</value>
     </property>
     <property key="PartyOrganizationParty">
-        <value xml:lang="de">Organisation Akteur</value>
+        <value xml:lang="de">Organisation Nutzer</value>
         <value xml:lang="en">Organization User</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Organisation de l'acteur</value>
@@ -9379,7 +9381,7 @@
         <value xml:lang="zh_TW">組織團體</value>
     </property>
     <property key="PartyOrganizationPartyId">
-        <value xml:lang="de">Organisation Akteur ID</value>
+        <value xml:lang="de">Organisation Nutzer ID</value>
         <value xml:lang="en">Organization User ID</value>
         <value xml:lang="es">Código de participante</value>
         <value xml:lang="fr">Organisation de l'acteur</value>
@@ -9461,7 +9463,7 @@
         <value xml:lang="zh_TW">上層清單</value>
     </property>
     <property key="PartyParties">
-        <value xml:lang="de">Akteure</value>
+        <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">Parties</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteurs</value>
@@ -9479,7 +9481,7 @@
         <value xml:lang="zh_TW">團體</value>
     </property>
     <property key="PartyPartiesFor">
-        <value xml:lang="de">Akteure für</value>
+        <value xml:lang="de">Nutzer für</value>
         <value xml:lang="en">Parties for</value>
         <value xml:lang="es">Participantes para</value>
         <value xml:lang="fr">Acteurs pour</value>
@@ -9497,7 +9499,7 @@
         <value xml:lang="zh_TW">團體用於</value>
     </property>
     <property key="PartyPartiesFound">
-        <value xml:lang="de">Akteure gefunden</value>
+        <value xml:lang="de">Nutzer gefunden</value>
         <value xml:lang="en">Parties Found</value>
         <value xml:lang="es">Participantes encontrados</value>
         <value xml:lang="fr">Acteurs trouvés</value>
@@ -9515,7 +9517,7 @@
         <value xml:lang="zh_TW">找到團體</value>
     </property>
     <property key="PartyParty">
-        <value xml:lang="de">Akteur</value>
+        <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">User</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteur</value>
@@ -9533,7 +9535,7 @@
         <value xml:lang="zh_TW">團體</value>
     </property>
     <property key="PartyPartyCurrentInTheRoleOf">
-        <value xml:lang="de">Der aktuelle Akteur in der Rolle als</value>
+        <value xml:lang="de">Der aktuelle Nutzer in der Rolle als</value>
         <value xml:lang="en">The current user in the role of</value>
         <value xml:lang="es">Del participante actual en el rol de</value>
         <value xml:lang="fr">L'acteur courant dans le rôle de</value>
@@ -9550,7 +9552,7 @@
         <value xml:lang="zh_TW">目前團體具有角色</value>
     </property>
     <property key="PartyPartyFrom">
-        <value xml:lang="de">Akteur von</value>
+        <value xml:lang="de">Nutzer von</value>
         <value xml:lang="en">User From</value>
         <value xml:lang="es">de participante</value>
         <value xml:lang="fr">De l'acteur</value>
@@ -9568,7 +9570,7 @@
         <value xml:lang="zh_TW">團體來自</value>
     </property>
     <property key="PartyPartyFromDoesNotExists">
-        <value xml:lang="de">Akteur 'From' existiert nicht!</value>
+        <value xml:lang="de">Nutzer 'Von' existiert nicht!</value>
         <value xml:lang="en">User From does not exist!</value>
         <value xml:lang="it">Soggetto Da non esiste!</value>
         <value xml:lang="ja">取引先(元)が存在しません!</value>
@@ -9578,7 +9580,7 @@
     </property>
     <property key="PartyPartyGroupInformation">
         <value xml:lang="cs">Informace o skupině</value>
-        <value xml:lang="de">Akteurgruppe Information</value>
+        <value xml:lang="de">Informationen der Nutzergruppe</value>
         <value xml:lang="en">User Group Information</value>
         <value xml:lang="es">Información del grupo</value>
         <value xml:lang="fr">Information groupe d'acteurs</value>
@@ -9597,7 +9599,7 @@
     </property>
     <property key="PartyPartyGroupName">
         <value xml:lang="cs">Název organizace partnera</value>
-        <value xml:lang="de">Akteurgruppe Namen</value>
+        <value xml:lang="de">Name der Nutzergruppe</value>
         <value xml:lang="en">User Group Name</value>
         <value xml:lang="es">Nombre del grupo</value>
         <value xml:lang="fr">Nom du groupe d'acteurs</value>
@@ -9616,7 +9618,7 @@
     </property>
     <property key="PartyPartyGroupSuccessfullyCreated">
         <value xml:lang="cs">Partner pro organizaci úspěšně vytvořen.</value>
-        <value xml:lang="de">Akteurgruppe erfolgreich erstellt.</value>
+        <value xml:lang="de">Nutzergruppe erfolgreich erstellt.</value>
         <value xml:lang="en">User Group successfully created.</value>
         <value xml:lang="es">EL grupo se ha creado con exito.</value>
         <value xml:lang="fr">Groupe d'acteurs créé. </value>
@@ -9633,7 +9635,7 @@
     </property>
     <property key="PartyPartyGroupSuccessfullyUpdated">
         <value xml:lang="cs">Partner pro organizaci byl aktualizován.</value>
-        <value xml:lang="de">Akteurgruppe erfolgreich aktualisiert.</value>
+        <value xml:lang="de">Nutzergruppe erfolgreich aktualisiert.</value>
         <value xml:lang="en">User Group successfully updated.</value>
         <value xml:lang="es">El grupo se ha actualizado con éxito.</value>
         <value xml:lang="fr">Groupe d'acteurs mis à jour.</value>
@@ -9649,7 +9651,7 @@
         <value xml:lang="zh_TW">成功更新團體群組.</value>
     </property>
     <property key="PartyPartyIDUserLoginID">
-        <value xml:lang="de">Akteur ID/Benuterzanmeldung ID</value>
+        <value xml:lang="de">Nutzer ID/Benuterzanmeldung ID</value>
         <value xml:lang="en">PartyID/UserLoginID</value>
         <value xml:lang="es">Código / usuario</value>
         <value xml:lang="fr">Acteur / ident. de connexion</value>
@@ -9669,7 +9671,7 @@
     <property key="PartyPartyId">
         <value xml:lang="ar">دليل الصلة</value>
         <value xml:lang="cs">Id partnera</value>
-        <value xml:lang="de">Akteur ID</value>
+        <value xml:lang="de">Nutzer ID</value>
         <value xml:lang="en">User ID</value>
         <value xml:lang="es">Código de participante</value>
         <value xml:lang="fr">Acteur</value>
@@ -9688,7 +9690,7 @@
         <value xml:lang="zh_TW">團體識別</value>
     </property>
     <property key="PartyPartyIdMissing">
-        <value xml:lang="de">Akteur ID fehlt</value>
+        <value xml:lang="de">Nutzer ID fehlt</value>
         <value xml:lang="en">User ID missing</value>
         <value xml:lang="es">Falta el código de participante</value>
         <value xml:lang="fr">Acteur disparu</value>
@@ -9753,7 +9755,7 @@
         <value xml:lang="zh_TW">具有角色</value>
     </property>
     <property key="PartyPartyNotDefined">
-        <value xml:lang="de">Akteur nicht definiert</value>
+        <value xml:lang="de">Nutzer nicht definiert</value>
         <value xml:lang="en">User not defined</value>
         <value xml:lang="es">Participante no definido</value>
         <value xml:lang="fr">Acteur non défini</value>
@@ -9770,7 +9772,7 @@
         <value xml:lang="zh_TW">沒有定義團體</value>
     </property>
     <property key="PartyPartyOfTheRoleParty">
-        <value xml:lang="de">des aktuellen Akteurs in der Rolle als</value>
+        <value xml:lang="de">des aktuellen Nutzers in der Rolle als</value>
         <value xml:lang="en">of the current user in the role of</value>
         <value xml:lang="es">del participante actual en el rol de</value>
         <value xml:lang="fr">de l'acteur actuel dans le Rôle de </value>
@@ -9803,7 +9805,7 @@
         <value xml:lang="zh_TW">請求</value>
     </property>
     <property key="PartyPartySuccessfullyDeleted">
-        <value xml:lang="de">Akteur erfolgreich gelöscht.</value>
+        <value xml:lang="de">Nutzer erfolgreich gelöscht.</value>
         <value xml:lang="en">User successfully deleted.</value>
         <value xml:lang="es">Participante borrado con éxito.</value>
         <value xml:lang="fr">Acteur supprimé. </value>
@@ -9819,7 +9821,7 @@
         <value xml:lang="zh_TW">已成功刪除團體.</value>
     </property>
     <property key="PartyPartyTo">
-        <value xml:lang="de">Akteur an</value>
+        <value xml:lang="de">Nutzer an</value>
         <value xml:lang="en">User To</value>
         <value xml:lang="es">al participante</value>
         <value xml:lang="fr">à l'acteur</value>
@@ -9837,7 +9839,7 @@
         <value xml:lang="zh_TW">團體-到</value>
     </property>
     <property key="PartyPartyToDoesNotExists">
-        <value xml:lang="de">Akteur existiert nicht!</value>
+        <value xml:lang="de">Nutzer existiert nicht!</value>
         <value xml:lang="en">User To does not exist!</value>
         <value xml:lang="it">Soggetto A non esiste!</value>
         <value xml:lang="ja">取引先(先)が存在しません!</value>
@@ -9846,7 +9848,7 @@
         <value xml:lang="zh_TW">不存在「團體-到」！</value>
     </property>
     <property key="PartyPartyTypeIdNotFound">
-        <value xml:lang="de">Die gesuchte Akteur Typen ID ${partyTypeId} konnte nicht gefunden werden oder ist kein Sub-Typ von PARTY_GROUP</value>
+        <value xml:lang="de">Die gesuchte Nutzer Typ ID ${partyTypeId} konnte nicht gefunden werden oder ist kein Sub-Typ von PARTY_GROUP</value>
         <value xml:lang="en">The specified partyTypeId ${partyTypeId} could not be found or is not a sub-type of PARTY_GROUP</value>
         <value xml:lang="it">Il tipo soggetto specificato ${partyTypeId} non è stato trovato o non è un sotto-tipo di PARTY_GROUP</value>
         <value xml:lang="ja">指定した取引先種類ID ${partyTypeId} が見つからないか、PARTY_GROUP のサブタイプではありません</value>
@@ -9855,7 +9857,7 @@
         <value xml:lang="zh_TW">無法找到指定的團體類型識別(partyTypeId)${partyTypeId},或者它不是團體群組(PARTY_GROUP)的子類型</value>
     </property>
     <property key="PartyPartyWithId">
-        <value xml:lang="de">des Akteur mit der ID</value>
+        <value xml:lang="de">des Nutzers mit der ID</value>
         <value xml:lang="en">of the User with ID </value>
         <value xml:lang="es">Del participante con código</value>
         <value xml:lang="fr">L'acteur avec la réf.</value>
@@ -10099,7 +10101,7 @@
         <value xml:lang="zh_TW">安全錯誤: 要執行 ${methodShortDescription},你必須具有 PARTYMGR${securityAction} 或 PARTYMGR_ADMIN 權限</value>
     </property>
     <property key="PartyPermissionErrorForThisParty">
-        <value xml:lang="de">Sie haben keine Berechtigung, diese Aktion für diesen Akteur auszuführen</value>
+        <value xml:lang="de">Sie haben keine Berechtigung, diese Aktion für diesen Nutzer auszuführen</value>
         <value xml:lang="en">You do not have permission to perform this operation for this user</value>
         <value xml:lang="es">Usted no cuenta con permisos para realizar esta acción</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'effectuer cette opération pour cet acteur.</value>
@@ -10117,7 +10119,7 @@
         <value xml:lang="zh_TW">你沒有權限對這個團體執行本操作</value>
     </property>
     <property key="PartyPermissionErrorPartyId">
-        <value xml:lang="de">Sicherheitsfehler: Sie haben keine Berechtigung ${resourceDescription} für diesen Akteur auszuführen.</value>
+        <value xml:lang="de">Sicherheitsfehler: Sie haben keine Berechtigung ${resourceDescription} für diesen Nutzer auszuführen.</value>
         <value xml:lang="en">Security Error: you do not have permission to perform ${resourceDescription} for this user.</value>
         <value xml:lang="es">Usted no cuenta con permisos para realizar esta acción</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'effectuer cette opération pour cet acteur.</value>
@@ -10747,7 +10749,7 @@
         <value xml:lang="zh_TW">快速增加到購物清單</value>
     </property>
     <property key="PartyRateNotSpecified">
-        <value xml:lang="de">Rate nicht angegeben für diesen Akteur und keine Standard-Rate definiert</value>
+        <value xml:lang="de">Rate nicht angegeben für diesen Nutzer und keine Standard-Rate definiert</value>
         <value xml:lang="en">Rate not specified for this user AND NO default rate</value>
         <value xml:lang="fr">Aucun taux spécifié pour cet acteur et AUCUN taux par défaut</value>
         <value xml:lang="hi_IN">इस पार्टी के लिए दर निर्दिष्ट नहीं है और कोई डिफ़ॉल्ट दर नहीं है</value>
@@ -10796,7 +10798,7 @@
     </property>
     <property key="PartyRelationSecurity">
         <value xml:lang="cs">Vztah partnera k zabezpečení</value>
-        <value xml:lang="de">Akteur Beziehung Sicherheit</value>
+        <value xml:lang="de">Nutzer Beziehung Sicherheit</value>
         <value xml:lang="en">User Relationship Security</value>
         <value xml:lang="es">Relación de seguridad del participante</value>
         <value xml:lang="fr">avec la sécurité</value>
@@ -10813,7 +10815,7 @@
         <value xml:lang="zh_TW">團體關係安全</value>
     </property>
     <property key="PartyRelationshipTypeAlreadyExists">
-        <value xml:lang="de">Akteur-Beziehungstyp kann nicht erstellt werden: existiert bereits</value>
+        <value xml:lang="de">Nutzer-Beziehungstyp kann nicht erstellt werden: existiert bereits</value>
         <value xml:lang="en">Could not create user relationship type: already exists</value>
         <value xml:lang="it">Non è possibile creare il tipo rapporto soggetto: esiste già</value>
         <value xml:lang="ja">取引先の関係が作成できません。すでに存在します</value>
@@ -10822,7 +10824,7 @@
         <value xml:lang="zh_TW">無法新建團體關連類型:已經存在了</value>
     </property>
     <property key="PartyRelationshipTypeReadFailure">
-        <value xml:lang="de">Akteur-Beziehungstyp kann nicht erstellt werden (Lese-Fehler): ${errorString}</value>
+        <value xml:lang="de">Nutzer-Beziehungstyp kann nicht erstellt werden (Lese-Fehler): ${errorString}</value>
         <value xml:lang="en">Could not create user relationship type (read failure): ${errorString}</value>
         <value xml:lang="it">Non è possibile creare il tipo rapporto soggetto (fallita lettura): ${errorString}</value>
         <value xml:lang="ja">取引先の関係が作成できません (読み込み失敗): ${errorString}</value>
@@ -10831,7 +10833,7 @@
         <value xml:lang="zh_TW">無法新建團體關連類型(讀失敗):${errorString}</value>
     </property>
     <property key="PartyRelationshipTypeWriteFailure">
-        <value xml:lang="de">Akteur-Beziehungstyp kann nicht erstellt werden (Schreib-Fehler): ${errorString}</value>
+        <value xml:lang="de">Nutzer-Beziehungstyp kann nicht erstellt werden (Schreib-Fehler): ${errorString}</value>
         <value xml:lang="en">Could not create user relationship type (write failure): ${errorString}</value>
         <value xml:lang="it">Non è possibile creare il tipo rapporto soggetto (fallita scrittura): ${errorString}</value>
         <value xml:lang="ja">取引先の関係が作成できません (書き込み失敗): ${errorString}</value>
@@ -11210,7 +11212,7 @@
         <value xml:lang="zh_TW">角色類型</value>
     </property>
     <property key="PartyRoleTypeIdFrom">
-        <value xml:lang="de">Akteur Rolle Typ ID von (neu)</value>
+        <value xml:lang="de">Nutzer Rolle Typ ID von (neu)</value>
         <value xml:lang="en">User Role Type Id From (NEW)</value>
         <value xml:lang="es">Código Tipo de rol de participante, de</value>
         <value xml:lang="fr">Rôle d'origine</value>
@@ -11240,7 +11242,7 @@
         <value xml:lang="zh_TW">沒有找到角色類型識別.</value>
     </property>
     <property key="PartyRoleTypeIdTo">
-        <value xml:lang="de">Akteur Rolle Typ ID an (neu)</value>
+        <value xml:lang="de">Nutzer Rolle Typ ID an (neu)</value>
         <value xml:lang="en">User Role Type Id To (NEW)</value>
         <value xml:lang="es">Codigo Tipo de rol de participante, para</value>
         <value xml:lang="fr">Rôle de destination</value>
@@ -11295,6 +11297,7 @@
         <value xml:lang="zh_TW">角色</value>
     </property>
     <property key="PartySecurityAlert">
+    	<value xml:lang="de">Jüngste Warnungen</value>
         <value xml:lang="en">Alerts</value>
     </property>
     <property key="PartySecurityGroup">
@@ -11492,7 +11495,7 @@
         <value xml:lang="zh_TW">選擇角色</value>
     </property>
     <property key="PartySelectcRoleForParty">
-        <value xml:lang="de">Rolle(n) für diesen Akteur auswählen</value>
+        <value xml:lang="de">Rolle(n) für diesen Nutzer auswählen</value>
         <value xml:lang="en">Select role(s) for this user</value>
         <value xml:lang="es">Seleccione rol(es) para este participante</value>
         <value xml:lang="fr">Sélectionnez les rôle(s) pour cet acteur</value>
@@ -11915,7 +11918,7 @@
         <value xml:lang="zh_TW">缺少省</value>
     </property>
     <property key="PartyStatusCannotBeChanged">
-        <value xml:lang="de">Akteur Status kann nicht von ${partyFromStatusId} in ${partyToStatusId} geändert werden</value>
+        <value xml:lang="de">Nutzer Status kann nicht von ${partyFromStatusId} in ${partyToStatusId} geändert werden</value>
         <value xml:lang="en">Cannot change user status from ${partyFromStatusId} to ${partyToStatusId}</value>
         <value xml:lang="it">Non è possibile cambiare lo stato del soggetto da ${partyFromStatusId} a ${partyToStatusId}</value>
         <value xml:lang="ja">取引先ステータスを ${partyFromStatusId} から ${partyToStatusId} に変更できません</value>
@@ -12438,7 +12441,7 @@
     </property>
     <property key="PartyTypeId">
         <value xml:lang="cs">Typ partnera</value>
-        <value xml:lang="de">Akteur Typ ID</value>
+        <value xml:lang="de">Nutzer Typ ID</value>
         <value xml:lang="en">User Type Id</value>
         <value xml:lang="es">Código Tipo de participante</value>
         <value xml:lang="fr">Type identifiant</value>
@@ -12455,9 +12458,11 @@
         <value xml:lang="zh_TW">團體類型識別</value>
     </property>
     <property key="PartyUserActivity">
+    	<value xml:lang="de">Benutzeraktivität</value>
         <value xml:lang="en">User Activity</value>
     </property>
     <property key="PartyUserManagement">
+    	<value xml:lang="de">Benutzerverwaltung</value>
         <value xml:lang="en">User Management</value>
     </property>
     <property key="PartyUnableToLocatePurpose">
@@ -12738,7 +12743,7 @@
         <value xml:lang="zh_TW">缺少使用者名稱</value>
     </property>
     <property key="PartyValueFromPartyLevel">
-        <value xml:lang="de">Wert der Akteurs-Ebene</value>
+        <value xml:lang="de">Wert der Nutzer-Ebene</value>
         <value xml:lang="en">Value from user level</value>
         <value xml:lang="fr">Valeur au niveau acteur</value>
         <value xml:lang="hi_IN">पार्टी स्तर से प्राप्त मान</value>
@@ -12888,7 +12893,7 @@
     </property>
     <property key="PartyViewSegmentRoles">
         <value xml:lang="cs">Zobrazení segmentu rolí partnera</value>
-        <value xml:lang="de">Akteur Segment Rolle anzeigen</value>
+        <value xml:lang="de">Nutzer Segment Rolle anzeigen</value>
         <value xml:lang="en">View User Segment Roles</value>
         <value xml:lang="es">Ver roles de segmento</value>
         <value xml:lang="fr">Afficher les rôles de segmentation de l'acteur</value>
@@ -13181,7 +13186,7 @@
         <value xml:lang="zh_TW">找不到郵遞區號</value>
     </property>
     <property key="PartyContentType">
-        <value xml:lang="de">Akteur Inhaltstyp</value>
+        <value xml:lang="de">Nutzer Inhaltstyp</value>
         <value xml:lang="en">User Content Type</value>
         <value xml:lang="fr">Type du contenu de l'acteur</value>
     </property>

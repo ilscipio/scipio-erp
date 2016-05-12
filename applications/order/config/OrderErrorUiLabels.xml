@@ -422,7 +422,7 @@
         <value xml:lang="zh_TW">無法初始化一個空的採購訂單。</value>
     </property>
     <property key="OrderCouldNotLocateTheSelectedParty">
-        <value xml:lang="de">Ausgewählter Akteur konnte nicht gefunden werden. </value>
+        <value xml:lang="de">Ausgewählter Nutzer konnte nicht gefunden werden. </value>
         <value xml:lang="en">Could not locate the selected party. </value>
         <value xml:lang="es">No se puede localizar al participante seleccionado.</value>
         <value xml:lang="fr">Impossible de localiser l'acteur sélectionné.</value>
@@ -1938,7 +1938,7 @@
         <value xml:lang="zh_TW">沒有訂單頭，無法創建支付</value>
     </property>
     <property key="OrderNoPayToPartyIdSetOnProductStore">
-        <value xml:lang="de">Kein 'Zahlung An'-Akteur bei Laden ${productStoreId} eingestellt</value>
+        <value xml:lang="de">Kein 'Zahlung An'-Nutzer bei Laden ${productStoreId} eingestellt</value>
         <value xml:lang="en">No payToPartyId set on ProductStore : ${productStoreId}</value>
         <value xml:lang="es">Ningún pago para el participante en la tienda: ${productStoreId}</value>
         <value xml:lang="fr">Aucun paie pour l'identifiant d'acteur dans le centre de profit : ${productStoreId}</value>
@@ -2261,7 +2261,7 @@
         <value xml:lang="zh_TW">訂單類型不存在</value>
     </property>
     <property key="OrderPartyIdAndOrRoleTypeIdNotDefined">
-        <value xml:lang="de">Akteur und/oder Rolle nicht definiert. </value>
+        <value xml:lang="de">Nutzer und/oder Rolle nicht definiert. </value>
         <value xml:lang="en">partyId and/or roleTypeId not defined. </value>
         <value xml:lang="es">Código y/o tipo de rol del participante no definidos.</value>
         <value xml:lang="fr">Réf. d'acteur et/ou de type de rôle non défini(s).</value>
@@ -2703,7 +2703,7 @@
         <value xml:lang="zh_TW">獲得訂單明細類型時出錯：${orderItemTypeId}</value>
     </property>
     <property key="OrderProblemsGettingPartyRecord">
-        <value xml:lang="de">Problem beim Lesen des Akteurs</value>
+        <value xml:lang="de">Problem beim Lesen des Nutzers</value>
         <value xml:lang="en">Problems getting Party record</value>
         <value xml:lang="es">Problemas obteniendo registro de participante</value>
         <value xml:lang="fr">Problèmes en obtenant l'enregistrement de l'acteur</value>
@@ -2813,7 +2813,7 @@
         <value xml:lang="zh_TW">檢查退款支付金額時出現問題</value>
     </property>
     <property key="OrderProblemsWithGetPartyAcctgPreferences">
-        <value xml:lang="de">Problem beim Lesen der Akteurs-Konteneinstellungen. </value>
+        <value xml:lang="de">Problem beim Lesen der Konteneinstellungen des Nutzers. </value>
         <value xml:lang="en">Problems with getting PartyAcctgPreference. </value>
         <value xml:lang="es">Hay problemas al obtener preferencias de contabilidad de participante.</value>
         <value xml:lang="fr">Problème à l'obtention des préférences comptabilité de l'acteur</value>
@@ -3151,7 +3151,7 @@
         <value xml:lang="zh_TW">退貨數量 [ ${parameters.returnQuantity} ] 不能超過訂單數量 [ ${orderItem.quantity} ]。 </value>
     </property>
     <property key="OrderReturnRequestPartyRoleInternalOrg">
-        <value xml:lang="de">Fehler: eine Retoure muss an einen Akteur in der Rolle 'interne Organisation' gehen</value>
+        <value xml:lang="de">Fehler: eine Retoure muss an einen Nutzer in der Rolle 'interne Organisation' gehen</value>
         <value xml:lang="en">Error: a return must be to a party in the role of internal organization</value>
         <value xml:lang="fr">Erreur : le retour doit avoir un acteur avec le rôle d'organisation interne</value>
         <value xml:lang="it">Errore: un reso deve avere un soggetto con ruolo organizzazione interna</value>
@@ -3160,7 +3160,7 @@
         <value xml:lang="zh">错误：退货必须是到一个有内部机构角色的会员</value>
     </property>
     <property key="OrderReturnRequestPartyRoleSupplier">
-        <value xml:lang="de">Fehler: eine Retoure muss an einen Akteur in der Rolle 'Lieferant' gehen</value>
+        <value xml:lang="de">Fehler: eine Retoure muss an einen Nutzer in der Rolle 'Lieferant' gehen</value>
         <value xml:lang="en">Error: a return must be to a party in the role of supplier</value>
         <value xml:lang="fr">Erreur : le retour doit avoir un acteur avec le rôle de fournisseur</value>
         <value xml:lang="it">Errore: un reso deve avere un soggetto con ruolo fornitore</value>
@@ -3623,7 +3623,7 @@
         <value xml:lang="zh_TW">要運行創建退貨明細運輸時發生安全錯誤</value>
     </property>
     <property key="OrderSecurityErrorToRunCreateShoppingListForAnotherParty">
-        <value xml:lang="de">Berechtigungsfehler: Um 'createShoppingList' für einen anderen Akteur auszuführen müssen Sie die PARTYMGR_CREATE oder PARTYMGR_ADMIN Berechtigungen haben</value>
+        <value xml:lang="de">Berechtigungsfehler: Um 'createShoppingList' für einen anderen Nutzer auszuführen müssen Sie die PARTYMGR_CREATE oder PARTYMGR_ADMIN Berechtigungen haben</value>
         <value xml:lang="en">Security Error : to run createShoppingList for another party you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission</value>
         <value xml:lang="es">Error de seguridad: Para ejecutar createShoppingList debe contar con los permisos PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="fr">Erreur de sécurité : pour exécuter createShoppingList pour un autre acteur, vous devez avoir l'autorisation d'administrer ou de créer la commande</value>
@@ -3681,7 +3681,7 @@
         <value xml:lang="zh_TW">安全錯誤：要運行 deleteOrderShipment，你必須具有 ORDERMGR_DELETE 或 ORDERMGR_ADMIN 權限</value>
     </property>
     <property key="OrderSecurityErrorToRunForAnotherParty">
-        <value xml:lang="de">Berechtigungsfehler: Um '${parentMethodName}' für einen anderen Akteur auszuführen müssen Sie die PARTYMGR_${permissionAction} oder PARTYMGR_ADMIN Berechtigungen haben</value>
+        <value xml:lang="de">Berechtigungsfehler: Um '${parentMethodName}' für einen anderen Nutzer auszuführen müssen Sie die PARTYMGR_${permissionAction} oder PARTYMGR_ADMIN Berechtigungen haben</value>
         <value xml:lang="en">Security Error : to run ${parentMethodName} for another party you must have the PARTYMGR_${permissionAction} or PARTYMGR_ADMIN permission</value>
         <value xml:lang="es">Error de seguridad: Para ejecutar ${parentMethodName} debe contar con los permisos PARTYMGR_${permissionAction} o PARTYMGR_ADMIN</value>
         <value xml:lang="fr">Erreur de sécurité : pour exécuter ${parentMethodName} pour un autre acteur, vous devez avoir l'autorisation d'administrer ou ${permissionAction} la commande</value>

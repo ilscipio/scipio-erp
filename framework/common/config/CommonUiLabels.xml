@@ -8359,7 +8359,7 @@
     <property key="CommonPartyId">
         <value xml:lang="ar">دليل الطرف</value>
         <value xml:lang="cs">Id partnera</value>
-        <value xml:lang="de">Akteur ID</value>
+        <value xml:lang="de">Nutzer ID</value>
         <value xml:lang="en">Party Id</value>
         <value xml:lang="es">Código del participante</value>
         <value xml:lang="fr">Réf. de la personne</value>
@@ -14986,7 +14986,7 @@
     <property key="Party">
         <value xml:lang="ar">طرف</value>
         <value xml:lang="cs">Partneři</value>
-        <value xml:lang="de">Akteur</value>
+        <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">Party</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteurs</value>

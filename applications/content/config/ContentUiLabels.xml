@@ -4007,7 +4007,7 @@
     <property key="FormFieldTitle_committedByPartyId">
         <value xml:lang="ar">مرتكبة من طرف</value>
         <value xml:lang="da">Udfært af Party Id</value>
-        <value xml:lang="de">Eingebracht von Akteur ID</value>
+        <value xml:lang="de">Eingebracht von Nutzer ID</value>
         <value xml:lang="en">Committed By Party Id</value>
         <value xml:lang="fr">Téléchargement par acteur</value>
         <value xml:lang="it">Registrato Dal Soggetto</value>
@@ -6296,7 +6296,7 @@
     </property>
     <property key="PageTitleCreateWebSiteParties">
         <value xml:lang="da">Opret webside parter</value>
-        <value xml:lang="de">Webseite Akteure erstellen</value>
+        <value xml:lang="de">Webseite Nutzer erstellen</value>
         <value xml:lang="en">Create Web Site Parties</value>
         <value xml:lang="fr">Créer les acteurs du site Web</value>
         <value xml:lang="it">Creare Soggetti Sito Web</value>
@@ -7068,7 +7068,7 @@
     <property key="PageTitleEditWebSiteParties">
         <value xml:lang="ar">تحرير أطراف موقع الويب</value>
         <value xml:lang="da">Ret webside parter</value>
-        <value xml:lang="de">Webseite Akteure bearbeiten</value>
+        <value xml:lang="de">Webseite Nutzer bearbeiten</value>
         <value xml:lang="en">Edit WebSite Parties</value>
         <value xml:lang="fr">Modifier les acteurs du site web</value>
         <value xml:lang="it">Aggiorna Soggetti Sito Web</value>

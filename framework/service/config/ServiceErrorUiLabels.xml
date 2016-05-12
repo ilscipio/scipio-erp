@@ -33,7 +33,7 @@
         <value xml:lang="zh_TW">找不到下列必要的參數:</value>
     </property>
     <property key="serviceUtil.no_permission_to_operation">
-        <value xml:lang="de">Sie haben keine Berechtigung, diese Aktion für diesen Akteur auszuführen</value>
+        <value xml:lang="de">Sie haben keine Berechtigung, diese Aktion für diesen Nutzer auszuführen</value>
         <value xml:lang="en">You do not have permission to perform this operation for this party</value>
         <value xml:lang="es">Usted no cuenta con permisos para realizar la acción</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation pour effectuer cette opération</value>
@@ -59,7 +59,7 @@
         <value xml:lang="zh_TW">你沒有執行這個服務所需的權限</value>
     </property>
     <property key="serviceUtil.party_id_missing">
-        <value xml:lang="de">Akteur ID fehlt</value>
+        <value xml:lang="de">Nutzer ID fehlt</value>
         <value xml:lang="en">Party ID missing</value>
         <value xml:lang="es">No existe el código de Participante</value>
         <value xml:lang="fr">Il manque la Party ID</value>

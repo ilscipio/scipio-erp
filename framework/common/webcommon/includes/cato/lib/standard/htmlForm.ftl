@@ -967,6 +967,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    style                   = Legacy HTML style string for compatibility
+                              WARN: This is currently only implemented on a few field types and sub-types.
+                              TODO: Add to all (sometimes needed for display:none).
     maxlength               = ((int)) Max allowed length 
                               e.g. For text inputs, max number of characters.
     id                      = ((string), default: -auto-generated-) ID for the widget itself
@@ -1212,9 +1215,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     confirmMsg              = Confirmation message     
     progressArgs            = Same as for submitarea, but only works if this is a top-level submit     
     progressOptions         = Same as for submitarea, but only works if this is a top-level submit
-    style                   = Legacy HTML style string for compatibility
-                              This is set only on the widget itself (not any container).
-                              WARN: Currently this arg only works for submits, not other field types.
                       
     * reset *
     text                    = Label to show on reset button
@@ -1620,6 +1620,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#case "input">
         <@field_input_widget name=name 
                               class=class 
+                              style=style 
                               alert=alert 
                               value=value 
                               textSize=size 
@@ -1642,6 +1643,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               class=class 
                               alert=alert 
                               cols=cols 
+                              style=style 
                               rows=rows 
                               id=id
                               readonly=readonly 
@@ -1660,6 +1662,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <@field_datetime_widget name=name 
                               class=class 
+                              style=style 
                               alert=alert 
                               title=title 
                               value=value 
@@ -1687,6 +1690,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <@field_datefind_widget name=name 
                               class=class 
+                              style=style 
                               alert=alert 
                               title=title 
                               value=value 
@@ -1705,6 +1709,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#case "textfind">
         <@field_textfind_widget name=name 
                               class=class 
+                              style=style 
                               alert=alert 
                               title=title 
                               value=value 
@@ -1725,6 +1730,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#case "rangefind">
         <@field_rangefind_widget name=name 
                               class=class 
+                              style=style 
                               alert=alert 
                               title=title 
                               value=value 
@@ -1750,6 +1756,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <@field_select_widget name=name
                                 class=class 
+                                style=style 
                                 alert=alert 
                                 id=id
                                 disabled=disabled 
@@ -1790,10 +1797,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                 passArgs=passArgs><#nested></@field_select_widget>
         <#break>
       <#case "option">
-        <@field_option_widget value=value text=text selected=selected passArgs=passArgs><#nested></@field_option_widget>
+        <@field_option_widget value=value text=text selected=selected style=style passArgs=passArgs><#nested></@field_option_widget>
         <#break>
       <#case "lookup">
-        <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value 
+        <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert="false" value=value 
           size=size?string maxlength=maxlength id=id events=events passArgs=passArgs/>
       <#break>
       <#case "checkbox">
@@ -1817,10 +1824,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
             <#local description = "">
           </#if>
           <#local items=[{"value":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
-          <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
+          <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType passArgs=passArgs/>
         <#else>
-          <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
+          <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType passArgs=passArgs/>
         </#if>
         <#break>
@@ -1846,24 +1853,24 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
             <#local description = "">
           </#if>
           <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
-          <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
+          <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel type=radioType passArgs=passArgs/>
         <#else>
           <#-- multi radio button item mode -->
-          <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
+          <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=radioType passArgs=passArgs/>
         </#if>
         <#break>
       <#case "file">
         <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel passArgs=passArgs/>
+          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel style=style passArgs=passArgs/>
         <#break>
       <#case "password">
         <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
+          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel style=style passArgs=passArgs/>
         <#break> 
       <#case "reset">                    
-        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel passArgs=passArgs/>
+        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel style=style passArgs=passArgs/>
         <#break>    
       <#case "submit">
         <#if !catoSubmitFieldTypeButtonMap??>
@@ -1889,10 +1896,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           style=style passArgs=passArgs/>
         <#break>
       <#case "submitarea">
-        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel passArgs=passArgs><#nested></@field_submitarea_widget>
+        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel style=style passArgs=passArgs><#nested></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
-        <@field_hidden_widget name=name value=value id=id events=events inlineLabel=effInlineLabel passArgs=passArgs/>
+        <@field_hidden_widget name=name value=value id=id events=events inlineLabel=effInlineLabel style=style passArgs=passArgs/>
         <#break>        
       <#case "display">
         <#-- TODO?: may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
@@ -1916,14 +1923,14 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local desc = value>
         </#if>
         <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
-          title=title class=class id=id alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
+          title=title class=class id=id alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" style=style 
           imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>
-          <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
+          <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel style=style passArgs=passArgs/>
         <#else>
-          <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs><#nested /></@field_generic_widget>
+          <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel style=style passArgs=passArgs><#nested /></@field_generic_widget>
         </#if>
     </#switch>
   </@field_markup_container>

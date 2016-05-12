@@ -44,7 +44,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderTextField form widget macro -->
 <#assign field_input_widget_defaultArgs = {
-  "name":"", "class":"", "alert":"", "value":"", "textSize":"", "maxlength":"", "id":"", "events":{}, "disabled":false, "ajaxUrl":"", 
+  "name":"", "class":"", "style":"", "alert":"", "value":"", "textSize":"", "maxlength":"", "id":"", "events":{}, "disabled":false, "ajaxUrl":"", 
   "ajaxEnabled":false, "mask":false, "clientAutocomplete":"", "placeholder":"", "tooltip":"", "title":"", "collapse":false, "readonly":false, 
   "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
 }>
@@ -73,12 +73,12 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local clientAutocomplete = true>
     </#if>
   </#if>
-  <@field_input_markup_widget name=name class=class alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
+  <@field_input_markup_widget name=name class=class style=style alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
     mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip title=title collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_input_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_input_markup_widget name="" class="" alert="" value="" textSize="" maxlength="" id="" events={} disabled=false ajaxUrl="" ajaxEnabled=false 
+<#macro field_input_markup_widget name="" class="" style="" alert="" value="" textSize="" maxlength="" id="" events={} disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete=true placeholder="" tooltip="" title="" collapse=false readonly=false fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
@@ -103,6 +103,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if id?has_content> id="${id}"</#if><#t/>
     <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
     <#if !clientAutocomplete> autocomplete="off"</#if><#t/>
+    <#if style?has_content> style="${style}"</#if><#t/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
   /><#t/>
   <#if ajaxUrl?has_content>
@@ -114,7 +115,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderTextareaField form widget macro -->
 <#assign field_textarea_widget_defaultArgs = {
-  "name":"", "class":"", "alert":"", "cols":"", "rows":"", "id":"", "readonly":"", "value":"", "visualEditorEnable":true, 
+  "name":"", "class":"", "style":"", "alert":"", "cols":"", "rows":"", "id":"", "readonly":"", "value":"", "visualEditorEnable":true, 
   "buttons":"", "language":"", "placeholder":"", "tooltip":"", "title":"", "fieldTitleBlank":false, "collapse":false, 
   "inlineLabel":false, "wrap":"", "passArgs":{}
 }>
@@ -129,12 +130,12 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local readonly = false>
     </#if>
   </#if>
-  <@field_textarea_markup_widget name=name class=class alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
+  <@field_textarea_markup_widget name=name class=class style=style alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
     buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_textarea_markup_widget name="" class="" alert="" cols="" rows="" id="" readonly=false value="" visualEditorEnable=true 
+<#macro field_textarea_markup_widget name="" class="" style="" alert="" cols="" rows="" id="" readonly=false value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
@@ -152,6 +153,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if readonly> readonly="readonly"</#if><#t/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
     <#if wrap?has_content> wrap="${wrap}"</#if><#t/>
+    <#if style?has_content> style="${style}"</#if><#t/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
   ><#t/>
     <#if value?has_content>${value}<#else><#nested></#if><#t/>
@@ -180,7 +182,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderDateTimeField form widget macro -->
 <#assign field_datetime_widget_defaultArgs = {
-  "name":"", "class":"", "title":"", "value":"", "size":"", "maxlength":"", "id":"", "dateType":"", "dateDisplayType":"", 
+  "name":"", "class":"", "style":"", "title":"", "value":"", "size":"", "maxlength":"", "id":"", "dateType":"", "dateDisplayType":"", 
   "timeDropdownParamName":"", "defaultDateTimeString":"", "localizedIconTitle":"", "timeDropdown":"", "timeHourName":"", 
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":"", "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
@@ -201,14 +203,14 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !id?has_content>
     <#local id = getNextFieldId()>
   </#if>
-  <@field_datetime_markup_widget name=name class=class title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType 
+  <@field_datetime_markup_widget name=name class=class style=style title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
     alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_datetime_markup_widget name="" class="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
+<#macro field_datetime_markup_widget name="" class="" style="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" events={} step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
@@ -270,6 +272,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <@fieldElemAttribStr attribs=attribs /><#t/>
         <#if title?has_content> title="${title}"</#if><#t/>
         <#if value?has_content> value="${value}"</#if><#t/>
+        <#if style?has_content> style="${style}"</#if><#t/>
         <#if size?has_content> size="${size}"</#if><#t/>
         <#if maxlength?has_content> maxlength="${maxlength}"</#if>
         <#if displayInputId?has_content> id="${displayInputId}"</#if> /><#t/>
@@ -342,7 +345,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderDateFindField form widget macro -->
 <#assign field_datefind_widget_defaultArgs = {
-  "class":"", "id":"", "alert":"", "name":"", "localizedInputTitle":"", "value":"", "value2":"", "size":"", "maxlength":"", "dateType":"", "dateDisplayType":"",
+  "class":"", "id":"", "style":"", "alert":"", "name":"", "localizedInputTitle":"", "value":"", "value2":"", "size":"", "maxlength":"", "dateType":"", "dateDisplayType":"",
   "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleClass":"", "defaultOptionFrom":"", 
   "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"",
   "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", 
@@ -387,7 +390,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !(opIsEmpty?is_boolean && opIsEmpty == false) && !opIsEmpty?has_content>
     <#local opIsEmpty = getPropertyMsg("conditional", "is_empty")!"">
   </#if>
-  <@field_datefind_markup_widget id=id class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType dateDisplayType=dateDisplayType
+  <@field_datefind_markup_widget id=id class=class style=style alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType dateDisplayType=dateDisplayType
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleClass defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
     opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty 
@@ -395,7 +398,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_datefind_markup_widget id="" class="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
+<#macro field_datefind_markup_widget id="" class="" style="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
     title="" tooltip="" inlineLabel=false origLabel=origLabel origArgs={} passArgs={} catchArgs...>
@@ -441,7 +444,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderDropDownField form widget macro -->
 <#assign field_select_widget_defaultArgs = {
-  "name":"", "class":"", "alert":"", "id":"", "multiple":"", "formName":"", "formId":"", "otherFieldName":"", "size":"", 
+  "name":"", "class":"", "alert":"", "id":"", "style":"", "multiple":"", "formName":"", "formId":"", "otherFieldName":"", "size":"", 
   "currentFirst":"", "currentValue":"", "currentDescription":"", "allowEmpty":"", "options":"", "fieldName":"", "otherFieldName":"", 
   "otherValue":"", "otherFieldSize":"", "dDFCurrent":"", "defaultValue":"", "ajaxOptions":"", "frequency":"", "minChars":"",
   "choices":"", "autoSelect":"", "partialSearch":"", "partialChars":"", "ignoreCase":"", "fullSearch":"", "events":{}, 
@@ -500,7 +503,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       </#list>
     </#if>
   </#if>
-  <@field_select_markup_widget name=name class=class alert=alert id=id multiple=multiple formName=formName formId=formId otherFieldName=otherFieldName size=size currentFirst=currentFirst 
+  <@field_select_markup_widget name=name class=class alert=alert id=id style=style multiple=multiple formName=formName formId=formId otherFieldName=otherFieldName size=size currentFirst=currentFirst 
     currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent defaultValue=defaultValue ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
@@ -508,7 +511,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_select_markup_widget name="" class="" alert="" id="" multiple=false formName="" formId="" otherFieldName="" size="" currentFirst=false 
+<#macro field_select_markup_widget name="" class="" alert="" id="" style="" multiple=false formName="" formId="" otherFieldName="" size="" currentFirst=false 
     currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" events={} ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
@@ -528,6 +531,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
     <#--<#if size?has_content> size="${size}"</#if>-->
     <#if title?has_content> title="${title}"</#if><#t/>
+    <#if style?has_content> style="${style}"</#if><#t/>
     <#if disabled> disabled="disabled"</#if><#t/>
   ><#lt/>
   <#if !manualItemsOnly>  
@@ -590,7 +594,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 </#macro>
 
 <#assign field_option_widget_defaultArgs = {
-  "text":"", "value":"", "selected":false, "passArgs":{}
+  "text":"", "value":"", "selected":false, "style":"", "passArgs":{}
 }>
 <#macro field_option_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_option_widget_defaultArgs)>
@@ -599,17 +603,17 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !text?has_content>
     <#local text><#nested></#local>
   </#if>
-  <@field_option_markup_widget text=text value=value selected=selected origArgs=origArgs passArgs=passArgs/>
+  <@field_option_markup_widget text=text value=value selected=selected style=style origArgs=origArgs passArgs=passArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_option_markup_widget text="" value="" selected=false origArgs={} passArgs={} catchArgs...>
-   <option value="${value}"<#if selected> selected="selected"</#if>>${text}</option><#t/>
+<#macro field_option_markup_widget text="" value="" selected=false style="" origArgs={} passArgs={} catchArgs...>
+   <option value="${value}"<#if selected> selected="selected"</#if><#if style?has_content> style="${style}"</#if>>${text}</option><#t/>
 </#macro>    
 
 <#-- migrated from @renderLookupField form widget macro -->
 <#assign field_lookup_widget_defaultArgs = {
-  "name":"", "formName":"", "fieldFormName":"", "class":"", "alert":"", "value":"", "size":"", "maxlength":"", "id":"", 
+  "name":"", "formName":"", "fieldFormName":"", "class":"", "style":"", "alert":"", "value":"", "size":"", "maxlength":"", "id":"", 
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
   "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
@@ -626,7 +630,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local ajaxEnabled = javaScriptEnabled!false>
     </#if>
   </#if>
-  <@field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert=alert value=value size=size 
+  <@field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert=alert value=value size=size 
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
     height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed 
@@ -634,7 +638,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_lookup_markup_widget name="" formName="" fieldFormName="" class="" alert="false" value="" size="" 
+<#macro field_lookup_markup_widget name="" formName="" fieldFormName="" class="" alert="false" value="" size="" style="" 
     maxlength="" id="" events={} readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=false presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
@@ -666,7 +670,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if size?has_content && size=="0">
       <input type="hidden" <#if name?has_content> name="${name}"/></#if>
     <#else>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#rt/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if style?has_content> style="${style}"</#if><#rt/>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#t/>
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
         <#if autocomplete?has_content> autocomplete="off"</#if>/></#if><#t/>
@@ -759,7 +763,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderCheckField (a.k.a. @renderCheckBox) form widget macro -->
 <#assign field_checkbox_widget_defaultArgs = {
-  "items":[], "id":"", "class":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
+  "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
   "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
@@ -808,7 +812,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local class = addClassArgDefault(class, defaultClass)>
   <#local labelType = styles[stylesPrefix + "_labeltype"]!styles["field_checkbox_default_labeltype"]!"standard">
   <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_checkbox_default_labelposition"]!"after">
-  <@field_checkbox_markup_widget items=items id=id class=class alert=alert allChecked=allChecked 
+  <@field_checkbox_markup_widget items=items id=id class=class style=style alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
     labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
@@ -816,7 +820,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what -->
-<#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
+<#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
     labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
@@ -853,6 +857,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local itemValue = item.value!"">
     <#local itemClass = class>
     <#local itemAlert = alert>
+    <#local itemStyle = style>
     
     <#local inputTitle = title>
     <#local inputClass = "">
@@ -864,7 +869,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       </#if>
       <#local inputAttribs = inputAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
     </#if>
-    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>>
+    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>>
       <#local labelMarkup>
         <#if labelType == "extralabel">
           <label<#if currentId?has_content> for="${currentId}"</#if>></label>
@@ -904,7 +909,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
-  "items":"", "id":"", "class":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
+  "items":"", "id":"", "class":"", "style":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
   "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
@@ -925,13 +930,13 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local class = addClassArgDefault(class, defaultClass)>
   <#local labelType = styles[stylesPrefix + "_labeltype"]!styles["field_radio_default_labeltype"]!"standard">
   <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
-  <@field_radio_markup_widget items=items id=id class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
+  <@field_radio_markup_widget items=items id=id class=class style=style alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     events=events tooltip=tooltip title=title multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
     type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
+<#macro field_radio_markup_widget items="" id="" class="" style="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
     labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
@@ -962,6 +967,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local itemValue = item.value!item.key!>
     <#local itemClass = class>
     <#local itemAlert = alert>
+    <#local itemStyle = style>
     
     <#local inputClass = "">
     <#local inputAlert = false>
@@ -974,7 +980,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#local inputTitle = item.tooltip>
       </#if>
     </#if>
-    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>><#rt/>
+    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>><#rt/>
       <#local labelMarkup>
         <#if item.description?has_content>
           <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label>
@@ -1005,35 +1011,36 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderFileField form widget macro -->
 <#assign field_file_widget_defaultArgs = {
-  "class":"", "alert":"", "name":"", "value":"", "size":"", "maxlength":"", "autocomplete":"", "id":"", "title":"", 
+  "class":"", "alert":"", "name":"", "value":"", "size":"", "style":"", "maxlength":"", "autocomplete":"", "id":"", "title":"", 
   "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_file_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_file_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_file_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_file_markup_widget>
+  <@field_file_markup_widget class=class alert=alert name=name style=style value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_file_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_file_markup_widget class="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+<#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+  <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#rt/>
+    <#lt/><#if style?has_content> style="${style}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
 <#assign field_password_widget_defaultArgs = {
-  "class":"", "alert":"", "name":"", "value":"", "size":"", "maxlength":"", "id":"", "autocomplete":"", "title":"", "placeholder":"", 
+  "class":"", "alert":"", "style":"", "name":"", "value":"", "size":"", "maxlength":"", "id":"", "autocomplete":"", "title":"", "placeholder":"", 
   "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_password_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_password_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_password_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_password_markup_widget>
+  <@field_password_markup_widget class=class alert=alert name=name value=value style=style size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_password_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_password_markup_widget class="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_password_markup_widget class="" alert="" style="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_password_tooltip!styles.field_default_tooltip!"")>
@@ -1044,24 +1051,25 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
     <@fieldElemAttribStr attribs=attribs /><#t/>
+    <#if style?has_content> style="${style}"</#if><#t/>
     <#if title?has_content> title="${title}"</#if><#t/>
   /><#t/>
 </#macro>
 
 <#-- migrated from @renderResetField form widget macro -->
 <#assign field_reset_widget_defaultArgs = {
-  "class":"", "alert":"", "name":"", "text":"", "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "class":"", "id":"", "alert":"", "style":"", "name":"", "text":"", "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_reset_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_reset_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_reset_markup_widget class=class alert=alert name=name text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs/>
+  <@field_reset_markup_widget class=class alert=alert name=name id=id style=style text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_reset_markup_widget class="" alert="" name="" text="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <input type="reset"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if text?has_content> value="${text}"</#if>/>
+<#macro field_reset_markup_widget class="" alert="" name="" id="" style="" text="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+  <input type="reset"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if text?has_content> value="${text}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>/>
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro 
@@ -1218,7 +1226,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#-- migrated from @renderRangeFindField form widget macro -->
 <#assign field_textfind_widget_defaultArgs = {
   "name":"", "formName":"", "value":"", "defaultOption":"", "opEquals":"", "opBeginsWith":"", "opContains":"", "opIsEmpty":"", "opNotEqual":"", "opLike":"",
-  "class":"", "id":"", "alert":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "hideIgnoreCase":false, "ignoreCase":"", 
+  "class":"", "id":"", "style":"", "alert":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "hideIgnoreCase":false, "ignoreCase":"", 
   "ignoreCaseMsg":"", "title":"", "tooltip":"", "fieldTitleBlank":false, "hideOptions":false, "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
 }>
 <#macro field_textfind_widget args={} inlineArgs...>
@@ -1257,14 +1265,14 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     </#if>
   </#if>
   <@field_textfind_markup_widget name=name formName=formName value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains 
-    opIsEmpty=opIsEmpty opNotEqual=opNotEqual opLike=opLike class=class id=id alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleClass 
+    opIsEmpty=opIsEmpty opNotEqual=opNotEqual opLike=opLike class=class id=id style=style alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleClass 
     hideIgnoreCase=hideIgnoreCase ignoreCase=ignoreCase ignoreCaseMsg=ignoreCaseMsg title=title tooltip=tooltip fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions 
     inlineLabel=inlineLabel origLabel=origLabel collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@field_textfind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textfind_markup_widget name="" formName="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
-    opIsEmpty="" opNotEqual="" opLike="" class="" id="" alert="" size="" maxlength="" autocomplete=true titleClass="" 
+    opIsEmpty="" opNotEqual="" opLike="" class="" id="" style="" alert="" size="" maxlength="" autocomplete=true titleClass="" 
     hideIgnoreCase="" ignoreCase=false ignoreCaseMsg="" title="" tooltip="" fieldTitleBlank=false hideOptions=false inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
@@ -1347,7 +1355,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderRangeFindField form widget macro -->
 <#assign field_rangefind_widget_defaultArgs = {
-  "class":"", "id":"", "alert":"", "name":"", "formName":"", "value":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "defaultOptionFrom":"", 
+  "class":"", "id":"", "style":"", "alert":"", "name":"", "formName":"", "value":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "defaultOptionFrom":"", 
   "opEquals":"", "opGreaterThan":"", "opGreaterThanEquals":"", "opLessThan":"", "opLessThanEquals":"", "opIsEmpty":"", "value2":"", 
   "defaultOptionThru":"", "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
 }>
@@ -1380,7 +1388,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local autocomplete = true>
     </#if>
   </#if>
-  <@field_rangefind_markup_widget class=class id=id alert=alert name=name formName=formName value=value size=size maxlength=maxlength 
+  <@field_rangefind_markup_widget class=class id=id style=style alert=alert name=name formName=formName value=value size=size maxlength=maxlength 
       autocomplete=autocomplete titleClass=titleClass defaultOptionFrom=defaultOptionFrom opEquals=opEquals 
       opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals opIsEmpty=opIsEmpty
       value2=value2 defaultOptionThru=defaultOptionThru title=title tooltip=tooltip
@@ -1388,7 +1396,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_rangefind_markup_widget class="" id="" alert="" name="" formName="" value="" size="" maxlength="" autocomplete=true titleClass="" 
+<#macro field_rangefind_markup_widget class="" id="" style="" alert="" name="" formName="" value="" size="" maxlength="" autocomplete=true titleClass="" 
     defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" opIsEmpty="" value2="" 
     defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
@@ -1462,7 +1470,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderDisplayField form widget macro -->
 <#assign field_display_widget_defaultArgs = {
-  "type":"", "imageLocation":"", "idName":"", "description":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
+  "type":"", "imageLocation":"", "idName":"", "description":"", "style":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
   "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, 
   "formatText":"", "passArgs":{}
 }>
@@ -1473,7 +1481,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !formatText?is_boolean>
     <#local formatText = true>
   </#if>
-  <@field_display_markup_widget type=type imageLocation=imageLocation id=id idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
+  <@field_display_markup_widget type=type imageLocation=imageLocation id=id style=style idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
     inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel formatText=formatText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
 </#macro>
 
@@ -1489,7 +1497,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local classes = compileClassArg(class)>
   <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
   <#if hasWrapper>
-    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title}"</#if>><#rt/>
+    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title?html}"</#if><#if style?has_content> style="${style}"</#if>><#rt/>
   </#if>
   <#if type?has_content && type == "image">
     <img src="${imageLocation}" alt="${imageAlt}"/><#lt/>
@@ -1523,17 +1531,17 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderField form widget macro -->
 <#assign field_generic_widget_defaultArgs = {
-  "text":"", "class":"", "id":"", "title":"", "tooltip":"", "inlineLabel":false, "passArgs":{}
+  "text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_generic_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_generic_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_generic_markup_widget text=text class=class id=id title=title tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
+  <@field_generic_markup_widget text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_generic_markup_widget text="" class="" id="" tooltip="" title="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_generic_tooltip!styles.field_default_tooltip!"")>
@@ -1543,7 +1551,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local classes = compileClassArg(class)>
   <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
   <#if hasWrapper>
-    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title}"</#if>><#rt/>
+    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title}"</#if><#if style?has_content> style="${style}"</#if>><#rt/>
   </#if>
     <#if text?has_content>
       ${text}<#t/>

@@ -2343,7 +2343,7 @@
         <value xml:lang="zh_TW">編輯安全群組使用者登入</value>
     </property>
     <property key="PageTitleFindCommunicationEvents">
-        <value xml:lang="de">Kommunikationen suchen</value>
+        <value xml:lang="de">Kommunikation suchen</value>
         <value xml:lang="en">Find Communications</value>
         <value xml:lang="es">Buscar comunicaciones</value>
         <value xml:lang="fr">Rechercher les communications</value>
@@ -4407,7 +4407,7 @@
         <value xml:lang="en">Last Communication</value>
     </property>
     <property key="PartyCommunications">
-        <value xml:lang="de">Kommunikationen</value>
+        <value xml:lang="de">Kommunikation</value>
         <value xml:lang="en">Communications</value>
         <value xml:lang="es">Comunicaciones</value>
         <value xml:lang="fr">Communications</value>
@@ -4425,7 +4425,7 @@
         <value xml:lang="zh_TW">通訊</value>
     </property>
     <property key="PartyCommunicationsOfParty">
-        <value xml:lang="de">Kommunikation der Nutzer</value>
+        <value xml:lang="de">Kommunikation des Nutzers</value>
         <value xml:lang="en">Communications of user</value>
         <value xml:lang="fr">Communications de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी के संचार</value>
@@ -4438,7 +4438,7 @@
         <value xml:lang="zh_TW">團體通訊</value>
     </property>
     <property key="PartyCommunicationsWith">
-        <value xml:lang="de">Kommunikationen mit</value>
+        <value xml:lang="de">Kommunikation mit</value>
         <value xml:lang="en">Communications with</value>
         <value xml:lang="es">Comunicaciones con</value>
         <value xml:lang="fr">Communications avec</value>
@@ -6218,7 +6218,7 @@
         <value xml:lang="zh_TW">電子郵件送至</value>
     </property>
     <property key="PartyEmailsFromUnknownOrigin">
-        <value xml:lang="de">E-Mail von unbekannter Herkunft</value>
+        <value xml:lang="de">E-Mail unbekannter Herkunft</value>
         <value xml:lang="en">Emails from UN-known origin</value>
         <value xml:lang="fr">Mél issu d'une origine inconnue</value>
         <value xml:lang="hi_IN">अज्ञात मूल से ईमेल</value>
@@ -6450,7 +6450,7 @@
         <value xml:lang="zh_TW">查詢通訊事件</value>
     </property>
     <property key="PartyFindCommunicationsByOrder">
-        <value xml:lang="de">Kommunikationen nach Bestellung suchen</value>
+        <value xml:lang="de">Kommunikation nach Bestellung suchen</value>
         <value xml:lang="en">Find Communications by Order</value>
         <value xml:lang="fr">Communications liées à une commande</value>
         <value xml:lang="ja">注文の通信を検索</value>
@@ -8347,7 +8347,7 @@
         <value xml:lang="zh_TW">指定的聯絡資訊不屬於您,您不能檢視或編輯它.</value>
     </property>
     <property key="PartyMyCommunications">
-        <value xml:lang="de">Meine Kommunikationen</value>
+        <value xml:lang="de">Meine Kommunikation</value>
         <value xml:lang="en">My Communications</value>
         <value xml:lang="fr">Mes communications</value>
         <value xml:lang="hi_IN">मेरा संचार</value>
@@ -9308,7 +9308,7 @@
         <value xml:lang="zh_TW">目前密碼</value>
     </property>
     <property key="PartyOpenEvents">
-        <value xml:lang="de">Offene Kommunikationen</value>
+        <value xml:lang="de">Offene Kommunikation</value>
         <value xml:lang="en">Open Communications</value>
         <value xml:lang="fr">Communications ouvertes</value>
         <value xml:lang="hi_IN">संचार खोले</value>

@@ -5253,10 +5253,11 @@
         <value xml:lang="zh_TW">固定資產資料中的期望使用壽命結束為空.</value>
     </property>
     <property key="AccountingExportInvoices">
+    	<value xml:lang="de">Rechnungsexport</value>
         <value xml:lang="en">Export Invoices</value>
     </property>
     <property key="AccountingExpenses">
-        <value xml:lang="de">Aufwendungen</value>
+        <value xml:lang="de">Ausgaben</value>
         <value xml:lang="en">Expenses</value>
         <value xml:lang="fr">Dépenses</value>
         <value xml:lang="hi_IN">व्यय</value>
@@ -7303,6 +7304,7 @@
         <value xml:lang="zh_TW">隱藏欄位</value>
     </property>
     <property key="AccountingIncomesExpenses">
+    	<value xml:lang="en">Einnahmen &amp; Ausgaben</value>
         <value xml:lang="en">Income &amp; Expenses</value>
     </property>
     <property key="AccountingIgnoreInvoiceItems">
@@ -7355,6 +7357,7 @@
         <value xml:lang="zh_TW">傳遞給新建發票服務的數值非法</value>
     </property>
     <property key="AccountingIncome">
+    	<value xml:lang="de">Einnahmen</value>
         <value xml:lang="en">Income</value>
         <value xml:lang="fr">Revenu</value>
         <value xml:lang="hi_IN">आय</value>
@@ -13143,6 +13146,7 @@
         <value xml:lang="zh_TW">接收支付</value>
     </property>
     <property key="AccountingRecentPayments">
+    	<value xml:lang="de">Letzte Zahlungsvorgänge</value>
         <value xml:lang="en">Recent Payments</value>
     </property>
     <property key="AccountingReconcile">
@@ -16790,6 +16794,7 @@
         <value xml:lang="zh_TW">比率</value>
     </property>
     <property key="FormFieldTitle_costCenters">
+    	<value xml:lang="de">Kostenstellen</value>
         <value xml:lang="en">Cost Centers</value>
         <value xml:lang="fr">Centres de coût</value>
         <value xml:lang="hi_IN">लागत केंद्र</value>

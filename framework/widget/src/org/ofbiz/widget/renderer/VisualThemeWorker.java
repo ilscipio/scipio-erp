@@ -202,7 +202,11 @@ public class VisualThemeWorker {
             // empty string marks the lookup
             libLocationExprCache.put(cacheKey, (res != null ? res : ""));
         }
-        return res.isEmpty() ? null : res;
+        if (res != null && !res.isEmpty()) {
+            return res;
+        } else {
+            return null;
+        }
     }
     
     public static String getMacroLibraryLocationStaticFromResources(String platform, Map<String, List<String>> themeResources, 

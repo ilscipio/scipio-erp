@@ -198,7 +198,9 @@ under the License.
         <response name="survey" type="view" value="survey"/>
         <response name="product" type="view" value="product"/>
         <response name="viewcart" type="request-redirect" value="showcart"/>
-        <response name="error" type="view" value="showcart"/>
+        <!-- Cato: If there's an error, currently in most case we want to go back to the previous (product page)...
+        <response name="error" type="view" value="showcart"/>-->
+        <response name="error" type="view-last" value="showcart"/>
     </request-map>
 
     <request-map uri="additemsurvey">

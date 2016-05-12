@@ -18,8 +18,13 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#if getUsername>
+<#-- Cato: TODO?: Fields for business account (with party group) -->
+<#-- Cato: TODO?: Some of this is redundant with customerbasicfields.ftl - investigate -->
+
 <@script>
+
+<#if getUsername>
+
      lastFocusedName = null;
      function setLastFocused(formElement) {
          lastFocusedName = formElement.name;
@@ -41,16 +46,22 @@ under the License.
              document.getElementById('USERNAME').value = jQuery('#CUSTOMER_EMAIL').val();
          }
      }
-     function setEmailUsername() {
+     function setEmailUsername(noreset) {
          if (document.getElementById('UNUSEEMAIL').checked) {
              document.getElementById('USERNAME').value = jQuery('#CUSTOMER_EMAIL').val();
-             // don't disable, make the browser not submit the field: document.getElementById('USERNAME').disabled=true;
+             <#-- don't disable, make the browser not submit the field: document.getElementById('USERNAME').disabled=true; -->
+             <#-- Cato: ... but DO set disabled class so user sees as if was disabled -->
+             jQuery('#USERNAME').slideUp('slow');
          } else {
-             document.getElementById('USERNAME').value='';
-             // document.getElementById('USERNAME').disabled=false;
+             if (noreset !== true) { <#-- Cato: extra check -->
+                document.getElementById('USERNAME').value='';
+             }
+             <#-- document.getElementById('USERNAME').disabled=false; -->
+             jQuery('#USERNAME').slideDown('slow');
          }
      }
      function hideShowUsaStates() {
+       <#-- Cato: Don't do this here. if we ever do it it should be everywhere or nowhere. 
          var customerStateElement = document.getElementById('newuserform_stateProvinceGeoId');
          var customerCountryElement = document.getElementById('newuserform_countryGeoId');
          if (customerCountryElement.value == "USA" || customerCountryElement.value == "UMI") {
@@ -58,352 +69,268 @@ under the License.
          } else {
              customerStateElement.style.display = "none";
          }
+       -->
      }
-   </@script>
+   
 </#if>
 
-<#------------------------------------------------------------------------------
-NOTE: all page headings should start with an h2 tag, not an H1 tag, as 
-there should generally always only be one h1 tag on the page and that 
-will generally always be reserved for the logo at the top of the page.
-------------------------------------------------------------------------------->
+    jQuery(document).ready(function() {
+        hideShowUsaStates();
+        
+        <#-- Cato: do this also on page load -->
+        setEmailUsername(true);
+    });
 
-<@heading>${uiLabelMap.PartyRequestNewAccount}
-  <span>
-    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href="<@ofbizUrl>checkLogin/main</@ofbizUrl>">${uiLabelMap.CommonLoginHere}</a>
-  </span>
-</@heading>
+</@script>
 
-<#macro fieldErrors fieldName>
-  <#if errorMessageList?has_content>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+    <@menuitem type="link" href="javascript:document.getElementById('newuserform').submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
+  </@menu>
+</#macro>
+<#--${uiLabelMap.PartyRequestNewAccount}-->
+<@section menuContent=menuContent menuLayoutGeneral="bottom"><#-- title=uiLabelMap.EcommerceRegister-->
+  <@commonMsg type="info">
+    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href="<@ofbizUrl>checkLogin/main</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonLoginHere}</a>.
+  </@commonMsg>
+
+
+<#-- Cato: NOTE: fieldErrors should be kept in the time there is no javascript validation.
+    To remove these, simply toggle this bool. 
+    NOTE: these do work fairly decently however. -->
+<#assign useServerFieldErrors = useServerFieldErrors!true>
+
+<#macro fieldErrors args={} inlineArgs...>
+  <#if useServerFieldErrors && errorMessageList?has_content>
+    <#local fieldName = inlineArgs.fieldName!args.fieldName!>
     <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName, true, errorMessageList)>
-    <ul>
+    <#if fieldMessages?has_content>
+    <@alert type="error">
       <#list fieldMessages as errorMsg>
-        <li class="errorMessage">${errorMsg}</li>
+        ${errorMsg}<#if errorMsg_has_next><br/></#if>
       </#list>
-    </ul>
+    </@alert>
+    </#if>
   </#if>
 </#macro>
-<#macro fieldErrorsMulti fieldName1 fieldName2 fieldName3 fieldName4>
-  <#if errorMessageList?has_content>
-    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName1, fieldName2, fieldName3, fieldName4, true, errorMessageList)>
-    <ul>
+<#macro fieldErrorsMulti args={} fieldNames...>
+  <#if useServerFieldErrors && errorMessageList?has_content>
+    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldNames, true, errorMessageList)>
+    <#if fieldMessages?has_content>
+    <@alert type="error">
       <#list fieldMessages as errorMsg>
-        <li class="errorMessage">${errorMsg}</li>
+        ${errorMsg}<#if errorMsg_has_next><br/></#if>
       </#list>
-    </ul>
+    </@alert>
+    </#if>
   </#if>
 </#macro>
-
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
-  &nbsp;<a href="javascript:document.getElementById('newuserform').submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
 
 <form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" id="newuserform" name="newuserform">
   
-  
-  <#----------------------------------------------------------------------
-  If you need to include a brief explanation of the form, or certain 
-  elements in the form (such as explaining asterisks denote REQUIRED),
-  then you should use a <p></p> tag with a class name of "desc"
-  ----------------------------------------------------------------------->
+  <@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
 
-  <p class="desc">${uiLabelMap.CommonFieldsMarkedAreRequired}</p>
 
-  <#----------------------------------------------------------------------
-  There are two types of fieldsets, regular (full width) fielsets, and
-  column (half width) fieldsets. If you want to group two sets of inputs
-  side by side in two columns, give each fieldset a class name of "col"
-  ----------------------------------------------------------------------->
-
-  <fieldset class="col">
-    <legend>${uiLabelMap.PartyFullName}</legend>
-    <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>
-    <#----------------------------------------------------------------------
-    Each input row should be enclosed in a <div></div>. 
-    This will ensure than each input field clears the one
-    above it. Alternately, if you want several inputs to float next to
-    each other, you can enclose them in a table as illustrated below for
-    the phone numbers, or you can enclose each label/input pair in a span
-
-    Example:
-    <div>
-      <span>
-        <input type="text" name="expMonth" value=""/>
-        <label for="expMonth">Exp. Month</label>
-      </span>
-      <span>
-        <input type="text" name="expYear" value=""/>
-        <label for="expYear">Exp. Year</label>
-      </span>
-    </div>
-    ----------------------------------------------------------------------->
-    <div>
-      <#-- TODO: @personalTitleField -->
-      <label for="USER_TITLE">${uiLabelMap.CommonTitle}</label>
-      <@fieldErrors fieldName="USER_TITLE"/>
-      <select name="USER_TITLE" id="USER_TITLE">
-        <#if requestParameters.USER_TITLE?has_content >
-          <option value="${requestParameters.USER_TITLE}">${requestParameters.USER_TITLE}</option>
-          <option value="">---</option>
-        <#else>
-          <option value="">${uiLabelMap.CommonSelectOne}</option>
-        </#if>
-        <option value="Mr.">${uiLabelMap.CommonTitleMr}</option>
-        <option value="Mrs.">${uiLabelMap.CommonTitleMrs}</option>
-        <option value="Ms.">${uiLabelMap.CommonTitleMs}</option>
-        <option value="Dr.">${uiLabelMap.CommonTitleDr}</option>
-      </select>
-    </div>
-
-    <div>
-      <label for="USER_FIRST_NAME">${uiLabelMap.PartyFirstName}*</label>
-      <@fieldErrors fieldName="USER_FIRST_NAME"/>
-      <input type="text" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value="${requestParameters.USER_FIRST_NAME!}" />
-    </div>
-
-    <div>
-      <label for="USER_MIDDLE_NAME">${uiLabelMap.PartyMiddleInitial}</label>
-      <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
-      <input type="text" name="USER_MIDDLE_NAME" id="USER_MIDDLE_NAME" value="${requestParameters.USER_MIDDLE_NAME!}" />
-    </div>
-
-    <div>
-      <label for="USER_LAST_NAME">${uiLabelMap.PartyLastName}*</label>
-      <@fieldErrors fieldName="USER_LAST_NAME"/>
-      <input type="text" name="USER_LAST_NAME" id="USER_LAST_NAME" value="${requestParameters.USER_LAST_NAME!}" />
-    </div>
-
-    <div>
-      <label for="USER_SUFFIX">${uiLabelMap.PartySuffix}</label>
-      <@fieldErrors fieldName="USER_SUFFIX"/>
-      <input type="text" name="USER_SUFFIX" id="USER_SUFFIX" value="${requestParameters.USER_SUFFIX!}" />
-    </div>
-
-  </fieldset>
-
-  <fieldset class="col">
-    <legend>${uiLabelMap.PartyShippingAddress}</legend>
-    <div>
-      <label for="CUSTOMER_ADDRESS1">${uiLabelMap.PartyAddressLine1}*</label>
-      <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
-      <input type="text" name="CUSTOMER_ADDRESS1" id="CUSTOMER_ADDRESS1" value="${requestParameters.CUSTOMER_ADDRESS1!}" />
-    </div>
-
-    <div>
-      <label for="CUSTOMER_ADDRESS2">${uiLabelMap.PartyAddressLine2}</label>
-      <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
-      <input type="text" name="CUSTOMER_ADDRESS2" id="CUSTOMER_ADDRESS2" value="${requestParameters.CUSTOMER_ADDRESS2!}" />
-    </div>
-
-    <div>
-      <label for="CUSTOMER_CITY">${uiLabelMap.PartyCity}*</label>
-      <@fieldErrors fieldName="CUSTOMER_CITY"/>
-      <input type="text" name="CUSTOMER_CITY" id="CUSTOMER_CITY" value="${requestParameters.CUSTOMER_CITY!}" />
-    </div>
-
-    <div>
-      <label for="CUSTOMER_POSTAL_CODE">${uiLabelMap.PartyZipCode}*</label>
-      <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
-      <input type="text" name="CUSTOMER_POSTAL_CODE" id="CUSTOMER_POSTAL_CODE" value="${requestParameters.CUSTOMER_POSTAL_CODE!}" />
-    </div>
-  
-    <div>
-        <label for="customerCountry">${uiLabelMap.CommonCountry}*</label>
-        <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
-        <select name="CUSTOMER_COUNTRY" id="newuserform_countryGeoId">
-            <@render resource="component://common/widget/CommonScreens.xml#countries" />        
-            <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
-            <option selected="selected" value="${defaultCountryGeoId}">
-                <#assign countryGeo = delegator.findOne("Geo",{"geoId":defaultCountryGeoId}, false)>
-                ${countryGeo.get("geoName",locale)}
-            </option>
-        </select>
-    </div>
-    
-    <div>
-        <label for="customerState">${uiLabelMap.PartyState}*</label>
-        <@fieldErrors fieldName="CUSTOMER_STATE"/>
-        <select name="CUSTOMER_STATE" id="newuserform_stateProvinceGeoId"></select>
-    </div>
-
-    <div>
-      <label for="CUSTOMER_ADDRESS_ALLOW_SOL">${uiLabelMap.PartyAllowAddressSolicitation}</label>
-      <@fieldErrors fieldName="CUSTOMER_ADDRESS_ALLOW_SOL"/>
-      <select name="CUSTOMER_ADDRESS_ALLOW_SOL" id="CUSTOMER_ADDRESS_ALLOW_SOL">
-        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-        <option></option>
-        <option value="Y">${uiLabelMap.CommonYes}</option>
-        <option value="N">${uiLabelMap.CommonNo}</option>
-      </select>
-    </div>
-
-  </fieldset>
-
+<@row>
+  <@cell columns=6>
   <fieldset>
-    <legend>${uiLabelMap.PartyPhoneNumbers}</legend>
-    <@table type="fields-vert" summary="Tabular form for entering multiple telecom numbers for different purposes. Each row allows user to enter telecom number for a purpose">
-      <@thead>
-        <@tr>
-          <@th></@th>
-          <@th scope="col">${uiLabelMap.CommonCountry}</@th>
-          <@th scope="col">${uiLabelMap.PartyAreaCode}</@th>
-          <@th scope="col">${uiLabelMap.PartyContactNumber}</@th>
-          <@th scope="col">${uiLabelMap.PartyExtension}</@th>
-          <@th scope="col">${uiLabelMap.PartyAllowSolicitation}</@th>
-        </@tr>
-      </@thead>
-      <@tbody>
-        <@tr>
-          <@th scope="row">${uiLabelMap.PartyHomePhone}</@th>
-          <@td><input type="text" name="CUSTOMER_HOME_COUNTRY" size="5" value="${requestParameters.CUSTOMER_HOME_COUNTRY!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_HOME_AREA" size="5" value="${requestParameters.CUSTOMER_HOME_AREA!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_HOME_CONTACT" value="${requestParameters.CUSTOMER_HOME_CONTACT!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_HOME_EXT" size="6" value="${requestParameters.CUSTOMER_HOME_EXT!}"/></@td>
-          <@td>
-            <select name="CUSTOMER_HOME_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-              <option></option>
-              <option value="Y">${uiLabelMap.CommonYes}</option>
-              <option value="N">${uiLabelMap.CommonNo}</option>
-            </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@th scope="row">${uiLabelMap.PartyBusinessPhone}</@th>
-          <@td><input type="text" name="CUSTOMER_WORK_COUNTRY" size="5" value="${requestParameters.CUSTOMER_WORK_COUNTRY!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_WORK_AREA" size="5" value="${requestParameters.CUSTOMER_WORK_AREA!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_WORK_CONTACT" value="${requestParameters.CUSTOMER_WORK_CONTACT!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_WORK_EXT" size="6" value="${requestParameters.CUSTOMER_WORK_EXT!}" /></@td>
-          <@td>
-            <select name="CUSTOMER_WORK_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-              <option></option>
-              <option value="Y">${uiLabelMap.CommonYes}</option>
-              <option value="N">${uiLabelMap.CommonNo}</option>
-            </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@th scope="row">${uiLabelMap.PartyFaxNumber}</@th>
-          <@td><input type="text" name="CUSTOMER_FAX_COUNTRY" size="5" value="${requestParameters.CUSTOMER_FAX_COUNTRY!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_FAX_AREA" size="5" value="${requestParameters.CUSTOMER_FAX_AREA!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_FAX_CONTACT" value="${requestParameters.CUSTOMER_FAX_CONTACT!}" /></@td>
-          <@td></@td>
-          <@td>
-            <select name="CUSTOMER_FAX_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-              <option></option>
-              <option value="Y">${uiLabelMap.CommonYes}</option>
-              <option value="N">${uiLabelMap.CommonNo}</option>
-            </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@th scope="row">${uiLabelMap.PartyMobilePhone}</@th>
-          <@td><input type="text" name="CUSTOMER_MOBILE_COUNTRY" size="5" value="${requestParameters.CUSTOMER_MOBILE_COUNTRY!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_MOBILE_AREA" size="5" value="${requestParameters.CUSTOMER_MOBILE_AREA!}" /></@td>
-          <@td><input type="text" name="CUSTOMER_MOBILE_CONTACT" value="${requestParameters.CUSTOMER_MOBILE_CONTACT!}" /></@td>
-          <@td></@td>
-          <@td>
-            <select name="CUSTOMER_MOBILE_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-              <option></option>
-              <option value="Y">${uiLabelMap.CommonYes}</option>
-              <option value="N">${uiLabelMap.CommonNo}</option>
-            </select>
-          </@td>
-        </@tr>
-      </@tbody>
-    </@table>
-  </fieldset>
-
-  <fieldset class="col">
-    <legend>${uiLabelMap.PartyEmailAddress}</legend>
-    <div>
-      <label for="CUSTOMER_EMAIL">${uiLabelMap.PartyEmailAddress}*</label>
+    <legend>${uiLabelMap.EcommerceAccountInformation}</legend>
+    <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_EMAIL"/>
-      <input type="text" name="CUSTOMER_EMAIL" id="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL!}" onchange="changeEmail()" onkeyup="changeEmail()" />
-    </div>
-    <div>
-      <label for="CUSTOMER_EMAIL_ALLOW_SOL">${uiLabelMap.PartyAllowSolicitation}</label>
-      <select name="CUSTOMER_EMAIL_ALLOW_SOL" id="CUSTOMER_EMAIL_ALLOW_SOL">
-        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-        <option></option>
-        <option value="Y">${uiLabelMap.CommonYes}</option>
-        <option value="N">${uiLabelMap.CommonNo}</option>
-      </select>
-    </div>
-  </fieldset>
+      <@fields type="default-compact" ignoreParentField=true>
+        <@allowSolicitationField name="CUSTOMER_EMAIL_ALLOW_SOL" />
+      </@fields>
+    </#macro>
+    <@field type="input" name="CUSTOMER_EMAIL" id="CUSTOMER_EMAIL" value="${parameters.CUSTOMER_EMAIL!}" 
+        onChange="changeEmail()" onkeyup="changeEmail()" label="${uiLabelMap.PartyEmailAddress}" required=true 
+        postWidgetContent=extraFieldContent/>
 
-  <fieldset class="col">
-    <legend><#if getUsername>${uiLabelMap.CommonUsername}</#if></legend>
     <#if getUsername>
-      <@fieldErrors fieldName="USERNAME"/>
-      <#if !requestParameters.preferredUsername?has_content>
-        <div class="form-row inline">
-          <label for="UNUSEEMAIL">
-            <input type="checkbox" class="checkbox" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" onclick="setEmailUsername();" onfocus="setLastFocused(this);"/> ${uiLabelMap.EcommerceUseEmailAddress}
-          </label>
-        </div>
-      </#if>
-
-      <div>
-        <label for="USERNAME">${uiLabelMap.CommonUsername}*</label>
-        <#if requestParameters.preferredUsername?has_content>
-            <input type="text" name="showUserName" id="showUserName" value="${requestParameters.USERNAME!}" disabled="disabled"/>
-            <input type="hidden" name="USERNAME" id="USERNAME" value="${requestParameters.USERNAME!}"/>
-        <#else>
-            <input type="text" name="USERNAME" id="USERNAME" value="${requestParameters.USERNAME!}" onfocus="clickUsername();" onchange="changeEmail();"/>
+      <#if parameters.preferredUsername?has_content>
+        <#macro extraFieldContent args={}>
+          <@fieldErrors fieldName="USERNAME"/>
+        </#macro>
+        <input type="hidden" name="USERNAME" id="USERNAME" value="${parameters.USERNAME!}"/>
+        <@field type="text" name="showUserName" id="showUserName" value="${parameters.USERNAME!}" disabled="disabled" label="${uiLabelMap.CommonUsername}" 
+            required=true postWidgetContent=extraFieldContent  />
+      <#else>
+        <#macro extraFieldContent args={}>
+          <@fieldErrors fieldName="USERNAME"/>
+          <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" 
+            onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.EcommerceUseEmailAddress 
+            checked=((parameters.UNUSEEMAIL!) == "on")/>
+        </#macro>
+        <#assign fieldStyle = "">
+        <#if ((parameters.UNUSEEMAIL!) == "on")>
+          <#assign fieldStyle = "display:none;">
         </#if>
-      </div>
+        <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value="${parameters.USERNAME!}" onFocus="clickUsername();" onchange="changeEmail();" 
+            label="${uiLabelMap.CommonUsername}" required=true postWidgetContent=extraFieldContent />
+      </#if>
     </#if>
-  </fieldset>
 
-  <fieldset class="col">
-    <legend>${uiLabelMap.CommonPassword}</legend>
     <#if createAllowPassword>
-      <div>
-        <label for="PASSWORD">${uiLabelMap.CommonPassword}*</label>
+      <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="PASSWORD"/>
-        <input type="password" name="PASSWORD" id="PASSWORD" onfocus="setLastFocused(this);"/>
-      </div>
+      </#macro>
+      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" 
+        label="${uiLabelMap.CommonPassword}" required=true postWidgetContent=extraFieldContent />
 
-      <div>
-        <label for="CONFIRM_PASSWORD">${uiLabelMap.PartyRepeatPassword}*</label>
+      <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
-        <input type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50"/>
-      </div>
+      </#macro>
+      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" 
+        label="${uiLabelMap.PartyRepeatPassword}" required=true postWidgetContent=extraFieldContent />
 
-      <div>
-        <label for="PASSWORD_HINT">${uiLabelMap.PartyPasswordHint}</label>
+      <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="PASSWORD_HINT"/>
-        <input type="text" name="PASSWORD_HINT" id="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT!}" maxlength="100"/>
-      </div>
+      </#macro>
+      <@field type="input" name="PASSWORD_HINT" id="PASSWORD_HINT" value="${parameters.PASSWORD_HINT!}" 
+        maxlength="100"label="${uiLabelMap.PartyPasswordHint}" postWidgetContent=extraFieldContent/>
     <#else>
-      <div>
-        <label>${uiLabelMap.PartyReceivePasswordByEmail}.</div>
-      </div>
+      <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     </#if>
   </fieldset>
+  </@cell>
+
+  <@cell columns=6>
+  <fieldset>
+    <legend>${uiLabelMap.PartyPersonalInformation}</legend>
+    <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="USER_TITLE"/>
+    </#macro>
+    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle postWidgetContent=extraFieldContent/> 
+    
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="USER_FIRST_NAME"/>
+    </#macro>
+    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value="${parameters.USER_FIRST_NAME!}" 
+        label="${uiLabelMap.PartyFirstName}" required=true postWidgetContent=extraFieldContent />
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
+    </#macro>
+    <@field type="input" name="USER_MIDDLE_NAME" id="USER_MIDDLE_NAME" value="${parameters.USER_MIDDLE_NAME!}" 
+        label="${uiLabelMap.PartyMiddleInitial}" postWidgetContent=extraFieldContent/>
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="USER_LAST_NAME"/>
+    </#macro>
+    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value="${parameters.USER_LAST_NAME!}" 
+        label="${uiLabelMap.PartyLastName}" required=true postWidgetContent=extraFieldContent />
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="USER_SUFFIX"/>
+    </#macro>
+    <@field type="input" name="USER_SUFFIX" id="USER_SUFFIX" value="${parameters.USER_SUFFIX!}" 
+        label="${uiLabelMap.PartySuffix}" postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"/>
+
+  </fieldset>
+  </@cell>
+</@row>
+
+<@row>
+  <@cell columns=6>
+  <fieldset>
+    <#-- Cato: NOTE: This is used both as GENERAL_LOCATION and SHIPPING_LOCATION
+    <legend>${uiLabelMap.PartyShippingAddress}</legend>
+    <legend>${getLabel("ContactMechType.description.POSTAL_ADDRESS", "PartyEntityLabels")}</legend>-->
+    
+    <legend>${uiLabelMap.CommonLocation}</legend>
+    
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
+    </#macro>
+    <@field type="input" name="CUSTOMER_ADDRESS1" id="CUSTOMER_ADDRESS1" value="${parameters.CUSTOMER_ADDRESS1!}" 
+        label="${uiLabelMap.PartyAddressLine1}" required=true postWidgetContent=extraFieldContent/>
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
+    </#macro>
+    <@field type="input" name="CUSTOMER_ADDRESS2" id="CUSTOMER_ADDRESS2" value="${parameters.CUSTOMER_ADDRESS2!}" 
+        label="${uiLabelMap.PartyAddressLine2}" postWidgetContent=extraFieldContent/>
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="CUSTOMER_CITY"/>
+    </#macro>
+    <@field type="input" name="CUSTOMER_CITY" id="CUSTOMER_CITY" value="${parameters.CUSTOMER_CITY!}" 
+        label="${uiLabelMap.PartyCity}" required=true postWidgetContent=extraFieldContent />
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
+    </#macro>
+    <@field type="input" name="CUSTOMER_POSTAL_CODE" id="CUSTOMER_POSTAL_CODE" value="${parameters.CUSTOMER_POSTAL_CODE!}" 
+        label="${uiLabelMap.PartyZipCode}" required=true postWidgetContent=extraFieldContent />
+  
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
+    </#macro>
+    <@field type="select" name="CUSTOMER_COUNTRY" id="newuserform_countryGeoId" label=uiLabelMap.CommonCountry 
+        required=true postWidgetContent=extraFieldContent>
+        <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={
+            "currentCountryGeoId":parameters.CUSTOMER_COUNTRY!""
+        }/>  
+    </@field>
+    
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="CUSTOMER_STATE"/>
+    </#macro>
+    <@field type="select" name="CUSTOMER_STATE" id="newuserform_stateProvinceGeoId" required=true 
+        label=uiLabelMap.PartyState postWidgetContent=extraFieldContent>
+        <#-- Populated by JS -->
+        <#if parameters.CUSTOMER_STATE?has_content>
+          <option value="${parameters.CUSTOMER_STATE?html}">${parameters.CUSTOMER_STATE?html}</option>
+        </#if>
+    </@field>
+
+    <#macro extraFieldContent args={}>
+      <@fieldErrors fieldName="CUSTOMER_ADDRESS_ALLOW_SOL"/>
+    </#macro>
+    <@allowSolicitationField name="CUSTOMER_ADDRESS_ALLOW_SOL" postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"  />
+
+  </fieldset>
+  </@cell>
+
+  <@cell columns=6>
+  <fieldset>
+    <#--<legend>${uiLabelMap.PartyPhoneNumbers}</legend>-->
+    <legend>${getLabel("CommunicationEventType.description.PHONE_COMMUNICATION", "PartyEntityLabels")}</legend>
+    
+    <@telecomNumberField label=uiLabelMap.PartyHomePhone fieldNamePrefix="CUSTOMER_HOME_" required=true showExt=true
+        countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
+      <@fields type="default-compact" ignoreParentField=true>
+        <@allowSolicitationField name="CUSTOMER_HOME_ALLOW_SOL" containerClass="+${styles.field_extra!}" />
+      </@fields>
+    </@telecomNumberField>
+
+    <@telecomNumberField label=uiLabelMap.PartyBusinessPhone fieldNamePrefix="CUSTOMER_WORK_" showExt=true
+        countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
+      <@fields type="default-compact" ignoreParentField=true>
+        <@allowSolicitationField name="CUSTOMER_WORK_ALLOW_SOL" containerClass="+${styles.field_extra!}" />
+      </@fields>
+    </@telecomNumberField>
+
+    <@telecomNumberField label=uiLabelMap.PartyFaxNumber fieldNamePrefix="CUSTOMER_FAX_" showExt=false
+        countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" containerClass="+${styles.field_extra!}">
+      <@fields type="default-compact" ignoreParentField=true>
+        <@allowSolicitationField name="CUSTOMER_FAX_ALLOW_SOL" containerClass="+${styles.field_extra!}"/>
+      </@fields>
+    </@telecomNumberField>
+
+    <@telecomNumberField label=uiLabelMap.PartyMobilePhone fieldNamePrefix="CUSTOMER_MOBILE_" showExt=false
+        countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" containerClass="+${styles.field_extra!}">
+      <@fields type="default-compact" ignoreParentField=true>
+        <@allowSolicitationField name="CUSTOMER_MOBILE_ALLOW_SOL" containerClass="+${styles.field_extra!}"/>
+      </@fields>
+    </@telecomNumberField>
+
+  </fieldset>
+  </@cell>
+</@row>
+
 </form>
 
-<#------------------------------------------------------------------------------
-To create a consistent look and feel for all buttons, input[type=submit], 
-and a tags acting as submit buttons, all button actions should have a 
-class name of "button". No other class names should be used to style 
-button actions.
-------------------------------------------------------------------------------->
-<div>  
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
-  <a href="javascript:document.getElementById('newuserform').submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>   
-</div>
-
-<@script>
-      hideShowUsaStates();
-  </@script>
+</@section>

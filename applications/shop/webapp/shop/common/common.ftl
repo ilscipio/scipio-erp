@@ -332,20 +332,21 @@ jQuery(document).ready(function() {
   </div>
 </#macro>
 
-<#macro telecomNumberField params=true label="" fieldNamePrefix="" required=false tooltip=false inlineArgs...>
+<#macro telecomNumberField params=true label="" fieldNamePrefix="" required=false showExt=true tooltip=false inlineArgs...>
   <#if params?is_boolean>
     <#local params = parameters>
   </#if>
   <#local args = inlineArgs>
-  <#local countryCodeName = (args.countryCodeName)!"${fieldNamePrefix}countryCode">
-  <#local areaCodeName = (args.areaCodeName)!"${fieldNamePrefix}areaCode">
-  <#local contactNumberName = (args.contactNumberName)!"${fieldNamePrefix}contactNumber">
-  <#local extensionName = (args.extensionName)!"${fieldNamePrefix}extension">
+  <#local countryCodeName = fieldNamePrefix + (args.countryCodeName)!"countryCode">
+  <#local areaCodeName = fieldNamePrefix + (args.areaCodeName)!"areaCode">
+  <#local contactNumberName = fieldNamePrefix + (args.contactNumberName)!"contactNumber">
+  <#local extensionName = fieldNamePrefix + (args.extensionName)!"extension">
   <@field type="generic" label=label tooltip=tooltip required=required args=args>
-      <@field type="input" inline=true size="4" maxlength="10" name="${countryCodeName}" value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="${areaCodeName}" value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="${contactNumberName}" value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
-      &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="${extensionName}" value=((params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension />
+      <@field type="input" inline=true size="1" maxlength="10" name="${countryCodeName}" value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name="${areaCodeName}" value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name="${contactNumberName}" value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
+      <#if showExt>&nbsp;<span style="white-space: nowrap;">${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="${extensionName}" 
+        value=((params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension /></span></#if>
     <#nested>
   </@field>
 </#macro>
@@ -390,7 +391,7 @@ jQuery(document).ready(function() {
             <option value="Dr."<#if personalTitle == "Dr." || personalTitle == uiLabelMap.CommonTitleDr> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
           </#if>
         <#else>
-          <option value="">${uiLabelMap.CommonSelectOne}</option>
+          <#--<option value="">${uiLabelMap.CommonSelectOne}</option>-->
           <option value=""></option><#-- NOTE: empty is allowed -->
           <option value="Mr.">${uiLabelMap.CommonTitleMr}</option>
           <option value="Mrs.">${uiLabelMap.CommonTitleMrs}</option>

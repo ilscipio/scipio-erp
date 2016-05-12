@@ -19,6 +19,8 @@ under the License.
 
 <#include "customercommon.ftl">
 
+<#-- Cato: TODO?: Some of this is redundant with newcustomer.ftl - investigate -->
+
 <#if !cbfParams??>
   <#assign cbfParams = parameters>
 </#if>

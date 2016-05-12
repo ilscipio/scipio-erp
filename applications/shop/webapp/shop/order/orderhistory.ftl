@@ -92,7 +92,8 @@ under the License.
   </#if>
 </@section>
 
-<#if hasOrderDownloads>
+<#-- show it for now due to the order completion notice
+<#if hasOrderDownloads>-->
   <#assign sectionTitle>${uiLabelMap.EcommerceDownloadsAvailableTitle}</#assign>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -104,4 +105,5 @@ under the License.
         Alternatively, we could show a smaller summary here and leave full details to the dedicated page. -->
     <@render resource="component://shop/widget/OrderScreens.xml#orderdownloadscontent" />
   </@section>
-</#if>
+<#--
+</#if>-->

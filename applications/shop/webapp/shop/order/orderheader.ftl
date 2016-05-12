@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- CATO: TODO: Uncomment return link once converted -->
+
 <#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
@@ -56,9 +58,10 @@ under the License.
           others don't become available until after order is completed and stuff. -->
       <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${uiLabelMap.CommonInvoice} (${uiLabelMap.CommonPdf})" />
       <#--</#if>-->
+      <#-- Cato: TODO: Uncomment once converted/tested
       <#if maySelect && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">
         <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") text=uiLabelMap.OrderRequestReturn />
-      </#if>
+      </#if>-->
     </@menu>
   </#if>
 </#if>

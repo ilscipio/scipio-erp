@@ -17,7 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Cato: TODO: Convert -->
+<#-- CATO: DEPRECATED? This was an alternate newcustomer template not even in use in stock ecommerce screens -->
+
 <@section title=uiLabelMap.EcommerceMyAccount>
     <form id="newUserForm" method="post" action="<@ofbizUrl>createCustomerProfile</@ofbizUrl>">
       <fieldset class="left center">
@@ -167,6 +168,8 @@ under the License.
               - <input type="text" name="billToExtension" id="billToExtension" value="${extension?default("${parameters.billToExtension!}")}" size="3" maxlength="3"/>
             </div>
       </fieldset>
-      <div><a id="submitNewUserForm" href="javascript:void(0);" class="${styles.link_run_sys!} ${styles.action_register!}">${uiLabelMap.CommonSubmit}</a></div>
+      
+      <@field type="submit" submitType="link" id="submitNewUserForm" href="javascript:void(0);" class="${styles.link_run_sys!} ${styles.action_register!}" text=uiLabelMap.CommonSubmit />
+
     </form>
 </@section>

@@ -24,7 +24,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" id="CommonGoBack1" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonGoBack />
+        <@menuitem type="link" id="CommonGoBack1" href=makeOfbizUrl(donePage) class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonGoBack />
         <@menuitem type="link" id="CommonSave1" href="javascript:document.getElementById('changepasswordform').submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
     </@menu>
 </#macro>

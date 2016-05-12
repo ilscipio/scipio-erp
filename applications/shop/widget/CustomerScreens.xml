@@ -676,7 +676,8 @@ under the License.
     <screen name="newcustomer">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleNewCustomer"/>
+                <!--<set field="titleProperty" value="PageTitleNewCustomer"/>-->
+                <set field="titleProperty" value="EcommerceRegister"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/NewCustomer.groovy"/>
 
                 <set field="dependentForm" value="newuserform"/>

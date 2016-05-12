@@ -18,6 +18,9 @@ under the License.
 -->
 <#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutshippingaddress.ftl -->
 
+<#-- Cato: TODO?: Anon user fields for business account (with party group) -->
+
+
 <#include "ordercommon.ftl">
 
 <@script>

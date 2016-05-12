@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
+<#-- Cato: TODO?: Review if can merge with order/genericaddress.ftl -->
+
 <#-- Cato: migrated from editcontactmech.ftl -->
 
 <#if !pafParams??>

@@ -8671,7 +8671,9 @@
         <value xml:lang="zh_CN">人员</value>
         <value xml:lang="zh_TW">人員</value>
     </property>
+    <!-- Cato: TODO: Localize (was this from stock?) -->
     <property key="CommonPersons">
+        <value xml:lang="de">Personen</value>
         <value xml:lang="en">Persons</value>
     </property>
     <property key="CommonPingDatasourceCannotConnect">

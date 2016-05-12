@@ -199,9 +199,9 @@ under the License.
                   <#assign returnHeader = return.getRelatedOne("ReturnHeader", false)>
                   <#if returnHeader.statusId != "RETURN_CANCELLED">
                     <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "RETURN_APPROVED">
-                      <#assign displayState = "Return Pending">
+                      <#assign displayState = "${uiLabelMap.OrderOrderReturn} ${uiLabelMap.PartyPending}">
                     <#else>
-                      <#assign displayState = "Returned">
+                      <#assign displayState = uiLabelMap.OrderReturned>
                     </#if>
                     ${displayState} (#${return.returnId})
                   </#if>

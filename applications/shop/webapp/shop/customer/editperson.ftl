@@ -25,7 +25,7 @@ under the License.
 <#assign sectionTitle><#if person??><#-- Cato: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editpersonform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>

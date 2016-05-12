@@ -18,6 +18,8 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- CATO: TODO: CONVERT -->
+
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
       <#if (maySelectItems!false)>
@@ -26,7 +28,7 @@ under the License.
       </#if>
     </@menu>
 </#macro>
-<@section title=uiLabelMap.OrderReturnItems menuContent=menuContent>
+<@section menuContent=menuContent><#--title=uiLabelMap.OrderReturnItems -->
     <form name="selectAllForm" method="post" action="<@ofbizUrl>requestReturn</@ofbizUrl>">
       <input type="hidden" name="_checkGlobalScope" value="Y"/>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
@@ -40,25 +42,29 @@ under the License.
 
       <@table type="fields">
         <@tr>
-          <@td colspan="5"><@heading>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading></@td>
+          <@td colspan="5"><@heading>${uiLabelMap.OrderReturnItemsFromOrder} <a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading></@td>
           <@td align="right">
             <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
             <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>
           </@td>
         </@tr>
         <@tr>
-          <@td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></@td>
-          <@td><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></@td>
-          <@td><div class="tableheadtext">${uiLabelMap.EcommercePrice}</div></@td>
-          <@td><div class="tableheadtext">${uiLabelMap.OrderReason}</div></@td>
-          <@td><div class="tableheadtext">${uiLabelMap.OrderRequestedResponse}</div></@td>
+          <@td>${uiLabelMap.CommonDescription}</@td>
+          <@td>${uiLabelMap.CommonQuantity}</@td>
+          <@td>${uiLabelMap.EcommercePrice}</@td>
+          <@td>${uiLabelMap.OrderReason}</@td>
+          <@td>${uiLabelMap.OrderRequestedResponse}</@td>
           <@td>&nbsp;</@td>
         </@tr>
         <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
         <#if returnableItems?has_content>
           <#assign rowCount = 0>
           <#list returnableItems.keySet() as orderItem>
-          <#if !orderItem.orderAdjustmentId?has_content>    <#-- filter orderAdjustments -->
+          <#-- Cato: This stock check does not work in FTL (crash); make our own;
+              BUT still do the check commented as a fallback in case it's not a GenericValue
+          <#if !orderItem.orderAdjustmentId?has_content>    <#- filter orderAdjustments ->
+          -->
+          <#if orderItem.entityName == "OrderItem" || (!orderItem.entityName?has_content && !orderItem.orderAdjustmentId?has_content)>    <#-- filter orderAdjustments -->
             <@tr>
               <@td>
             <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
@@ -110,7 +116,7 @@ under the License.
           </#list>
           <input type="hidden" name="_rowCount" value="${rowCount}"/>
           <@tr>
-            <@td colspan="6"><div class="tableheadtext">${uiLabelMap.OrderSelectShipFromAddress}:</@td>
+            <@td colspan="6">${uiLabelMap.OrderSelectShipFromAddress}:</@td>
           </@tr>
           <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
           <@tr>
@@ -145,7 +151,7 @@ under the License.
             </@td>
           </@tr>
         <#else>
-          <@tr><@td colspan="6"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoReturnableItems} ${uiLabelMap.CommonNbr}${orderId}</@commonMsg></@td></@tr>
+          <@tr><@td colspan="6"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoReturnableItems} ${orderId}</@commonMsg></@td></@tr>
         </#if>
       </@table>
     </form>

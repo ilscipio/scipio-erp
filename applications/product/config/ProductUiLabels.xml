@@ -9791,7 +9791,7 @@
         <value xml:lang="zh_TW">編輯產品支付方法類型</value>
     </property>
     <property key="PageTitleEditProductPriceRules">
-        <value xml:lang="de">Produkt Preisregeln bearbeiten</value>
+        <value xml:lang="de">Preisregeln des Produkts bearbeiten</value>
         <value xml:lang="en">Edit Product Price Rules</value>
         <value xml:lang="es">Editar Reglas de Precio de un Producto</value>
         <value xml:lang="fr">Modification des règles de prix des articles</value>
@@ -10035,7 +10035,7 @@
         <value xml:lang="zh_TW">編輯產品商店送貨設置</value>
     </property>
     <property key="PageTitleEditProductStoreShipmentCostEstimates">
-        <value xml:lang="de">Schätzung der Versandkosten des Shop bearbeiten</value>
+        <value xml:lang="de">Schätzung der Versandkosten des Shops bearbeiten</value>
         <value xml:lang="en">Edit Product Store Shipment Cost Estimates</value>
         <value xml:lang="es">Editar estimaciones de gastos de envío de tienda</value>
         <value xml:lang="fr">Modifier les estimations des coûts d'expédition du centre de profit</value>
@@ -10363,7 +10363,7 @@
         <value xml:lang="zh_TW">場所地理位置</value>
     </property>
     <property key="PageTitleFindCategory">
-        <value xml:lang="de">Kategorie suchen</value>
+        <value xml:lang="de">Kategoriesuche</value>
         <value xml:lang="en">Find Category</value>
         <value xml:lang="ja">カテゴリを検索</value>
         <value xml:lang="th">ค้นหาหมวดหมู่</value>
@@ -10372,6 +10372,7 @@
         <value xml:lang="zh_TW">尋找分類</value>
     </property>
     <property key="PageTitleFindCatalog">
+    	<value xml:lang="en">Katalogsuche</value>
         <value xml:lang="en">Find Catalog</value>
         <value xml:lang="ja">カタログを検索</value>
         <value xml:lang="vi">Tìm Phân loại Trình diễn</value>
@@ -10498,6 +10499,7 @@
         <value xml:lang="zh_TW">尋找庫存細項標籤</value>
     </property>
     <property key="PageTitleFindProduct">
+    	<value xml:lang="de">Produktsuche</value>
         <value xml:lang="en">Find Product</value>
         <value xml:lang="it">Ricerca prodotti</value>
         <value xml:lang="ja">製品を検索</value>
@@ -10520,7 +10522,7 @@
         <value xml:lang="zh_TW">尋找產品型錄</value>
     </property>
     <property key="PageTitleFindProductPriceRule">
-        <value xml:lang="de">Produkt Preisregel suchen</value>
+        <value xml:lang="de">Preisregeln für Produkte</value>
         <value xml:lang="en">Find Product Price Rule</value>
         <value xml:lang="es">Buscar Regla de Precios de Productos</value>
         <value xml:lang="fr">Recherche de règles de prix</value>
@@ -10535,7 +10537,7 @@
         <value xml:lang="zh_TW">尋找產品價格規則</value>
     </property>
     <property key="PageTitleFindProductPromos">
-        <value xml:lang="de">Produkt Aktionen suchen</value>
+        <value xml:lang="de">Produktaktionen suchen</value>
         <value xml:lang="en">Find Product Promos</value>
         <value xml:lang="es">Buscar Promociones de Productos</value>
         <value xml:lang="fr">Recherche de promotions</value>
@@ -10738,7 +10740,7 @@
         <value xml:lang="zh_TW">產品商店金融帳戶設定清單</value>
     </property>
     <property key="PageTitleListProductStorePaySetup">
-        <value xml:lang="de">Liste Shop Zahlung Einstellungen</value>
+        <value xml:lang="de">Liste der Zahlungsmethoden des Shops</value>
         <value xml:lang="en">List Product Store Payment Setup</value>
         <value xml:lang="es">Listar configuración de pago de tienda</value>
         <value xml:lang="fr">Liste des configurations de paiement du centre de profit</value>
@@ -31186,6 +31188,7 @@
         <value xml:lang="zh_TW">驗證揀貨</value>
     </property>
     <property key="ProductViewEstimates">
+    	<value xml:lang="de">Versandkosten (Schätzungen)</value>
         <value xml:lang="en">Shipping Estimates</value>
         <value xml:lang="es">Ver estimaciones</value>
         <value xml:lang="fr">Coûts d'expédition</value>
@@ -31750,7 +31753,7 @@
         <value xml:lang="fr">Ne pas redimensionner</value>
     </property>
     <property key="ProductPaymentMethods">
-        <value xml:lang="de">Produkt Zahlungsmethodes</value>
+        <value xml:lang="de">Zahlungsmethoden</value>
         <value xml:lang="en">Payment Methods</value>
         <value xml:lang="es">Métodos de pago</value>
         <value xml:lang="fr">Méthodes de paiement</value>

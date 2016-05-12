@@ -660,7 +660,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
         <#local href = styles.menu_link_href_default!>
       </#if>
       <#local href = interpretRequestUri(href)>
-      <#t><@menuitem_link_markup href=href onclick=onClick class=contentClass id=contentId style=contentStyle 
+      <#t><@menuitem_link_markup href=href onClick=onClick class=contentClass id=contentId style=contentStyle 
             name=contentName attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] 
             target=target title=title disabled=disabled selected=selected active=active isNestedMenu=isNestedMenu 
             parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType

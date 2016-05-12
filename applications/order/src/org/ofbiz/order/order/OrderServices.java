@@ -2251,7 +2251,10 @@ public class OrderServices {
                     "OrderErrorCannotCancelItemItemNotFound", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
         }
 
-        return ServiceUtil.returnSuccess();
+        // Cato: Return a basic success message if it worked
+        // NOTE: It's possible this gets mixed up with errors in ECAs and SECAs, but leave it for now.
+        //return ServiceUtil.returnSuccess();
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "OrderOrderItemCancelled", locale));
     }
 
     /** Service for changing the status on order item(s) */

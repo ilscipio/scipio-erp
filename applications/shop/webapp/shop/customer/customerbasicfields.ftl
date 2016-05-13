@@ -53,8 +53,9 @@ under the License.
 
     <input type="hidden" name="${fieldNamePrefix}emailContactMechId" value="${cbfParams["${fieldNamePrefix}emailContactMechId"]!}"/>
     <@field type="generic" label=uiLabelMap.PartyEmailAddress required=true>
-      <@field type="input" name="${fieldNamePrefix}emailAddress" value=(cbfParams["${fieldNamePrefix}emailAddress"]!) required=true />
-    
+      <@fields type="default-manual-widgetonly">
+        <@field type="input" name="${fieldNamePrefix}emailAddress" value=(cbfParams["${fieldNamePrefix}emailAddress"]!) required=true />
+      </@fields>
       <@fields type="default-compact" ignoreParentField=true>
         <@allowSolicitationField params=cbfParams name="${fieldNamePrefix}emailSol" allowSolicitation="" />
       </@fields>

@@ -69,6 +69,13 @@ function toggleBillingAccount(box) {
 <#-- Cato: New form to allow creation of a temp anon user (based on old/legacy anon checkout)
     at the same time the ship address form is submitted -->
 <@section title=uiLabelMap.EcommerceYourNamePhoneAndEmail>
+  <#-- This makes it impossible to align with others below
+  Instead, using @fields to get only widget part to limit columns
+  <@row>
+    <@cell columns=6>
+  -->
+  <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+
    <#-- Cato: this triggers the user creation (or update) before the main event -->
    <input type="hidden" name="createUpdateAnonUser" value="Y"/>
 
@@ -78,6 +85,12 @@ function toggleBillingAccount(box) {
    <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
 
    <@render resource="component://shop/widget/CustomerScreens.xml#customerBasicFields" ctxVars={}/>
+
+  </@fields>
+  <#--
+    </@cell>
+  </@row>
+  -->
 
 </@section>
 </#if>
@@ -212,7 +225,7 @@ function toggleBillingAccount(box) {
     <@section>
     <@row>
       <@cell columns=2>
-        <strong>${uiLabelMap.PartyTaxIdentification}</strong>
+        <label><strong>${uiLabelMap.PartyTaxIdentification}</strong></label>
       </@cell>
       <@cell columns=6 last=true>
         <@section>
@@ -231,7 +244,7 @@ function toggleBillingAccount(box) {
     <@section>
     <@row>
       <@cell columns=2>
-        <strong>${uiLabelMap.AccountingAgreementInformation}</strong>
+        <label><strong>${uiLabelMap.AccountingAgreementInformation}</strong></label>
       </@cell>
       <@cell columns=10>
         <@section>

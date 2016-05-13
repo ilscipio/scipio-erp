@@ -435,7 +435,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             if (product.get("reservMaxPersons") != null) {
                 BigDecimal reservMaxPersons = product.getBigDecimal("reservMaxPersons");
                  if (reservMaxPersons.compareTo(reservPersons) < 0)    {
-                     Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("reservMaxPersons", product.getString("reservMaxPersons"), "reservPersons", reservPersons);
+                     // Cato: This prints nonsensical value: product.getString("reservMaxPersons")
+                     Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("reservMaxPersons", product.getBigDecimal("reservMaxPersons"), "reservPersons", reservPersons);
                      String excMsg = UtilProperties.getMessage(resource_error, "item.maximum_number_of_person_renting", messageMap, cart.getLocale());
 
                      Debug.logInfo(excMsg,module);

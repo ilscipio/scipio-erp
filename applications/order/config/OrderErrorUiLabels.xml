@@ -5750,20 +5750,21 @@
         <value xml:lang="zh">没有找到固定资产，固定资产标识：${fixedAssetId}</value>
         <value xml:lang="zh_TW">沒有找到固定資產，固定資產ID：${fixedAssetId}</value>
     </property>
-    <property key="item.maximum_number_of_person_renting">
+    <property key="item.maximum_number_of_person_renting"> 
+        <!-- Cato: formatting changed -->
         <value xml:lang="de">Die maximale Anzahl Personen für dieses Objekt beträgt ${reservMaxPersons}, Sie haben aber ${reservPersons} verlangt!</value>
-        <value xml:lang="en">The maximum number of persons renting this object is ${reservMaxPersons} however you have requested: ${reservPersons} !</value>
-        <value xml:lang="es">El número máximo de personas para reservar este objeto es ${reservMaxPersons}. ¡No obstante ha solicitado: ${reverPersons}!</value>
-        <value xml:lang="fr">Le nombre maximum de personnes ppuvant louer cet objet est ${reservMaxPersons} cependant vous avez demandé: ${reservPersons} !</value>
-        <value xml:lang="it">Il numero massimo di persone che affittano questo oggetto è ${reservMaxPersons} comunque tu hai richiesto: ${reservPersons} !</value>
+        <value xml:lang="en">The maximum number of persons renting this object is ${reservMaxPersons} however you have requested ${reservPersons}!</value>
+        <value xml:lang="es">El número máximo de personas para reservar este objeto es ${reservMaxPersons}. ¡No obstante ha solicitado ${reverPersons}!</value>
+        <value xml:lang="fr">Le nombre maximum de personnes ppuvant louer cet objet est ${reservMaxPersons} cependant vous avez demandé ${reservPersons}!</value>
+        <value xml:lang="it">Il numero massimo di persone che affittano questo oggetto è ${reservMaxPersons} comunque tu hai richiesto ${reservPersons}!</value>
         <value xml:lang="ja">この物件をレンタルできる最大人数は ${reservMaxPersons} ですが、リクエストしたのは ${reservPersons} です!</value>
-        <value xml:lang="pt_BR">O máximo  de pessoas alugando esse objeto é ${reservMaxPersons} porém você solicitou: ${reservPersons} ！</value>
-        <value xml:lang="ro">Numarul maxim de persoane care inchiriaza acest obiect este ${reservMaxPersons} daca tu ai cerut: ${reservPersons} !</value>
-        <value xml:lang="ru">Максимальное количество персон арендующих данный объект ${reservMaxPersons}, но вы запросили: ${reservPersons} !</value>
+        <value xml:lang="pt_BR">O máximo  de pessoas alugando esse objeto é ${reservMaxPersons} porém você solicitou ${reservPersons}！</value>
+        <value xml:lang="ro">Numarul maxim de persoane care inchiriaza acest obiect este ${reservMaxPersons} daca tu ai cerut ${reservPersons}!</value>
+        <value xml:lang="ru">Максимальное количество персон арендующих данный объект ${reservMaxPersons}, но вы запросили ${reservPersons}!</value>
         <value xml:lang="th">จำนวนมากที่สุดของผู้ที่เช่าสิ่งของคือ ${reservMaxPersons} อย่างไรก็ตามคุณมีการร้องขอ: ${reservPersons} !</value>
-        <value xml:lang="vi">Số lượng tối đa nhân sự tính trước cho công việc này là ${reservMaxPersons}, tuy nhiên bạn đã yêu cầu: ${reservPersons} !</value>
-        <value xml:lang="zh">租用这个对象的最大人数是 ${reservMaxPersons} 而你要求的是：${reservPersons} ！</value>
-        <value xml:lang="zh_TW">租用這個物件的最大人數是 ${reservMaxPersons} 而你要求的是：${reservPersons} ！</value>
+        <value xml:lang="vi">Số lượng tối đa nhân sự tính trước cho công việc này là ${reservMaxPersons}, tuy nhiên bạn đã yêu cầu ${reservPersons}!</value>
+        <value xml:lang="zh">租用这个对象的最大人数是 ${reservMaxPersons} 而你要求的是 ${reservPersons}！</value>
+        <value xml:lang="zh_TW">租用這個物件的最大人數是 ${reservMaxPersons} 而你要求的是 ${reservPersons}！</value>
     </property>
     <property key="item.missing_reservation_starting_date">
         <value xml:lang="de">Das Startdatum der Reservierung fehlt....</value>

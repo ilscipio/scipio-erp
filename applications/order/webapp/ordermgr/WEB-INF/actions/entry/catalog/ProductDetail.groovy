@@ -579,3 +579,12 @@ if (product) {
         context.productTags = keywordMap;
     }
 }
+
+// Cato: Decide the next possible reserv start date (next day)
+nextDayTimestamp = UtilDateTime.getDayStart(nowTimestamp, 1, timeZone, locale);
+context.nextDayTimestamp = nextDayTimestamp;
+earliestReservStartDate = nextDayTimestamp;
+context.earliestReservStartDate = earliestReservStartDate;
+
+
+

@@ -24,6 +24,13 @@ under the License.
   <#assign bapfParams = parameters>
 </#if>
 
+<#-- NOTE: This is a map that itself may contain fieldArgs map 
+    This is where the Cato macro arg map support unleashes its power! -->
+<#assign newAddressFieldsWrapperArgs = bapfNewAddressFieldsWrapperArgs!{
+    "type":"default", "ignoreParentField":true
+    }>
+
+
 <#if useScripts && useNewAddr && newAddrInline && 
     newAddrContentId?has_content && pickFieldClass?has_content && 
     newAddrFieldId?has_content>
@@ -105,7 +112,7 @@ under the License.
         <#if newAddrInline>
           <div<#if newAddrContentId?has_content> id="${newAddrContentId}"</#if><#rt/>
             <#lt><#if (selectedContactMechId != "_NEW_")> style="display:none;"</#if> class="new-item-selection-content">
-            <@fields type="default" ignoreParentField=true>
+            <@fields args=newAddressFieldsWrapperArgs>
               <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
                   ctxVars={
                     "pafFieldNamePrefix":newAddrFieldNamePrefix,

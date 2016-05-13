@@ -27,8 +27,8 @@ under the License.
         </actions>
         <alt-target use-when="marketingCampaign==null" target="createMarketingCampaign"/>
         <auto-fields-entity entity-name="MarketingCampaign"/>
-        <field use-when="marketingCampaign!=null" name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="marketingCampaign==null&amp;&amp;marketingCampaignId==null" name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}"><ignored/></field>
+        <field use-when="marketingCampaign!=null" name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
+        <field use-when="marketingCampaign==null&amp;&amp;marketingCampaignId==null" name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}"><text/></field>
         <field use-when="marketingCampaign==null&amp;&amp;marketingCampaignId!=null" name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${marketingCampaignId}]"><display/></field>
         <field name="parentCampaignId" title="${uiLabelMap.MarketingParentCampaignId}">
             <drop-down allow-empty="true">
@@ -56,21 +56,24 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="DONE_PAGE">
+        <field name="createdByUserLogin"><ignored/></field>
+        <field name="lastModifiedByUserLogin"><ignored/></field>
+      <!--   <field name="DONE_PAGE">
             <hidden value="${donePage}"/>
-        </field>
+        </field> -->
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
-        <field name="cancelAction" widget-style="${styles.link_nav_cancel}" title=" "><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field>
+        <!-- <field name="cancelAction" widget-style="${styles.link_nav_cancel}" title=" "><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
-   <form name="ListMarketingCampaign" type="list" paginate-target="listMarketingCampaign"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- CATO: ListMarketingCampaign moved to component://marketing/widget/MarketingCampaignScreens.xml#MarketingCampaignSearchResults -->
+   <!-- <form name="ListMarketingCampaign" type="list" paginate-target="listMarketingCampaign"
+        odd-row-style="alternate-row" header-row-style="header-row-2"> orig: default-table-style=-style="basic-table hover-bar"
         <actions>
             <entity-condition entity-name="MarketingCampaign">
                 <condition-expr field-name="marketingCampaignId" from-field="parameters.marketingCampaignId" />
                 <condition-expr field-name="campaignName" from-field="parameters.campaignName" />
                 <condition-expr field-name="parentCampaignId" from-field="parameters.parentCampaignId" /> 
-                <!-- <condition-expr field-name="statusId" from-field="parameters.statusId" /> -->
+                <condition-expr field-name="statusId" from-field="parameters.statusId" />
             </entity-condition>
         </actions>
         <field name="marketingCampaignId" widget-style="${styles.link_nav_info_id}" title="${uiLabelMap.MarketingCampaignId}">
@@ -83,7 +86,7 @@ under the License.
             <display-entity entity-name="StatusItem" description="${description}" also-hidden="true"/>
         </field>
         <field name="parentCampaignId" title="${uiLabelMap.MarketingParentCampaignId}"><display/></field>
-    </form>
+    </form> -->
 
     <!-- CATO: To be removed -->
    <!-- <form name="ListMarketingCampaignRoles" type="list" paginate-target="listMarketingCampaignGeo"

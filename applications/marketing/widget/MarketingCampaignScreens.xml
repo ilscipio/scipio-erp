@@ -72,30 +72,17 @@ under the License.
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" />
-                <set field="titleProperty" value="PageTitleEditMarketingCampaign" />
-                <set field="campaignTabButtonItem" value="MarketingCampaign" />
-                <set field="labelTitleProperty" value="PageTitleEditMarketingCampaign" />
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="FindMarketingCampaign" />
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
+                <set field="title" value="${uiLabelMap.MarketingCampaign} ${marketingCampaignId}" />
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonMarketingCampaignDecorator">
-                    <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap[titleProperty]}" />
-                        </container>
+                    <decorator-section name="body">                        
                         <section>
                             <condition>
                                 <not><if-empty field="marketingCampaign" /></not>
                             </condition>
-                            <widgets>
-                                <container style="button-bar button-style-1">
-                                    <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.link_nav} ${styles.action_add}">
-                                        <parameter param-name="DONE_PAGE" from-field="donePage" />
-                                    </link>
-                                </container>
-                            </widgets>
                         </section>
                         <include-form name="EditMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" />
                     </decorator-section>
@@ -150,8 +137,9 @@ under the License.
             <actions>
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/campaign/FindMarketingCampaign.groovy"/>
             </actions>
-            <widgets>                 		
-				<include-form name="ListMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" />				
+            <widgets>         
+                <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/MarketingCampaingList.ftl"/></html></platform-specific>        		
+				<!-- <include-form name="ListMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" /> -->				
             </widgets>
         </section>
     </screen>

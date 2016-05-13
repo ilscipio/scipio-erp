@@ -258,7 +258,7 @@ jQuery(document).ready(function() {
 <#macro commonInvField args={} inlineArgs...>
     <#local args = mergeArgMaps(args, inlineArgs, {
         "type":"generic", "labelContentFieldsType":"default", "postfixColumns":"", "labelContent":"", "labelContentArgs":{}, "widgetAreaClass":"",
-        "widgetPostfixColumns":"", "postfixContent":"", "postfix":false
+        "labelColumns":"", "postfixContent":"", "postfix":false
     })>
     <#local dummy = localsPutAll(args)>
 
@@ -280,8 +280,8 @@ jQuery(document).ready(function() {
   <#if !postfixColumns?has_content>
     <#local postfixColumns = 3>
   </#if>
-  <#if !widgetPostfixColumns?has_content>
-    <#local widgetPostfixColumns = 10>
+  <#if !labelColumns?has_content>
+    <#local labelColumns = 2>
   </#if>
   <#if postfixContent?is_directive || postfixContent?has_content>
     <#local postfix = true>
@@ -293,7 +293,7 @@ jQuery(document).ready(function() {
   </#if>
   <@field inverted=true args=args postfix=postfix
     labelContent=labelContent labelContentArgs=labelContentArgs
-    widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
+    labelColumns=labelColumns postfixColumns=postfixColumns><#nested></@field>
 </#macro>
 
 <#-- this is an ugly kludge needed due to only having one #nested in freemarker -->
@@ -306,15 +306,15 @@ jQuery(document).ready(function() {
 <#-- Almost same as commonInvField currently, except we assume it's a radio or checkbox and set widget area size to 1 column -->
 <#macro checkAddressInvField args={} inlineArgs...>
     <#local args = mergeArgMaps(args, inlineArgs, {
-        "widgetPostfixColumns":""
+        "labelColumns":""
     })>
     <#local dummy = localsPutAll(args)>
-  <#if !widgetPostfixColumns?has_content>
-    <#local widgetPostfixColumns = 11>
+  <#if !labelColumns?has_content>
+    <#local labelColumns = 1>
   </#if>
     <#-- FORCE this to zero -->
     <#local labelSmallDiffColumns = 0>
-    <@commonInvField widgetPostfixColumns=widgetPostfixColumns labelSmallDiffColumns=labelSmallDiffColumns args=inlineArgs />
+    <@commonInvField labelColumns=labelColumns labelSmallDiffColumns=labelSmallDiffColumns args=inlineArgs />
 </#macro>
 
 <#macro addressList>

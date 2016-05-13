@@ -31,6 +31,8 @@ under the License.
 <#assign newAddressFieldsWrapperArgs = bapfNewAddressFieldsWrapperArgs!{
     "type":"default", "ignoreParentField":true,
     "fieldArgs": {
+        "gridArgs": {
+        }
     }
 }>
 

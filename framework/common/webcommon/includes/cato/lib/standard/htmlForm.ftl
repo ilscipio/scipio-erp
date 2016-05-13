@@ -936,11 +936,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
                               the default is usually true unless prevented by other settings.
     totalColumns            = ((int)) CONVENIENCE alias for {{{gridArgs.totalColumns}}} - Total number of columns spanned by the outer container, including label area, widget and postfix
-    widgetPostfixColumns    = ((int)) CONVENIENCE alias for {{{gridArgs.widgetPostfixColumns}}} - Number of grid columns to use as size for widget + postfix area (combined)
-                              If totalColumns is kept the same, any space removed from this value is given to the label area,
-                              and any space added is removed from the label area, also depending on the configuration of the label area.
-                              DEV NOTE: This value now includes the postfix area because it is usually easier
-                                  to use this way given that the widget + postfix configuration is variable.
+    labelColumns            = ((int)) CONVENIENCE alias for {{{gridArgs.labelColumns}}} - Number of grid columns to use as size for label area, IF one is to be rendered
+                              If totalColumns is kept the same, any space removed from this value is removed from widget and postfix (combined).
     labelSmallDiffColumns   = ((int), fallback default: 1) CONVENIENCE alias for {{{gridArgs.labelSmallDiffColumns}}} - Difference between large and small columns of the label area (added to label area columns for "small" container)
                               By default, this setting is set to 1 so that on small screens the label area gets a slightly larger size.
                               Sometimes it is needed to set this to zero for custom markup.
@@ -1244,7 +1241,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "labelSmallDiffColumns":"",
-  "tooltip":"", "gridArgs":{}, "totalColumns":"", "widgetPostfixColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "widgetOnly":"", "containerId":"", "containerClass":"", "containerStyle":"",
+  "tooltip":"", "gridArgs":{}, "totalColumns":"", "labelColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "widgetOnly":"", "containerId":"", "containerClass":"", "containerStyle":"",
   "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixColumns":"", "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
   "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "labelAreaConsume":"", "inlineLabelArea":"", "inlineLabel":false,
   "description":"",
@@ -1611,7 +1608,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
       
-  <#local defaultGridArgs = {"totalColumns":totalColumns, "widgetPostfixColumns":widgetPostfixColumns, 
+  <#local defaultGridArgs = {"totalColumns":totalColumns, "labelColumns":labelColumns, 
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":useLabelArea, 
     "labelInRow":(effLabelType != "vertical"), "postfix":postfix, "postfixColumns":postfixColumns,
     "fieldsType":fieldsType, "labelSmallDiffColumns":labelSmallDiffColumns}>
@@ -2166,21 +2163,34 @@ TODO: This (and @field args) do not currently provide enough control over large 
                               NOTE: Even though the default for this is false, in many cases generally we end up using true.
     totalColumns            = ((int), default: -from global styles-) The logical total columns for a field row
                               NOTE: This does not have to be 12.
-    widgetPostfixColumns    = ((int), default: -from global styles-) The columns size of widget and postfix combined (regardless of {{{widgetPostfixCombined}}}).         
+    totalLarge              = ((int), default: -value of totalColumns-) Total columns override for large
+    totalSmall              = ((int), default: -value of totalColumns-) Total columns override for small
+    labelColumns            = ((int), default: -from global styles-) The columns size of label area, if {{{labelArea}}} and {{{labelInRow}}} are true
+    labelLarge              = ((int), default: -value of labelColumns-) Label area columns override for large              
+    labelSmallLarge         = ((int), default: -value of labelColumns-)  Label area columns override for small              
+    postfixColumns          = ((int), default: -from global styles-) Postfix columns
+    postfixLarge            = ((int), default: -value of postfixColumns-) Postfix columns override for large
+    postfixSmall            = ((int), default: -value of postfixColumns-) Postfix columns override for small
 -->
 <#assign getDefaultFieldGridStyles_defaultArgs = {
-  "totalColumns":"", "widgetPostfixColumns":"", "labelArea":"", "labelInRow":"",
-  "postfix":"", "postfixColumns":"", "isLargeParent":"", "labelSmallDiffColumns":"",
-  "widgetPostfixCombined":"", "fieldsType":""
+  "widgetPostfixCombined":"", "fieldsType":"",
+  "labelArea":"", "labelInRow":"",
+  "postfix":"", "isLargeParent":"", "labelSmallDiffColumns":"",
+  "totalColumns":"", "totalLarge":"", "totalSmall":"", 
+  "labelColumns":"", "labelLarge":"", "labelSmall":"",
+  "postfixColumns":"", "postfixLarge":"", "postfixSmall":""
 }>
 <#function getDefaultFieldGridStyles args={} catchArgs...>
   <#local args = mergeArgMapsBasic(args, {}, catoStdTmplLib.getDefaultFieldGridStyles_defaultArgs)>
   <#local dummy = localsPutAll(args)> 
   
+  <#-- TODO: rewrite default case in java for speed -->
+  
+  <#-- basic arg defaults -->
+
   <#if !fieldsType?has_content>
     <#local fieldsType = "default">
   </#if>
-
   <#if !postfix?is_boolean>
     <#local postfix = false>
   </#if>
@@ -2193,26 +2203,6 @@ TODO: This (and @field args) do not currently provide enough control over large 
   <#if !widgetPostfixCombined?is_boolean>
     <#local widgetPostfixCombined = false>
   </#if>
-  
-  <#-- TODO?: All these value lookups don't really have to happen per-field, should optimize to cache results so less map lookups -->
-  <#if !totalColumns?has_content>
-    <#local totalColumns = styles["fields_" + fieldsType + "_totalcolumns"]!styles["fields_default_totalcolumns"]!12>
-  </#if>
-  <#local widgetPostfixColumnsDiff = styles["fields_" + fieldsType + "_widgetpostfixcolumnsdiff"]!styles["fields_default_widgetpostfixcolumnsdiff"]!2>
-  <#if !postfixColumns?has_content>
-    <#local postfixColumns = styles["fields_" + fieldsType + "_postfixsize"]!styles["fields_default_postfixsize"]!1>
-  </#if>
-  <#if !labelSmallDiffColumns?has_content>
-    <#local labelSmallDiffColumns = styles["fields_" + fieldsType + "_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
-  </#if>
-  <#-- NOTE: It's better to set the diff in styles (probably?) -->
-  <#if !widgetPostfixColumns?has_content>
-    <#local widgetPostfixColumns = styles["fields_" + fieldsType + "_widgetpostfixcolumns"]!styles["fields_default_widgetpostfixcolumns"]!"">
-    <#if widgetPostfixColumns?is_boolean>
-      <#local widgetPostfixColumns = "">
-    </#if>
-  </#if>
-  
   <#if !isLargeParent?is_boolean>
     <#local largeContainerFactor = styles["large_container_factor"]!6>
     <#-- get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
@@ -2220,54 +2210,93 @@ TODO: This (and @field args) do not currently provide enough control over large 
     <#-- if parent container is large, then we'll include the large grid sizes; otherwise only want small to apply -->
     <#local isLargeParent = (absColSizes.large > largeContainerFactor)>  
   </#if>
-
-  <#if postfix>
-    <#local columnspostfix = postfixColumns>
-  <#else>
-    <#local columnspostfix = 0>
+  
+  
+  <#-- global styles lookups  -->
+  
+  <#-- TODO?: All these global styles lookups don't really have to happen per-field, should optimize to cache results so less map lookups -->
+  <#if !totalColumns?has_content>
+    <#local totalColumns = styles["fields_" + fieldsType + "_totalcolumns"]!styles["fields_default_totalcolumns"]!12>
   </#if>
-  <#if !widgetPostfixColumns?has_content>
-    <#if labelArea && labelInRow>
-      <#local widgetPostfixColumns = totalColumns - widgetPostfixColumnsDiff>
-    <#else>
-      <#local widgetPostfixColumns = totalColumns>
+  <#if labelArea && labelInRow>
+    <#if !labelColumns?has_content>
+      <#local labelColumns = styles["fields_" + fieldsType + "_labelcolumns"]!styles["fields_default_labelcolumns"]!2>
     </#if>
+  <#else>
+    <#local labelColumns = totalColumns>
+  </#if>
+  <#if postfix>
+    <#if !postfixColumns?has_content>
+      <#local postfixColumns = styles["fields_" + fieldsType + "_postfixcolumns"]!styles["fields_default_postfixcolumns"]!1>
+    </#if>
+  <#else>
+    <#local postfixColumns = 0>
+  </#if>
+  <#if !labelSmallDiffColumns?has_content>
+    <#local labelSmallDiffColumns = styles["fields_" + fieldsType + "_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
+  </#if>
+
+  <#if !totalLarge?has_content>
+    <#local totalLarge = styles["fields_" + fieldsType + "_totallarge"]!styles["fields_default_totallarge"]!totalColumns>
+  </#if>
+  <#if labelArea && labelInRow>
+    <#if !labelLarge?has_content>
+      <#local labelLarge = styles["fields_" + fieldsType + "_labellarge"]!styles["fields_default_labellarge"]!labelColumns>
+    </#if>
+  <#else>
+    <#local labelLarge = totalLarge>
+  </#if>
+  <#if postfix>
+    <#if !postfixLarge?has_content>
+      <#local postfixLarge = styles["fields_" + fieldsType + "_postfixlarge"]!styles["fields_default_postfixlarge"]!postfixColumns>
+    </#if>
+  <#else>
+    <#local postfixLarge = 0>
+  </#if>
+
+  <#if !totalSmall?has_content>
+    <#local totalSmall = styles["fields_" + fieldsType + "_totalsmall"]!styles["fields_default_totalsmall"]!totalColumns>
+  </#if>
+  <#if labelArea && labelInRow>
+    <#if !labelSmall?has_content>
+      <#local labelSmall = styles["fields_" + fieldsType + "_labelsmall"]!styles["fields_default_labelsmall"]!(labelColumns+labelSmallDiffColumns)>
+    </#if>
+  <#else>
+    <#local labelSmall = totalSmall>
+  </#if>
+  <#if postfix>
+    <#if !postfixSmall?has_content>
+      <#local postfixSmall = styles["fields_" + fieldsType + "_postfixsmall"]!styles["fields_default_postfixsmall"]!postfixColumns>
+    </#if>
+  <#else>
+    <#local postfixSmall = 0>
+  </#if>
+  
+  <#-- resolve unspecified values -->
+
+  <#if labelArea && labelInRow>
+    <#local widgetPostfixLarge = totalLarge - labelLarge>
+    <#local widgetPostfixSmall = totalSmall - labelSmall>
+  <#else>
+    <#-- Either no label or the label is on top and gets its own row -->
+    <#local widgetPostfixLarge = totalLarge>
+    <#local widgetPostfixSmall = totalSmall>
   </#if>
   
   <#if widgetPostfixCombined>
-    <#-- widget area will be child of a separate container. Total columns MUST be hardcoded as 12 here. -->
-    <#local columnswidget = 12 - columnspostfix>
+    <#-- widget area will be child of a separate container. 
+        Currently total columns MUST be hardcoded as 12 here. -->
+    <#local widgetLarge = 12 - postfixLarge>
+    <#local widgetSmall = 12 - postfixSmall>
   <#else>
-    <#local columnswidget = widgetPostfixColumns - columnspostfix>
+    <#local widgetLarge = widgetPostfixLarge - postfixLarge>
+    <#local widgetSmall = widgetPostfixSmall - postfixSmall>
   </#if>
 
-  <#if labelInRow>
-    <#local columnslabelarea = totalColumns - widgetPostfixColumns>
-  <#else>
-    <#local columnslabelarea = totalColumns>
-  </#if>
-
-  <#-- adjust for small -->
-  <#if labelInRow>
-    <#local labelsmall = columnslabelarea + labelSmallDiffColumns>
-  <#else>
-    <#local labelsmall = columnslabelarea>
-  </#if>
-  <#if labelArea && labelInRow>
-    <#local wpsmall = widgetPostfixColumns - labelSmallDiffColumns>
-  <#else>
-    <#local wpsmall = widgetPostfixColumns>
-  </#if>
-  <#if labelArea && labelInRow && !widgetPostfixCombined>
-    <#local widgetsmall = columnswidget - labelSmallDiffColumns>
-  <#else>
-    <#local widgetsmall = columnswidget>
-  </#if>
-
-  <#local labelAreaClass><#if labelArea>${styles.grid_small!}${labelsmall}<#if isLargeParent> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
-  <#local widgetPostfixAreaClass>${styles.grid_small!}${wpsmall}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
-  <#local widgetAreaClass>${styles.grid_small!}${widgetsmall}<#if isLargeParent> ${styles.grid_large!}${columnswidget}</#if></#local>
-  <#local postfixAreaClass><#if postfix>${styles.grid_small!}${columnspostfix}<#if isLargeParent> ${styles.grid_large!}${columnspostfix}</#if></#if></#local>
+  <#local labelAreaClass><#if labelArea>${styles.grid_small!}${labelSmall}<#if isLargeParent> ${styles.grid_large!}${labelLarge}</#if></#if></#local>
+  <#local widgetPostfixAreaClass>${styles.grid_small!}${widgetPostfixSmall}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixLarge}</#if></#local>
+  <#local widgetAreaClass>${styles.grid_small!}${widgetSmall}<#if isLargeParent> ${styles.grid_large!}${widgetLarge}</#if></#local>
+  <#local postfixAreaClass><#if postfix>${styles.grid_small!}${postfixSmall}<#if isLargeParent> ${styles.grid_large!}${postfixLarge}</#if></#if></#local>
   
   <#-- This is last if in separate row -->
   <#if labelArea && !labelInRow>

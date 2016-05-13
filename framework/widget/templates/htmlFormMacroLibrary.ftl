@@ -476,32 +476,21 @@ WARN: no code run here or indirectly from here should assume full current contex
     
   <#-- Cato: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
-  <!-- Column size factors: <@objectAsScript lang="raw" escape=false object=absColSizes /> -->
-  <!-- All parent/current col sizes: <@objectAsScript lang="raw" escape=false object=getAllContainerSizes()![] /> -->
-  <#-- TODO: review this: for the time being, we will only set the grid_large values if the
-          estimated absolute column width for "large" is larger than 6. 
-          otherwise, this form is probably in a small space so the grid_small settings are more appropriate. -->
-  <#local largeContainerFactor = styles["large_container_factor"]!6>
-  <#local isLargeParent = (absColSizes.large > largeContainerFactor)>  
-    
-  <#local totalColumns = styles["fields_formwidget_totalcolumns"]!styles["fields_default_totalcolumns"]!12>
-  <#local widgetPostfixColumnsDiff = styles["fields_formwidget_widgetpostfixcolumnsdiff"]!styles["fields_default_widgetpostfixcolumnsdiff"]!2>
-  <#local widgetPostfixColumns = styles["fields_formwidget_widgetpostfixcolumns"]!styles["fields_default_widgetpostfixcolumns"]!"">
-  <#if widgetPostfixColumns?is_boolean>
-    <#local widgetPostfixColumns = "">
-  </#if>
-  <#local labelSmallDiffColumns = styles["fields_formwidget_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
-  <#if !widgetPostfixColumns?has_content>
-    <#local widgetPostfixColumns = totalColumns - widgetPostfixColumnsDiff>
-  </#if>
+  <#-- Column size factors: <@objectAsScript lang="raw" escape=false object=absColSizes /> -->
+  <#-- All parent/current col sizes: <@objectAsScript lang="raw" escape=false object=getAllContainerSizes()![] /> -->
 
-  <#local titleAreaColumns = totalColumns - widgetPostfixColumns>
+
+  <#local defaultGridStyles = getDefaultFieldGridStyles({"labelArea":true, "labelInRow":true,
+    "widgetPostfixCombined":true, "postfix":false, 
+    "totalColumns": styles["fields_formwidget_totalcolumns"]!"",
+    "labelColumns": styles["fields_formwidget_labelcolumns"]!""
+  })>
   
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
       <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}")>
-      <#local titleAreaClassDefault>${styles.grid_small!}${titleAreaColumns + labelSmallDiffColumns}<#if isLargeParent> ${styles.grid_large!}${titleAreaColumns}</#if></#local>
+      <#local titleAreaClassDefault = defaultGridStyles.labelArea>
       <#-- NOTE: using explicit version for compatibility! -->
       <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
         <#-- TODO: currently not making use of:
@@ -516,14 +505,13 @@ WARN: no code run here or indirectly from here should assume full current contex
       </div>
   </#if>
   <#local innerClass = style>
-  <#-- NOTE: IMPORTANT: requires grid_end always -->
-  <#local innerClass = addClassArg(innerClass, "${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}")>
+  <#local innerClass = addClassArg(innerClass, "field-entry-widget ${fieldEntryTypeClass}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <#local innerClassDefault>${styles.grid_small!}${widgetPostfixColumns - labelSmallDiffColumns}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
+      <#local innerClassDefault = defaultGridStyles.widgetPostfixArea>
   <#else>
       <#-- Cato: NOTE: This must be 12 hardcoded, NOT totalColumns -->
-      <#local innerClassDefault>${styles.grid_small!}12<#if isLargeParent> ${styles.grid_large!}12</#if></#local>
+      <#local innerClassDefault>${styles.grid_small!}12 ${styles.grid_end!}</#local>
   </#if>
       <#-- NOTE: using explicit version for compatibility! -->
       <@cell open=true close=false class=compileClassArgExplicit(innerClass, innerClassDefault) />

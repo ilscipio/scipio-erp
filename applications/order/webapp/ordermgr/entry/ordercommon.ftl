@@ -4,7 +4,7 @@ Cato: Local order template common defs
 
 <#-- Cato: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType-->
-<#macro checkoutInvField type="generic" labelContentFieldsType="default-compact" postfixColumns="" labelContent="" labelContentArgs={} widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
+<#macro checkoutInvField type="generic" labelContentFieldsType="default-compact" postfixColumns="" labelContent="" labelContentArgs={} widgetAreaClass="" labelColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--
   <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixColumns":postfixColumns, "widgetPostfixCombined":false})>
   <@row>
@@ -23,11 +23,6 @@ Cato: Local order template common defs
   <#if !postfixColumns?has_content>
     <#local postfixColumns = 3>
   </#if>
-  <#-- use default
-  <#if !widgetPostfixColumns?has_content>
-    <#local widgetPostfixColumns = 11>
-  </#if>
-  -->
   <#if postfixContent?is_directive || postfixContent?has_content>
     <#local postfix = true>
   </#if>
@@ -38,7 +33,7 @@ Cato: Local order template common defs
   </#if>
   <@field type=type inverted=true args=inlineArgs widgetAreaClass=widgetAreaClass postfix=postfix
     labelContent=labelContent labelContentArgs=labelContentArgs
-    postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
+    postfixContent=postfixContent labelColumns=labelColumns postfixColumns=postfixColumns><#nested></@field>
 </#macro>
 
 <#-- this is an ugly kludge needed due to only having one #nested in freemarker -->

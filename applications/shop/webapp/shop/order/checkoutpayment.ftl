@@ -424,7 +424,7 @@ jQuery(document).ready(function(){
                 <#assign middleNameOnCard = person.middleName!>
                 <#assign lastNameOnCard = person.lastName!>
               </#if>
-              <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+              <@fields type="inherit-all" fieldArgs={"gridArgs":{"totalLarge":8, "widgetPostfixLarge":6}}>
                 <@render resource="component://shop/widget/CustomerScreens.xml#creditCardFields" 
                   ctxVars={
                     "ccfFieldNamePrefix": "newCreditCard_",
@@ -453,8 +453,10 @@ jQuery(document).ready(function(){
                             "type":"default",
                             "ignoreParentField":true,
                             "fieldArgs": {
-                                "totalColumns":8,
-                                "widgetPostfixColumns":6
+                                "gridArgs": {
+                                    "totalLarge":8,
+                                    "widgetPostfixLarge":6
+                                }
                             }
                         }
                     }/>
@@ -513,7 +515,7 @@ jQuery(document).ready(function(){
                 <#-- TODO: Unhardcode -->
                 <#assign nameOnAccount = "${person.firstName!} ${person.lastName!}">
               </#if>
-              <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+              <@fields type="inherit-all" fieldArgs={"gridArgs":{"totalLarge":8, "widgetPostfixLarge":6}}>
                 <@render resource="component://shop/widget/CustomerScreens.xml#eftAccountFields" 
                   ctxVars={
                     "eafFieldNamePrefix": "newEftAccount_",
@@ -537,8 +539,10 @@ jQuery(document).ready(function(){
                             "type":"default",
                             "ignoreParentField":true,
                             "fieldArgs": {
-                                "totalColumns":8,
-                                "widgetPostfixColumns":6
+                                "gridArgs": {
+                                    "totalLarge":8,
+                                    "widgetPostfixLarge":6
+                                }
                             }
                         }
                     }/>
@@ -650,7 +654,7 @@ jQuery(document).ready(function(){
           </#if>
           <#if showDetails && showSupplemental>
             <@section containerId="content__NEW_GIFT_CARD_${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
-            <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+            <@fields type="inherit-all" fieldArgs={"gridArgs":{"totalLarge":8, "widgetPostfixLarge":6}}>
               <@field type="input" size="15" id="giftCardNumber${primSupplSuffix}" name="giftCardNumber" value=((newGiftCardParams.giftCardNumber)!) label=uiLabelMap.AccountingNumber
                 tooltip="DemoCustomer: test: 123412341234 or 432143214321"/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               <#if cart.isPinRequiredForGC(delegator)>

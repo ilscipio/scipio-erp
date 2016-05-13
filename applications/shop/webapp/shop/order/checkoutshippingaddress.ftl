@@ -74,7 +74,7 @@ function toggleBillingAccount(box) {
   <@row>
     <@cell columns=6>
   -->
-  <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+  <@fields type="inherit-all" fieldArgs={"gridArgs":{"totalLarge":8, "widgetPostfixLarge":6}}>
 
    <#-- Cato: this triggers the user creation (or update) before the main event -->
    <input type="hidden" name="createUpdateAnonUser" value="Y"/>
@@ -173,7 +173,7 @@ function toggleBillingAccount(box) {
           <@row>
             <@cell columns=6>
           -->
-          <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+          <@fields type="inherit-all" fieldArgs={"gridArgs":{"totalLarge":8, "widgetPostfixLarge":6}}>
             <input type="hidden" name="newShipAddr_partyId" value="${parameters.partyId!}" />
             <input type="hidden" name="newShipAddr_productStoreId" value="${productStoreId!}" />
             <#-- Cato: UNTESTED: If this is uncommented, this address takes over the SHIPPING_LOCATION purpose from the last address

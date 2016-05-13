@@ -908,14 +908,13 @@ context.styles = [
         "standardClass" : "field-standard"
     ],
     "fields_default_totalcolumns" : 12,                 /* Logical field total column span. Doesn't have to be 12. NOTE: This could also be passed via fieldargs.totalColumns, but this also covers cases where @fields does not apply (calls to getDefaultFieldGridStyles_defaultArgs). These also give more control. */
-    "fields_default_widgetpostfixcolumnsdiff" : 2,      /* The main field widget area size: widgetpostfixcolumns = (totalcolumns - widgetpostfixcolumnsdiff)  */
-    "fields_default_widgetpostfixcolumns" : "",         /* If set to number (non-empty-string), this overrides the (totalcolumns - widgetpostfixcolumnsdiff) calculation */
-    "fields_default_postfixsize" : 1,
+    "fields_default_labelcolumns" : 2,
+    "fields_default_postfixcolumns" : 1,
     "fields_default_labelsmallcoldiff" : 1,
     "fields_default_widgetpostfixcombined" : true,      /* NOTE: This is GENERAL default, or fallback default, because the actual flag may be more complex to determine. */
     
     /* form widgets (SPECIAL settings; these do not fully support all settings of the other types) */
-    "fields_formwidget_totalcolumns" : 11,              /* FIXME?: Form widget field spans were made smaller (11) as a workaround for visual ugliness in forms with positions */
+    "fields_formwidget_totalcolumns" : 11,               /* FIXME?: Form widget field spans were made smaller (11) as a workaround for visual ugliness in forms with positions */
     
     /* alternate to default with different top-level checkbox styles */
     "fields_default_alt1_labelareaconsumeexceptions" : "checkbox-single radio-single",

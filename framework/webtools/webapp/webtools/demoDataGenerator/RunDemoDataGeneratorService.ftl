@@ -5,7 +5,7 @@
     </#list>
 
       <#-- Cato: leave room for the label area because service parameter names can be long -->
-      <@fields fieldArgs={"widgetPostfixColumns":8}>
+      <@fields fieldArgs={"labelColumns":4}>
         <#list serviceParameters as serviceParameter>    
           <#if serviceParameter.type == "Boolean">
             <#assign value = "N" />

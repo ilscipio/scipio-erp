@@ -23,7 +23,7 @@ under the License.
     </#list>
 
   <#-- Cato: leave room for the label area because service parameter names can be long -->
-  <@fields fieldArgs={"widgetPostfixColumns":8}>
+  <@fields fieldArgs={"labelColumns":4}>
     <#list serviceParameters as serviceParameter>
       <#-- NOTE: defaultValue is actually a private member and getDefaultValue is invoked instead -->
       <#assign defaultValStr = serviceParameter.defaultValue!?string>

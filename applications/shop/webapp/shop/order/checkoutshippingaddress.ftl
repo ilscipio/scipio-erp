@@ -155,22 +155,33 @@ function toggleBillingAccount(box) {
       </@addressList>
     
         <#macro newAddrFormContent args={}>
-          <input type="hidden" name="newShipAddr_partyId" value="${parameters.partyId!}" />
-          <input type="hidden" name="newShipAddr_productStoreId" value="${productStoreId!}" />
+          <#-- This makes it impossible to align with others below
+          Instead, using @fields to get only widget part to limit columns
+          <@row>
+            <@cell columns=6>
+          -->
+          <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+            <input type="hidden" name="newShipAddr_partyId" value="${parameters.partyId!}" />
+            <input type="hidden" name="newShipAddr_productStoreId" value="${productStoreId!}" />
+            <#-- Cato: UNTESTED: If this is uncommented, this address takes over the SHIPPING_LOCATION purpose from the last address
+                and saves as default in profile due to way createPostalAddressAndPurposes service written.
+                It's nice that it sets as default in profile (maybe), but I'm not sure we want it to remove the SHIPPING_LOCATION
+                purpose from the other address. With it commented, it simply adds another SHIPPING_LOCATION and does not set in
+                profile.
+            <input type="hidden" name="newShipAddr_setShippingPurpose" value="Y" />-->
           
-          <#-- Cato: UNTESTED: If this is uncommented, this address takes over the SHIPPING_LOCATION purpose from the last address
-               and saves as default in profile due to way createPostalAddressAndPurposes service written.
-               It's nice that it sets as default in profile (maybe), but I'm not sure we want it to remove the SHIPPING_LOCATION
-               purpose from the other address. With it commented, it simply adds another SHIPPING_LOCATION and does not set in
-               profile.
-          <input type="hidden" name="newShipAddr_setShippingPurpose" value="Y" />-->
-          
-          <#-- Cato: Fields copied from editcontactmech.ftl (+ newShipAddr_ prefix) -->
-          <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
+            <#-- Cato: Fields copied from editcontactmech.ftl (+ newShipAddr_ prefix) -->
+            <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
                 ctxVars={
                     "pafFieldNamePrefix":"newShipAddr_",
                     "pafUseScripts":true,
-                    "pafParams":newShipAddrParams!parameters}/>
+                    "pafParams":newShipAddrParams!parameters
+                    } />
+          </@fields>
+          <#--
+            </@cell>
+          </@row>
+          -->
         </#macro>
     
         <#if shippingContactMechList?has_content>
@@ -200,15 +211,15 @@ function toggleBillingAccount(box) {
     <#-- Party Tax Info -->
     <@section>
     <@row>
-      <@cell columns=5>
+      <@cell columns=2>
         <strong>${uiLabelMap.PartyTaxIdentification}</strong>
       </@cell>
-      <@cell columns=7>
+      <@cell columns=6 last=true>
         <@section>
-        <#-- Cato: NOTE: Can simply add this around to change the look:
-        <@fields type="default-compact"> -->
+        <#-- Cato: NOTE: Can simply use or omit default-compact to change the look -->
+        <@fields type="default-compact">
         <@render resource="component://shop/widget/OrderScreens.xml#customertaxinfo" /> 
-        <#--</@fields>-->
+        </@fields>
         </@section>
       </@cell>
     </@row>
@@ -219,11 +230,12 @@ function toggleBillingAccount(box) {
   <#if agreements?has_content>
     <@section>
     <@row>
-      <@cell columns=5>
+      <@cell columns=2>
         <strong>${uiLabelMap.AccountingAgreementInformation}</strong>
       </@cell>
-      <@cell columns=7>
+      <@cell columns=10>
         <@section>
+          <@fields type="default-compact">
           <#-- Cato: for shop, use only radios; can't link to anything with select -->
           <#if false && agreements.size() != 1>
               <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
@@ -232,7 +244,8 @@ function toggleBillingAccount(box) {
                 </#list>
               </@field>
           <#else>
-            <@field type="generic" label=uiLabelMap.AccountingAgreement name="agreementId">
+            <#-- not really needed currently, readd later maybe
+            <@field type="generic" label=uiLabelMap.AccountingAgreement name="agreementId">-->
                 <#list agreements as agreement>
                   <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
                   <#assign fieldLabel>${agreement.description!} will be used for this order. 
@@ -243,8 +256,10 @@ function toggleBillingAccount(box) {
                   </#assign>
                   <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=fieldLabel />
                 </#list>
-            </@field>
+            <#--
+            </@field>-->
           </#if>
+        </@fields>
         </@section>
       </@cell>
     </@row>

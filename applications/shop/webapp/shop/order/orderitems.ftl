@@ -56,6 +56,7 @@ under the License.
     <@thead>
     <@tr>
       <#if maySelect>
+        <#-- Cato: TODO? could want to omit some these when showDetailed==false -->
         <@th width="25%">${uiLabelMap.OrderProduct}</@th>
         <@th width="10%">${uiLabelMap.OrderQtyOrdered}</@th>
         <@th width="10%">${uiLabelMap.OrderQtyPicked}</@th>
@@ -101,7 +102,9 @@ under the License.
           </#list>
         </#if>
       </#if>
-      <@tr><@td colspan="${numColumns}"></@td></@tr>
+
+      <#--<@tr><@td colspan="${numColumns}"></@td></@tr>-->
+
       <@tr>
         <#-- Cato: Workaround for access from macros -->
         <#assign orderItem = orderItem>
@@ -141,13 +144,15 @@ under the License.
           <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
         </#if>
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
+          <#-- non-product item -->
           <@td>
             ${htmlContentString(orderItem.itemDescription!"")} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
           </@td>
         <#else>
+          <#-- product item -->
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
           <@td>
-            <#if !printable><a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+            <#if !printable><a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
             <#-- Cato: Link to downloads to consume -->
             <#-- TODO: delegate status tests -->
             <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
@@ -284,7 +289,8 @@ under the License.
       <#-- show info from workeffort if it was a rental item -->
       <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
         <#if workEffortSave??>
-          <@tr><@td></@td><@td colspan="${numColumns}">${uiLabelMap.CommonFrom}: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonUntil} ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonFor} ${workEffortSave.reservPersons} ${uiLabelMap.CommonPerson}(s)</@td></@tr>
+          <@tr><@td colspan="${numColumns}">${uiLabelMap.CommonFrom}: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")}<#rt/>
+            <#lt/> ${uiLabelMap.CommonUntil} ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonFor} ${workEffortSave.reservPersons} ${uiLabelMap.CommonPerson}(s)</@td></@tr>
         </#if>
       </#if>
       <#-- now show adjustment details per line item -->

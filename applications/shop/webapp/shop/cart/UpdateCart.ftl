@@ -27,8 +27,8 @@ under the License.
         <@tr>
           <@th width="25%" id="orderItem">${uiLabelMap.ProductProduct}</@th>
           <@th width="15%" id="description" class="${styles.text_right!}"></@th>
-          <@th width="10%" id="unitPrice" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
           <@th width="15%" id="quantity" class="${styles.text_right!}">${uiLabelMap.CommonQuantity}</@th>
+          <@th width="10%" id="unitPrice" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
           <@th width="15%" id="adjustment" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
           <@th width="15%" id="itemTotal" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
           <@td>&nbsp;</@td>
@@ -39,22 +39,26 @@ under the License.
           <@tr id="cartItemDisplayRow_${cartLine_index}">
             <@td headers="orderItem">
               <#if cartLine.getProductId()??>
+                <#-- product item -->
                 <#if cartLine.getParentProductId()??>
                   <#assign parentProductId = cartLine.getParentProductId() />
                 <#else>
                   <#assign parentProductId = cartLine.getProductId() />
                 </#if>
+                <#-- CATO: Uncomment if you want to use the image placeholders
+                  <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
+                  <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
+                  <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
+                -->
+                <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+              <#else>
+                <#-- non-product item -->
+                ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}  
               </#if>
-              <#-- CATO: Uncomment if you want to use the image placeholders
-                <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
-                <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
-                <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
-              -->
-              ${cartLine.getProductId()!}
             </@td>
-            <@td headers="description">${cartLine.getName()!}</@td>
-            <@td headers="unitPrice" class="${styles.text_right!}">${cartLine.getDisplayPrice()}</@td>
+            <@td headers="description"></@td>
             <@td headers="quantity" class="${styles.text_right!}"><span id="completedCartItemQty_${cartLine_index}">${cartLine.getQuantity()?string.number}</span></@td>
+            <@td headers="unitPrice" class="${styles.text_right!}">${cartLine.getDisplayPrice()}</@td>
             <@td headers="adjustment" class="${styles.text_right!}"><span id="completedCartItemAdjustment_${cartLine_index}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></span></@td>
             <@td headers="itemTotal" align="right" class="${styles.text_right!}"><span id="completedCartItemSubTotal_${cartLine_index}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency() /></span></@td>
             <@td>&nbsp;</@td>
@@ -88,7 +92,7 @@ under the License.
           <@td>&nbsp;</@td>
         </@tr>
         <#-- tax adjustments -->
-          <@tr valign="top">
+          <@tr>
             <@td id="salesTax" scope="row" colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
             <@td nowrap="nowrap" class="${styles.text_right!}" headers="salesTax" id="completedCartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
             <@td>&nbsp;</@td>
@@ -126,8 +130,8 @@ under the License.
             <@tr>
               <@th width="25%" id="editOrderItem">${uiLabelMap.ProductProduct}</@th>
               <@th width="15%" id="editDescription" class="${styles.text_right!}"></@th>
-              <@th width="10%" id="editUnitPrice" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
               <@th width="15%" id="editQuantity" class="${styles.text_right!}">${uiLabelMap.CommonQuantity}</@th>
+              <@th width="10%" id="editUnitPrice" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
               <@th width="15%" id="editAdjustment" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
               <@th width="15%" id="editItemTotal" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
               <@th id="removeItem" class="${styles.text_right!}"></@th>
@@ -138,51 +142,55 @@ under the License.
               <@tr id="cartItemRow_${cartLine_index}">
                 <@td headers="editOrderItem">
                   <#if cartLine.getProductId()??>
+                    <#-- product item -->
                     <#if cartLine.getParentProductId()??>
                       <#assign parentProductId = cartLine.getParentProductId() />
                     <#else>
                       <#assign parentProductId = cartLine.getProductId() />
                     </#if>
+                      <#-- CATO: Uncomment if you want to use the image placeholders
+                      <#if cartLine.getProductId()??>
+                        <#if cartLine.getParentProductId()??>
+                          <#assign parentProductId = cartLine.getParentProductId() />
+                        <#else>
+                          <#assign parentProductId = cartLine.getProductId() />
+                        </#if>
+                        <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
+                        <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
+                        <#if smallImageUrl?string?has_content>
+                          <#assign imgUrl><@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl></#assign>
+                          <@img src=imgUrl width="150px;" height="75px"/>
+                        </#if>
+                      -->
+                    <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+                  <#else>
+                    <#-- non-product item -->
+                    ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}  
                   </#if>
-                  <#-- CATO: Uncomment if you want to use the image placeholders
-                  <#if cartLine.getProductId()??>
-                    <#if cartLine.getParentProductId()??>
-                      <#assign parentProductId = cartLine.getParentProductId() />
-                    <#else>
-                      <#assign parentProductId = cartLine.getProductId() />
-                    </#if>
-                    <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
-                    <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
-                    <#if smallImageUrl?string?has_content>
-                      <#assign imgUrl><@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl></#assign>
-                      <@img src=imgUrl width="150px;" height="75px"/>
-                    </#if>
-                  -->
-                  ${cartLine.getProductId()!}
                 </@td>
-                <@td headers="editDescription">${cartLine.getName()!}</@td>
-                <@td headers="editUnitPrice" id="itemUnitPrice_${cartLine_index}" class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency() /></@td>
+                <@td headers="editDescription"></@td>
                 <@td headers="editQuantity" class="${styles.text_right!}">
                   <#compress>
                         <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                             ${cartLine.getQuantity()?string.number}
                         <#else><#-- Is Promo or Shoppinglist -->
-                                <input type="hidden" name="cartLineProductId" id="cartLineProductId_${cartLine_index}" value="${cartLine.getProductId()}" /> 
-                                <@field type="select" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" class="+validate-number">
-                                    <#list 1..99 as x>
-                                        <#if cartLine.getQuantity()==x>
-                                            <#assign selected = true/>
-                                        <#else>
-                                            <#assign selected = false/>
-                                        </#if>
-                                        <@field type="option" value="${x}" selected=selected>${x}</@field>
-                                    </#list>
-                                </@field>
-                                <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                <span id="advice-validate-number-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonPleaseEnterValidNumberInThisField}) </span>
+                            <input type="hidden" name="cartLineProductId" id="cartLineProductId_${cartLine_index}" value="${cartLine.getProductId()}" /> 
+                            <@field type="select" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" class="+validate-number">
+                                <#list 1..99 as x>
+                                    <#if cartLine.getQuantity()==x>
+                                        <#assign selected = true/>
+                                    <#else>
+                                        <#assign selected = false/>
+                                    </#if>
+                                    <@field type="option" value="${x}" selected=selected>${x}</@field>
+                                </#list>
+                            </@field>
+                            <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
+                            <span id="advice-validate-number-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonPleaseEnterValidNumberInThisField}) </span>
                         </#if>
                     </#compress>
                 </@td>
+                <@td headers="editUnitPrice" id="itemUnitPrice_${cartLine_index}" class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency() /></@td>
                 <#if !cartLine.getIsPromo()>
                   <@td headers="editAdjustment" id="addPromoCode_${cartLine_index}" class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency() /></@td>
                 <#else>
@@ -216,7 +224,7 @@ under the License.
            <#-- other adjustments -->
             <#list shoppingCart.getAdjustments() as cartAdjustment>
                 <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true) />
-                <@tr valign="top">
+                <@tr>
                     <@td colspan="5" class="${styles.text_right!}">
                         <#--${uiLabelMap.OrderPromotion}: ${cartAdjustment.description!""}-->
                         ${adjustmentType.get("description", locale)!}: ${cartAdjustment.get("description", locale)!}
@@ -234,19 +242,19 @@ under the License.
             </@tr>
 
             <#-- tax adjustments -->
-              <@tr valign="top">
+              <@tr>
                 <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
                 <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency()/></@td>
                 <@td>&nbsp;</@td>
               </@tr>
             
             <#-- grand total -->
-            <@tr valign="top">
+            <@tr>
                 <@td colspan="5"></@td>
                 <@td colspan="1"><hr /></@td>
                 <@td>&nbsp;</@td>
             </@tr>
-            <@tr valign="top">
+            <@tr>
                 <@td colspan="5" class="${styles.text_right!}">
                     <strong>${uiLabelMap.CommonTotal}</strong>
                 </@td>

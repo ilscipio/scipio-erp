@@ -114,9 +114,9 @@ function setAlternateGwp(field) {
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                     <#assign isStoreInventoryNotRequiredAndNotAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequiredAndAvailable(request, itemProduct, cartLine.getQuantity(), false, false) />
                     <#if isStoreInventoryNotRequiredAndNotAvailable && itemProduct.inventoryMessage?has_content>
-                        <@tr><@td colspan="6"><@commonMsg type="warning">${itemProduct.inventoryMessage}</@commonMsg></@td></@tr>
+                        <@tr type="meta"><@td colspan="6"><@commonMsg type="warning">${itemProduct.inventoryMessage}</@commonMsg></@td></@tr>
                     </#if>
-                    <@tr class="${rowColor!}" valign="top">
+                    <@tr class="${rowColor!}">
                         <@td> 
                         <#if cartLine.getProductId()??>
                             <#-- product item -->
@@ -125,7 +125,7 @@ function setAlternateGwp(field) {
                             <#else>
                                 <#assign parentProductId = cartLine.getProductId() />
                             </#if>
-                            <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}">${cartLine.getProductId()} -${cartLine.getName()!}</a>
+                            <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()} - ${cartLine.getName()!}</a>
                             <#-- For configurable products, the selected options are shown -->
                             <#if cartLine.getConfigWrapper()??>
                               <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
@@ -146,7 +146,7 @@ function setAlternateGwp(field) {
                                 <ul>
                                 <#list attrEntries as attrEntry>
                                     <li>
-                                        ${attrEntry.getKey()} : ${attrEntry.getValue()}
+                                        ${attrEntry.getKey()}: ${attrEntry.getValue()}
                                     </li>
                                 </#list>
                                 </ul>
@@ -195,65 +195,39 @@ function setAlternateGwp(field) {
                         <#-- end gift wrap option -->
 
                         <#-- QUANTITY -->
-                        <@td><#compress>
+                        <@td>
                             <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
-                                <#if fixedAssetExist == true>
-                                  <@modal id="${cartLine.productId}_q" label="${cartLine.getQuantity()?string.number}">    
-                                    <@table type="data-complex">
-                                        <#if cartLine.getReservStart()??>
-                                                <@tr>
-                                                    <@td>&nbsp;</@td>
-                                                    <@td>${cartLine.getReservStart()?string("yyyy-mm-dd")}</@td>
-                                                    <@td>${cartLine.getReservLength()?string.number}</@td></@tr>
-                                                <@tr open=true close=false />
-                                                    <@td>&nbsp;</@td>
-                                                    <@td>${cartLine.getReservPersons()?string.number}</@td>
-                                        <#else>
-                                                <@tr>
-                                                    <@td>--</@td>
-                                                    <@td>--</@td>
-                                                </@tr>
-                                                <@tr open=true close=false />
-                                                    <@td>--</@td>       
-                                        </#if>
-                                                    <@td>${cartLine.getQuantity()?string.number}</@td>
-                                                <@tr close=true open=false />
-                                      </@table>
+                                <#if fixedAssetExist == true && cartLine.getReservStart()??>
+                                  <#-- Cato: NOTE: stock bugfixes applied here -->
+                                  <@modal id="${cartLine.productId}_q" label="${cartLine.getQuantity()?string.number}">   
+                                    <@fields type="default-compact"> 
+                                      <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
+                                      <@field type="display" label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
+                                      <@field type="display" label=uiLabelMap.CommonPersons value=(cartLine.getReservPersons()?string.number) />
+                                      <@field type="display" label=uiLabelMap.CommonQuantity value=(cartLine.getQuantity()?string.number) />
+                                    </@fields>
                                   </@modal>                                                 
                                 <#else><#-- fixedAssetExist -->
                                     ${cartLine.getQuantity()?string.number}
                                 </#if>
                             <#else><#-- Is Promo or Shoppinglist -->
-                               <#if fixedAssetExist == true>
-                                    <@table type="fields">
+                                <#if fixedAssetExist == true>
+                                    <#-- Cato:FIXME?: can't put in modal easily because inputs end up outside form -->
                                     <#if cartLine.getReservStart()??>
-                                        <@tr>
-                                            <@td></@td>
-                                            <@td><input type="text" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}/></@td>
-                                            <@td><input type="text" size="2" name="reservLength_${cartLineIndex}" value="${cartLine.getReservLength()?string.number}"/></@td>
-                                        </@tr>
-                                        <@tr open=true close=false />
-                                            <@td></@td>
-                                            <@td>
-                                            <input type="text" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number} /> 
-                                            </@td>
+                                      <@fields type="default-compact"> 
+                                        <@field type="datetime" dateType="date" name="reservStart_${cartLineIndex}" maxlength=10 label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) 
+                                          postfix=false datePostfix=false/><#-- FIXME: not enough space for postfix right now -->
+                                        <@field type="input" name="reservLength_${cartLineIndex}"  label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
+                                        <@field type="input" name="reservPersons_${cartLineIndex}" label=uiLabelMap.CommonPersons value=(cartLine.getReservPersons()?string.number) />
+                                        <@field type="input" name="update_${cartLineIndex}" label=uiLabelMap.CommonQuantity value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
+                                      </@fields>
                                     <#else>
-                                        <@tr>
-                                            <@td>--</@td>
-                                            <@td>--</@td>
-                                        </@tr>
-                                        <@tr open=true close=false />
-                                            <@td>--</@td>
+                                      <@field type="input" widgetOnly=true name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
                                     </#if>
-                                        <@td>
-                                        <input type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
-                                        </@td>
-                                        <@tr close=true open=false />
-                                    </@table>
                                 <#else><#-- fixedAssetExist -->
                                     <@field type="select" widgetOnly=true name="update_${cartLineIndex}" onChange="javascript:this.form.submit();">
                                         <#list 1..99 as x>
-                                            <#if cartLine.getQuantity()==x>
+                                            <#if cartLine.getQuantity() == x>
                                                 <#assign selected = true/>
                                             <#else>
                                                 <#assign selected = false/>
@@ -263,14 +237,13 @@ function setAlternateGwp(field) {
                                     </@field>
                                 </#if>
                             </#if>
-                            </#compress>
                         </@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
-                            <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value="${cartLineIndex}" onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
-                        </@tr>
-                    </#list>
+                        <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value="${cartLineIndex}" onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
+                    </@tr>
+                </#list>
             <#--Cato: styling issues: 
             </@tbody>
             <@tfoot>-->
@@ -280,7 +253,6 @@ function setAlternateGwp(field) {
                         <@td>&nbsp;</@td>
                     </@tr>
 
-            
                     <@tr>
                         <@td colspan="5" class="${styles.text_right!}">
                             ${uiLabelMap.CommonSubTotal}
@@ -294,7 +266,7 @@ function setAlternateGwp(field) {
                 <#-- other adjustments -->
                 <#list shoppingCart.getAdjustments() as cartAdjustment>
                     <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true) />
-                    <@tr valign="top">
+                    <@tr>
                         <@td colspan="5" class="${styles.text_right!}">
                             <#--${uiLabelMap.OrderPromotion}: ${cartAdjustment.description!""}-->
                             ${adjustmentType.get("description", locale)!}: ${cartAdjustment.get("description", locale)!}
@@ -306,7 +278,7 @@ function setAlternateGwp(field) {
 
                 <#-- tax adjustments -->
                 <#if (shoppingCart.getDisplayTaxIncluded() > 0.0)>
-                  <@tr valign="top">
+                  <@tr>
                     <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
                     <@td nowrap="nowrap" class="${styles.text_right!}"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
                     <@td>&nbsp;</@td>
@@ -315,12 +287,12 @@ function setAlternateGwp(field) {
 
                 
                 <#-- grand total -->
-                <@tr valign="top">
+                <@tr>
                     <@td colspan="5"></@td>
                     <@td colspan="1"><hr /></@td>
                     <@td>&nbsp;</@td>
                 </@tr>
-                <@tr valign="top">
+                <@tr>
                     <@td colspan="5" class="${styles.text_right!}">
                         <strong>${uiLabelMap.CommonTotal}</strong>
                     </@td>

@@ -57,6 +57,8 @@ under the License.
             <li><a href="<@ofbizUrl>showcart</@ofbizUrl>">${uiLabelMap.PageTitleOrderShowCart}</a></li>
             <li><a href="<@ofbizUrl>checkoutoptionslogin</@ofbizUrl>">${uiLabelMap.OrderCheckout}</a></li>
             <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
+            <li><a href="<@ofbizUrl>emptycart</@ofbizUrl>">${uiLabelMap.EcommerceEmptyCart}</a></li>
+
         </ul>
       </#if>
     </a>

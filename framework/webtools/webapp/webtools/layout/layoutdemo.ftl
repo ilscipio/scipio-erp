@@ -579,6 +579,7 @@
     <@fields type="default"> <#-- see styles.fields_default_xxx. note: @fields currently optional for type="default"-->
       <@field type="input" name="input1" label="Input 1" />
       <@field type="input" name="input2" label="Input 2" postfix=true />
+      <@field type="input" name="input2b" label="Input 2b" postfix=true postfixColumns=2/>
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
       <@field type="input" name="input3nolabel" />

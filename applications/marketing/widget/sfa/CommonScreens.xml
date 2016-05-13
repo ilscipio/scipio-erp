@@ -64,6 +64,84 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="CommonMarketingDecorator">
+        <section>
+            <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
+                <set field="activeMainMenuItem" value="MarketingCampaign"/>
+                <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                                    <!-- <not><if-empty field="marketingCampaignId"/></not> -->
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-menu location="component://marketing/widget/sfa/SfaMenus.xml" name="SfaAppSideBar"/>
+                                <!-- <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/> -->
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="MARKETING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonPromoDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="Promotions"/>                
+                <set field="showMainExtendedBar" type="Boolean" value="true" />                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
+                    <!-- Cato: delegator to main-decorator -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                       <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                    </decorator-section>                   
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="MARKETING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="main">
         <section>

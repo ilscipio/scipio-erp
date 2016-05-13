@@ -21,7 +21,52 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-   
+   <screen name="CommonMarketingCampaignDecorator">
+        <section>
+            <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
+                <set field="activeMainMenuItem" value="MarketingCampaign"/>
+                <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                                    <!-- <not><if-empty field="marketingCampaignId"/></not> -->
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-menu location="component://marketing/widget/sfa/SfaMenus.xml" name="SfaAppSideBar"/>
+                                <!-- <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/> -->
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="MARKETING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="EditMarketingCampaign">
         <section>
@@ -32,7 +77,7 @@ under the License.
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonMarketingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonMarketingCampaignDecorator">
                     <decorator-section name="body">                        
                         <section>
                             <condition>
@@ -57,7 +102,7 @@ under the License.
                 <set field="showActionButtons" value="Y" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonMarketingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonMarketingCampaignDecorator">
                     <decorator-section name="body">
                         <section>
                             <condition>

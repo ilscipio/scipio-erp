@@ -931,16 +931,17 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               TODO?: DEV NOTE: this should probably be separate from tooltip in the end...
     name                    = Field name
     value                   = Field value
-    totalColumns            = ((int)) Total number of columns spanned by the outer container, including label area, widget and postfix
-    widgetPostfixColumns    = ((int)) Number of grid columns to use as size for widget + postfix area (combined)
+    gridArgs                = ((map)) Grid size and configuration arguments roughly equivalent to #getDefaultFieldGridStyles arguments
+    widgetPostfixCombined   = ((boolean), default: -markup decision, usually true-) CONVENIENCE alias for {{{gridArgs.widgetPostfixCombined}}} - Overridable setting to force or prevent widget and postfix having their own sub-container
+                              It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
+                              the default is usually true unless prevented by other settings.
+    totalColumns            = ((int)) CONVENIENCE alias for {{{gridArgs.totalColumns}}} - Total number of columns spanned by the outer container, including label area, widget and postfix
+    widgetPostfixColumns    = ((int)) CONVENIENCE alias for {{{gridArgs.widgetPostfixColumns}}} - Number of grid columns to use as size for widget + postfix area (combined)
                               If totalColumns is kept the same, any space removed from this value is given to the label area,
                               and any space added is removed from the label area, also depending on the configuration of the label area.
                               DEV NOTE: This value now includes the postfix area because it is usually easier
                                   to use this way given that the widget + postfix configuration is variable.
-    widgetPostfixCombined   = ((boolean), default: -markup decision, usually true-) Overridable setting to force or prevent widget and postfix having their own sub-container
-                              It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
-                              the default is usually true unless prevented by other settings.
-    labelSmallDiffColumns   = ((int), fallback default: 1) Difference between large and small columns of the label area (added to label area columns for "small" container)
+    labelSmallDiffColumns   = ((int), fallback default: 1) CONVENIENCE alias for {{{gridArgs.labelSmallDiffColumns}}} - Difference between large and small columns of the label area (added to label area columns for "small" container)
                               By default, this setting is set to 1 so that on small screens the label area gets a slightly larger size.
                               Sometimes it is needed to set this to zero for custom markup.
     class                   = ((css-class)) CSS classes for the field element (NOT the cell container!)
@@ -1243,7 +1244,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "labelSmallDiffColumns":"",
-  "tooltip":"", "totalColumns":"", "widgetPostfixColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "widgetOnly":"", "containerId":"", "containerClass":"", "containerStyle":"",
+  "tooltip":"", "gridArgs":{}, "totalColumns":"", "widgetPostfixColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "widgetOnly":"", "containerId":"", "containerClass":"", "containerStyle":"",
   "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixColumns":"", "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
   "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "labelAreaConsume":"", "inlineLabelArea":"", "inlineLabel":false,
   "description":"",
@@ -1610,7 +1611,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
       
-  <@field_markup_container type=type fieldsType=fieldsType totalColumns=totalColumns widgetPostfixColumns=widgetPostfixColumns widgetPostfixCombined=widgetPostfixCombined postfix=postfix postfixColumns=postfixColumns 
+  <#local defaultGridArgs = {"totalColumns":totalColumns, "widgetPostfixColumns":widgetPostfixColumns, 
+    "widgetPostfixCombined":widgetPostfixCombined, "labelArea":useLabelArea, 
+    "labelInRow":(effLabelType != "vertical"), "postfix":postfix, "postfixColumns":postfixColumns,
+    "fieldsType":fieldsType, "labelSmallDiffColumns":labelSmallDiffColumns}>
+      
+  <@field_markup_container type=type fieldsType=fieldsType defaultGridArgs=defaultGridArgs gridArgs=gridArgs postfix=postfix  
     postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent 
     collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass containerStyle=containerStyle
     preWidgetContent=preWidgetContent postWidgetContent=postWidgetContent preLabelContent=preLabelContent postLabelContent=postLabelContent prePostfixContent=prePostfixContent postPostfixContent=postPostfixContent
@@ -1960,8 +1966,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 <#-- @field container markup - theme override 
     nested content is the actual field widget (<input>, <select>, etc.). 
     WARN: origArgs may be empty -->
-<#macro field_markup_container type="" fieldsType="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" 
-    postfix=false postfixColumns=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" 
+<#macro field_markup_container type="" fieldsType="" defaultGridArgs={} gridArgs={} 
+    postfix=false postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" 
     collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" containerStyle=""
     preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
     labelAreaContentArgs={} postfixContentArgs={} prePostContentArgs={}
@@ -1971,7 +1977,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 
   <#local labelInRow = (labelType != "vertical")>
   
-  <#if !widgetPostfixCombined?has_content>
+  <#local widgetPostfixCombined = gridArgs.widgetPostfixCombined!defaultGridArgs.widgetPostfixCombined!"">
+  <#if !widgetPostfixCombined?is_boolean>
     <#-- We may have collapse==false but collapsePostfix==true, in which case
         we may want to collapse the postfix without collapsing the entire thing. 
         Handle this by making a combined sub-row if needed.
@@ -1986,10 +1993,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 
   <#-- This is separated because some templates need access to the grid sizes to align things, and they
       can't be calculated statically in the styles hash -->
-  <#local defaultGridStyles = getDefaultFieldGridStyles({"totalColumns":totalColumns, "widgetPostfixColumns":widgetPostfixColumns, 
-    "widgetPostfixCombined":widgetPostfixCombined, "labelArea":labelArea, 
-    "labelInRow":labelInRow, "postfix":postfix, "postfixColumns":postfixColumns,
-    "fieldsType":fieldsType, "labelSmallDiffColumns":labelSmallDiffColumns})>
+  <#local defaultGridStyles = getDefaultFieldGridStyles(defaultGridArgs + {"labelInRow": labelInRow,
+    "widgetPostfixCombined":widgetPostfixCombined} + gridArgs)>
   <#-- NOTE: For inverted, we don't swap the defaultGridStyles grid classes, only the user-supplied and identifying ones -->
 
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>

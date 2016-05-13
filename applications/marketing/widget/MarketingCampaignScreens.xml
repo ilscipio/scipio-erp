@@ -100,6 +100,7 @@ under the License.
                 <set field="entityName" value="MarketingCampaign" />
                 <set field="activeSubMenuItem" value="Marketing"/>
                 <set field="title" value="${uiLabelMap.MarketingCampaign} ${marketingCampaignId}" />
+                <set field="showActionButtons" value="Y" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonMarketingCampaignDecorator">
@@ -138,8 +139,7 @@ under the License.
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/campaign/FindMarketingCampaign.groovy"/>
             </actions>
             <widgets>         
-                <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/MarketingCampaingList.ftl"/></html></platform-specific>        		
-				<!-- <include-form name="ListMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" /> -->				
+                <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/MarketingCampaingList.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

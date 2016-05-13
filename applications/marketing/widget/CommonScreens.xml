@@ -152,6 +152,7 @@ under the License.
             <actions>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
                 <set field="entityName" value="MarketingCampaign" />
+                <set field="showActionButtons" value="N" />
             </actions>
             <widgets>
                 <section>
@@ -161,8 +162,8 @@ under the License.
                         </not>
                     </condition>
                     <widgets>
-                        <screenlet title="${uiLabelMap.PageTitleListMarketingCampaign}">
-                            <include-form name="ListMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" />
+                        <screenlet title="${uiLabelMap.PageTitleListMarketingCampaign}">                            
+                            <include-screen name="MarketingCampaignSearchResults" location="component://marketing/widget/MarketingCampaignScreens.xml"/>
                         </screenlet>
                     </widgets>
                 </section>                        

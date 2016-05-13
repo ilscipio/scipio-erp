@@ -11,7 +11,9 @@
                         <@th>${uiLabelMap.MarketingCampaignName}</@th>
                         <@th>${uiLabelMap.MarketingParentCampaignId}</@th>                       
                         <@th>${uiLabelMap.CommonStatus}</@th>
-                        <@th>${uiLabelMap.CommonDelete}</@th>
+                        <#if showActionButtons=="Y">
+                            <@th>${uiLabelMap.CommonDelete}</@th>
+                        </#if>
                     </@tr>
                 </@thead>
                 <#-- Header Ends-->
@@ -21,8 +23,10 @@
                         <@td><a href="<@ofbizUrl>EditMarketingCampaign?marketingCampaignId=${marketingCampaign.marketingCampaignId}</@ofbizUrl>">${marketingCampaign.marketingCampaignId}</a></@td>
                         <@td>${marketingCampaign.campaignName!}</@td>
                         <@td>${marketingCampaign.parentCampaignId!}</@td>                                                 
-                        <@td>${status.description}</@td>                        
-                        <@td><a href="javascript:document.deleteMarketingCampaign_${marketingCampaign_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
+                        <@td>${status.description}</@td> 
+                        <#if showActionButtons=="Y">                     
+                            <@td><a href="javascript:document.deleteMarketingCampaign_${marketingCampaign_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
+                        </#if>
                     </@tr>
                 </#list>
             </@table>    

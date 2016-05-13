@@ -31778,4 +31778,9 @@
     <property key="ProductReceiveInventoryItems">
         <value xml:lang="en">Receive Inventory</value>
     </property>
+    <!--  Cato: TODO: Localize -->
+    <property key="ProductRooms">
+        <value xml:lang="de">Zimmer</value>
+        <value xml:lang="en">Rooms</value>
+    </property>
 </resource>

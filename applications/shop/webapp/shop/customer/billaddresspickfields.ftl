@@ -24,11 +24,15 @@ under the License.
   <#assign bapfParams = parameters>
 </#if>
 
-<#-- NOTE: This is a map that itself may contain fieldArgs map 
+<#-- NOTE: You can override the look of the new address (postal code, country, etc.) fields 
+    specifically using this map, which is args to @fields (see checkoutpayment.ftl for example)
+    This is a map that itself may contain fieldArgs map 
     This is where the Cato macro arg map support unleashes its power! -->
 <#assign newAddressFieldsWrapperArgs = bapfNewAddressFieldsWrapperArgs!{
-    "type":"default", "ignoreParentField":true
-    }>
+    "type":"default", "ignoreParentField":true,
+    "fieldArgs": {
+    }
+}>
 
 
 <#if useScripts && useNewAddr && newAddrInline && 

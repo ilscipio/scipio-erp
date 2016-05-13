@@ -785,12 +785,14 @@ public class GiftCertificateServices {
                     .orderBy("-responseDate").queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
+            // Cato: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingGiftCerticateNumberCannotFulfill", locale));
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
         if (surveyResponse == null) {
+         // Cato: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingGiftCerticateNumberCannotFulfill", locale));
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
 
         // get the response answers

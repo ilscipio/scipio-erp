@@ -175,6 +175,41 @@ jQuery(document).ready(function(){
       <#-- return nothing otherwise -->
     </#function>
 
+
+    <#macro payMethInfoPanel title updateAction="">
+      <#-- Cato: Every non-new may meth option gets a panel, for consistency
+          because the "new" pay meths show their fields below the title, currently
+          doing the same for panel, though not sure about look
+      <@row>
+        <@cell columns=2>
+          <@heading>${title}</@heading>
+        </@cell>
+        <@cell columns=10>
+      -->
+        <@heading>${title}</@heading>
+        <@row>
+          <@cell small=6>
+        
+          <div class="pay-meth-info-panel-container">
+            <#assign bottomContent = false>
+            <#if updateAction?has_content>
+              <#assign bottomContent>
+                <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), '${updateAction}', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!} panel-update-link">${uiLabelMap.CommonUpdate}</a>
+              </#assign>
+            </#if>
+            <@panel bottomContent=bottomContent class="+pay-meth-info-panel">
+              <#nested>
+            </@panel>
+          </div>
+          </@cell>
+        </@row>
+      <#--
+        </@cell>
+      </@row>
+      -->
+      <#--<br/>-->
+    </#macro>
+
     <#macro payMethAmountField type="pay-meth" payMethId="" params=true id=true name=true>
       <#if params?is_boolean>
         <#local params = parameters>
@@ -228,39 +263,6 @@ jQuery(document).ready(function(){
       <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="${id}" name="${name}" value=fieldValue 
         tooltip=realCurPayAmountFullStr postfix=true collapsePostfix=false postfixColumns=9 postfixContent=postfixContent />  
     </#macro>
-
-    <#macro payMethInfoPanel title updateAction="">
-      <#-- this currently looks strange, so just show one after the other for now
-      <@row>
-        <@cell columns=5>
-          <@heading>${title}</@heading>
-        </@cell>
-        <@cell columns=7>
-      -->
-      <@heading>${title}</@heading>
-        <@row>
-          <@cell small=5>
-        
-          <div class="pay-meth-info-panel-container">
-            <#assign bottomContent = false>
-            <#if updateAction?has_content>
-              <#assign bottomContent>
-                <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), '${updateAction}', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!} panel-update-link">${uiLabelMap.CommonUpdate}</a>
-              </#assign>
-            </#if>
-            <@panel bottomContent=bottomContent class="+pay-meth-info-panel">
-              <#nested>
-            </@panel>
-          </div>
-          </@cell>
-        </@row>
-      <#--
-        </@cell>
-      </@row>
-      -->
-      <#--<br/>-->
-    </#macro>
-
 
     <#-- Cato: Payment method content and markup.
         This pattern allows to avoid duplicating the control/loop/ordering logic and keeps the definitions for each pay method together so easier to follow alongside the original.
@@ -422,7 +424,8 @@ jQuery(document).ready(function(){
                 <#assign middleNameOnCard = person.middleName!>
                 <#assign lastNameOnCard = person.lastName!>
               </#if>
-              <@render resource="component://shop/widget/CustomerScreens.xml#creditCardFields" 
+              <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+                <@render resource="component://shop/widget/CustomerScreens.xml#creditCardFields" 
                   ctxVars={
                     "ccfFieldNamePrefix": "newCreditCard_",
                     "ccfFallbacks":{
@@ -433,6 +436,7 @@ jQuery(document).ready(function(){
                     },
                     "ccfParams":newCreditCardParams!parameters
                   }/>
+              </@fields>
               <@field type="generic" label=uiLabelMap.PartyBillingAddress>
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
                     ctxVars={
@@ -444,8 +448,16 @@ jQuery(document).ready(function(){
                         "bapfNewAddrContentId":"newcreditcard_newbilladdrcontent",
                         "bapfPickFieldClass":"new-cc-bill-addr-pick-radio",
                         "bapfNewAddrFieldId":"newcreditcard_newaddrradio",
-                        "bapfParams":newCreditCardParams!parameters
-                        }/>
+                        "bapfParams":newCreditCardParams!parameters,
+                        "bapfNewAddressFieldsWrapperArgs": {
+                            "type":"default",
+                            "ignoreParentField":true,
+                            "fieldArgs": {
+                                "totalColumns":8,
+                                "widgetPostfixColumns":6
+                            }
+                        }
+                    }/>
               </@field>
 
               <#if userHasAccount>
@@ -501,12 +513,14 @@ jQuery(document).ready(function(){
                 <#-- TODO: Unhardcode -->
                 <#assign nameOnAccount = "${person.firstName!} ${person.lastName!}">
               </#if>
-              <@render resource="component://shop/widget/CustomerScreens.xml#eftAccountFields" 
-                ctxVars={
+              <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
+                <@render resource="component://shop/widget/CustomerScreens.xml#eftAccountFields" 
+                  ctxVars={
                     "eafFieldNamePrefix": "newEftAccount_",
                     "eafFallbacks":{"nameOnAccount":nameOnAccount},
                     "eafParams":newEftAccountParams!parameters
                     } />
+              </@fields>
               <@field type="generic" label=uiLabelMap.PartyBillingAddress>
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
                     ctxVars={
@@ -518,8 +532,16 @@ jQuery(document).ready(function(){
                         "bapfNewAddrContentId":"neweftaccount_newbilladdrcontent",
                         "bapfPickFieldClass":"new-eft-bill-addr-pick-radio",
                         "bapfNewAddrFieldId":"neweftaccount_newaddrradio",
-                        "bapfParams":newEftAccountParams!parameters
-                        }/>
+                        "bapfParams":newEftAccountParams!parameters,
+                        "bapfNewAddressFieldsWrapperArgs": {
+                            "type":"default",
+                            "ignoreParentField":true,
+                            "fieldArgs": {
+                                "totalColumns":8,
+                                "widgetPostfixColumns":6
+                            }
+                        }
+                    }/>
               </@field>
 
               <#if userHasAccount>
@@ -628,7 +650,7 @@ jQuery(document).ready(function(){
           </#if>
           <#if showDetails && showSupplemental>
             <@section containerId="content__NEW_GIFT_CARD_${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
-              
+            <@fields type="inherit-all" fieldArgs={"totalColumns":8, "widgetPostfixColumns":6}>
               <@field type="input" size="15" id="giftCardNumber${primSupplSuffix}" name="giftCardNumber" value=((newGiftCardParams.giftCardNumber)!) label=uiLabelMap.AccountingNumber
                 tooltip="DemoCustomer: test: 123412341234 or 432143214321"/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               <#if cart.isPinRequiredForGC(delegator)>
@@ -643,6 +665,7 @@ jQuery(document).ready(function(){
                     value="Y" checked=((singleUseGiftCard!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUseGiftCard" name="singleUseGiftCard" value="N" />
               </#if>
+            </@fields>
 
               <@payMethAmountField type="new-pay-meth" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" params=newGiftCardParams/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
             </@section>

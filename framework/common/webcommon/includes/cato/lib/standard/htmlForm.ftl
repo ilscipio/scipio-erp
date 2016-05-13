@@ -2148,6 +2148,9 @@ Caller may override any.
 
 NOTE: This is used both internally by @field and in some cases is also needed in templates.
                     
+TODO: This (and @field args) do not currently provide enough control over large vs small,
+    and medium is omitted entirely.
+                    
   * Parameters *
     fieldsType              = ((string), default: default) The @fields type
                               Used for calculating the defaults of some of the other parameters.
@@ -2226,9 +2229,26 @@ NOTE: This is used both internally by @field and in some cases is also needed in
     <#local columnslabelarea = totalColumns>
   </#if>
 
-  <#local labelAreaClass><#if labelArea>${styles.grid_small!}<#if labelInRow>${columnslabelarea + labelSmallDiffColumns}<#else>${columnslabelarea}</#if><#if isLargeParent> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
-  <#local widgetPostfixAreaClass><#if labelArea && labelInRow>${styles.grid_small!}${widgetPostfixColumns - labelSmallDiffColumns}<#else>${styles.grid_small!}${widgetPostfixColumns}</#if><#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
-  <#local widgetAreaClass><#if labelArea && labelInRow && !widgetPostfixCombined>${styles.grid_small!}${columnswidget - labelSmallDiffColumns}<#else>${styles.grid_small!}${columnswidget}</#if><#if isLargeParent> ${styles.grid_large!}${columnswidget}</#if></#local>
+  <#-- adjust for small -->
+  <#if labelInRow>
+    <#local labelsmall = columnslabelarea + labelSmallDiffColumns>
+  <#else>
+    <#local labelsmall = columnslabelarea>
+  </#if>
+  <#if labelArea && labelInRow>
+    <#local wpsmall = widgetPostfixColumns - labelSmallDiffColumns>
+  <#else>
+    <#local wpsmall = widgetPostfixColumns>
+  </#if>
+  <#if labelArea && labelInRow && !widgetPostfixCombined>
+    <#local widgetsmall = columnswidget - labelSmallDiffColumns>
+  <#else>
+    <#local widgetsmall = columnswidget>
+  </#if>
+
+  <#local labelAreaClass><#if labelArea>${styles.grid_small!}${labelsmall}<#if isLargeParent> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
+  <#local widgetPostfixAreaClass>${styles.grid_small!}${wpsmall}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
+  <#local widgetAreaClass>${styles.grid_small!}${widgetsmall}<#if isLargeParent> ${styles.grid_large!}${columnswidget}</#if></#local>
   <#local postfixAreaClass><#if postfix>${styles.grid_small!}${columnspostfix}<#if isLargeParent> ${styles.grid_large!}${columnspostfix}</#if></#if></#local>
   
   <#-- This is last if in separate row -->

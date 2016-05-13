@@ -2164,9 +2164,9 @@ TODO: This (and @field args) do not currently provide enough control over large 
     widgetPostfixColumns    = ((int), default: -from global styles-) The columns size of widget and postfix combined (regardless of {{{widgetPostfixCombined}}}).         
 -->
 <#assign getDefaultFieldGridStyles_defaultArgs = {
-  "totalColumns":"", "widgetPostfixColumns":"", "labelArea":true, "labelInRow":true,
-  "postfix":false, "postfixColumns":"", "isLargeParent":"", "labelSmallDiffColumns":"",
-  "widgetPostfixCombined":false, "fieldsType":""
+  "totalColumns":"", "widgetPostfixColumns":"", "labelArea":"", "labelInRow":"",
+  "postfix":"", "postfixColumns":"", "isLargeParent":"", "labelSmallDiffColumns":"",
+  "widgetPostfixCombined":"", "fieldsType":""
 }>
 <#function getDefaultFieldGridStyles args={} catchArgs...>
   <#local args = mergeArgMapsBasic(args, {}, catoStdTmplLib.getDefaultFieldGridStyles_defaultArgs)>
@@ -2174,6 +2174,19 @@ TODO: This (and @field args) do not currently provide enough control over large 
   
   <#if !fieldsType?has_content>
     <#local fieldsType = "default">
+  </#if>
+
+  <#if !postfix?is_boolean>
+    <#local postfix = false>
+  </#if>
+  <#if !labelArea?is_boolean>
+    <#local labelArea = true>
+  </#if>
+  <#if !labelInRow?is_boolean>
+    <#local labelInRow = true>
+  </#if>
+  <#if !widgetPostfixCombined?is_boolean>
+    <#local widgetPostfixCombined = false>
   </#if>
   
   <#-- TODO?: All these value lookups don't really have to happen per-field, should optimize to cache results so less map lookups -->

@@ -18,6 +18,9 @@
 ************
 Creates a modal UI element.
 
+FIXME: Needs parameter to control injection and location of hidden modal content so can inject
+    within forms
+
   * Usage Examples *  
     <@modal id="dsadsa" attr="" >
         Modal Content 

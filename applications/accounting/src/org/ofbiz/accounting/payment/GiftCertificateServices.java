@@ -790,7 +790,7 @@ public class GiftCertificateServices {
                     "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
         if (surveyResponse == null) {
-         // Cato: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
+            // Cato: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }

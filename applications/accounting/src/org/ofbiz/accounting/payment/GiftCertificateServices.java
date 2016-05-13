@@ -1019,8 +1019,9 @@ public class GiftCertificateServices {
                     .orderBy("-responseDate").queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
+            // Cato: confusing error message: "AccountingGiftCerticateNumberCannotReload"
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
-                    "AccountingGiftCerticateNumberCannotReload", locale));
+                    "AccountingGiftCerticateNumberCannotReloadFromSurveyAnswers", locale));
         }
 
         // get the response answers

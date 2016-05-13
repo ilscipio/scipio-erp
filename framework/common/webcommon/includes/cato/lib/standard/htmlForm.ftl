@@ -1079,6 +1079,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               If dateType is "date-time" (timestamp), it is possible to specify dateDisplayType="date" here.
                               This means the user will be presented with a short date only, but the data sent to the server
                               will be a full timestamp.
+    datePostfix             = ((boolean), default: true) Override for date-widget-specific postfix
     title                   = Title
                               If empty, markup/theme decides what to show.
                               Can also be a special value in format {{{"#PROP:resource#propname"}}} (if no {{{resource}}}, taken from CommonUiLabels).
@@ -1255,7 +1256,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
   "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{}, "style":"",
   "widgetAreaClass":"", "labelAreaClass":"", "postfixAreaClass":"", "widgetPostfixAreaClass":"",
-  "inverted":false, "invertedClass":"", "standardClass":"",
+  "inverted":false, "invertedClass":"", "standardClass":"", "datePostfix":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1674,6 +1675,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               formName=formName
                               tooltip=tooltip
                               origLabel=origLabel
+                              postfix=datePostfix
                               inlineLabel=effInlineLabel
                               passArgs=passArgs/>                
         <#break>

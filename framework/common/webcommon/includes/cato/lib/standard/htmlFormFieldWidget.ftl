@@ -186,7 +186,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   "timeDropdownParamName":"", "defaultDateTimeString":"", "localizedIconTitle":"", "timeDropdown":"", "timeHourName":"", 
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":"", "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
-  "collapse":false, "fieldTitleBlank":false, "origLabel":"", "inlineLabel":false, "passArgs":{}
+  "collapse":false, "fieldTitleBlank":false, "origLabel":"", "postfix":"", "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_datetime_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datetime_widget_defaultArgs)>
@@ -206,14 +206,14 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <@field_datetime_markup_widget name=name class=class style=style title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
-    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
+    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel postfix=postfix origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datetime_markup_widget name="" class="" style="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" events={} step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
@@ -232,8 +232,11 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local inputName = "${name?html}">
   </#if>
   <#local attribs = {}>
+  <#if !postfix?is_boolean>
+    <#local postfix = true>
+  </#if>
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
-    <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
+    <div class="${styles.grid_small!}<#if postfix>11<#else>12</#if> ${styles.grid_cell!}">
       <#if tooltip?has_content> 
         <#local class = addClassArg(class, styles.field_datetime_tooltip!styles.field_default_tooltip!"")>
         <#-- tooltip supplants title -->
@@ -278,9 +281,11 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if displayInputId?has_content> id="${displayInputId}"</#if> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${inputName}"</#if><#if inputId?has_content> id="${inputId}"</#if><#if value?has_content> value="${value}"</#if> />
     </div>
+  <#if postfix>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
       <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
     </div>
+  </#if>
   </div>
   <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
 </#macro>

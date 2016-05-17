@@ -18,11 +18,10 @@ under the License.
 -->
 <#include "catalogcommon.ftl">
 
-<#-- CATO: FIXME: Configuration tab is too low key and probably temporary while fix the rest 
-    Belongs more with right panel, but it doesnt fit
--->
-
-
+<#-- CATO: TODO: reorganize the code sharing with productdetail, very similar -->
+<#-- CATO: TODO: does not currently support virtual config products (none in demo data) (only supports virtual options) -->
+<#-- CATO: TODO: Rewrite virtual product support/JS and add fields-->
+<#-- CATO: NOTE: This template is tied into inlineProductDetail.ftl -->
 
 <#-- variable setup -->
 <#assign productContentWrapper = productContentWrapper!>
@@ -30,6 +29,9 @@ under the License.
 <#-- end variable setup -->
 
 <#-- virtual product javascript -->
+<#-- CATO: TODO: rewrite virtual JS
+    NOTE: there is no virtual config product in demo data, but options can be virtual and 
+    do they interact with this?? -->
 ${virtualJavaScript!}
 <@script>
      function setAddProductId(name) {
@@ -43,6 +45,8 @@ ${virtualJavaScript!}
      }
      function isVirtual(product) {
         var isVirtual = false;
+        <#-- CATO: TODO: Support for virtual products 
+            Leave here until has replacement -->
         <#if virtualJavaScript??>
         for (i = 0; i < VIR.length; i++) {
             if (VIR[i] == product) {
@@ -64,11 +68,11 @@ ${virtualJavaScript!}
 
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
-            changeObjectVisibility("add_amount", "visible");
+            jQuery("#add_amount_container").show();
         }
 
         if (toggle == 'N') {
-            changeObjectVisibility("add_amount", "hidden");
+            jQuery("#add_amount_container").hide();
         }
     }
 
@@ -124,18 +128,30 @@ ${virtualJavaScript!}
     });
     
     function getConfigDetails(event) {
-            jQuery.ajax({
-                url: '<@ofbizUrl>getConfigDetailsEvent</@ofbizUrl>',
-                type: 'POST',
-                data: jQuery('#configFormId').serialize(),
-                success: function(data) {
-                      var totalPrice = data.totalPrice;
-                      var configId = data.configId;
-                      document.getElementById('totalPrice').innerHTML = totalPrice;
-                      document.addToShoppingList.configId.value = configId;
-                      event.stop();
-                }
-            });
+        jQuery.ajax({
+            url: '<@ofbizUrl>getConfigDetailsEvent</@ofbizUrl>',
+            type: 'POST',
+            data: jQuery('#configFormId').serialize(),
+            success: function(data) {
+                var totalPrice = data.totalPrice;
+                var configId = data.configId;
+                document.getElementById('totalPrice').innerHTML = totalPrice;
+                <#-- CATO: not yet support
+                document.addToShoppingList.configId.value = configId;
+                -->
+                <#-- CATO: this is invalid
+                event.stop();-->
+                <#-- CATO: put it here too -->
+                baseCurrentPrice = totalPrice;
+                event.preventDefault();
+            },
+            error: function(data) {
+                <#-- FIXME: better message -->
+                alert("${uiLabelMap.CommonError?js_string}");
+                <#-- CATO: prevent connection fail causing weirdness -->
+                event.preventDefault();
+            }
+        });
     }
 
 </@script>
@@ -145,40 +161,40 @@ ${virtualJavaScript!}
 <#macro productConfigurator>
   <#-- Product Configurator -->
   <#-- CATO: FIXME: view switching bad -->
+  <div class="product-configurator">
   <form name="configform" id="configFormId" method="post" action="<@ofbizUrl>product<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
     <input type="hidden" name="add_product_id" value="${product.productId}" />
     <input type="hidden" name="add_category_id" value="" />
     <input type="hidden" name="quantity" value="1" />
 
     <input type="hidden" name="product_id" value="${product.productId}" />
-      
-      <@menu type="button">
-        <@menuitem type="link" href="javascript:verifyConfig();" class="+${styles.action_run_sys!} ${styles.action_verify!}" text=uiLabelMap.OrderVerifyConfiguration />
-      </@menu>
 
       <#-- CATO: TODO: Preselection using parameters map -->
 
       <#assign counter = 0>
       <#assign questions = configwrapper.questions>
       <#list questions as question>
-        <@section>
+        <@section containerClass="+product-config-question">
         <@row>
           <@cell small=4>
-              <div>${question.question!""}</div>
+              <div><label>${question.question!""}</label></div>
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 <div>${question.description!}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!?string>
                 <#if instructions?has_content>
-                  <#-- CATO: FIXME:dont understand why this is an "error" message -->
-                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a>
+                  <#-- CATO: dont understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
+                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a> -->
+                  <@modal label=uiLabelMap.OrderInstructions><p>${instructions}</p></@modal>
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!?string>
                 <#if image?has_content>
                   <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
                 </#if>
               <#else>
-                <div><a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav_inline!} ${styles.action_view!}">Details</a></div>
+                <#-- CATO: FIXME?: this does nothing in ecommerce
+                <div><a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav_inline!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></div>
+                -->
               </#if>
           </@cell>
           <@cell small=8>
@@ -187,7 +203,7 @@ ${virtualJavaScript!}
               <#-- Standard item: all the options are always included -->
               <#assign options = question.options>
               <#list options as option>
-                <div>${option.description!}<#if !option.isAvailable()> (*)</#if></div>
+                <div><label>${option.description!}<#if !option.isAvailable()> (*)</#if></label></div>
               </#list>
             <#else>
               <#if question.isSingleChoice()>
@@ -215,17 +231,25 @@ ${virtualJavaScript!}
                         <#-- Render virtual compoennts -->
                         <#if option.hasVirtualComponent()>
                           <div>
-                            <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
+                          <#assign inlineCounter = counter+ "_" +optionCounter + "_"+componentCounter>
+                            <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if> <span id="variant_price_display${inlineCounter}"> </span></#assign>
                             <@field type="radio" name="${counter}" id="${counter}_${optionCounter}" value=optionCounter?string
                                 onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
                             
+                          <@fields type="default">
                             <#assign components = option.getComponents()>
                             <#list components as component>
                               <#if (option.isVirtualComponent(component))>
-                                <@render resource=inlineProductDetailScreen reqAttribs={"inlineProductId":component.productId, "inlineCounter":counter+ "_" +optionCounter + "_"+componentCounter, "addJavaScript":componentCounter}/>
+                                <@render resource=inlineProductDetailScreen reqAttribs={
+                                    "inlineProductId":component.productId, 
+                                    "inlineCounter":inlineCounter, 
+                                    "addJavaScript":componentCounter,
+                                    "ipdIncludePriceDisplay":false,
+                                    "ipdPlusMinusPriceDisplay":true } clearValues=true />
                                 <#assign componentCounter = componentCounter + 1>
                               </#if>
                             </#list>
+                          </@fields>
                           </div>
                         <#else>
                           <div>
@@ -250,7 +274,7 @@ ${virtualJavaScript!}
                         <#assign options = question.options>
                         <#assign optionCounter = 0>
                         <#list options as option>
-                          <#if showOffsetPrice?? && "Y" == showOffsetPrice>
+                          <#if "Y" == (showOffsetPrice!)>
                             <#assign shownPrice = option.price - selectedPrice>
                           <#else>
                             <#assign shownPrice = option.price>
@@ -258,7 +282,7 @@ ${virtualJavaScript!}
                           <#if option.isSelected()>
                             <#assign optionCounter = optionCounter + 1>
                           </#if>
-                          <option value="${optionCounter}" <#if option.isSelected()>selected="selected"</#if>>
+                          <option value="${optionCounter}"<#if option.isSelected()> selected="selected"</#if>>
                             ${option.description}&nbsp;
                             <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
                             <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
@@ -277,17 +301,25 @@ ${virtualJavaScript!}
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
                       <div>
-                        <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
+                      <#assign inlineCounter = counter+ "_" +optionCounter + "_"+componentCounter>
+                        <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if> <span id="variant_price_display${inlineCounter}"> </span></#assign>
                         <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter?string onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" 
                             label=fieldLabel />
 
+                     <@fields type="default">
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
-                            <@render resource=inlineProductDetailScreen reqAttribs={"inlineProductId":component.productId, "inlineCounter":counter+ "_" +optionCounter + "_"+componentCounter, "addJavaScript":componentCounter}/>
+                            <@render resource=inlineProductDetailScreen reqAttribs={
+                                "inlineProductId":component.productId, 
+                                "inlineCounter":inlineCounter, 
+                                "addJavaScript":componentCounter,
+                                "ipdIncludePriceDisplay":false,
+                                "ipdPlusMinusPriceDisplay":true } clearValues=true />
                             <#assign componentCounter = componentCounter + 1>
                           </#if>
                         </#list>
+                      </@fields>
                       </div>
                     <#else>
                     <div>
@@ -305,9 +337,19 @@ ${virtualJavaScript!}
         </@section>
         <#assign counter = counter + 1>
       </#list>
+
+    <#-- CATO: I don't think need this button... probably on a shop you want this to check automatically or on additem
+      <@menu type="button">
+        <@menuitem type="link" href="javascript:verifyConfig();" class="+${styles.action_run_sys!} ${styles.action_verify!}" text=uiLabelMap.OrderVerifyConfiguration />
+      </@menu>
+    -->
+
   </form>
+  </div>
 </#macro>
 
+
+<#-- MAIN PAGE -->
 
 <@section>
 
@@ -318,14 +360,17 @@ ${virtualJavaScript!}
         <@cell columns=4>
           <@panel>
             <div id="product-info"> 
-              <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
-              <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
-              <div><b>${product.productId!}</b></div>
+              <#assign hasDesc = productContentWrapper.get("DESCRIPTION","html")!?string?has_content>
+              <#if hasDesc><p></#if>
+                <#if hasDesc>${productContentWrapper.get("DESCRIPTION","html")!}</#if>
+              <#if hasDesc></p></#if>
+
               <#-- example of showing a certain type of feature with the product -->
+              <#-- Cato: not now
               <#if sizeProductFeatureAndAppls?has_content>
                 <div>
                   <#if (sizeProductFeatureAndAppls?size == 1)>
-                    <#-- TODO : i18n -->
+                    <#- TODO : i18n ->
                     ${uiLabelMap.CommonSize}:
                   <#else>
                     Sizes Available:
@@ -335,6 +380,7 @@ ${virtualJavaScript!}
                   </#list>
                 </div>
               </#if>
+              -->
         
               <#-- for prices:
                       - if totalPrice is present, use it (totalPrice is the price calculated from the parts)
@@ -343,52 +389,61 @@ ${virtualJavaScript!}
                       - if price < defaultPrice and defaultPrice < listPrice, show default
                       - if isSale show price with salePrice style and print "On Sale!"
               -->
-              <#if totalPrice??>
-                <div>${uiLabelMap.ProductAggregatedPrice}: <span id="totalPrice" class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
-              <#else>
-              <#if price.competitivePrice?? && price.price?? && price.price < price.competitivePrice>
-                <div>${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
-              </#if>
-              <#if price.listPrice?? && price.price?? && price.price < price.listPrice>
-                <div>${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
-              </#if>
-              <#if price.listPrice?? && price.defaultPrice?? && price.price?? && price.price < price.defaultPrice && price.defaultPrice < price.listPrice>
-                <div>${uiLabelMap.ProductRegularPrice}: <span class="basePrice"><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
-              </#if>
-              <div>
-        
-                  <#if price.isSale?? && price.isSale>
-                    <span class="salePrice">${uiLabelMap.OrderOnSale}!</span>
-                    <#assign priceStyle = "salePrice">
-                  <#else>
-                    <#assign priceStyle = "regularPrice">
-                  </#if>
-                    ${uiLabelMap.OrderYourPrice}: <#if "Y" == (product.isVirtual!)>from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
-        
-              </div>
-              <#if price.listPrice?? && price.price?? && price.price < price.listPrice>
-                <#assign priceSaved = price.listPrice - price.price>
-                <#assign percentSaved = (priceSaved / price.listPrice) * 100>
-                <div>${uiLabelMap.OrderSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span></div>
-              </#if>
-              </#if>
-        
-              <#-- Included quantities/pieces -->
-              <#if product.quantityIncluded?? && product.quantityIncluded != 0>
-                <div>${uiLabelMap.OrderIncludes}:
-                  ${product.quantityIncluded!}
-                  ${product.quantityUomId!}
-                </div>
-              </#if>
-              <#if product.piecesIncluded?? && product.piecesIncluded?long != 0>
-                <div>${uiLabelMap.OrderPieces}:
-                  ${product.piecesIncluded}
-                </div>
-              </#if>
-              <#if daysToShip??>
-                <div>${uiLabelMap.ProductUsuallyShipsIn} ${daysToShip} ${uiLabelMap.CommonDays}</div>
-              </#if>
-        
+              <#-- CATO: make sure to use totalPrice first for config products, ignore defaultPrice -->
+                
+                <#if price.listPrice?has_content>
+                    <#assign oldPrice = price.listPrice/>
+                <#elseif !totalPrice?has_content && price.defaultPrice?has_content>
+                    <#assign oldPrice = price.defaultPrice/>
+                </#if>
+
+                <#if totalPrice?has_content>
+                    <#assign currentPrice = totalPrice>
+                <#elseif price.price?has_content>
+                    <#assign currentPrice = price.price/>
+                <#else>
+                    <#assign currentPrice = oldPrice/>
+                </#if>
+
+                <#-- CATO: Uncomment to mark a product that is on sale
+                <#if price.isSale?? && price.isSale>
+                    <p>${uiLabelMap.OrderOnSale}!</p>
+                </#if>-->
+                
+                <p>
+                <#-- Only show the "old" price if the current price is lower (otherwise, bad advertisement) -->
+                <#if oldPrice?has_content && currentPrice?has_content && (oldPrice?double > currentPrice?double)>
+                    <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
+                </#if>
+                 
+                <#if currentPrice?has_content>
+                    <span id="product-price"><strong><span id="totalPrice"><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></span></strong></span>
+                </#if>
+                    <@script>
+                        var baseCurrentPrice = "${currentPrice}";
+                    </@script>
+                </p>
+                
+                <#-- CATO: Uncomment to display how much a user is saving by buying this product
+                <#if price.listPrice?? && price.price?? && (price.price < price.listPrice)>
+                    <span id="product-saved"><sup>
+                        <#assign priceSaved = oldPrice - currentPrice />
+                        <#assign percentSaved = (priceSaved / oldPrice) * 100 />
+                        ${uiLabelMap.OrderSave}: <@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed /> (${percentSaved?int}%)
+                        </sup>
+                    </span>
+                </#if>
+                -->
+
+                <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
+                <#if (showPriceDetails?? && (showPriceDetails!"N") == "Y")>
+                    <#if price.orderItemPriceInfos??>
+                        <#list price.orderItemPriceInfos as orderItemPriceInfo>
+                            <p>${orderItemPriceInfo.description!}</p>
+                        </#list>
+                    </#if>
+                </#if>
+
               <#-- show tell a friend details only in shop application -->
               <#-- CATO: not yet supported
               <div>&nbsp;</div>
@@ -396,37 +451,37 @@ ${virtualJavaScript!}
                 <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="${styles.link_nav!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>
               </div>
               -->
-        
-              <#if disFeatureList?? && 0 < disFeatureList.size()>
-                <p>&nbsp;</p>
-                <#list disFeatureList as currentFeature>
-                    <div>
-                        ${currentFeature.productFeatureTypeId}:&nbsp;${currentFeature.description}
-                    </div>
-                </#list>
-                    <div>&nbsp;</div>
-              </#if>
             </div>
             
             <div id="product-add-cart">
-              <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform">
+            <#macro amountField>
+                <#local fieldStyle = "">
+                <#if (product.requireAmount!"N") != "Y">
+                    <#-- Cato: Issues with css
+                    <#assign hiddenStyle = styles.hidden!/>-->
+                    <#local fieldStyle = "display: none;">
+                </#if>
+                <@field type="input" size="5" name="add_amount" id="add_amount" containerStyle=fieldStyle value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
+            </#macro>
+
+              <#-- CATO: don't need ugly view-switch: <#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if> -->
+              <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform">
                 <#assign inStock = true>
                 <#-- Variant Selection -->
-                <#if product.isVirtual?? && product.isVirtual?upper_case == "Y">
-                  <#if variantTree?? && 0 < variantTree.size()>
+                <#if (product.isVirtual!?upper_case) == "Y">
+                  <#-- Cato: TODO: support for virtual products -->
+                  <#if variantTree?? && (0 < variantTree.size())>
                     <#list featureSet as currentType>
-                      <div>
-                        <select name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
-                          <option>${featureTypes.get(currentType)}</option>
-                        </select>
-                      </div>
+                      <@field type="select" name="FT${currentType}" onChange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
+                        <option>${featureTypes.get(currentType)}</option>
+                      </@field>
                     </#list>
                     <input type="hidden" name="product_id" value="${product.productId}" />
                     <input type="hidden" name="add_product_id" value="NULL" />
                   <#else>
                     <input type="hidden" name="product_id" value="${product.productId}" />
                     <input type="hidden" name="add_product_id" value="NULL" />
-                    <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+                    <div>${uiLabelMap.ProductItemOutOfStock}.</div>
                     <#assign inStock = false>
                   </#if>
                 <#else>
@@ -435,24 +490,14 @@ ${virtualJavaScript!}
                   <#if productNotAvailable??>
                     <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
                     <#if isStoreInventoryRequired>
-                      <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+                      <div>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage?has_content>&mdash; ${product.inventoryMessage}</#if></div>
                       <#assign inStock = false>
                     <#else>
-                      <div class="tabletext"><b>${product.inventoryMessage!}</b></div>
+                      <#if product.inventoryMessage?has_content><div>${product.inventoryMessage}</div></#if>
                     </#if>
                   </#if>
                 </#if>
-        
 
-                <#macro amountField>
-                    <#local fieldStyle = "">
-                    <#if (product.requireAmount!"N") != "Y">
-                        <#-- Cato: Issues with css
-                        <#assign hiddenStyle = styles.hidden!/>-->
-                        <#local fieldStyle = "display: none;">
-                    </#if>
-                    <@field type="input" size="5" name="add_amount" id="add_amount" containerStyle=fieldStyle value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
-                </#macro>
         
                 <#-- check to see if introductionDate hasn't passed yet -->
                 <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
@@ -463,22 +508,22 @@ ${virtualJavaScript!}
                 <#-- check to see if the product requires inventory check and has inventory -->
                 <#else>
                   <#if inStock>
-                  
                     <@amountField />
                     
                     <#if !configwrapper.isCompleted()>
                       <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
                       <@field type="text" disabled=true name="quantity" id="quantity" value="0" size="5" label=uiLabelMap.CommonQuantity/>
                     <#else>
-                      <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                       <#assign qtyDefault = 1>
                       <#if minimumQuantity?? && (minimumQuantity > 0)>
                         <#assign qtyDefault = minimumQuantity>
                       </#if>
                       <@field type="text" name="quantity" id="quantity" value=(parameters.quantity!qtyDefault) size="5" label=uiLabelMap.CommonQuantity/>
                       <#if minimumQuantity?? && (minimumQuantity > 0)>
-                        Minimum order quantity is ${minimumQuantity}.
+                        <div>${uiLabelMap.ProductMinimumOrderQuantity}: ${minimumQuantity}</div>
                       </#if>
+
+                      <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12} ${styles.link_run_session!} ${styles.action_add!}"/>
                     </#if>
                   </#if>
                   <#-- CATO: FIXME?: I think this parameter does more harm than good, but leave until sure can remove -->
@@ -489,8 +534,7 @@ ${virtualJavaScript!}
               </form>
               
               <#-- CATO: Shopping list not supported yet
-              <div>-->
-              <div style="display:none;">
+              <div>
                   <#if userHasAccount>
                     <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
                       <input type="hidden" name="productId" value="${product.productId}" />
@@ -510,20 +554,22 @@ ${virtualJavaScript!}
                       <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
                     </form>
                   <#else>
-                    <#-- CATO: why ever show this?
+                    <#- CATO: why ever show this?
                     <@commonMsg type="info">${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
-                    ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.</@commonMsg>-->
+                    ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.</@commonMsg>->
                   </#if>
               </div>
-              
+              -->
             </div>
           </@panel>
               
               
               <#-- Prefill first select box (virtual products only) -->
+              <#-- CATO: TODO: virtual products 
               <#if variantTree?? && 0 < variantTree.size()>
                 <@script>eval("list" + "${featureOrderFirst}" + "()");</@script>
               </#if>
+              -->
         
               <#-- Swatches (virtual products only) -->
               <#-- CATO: no swatches for now
@@ -580,10 +626,11 @@ ${virtualJavaScript!}
     <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
 
     <ul class="tabs" data-tab>
-      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonDescription}</a></li>
-      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonInformation}</a></li>
+      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
+      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonSpecifications}</a></li><#-- ${uiLabelMap.CommonInformation} -->
 
-      <li class="tab-title"><a href="#panel31"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonConfiguration}</a></li>
+      <#-- "Configuration" is too weird for an iitem like a pizza: ${uiLabelMap.CommonConfiguration} -->
+      <li class="tab-title"><a href="#panel31"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonOptions}</a></li>
     </ul>
     <div class="tabs-content">
         <div class="content active" id="panel11">

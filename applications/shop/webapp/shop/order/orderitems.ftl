@@ -18,6 +18,9 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
+<#-- CATO: TODO?: Create shopping list from order (commented) -->
+<#-- CATO: TODO: This is unable to list selected config product options (harder than showcart) -->
+
 <#-- CATO: NOTE: DO NOT COMMENT STUFF, USE FLAGS INSTEAD -->
 
 <#-- CATO: Extra toggle for (some of the) detailed info (some other detailed is required) 
@@ -31,8 +34,6 @@ under the License.
 
 <#assign maySelect = ((maySelectItems!"N") == "Y")>
 <#assign printable = printable!false>
-
-<#-- CATO: TODO?: Create shopping list from order (commented) -->
 
 <#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
@@ -177,7 +178,9 @@ under the License.
                     <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[${uiLabelMap.ContentDownload}]</a><#lt/>
               </#if>
             </#if>
-            <#-- TODO: Config options inserted here -->
+
+            <#-- Cato: TODO: LIST CONFIG OPTIONS HERE -->
+
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
             <#if orderItemAttributes?has_content>
                 <ul>

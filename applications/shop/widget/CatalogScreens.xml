@@ -290,7 +290,9 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/InlineProductDetail.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/inlineProductDetail.ftl"/></html></platform-specific>
+                <!-- Cato: now in shop
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/inlineProductDetail.ftl"/></html></platform-specific> -->
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/inlineProductDetail.ftl"/></html></platform-specific> 
             </widgets>
         </section>
     </screen>

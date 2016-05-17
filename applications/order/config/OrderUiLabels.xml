@@ -15214,4 +15214,12 @@
         <value xml:lang="de">Auftragsposition wurde abgebrochen.</value>
         <value xml:lang="en">Order item has been cancelled.</value>
     </property>
+    <property key="OrderGrossSales">
+        <value xml:lang="de">Bruttoumsatz</value>
+        <value xml:lang="en">Gross Sales</value>
+    </property>   
+    <property key="OrderNetSales">
+        <value xml:lang="de">Nettoumsatz</value>
+        <value xml:lang="en">Net Sales</value>
+    </property>  
 </resource>

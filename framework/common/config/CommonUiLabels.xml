@@ -16169,4 +16169,43 @@
         <value xml:lang="de">Hier klicken für Details</value>
         <value xml:lang="en">Click here for details</value>
     </property>
+    <property key="CommonPerDay">
+        <value xml:lang="de">pro Tag</value>
+        <value xml:lang="en">per day</value>
+    </property>    
+    <property key="CommonPerWeek">
+        <value xml:lang="de">pro Woche</value>
+        <value xml:lang="en">per week</value>
+    </property>   
+    <property key="CommonPerMonth">
+        <value xml:lang="de">pro Monat</value>
+        <value xml:lang="en">per month</value>
+    </property>  
+    <property key="CommonRequests">
+        <value xml:lang="de">Anfragen</value>
+        <value xml:lang="en">Requests</value>
+        <value xml:lang="es">Peticiones</value>
+        <value xml:lang="fr">Demandes</value>
+        <value xml:lang="it">Richieste</value>
+        <value xml:lang="ja">リクエスト</value>
+        <value xml:lang="nl">Aanvragen</value>
+        <value xml:lang="pt_BR">Solicitações</value>
+        <value xml:lang="ro">Cerere</value>
+        <value xml:lang="ru">Запросы</value>
+        <value xml:lang="th">การร้องขอ</value>
+        <value xml:lang="vi">Yêu cầu từ Khách hàng</value>
+        <value xml:lang="zh">请求</value>
+        <value xml:lang="zh_CN">请求</value>
+        <value xml:lang="zh_TW">請求</value>
+    </property>   
+    <property key="CommonCompany">
+        <value xml:lang="de">Unternehmen</value>
+        <value xml:lang="en">Company</value>
+        <value xml:lang="it">Azienda</value>
+        <value xml:lang="ja">会社</value>
+        <value xml:lang="pt_BR">Companhia</value>
+        <value xml:lang="vi">Doanh nghiệp</value>
+        <value xml:lang="zh">公司</value>
+        <value xml:lang="zh_TW">公司</value>
+    </property>      
 </resource>

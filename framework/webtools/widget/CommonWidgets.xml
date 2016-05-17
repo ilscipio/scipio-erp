@@ -31,7 +31,7 @@ under the License.
                 <set field="chartIntervalScope" value="day"/> <!-- hour|day|week|month|year -->
                 <set field="chartIntervalCount" value="1"/>     <!-- Look back x hours/days/weeks/months/years -->
                 <script location="component://webtools/script/com/ilscipio/data/StatsServerTraffic.groovy"/>
-                <set field="title" value="Requests (per day)"/>
+                <set field="title" value="${uiLabelMap.CommonRequests} (${uiLabelMap.CommonPerDay})"/>
             </actions>
             <widgets>
                 <platform-specific>

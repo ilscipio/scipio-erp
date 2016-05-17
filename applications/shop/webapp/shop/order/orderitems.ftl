@@ -260,10 +260,16 @@ under the License.
             <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/>
           </@td>
           <@td>
+            <#-- CATO: THIS IS WRONG - MUST USE getOrderItemSubTotal INSTEAD!
             <#if workEfforts??>
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem)*rentalQuantity isoCode=currencyUomId/>
             <#else>
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem) isoCode=currencyUomId/>
+            </#if>-->
+            <#if workEfforts??>
+              <@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem)*rentalQuantity isoCode=currencyUomId/>
+            <#else>
+              <@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/>
             </#if>
           </@td>
           <#if maySelect && (roleTypeId!) == "PLACING_CUSTOMER">

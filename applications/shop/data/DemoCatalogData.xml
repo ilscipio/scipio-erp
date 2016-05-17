@@ -903,8 +903,8 @@ under the License.
     <ProductPrice productId="METADATA" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-01-01 00:00:00.0" price="1.00" createdDate="2011-01-01 00:00:00.0"/>
     <ProductPrice productId="DVD" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-01-01 00:00:00.0" price="0.25" createdDate="2011-01-01 00:00:00.0"/>
     
-    <ProductConfigItem configItemId="SC00000" configItemTypeId="MULTIPLE" configItemName="Scanning Type" description="Select the scanning type :"/>
-    <ProductConfigItem configItemId="SCF0001" configItemTypeId="MULTIPLE" configItemName="Scanning Options" description="Scanning options :"/>
+    <ProductConfigItem configItemId="SC00000" configItemTypeId="MULTIPLE" configItemName="Scanning Type" description="Scanning type"/><!-- Cato: consistency: description="Select the scanning type :" -->
+    <ProductConfigItem configItemId="SCF0001" configItemTypeId="MULTIPLE" configItemName="Scanning Options" description="Scanning options"/><!-- Cato: consistency: description="Scanning options :" -->
     
     <ProductConfigOption configItemId="SC00000" configOptionId="SCOP001" configOptionName="OPT0001" description="Scanning Type" sequenceNum="10"/>
     <ProductConfigOption configItemId="SCF0001" configOptionId="SCOP006" configOptionName="OPT0006" description="Express" sequenceNum="10"/>
@@ -930,8 +930,8 @@ under the License.
     <ElectronicText dataResourceId="CSV-1001-ALT" textData="book-scanning-service"/>
     <ElectronicText dataResourceId="DRCSV-1001-ALTEN" textData="book-scanning-service"/>
 
-    <ProductConfig productId="CSV-1001" configItemId="SC00000" sequenceNum="10" fromDate="2011-01-01 00:00:00.0" description="Select the scanning type :" configTypeId="QUESTION" isMandatory="N"/>
-    <ProductConfig productId="CSV-1001" configItemId="SCF0001" sequenceNum="20" fromDate="2011-01-01 00:00:00.0" description="Scanning options :" configTypeId="QUESTION" isMandatory="N"/>
+    <ProductConfig productId="CSV-1001" configItemId="SC00000" sequenceNum="10" fromDate="2011-01-01 00:00:00.0" description="Scanning type" configTypeId="QUESTION" isMandatory="N"/><!-- Cato: consistency: description="Select the scanning type :"  -->
+    <ProductConfig productId="CSV-1001" configItemId="SCF0001" sequenceNum="20" fromDate="2011-01-01 00:00:00.0" description="Scanning options" configTypeId="QUESTION" isMandatory="N"/><!-- Cato: consistency:  description="Scanning options :" -->
     
     <WorkEffort workEffortId="SCTASK01" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Stock out" description="Components" revisionNumber="1" fixedAssetId="DEMO_BOOK_GROUP" estimatedMilliSeconds="600000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="SCTASK02" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Preparation" description="Preparation" revisionNumber="1" fixedAssetId="DEMO_BOOK_GROUP" estimatedMilliSeconds="900000" estimatedSetupMillis="0"/>

@@ -51,9 +51,42 @@ under the License.
                   <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
                 -->
                 <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+                <#-- For configurable products, the selected options are shown -->
+                <#if cartLine.getConfigWrapper()??>
+                  <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
+                  <#if selectedOptions??>
+                    <ul class="order-item-attrib-list">
+                    <#list selectedOptions as option>
+                        <li>${option.getDescription()}</li>
+                    </#list>
+                    </ul>
+                  </#if>
+                </#if>
+                <#assign attrs = cartLine.getOrderItemAttributes()/>
+                <#if attrs?has_content>
+                    <#assign attrEntries = attrs.entrySet()/>
+                    <ul class="order-item-attrib-list">
+                    <#list attrEntries as attrEntry>
+                        <li>
+                            ${attrEntry.getKey()}: ${attrEntry.getValue()}
+                        </li>
+                    </#list>
+                    </ul>
+                </#if>
               <#else>
                 <#-- non-product item -->
                 ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}  
+                <#assign attrs = cartLine.getOrderItemAttributes()/>
+                <#if attrs?has_content>
+                    <#assign attrEntries = attrs.entrySet()/>
+                    <ul class="order-item-attrib-list">
+                    <#list attrEntries as attrEntry>
+                        <li>
+                            ${attrEntry.getKey()}: ${attrEntry.getValue()}
+                        </li>
+                    </#list>
+                    </ul>
+                </#if>
               </#if>
             </@td>
             <@td headers="description"></@td>
@@ -163,9 +196,42 @@ under the License.
                         </#if>
                       -->
                     <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+                    <#-- For configurable products, the selected options are shown -->
+                    <#if cartLine.getConfigWrapper()??>
+                      <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
+                      <#if selectedOptions??>
+                        <ul class="order-item-attrib-list">
+                        <#list selectedOptions as option>
+                            <li>${option.getDescription()}</li>
+                        </#list>
+                        </ul>
+                      </#if>
+                    </#if>
+                    <#assign attrs = cartLine.getOrderItemAttributes()/>
+                    <#if attrs?has_content>
+                        <#assign attrEntries = attrs.entrySet()/>
+                        <ul class="order-item-attrib-list">
+                        <#list attrEntries as attrEntry>
+                            <li>
+                                ${attrEntry.getKey()}: ${attrEntry.getValue()}
+                            </li>
+                        </#list>
+                        </ul>
+                    </#if>
                   <#else>
                     <#-- non-product item -->
-                    ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}  
+                    ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!} 
+                    <#assign attrs = cartLine.getOrderItemAttributes()/>
+                    <#if attrs?has_content>
+                        <#assign attrEntries = attrs.entrySet()/>
+                        <ul class="order-item-attrib-list">
+                        <#list attrEntries as attrEntry>
+                            <li>
+                                ${attrEntry.getKey()}: ${attrEntry.getValue()}
+                            </li>
+                        </#list>
+                        </ul>
+                    </#if>
                   </#if>
                 </@td>
                 <@td headers="editDescription"></@td>

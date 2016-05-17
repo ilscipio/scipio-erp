@@ -130,12 +130,23 @@ function setAlternateGwp(field) {
                             <#if cartLine.getConfigWrapper()??>
                               <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
                               <#if selectedOptions??>
-                                <ul>
+                                <ul class="order-item-attrib-list">
                                 <#list selectedOptions as option>
                                     <li>${option.getDescription()}</li>
                                 </#list>
                                 </ul>
                               </#if>
+                            </#if>
+                            <#assign attrs = cartLine.getOrderItemAttributes()/>
+                            <#if attrs?has_content>
+                                <#assign attrEntries = attrs.entrySet()/>
+                                <ul class="order-item-attrib-list">
+                                <#list attrEntries as attrEntry>
+                                    <li>
+                                        ${attrEntry.getKey()}: ${attrEntry.getValue()}
+                                    </li>
+                                </#list>
+                                </ul>
                             </#if>
                         <#else>
                             <#-- non-product item -->
@@ -143,7 +154,7 @@ function setAlternateGwp(field) {
                             <#assign attrs = cartLine.getOrderItemAttributes()/>
                             <#if attrs?has_content>
                                 <#assign attrEntries = attrs.entrySet()/>
-                                <ul>
+                                <ul class="order-item-attrib-list">
                                 <#list attrEntries as attrEntry>
                                     <li>
                                         ${attrEntry.getKey()}: ${attrEntry.getValue()}

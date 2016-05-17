@@ -286,4 +286,16 @@ div.field-extra {
     text-align: right;
 }
 
+.product-configurator .product-config-question {
+    margin-bottom: 1rem;
+}
+
+ul.order-item-attrib-list, .order-item-attrib-list ul {
+
+}
+
+.order-item-attrib-list li {
+    /*font-size: 0.875rem;*/
+    font-size: 0.8em;
+}
 

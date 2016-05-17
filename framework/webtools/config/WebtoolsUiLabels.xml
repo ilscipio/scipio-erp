@@ -848,6 +848,7 @@
         <value xml:lang="zh_TW">人造物品資訊</value>
     </property>
     <property key="WebtoolsArtifactInfoTimeToLoad">
+    	<value xml:lang="de">(Das Laden könnte etwas dauern!)</value>
         <value xml:lang="en">(may take some time to load)</value>
         <value xml:lang="fr">(cela peut prendre un certain temps à charger)</value>
         <value xml:lang="vi">(đợi chút thời gian)</value>
@@ -2334,7 +2335,7 @@
         <value xml:lang="zh_TW">資料實體</value>
     </property>
     <property key="WebtoolsForSomethingInteresting">
-        <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: CATO -</value>
+        <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: cato -</value>
         <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: CATO -</value>
         <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion : admin, et le mot de passe : CATO -</value>
         <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:CATO -</value>
@@ -2421,6 +2422,7 @@
         <value xml:lang="zh_TW">通用JAVA執行緒</value>
     </property>
     <property key="WebtoolsGeoCreateNew">
+    	<value xml:lang="de">Zone erstellen/bearbeiten</value>
         <value xml:lang="en">Create/Edit Geo</value>
         <value xml:lang="fr">Créer/Modifier une zone géographique</value>
         <value xml:lang="ja">位置の作成/編集</value>
@@ -2429,6 +2431,7 @@
         <value xml:lang="zh_TW">新建/編輯地理</value>
     </property>
     <property key="WebtoolsGeoEdit">
+    	<value xml:lang="de">Zone erstellen/bearbeiten</value>
         <value xml:lang="en">Create/Edit Geo</value>
         <value xml:lang="fr">Créer/Modifier la zone géographique</value>
         <value xml:lang="ja">位置の作成/編集</value>
@@ -2437,6 +2440,7 @@
         <value xml:lang="zh_TW">新建/編輯地理</value>
     </property>
     <property key="WebtoolsGeoManagement">
+    	<value xml:lang="de">Zonen Management</value>
         <value xml:lang="en">Geo Management</value>
         <value xml:lang="fr">Gestion des zones géographiques</value>
         <value xml:lang="ja">位置管理</value>
@@ -2445,6 +2449,7 @@
         <value xml:lang="zh_TW">地理管理</value>
     </property>
     <property key="WebtoolsGeosFind">
+    	<value xml:lang="de">Zonen suchen</value>
         <value xml:lang="en">Find Geos</value>
         <value xml:lang="fr">Recherche de zones géographiques</value>
         <value xml:lang="ja">位置の検索</value>
@@ -2453,6 +2458,7 @@
         <value xml:lang="zh_TW">尋找地理</value>
     </property>
     <property key="WebtoolsGeosLink">
+    	<value xml:lang="de">Zonen verknüpfen</value>
         <value xml:lang="en">Link Geos</value>
         <value xml:lang="fr">Lier des zones géographiques</value>
         <value xml:lang="ja">位置のリンク</value>
@@ -2461,6 +2467,7 @@
         <value xml:lang="zh_TW">連結地理</value>
     </property>
     <property key="WebtoolsGeosLinkExplained">
+    	<value xml:lang="de">Zonen (miteinander) verknüpfen</value>
         <value xml:lang="en">Link Geos (associate Geos to a Geo)</value>
         <value xml:lang="fr">Lier des zones géographiques (association d'une avec plusieurs)</value>
         <value xml:lang="ja">位置のリンク (位置から位置へ関連付け)</value>
@@ -2469,6 +2476,7 @@
         <value xml:lang="zh_TW">連結地理(把它們結合到一個地理位置)</value>
     </property>
     <property key="WebtoolsGeosSelect">
+    	<value xml:lang="de">Zu verknüpfende Zone wählen</value>
         <value xml:lang="en">Select Geos to associate</value>
         <value xml:lang="fr">Sélectionnez les zones géographiques à associer</value>
         <value xml:lang="ja">関連付けする位置を選択</value>
@@ -2960,7 +2968,7 @@
         <value xml:lang="zh_TW">檔案名</value>
     </property>
     <property key="WebtoolsLabelManagerFindLabels">
-        <value xml:lang="de">Labels Suchen</value>
+        <value xml:lang="de">Labels suchen</value>
         <value xml:lang="en">Find Labels</value>
         <value xml:lang="fr">Gestionnaire de traduction</value>
         <value xml:lang="it">Gestione delle label</value>
@@ -4726,7 +4734,7 @@
         <value xml:lang="zh_TW">服務ECA's</value>
     </property>
     <property key="WebtoolsServiceEngineThreads">
-        <value xml:lang="de">Service-Engine Threads</value>
+        <value xml:lang="de">Service Engine Threads</value>
         <value xml:lang="en">Job Queue Service Threads</value>
         <value xml:lang="fr">Threads du Service Engine</value>
         <value xml:lang="it">Threads dell' Engine Servizi</value>
@@ -4738,7 +4746,7 @@
         <value xml:lang="zh_TW">服務引擎執行緒</value>
     </property>
     <property key="WebtoolsServiceEngineTools">
-        <value xml:lang="de">Service-Engine</value>
+        <value xml:lang="de">Service Engine</value>
         <value xml:lang="en">Service Engine</value>
         <value xml:lang="fr">Outils du moteur de services</value>
         <value xml:lang="it">Strumenti per engine servizi</value>
@@ -5197,6 +5205,7 @@
         <value xml:lang="zh_TW">刷新頁面</value>
     </property>
     <property key="WebtoolsStatsRequestsBy">
+    	<value xml:lang="de">Zugriffe pro</value>
         <value xml:lang="en">Requests by</value>
     </property>
     <property key="WebtoolsStatsRequestId">
@@ -5286,6 +5295,7 @@
         <value xml:lang="zh_TW">檢視統計</value>
     </property>
     <property key="WebtoolsStatsSystemMemory">
+    	<value xml:lang="de">System Speicher</value>
         <value xml:lang="en">System Memory</value>
     </property>
     <property key="WebtoolsStatusInvalid">

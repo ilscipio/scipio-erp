@@ -4915,6 +4915,7 @@
     <property key="CommonGeoAssocTypeId">
         <value xml:lang="ar">دليل نوع ترابط الإحداثية</value>
         <value xml:lang="cs">ID asociace typu polohy</value>
+        <value xml:lang="de">Zonen-Assoziations ID</value>
         <value xml:lang="en">Geo Assoc Type ID</value>
         <value xml:lang="es">Tipo de código de ubicación</value>
         <value xml:lang="fr">Type d'assocation entre zones</value>
@@ -4928,6 +4929,7 @@
     <property key="CommonGeoCode">
         <value xml:lang="ar">رمز</value>
         <value xml:lang="cs">Kód</value>
+        <value xml:lang="de">Code</value>
         <value xml:lang="en">Code</value>
         <value xml:lang="es">Código</value>
         <value xml:lang="fr">Code</value>
@@ -4945,6 +4947,7 @@
     <property key="CommonGeoId">
         <value xml:lang="ar">دليل الإحداثية</value>
         <value xml:lang="cs">ID polohy</value>
+        <value xml:lang="de">Zonen ID</value>
         <value xml:lang="en">Geo ID</value>
         <value xml:lang="es">Código ubicación</value>
         <value xml:lang="fr">Zone géographique</value>
@@ -4996,7 +4999,7 @@
     <property key="CommonGeoSecCode">
         <value xml:lang="ar">الرمز الثانوي</value>
         <value xml:lang="cs">Sekundární kód</value>
-        <value xml:lang="de">Sekundärer Kode</value>
+        <value xml:lang="de">Sekundärer Code</value>
         <value xml:lang="en">Secondary Code</value>
         <value xml:lang="es">Código secundario</value>
         <value xml:lang="fr">Code secondaire</value>
@@ -5014,6 +5017,7 @@
     <property key="CommonGeoTypeId">
         <value xml:lang="ar">دليل نوع الإحداثية</value>
         <value xml:lang="cs">ID typu polohy</value>
+        <value xml:lang="de">Zonen Typ ID</value>
         <value xml:lang="en">Geo Type ID</value>
         <value xml:lang="es">Tipo de ubicación</value>
         <value xml:lang="fr">Type de zone géographique</value>
@@ -5031,6 +5035,7 @@
     <property key="CommonGeoWellKnownText">
         <value xml:lang="ar">نص معروف جدا</value>
         <value xml:lang="cs">Známý text</value>
+        <value xml:lang="de">Bekannter Text</value>
         <value xml:lang="en">Well Known Text</value>
         <value xml:lang="es">Texto conocido</value>
         <value xml:lang="fr">Texte connu</value>
@@ -5044,7 +5049,7 @@
     <property key="CommonGeos">
         <value xml:lang="ar">إحداثيات</value>
         <value xml:lang="cs">Poloha</value>
-        <value xml:lang="de">Geo</value>
+        <value xml:lang="de">Zonen</value>
         <value xml:lang="en">Geos</value>
         <value xml:lang="es">Lugares</value>
         <value xml:lang="fr">Zones géographiques</value>
@@ -14391,7 +14396,7 @@
     <property key="FormFieldTitle_taxAuthGeoId">
         <value xml:lang="ar">الرمز الجغرافي للسلطة الضريبية</value>
         <value xml:lang="cs">Poloha finančního úřadu</value>
-        <value xml:lang="de">Steuerbehörde GeoID</value>
+        <value xml:lang="de">Steuerbehörde Zonen ID</value>
         <value xml:lang="en">Tax Auth Geo ID</value>
         <value xml:lang="es">Código geográfico autoridad tributaria</value>
         <value xml:lang="fr">Réf. géo. d'administration fiscale</value>
@@ -14894,6 +14899,7 @@
     <property key="PageTitleLookupGeo">
         <value xml:lang="ar">إستعراض الإحداثيات</value>
         <value xml:lang="cs">Vyhledání polohy</value>
+        <value xml:lang="de">Zonen auswählen</value>
         <value xml:lang="en">Lookup Geo</value>
         <value xml:lang="es">Buscar zonas geográficas</value>
         <value xml:lang="fr">Recherche une ou des zones géographiques</value>

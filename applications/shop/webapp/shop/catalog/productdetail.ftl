@@ -525,7 +525,7 @@
 
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonDescription}</a></li>
-      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonInformation}</a></li>
+      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonInformation}</a></li>
     </ul>
     <div class="tabs-content">
         <div class="content active" id="panel11">

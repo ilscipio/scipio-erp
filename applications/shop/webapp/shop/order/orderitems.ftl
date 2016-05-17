@@ -24,6 +24,11 @@ under the License.
     FIXME: some of the detail can only be turned off with maySelect=false currently, but it may also disable needed functionality -->
 <#assign showDetailed = showDetailed!true>
 
+<#assign showDetailedAdjustments = showDetailedAdjustments!true>
+
+<#-- CATO: I have set sales tax details to not show because they are especially extremely confusing due to way they combining with promotions -->
+<#assign showDetailedTax = showDetailedTax!false>
+
 <#assign maySelect = ((maySelectItems!"N") == "Y")>
 <#assign printable = printable!false>
 
@@ -147,6 +152,16 @@ under the License.
           <#-- non-product item -->
           <@td>
             ${htmlContentString(orderItem.itemDescription!"")} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
+            <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+            <#if orderItemAttributes?has_content>
+                <ul>
+                <#list orderItemAttributes as orderItemAttribute>
+                    <li>
+                        ${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}
+                    </li>
+                </#list>
+                </ul>
+            </#if>
           </@td>
         <#else>
           <#-- product item -->
@@ -162,8 +177,9 @@ under the License.
                     <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[${uiLabelMap.ContentDownload}]</a><#lt/>
               </#if>
             </#if>
-            <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
-            <#if showDetailed && orderItemAttributes?has_content>
+            <#-- TODO: Config options inserted here -->
+            <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+            <#if orderItemAttributes?has_content>
                 <ul>
                 <#list orderItemAttributes as orderItemAttribute>
                     <li>
@@ -295,8 +311,10 @@ under the License.
       </#if>
       <#-- now show adjustment details per line item -->
       <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
-      <#if showDetailed>
+      <#if showDetailed && showDetailedAdjustments>
       <#list itemAdjustments as orderItemAdjustment>
+        <#-- CATO: tax adjustments are especially confusing, so have their own option to hide -->
+        <#if showDetailedTax || !["SALES_TAX"]?seq_contains(orderItemAdjustment.orderAdjustmentTypeId)>
         <@tr>
           <@td>
             <#--${uiLabelMap.EcommerceAdjustment}: ${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}-->
@@ -328,6 +346,7 @@ under the License.
           <@td></@td>
           <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
         </@tr>
+        </#if>
       </#list>
       </#if>
       <#-- show the order item ship group info -->

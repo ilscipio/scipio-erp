@@ -107,7 +107,8 @@ function submitForm(form, mode, value) {
               </@fields>
             </@field>
               <#--<hr />-->
-
+    <#-- limit len -->
+    <@fields type="inherit-all" fieldArgs={"gridArgs":{"totalLarge":8}}>
               <@field type="textarea" title=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" wrap="hard" name="shipping_instructions" label=uiLabelMap.OrderSpecialInstructions>${parameters.shipping_instructions!shoppingCart.getShippingInstructions()!}</@field>
        
               <#--<hr />-->
@@ -146,6 +147,8 @@ function submitForm(form, mode, value) {
                   <@field type="input" widgetOnly=true size="30" name="order_additional_emails" value=(parameters.order_additional_emails!shoppingCart.getOrderAdditionalEmails()!)/>
               </@field>
         <#--</fieldset>-->
+    </@fields>
+
     </form>
 </@section>
 

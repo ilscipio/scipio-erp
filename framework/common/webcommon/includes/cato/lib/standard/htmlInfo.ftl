@@ -47,6 +47,12 @@ FIXME: Needs parameter to control injection and location of hidden modal content
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.modal_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
+  <#local idNum = getRequestVar("catoModalIdNum")!0>
+  <#local idNum = idNum + 1 />
+  <#local dummy = setRequestVar("catoModalIdNum", idNum)>  
+  <#if !id?has_content>
+    <#local id = "modal_" + (renderSeqNumber!"")?string + "_" + idNum?string>
+  </#if>
   <@modal_markup id=id label=label href=href class=class icon=icon origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
 </#macro>
 

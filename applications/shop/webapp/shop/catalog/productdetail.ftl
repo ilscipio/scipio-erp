@@ -416,7 +416,7 @@
                     <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
                         <@alert type="info">${uiLabelMap.ProductProductNoLongerAvailable}.</@alert>
                         <#-- check to see if the product requires inventory check and has inventory -->                        
-                    <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE"> <#-- Cato: NOTE: All stuff for VV_FEATURETREE should already be included above -->
+                    <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
                         <#if inStock>
                             <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
                                 <#-- Cato: NOTE: here the actual dateType sent to server is yyyy-MM-dd -->
@@ -433,19 +433,24 @@
                                 <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value=(parameters.quantity!"1") size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
                             </#if>
                             <@amountField />
+                            <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12} ${styles.link_run_session!} ${styles.action_add!}"/> 
                         <#else>
                             <#if productStore??>
                                 <#if productStore.requireInventory?? && productStore.requireInventory == "N">
+                                    <#if product.inventoryMessage?has_content><div>${product.inventoryMessage}</div></#if>
                                     <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value="1" size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
                                     <@amountField />
+                                    <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12} ${styles.link_run_session!} ${styles.action_add!}"/> 
                                 <#else>
                                     <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                    <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
+                                    <div>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage?has_content>&mdash; ${product.inventoryMessage}</#if></div>
                                 </#if>
                             </#if>
                         </#if>
-                    </#if>
-                    <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>                  
+                    <#elseif (product.virtualVariantMethodEnum!) == "VV_FEATURETREE">
+                        <#-- Cato: NOTE: All stuff for VV_FEATURETREE should already be included above (except button) -->
+                        <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12} ${styles.link_run_session!} ${styles.action_add!}"/> 
+                    </#if>                 
 
               </form>
                 <#-- CATO: Review 

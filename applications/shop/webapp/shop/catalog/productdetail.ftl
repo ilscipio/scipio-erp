@@ -524,8 +524,8 @@
     <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
 
     <ul class="tabs" data-tab>
-      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonDescription}</a></li>
-      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonInformation}</a></li>
+      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
+      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonSpecifications}</a></li><#-- ${uiLabelMap.CommonInformation} -->
     </ul>
     <div class="tabs-content">
         <div class="content active" id="panel11">

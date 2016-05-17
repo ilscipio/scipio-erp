@@ -16208,4 +16208,9 @@
         <value xml:lang="zh">公司</value>
         <value xml:lang="zh_TW">公司</value>
     </property>      
+    <property key="CommonSpecifications">
+        <value xml:lang="de">Technische Daten</value>
+        <value xml:lang="en">Specifications</value>
+        <value xml:lang="fr">Spécifications</value>
+    </property>
 </resource>

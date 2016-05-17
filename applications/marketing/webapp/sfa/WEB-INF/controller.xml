@@ -22,9 +22,11 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <!-- CATO: Disabled for now -->  
-    <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/> -->
+    <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/>
     <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>
-    <include location="component://workeffort/webapp/workeffort/WEB-INF/controller.xml"/>
+    <include location="component://workeffort/webapp/workeffort/WEB-INF/controller.xml"/> -->
+    <!-- CATO: including marketing webapp controller entries and overriding the desired view-maps in here is much better than duplicating them -->
+    <include location="component://marketing/webapp/marketing/WEB-INF/controller.xml"/>
     <description>CRM Module Site Configuration File</description>
     
     <!-- Request Mappings -->
@@ -259,264 +261,6 @@ under the License.
         <response name="success" type="view" value="EditEvent" save-home-view="true"/>
     </request-map>
     
-    <!-- CATO: ProductPromo* entries copied from /cato-foundation/applications/marketing/webapp/marketing/WEB-INF/controller.xml -->
-    <!-- ================ ProductPromo Requests ================= -->
-    <request-map uri="FindProductPromo">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindProductPromo"/>
-    </request-map>
-
-    <request-map uri="EditProductPromo">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductPromo"/>
-    </request-map>
-    <request-map uri="createProductPromo">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromo"/>
-        <response name="success" type="view" value="EditProductPromo"/>
-        <response name="error" type="view" value="EditProductPromo"/>
-    </request-map>
-    <request-map uri="updateProductPromo">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromo"/>
-        <response name="success" type="view" value="EditProductPromo"/>
-        <response name="error" type="view" value="EditProductPromo"/>
-    </request-map>
-    
-    <!-- ================ ProductPromoCode Requests ================= -->
-    <request-map uri="FindProductPromoCode">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindProductPromoCode"/>
-    </request-map>
-    <request-map uri="deleteProductPromoCode">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoCode"/>
-        <response name="success" type="view" value="FindProductPromoCode"/>
-        <response name="error" type="view" value="FindProductPromoCode"/>
-    </request-map>
-
-    <request-map uri="EditProductPromoCode">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-    </request-map>
-    <request-map uri="createProductPromoCode">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoCode"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-    <request-map uri="updateProductPromoCode">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoCode"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-
-    <request-map uri="createProductPromoCodeEmail">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoCodeEmail"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-    <request-map uri="deleteProductPromoCodeEmail">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoCodeEmail"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-    <request-map uri="createBulkProductPromoCodeEmail">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createBulkProductPromoCodeEmail"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-
-    <request-map uri="createProductPromoCodeParty">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoCodeParty"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-    <request-map uri="deleteProductPromoCodeParty">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoCodeParty"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-    <request-map uri="createProductPromoCodeSet">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoCodeSet"/>
-        <response name="success" type="view" value="FindProductPromoCode"/>
-        <response name="error" type="view" value="FindProductPromoCode"/>
-    </request-map>
-    <request-map uri="createBulkProductPromoCode">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createBulkProductPromoCode"/>
-        <response name="success" type="view" value="FindProductPromoCode"/>
-        <response name="error" type="view" value="FindProductPromoCode"/>
-    </request-map> 
-    
-    <!-- ================ Product Promo Content Requests ================= -->
-    <request-map uri="EditProductPromoContent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductPromoContent"/>
-        <response name="error" type="view" value="EditProductPromoContent"/>
-    </request-map>    
-    <request-map uri="removeContentFromProductPromo">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="removeProductPromoContent"/>
-        <response name="success" type="view" value="EditProductPromoContent"/>
-        <response name="error" type="view" value="EditProductPromoContent"/>
-    </request-map>
-    <request-map uri="addImageContentForProductPromo">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="addImageForProductPromo"/>
-        <response name="success" type="view" value="EditProductPromoContent"/>
-        <response name="error" type="view" value="EditProductPromoContent"/>
-    </request-map>
-
-    <request-map uri="getChild">
-        <security auth="false" https="true"/>
-        <event type="java" path="org.ofbiz.product.category.CategoryServices" invoke="getChildCategoryTree"/>
-        <response name="success" type="request" value="json"/>
-        <response name="error" type="request" value="json"/>
-    </request-map>
-    <request-map uri="listMiniproduct">
-        <security auth="false" https="true"/>
-        <response name="success" type="view" value="listMiniproduct"/>
-    </request-map>
-    
-    <!-- ================ ProductPromo Rules Requests ================= -->
-    <request-map uri="EditProductPromoRules">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-    </request-map>
-
-    <request-map uri="createProductPromoRule">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoRule"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="updateProductPromoRule">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoRule"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="deleteProductPromoRule">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoRule"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-
-    <request-map uri="createProductPromoCond">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoCond"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="updateProductPromoCond">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoCond"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    
-    <request-map uri="LookupUserLoginAndPartyDetails">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupUserLoginAndPartyDetails"/>
-    </request-map>
-    
-    <request-map uri="deleteProductPromoCond">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoCond"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-
-    <request-map uri="createProductPromoAction">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoAction"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="updateProductPromoAction">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoAction"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="deleteProductPromoAction">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoAction"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-
-    <request-map uri="createProductPromoCategory">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoCategory"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="updateProductPromoCategory">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoCategory"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="deleteProductPromoCategory">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoCategory"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-
-    <request-map uri="createProductPromoProduct">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductPromoProduct"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="updateProductPromoProduct">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoProduct"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    <request-map uri="deleteProductPromoProduct">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductPromoProduct"/>
-        <response name="success" type="view" value="EditProductPromoRules"/>
-        <response name="error" type="view" value="EditProductPromoRules"/>
-    </request-map>
-    
-    <!-- ================ ProductPromo Stores Requests ================= -->
-    <request-map uri="EditProductPromoStores">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductPromoStores"/>
-    </request-map>
-    <request-map uri="promo_createProductStorePromoAppl">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductStorePromoAppl"/>
-        <response name="success" type="view" value="EditProductPromoStores"/>
-        <response name="error" type="view" value="EditProductPromoStores"/>
-    </request-map>
-    <request-map uri="promo_updateProductStorePromoAppl">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductStorePromoAppl"/>
-        <response name="success" type="view" value="EditProductPromoStores"/>
-        <response name="error" type="view" value="EditProductPromoStores"/>
-    </request-map>
-    <request-map uri="promo_deleteProductStorePromoAppl">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductStorePromoAppl"/>
-        <response name="success" type="view" value="EditProductPromoStores"/>
-        <response name="error" type="view" value="EditProductPromoStores"/>
-    </request-map>
-    
     
     <!-- CATO: New root entries -->
     <request-map uri="Services"><security https="true" auth="true"/><response name="success" type="view" value="Services"/></request-map>
@@ -536,27 +280,8 @@ under the License.
     <request-map uri="AnalyticsLeads"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsLeads"/></request-map>
     <request-map uri="AnalyticsSegments"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsSegments"/></request-map>
     <request-map uri="AnalyticsTracking"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsTracking"/></request-map>
-    <request-map uri="AnalyticsForecast"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsForecast"/></request-map>
+    <request-map uri="AnalyticsForecast"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsForecast"/></request-map>    
     
-    <!-- CATO: Marketing entries copied from /cato-foundation/applications/marketing/webapp/marketing/WEB-INF/controller.xml -->
-    <!-- =========== MarketingCampaign =========== -->    
-    <request-map uri="EditMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="EditMarketingCampaign"/></request-map>
-    <request-map uri="createMarketingCampaign"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="createMarketingCampaign"/>
-        <response name="success" type="view" value="EditMarketingCampaign"/>
-        <response name="error" type="view" value="EditMarketingCampaign"/>
-    </request-map>
-    <request-map uri="updateMarketingCampaign"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateMarketingCampaign"/>
-        <response name="success" type="view" value="EditMarketingCampaign"/>
-        <response name="error" type="view" value="EditMarketingCampaign"/>
-    </request-map>
-    <request-map uri="removeMarketingCampaign">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deleteMarketingCampaign"/>
-        <response name="success" type="view" value="FindMarketingCampaign"/>
-        <response name="error" type="view" value="FindMarketingCampaign"/>
-    </request-map>
     <!-- <request-map uri="Campaigns"><security https="true" auth="true"/><response name="success" type="view" value="Campaigns"/></request-map> -->
     <!--  <request-map uri="Promotions"><security https="true" auth="true"/><response name="success" type="view" value="Promotions"/></request-map> -->
     <request-map uri="Segments"><security https="true" auth="true"/><response name="success" type="view" value="Segments"/></request-map>
@@ -579,6 +304,7 @@ under the License.
     <request-map uri="LookupLeads"><security auth="true" https="true"/><response name="success" type="view" value="LookupLeads"/></request-map>
     <request-map uri="LookupAccounts"><security auth="true" https="true"/><response name="success" type="view" value="LookupAccounts"/></request-map>
     <request-map uri="LookupAccountLeads"><security auth="true" https="true"/><response name="success" type="view" value="LookupAccountLeads"/></request-map>
+    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -624,12 +350,10 @@ under the License.
     
     <view-map name="ListPartyCommEvents" type="screen" page="component://marketing/widget/sfa/OpportunityScreens.xml#OpportunityCommEvent"/>
     
-    
-    <!-- CATO: The following is duplicated in component://marketing/webapp/marketing/WEB-INF/controller.xml -->
+    <!-- CATO: The following exist in component://marketing/webapp/marketing/WEB-INF/controller.xml but point to different screens -->
     <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#FindMarketingCampaign"/>
-    <view-map name="EditMarketingCampaign" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaign"/>
     
-    <!-- CATO: The following is duplicated in component://marketing/webapp/marketing/WEB-INF/controller.xml -->
+    <!-- CATO: The following exist in component://marketing/webapp/marketing/WEB-INF/controller.xml but point to different screens -->
     <view-map name="FindProductPromo" type="screen" page="component://marketing/widget/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://marketing/widget/PromoScreens.xml#EditProductPromo"/>
     <view-map name="EditProductPromoRules" type="screen" page="component://marketing/widget/PromoScreens.xml#EditProductPromoRules"/>

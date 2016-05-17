@@ -24,7 +24,7 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="trackingCode==null" target="createTrackingCode"/>
 
-        <field use-when="trackingCode!=null" name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <!-- <field use-when="trackingCode!=null" name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field> -->
         <field use-when="trackingCode==null&amp;&amp;trackingCodeId==null" name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><text/></field>
         <field use-when="trackingCode==null&amp;&amp;trackingCodeId!=null" name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${trackingCodeId}]"><display/></field>
 

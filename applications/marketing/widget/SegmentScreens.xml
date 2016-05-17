@@ -23,25 +23,13 @@ under the License.
 
     <!-- SegmentGroup Find Screen -->
     <screen name="FindSegmentGroup">
-        <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                </or>
-            </condition>
+        <section>            
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="titleProperty" value="PageTitleFindSegmentGroup"/>
-                <set field="activeMainMenuItem" value="Segment"/>
-
-                <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <set field="title" value="${uiLabelMap.MarketingSegments}"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
@@ -49,12 +37,21 @@ under the License.
                                 <if-has-permission permission="MARKETING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet>
-                                    <container style="button-bar">
-                                        <link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_add}"/>
-                                    </container>
-                                    <include-form name="FindSegmentGroup" location="component://marketing/widget/SegmentForms.xml"/>
-                                </screenlet>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                  <decorator-section name="menu-bar">
+                                      <section>
+                                          <widgets>
+                                                <container style="button-bar"><link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_add}"/></container>
+                                          </widgets>      
+                                      </section>
+                                  </decorator-section>
+                                  <decorator-section name="search-options">
+                                      <platform-specific><html><html-template location="component://marketing/webapp/sfa/segment/FindMarketingSegment.ftl"/></html></platform-specific>
+                                  </decorator-section>
+                                  <decorator-section name="search-results">
+                                      <include-screen name="MarketingSegmentSearchResults"/>                        
+                                  </decorator-section>
+                              </decorator-screen>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
@@ -65,73 +62,32 @@ under the License.
             </widgets>
         </section>
     </screen>
-
-    <screen name="CommonSegmentGroupDecorator">
+    
+    <screen name="MarketingSegmentSearchResults">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Segment"/>
-                <set field="activeSubMenuItem" value="Segment"/>
-
-                <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
-                <entity-one entity-name="SegmentGroup" value-field="segmentGroup"/>
+                <script location="component://marketing/webapp/marketing/WEB-INF/actions/segment/FindMarketingSegment.groovy"/>
             </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.segmentGroupId}" override-by-auto-include="true">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://marketing/widget/SegmentMenus.xml" name="SegmentGroupSideBar"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field="segmentGroupId"/></not></condition>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
+            <widgets>         
+                <platform-specific><html><html-template location="component://marketing/webapp/sfa/segment/MarketingSegmentList.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
+    
 
     <screen name="EditSegmentGroup">
         <section>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="PageTitleEditSegmentGroup"/>
-                <set field="segmentTabButtonItem" value="SegmentGroup"/>
-                <set field="labelTitleProperty" value="PageTitleEditSegmentGroup"/>
-
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/LookupSegmentGroup"/>
+                
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="SegmentGroup" value-field="segmentGroup"/>
+                
+                <set field="title" value="${uiLabelMap.MarketingSegment} ${segmentGroupId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSegmentGroupDecorator">
+                <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditSegmentGroup" location="component://marketing/widget/SegmentForms.xml"/>
@@ -163,7 +119,7 @@ under the License.
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSegmentGroupDecorator">
+                <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
@@ -206,7 +162,7 @@ under the License.
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSegmentGroupDecorator">
+                <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
@@ -249,7 +205,7 @@ under the License.
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSegmentGroupDecorator">
+                <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->

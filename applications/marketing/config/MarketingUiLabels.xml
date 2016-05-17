@@ -263,6 +263,9 @@
         <value xml:lang="zh">市场攻势</value>
         <value xml:lang="zh_TW">行銷活動</value>
     </property>
+    <property key="MarketingCampaigns">        
+        <value xml:lang="en">Campaigns</value>        
+    </property>
     <property key="MarketingCampaignCreate">
         <value xml:lang="de">Marketing Kampagne erstellen</value>
         <value xml:lang="en">Create Marketing Campaign</value>
@@ -1052,6 +1055,9 @@
         <value xml:lang="zh">分区</value>
         <value xml:lang="zh_TW">分區</value>
     </property>
+    <property key="MarketingSegments">        
+        <value xml:lang="en">Segments</value>
+    </property>
     <property key="MarketingSegmentGroupClassCreate">
         <value xml:lang="de">Neue Klassifizierung für Segmentgruppe erstellen</value>
         <value xml:lang="en">Create New Segment Group Classification</value>
@@ -1143,6 +1149,9 @@
         <value xml:lang="vi">Lỗi quyền xem Nhóm phân đoạn</value>
         <value xml:lang="zh">分区组浏览权限出错</value>
         <value xml:lang="zh_TW">分區群組檢視權限出錯</value>
+    </property>
+    <property key="MarketingSegmentGroupNoSegmentGroupFound">
+        <value xml:lang="en">No Segments found </value>
     </property>
     <property key="MarketingSegmentGroupNoSegmentGroupFoundWithId">
         <value xml:lang="de">Keine Segmentgruppe gefunden mit ID:</value>

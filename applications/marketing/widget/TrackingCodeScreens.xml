@@ -20,70 +20,26 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-   <screen name="CommonTrackingCodeDecorator">
-        <section>
-            <actions>
-                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="Tracking"/>
-                <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
-                <entity-one entity-name="TrackingCode" value-field="trackingCode"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <widgets>
-                                        <include-menu name="TrackingCodeSideBar" location="component://marketing/widget/TrackingCodeMenus.xml"/>
-                                    </widgets>
-                                </section>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
 
    <screen name="EditTrackingCode">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditTrackingCode"/>
-                <set field="trackingCodeTabButtonItem" value="TrackingCode"/>
-                <set field="labelTitleProperty" value="PageTitleEditTrackingCode"/>
-
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+               
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <entity-one entity-name="TrackingCode" value-field="trackingCode"/>
+                <set field="title" value="${uiLabelMap.MarketingTrackingCode} ${trackingCodeId}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <not><if-empty field="trackingCode"/></not>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditTrackingCode}">
+                                <screenlet>
                                     <container>
                                         <link text="${uiLabelMap.MarketingTrackingCodeCreate}" target="EditTrackingCode" style="${styles.link_nav} ${styles.action_add}">
                                             <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -115,7 +71,7 @@ under the License.
                 <set field="entityName" value="TrackingCode"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <container style="button-bar">
@@ -163,7 +119,7 @@ under the License.
                 <entity-one entity-name="TrackingCodeOrder" value-field="trackingCodeOrder"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditTrackingCodeOrder" location="component://marketing/widget/TrackingCodeForms.xml"/>
@@ -190,7 +146,7 @@ under the License.
                 <set field="trackingCodeTypeId" from-field="parameters.trackingCodeTypeId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListTrackingCodeOrdersFor} ${uiLabelMap.MarketingTrackingCodeTrackingCodeId}=${trackingCodeId}">
                             <include-form name="ListTrackingCodeOrders" location="component://marketing/widget/TrackingCodeForms.xml"/>
@@ -212,7 +168,7 @@ under the License.
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/EditTrackingCode?trackingCodeId=${trackingCodeId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="FindTrackingCodeOrders" location="component://marketing/widget/TrackingCodeForms.xml"/>
@@ -236,7 +192,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditTrackingCodeVisit" location="component://marketing/widget/TrackingCodeForms.xml"/>
@@ -263,7 +219,7 @@ under the License.
                 <set field="entityName" value="TrackingCodeVisit"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListTrackingCodeFor} ${uiLabelMap.MarketingTrackingCodeTrackingCodeId}=${trackingCodeId}">
                             <include-form name="ListTrackingCodeVisits" location="component://marketing/widget/TrackingCodeForms.xml"/>
@@ -284,7 +240,7 @@ under the License.
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleFindTrackingCodeVisit}">
                             <include-form name="FindTrackingCodeVisits" location="component://marketing/widget/TrackingCodeForms.xml"/>
@@ -340,23 +296,22 @@ under the License.
    <screen name="EditTrackingCodeType">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditTrackingCodeType"/>
-                <set field="trackingCodeTabButtonItem" value="TrackingCodeType"/>
-                <set field="labelTitleProperty" value="PageTitleEditTrackingCodeType"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCodeType"/>
                 <set field="trackingCodeTypeId" from-field="parameters.trackingCodeTypeId"/>
                 <entity-one entity-name="TrackingCodeType" value-field="trackingCodeType"/>
+                <set field="title" value="${uiLabelMap.MarketingTracking} ${trackingCodeTypeId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <not><if-empty field="trackingCodeType"/></not>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditTrackingCodeType}">
+                                <screenlet>
                                     <container style="button-bar">
                                         <link text="${uiLabelMap.MarketingTrackingCodeTypeCreate}" target="EditTrackingCodeType" style="${styles.link_nav} ${styles.action_add}">
                                             <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -389,7 +344,7 @@ under the License.
                 <set field="entityName" value="TrackingCodeType"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTrackingCodeDecorator">
+                <decorator-screen name="CommonTrackingCodeDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <container style="button-bar">

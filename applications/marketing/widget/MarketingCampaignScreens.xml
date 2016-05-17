@@ -73,7 +73,7 @@ under the License.
 				                      </section>
 				                  </decorator-section>
 				                  <decorator-section name="search-options">
-				                      <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/FindMarketingCampaing.ftl"/></html></platform-specific>
+				                      <platform-specific><html><html-template location="component://marketing/webapp/sfa/campaign/FindMarketingCampaing.ftl"/></html></platform-specific>
 				                  </decorator-section>
 				                  <decorator-section name="search-results">
 				                      <include-screen name="MarketingCampaignSearchResults"/>                        
@@ -93,7 +93,7 @@ under the License.
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/campaign/FindMarketingCampaign.groovy"/>
             </actions>
             <widgets>         
-                <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/MarketingCampaingList.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://marketing/webapp/sfa/campaign/MarketingCampaingList.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

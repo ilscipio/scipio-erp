@@ -484,6 +484,33 @@ under the License.
         </section>
     </screen>
 
+    <!-- CATO: TODO: REVIEW IF NEEDED (came from upstream)
+    <screen name="InvoiceTerms">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleListInvoiceTerms"/>
+                <set field="tabButtonItem" value="invoiceTerms"/>
+                <set field="invoiceId" from-field="parameters.invoiceId"/>
+                <entity-one entity-name="Invoice" value-field="invoice"/>
+                <entity-and entity-name="InvoiceTerm" list="invoiceTerms">
+                    <field-map from-field="invoiceId" field-name="invoiceId"/>
+                    <order-by field-name="invoiceTermId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="PartyInvoiceTermPanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
+                            <include-form name="EditInvoiceTerm" location="component://accounting/widget/InvoiceForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    -->
+    
     <screen name="SendPerEmail">
         <section>
             <actions>

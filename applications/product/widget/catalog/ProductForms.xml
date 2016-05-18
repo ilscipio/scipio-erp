@@ -259,9 +259,8 @@
             <submit button-type="button" />
         </field>
     </form>
-    
     <form name="UpdateProductPrice" type="list" target="updateProductPrice" title="" list-name="productPrices" odd-row-style="alternate-row"
-       > <!-- orig: default-table-style=-style="basic-table" -->
+        paginate-target="EditProductPrices"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>

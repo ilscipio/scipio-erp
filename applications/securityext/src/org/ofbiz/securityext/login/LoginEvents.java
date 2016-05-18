@@ -19,6 +19,9 @@
 
 package org.ofbiz.securityext.login;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -225,7 +228,12 @@ public class LoginEvents {
             } else {
                 passwordToSend = supposedUserLogin.getString("currentPassword");
             }
-        } catch (GenericEntityException e) {
+            /* Its a Base64 string, it can contain + and this + will be converted to space after decoding the url.
+               For example: passwordToSend "DGb1s2wgUQmwOBK9FK+fvQ==" will be converted to "DGb1s2wgUQmwOBK9FK fvQ=="
+               So to fix it, done Url encoding of passwordToSend.
+            */
+            passwordToSend = URLEncoder.encode(passwordToSend, "UTF-8");
+        } catch (GenericEntityException  | UnsupportedEncodingException e) {
             Debug.logWarning(e, "", module);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
             errMsg = UtilProperties.getMessage(resource, "loginevents.error_accessing_password", messageMap, UtilHttp.getLocale(request));

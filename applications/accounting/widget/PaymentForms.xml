@@ -460,7 +460,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="${styles.link_run_sys} ${styles.action_send}"><submit/></field>
     </form>
 
-    <form name="FindSalesInvoicesByDueDate" type="single" target="findSalesInvoicesByDueDate"
+    <form name="FindSalesInvoicesByDueDate" type="single" target="FindSalesInvoicesByDueDate"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="invoiceTypeId"><hidden value="SALES_INVOICE"/></field>
         <field name="organizationPartyId" parameter-name="partyIdFrom">
@@ -477,8 +477,8 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
-    <form name="FindPurchaseInvoicesByDueDate" type="single" target="findPurchaseInvoicesByDueDate"
+
+    <form name="FindPurchaseInvoicesByDueDate" type="single" target="FindPurchaseInvoicesByDueDate"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="invoiceTypeId"><hidden value="PURCHASE_INVOICE"/></field>
         <field name="organizationPartyId" parameter-name="partyId">

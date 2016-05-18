@@ -49,7 +49,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <screenlet title="${uiLabelMap.PageTitleAddTrackingCode}">
+                                <screenlet>
                                     <include-form name="EditTrackingCode" location="component://marketing/widget/TrackingCodeForms.xml"/>
                                 </screenlet>
                             </fail-widgets>

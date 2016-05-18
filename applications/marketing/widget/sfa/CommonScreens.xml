@@ -278,7 +278,8 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="OpportunitySideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <!-- <include-menu name="OpportunitySideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -577,10 +578,10 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="AccountSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
                     </decorator-section>                  
                     <decorator-section name="body">
-                        <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <!-- <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -591,11 +592,11 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="ContactSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">                        
+                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <!-- <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -615,10 +616,11 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="LeadSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <!-- <include-menu name="LeadSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <include-menu name="LeadSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <!-- <include-menu name="LeadSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

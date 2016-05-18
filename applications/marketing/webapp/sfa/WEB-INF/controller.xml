@@ -264,9 +264,8 @@ under the License.
     
     <!-- CATO: New root entries -->
     <request-map uri="Services"><security https="true" auth="true"/><response name="success" type="view" value="Services"/></request-map>
-    <request-map uri="Sales"><security https="true" auth="true"/><response name="success" type="view" value="Sales"/></request-map>
-    <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>
-    <!-- <request-map uri="Marketing"><security https="true" auth="true"/><response name="success" type="view" value="Marketing"/></request-map> -->
+    <request-map uri="FindAccounts"><security https="true" auth="true"/><response name="success" type="view" value="FindAccounts"/></request-map>
+    <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>    
     <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>
     <request-map uri="Calendar"><security https="true" auth="true"/><response name="success" type="view" value="Calendar"/></request-map>
     <request-map uri="Settings"><security https="true" auth="true"/><response name="success" type="view" value="Settings"/></request-map>
@@ -288,11 +287,11 @@ under the License.
     <request-map uri="Tracking"><security https="true" auth="true"/><response name="success" type="view" value="Tracking"/></request-map>
     
     <!-- CATO: Sales entries -->
-    <request-map uri="SalesAccounts"><security https="true" auth="true"/><response name="success" type="view" value="SalesAccounts"/></request-map>
+   <!--  <request-map uri="SalesAccounts"><security https="true" auth="true"/><response name="success" type="view" value="SalesAccounts"/></request-map>
     <request-map uri="SalesContacts"><security https="true" auth="true"/><response name="success" type="view" value="SalesContacts"/></request-map>
     <request-map uri="SalesLeads"><security https="true" auth="true"/><response name="success" type="view" value="SalesLeads"/></request-map>
     <request-map uri="SalesOpportunities"><security https="true" auth="true"/><response name="success" type="view" value="SalesOpportunities"/></request-map>
-    <request-map uri="SalesEvents"><security https="true" auth="true"/><response name="success" type="view" value="SalesEvents"/></request-map>
+    <request-map uri="SalesEvents"><security https="true" auth="true"/><response name="success" type="view" value="SalesEvents"/></request-map> -->
     
     <!-- CATO: Settings entries -->
     <request-map uri="DataSources"><security https="true" auth="true"/><response name="success" type="view" value="DataSources"/></request-map>

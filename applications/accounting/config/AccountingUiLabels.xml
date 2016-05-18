@@ -5568,6 +5568,7 @@
         <value xml:lang="zh_TW">尋找應收支付</value>
     </property>
     <property key="AccountingFindBudgets">
+    	<value xml:lang="en">Budgets suchen</value>
         <value xml:lang="en">Find Budgets</value>
     </property>
     <property key="AccountingFindDepositSlip">
@@ -5593,7 +5594,7 @@
         <value xml:lang="zh_TW">尋找財務帳目對帳</value>
     </property>
     <property key="AccountingFindFixedAssets">
-        <value xml:lang="de">Suche Anlagen</value>
+        <value xml:lang="de">Anlagen suchen</value>
         <value xml:lang="en">Find Fixed Assets</value>
         <value xml:lang="es">Lista Activos Fijos</value>
         <value xml:lang="fr">Liste des immobilisations</value>
@@ -9331,9 +9332,11 @@
         <value xml:lang="zh_TW">新建合約條件</value>
     </property>
     <property key="AccountingNewBudget">
+    	<value xml:lang="de">Erstelle neues Budget</value>
         <value xml:lang="en">Create New Budget</value>
     </property>
     <property key="AccountingNewCompany">
+    	<value xml:lang="de">Erstelle neue Buchhaltungsfirma</value>
         <value xml:lang="en">Create new accounting company</value>
     </property>
     <property key="AccountingNewBillingAccount">
@@ -21400,6 +21403,7 @@
     </property>
     <property key="PageTitleFindPayment">
         <value xml:lang="ar">إيجاد التسديد</value>
+        <value xml:lang="en">Zahlung finden</value>
         <value xml:lang="en">Find Payment</value>
         <value xml:lang="es">Encontrar Pago</value>
         <value xml:lang="fr">Recherche de paiements</value>

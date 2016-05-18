@@ -13812,7 +13812,7 @@
         <value xml:lang="zh_TW">型錄 [識別]</value>
     </property>
     <property key="ProductCatalogManager">
-        <value xml:lang="de">Katalogverwaltung Anwendung</value>
+        <value xml:lang="de">Katalogverwaltung</value>
         <value xml:lang="en">Catalog Manager</value>
         <value xml:lang="es">Aplicación de Administración de Catálogos</value>
         <value xml:lang="fr">Application de gestion des articles</value>
@@ -13827,7 +13827,7 @@
         <value xml:lang="zh_TW">型錄管理應用程式</value>
     </property>
     <property key="ProductCatalogManagerApplication">
-        <value xml:lang="de">Katalogverwaltung Anwendung</value>
+        <value xml:lang="de">Katalogverwaltung</value>
         <value xml:lang="en">Catalog Manager Application</value>
         <value xml:lang="es">Aplicación de Administración de Catálogos</value>
         <value xml:lang="fr">Application de gestion des articles</value>
@@ -17243,7 +17243,7 @@
         <value xml:lang="zh_TW">場所位置</value>
     </property>
     <property key="ProductFacilityManager">
-        <value xml:lang="de">Einrichtungsverwaltung Anwendung</value>
+        <value xml:lang="de">Einrichtungsverwaltung</value>
         <value xml:lang="en">Warehouse Manager</value>
         <value xml:lang="es">Aplicación de Administración del Almacén</value>
         <value xml:lang="fr">Application de gestion de stock</value>
@@ -17257,7 +17257,7 @@
         <value xml:lang="zh_TW">場所管理應用程式</value>
     </property>
     <property key="ProductFacilityManagerApplication">
-        <value xml:lang="de">Einrichtungsverwaltung Anwendung</value>
+        <value xml:lang="de">Einrichtungsverwaltung</value>
         <value xml:lang="en">Warehouse Manager Application</value>
         <value xml:lang="es">Aplicación de Administración del Almacén</value>
         <value xml:lang="fr">Application de gestion de stock</value>

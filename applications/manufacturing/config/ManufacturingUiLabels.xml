@@ -4733,7 +4733,7 @@
         <value xml:lang="zh_TW">運輸計劃庫存報告 </value>
     </property>
     <property key="ManufacturingShipmentPlans">
-        <value xml:lang="de">Versand-Pläne</value>
+        <value xml:lang="de">Versandpläne</value>
         <value xml:lang="en">Shipment Plans</value>
         <value xml:lang="es">Planes de Envío</value>
         <value xml:lang="fr">Plans d'expédition</value>

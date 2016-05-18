@@ -263,7 +263,7 @@ under the License.
     
     
     <!-- CATO: New root entries -->
-    <request-map uri="Services"><security https="true" auth="true"/><response name="success" type="view" value="Services"/></request-map>
+    <request-map uri="MyCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="MyCommunicationEvents"/></request-map>
     <request-map uri="FindAccounts"><security https="true" auth="true"/><response name="success" type="view" value="FindAccounts"/></request-map>
     <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>    
     <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>
@@ -348,6 +348,9 @@ under the License.
     <view-map name="LookupAccountLeads" type="screen" page="component://marketing/widget/sfa/LookupScreens.xml#LookupAccountLeads"/>
     
     <view-map name="ListPartyCommEvents" type="screen" page="component://marketing/widget/sfa/OpportunityScreens.xml#OpportunityCommEvent"/>
+    
+    
+    <view-map name="MyCommunicationEvents" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#PartyCommunicationEvents"/>
     
     <!-- CATO: The following exist in component://marketing/webapp/marketing/WEB-INF/controller.xml but point to different screens -->
     <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#FindMarketingCampaign"/>

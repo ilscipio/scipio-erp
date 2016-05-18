@@ -603,6 +603,21 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="CommonServiceDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">                        
+                        <include-menu name="ServicesAppSideBar" location="component://marketing/widget/ServicesMenus.xml"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <!-- <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="CommonLeadDecorator">
         <section>
             <actions>

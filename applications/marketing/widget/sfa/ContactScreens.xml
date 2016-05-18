@@ -23,12 +23,14 @@ under the License.
     <screen name="FindContacts">
         <section>
             <actions>
-                <set field="titleProperty" value="MarketingFindContacts"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="currentUrl" value="FindContacts"/>
                 <set field="activeMainMenuItem" value="Contacts"/>
                 <set field="setContactDescription" value="${groovy:session.setAttribute(&quot;contactDescription&quot;,activeMainMenuItem)}"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>
+                
+                <set field="title" value="${uiLabelMap.SfaContacts}"/>
             </actions>
             <widgets>
                 <!-- <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}"> -->
@@ -40,7 +42,7 @@ under the License.
                                 <container style="no-clear">
                                     <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                         <decorator-section name="search-options">
-                                            <include-menu name="ContactFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                                            <!-- <include-menu name="ContactFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
                                             <include-form name="FindContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                                         </decorator-section>
                                         <decorator-section name="search-results">
@@ -53,12 +55,12 @@ under the License.
                                                 </condition>
                                                 <widgets>
                                                     <!-- list all contacts -->
-                                                    <label style="heading" text="${uiLabelMap.SfaAllContacts}"/>
+                                                    <!-- <label style="heading" text="${uiLabelMap.SfaAllContacts}"/> -->
                                                     <include-form name="ListContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                                                 </widgets>
                                                 <fail-widgets>
                                                     <!-- list my contacts -->
-                                                    <label style="heading" text="${uiLabelMap.SfaMyContacts}"/>
+                                                    <!-- <label style="heading" text="${uiLabelMap.SfaMyContacts}"/> -->
                                                     <include-form name="ListMyContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                                                 </fail-widgets>
                                             </section>
@@ -82,7 +84,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonCreate} ${uiLabelMap.SfaContact}">
+                        <screenlet>
                             <include-form name="NewContact" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                         </screenlet>
                     </decorator-section>

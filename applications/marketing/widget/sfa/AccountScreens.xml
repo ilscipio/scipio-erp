@@ -23,22 +23,23 @@ under the License.
     <screen name="FindAccounts">
         <section>
             <actions>
-                <set field="titleProperty" value="MarketingFindAccounts"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="currentUrl" value="FindAccounts"/>
                 <set field="activeMainMenuItem" value="Accounts"/>
+                
                 <set field="setAccountDescription" value="${groovy:session.setAttribute(&quot;accountDescription&quot;,activeMainMenuItem)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>
+                
+                <set field="title" value="${uiLabelMap.SfaAcccounts}" />
             </actions>
             <widgets>
-            
-                <decorator-screen name="CommonAccountDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
-                <!-- <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}"> -->
+                <decorator-screen name="CommonAccountDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">               
                     <decorator-section name="body">
                         <section>
                             <widgets>
                                 <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                                <include-menu name="AccountFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                                <!-- <include-menu name="AccountFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
                                 <section>
                                     <widgets>
                                             <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -55,12 +56,12 @@ under the License.
                                                         </condition>
                                                         <widgets>
                                                             <!-- list all accounts -->
-                                                            <label style="heading" text="${uiLabelMap.SfaAllAccounts}"/>
+                                                            <!-- <label style="heading" text="${uiLabelMap.SfaAllAccounts}"/> -->
                                                             <include-form name="ListAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
                                                         </widgets>
                                                         <fail-widgets>
                                                             <!-- list my accounts -->
-                                                            <label style="heading" text="${uiLabelMap.SfaMyAccounts}"/>
+                                                            <!-- <label style="heading" text="${uiLabelMap.SfaMyAccounts}"/> -->
                                                             <include-form name="ListMyAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
                                                         </fail-widgets>
                                                     </section>

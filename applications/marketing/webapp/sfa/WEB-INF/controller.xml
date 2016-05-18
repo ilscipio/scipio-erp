@@ -22,9 +22,9 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <!-- CATO: Disabled for now -->  
-    <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/>
+    <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/> -->
     <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>
-    <include location="component://workeffort/webapp/workeffort/WEB-INF/controller.xml"/> -->
+    <!--  <include location="component://workeffort/webapp/workeffort/WEB-INF/controller.xml"/> -->
     <!-- CATO: including marketing webapp controller entries and overriding the desired view-maps in here is much better than duplicating them -->
     <include location="component://marketing/webapp/marketing/WEB-INF/controller.xml"/>
     <description>CRM Module Site Configuration File</description>

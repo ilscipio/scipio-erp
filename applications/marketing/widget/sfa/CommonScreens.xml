@@ -32,7 +32,11 @@ under the License.
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/partymgr.js" global="true"/>
-                <set field="layoutSettings.styleSheets[]" value="/partymgr/static/partymgr.css" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/base-theme/bower_components/fullcalendar/dist/fullcalendar.min.js" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/partymgr/static/partymgr.css" global="true"/>                
+                <set field="layoutSettings.styleSheets[]" value="/base-theme/bower_components/fullcalendar/dist/fullcalendar.min.css" global="true"/>
+                
+                
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.SfaCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.MarketingCompanySubtitle" global="true"/>
                 <set field="applicationMenuName" value="SfaAppBar" global="true"/>
@@ -666,6 +670,37 @@ under the License.
                 <decorator-screen name="CommonEventDecorator">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonCalendarDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="Calendar" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="MARKETING" action="_VIEW" />
+                            </condition>
+                            <actions>
+                                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy" />
+                            </actions>
+                            <widgets>
+                               <!--  <screenlet id="calendarOptions" name="calendarOptionsScreenlet" collapsible="true" title="${uiLabelMap.WorkEffortCalendarFindEntries}">
+                                    <include-form name="FilterCalendarEvents" location="component://workeffort/widget/CalendarForms.xml" />
+                                </screenlet> -->
+                                <decorator-section-include name="body" />
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

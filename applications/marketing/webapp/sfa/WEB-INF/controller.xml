@@ -363,6 +363,8 @@ under the License.
     <view-map name="FindProductPromoCode" type="screen" page="component://marketing/widget/PromoScreens.xml#FindProductPromoCode"/>
     <view-map name="EditProductPromoCode" type="screen" page="component://marketing/widget/PromoScreens.xml#EditProductPromoCode"/>
     <view-map name="EditProductPromoContent" type="screen" page="component://marketing/widget/PromoScreens.xml#EditProductPromoContent"/>
+    
+    <view-map name="Calendar" type="screen" page="component://marketing/widget/sfa/CalendarScreens.xml#CalendarWithDecorator"/>
 
     <!-- end of view mappings -->
 </site-conf>

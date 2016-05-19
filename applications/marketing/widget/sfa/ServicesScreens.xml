@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="activeMainMenuItem" value="mycomm"/>
+                <set field="activeMainMenuItem" value="MyCommunicationEvents"/>
                 <set field="my" value="My" global="true"/>
                 
                 <!-- <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" /> -->
@@ -103,33 +103,7 @@ under the License.
     <screen name="listMyCommEvents">
         <section>
             <actions>
-                <entity-condition entity-name="CommunicationEventAndRole" list="commEventsUnknown">
-                    <condition-list combine="and">
-                        <condition-expr field-name="statusId" operator="equals" value="COM_UNKNOWN_PARTY"/>
-                        <condition-expr field-name="roleStatusId" operator="not-equals" value="COM_ROLE_COMPLETED"/>
-                        <condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
-                    </condition-list>
-                    <order-by field-name="entryDate"/>
-                </entity-condition>
-                <entity-condition entity-name="CommunicationEventAndRole" list="commEventDraft">
-                    <condition-list combine="and">
-                        <condition-expr field-name="statusId" operator="equals" value="COM_PENDING"/>
-                        <condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
-                        <condition-expr field-name="roleTypeId" operator="equals" value="ORIGINATOR"/>
-                    </condition-list>
-                    <order-by field-name="entryDate"/>
-                </entity-condition>
-                <entity-one entity-name="PartyNameView" value-field="partyName">
-                    <field-map field-name="partyId" from-field="partyId"/>
-                </entity-one>
-                <entity-condition entity-name="CommunicationEventAndRole" list="commEventProgress">
-                    <condition-list combine="and">
-                        <condition-expr field-name="statusId" operator="equals" value="COM_IN_PROGRESS"/>
-                        <condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
-                        <condition-expr field-name="roleTypeId" operator="equals" value="ORIGINATOR"/>
-                    </condition-list>
-                    <order-by field-name="entryDate"/>
-                </entity-condition>
+                <script location="component://marketing/webapp/sfa/WEB-INF/actions/services/Communications.groovy"/>
             </actions>
             <widgets>
                 <!-- <section>
@@ -138,10 +112,13 @@ under the License.
                     </condition> -->
                     <!-- <widgets> -->
                         <!-- <label style="heading" text="${uiLabelMap.PartyEmailsFromUnknownOrigin}"/> -->
-                        <include-form name="ListMyUnknownPartyEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                        <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/CommunicationList.ftl"/></html></platform-specific>
+                        <!-- <include-form name="ListMyUnknownPartyEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/> -->
                     <!-- </widgets> -->
                 <!-- </section> -->
+                
                 <!-- <include-form name="ListPartyCommEvents" location="component://party/widget/partymgr/CommunicationEventForms.xml"/> -->
+                
                 <!-- <section>
                     <condition>
                         <not><if-empty field="commEventDraft"/></not>
@@ -151,6 +128,7 @@ under the License.
                         <include-form name="ListDraftEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                     </widgets>
                 </section>
+                
                 <section>
                     <condition>
                         <not><if-empty field="commEventProgress"/></not>

@@ -53,7 +53,8 @@ under the License.
                         <screenlet title="${uiLabelMap.WorkEffortDayView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" navigation-menu-name="Day" padded="false">
                             <include-menu name="Day" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             <platform-specific>
-                                <html><html-template location="component://marketing/webapp/sfa/calendar/day.ftl"/></html>
+                                <!-- <html><html-template location="component://marketing/webapp/sfa/calendar/calendar.ftl"/></html> -->
+                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/day.ftl"/></html>
                             </platform-specific>
                         </screenlet>
                       </container>

@@ -640,6 +640,32 @@ under the License.
                     be the view or request name (ie view-map-name or request-map URI).
 
                     Can be an URL.
+                    
+                    ***
+                    
+                    Cato: This field is enhanced to support dynamic variable response values extracted
+                    from the request. It uses EL-like notation ("${...}") in the form: "${scope.name}"
+                    
+                    The following scopes are currently recognized:                    
+                    * requestAttributes
+                    * requestParameters
+                    * requestAttrParam - checks attributes; if empty string, returns empty string; if null, uses params 
+                    * sessionAttributes
+                    * applicationAttributes
+                    
+                    If a field is missing, it will evaluate to empty string, and the effect will depend on the
+                    response type and other factors.
+                    
+                    Examples: 
+                        type="request" value="${requestAttributes.myForwardRequestName}"
+                        type="request-redirect" value="${requestAttributes.myDynamicRedirect}"
+                    
+                    This facility only provides basic substitution, such that it is not useful on its own
+                    and events must be written to set the scopes to proper values and perform validation of the values.
+                    
+                    WARNING: Use with care; events should always validate the attributes. Improper validation may
+                    lead to security issues. Use of requestParameters and requestAttrParam is discouraged
+                    and mainly provided for testing.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

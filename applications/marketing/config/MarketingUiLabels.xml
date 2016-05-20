@@ -449,6 +449,12 @@
         <value xml:lang="zh">沟通事件标识</value>
         <value xml:lang="zh_TW">通訊事件識別</value>
     </property>
+    <property key="MarketingCommunicationStatusId">
+        <value xml:lang="en">Communication Status Id</value>
+    </property>
+    <property key="MarketingCommunicationRoleStatusId">
+        <value xml:lang="en">Communication Role Status Id</value>
+    </property>
     <property key="MarketingContactListCommEventTypeId">
         <value xml:lang="de">Kommunikationsereignis-Art</value>
         <value xml:lang="en">Communication Event Type Id</value>
@@ -603,6 +609,9 @@
         <value xml:lang="vi">Không tìm thấy danh sách email [${contactListId}].</value>
         <value xml:lang="zh">无法找到电子邮件列表 [${contactListId}]。</value>
         <value xml:lang="zh_TW">無法找到電子郵件清單 [${contactListId}].</value>
+    </property>
+    <property key="MarketingServiceCommunicationNotFound">  
+        <value xml:lang="en">Could not find communications.</value>
     </property>
     <property key="MarketingContactListOptInVerifyCode">
         <value xml:lang="de">zusätzlicher Bestätigungscode</value>

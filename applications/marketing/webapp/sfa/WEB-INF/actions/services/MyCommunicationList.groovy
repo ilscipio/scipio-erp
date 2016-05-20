@@ -3,22 +3,26 @@ import javolution.util.FastList
 import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
-                
 
 Debug.log("partyId =============> " + context.partyId);
-List mainAndExprs = FastList.newInstance();
-mainAndExprs.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "COM_UNKNOWN_PARTY"));
-mainAndExprs.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, context.partyId));
-mainAndExprs.add(EntityCondition.makeCondition("roleStatusId", EntityOperator.NOT_EQUAL, "COM_ROLE_COMPLETED"));
-commEventsUnknown = from("CommunicationEventAndRole").where(mainAndExprs).queryList();
-Debug.log("commEventsUnknown ============> " + commEventsUnknown);
                 
-commEventDraft = from("CommunicationEventAndRole").where(["statusId" : "COM_PENDING", "roleTypeId" : "ORIGINATOR", "partyId" : context.partyId]).queryList();
-Debug.log("commEventDraft ============> " + commEventDraft);
+List mainAndExprs = FastList.newInstance();
 
-commEventProgress = from("CommunicationEventAndRole").where(["statusId" : "COM_IN_PROGRESS", "roleTypeId" : "ORIGINATOR", "partyId" : context.partyId]).queryList();
-Debug.log("commEventProgress ============> " + commEventProgress);
+mainAndExprs.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, context.partyId));
 
-context.commEventsUnknown = commEventsUnknown;
-context.commEventDraft = commEventDraft;
-context.commEventProgress = commEventProgress;
+statusId = parameters.statusId;
+if (statusId)
+    mainAndExprs.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
+
+roleStatusId = parameters.roleStatusId;
+if (roleStatusId)
+    mainAndExprs.add(EntityCondition.makeCondition("roleStatusId", EntityOperator.EQUALS, roleStatusId));
+    
+partyIdTo = parameters.partyIdTo;    
+if (partyIdTo)
+    mainAndExprs.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdTo));
+    
+commEventList = from("CommunicationEventAndRole").where(mainAndExprs).queryList();
+
+Debug.log("commEventList ============> " + commEventList);
+context.commEventList = commEventList;

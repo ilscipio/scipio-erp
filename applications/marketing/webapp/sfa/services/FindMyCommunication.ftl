@@ -1,19 +1,21 @@
 <@section>
     <form name="MyCommunicationEvents" action="<@ofbizUrl>MyCommunicationEvents</@ofbizUrl>" method="POST">
-        <@field type="select" name="comEventStatus" label="${uiLabelMap.CommonStatus}">
+    
+        <@field type="lookup" name="partyIdTo" formName="MyCommunicationEvents" id="partyIdTo" fieldFormName="LookupPartyName" label=uiLabelMap.PartyPartyTo />
+    
+        <@field type="select" name="comEventStatus" label="${uiLabelMap.MarketingCommunicationStatusId}">
             <option value=""></value>
             <#list comEventStatusList as comEventStatus>
                 <option value="${comEventStatus.statusId}">${comEventStatus.description}</option>
             </#list>
        </@field>
 
-        <@field type="select" name="comEventRoleStatus" label="${uiLabelMap.CommonStatus}">
+        <@field type="select" name="comEventRoleStatus" label="${uiLabelMap.MarketingCommunicationRoleStatusId}">
             <option value=""></value>   
             <#list comEventRoleStatusList as comEventRoleStatus>
                 <option value="${comEventRoleStatus.statusId}">${comEventRoleStatus.description}</option>
             </#list>
        </@field>
-     
 
        <@field type="select" name="communicationEventTypeId" label="${uiLabelMap.MarketingContactListCommEventTypeId}">
             <option value=""></value>           

@@ -27,9 +27,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
                 <set field="activeMainMenuItem" value="MyCommunicationEvents"/>
-                <set field="my" value="My" global="true"/>
-                
-                <!-- <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" /> -->
+                <script location="component://marketing/webapp/sfa/WEB-INF/actions/services/FindMyCommunication.groovy"/>
             </actions>
             <widgets>
                 <!-- <decorator-screen  name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -48,10 +46,11 @@ under the License.
 			                         <widgets>
 		                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
 		                                     <decorator-section name="search-options">
-		                                      <!--    <include-form name="FindAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/> -->
+		                                      <!--    <include-form name="FindAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/> -->		                                          
+		                                          <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/FindMyCommunication.ftl"/></html></platform-specific>
 		                                     </decorator-section>
 		                                     <decorator-section name="search-results">
-                                                <include-screen name="MyCommunicationEvents"/>
+                                                <include-screen name="PartyCommunicationEventsResults"/>
 		                                     </decorator-section>
 		                                 </decorator-screen>
 			                         </widgets>
@@ -64,80 +63,18 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
-    
 
-    <!-- Portlet screens -->
-    <screen name="MyCommunicationEvents">
+    <screen name="PartyCommunicationEventsResults">
         <section>
             <actions>
-                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="internalNotesOnly" from-field="internalNotesOnly" default-value="false"/>
                 <set field="partyId" from-field="communicationPartyId" default-value="${userLogin.partyId}"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
+                <script location="component://marketing/webapp/sfa/WEB-INF/actions/services/MyCommunicationList.groovy"/>
             </actions>
             <widgets>
-                <screenlet>
-                    <!-- <include-menu name="communicationsMenu" location="component://party/widget/partymgr/PartyMenus.xml"/> -->
-                    <section><!-- List my communication events -->
-                        <condition>
-                            <or>
-                                <if-compare field="parameters.form" operator="equals" value="list"/>
-                                <if-empty field="parameters.form"/>
-                            </or>
-                        </condition>
-                        <actions>
-                            <set field="my" from-field="parameters.my" default-value="My"/>
-                        </actions>
-                        <widgets>
-                            <include-screen name="listMyCommEvents"/>
-                        </widgets>
-                    </section>
-                    
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
-    
-    
-    <screen name="listMyCommEvents">
-        <section>
-            <actions>
-                <script location="component://marketing/webapp/sfa/WEB-INF/actions/services/Communications.groovy"/>
-            </actions>
-            <widgets>
-                <!-- <section>
-                    <condition>
-                        <not><if-empty field="commEventsUnknown"/></not>
-                    </condition> -->
-                    <!-- <widgets> -->
-                        <!-- <label style="heading" text="${uiLabelMap.PartyEmailsFromUnknownOrigin}"/> -->
-                        <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/CommunicationList.ftl"/></html></platform-specific>
-                        <!-- <include-form name="ListMyUnknownPartyEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/> -->
-                    <!-- </widgets> -->
-                <!-- </section> -->
-                
+                <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/MyCommunicationList.ftl"/></html></platform-specific>                
                 <!-- <include-form name="ListPartyCommEvents" location="component://party/widget/partymgr/CommunicationEventForms.xml"/> -->
-                
-                <!-- <section>
-                    <condition>
-                        <not><if-empty field="commEventDraft"/></not>
-                    </condition>
-                    <widgets>
-                        <label style="heading" text="${uiLabelMap.PartyDraftEmails}"/>
-                        <include-form name="ListDraftEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                    </widgets>
-                </section>
-                
-                <section>
-                    <condition>
-                        <not><if-empty field="commEventProgress"/></not>
-                    </condition>
-                    <widgets>
-                        <label style="heading" text="${uiLabelMap.PartyInProgresstEmails}"/>
-                        <include-form name="ListProgressEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                    </widgets>
-                </section> -->
             </widgets>
         </section>
     </screen>

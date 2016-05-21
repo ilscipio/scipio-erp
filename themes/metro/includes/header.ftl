@@ -78,10 +78,14 @@ under the License.
         <#if thisApp == contextPath || contextPath + "/" == thisApp>
           <#assign selected = true>
         </#if>
-        <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPath(display)>
+        <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
         <#assign thisURL = rawString(servletPath)>
         <#if thisApp != "/">
-          <#assign thisURL = thisURL + "main">
+          <#if servletPath?has_content>
+            <#assign thisURL = thisURL + "main">
+          <#else>
+            <#assign thisURL = thisApp>
+          </#if>
         </#if>
         <#if layoutSettings.suppressTab?? && display.name == layoutSettings.suppressTab>
           <#-- do not display this component-->
@@ -102,10 +106,14 @@ under the License.
         <#if thisApp == contextPath || contextPath + "/" == thisApp>
           <#assign selected = true>
         </#if>
-          <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPath(display)>
+          <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
           <#assign thisURL = rawString(servletPath)>
           <#if thisApp != "/">
-            <#assign thisURL = thisURL + "main">
+            <#if servletPath?has_content>
+              <#assign thisURL = thisURL + "main">
+            <#else>
+              <#assign thisURL = thisApp>
+            </#if>
           </#if>
           <li <#if selected> class="active"</#if>>      
             <a href="${thisURL}${rawString(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>

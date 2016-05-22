@@ -21,6 +21,7 @@ context.styles = [
     
   /* Generic */
     "framework" : "foundation",
+	"customSideBar" : false,
     "disabled" : "disabled",
     "active" : "active",
     "selected" : "selected",

@@ -40,9 +40,9 @@
 //   "foundation/components/visibility";
 @import "compass/reset/utilities";
 @import "foundation/components/global";
-@import "base";
-@import "ui_autocomplete";
-@import "tiles";
+@import "shared/base";
+@import "shared/ui_autocomplete";
+@import "shared/tiles";
 @import "pizza";
-@import "chartsjs";
-@import "steps";
+@import "shared/chartsjs";
+@import "shared/steps";

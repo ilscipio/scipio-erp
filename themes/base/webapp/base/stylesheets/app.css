@@ -9744,12 +9744,12 @@ th.hide-for-touch {
 }
 /* GRID */
 /* FOUNDATION HACK: empty cells sometimes arbitrarily collapse to zero despite width, this prevents */
-/* line 6, ../scss/_base.scss */
+/* line 6, ../scss/shared/_base.scss */
 .column, .columns {
   min-height: 1px;
 }
 
-/* line 10, ../scss/_base.scss */
+/* line 10, ../scss/shared/_base.scss */
 .fullWidth {
   width: 100%;
   /*max-width: 85em;*/
@@ -9758,7 +9758,7 @@ th.hide-for-touch {
   margin-right: auto;
 }
 
-/* line 18, ../scss/_base.scss */
+/* line 18, ../scss/shared/_base.scss */
 .v-center {
   position: absolute;
   top: 50%;
@@ -9767,7 +9767,7 @@ th.hide-for-touch {
   transform: translate(-50%, -50%);
 }
 
-/* line 26, ../scss/_base.scss */
+/* line 26, ../scss/shared/_base.scss */
 .row.display {
   background: #eee;
   font-size: 11px;
@@ -9778,21 +9778,21 @@ th.hide-for-touch {
   margin-right: 0 !important;
 }
 
-/* line 36, ../scss/_base.scss */
+/* line 36, ../scss/shared/_base.scss */
 .row.display .columns:nth-child(even), .row.display .columns.small-centered, .row.display .columns.large-centered {
   background: #e1e1e1;
 }
 
-/* line 42, ../scss/_base.scss */
+/* line 42, ../scss/shared/_base.scss */
 .row .row {
   margin-bottom: 2em;
 }
-/* line 44, ../scss/_base.scss */
+/* line 44, ../scss/shared/_base.scss */
 .row .row .row {
   margin-bottom: 0px;
 }
 
-/* line 58, ../scss/_base.scss */
+/* line 58, ../scss/shared/_base.scss */
 div.form-field-entry div.field-entry-widgetpostfix,
 div.form-field-entry div.field-entry-widget {
   max-width: 50em;
@@ -9801,49 +9801,49 @@ div.form-field-entry div.field-entry-widget {
 
 /* NAVIGATION */
 /* Cato: duplicated from "side-nav" mixin and modified */
-/* line 130, ../scss/_base.scss */
+/* line 130, ../scss/shared/_base.scss */
 .side-nav {
   margin-top: 0px;
   background: #FAFAFA;
   padding: 0px;
   /* Nested sidebar menu element */
 }
-/* line 135, ../scss/_base.scss */
+/* line 135, ../scss/shared/_base.scss */
 .side-nav form {
   padding: 0px;
 }
-/* line 137, ../scss/_base.scss */
+/* line 137, ../scss/shared/_base.scss */
 .side-nav input[type="search"]:focus {
   box-shadow: 0 0 0 !important;
 }
-/* line 141, ../scss/_base.scss */
+/* line 141, ../scss/shared/_base.scss */
 .side-nav li.disabled {
   color: #999999;
   cursor: default;
 }
-/* line 147, ../scss/_base.scss */
+/* line 147, ../scss/shared/_base.scss */
 .side-nav li.disabled > a, .side-nav li.disabled > a:hover, .side-nav li.disabled > a:visited, .side-nav li.disabled > a:active, .side-nav li.disabled > a:focus {
   color: #999999;
   cursor: default;
 }
-/* line 152, ../scss/_base.scss */
+/* line 152, ../scss/shared/_base.scss */
 .side-nav li.dashboard {
   background-color: whitesmoke;
   border-bottom: 1px solid #dddddd;
 }
-/* line 156, ../scss/_base.scss */
+/* line 156, ../scss/shared/_base.scss */
 .side-nav li.dashboard a {
   color: #222222;
 }
-/* line 161, ../scss/_base.scss */
+/* line 161, ../scss/shared/_base.scss */
 .side-nav li.active {
   background: rgba(0, 64, 84, 0.05);
 }
-/* line 164, ../scss/_base.scss */
+/* line 164, ../scss/shared/_base.scss */
 .side-nav li.active > a:first-child:not(.button) {
   cursor: default;
 }
-/* line 171, ../scss/_base.scss */
+/* line 171, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype {
   /* NOTE: this will clash with some of the above; best-effort */
   display: block;
@@ -9852,35 +9852,35 @@ div.form-field-entry div.field-entry-widget {
   list-style-type: none;
   margin-left: 0.75rem;
 }
-/* line 82, ../scss/_base.scss */
+/* line 82, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li {
   font-size: 0.875rem;
   font-weight: normal;
   margin: 0 0 0.4375rem 0;
 }
-/* line 88, ../scss/_base.scss */
+/* line 88, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button) {
   color: #008cba;
   display: block;
   margin: 0;
   padding: 0.4375rem 0.875rem;
 }
-/* line 93, ../scss/_base.scss */
+/* line 93, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button):hover, .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button):focus {
   background: rgba(0, 0, 0, 0.025);
   color: #1cc7ff;
 }
-/* line 98, ../scss/_base.scss */
+/* line 98, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button):active {
   color: #1cc7ff;
 }
-/* line 103, ../scss/_base.scss */
+/* line 103, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.active > a:first-child:not(.button) {
   color: #1cc7ff;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: normal;
 }
-/* line 109, ../scss/_base.scss */
+/* line 109, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.divider {
   border-top: 1px solid;
   height: 0;
@@ -9888,19 +9888,19 @@ div.form-field-entry div.field-entry-widget {
   padding: 0;
   border-top-color: #e6e6e6;
 }
-/* line 117, ../scss/_base.scss */
+/* line 117, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.heading {
   color: #008cba;
   font-size: 0.875rem;
   font-weight: bold;
   text-transform: uppercase;
 }
-/* line 176, ../scss/_base.scss */
+/* line 176, ../scss/shared/_base.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.active {
   background: inherit;
 }
 
-/* line 184, ../scss/_base.scss */
+/* line 184, ../scss/shared/_base.scss */
 .sub-top-bar {
   display: block;
   margin: -0.25rem 0 1.125rem;
@@ -9956,57 +9956,57 @@ div.form-field-entry div.field-entry-widget {
 .sub-top-bar li.active a:hover {
   background: #0078a0;
 }
-/* line 187, ../scss/_base.scss */
+/* line 187, ../scss/shared/_base.scss */
 .sub-top-bar dt a, .sub-top-bar dd a, .sub-top-bar li a {
   background-color: #fafafa;
   color: #008cba;
   border-radius: 3px;
 }
 
-/* line 196, ../scss/_base.scss */
+/* line 196, ../scss/shared/_base.scss */
 li.name img {
   width: auto;
   height: 22px;
 }
 
 /* CONTENT */
-/* line 202, ../scss/_base.scss */
+/* line 202, ../scss/shared/_base.scss */
 .align-right {
   text-align: right;
   word-break: normal;
 }
 
-/* line 207, ../scss/_base.scss */
+/* line 207, ../scss/shared/_base.scss */
 .align-center {
   text-align: center;
   word-break: normal;
 }
 
-/* line 212, ../scss/_base.scss */
+/* line 212, ../scss/shared/_base.scss */
 .amount {
   text-align: right;
   word-break: normal;
 }
 
-/* line 217, ../scss/_base.scss */
+/* line 217, ../scss/shared/_base.scss */
 #content-main-section {
   padding-top: 32px;
   padding-bottom: 32px;
 }
 
-/* line 222, ../scss/_base.scss */
+/* line 222, ../scss/shared/_base.scss */
 #content-main-body {
   width: 100%;
   min-height: 100%;
   position: relative;
 }
 
-/* line 228, ../scss/_base.scss */
+/* line 228, ../scss/shared/_base.scss */
 h1 {
   margin-bottom: 1rem;
 }
 
-/* line 233, ../scss/_base.scss */
+/* line 233, ../scss/shared/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -10040,40 +10040,40 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 236, ../scss/_base.scss */
+/* line 236, ../scss/shared/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 238, ../scss/_base.scss */
+/* line 238, ../scss/shared/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 241, ../scss/_base.scss */
+/* line 241, ../scss/shared/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 247, ../scss/_base.scss */
+/* line 247, ../scss/shared/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 249, ../scss/_base.scss */
+/* line 249, ../scss/shared/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
-/* line 253, ../scss/_base.scss */
+/* line 253, ../scss/shared/_base.scss */
 .reveal-modal {
   box-shadow: none;
 }
 @media only screen and (min-width: 40.0625em) {
-  /* line 253, ../scss/_base.scss */
+  /* line 253, ../scss/shared/_base.scss */
   .reveal-modal {
     top: 12.5rem;
   }
 }
 
-/* line 259, ../scss/_base.scss */
+/* line 259, ../scss/shared/_base.scss */
 .page-noauth, .page-requirePasswordChange {
   background: url("/base-theme/images/background3.jpg") no-repeat center center fixed;
   -webkit-background-size: cover;
@@ -10082,22 +10082,22 @@ table.basic-table input {
   background-size: cover;
 }
 
-/* line 267, ../scss/_base.scss */
+/* line 267, ../scss/shared/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 275, ../scss/_base.scss */
+/* line 275, ../scss/shared/_base.scss */
 .login-box #login-box-title h1 img {
   height: 22px;
   margin-right: 10px;
 }
-/* line 279, ../scss/_base.scss */
+/* line 279, ../scss/shared/_base.scss */
 .login-box a {
   color: #008cba;
 }
-/* line 281, ../scss/_base.scss */
+/* line 281, ../scss/shared/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -10109,7 +10109,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 293, ../scss/_base.scss */
+  /* line 293, ../scss/shared/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -10118,27 +10118,27 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 297, ../scss/_base.scss */
+/* line 297, ../scss/shared/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 301, ../scss/_base.scss */
+/* line 301, ../scss/shared/_base.scss */
 td {
   word-break: normal;
 }
 
-/* line 302, ../scss/_base.scss */
+/* line 302, ../scss/shared/_base.scss */
 td.button-col {
   word-break: normal;
 }
 
-/* line 304, ../scss/_base.scss */
+/* line 304, ../scss/shared/_base.scss */
 td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
   word-break: normal;
 }
 
-/* line 307, ../scss/_base.scss */
+/* line 307, ../scss/shared/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -10146,31 +10146,31 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
   padding: 8px 0px;
 }
 
-/* line 313, ../scss/_base.scss */
+/* line 313, ../scss/shared/_base.scss */
 fieldset {
   border: none;
   padding-left: 0px;
   padding-right: 0px;
 }
-/* line 318, ../scss/_base.scss */
+/* line 318, ../scss/shared/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 325, ../scss/_base.scss */
+/* line 325, ../scss/shared/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 332, ../scss/_base.scss */
+/* line 332, ../scss/shared/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 336, ../scss/_base.scss */
+/* line 336, ../scss/shared/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -10178,7 +10178,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 343, ../scss/_base.scss */
+/* line 343, ../scss/shared/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -10186,7 +10186,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 350, ../scss/_base.scss */
+/* line 350, ../scss/shared/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -10194,7 +10194,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 357, ../scss/_base.scss */
+/* line 357, ../scss/shared/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -10218,42 +10218,42 @@ pre {
   border-width: 1px;
 }
 
-/* line 379, ../scss/_base.scss */
+/* line 379, ../scss/shared/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 384, ../scss/_base.scss */
+/* line 384, ../scss/shared/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 386, ../scss/_base.scss */
+/* line 386, ../scss/shared/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 387, ../scss/_base.scss */
+/* line 387, ../scss/shared/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 388, ../scss/_base.scss */
+/* line 388, ../scss/shared/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 389, ../scss/_base.scss */
+/* line 389, ../scss/shared/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 392, ../scss/_base.scss */
+/* line 392, ../scss/shared/_base.scss */
 pre.scrollable {
   max-height: 500px;
   overflow-x: scroll;
 }
 
-/* line 397, ../scss/_base.scss */
+/* line 397, ../scss/shared/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -10266,72 +10266,72 @@ pre.scrollable {
   font-size: 1.2rem;
 }
 
-/* line 409, ../scss/_base.scss */
+/* line 409, ../scss/shared/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 411, ../scss/_base.scss */
+/* line 411, ../scss/shared/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 418, ../scss/_base.scss */
+/* line 418, ../scss/shared/_base.scss */
 ul.chart-legend, ul.checkmark {
   list-style: none;
 }
-/* line 422, ../scss/_base.scss */
+/* line 422, ../scss/shared/_base.scss */
 ul.checkmark {
   margin: 0px;
 }
-/* line 426, ../scss/_base.scss */
+/* line 426, ../scss/shared/_base.scss */
 ul.checkmark li:before {
   font-family: "FontAwesome";
   content: "\f00c";
   padding-right: 10px;
 }
 
-/* line 436, ../scss/_base.scss */
+/* line 436, ../scss/shared/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 442, ../scss/_base.scss */
+/* line 442, ../scss/shared/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 451, ../scss/_base.scss */
+/* line 451, ../scss/shared/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 455, ../scss/_base.scss */
+/* line 455, ../scss/shared/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 460, ../scss/_base.scss */
+/* line 460, ../scss/shared/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 465, ../scss/_base.scss */
+/* line 465, ../scss/shared/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 470, ../scss/_base.scss */
+/* line 470, ../scss/shared/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 474, ../scss/_base.scss */
+/* line 474, ../scss/shared/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -10339,12 +10339,12 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 484, ../scss/_base.scss */
+/* line 484, ../scss/shared/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 489, ../scss/_base.scss */
+/* line 489, ../scss/shared/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
@@ -10358,18 +10358,18 @@ div.section-screenlet-container.no-title.no-menu {
 }
 */
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 504, ../scss/_base.scss */
+  /* line 504, ../scss/shared/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 509, ../scss/_base.scss */
+  /* line 509, ../scss/shared/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 511, ../scss/_base.scss */
+  /* line 511, ../scss/shared/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10385,27 +10385,27 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 531, ../scss/_base.scss */
+/* line 531, ../scss/shared/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 537, ../scss/_base.scss */
+/* line 537, ../scss/shared/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 540, ../scss/_base.scss */
+/* line 540, ../scss/shared/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 545, ../scss/_base.scss */
+/* line 545, ../scss/shared/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
-/* line 550, ../scss/_base.scss */
+/* line 550, ../scss/shared/_base.scss */
 table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
@@ -10418,35 +10418,35 @@ table.table-type-data .button {
       .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
       .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
   */
-/* line 563, ../scss/_base.scss */
+/* line 563, ../scss/shared/_base.scss */
 table.table-nocellspacing, table.table-nocellspacing-hint {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
 }
 
-/* line 568, ../scss/_base.scss */
+/* line 568, ../scss/shared/_base.scss */
 table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
-/* line 574, ../scss/_base.scss */
+/* line 574, ../scss/shared/_base.scss */
 input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }
 
-/* line 580, ../scss/_base.scss */
+/* line 580, ../scss/shared/_base.scss */
 .has-tip.field-tooltip-wrap {
   font-weight: normal;
   border-bottom: 0;
 }
 
 /*Tabs*/
-/* line 588, ../scss/_base.scss */
+/* line 588, ../scss/shared/_base.scss */
 ul.tabs {
   border-bottom: 1px solid #efefef;
 }
-/* line 590, ../scss/_base.scss */
+/* line 590, ../scss/shared/_base.scss */
 ul.tabs li {
   position: relative;
   bottom: -1px;
@@ -10455,92 +10455,92 @@ ul.tabs li {
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 597, ../scss/_base.scss */
+/* line 597, ../scss/shared/_base.scss */
 ul.tabs li.active {
   border-bottom: 1px solid #fff;
 }
 
-/* line 603, ../scss/_base.scss */
+/* line 603, ../scss/shared/_base.scss */
 .tabs-content {
   border-left: 1px solid #efefef;
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 607, ../scss/_base.scss */
+/* line 607, ../scss/shared/_base.scss */
 .tabs-content .content {
   padding: 20px;
 }
 
 /* Special panels */
-/* line 612, ../scss/_base.scss */
+/* line 612, ../scss/shared/_base.scss */
 .text-line-list ul, ul.text-line-list {
   list-style: none outside none;
   margin-left: 0;
 }
 
-/* line 616, ../scss/_base.scss */
+/* line 616, ../scss/shared/_base.scss */
 .text-line-list li:empty, .text-line-list .text-line:empty {
   display: none;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 624, ../scss/_base.scss */
+/* line 624, ../scss/shared/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 625, ../scss/_base.scss */
+/* line 625, ../scss/shared/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 626, ../scss/_base.scss */
+/* line 626, ../scss/shared/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 627, ../scss/_base.scss */
+/* line 627, ../scss/shared/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 628, ../scss/_base.scss */
+/* line 628, ../scss/shared/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 629, ../scss/_base.scss */
+/* line 629, ../scss/shared/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 634, ../scss/_base.scss */
+/* line 634, ../scss/shared/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 635, ../scss/_base.scss */
+/* line 635, ../scss/shared/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 636, ../scss/_base.scss */
+/* line 636, ../scss/shared/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 637, ../scss/_base.scss */
+/* line 637, ../scss/shared/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 638, ../scss/_base.scss */
+/* line 638, ../scss/shared/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 639, ../scss/_base.scss */
+/* line 639, ../scss/shared/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10553,7 +10553,7 @@ ul.tabs li.active {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 652, ../scss/_base.scss */
+/* line 652, ../scss/shared/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10575,7 +10575,7 @@ ul.tabs li.active {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 664, ../scss/_base.scss */
+/* line 664, ../scss/shared/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10591,7 +10591,7 @@ ul.tabs li.active {
 }
 
 /* terminate actions (like cancel order) */
-/* line 669, ../scss/_base.scss */
+/* line 669, ../scss/shared/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10608,7 +10608,7 @@ ul.tabs li.active {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 676, ../scss/_base.scss */
+/* line 676, ../scss/shared/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10630,7 +10630,7 @@ ul.tabs li.active {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 689, ../scss/_base.scss */
+/* line 689, ../scss/shared/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10646,7 +10646,7 @@ ul.tabs li.active {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 695, ../scss/_base.scss */
+/* line 695, ../scss/shared/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10662,7 +10662,7 @@ ul.tabs li.active {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 700, ../scss/_base.scss */
+/* line 700, ../scss/shared/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10678,32 +10678,32 @@ ul.tabs li.active {
 }
 
 /*Firefox specific fixes*/
-/* line 707, ../scss/_base.scss */
+/* line 707, ../scss/shared/_base.scss */
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
 
 /*Complex radio selection stuff*/
-/* line 713, ../scss/_base.scss */
+/* line 713, ../scss/shared/_base.scss */
 .new-item-selection-content {
   margin-top: 0.6rem;
 }
 
 /*Radio and checkbox item long label wrapping workaround
 */
-/* line 722, ../scss/_base.scss */
+/* line 722, ../scss/shared/_base.scss */
 input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox"] + label {
   display: inline;
 }
 
-/* line 1, ../scss/_ui_autocomplete.scss */
+/* line 1, ../scss/shared/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;
 }
 
 /* Experimental Tiles Design */
-/* line 2, ../scss/_tiles.scss */
+/* line 2, ../scss/shared/_tiles.scss */
 .tiles-container {
   position: relative;
   top: 0px;
@@ -10714,7 +10714,7 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   align: center;
 }
 
-/* line 12, ../scss/_tiles.scss */
+/* line 12, ../scss/shared/_tiles.scss */
 .tile {
   width: 150px;
   height: 150px;
@@ -10724,7 +10724,7 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   position: relative;
   overflow: hidden;
 }
-/* line 21, ../scss/_tiles.scss */
+/* line 21, ../scss/shared/_tiles.scss */
 .tile .tile-content {
   position: absolute;
   top: 0;
@@ -10733,11 +10733,11 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   height: inherit;
   overflow: hidden;
 }
-/* line 29, ../scss/_tiles.scss */
+/* line 29, ../scss/shared/_tiles.scss */
 .tile .tile-content :first-child {
   display: block;
 }
-/* line 33, ../scss/_tiles.scss */
+/* line 33, ../scss/shared/_tiles.scss */
 .tile .tile-content .tile-icon {
   position: absolute;
   width: 64px;
@@ -10749,7 +10749,7 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   margin-left: -32px;
   text-align: center;
 }
-/* line 45, ../scss/_tiles.scss */
+/* line 45, ../scss/shared/_tiles.scss */
 .tile .tile-content .tile-title {
   position: absolute;
   bottom: 0;
@@ -10761,7 +10761,7 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 60, ../scss/_tiles.scss */
+/* line 60, ../scss/shared/_tiles.scss */
 .tile .tile-content .tile-title-common {
   border-bottom: 1px solid #eee;
   color: #222222;
@@ -10769,7 +10769,7 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 76, ../scss/_tiles.scss */
+/* line 76, ../scss/shared/_tiles.scss */
 .tile .tile-content .tile-overlay-slide-up {
   width: 100%;
   height: inherit;
@@ -10782,37 +10782,37 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   height: 100%;
   transition: all 0.3s ease;
 }
-/* line 91, ../scss/_tiles.scss */
+/* line 91, ../scss/shared/_tiles.scss */
 .tile .tile-content .tile-overlay-static {
   width: 100%;
   height: inherit;
   display: block;
   height: 100%;
 }
-/* line 99, ../scss/_tiles.scss */
+/* line 99, ../scss/shared/_tiles.scss */
 .tile .tile-image {
   display: block;
   width: 100%;
   height: 100%;
 }
-/* line 105, ../scss/_tiles.scss */
+/* line 105, ../scss/shared/_tiles.scss */
 .tile .tile-image-common {
   background-color: #ffffff;
   transition: all 0.6s ease;
 }
-/* line 110, ../scss/_tiles.scss */
+/* line 110, ../scss/shared/_tiles.scss */
 .tile .tile-image-cover {
   background-size: cover;
   background-repeat: no-repeat;
 }
-/* line 115, ../scss/_tiles.scss */
+/* line 115, ../scss/shared/_tiles.scss */
 .tile .tile-image-contain {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-/* line 126, ../scss/_tiles.scss */
+/* line 126, ../scss/shared/_tiles.scss */
 .tile-common {
   cursor: pointer;
   color: #fff;
@@ -10823,38 +10823,38 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   -ms-user-select: none;
   user-select: none;
 }
-/* line 136, ../scss/_tiles.scss */
+/* line 136, ../scss/shared/_tiles.scss */
 .tile-common a, .tile-common a:active, .tile-common a:visited {
   color: #fff;
 }
-/* line 138, ../scss/_tiles.scss */
+/* line 138, ../scss/shared/_tiles.scss */
 .tile-common:hover {
   outline: #999999 solid 3px;
 }
-/* line 141, ../scss/_tiles.scss */
+/* line 141, ../scss/shared/_tiles.scss */
 .tile-common:hover .tile-overlay-slide-up {
   top: 0;
   transition: all 0.3s ease;
 }
-/* line 146, ../scss/_tiles.scss */
+/* line 146, ../scss/shared/_tiles.scss */
 .tile-common:hover .tile-image-cover {
   -webkit-transform: scale(1.5);
   transform: scale(1.5);
   transition: all 0.6s ease;
 }
-/* line 152, ../scss/_tiles.scss */
+/* line 152, ../scss/shared/_tiles.scss */
 .tile-common:hover .tile-image-contain {
   -webkit-transform: scale(1.5);
   transform: scale(1.5);
   transition: all 0.6s ease;
 }
 
-/* line 168, ../scss/_tiles.scss */
+/* line 168, ../scss/shared/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 173, ../scss/_tiles.scss */
+/* line 173, ../scss/shared/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -10863,24 +10863,24 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   margin-left: -16px;
 }
 
-/* line 183, ../scss/_tiles.scss */
+/* line 183, ../scss/shared/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 184, ../scss/_tiles.scss */
+/* line 184, ../scss/shared/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 185, ../scss/_tiles.scss */
+/* line 185, ../scss/shared/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 187, ../scss/_tiles.scss */
+/* line 187, ../scss/shared/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -10889,12 +10889,12 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   margin-left: -64px;
 }
 
-/* line 197, ../scss/_tiles.scss */
+/* line 197, ../scss/shared/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 199, ../scss/_tiles.scss */
+/* line 199, ../scss/shared/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -10903,12 +10903,12 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   margin-left: -96px;
 }
 
-/* line 209, ../scss/_tiles.scss */
+/* line 209, ../scss/shared/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 211, ../scss/_tiles.scss */
+/* line 211, ../scss/shared/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -10917,69 +10917,69 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   margin-left: -128px;
 }
 
-/* line 224, ../scss/_tiles.scss */
+/* line 224, ../scss/shared/_tiles.scss */
 .tile-color-0, .tile-color-primary {
   background-color: #008cba !important;
 }
 
-/* line 225, ../scss/_tiles.scss */
+/* line 225, ../scss/shared/_tiles.scss */
 .tile-color-1, .tile-color-secondary {
   background-color: #e7e7e7 !important;
 }
 
-/* line 226, ../scss/_tiles.scss */
+/* line 226, ../scss/shared/_tiles.scss */
 .tile-color-2, .tile-color-alert {
   background-color: #f04124 !important;
 }
 
-/* line 227, ../scss/_tiles.scss */
+/* line 227, ../scss/shared/_tiles.scss */
 .tile-color-3, .tile-color-success {
   background-color: #43ac6a !important;
 }
 
-/* line 228, ../scss/_tiles.scss */
+/* line 228, ../scss/shared/_tiles.scss */
 .tile-color-4, .tile-color-warning {
   background-color: #f08a24 !important;
 }
 
-/* line 229, ../scss/_tiles.scss */
+/* line 229, ../scss/shared/_tiles.scss */
 .tile-color-5, .tile-color-info {
   background-color: #a0d3e8 !important;
 }
 
-/* line 230, ../scss/_tiles.scss */
+/* line 230, ../scss/shared/_tiles.scss */
 .tile-color-6 {
   background-color: #333333 !important;
 }
 
-/* line 231, ../scss/_tiles.scss */
+/* line 231, ../scss/shared/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc !important;
 }
 
-/* line 232, ../scss/_tiles.scss */
+/* line 232, ../scss/shared/_tiles.scss */
 .tile-color-8, .tile-color-default-title {
   background-color: #f9f9f9 !important;
 }
 
-/* line 235, ../scss/_tiles.scss */
+/* line 235, ../scss/shared/_tiles.scss */
 .tile-color-50l, .tile-color-primary-alpha-light,
 .tile-color-gallery-overlay-bg {
   background-color: rgba(0, 140, 186, 0.3) !important;
 }
 
-/* line 237, ../scss/_tiles.scss */
+/* line 237, ../scss/shared/_tiles.scss */
 .tile-color-50h, .tile-color-primary-alpha-heavy {
   background-color: rgba(0, 140, 186, 0.7) !important;
 }
 
-/* line 238, ../scss/_tiles.scss */
+/* line 238, ../scss/shared/_tiles.scss */
 .tile-color-58l, .tile-color-snow-alpha-light,
 .tile-color-gallery-title-bg {
   background-color: rgba(249, 249, 249, 0.3) !important;
 }
 
-/* line 240, ../scss/_tiles.scss */
+/* line 240, ../scss/shared/_tiles.scss */
 .tile-color-58h, .tile-color-snow-alpha-heavy {
   background-color: rgba(249, 249, 249, 0.7) !important;
 }
@@ -11037,19 +11037,19 @@ ul[data-pie-id] {
   padding: 10px;
 }
 
-/* line 44, ../scss/_chartsjs.scss */
+/* line 44, ../scss/shared/_chartsjs.scss */
 .chart-data {
   width: 100% !important;
   max-width: 800px;
   height: auto !important;
 }
-/* line 49, ../scss/_chartsjs.scss */
+/* line 49, ../scss/shared/_chartsjs.scss */
 .chart-data:before {
   content: '{"primaryFillColor":"rgba(0, 140, 186, 0.7)","primaryStrokeColor":"rgba(0, 140, 186, 0.9)","primaryPointStrokeColor":"rgba(0, 140, 186, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.7)","secondaryStrokeColor":"rgba(231, 231, 231, 0.9)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pieFillColor1":"#008cba","pieFillColor2":"#e7e7e7","pieFillColor3":"#f04124","pieFillColor4":"#43ac6a","pieFillColor5":"#f08a24","pieFillColor6":"#a0d3e8","pieHighlightColor1":"rgba(0, 140, 186, 0.6)","pieHighlightColor2":"rgba(231, 231, 231, 0.6)","pieHighlightColor3":"rgba(240, 65, 36, 0.6)","pieHighlightColor4":"rgba(67, 172, 106, 0.6)","pieHighlightColor5":"rgba(240, 138, 36, 0.6)","pieHighlightColor6":"rgba(160, 211, 232, 0.6)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleType":"linear","scaleDisplay":true,"scaleGridLineColor":"rgba(0,0,0,.1)","scaleLabelFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"scaleLabelFontSize":14,"scaleLabelFontColor":"#222222","scaleLabelDisplay":false,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
   display: none;
 }
 
-/* line 55, ../scss/_chartsjs.scss */
+/* line 55, ../scss/shared/_chartsjs.scss */
 canvas {
   margin: 0.5em 0;
 }
@@ -11057,7 +11057,7 @@ canvas {
 /*
 * Based on the works of Lyn http://foundation.zurb.com/forum/posts/18131-step-by-step-list
 */
-/* line 4, ../scss/_steps.scss */
+/* line 4, ../scss/shared/_steps.scss */
 .steps {
   cursor: pointer;
   display: inline-block;
@@ -11069,16 +11069,16 @@ canvas {
   padding-left: 0;
   margin: 0;
 }
-/* line 15, ../scss/_steps.scss */
+/* line 15, ../scss/shared/_steps.scss */
 .steps.expanded {
   display: block;
 }
-/* line 19, ../scss/_steps.scss */
+/* line 19, ../scss/shared/_steps.scss */
 .steps.radius {
   border-radius: 5px;
   border-radius: 1000px;
 }
-/* line 24, ../scss/_steps.scss */
+/* line 24, ../scss/shared/_steps.scss */
 .steps li {
   display: inline-block;
   position: relative;
@@ -11088,27 +11088,27 @@ canvas {
   box-sizing: border-box;
   font-size: 1rem;
 }
-/* line 34, ../scss/_steps.scss */
+/* line 34, ../scss/shared/_steps.scss */
 .steps.even-2 li {
   width: 50%;
 }
-/* line 35, ../scss/_steps.scss */
+/* line 35, ../scss/shared/_steps.scss */
 .steps.even-3 li {
   width: 33.33334%;
 }
-/* line 36, ../scss/_steps.scss */
+/* line 36, ../scss/shared/_steps.scss */
 .steps.even-4 li {
   width: 25%;
 }
-/* line 37, ../scss/_steps.scss */
+/* line 37, ../scss/shared/_steps.scss */
 .steps.even-5 li {
   width: 20%;
 }
-/* line 38, ../scss/_steps.scss */
+/* line 38, ../scss/shared/_steps.scss */
 .steps.even-6 li {
   width: 16.66667%;
 }
-/* line 40, ../scss/_steps.scss */
+/* line 40, ../scss/shared/_steps.scss */
 .steps li:after {
   display: block;
   position: absolute;
@@ -11123,29 +11123,29 @@ canvas {
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
-/* line 55, ../scss/_steps.scss */
+/* line 55, ../scss/shared/_steps.scss */
 .steps li:first-child {
   padding-left: 2.5em;
 }
-/* line 59, ../scss/_steps.scss */
+/* line 59, ../scss/shared/_steps.scss */
 .steps li:last-child {
   padding-right: 2.5em;
 }
-/* line 63, ../scss/_steps.scss */
+/* line 63, ../scss/shared/_steps.scss */
 .steps li:hover, .steps li:hover:after {
   background-color: #e6f4f9;
 }
-/* line 67, ../scss/_steps.scss */
+/* line 67, ../scss/shared/_steps.scss */
 .steps li.active,
 .steps li.active:after {
   background-color: #007295;
   color: #fff;
 }
-/* line 74, ../scss/_steps.scss */
+/* line 74, ../scss/shared/_steps.scss */
 .steps li.active a, .steps li.active a:hover, .steps li.active a:visited, .steps li.active a:active, .steps li.active a:focus {
   color: #fff;
 }
-/* line 79, ../scss/_steps.scss */
+/* line 79, ../scss/shared/_steps.scss */
 .steps li.disabled,
 .steps li.disabled:after {
   background-color: #fff;

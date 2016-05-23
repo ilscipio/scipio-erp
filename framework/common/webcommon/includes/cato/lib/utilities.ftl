@@ -65,8 +65,11 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml#listLocales"
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
-    type                    = (screen, default: screen) The type of resource to render
-                              * {{{screen}}}: an Ofbiz screen by {{{component://}}} location
+    type                    = (screen|menu|form|tree, default: screen) The type of resource to render
+                              * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
+                              * {{{menu}}}: an Ofbiz menu (widget) by {{{component://}}} location
+                              * {{{form}}}: an Ofbiz form (widget) by {{{component://}}} location
+                              * {{{tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{catoNullObject}}} variable.
@@ -87,6 +90,22 @@ TODO: Reimplement as transform.
         ${screens.render(resource, name)}<#t>
       <#else>
         ${screens.render(resource)}<#t>
+      </#if>
+    <#else>
+      <#if !name?has_content>
+        <#local parts = resource?split("#")>
+        <#local resource = parts[0]>
+        <#local name = (parts[1])!>
+      </#if>
+      <#-- DEV NOTE: WARN: name clashes -->
+      <#local dummy = setContextField("catoWidgetWrapperResName", name)>
+      <#local dummy = setContextField("catoWidgetWrapperResLocation", resource)>
+      <#if type == "menu">
+        ${screens.render("component://common/widget/CommonScreens.xml#catoMenuWidgetWrapper")}<#t>
+      <#elseif type == "form">
+        ${screens.render("component://common/widget/CommonScreens.xml#catoFormWidgetWrapper")}<#t>
+      <#elseif type == "tree">
+        ${screens.render("component://common/widget/CommonScreens.xml#catoTreeWidgetWrapper")}<#t>
       </#if>
     </#if>
   </@varSection>

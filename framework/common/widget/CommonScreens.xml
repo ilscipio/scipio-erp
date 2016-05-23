@@ -1217,4 +1217,26 @@ under the License.
     </screen>
     -->
     
+    <screen name="catoMenuWidgetWrapper">
+        <section>
+            <widgets>
+                <include-menu name="${catoWidgetWrapperResName}" location="${catoWidgetWrapperResLocation}" />
+            </widgets>
+        </section>
+    </screen>
+    <screen name="catoFormWidgetWrapper">
+        <section>
+            <widgets>
+                <include-form name="${catoWidgetWrapperResName}" location="${catoWidgetWrapperResLocation}" />
+            </widgets>
+        </section>
+    </screen>
+    <screen name="catoTreeWidgetWrapper">
+        <section>
+            <widgets>
+                <include-tree name="${catoWidgetWrapperResName}" location="${catoWidgetWrapperResLocation}" />
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

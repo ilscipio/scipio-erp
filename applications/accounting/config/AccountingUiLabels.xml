@@ -7305,7 +7305,7 @@
         <value xml:lang="zh_TW">隱藏欄位</value>
     </property>
     <property key="AccountingIncomesExpenses">
-    	<value xml:lang="en">Einnahmen &amp; Ausgaben</value>
+    	<value xml:lang="de">Einnahmen &amp; Ausgaben</value>
         <value xml:lang="en">Income &amp; Expenses</value>
     </property>
     <property key="AccountingIgnoreInvoiceItems">

@@ -369,6 +369,13 @@ under the License.
     <view-map name="FindRequest" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#FindRequest"/>
     <view-map name="ViewRequest" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#ViewRequest"/>
     <view-map name="EditRequest" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#EditRequest"/>
+    
+    
+    <view-map name="AnalyticsSales" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsSales"/>
+    <view-map name="AnalyticsLeads" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsLeads"/>
+    <view-map name="AnalyticsSegments" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsSegments"/>
+    <view-map name="AnalyticsTracking" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsTracking"/>
+    <view-map name="AnalyticsForecast" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsForecast"/>
 
     <!-- end of view mappings -->
 </site-conf>

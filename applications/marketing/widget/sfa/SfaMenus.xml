@@ -40,7 +40,7 @@ under the License.
         <menu-item name="Marketing" title="${uiLabelMap.MarketingMarketing}"><link target="FindMarketingCampaign"/></menu-item>
         <menu-item name="Sales" title="${uiLabelMap.SfaSales}"><link target="FindAccounts"/></menu-item>
         <menu-item name="Calendar" title="${uiLabelMap.SfaCalendar}"><link target="Calendar"/></menu-item>
-        <menu-item name="Analytics" title="${uiLabelMap.SfaAnalytics}"><link target="Analytics"/></menu-item>
+        <menu-item name="Analytics" title="${uiLabelMap.SfaAnalytics}"><link target="AnalyticsSales"/></menu-item>
     </menu>
     <menu name="SfaAppSideBar" title="${uiLabelMap.SfaManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SfaAppBar" recursive="full" />

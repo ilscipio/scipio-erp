@@ -46,6 +46,143 @@ under the License.
          </section>
     </screen>
     
+    <screen name="ViewQuote">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="ViewQuote"/>
+                
+                <set field="showQuoteManagementLinks" value="Y"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-field="quote"/>
+                <get-related-one value-field="quote" relation-name="QuoteType" to-value-field="quoteType"/>
+                <get-related-one value-field="quote" relation-name="StatusItem" to-value-field="statusItem"/>
+                <get-related-one value-field="quote" relation-name="SalesChannelEnumeration" to-value-field="salesChannel"/>
+                <get-related-one value-field="quote" relation-name="Uom" to-value-field="currency"/>
+                <get-related-one value-field="quote" relation-name="ProductStore" to-value-field="store"/>
+                
+                
+                <set field="listOrderBy[]" value="quoteItemSeqId"/>
+                <get-related value-field="quote" relation-name="QuoteItem" list="quoteItems" order-by-list="listOrderBy"/>
+                <get-related value-field="quote" relation-name="QuoteAdjustment" list="quoteAdjustments"/>
+                <get-related value-field="quote" relation-name="QuoteRole" list="quoteRoles"/>
+                <!--
+                <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
+                <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
+                -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.CommonHeader}">
+                            <include-form location="component://order/widget/forms/QuoteForms.xml" name="QuoteHeader" />
+                        </screenlet>
+                        <include-screen name="ViewQuoteTemplate"/>
+                        <screenlet title="${uiLabelMap.OrderCopyQuote}">
+                            <platform-specific>
+                                <html><html-template location="component://order/webapp/ordermgr/quote/CopyQuote.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ViewQuoteSimple">
+        <section>
+            <actions>
+                <set field="showQuoteManagementLinks" value="N"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-field="quote"/>
+                <get-related-one value-field="quote" relation-name="QuoteType" to-value-field="quoteType"/>
+                <get-related-one value-field="quote" relation-name="StatusItem" to-value-field="statusItem"/>
+                <get-related-one value-field="quote" relation-name="Uom" to-value-field="currency"/>
+                <get-related-one value-field="quote" relation-name="ProductStore" to-value-field="store"/>
+
+                <get-related value-field="quote" relation-name="QuoteItem" list="quoteItems"/>
+                <get-related value-field="quote" relation-name="QuoteAdjustment" list="quoteAdjustments"/>
+                <get-related value-field="quote" relation-name="QuoteRole" list="quoteRoles"/>
+
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <include-screen name="ViewQuoteTemplate"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="QuoteReport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="OrderOrderQuoteReport"/>
+
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-field="quote"/>
+                <get-related-one value-field="quote" relation-name="QuoteType" to-value-field="quoteType"/>
+                <get-related-one value-field="quote" relation-name="StatusItem" to-value-field="statusItem"/>
+                <get-related-one value-field="quote" relation-name="Uom" to-value-field="currency"/>
+                <get-related-one value-field="quote" relation-name="ProductStore" to-value-field="store"/>
+                <get-related-one value-field="quote" relation-name="Party" to-value-field="party"/>
+                <get-related value-field="quote" relation-name="QuoteTerm" list="quoteTerms"/>
+                
+                <set field="listOrderBy[]" value="quoteItemSeqId"/>
+                <get-related value-field="quote" relation-name="QuoteItem" list="quoteItems" order-by-list="listOrderBy"/>
+                <get-related value-field="quote" relation-name="QuoteAdjustment" list="quoteAdjustments"/>
+
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/GetPartyAddress.groovy"/>
+                <!--
+                <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
+                <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
+                <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
+                -->
+            </actions>
+            <widgets>
+                <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    <!-- at the top left of every page we put the logo and company information -->
+                    <decorator-section name="topLeft">
+                        <section>
+                            <widgets>
+                                <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <!-- at the top right of every page we put the order information -->
+                    <decorator-section name="topRight">
+                        <section>
+                            <widgets>
+                                <platform-specific>
+                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportHeaderInfo.fo.ftl"/></xsl-fo>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
+                                <platform-specific>
+                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportContactMechs.fo.ftl"/></xsl-fo>
+                                </platform-specific>
+                                <!-- quote items and totals -->
+                                <platform-specific>
+                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportBody.fo.ftl"/></xsl-fo>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="EditQuote">
         <section>
             <actions>
@@ -403,88 +540,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="EditQuoteReportMail">
-        <section>
-            <actions>
-                <set field="titleProperty" value="OrderOrderQuoteEditReportMail"/>
-                <set field="activeSubMenuItem" value="ViewQuote"/>
-
-                <set field="quoteId" from-field="parameters.quoteId"/>
-                <entity-one entity-name="Quote" value-field="quote"/>
-                <get-related-one value-field="quote" relation-name="Party" to-value-field="party"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/GetPartyEmailAddress.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet>
-                            <include-form name="EditQuoteReportMail" location="component://order/widget/forms/QuoteForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="ViewQuote">
-        <section>
-            <actions>
-                <set field="activeSubMenuItem" value="ViewQuote"/>
-                
-                <set field="showQuoteManagementLinks" value="Y"/>
-                <set field="quoteId" from-field="parameters.quoteId"/>
-                <entity-one entity-name="Quote" value-field="quote"/>
-                <get-related-one value-field="quote" relation-name="QuoteType" to-value-field="quoteType"/>
-                <get-related-one value-field="quote" relation-name="StatusItem" to-value-field="statusItem"/>
-                <get-related-one value-field="quote" relation-name="SalesChannelEnumeration" to-value-field="salesChannel"/>
-                <get-related-one value-field="quote" relation-name="Uom" to-value-field="currency"/>
-                <get-related-one value-field="quote" relation-name="ProductStore" to-value-field="store"/>
-                
-                
-                <set field="listOrderBy[]" value="quoteItemSeqId"/>
-                <get-related value-field="quote" relation-name="QuoteItem" list="quoteItems" order-by-list="listOrderBy"/>
-                <get-related value-field="quote" relation-name="QuoteAdjustment" list="quoteAdjustments"/>
-                <get-related value-field="quote" relation-name="QuoteRole" list="quoteRoles"/>
-                <!--
-                <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
-                <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
-                -->
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonHeader}">
-                            <include-form location="component://order/widget/forms/QuoteForms.xml" name="QuoteHeader" />
-                        </screenlet>
-                        <include-screen name="ViewQuoteTemplate"/>
-                        <screenlet title="${uiLabelMap.OrderCopyQuote}">
-                            <platform-specific>
-                                <html><html-template location="component://order/webapp/ordermgr/quote/CopyQuote.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="ViewQuoteInfo">
-        <section>
-            <actions>
-                <entity-and entity-name="QuoteTerm" list="quoteTerms">
-                    <field-map field-name="quoteId"  from-field="parameters.quoteId"/>
-                    <field-map field-name="quoteItemSeqId" value="_NA_"/>
-                </entity-and>
-                <entity-and entity-name="QuoteNoteView" list="quoteNotes">
-                    <field-map field-name="quoteId"  from-field="parameters.quoteId"/>
-                    <order-by field-name="-noteDateTime"/>
-                </entity-and>
-            </actions>
-            <widgets>
-                    <include-screen name="QuoteTermsInfo"/>
-            </widgets>
-        </section>
-    </screen>
     
     <screen name="ViewQuoteProfit">
         <section>
@@ -524,32 +579,29 @@ under the License.
         </section>
     </screen>
     
-    <screen name="ViewQuoteSimple">
+    <screen name="EditQuoteReportMail">
         <section>
             <actions>
-                <set field="showQuoteManagementLinks" value="N"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditReportMail"/>
+                <set field="activeSubMenuItem" value="ViewQuote"/>
+
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <entity-one entity-name="Quote" value-field="quote"/>
-                <get-related-one value-field="quote" relation-name="QuoteType" to-value-field="quoteType"/>
-                <get-related-one value-field="quote" relation-name="StatusItem" to-value-field="statusItem"/>
-                <get-related-one value-field="quote" relation-name="Uom" to-value-field="currency"/>
-                <get-related-one value-field="quote" relation-name="ProductStore" to-value-field="store"/>
-
-                <get-related value-field="quote" relation-name="QuoteItem" list="quoteItems"/>
-                <get-related value-field="quote" relation-name="QuoteAdjustment" list="quoteAdjustments"/>
-                <get-related value-field="quote" relation-name="QuoteRole" list="quoteRoles"/>
-
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <get-related-one value-field="quote" relation-name="Party" to-value-field="party"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/GetPartyEmailAddress.groovy"/>
             </actions>
             <widgets>
-                <include-screen name="ViewQuoteTemplate"/>
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="EditQuoteReportMail" location="component://order/widget/forms/QuoteForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ViewQuoteTemplate">
         <section>
             <condition>
@@ -570,12 +622,54 @@ under the License.
         </section>
     </screen>
     
+    <screen name="ViewQuoteInfo">
+        <section>
+            <actions>
+                <entity-and entity-name="QuoteTerm" list="quoteTerms">
+                    <field-map field-name="quoteId"  from-field="parameters.quoteId"/>
+                    <field-map field-name="quoteItemSeqId" value="_NA_"/>
+                </entity-and>
+                <entity-and entity-name="QuoteNoteView" list="quoteNotes">
+                    <field-map field-name="quoteId"  from-field="parameters.quoteId"/>
+                    <order-by field-name="-noteDateTime"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                    <include-screen name="QuoteTermsInfo"/>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="quoteInfo">
         <section>
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://order/webapp/ordermgr/quote/quoteInfo.ftl"/></html>
                 </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ListQuoteInfo">
+        <section>
+            <condition>
+                <not><if-empty field="quoteTerms"/></not>
+            </condition>
+            <widgets>
+                <screenlet title="${uiLabelMap.OrderOrderQuoteTermList}">
+                    <include-form name="ListQuoteInfo" location="component://order/widget/ordermgr/QuoteForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ListQuoteNoteInfo">
+        <section>
+            <condition>
+                <not><if-empty field="quoteNotes"/></not>
+            </condition>
+            <widgets>
+                <screenlet title="${uiLabelMap.OrderOrderQuoteNotes}">
+                    <include-form name="ListQuoteNoteInfo" location="component://order/widget/forms/QuoteForms.xml"/>
+                </screenlet>
             </widgets>
         </section>
     </screen>
@@ -590,107 +684,12 @@ under the License.
         </section>
     </screen>
     
-    <screen name="QuoteReport">
-        <section>
-            <actions>
-                <set field="titleProperty" value="OrderOrderQuoteReport"/>
-
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="quoteId" from-field="parameters.quoteId"/>
-                <entity-one entity-name="Quote" value-field="quote"/>
-                <get-related-one value-field="quote" relation-name="QuoteType" to-value-field="quoteType"/>
-                <get-related-one value-field="quote" relation-name="StatusItem" to-value-field="statusItem"/>
-                <get-related-one value-field="quote" relation-name="Uom" to-value-field="currency"/>
-                <get-related-one value-field="quote" relation-name="ProductStore" to-value-field="store"/>
-                <get-related-one value-field="quote" relation-name="Party" to-value-field="party"/>
-                <get-related value-field="quote" relation-name="QuoteTerm" list="quoteTerms"/>
-                
-                <set field="listOrderBy[]" value="quoteItemSeqId"/>
-                <get-related value-field="quote" relation-name="QuoteItem" list="quoteItems" order-by-list="listOrderBy"/>
-                <get-related value-field="quote" relation-name="QuoteAdjustment" list="quoteAdjustments"/>
-
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/GetPartyAddress.groovy"/>
-                <!--
-                <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
-                <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
-                <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
-                -->
-            </actions>
-            <widgets>
-                <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
-                    <!-- at the top left of every page we put the logo and company information -->
-                    <decorator-section name="topLeft">
-                        <section>
-                            <widgets>
-                                <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <!-- at the top right of every page we put the order information -->
-                    <decorator-section name="topRight">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportHeaderInfo.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportContactMechs.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                                <!-- quote items and totals -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportBody.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
     <screen name="quoteRoles">
         <section>
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://order/webapp/ordermgr/quote/quoteRoles.ftl"/></html>
                 </platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="QuoteTermsInfo">
-        <section>
-            <condition>
-                <not><if-empty field="quoteTerms"/></not>
-            </condition>
-            <widgets>
-                <screenlet title="${uiLabelMap.CommonTerms}">
-                    <include-form name="ListQuoteInfo" location="component://order/widget/forms/QuoteForms.xml"/>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="ListQuoteNoteInfo">
-        <section>
-            <condition>
-                <not><if-empty field="quoteNotes"/></not>
-            </condition>
-            <widgets>
-                <screenlet title="${uiLabelMap.OrderOrderQuoteNotes}">
-                    <include-form name="ListQuoteNoteInfo" location="component://order/widget/forms/QuoteForms.xml"/>
-                </screenlet>
             </widgets>
         </section>
     </screen>
@@ -867,4 +866,16 @@ under the License.
         </section>
     </screen>
 
+    <screen name="QuoteTermsInfo">
+        <section>
+            <condition>
+                <not><if-empty field="quoteTerms"/></not>
+            </condition>
+            <widgets>
+                <screenlet title="${uiLabelMap.CommonTerms}">
+                    <include-form name="ListQuoteInfo" location="component://order/widget/forms/QuoteForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
 </screens>

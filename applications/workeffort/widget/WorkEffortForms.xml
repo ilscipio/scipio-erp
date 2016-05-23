@@ -1089,7 +1089,7 @@ under the License.
         <field name="reviewText"><textarea rows="5" cols="60"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
-    <form name="ListWorkEffortReviews" type="list" target="updateWorkEffortReview" list-name="productWorkEfforts" separate-columns="true"
+    <form name="ListWorkEffortReviews" type="list" target="updateWorkEffortReview" list-name="workEffortReviews" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortReview" use-cache="true" list="workEffortReviews">
@@ -1180,6 +1180,7 @@ under the License.
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortContactMech">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="contactMechId"/>
+                <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
     </form>

@@ -58,146 +58,6 @@ body {}
 div.form-field-entry div.field-entry-widgetpostfix, 
 div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important;}
 
-
-
-/* NAVIGATION */
-
-/* Cato: duplicated from "side-nav" mixin and modified */
-@mixin side-nav-nested(
-  $divider-color:$side-nav-divider-color,
-  $font-size:$side-nav-font-size,
-  $link-color:$side-nav-link-color,
-  $link-color-active:$side-nav-link-color-active,
-  $link-color-hover:$side-nav-link-color-hover,
-  $link-bg-hover:$side-nav-link-bg-hover) {
-  display: block;
-  font-family: $side-nav-font-family;
-  list-style-position: $side-nav-list-position;
-  // TODO?: this could maybe use a caret ">" image?
-  list-style-type: $side-nav-list-type;
-  //margin: 0;
-  margin-left: rem-calc(12);
-  //padding: $side-nav-padding;
-
-  li {
-    font-size: $font-size;
-    font-weight: $side-nav-font-weight;
-    margin: $side-nav-list-margin;
-
-    // Cato: added child selector here
-    > a:not(.button) {
-      color: $link-color;
-      display: block;
-      margin: $side-nav-link-margin;
-      padding: $side-nav-link-padding;
-      &:hover,
-      &:focus {
-        background: $link-bg-hover;
-        color: $link-color-hover;
-      }
-      &:active {
-        color: $link-color-active;
-      }
-    }
-
-    &.active > a:first-child:not(.button) {
-      color: $side-nav-link-color-active;
-      font-family: $side-nav-font-family-active;
-      font-weight: $side-nav-font-weight-active;
-    }
-
-    &.divider {
-      border-top: $side-nav-divider-size $side-nav-divider-style;
-      height: 0;
-      list-style: none;
-      padding: 0;
-      border-top-color: $divider-color;
-    }
-
-    &.heading {
-      color: $side-nav-heading-color;
-      font: {
-        size: $side-nav-heading-font-size;
-        weight: $side-nav-heading-font-weight;
-      }
-      text-transform: $side-nav-heading-text-transform;
-    }
-  }
-}
-
-
-
-.side-nav {
-    margin-top:0px;
-    background: #FAFAFA;
-    padding:0px;
-
-    form {padding:0px;}
-
-    input[type="search"]:focus {
-        box-shadow: 0 0 0 !important; }
-        
-    li {
-        &.disabled {
-            // This comes out wrong now...?
-            //padding: $side-nav-link-padding;
-            color: $aluminum;
-            cursor: $input-disabled-cursor;
-            
-            > a, > a:hover, > a:visited, > a:active, > a:focus {
-                color: $aluminum;
-                cursor: $input-disabled-cursor;
-            }
-        }
-        &.dashboard {
-            background-color: $white-smoke;
-            border-bottom: 1px solid $gainsboro;
-            
-            a {
-                color: $jet;
-            }
-        }
-        
-        &.active {
-            //Overrides side_nav
-            background: rgba(0, 64, 84, 0.05);
-            > a:first-child:not(.button) {
-                cursor: $sub-nav-active-cursor;
-            }
-        }
-    }
-    
-    /* Nested sidebar menu element */
-    .menu-type-sidebar.nested-sametype {
-        /* NOTE: this will clash with some of the above; best-effort */
-        @include side-nav-nested;
-        
-        li {
-            &.active {
-                background: inherit;
-            }
-        }
-    }
-}
-
-
-.sub-top-bar {@include sub-nav(); 
-    margin-top:8px;
-    
-    dt a, dd a, li a {
-        background-color: $ghost;
-        color: $primary-color;
-        border-radius: $button-radius;
-    }
-}
-
-
-// Logo
-li.name img { 
-    width: auto;
-    height: 22px;
-}
-
 /* CONTENT */
 .align-right {
   text-align: right;
@@ -264,35 +124,6 @@ table.basic-table {
     background-size: cover;
 }
 
-.login-box {
-  margin: 200px 0;
-  padding:0px;
-  min-width: 500px;
-  
-  #login-box-title {
-      
-    h1 {
-        img {height:22px; margin-right:10px;}
-    }
-  }
-  
-  a {color:$primary-color;}
-  
-  #login-box-content {
-      margin-top:20px;
-      padding: 40px 20px 0 20px;
-      box-shadow: 1px 1px 2px rgba(0, 0, 0, .25);
-      -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .25);
-      -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .25);
-      border: 1px solid #fafafa;
-      background: #fff;
-  }
-}
-
-@media (max-width:610px) {
-    .login-box  {position:static; width:100%;margin-left:0;padding:10px;margin-top:50px;}
-}
-
 .inline-list {
     li {margin-bottom:10px;}
 
@@ -354,46 +185,6 @@ fieldset {
     writing-mode: tb-rl;
     }
 
-pre {
-    /* original is white background with no border */
-    background-color: #fff;
-    white-space: pre-wrap; /* CSS3 */
-    white-space: -moz-pre-wrap; /* Mozilla, post millennium */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    word-wrap: break-word;
-    padding: 4px;
-    color: #333;
-    font-size: 11px;
-    line-height: 16px;
-    margin-bottom: 20px;
-    background-color: #f8f8f8;
-    border-color: #dfdfdf;
-    border-style: solid;
-    border-width: 1px;
-}
-
-pre, code {
-}
-
-code {
-    margin:0px;
-    padding:0px;
-    border:none;
-    background:none;
-    .INFO {color:$oil;}
-    .DEBUG {}
-    .WARN {color:$warning-color;}
-    .ERROR {color:$alert-color;}
-    .FATAL {color:$alert-color;font-weight:bold;}
-    .TRACE {color:$aluminum;}
-}
-
-pre.scrollable {
-    max-height:500px;
-    overflow-x:scroll;
-}
-
 .postfix input[type="submit"], .postfix button, {
         background: $input-prefix-bg;
         border-color: $input-prefix-border-color;
@@ -454,27 +245,6 @@ div.section-screenlet-container.no-title, div.section-screenlet-content.no-title
 // apply as close to first elem as possible
 div.section-screenlet-container.no-title.no-menu {
     margin-top: 0;
-}
-
-/*  FOOTER */
-#body-content {
-  min-height: 100%;
-  margin-bottom: -26px; 
-} 
-
-#body-content:after {
-  content: "";
-  display: block;
-}
-
-#body-content:after, #footer{
-  height: 26px;
-}
- 
-#footer {
-  background: $oil;
-  color: $smoke;
-  width: 100%;
 }
 
 /*MISC*/

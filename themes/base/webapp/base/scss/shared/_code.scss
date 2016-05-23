@@ -1,0 +1,39 @@
+pre {
+    /* original is white background with no border */
+    background-color: #fff;
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Mozilla, post millennium */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word;
+    padding: 4px;
+    color: #333;
+    font-size: 11px;
+    line-height: 16px;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    border-color: #dfdfdf;
+    border-style: solid;
+    border-width: 1px;
+}
+
+pre, code {
+}
+
+code {
+    margin:0px;
+    padding:0px;
+    border:none;
+    background:none;
+    .INFO {color:$oil;}
+    .DEBUG {}
+    .WARN {color:$warning-color;}
+    .ERROR {color:$alert-color;}
+    .FATAL {color:$alert-color;font-weight:bold;}
+    .TRACE {color:$aluminum;}
+}
+
+pre.scrollable {
+    max-height:500px;
+    overflow-x:scroll;
+}

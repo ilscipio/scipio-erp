@@ -9799,51 +9799,659 @@ div.form-field-entry div.field-entry-widget {
   float: left !important;
 }
 
+/* CONTENT */
+/* line 62, ../scss/shared/_base.scss */
+.align-right {
+  text-align: right;
+  word-break: normal;
+}
+
+/* line 67, ../scss/shared/_base.scss */
+.align-center {
+  text-align: center;
+  word-break: normal;
+}
+
+/* line 72, ../scss/shared/_base.scss */
+.amount {
+  text-align: right;
+  word-break: normal;
+}
+
+/* line 77, ../scss/shared/_base.scss */
+#content-main-section {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+/* line 82, ../scss/shared/_base.scss */
+#content-main-body {
+  width: 100%;
+  min-height: 100%;
+  position: relative;
+}
+
+/* line 88, ../scss/shared/_base.scss */
+h1 {
+  margin-bottom: 1rem;
+}
+
+/* line 93, ../scss/shared/_base.scss */
+input[type="button"], input[type="submit"], .buttontext {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  padding: 1rem 2rem 1.0625rem 2rem;
+  font-size: 1rem;
+  background-color: #008cba;
+  border-color: #007095;
+  color: white;
+  transition: background-color 300ms ease-out;
+  padding: 0.625rem 1.25rem 0.6875rem 1.25rem;
+  font-size: 0.6875rem;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hover, input[type="submit"]:focus, .buttontext:hover, .buttontext:focus {
+  background-color: #007095;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hover, input[type="submit"]:focus, .buttontext:hover, .buttontext:focus {
+  color: white;
+}
+
+/* line 96, ../scss/shared/_base.scss */
+table.basic-table {
+  width: 100%;
+}
+/* line 98, ../scss/shared/_base.scss */
+table.basic-table tr {
+  background: none;
+}
+/* line 101, ../scss/shared/_base.scss */
+table.basic-table tr td {
+  height: auto;
+  vertical-align: top;
+}
+/* line 107, ../scss/shared/_base.scss */
+table.basic-table tr.odd {
+  background: #fafafa;
+}
+/* line 109, ../scss/shared/_base.scss */
+table.basic-table input {
+  margin: 0px;
+}
+
+/* line 113, ../scss/shared/_base.scss */
+.reveal-modal {
+  box-shadow: none;
+}
+@media only screen and (min-width: 40.0625em) {
+  /* line 113, ../scss/shared/_base.scss */
+  .reveal-modal {
+    top: 12.5rem;
+  }
+}
+
+/* line 119, ../scss/shared/_base.scss */
+.page-noauth, .page-requirePasswordChange {
+  background: url("/base-theme/images/background3.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+/* line 128, ../scss/shared/_base.scss */
+.inline-list li {
+  margin-bottom: 10px;
+}
+
+/* line 132, ../scss/shared/_base.scss */
+td {
+  word-break: normal;
+}
+
+/* line 133, ../scss/shared/_base.scss */
+td.button-col {
+  word-break: normal;
+}
+
+/* line 135, ../scss/shared/_base.scss */
+td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
+  word-break: normal;
+}
+
+/* line 138, ../scss/shared/_base.scss */
+.toggleField fieldset {
+  border: none;
+  color: #008cba;
+  margin: 10px 0px;
+  padding: 8px 0px;
+}
+
+/* line 144, ../scss/shared/_base.scss */
+fieldset {
+  border: none;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+/* line 149, ../scss/shared/_base.scss */
+fieldset legend {
+  padding: 0px;
+  margin: 0px;
+  text-align: right;
+  background: none;
+}
+/* line 156, ../scss/shared/_base.scss */
+fieldset legend:hover {
+  color: #0078a0;
+  cursor: pointer;
+}
+
+/* line 163, ../scss/shared/_base.scss */
+.collapsed {
+  display: inline-block;
+}
+
+/* line 167, ../scss/shared/_base.scss */
+.rotate-90 {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  writing-mode: tb-rl;
+}
+
+/* line 174, ../scss/shared/_base.scss */
+.rotate-180 {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  writing-mode: tb-rl;
+}
+
+/* line 181, ../scss/shared/_base.scss */
+.rotate-270 {
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  writing-mode: tb-rl;
+}
+
+/* line 188, ../scss/shared/_base.scss */
+.postfix input[type="submit"], .postfix button {
+  background: #f2f2f2;
+  border-color: #cccccc;
+  border-size: 1px;
+  border-type: solid;
+  color: #333333;
+  padding-left: 0px;
+  padding-right: 0px;
+  font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.2rem;
+}
+
+/* line 200, ../scss/shared/_base.scss */
+.postfix i {
+  font-size: 1.2rem;
+}
+
+/* line 202, ../scss/shared/_base.scss */
+.postfix .fi {
+  font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.2rem;
+  line-height: 0.9rem;
+}
+
+/* line 209, ../scss/shared/_base.scss */
+ul.chart-legend, ul.checkmark {
+  list-style: none;
+}
+/* line 213, ../scss/shared/_base.scss */
+ul.checkmark {
+  margin: 0px;
+}
+/* line 217, ../scss/shared/_base.scss */
+ul.checkmark li:before {
+  font-family: "FontAwesome";
+  content: "\f00c";
+  padding-right: 10px;
+}
+
+/* line 227, ../scss/shared/_base.scss */
+div.section-screenlet-content {
+  margin-bottom: 0.5rem;
+}
+
+/* line 233, ../scss/shared/_base.scss */
+div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
+  margin-bottom: 0;
+}
+
+/* line 242, ../scss/shared/_base.scss */
+div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
+  margin-top: 0.2rem;
+}
+
+/* line 246, ../scss/shared/_base.scss */
+div.section-screenlet-container.no-title.no-menu {
+  margin-top: 0;
+}
+
+/*MISC*/
+/* line 254, ../scss/shared/_base.scss */
+.progress .meter {
+  transition-duration: 3s;
+}
+
+/* line 259, ../scss/shared/_base.scss */
+.button-group .text-entry {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+/* no longer needed for now
+.form-field-label-asterisk {
+}
+.form-field-input-asterisk {
+  display: none;
+}
+*/
+@media only screen and (min-width: 40.0625em) and (max-width: 64em) {
+  /* line 274, ../scss/shared/_base.scss */
+  input, select, text-area {
+    max-width: 100%;
+  }
+}
+@media only screen and (max-width: 40em) {
+  /* line 279, ../scss/shared/_base.scss */
+  input, select, text-area {
+    max-width: 100%;
+  }
+
+  /* line 281, ../scss/shared/_base.scss */
+  .login-box {
+    min-width: 0;
+  }
+}
+/* FIXUPS */
+/* no longer used - quick custom workaround for be able to scroll tables.
+div.scrollable-table-container {
+  overflow-x: scroll;
+  // FIXME: should get same margin as table had, not hardcoded, but doesn't collapse
+  margin-bottom: 1.25rem;
+}
+div.scrollable-table-container > table {
+  margin-bottom: 0;
+}
+*/
+/* line 301, ../scss/shared/_base.scss */
+.field-entry-widget.field-entry-type-display:last-child {
+  margin-bottom: 1rem;
+}
+
+/* line 307, ../scss/shared/_base.scss */
+.radio-item-inline.radio-item-separator {
+  display: none;
+}
+
+/* line 310, ../scss/shared/_base.scss */
+.checkbox-item-inline.checkbox-item-separator {
+  display: none;
+}
+
+/* line 315, ../scss/shared/_base.scss */
+.asmListItemRemove {
+  margin-left: 1rem;
+}
+
+/* line 320, ../scss/shared/_base.scss */
+table.table-type-data .button {
+  margin-bottom: 0.1rem;
+}
+
+/*table .button {
+  margin-bottom:0.1rem;
+}*/
+/* Tables where having zero cellspacing is extremely important (should be rare) 
+  TODO?: along with this we could have styles for table.table-hint-spacing-tiny and similar... but in this theme currently seems minor...
+      .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
+      .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
+  */
+/* line 333, ../scss/shared/_base.scss */
+table.table-nocellspacing, table.table-nocellspacing-hint {
+  border-spacing: 0 !important;
+  border-collapse: collapse !important;
+}
+
+/* line 338, ../scss/shared/_base.scss */
+table.table-noborder, table.table-noborder-hint {
+  border: none !important;
+}
+
+/* line 344, ../scss/shared/_base.scss */
+input.field-inline, select.field-inline, textarea.field-inline {
+  display: inline;
+  width: auto;
+}
+
+/* line 350, ../scss/shared/_base.scss */
+.has-tip.field-tooltip-wrap {
+  font-weight: normal;
+  border-bottom: 0;
+}
+
+/*Tabs*/
+/* line 358, ../scss/shared/_base.scss */
+ul.tabs {
+  border-bottom: 1px solid #efefef;
+}
+/* line 360, ../scss/shared/_base.scss */
+ul.tabs li {
+  position: relative;
+  bottom: -1px;
+  border-top: 1px solid #efefef;
+  border-left: 1px solid #efefef;
+  border-right: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+}
+/* line 367, ../scss/shared/_base.scss */
+ul.tabs li.active {
+  border-bottom: 1px solid #fff;
+}
+
+/* line 373, ../scss/shared/_base.scss */
+.tabs-content {
+  border-left: 1px solid #efefef;
+  border-right: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+}
+/* line 377, ../scss/shared/_base.scss */
+.tabs-content .content {
+  padding: 20px;
+}
+
+/* Special panels */
+/* line 382, ../scss/shared/_base.scss */
+.text-line-list ul, ul.text-line-list {
+  list-style: none outside none;
+  margin-left: 0;
+}
+
+/* line 386, ../scss/shared/_base.scss */
+.text-line-list li:empty, .text-line-list .text-line:empty {
+  display: none;
+}
+
+/* GENERAL ELEMENT COLORS */
+/* line 394, ../scss/shared/_base.scss */
+.colored-elem.primary, .colored-elem {
+  color: #008cba;
+}
+
+/* line 395, ../scss/shared/_base.scss */
+.colored-elem.secondary {
+  color: #e7e7e7;
+}
+
+/* line 396, ../scss/shared/_base.scss */
+.colored-elem.info {
+  color: #a0d3e8;
+}
+
+/* line 397, ../scss/shared/_base.scss */
+.colored-elem.success {
+  color: #43ac6a;
+}
+
+/* line 398, ../scss/shared/_base.scss */
+.colored-elem.warning {
+  color: #f08a24;
+}
+
+/* line 399, ../scss/shared/_base.scss */
+.colored-elem.alert {
+  color: #f04124;
+}
+
+/* TEXT COLORS */
+/* line 404, ../scss/shared/_base.scss */
+.colored-text.primary, .colored-text {
+  color: #008cba;
+}
+
+/* line 405, ../scss/shared/_base.scss */
+.colored-text.secondary {
+  color: #e7e7e7;
+}
+
+/* line 406, ../scss/shared/_base.scss */
+.colored-text.info {
+  color: #a0d3e8;
+}
+
+/* line 407, ../scss/shared/_base.scss */
+.colored-text.success {
+  color: #43ac6a;
+}
+
+/* line 408, ../scss/shared/_base.scss */
+.colored-text.warning {
+  color: #f08a24;
+}
+
+/* line 409, ../scss/shared/_base.scss */
+.colored-text.alert {
+  color: #f04124;
+}
+
+/* ACTION (LINK) STYLES */
+/* 2016-01-18: DEV NOTE: colors here are not final style choices, only demos of things that can be done for action links. 
+  not all links and menu items have the appropriate classes yet, but many do. 
+  the most important is probably to have a different visual indication for .action-run.action-scope-sys.action-modify (see below) so that
+  actions that modify state of system are made clear to user. In stock ofbiz these are ambiguous and easily confused with nav links.
+  note that system- vs session- vs page- changing actions can be styled separately. */
+/* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
+  NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
+/* line 422, ../scss/shared/_base.scss */
+.action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
+  background-color: #43ac6a;
+  border-color: #368a55;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-modify.action-add.button:hover, .action-nav.action-modify.action-add.button:focus, .action-nav.action-modify.action-add .button:hover, .action-nav.action-modify.action-add .button:focus {
+  background-color: #368a55;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-modify.action-add.button:hover, .action-nav.action-modify.action-add.button:focus, .action-nav.action-modify.action-add .button:hover, .action-nav.action-modify.action-add .button:focus {
+  color: white;
+}
+
+/* REMOVED: no need to make this green, looks strange, so only do it for nav version (above); already covered by action-modify style further below
+ individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) 
+.action-run.action-scope-sys.action-modify.action-add.button, .action-run.action-scope-sys.action-modify.action-add .button {
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
+}
+*/
+/* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
+/* line 434, ../scss/shared/_base.scss */
+.action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
+  background-color: #43ac6a;
+  border-color: #368a55;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-session.action-modify.action-continue.button:hover, .action-run.action-scope-session.action-modify.action-continue.button:focus, .action-run.action-scope-session.action-modify.action-continue .button:hover, .action-run.action-scope-session.action-modify.action-continue .button:focus {
+  background-color: #368a55;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-session.action-modify.action-continue.button:hover, .action-run.action-scope-session.action-modify.action-continue.button:focus, .action-run.action-scope-session.action-modify.action-continue .button:hover, .action-run.action-scope-session.action-modify.action-continue .button:focus {
+  color: white;
+}
+
+/* terminate actions (like cancel order) */
+/* line 439, ../scss/shared/_base.scss */
+.action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
+  background-color: #f08a24;
+  border-color: #cf6e0e;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-terminate.button:hover, .action-run.action-scope-sys.action-modify.action-terminate.button:focus, .action-run.action-scope-sys.action-modify.action-terminate .button:hover, .action-run.action-scope-sys.action-modify.action-terminate .button:focus {
+  background-color: #cf6e0e;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-terminate.button:hover, .action-run.action-scope-sys.action-modify.action-terminate.button:focus, .action-run.action-scope-sys.action-modify.action-terminate .button:hover, .action-run.action-scope-sys.action-modify.action-terminate .button:focus {
+  color: white;
+}
+
+/* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
+  FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
+/* line 446, ../scss/shared/_base.scss */
+.action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
+  background-color: #a0d3e8;
+  border-color: #61b6d9;
+  color: #333333;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.button:hover, .action-run.action-scope-sys.action-modify.button:focus, .action-run.action-scope-sys.action-modify .button:hover, .action-run.action-scope-sys.action-modify .button:focus {
+  background-color: #61b6d9;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.button:hover, .action-run.action-scope-sys.action-modify.button:focus, .action-run.action-scope-sys.action-modify .button:hover, .action-run.action-scope-sys.action-modify .button:focus {
+  color: white;
+}
+
+/* individual actions that modify only session or local state 
+  FIXME?: should use different color from system? removed for now...
+.action-run.action-scope-session.action-modify.button, .action-run.action-scope-session.action-modify .button,
+.action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button, {
+   @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
+}*/
+/* high-importance modify actions, like create order button */
+/* line 459, ../scss/shared/_base.scss */
+.action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
+  background-color: #f04124;
+  border-color: #cf2a0e;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-importance-high.button:hover, .action-run.action-scope-sys.action-modify.action-importance-high.button:focus, .action-run.action-scope-sys.action-modify.action-importance-high .button:hover, .action-run.action-scope-sys.action-modify.action-importance-high .button:focus {
+  background-color: #cf2a0e;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-importance-high.button:hover, .action-run.action-scope-sys.action-modify.action-importance-high.button:focus, .action-run.action-scope-sys.action-modify.action-importance-high .button:hover, .action-run.action-scope-sys.action-modify.action-importance-high .button:focus {
+  color: white;
+}
+
+/* special nav cancel/back/return action button (alt regular color) */
+/* line 465, ../scss/shared/_base.scss */
+.action-nav.action-cancel.button, .action-nav.action-cancel .button {
+  background-color: #e7e7e7;
+  border-color: #b9b9b9;
+  color: #333333;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-cancel.button:hover, .action-nav.action-cancel.button:focus, .action-nav.action-cancel .button:hover, .action-nav.action-cancel .button:focus {
+  background-color: #b9b9b9;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-cancel.button:hover, .action-nav.action-cancel.button:focus, .action-nav.action-cancel .button:hover, .action-nav.action-cancel .button:focus {
+  color: #333333;
+}
+
+/* special run-action cancel action button (warning color) */
+/* line 470, ../scss/shared/_base.scss */
+.action-run.action-cancel.button, .action-run.action-cancel .button {
+  background-color: #f08a24;
+  border-color: #cf6e0e;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-cancel.button:hover, .action-run.action-cancel.button:focus, .action-run.action-cancel .button:hover, .action-run.action-cancel .button:focus {
+  background-color: #cf6e0e;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-cancel.button:hover, .action-run.action-cancel.button:focus, .action-run.action-cancel .button:hover, .action-run.action-cancel .button:focus {
+  color: white;
+}
+
+/*Firefox specific fixes*/
+/* line 477, ../scss/shared/_base.scss */
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/*Complex radio selection stuff*/
+/* line 483, ../scss/shared/_base.scss */
+.new-item-selection-content {
+  margin-top: 0.6rem;
+}
+
+/*Radio and checkbox item long label wrapping workaround
+*/
+/* line 492, ../scss/shared/_base.scss */
+input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox"] + label {
+  display: inline;
+}
+
 /* NAVIGATION */
 /* Cato: duplicated from "side-nav" mixin and modified */
-/* line 130, ../scss/shared/_base.scss */
+/* line 68, ../scss/shared/_sidebar.scss */
 .side-nav {
   margin-top: 0px;
   background: #FAFAFA;
   padding: 0px;
   /* Nested sidebar menu element */
 }
-/* line 135, ../scss/shared/_base.scss */
+/* line 73, ../scss/shared/_sidebar.scss */
 .side-nav form {
   padding: 0px;
 }
-/* line 137, ../scss/shared/_base.scss */
+/* line 75, ../scss/shared/_sidebar.scss */
 .side-nav input[type="search"]:focus {
   box-shadow: 0 0 0 !important;
 }
-/* line 141, ../scss/shared/_base.scss */
+/* line 79, ../scss/shared/_sidebar.scss */
 .side-nav li.disabled {
   color: #999999;
   cursor: default;
 }
-/* line 147, ../scss/shared/_base.scss */
+/* line 85, ../scss/shared/_sidebar.scss */
 .side-nav li.disabled > a, .side-nav li.disabled > a:hover, .side-nav li.disabled > a:visited, .side-nav li.disabled > a:active, .side-nav li.disabled > a:focus {
   color: #999999;
   cursor: default;
 }
-/* line 152, ../scss/shared/_base.scss */
+/* line 90, ../scss/shared/_sidebar.scss */
 .side-nav li.dashboard {
   background-color: whitesmoke;
   border-bottom: 1px solid #dddddd;
 }
-/* line 156, ../scss/shared/_base.scss */
+/* line 94, ../scss/shared/_sidebar.scss */
 .side-nav li.dashboard a {
   color: #222222;
 }
-/* line 161, ../scss/shared/_base.scss */
+/* line 99, ../scss/shared/_sidebar.scss */
 .side-nav li.active {
   background: rgba(0, 64, 84, 0.05);
 }
-/* line 164, ../scss/shared/_base.scss */
+/* line 102, ../scss/shared/_sidebar.scss */
 .side-nav li.active > a:first-child:not(.button) {
   cursor: default;
 }
-/* line 171, ../scss/shared/_base.scss */
+/* line 109, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype {
   /* NOTE: this will clash with some of the above; best-effort */
   display: block;
@@ -9852,35 +10460,35 @@ div.form-field-entry div.field-entry-widget {
   list-style-type: none;
   margin-left: 0.75rem;
 }
-/* line 82, ../scss/shared/_base.scss */
+/* line 20, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li {
   font-size: 0.875rem;
   font-weight: normal;
   margin: 0 0 0.4375rem 0;
 }
-/* line 88, ../scss/shared/_base.scss */
+/* line 26, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button) {
   color: #008cba;
   display: block;
   margin: 0;
   padding: 0.4375rem 0.875rem;
 }
-/* line 93, ../scss/shared/_base.scss */
+/* line 31, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button):hover, .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button):focus {
   background: rgba(0, 0, 0, 0.025);
   color: #1cc7ff;
 }
-/* line 98, ../scss/shared/_base.scss */
+/* line 36, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li > a:not(.button):active {
   color: #1cc7ff;
 }
-/* line 103, ../scss/shared/_base.scss */
+/* line 41, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.active > a:first-child:not(.button) {
   color: #1cc7ff;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: normal;
 }
-/* line 109, ../scss/shared/_base.scss */
+/* line 47, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.divider {
   border-top: 1px solid;
   height: 0;
@@ -9888,19 +10496,19 @@ div.form-field-entry div.field-entry-widget {
   padding: 0;
   border-top-color: #e6e6e6;
 }
-/* line 117, ../scss/shared/_base.scss */
+/* line 55, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.heading {
   color: #008cba;
   font-size: 0.875rem;
   font-weight: bold;
   text-transform: uppercase;
 }
-/* line 176, ../scss/shared/_base.scss */
+/* line 114, ../scss/shared/_sidebar.scss */
 .side-nav .menu-type-sidebar.nested-sametype li.active {
   background: inherit;
 }
 
-/* line 184, ../scss/shared/_base.scss */
+/* line 122, ../scss/shared/_sidebar.scss */
 .sub-top-bar {
   display: block;
   margin: -0.25rem 0 1.125rem;
@@ -9956,148 +10564,35 @@ div.form-field-entry div.field-entry-widget {
 .sub-top-bar li.active a:hover {
   background: #0078a0;
 }
-/* line 187, ../scss/shared/_base.scss */
+/* line 125, ../scss/shared/_sidebar.scss */
 .sub-top-bar dt a, .sub-top-bar dd a, .sub-top-bar li a {
   background-color: #fafafa;
   color: #008cba;
   border-radius: 3px;
 }
 
-/* line 196, ../scss/shared/_base.scss */
+/* line 134, ../scss/shared/_sidebar.scss */
 li.name img {
   width: auto;
   height: 22px;
 }
 
-/* CONTENT */
-/* line 202, ../scss/shared/_base.scss */
-.align-right {
-  text-align: right;
-  word-break: normal;
-}
-
-/* line 207, ../scss/shared/_base.scss */
-.align-center {
-  text-align: center;
-  word-break: normal;
-}
-
-/* line 212, ../scss/shared/_base.scss */
-.amount {
-  text-align: right;
-  word-break: normal;
-}
-
-/* line 217, ../scss/shared/_base.scss */
-#content-main-section {
-  padding-top: 32px;
-  padding-bottom: 32px;
-}
-
-/* line 222, ../scss/shared/_base.scss */
-#content-main-body {
-  width: 100%;
-  min-height: 100%;
-  position: relative;
-}
-
-/* line 228, ../scss/shared/_base.scss */
-h1 {
-  margin-bottom: 1rem;
-}
-
-/* line 233, ../scss/shared/_base.scss */
-input[type="button"], input[type="submit"], .buttontext {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  border-radius: 0;
-  border-style: solid;
-  border-width: 0;
-  cursor: pointer;
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-weight: normal;
-  line-height: normal;
-  margin: 0 0 1.25rem;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  padding: 1rem 2rem 1.0625rem 2rem;
-  font-size: 1rem;
-  background-color: #008cba;
-  border-color: #007095;
-  color: white;
-  transition: background-color 300ms ease-out;
-  padding: 0.625rem 1.25rem 0.6875rem 1.25rem;
-  font-size: 0.6875rem;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hover, input[type="submit"]:focus, .buttontext:hover, .buttontext:focus {
-  background-color: #007095;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hover, input[type="submit"]:focus, .buttontext:hover, .buttontext:focus {
-  color: white;
-}
-
-/* line 236, ../scss/shared/_base.scss */
-table.basic-table {
-  width: 100%;
-}
-/* line 238, ../scss/shared/_base.scss */
-table.basic-table tr {
-  background: none;
-}
-/* line 241, ../scss/shared/_base.scss */
-table.basic-table tr td {
-  height: auto;
-  vertical-align: top;
-}
-/* line 247, ../scss/shared/_base.scss */
-table.basic-table tr.odd {
-  background: #fafafa;
-}
-/* line 249, ../scss/shared/_base.scss */
-table.basic-table input {
-  margin: 0px;
-}
-
-/* line 253, ../scss/shared/_base.scss */
-.reveal-modal {
-  box-shadow: none;
-}
-@media only screen and (min-width: 40.0625em) {
-  /* line 253, ../scss/shared/_base.scss */
-  .reveal-modal {
-    top: 12.5rem;
-  }
-}
-
-/* line 259, ../scss/shared/_base.scss */
-.page-noauth, .page-requirePasswordChange {
-  background: url("/base-theme/images/background3.jpg") no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
-/* line 267, ../scss/shared/_base.scss */
+/* line 1, ../scss/shared/_login.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 275, ../scss/shared/_base.scss */
+/* line 9, ../scss/shared/_login.scss */
 .login-box #login-box-title h1 img {
   height: 22px;
   margin-right: 10px;
 }
-/* line 279, ../scss/shared/_base.scss */
+/* line 13, ../scss/shared/_login.scss */
 .login-box a {
   color: #008cba;
 }
-/* line 281, ../scss/shared/_base.scss */
+/* line 15, ../scss/shared/_login.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -10109,7 +10604,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 293, ../scss/shared/_base.scss */
+  /* line 27, ../scss/shared/_login.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -10118,83 +10613,7 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 297, ../scss/shared/_base.scss */
-.inline-list li {
-  margin-bottom: 10px;
-}
-
-/* line 301, ../scss/shared/_base.scss */
-td {
-  word-break: normal;
-}
-
-/* line 302, ../scss/shared/_base.scss */
-td.button-col {
-  word-break: normal;
-}
-
-/* line 304, ../scss/shared/_base.scss */
-td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
-  word-break: normal;
-}
-
-/* line 307, ../scss/shared/_base.scss */
-.toggleField fieldset {
-  border: none;
-  color: #008cba;
-  margin: 10px 0px;
-  padding: 8px 0px;
-}
-
-/* line 313, ../scss/shared/_base.scss */
-fieldset {
-  border: none;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-/* line 318, ../scss/shared/_base.scss */
-fieldset legend {
-  padding: 0px;
-  margin: 0px;
-  text-align: right;
-  background: none;
-}
-/* line 325, ../scss/shared/_base.scss */
-fieldset legend:hover {
-  color: #0078a0;
-  cursor: pointer;
-}
-
-/* line 332, ../scss/shared/_base.scss */
-.collapsed {
-  display: inline-block;
-}
-
-/* line 336, ../scss/shared/_base.scss */
-.rotate-90 {
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  writing-mode: tb-rl;
-}
-
-/* line 343, ../scss/shared/_base.scss */
-.rotate-180 {
-  -webkit-transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  writing-mode: tb-rl;
-}
-
-/* line 350, ../scss/shared/_base.scss */
-.rotate-270 {
-  -webkit-transform: rotate(270deg);
-  -moz-transform: rotate(270deg);
-  -o-transform: rotate(270deg);
-  writing-mode: tb-rl;
-}
-
-/* line 357, ../scss/shared/_base.scss */
+/* line 1, ../scss/shared/_code.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -10218,483 +10637,64 @@ pre {
   border-width: 1px;
 }
 
-/* line 379, ../scss/shared/_base.scss */
+/* line 23, ../scss/shared/_code.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 384, ../scss/shared/_base.scss */
+/* line 28, ../scss/shared/_code.scss */
 code .INFO {
   color: #333333;
 }
-/* line 386, ../scss/shared/_base.scss */
+/* line 30, ../scss/shared/_code.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 387, ../scss/shared/_base.scss */
+/* line 31, ../scss/shared/_code.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 388, ../scss/shared/_base.scss */
+/* line 32, ../scss/shared/_code.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 389, ../scss/shared/_base.scss */
+/* line 33, ../scss/shared/_code.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 392, ../scss/shared/_base.scss */
+/* line 36, ../scss/shared/_code.scss */
 pre.scrollable {
   max-height: 500px;
   overflow-x: scroll;
 }
 
-/* line 397, ../scss/shared/_base.scss */
-.postfix input[type="submit"], .postfix button {
-  background: #f2f2f2;
-  border-color: #cccccc;
-  border-size: 1px;
-  border-type: solid;
-  color: #333333;
-  padding-left: 0px;
-  padding-right: 0px;
-  font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1.2rem;
-}
-
-/* line 409, ../scss/shared/_base.scss */
-.postfix i {
-  font-size: 1.2rem;
-}
-
-/* line 411, ../scss/shared/_base.scss */
-.postfix .fi {
-  font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1.2rem;
-  line-height: 0.9rem;
-}
-
-/* line 418, ../scss/shared/_base.scss */
-ul.chart-legend, ul.checkmark {
-  list-style: none;
-}
-/* line 422, ../scss/shared/_base.scss */
-ul.checkmark {
-  margin: 0px;
-}
-/* line 426, ../scss/shared/_base.scss */
-ul.checkmark li:before {
-  font-family: "FontAwesome";
-  content: "\f00c";
-  padding-right: 10px;
-}
-
-/* line 436, ../scss/shared/_base.scss */
-div.section-screenlet-content {
-  margin-bottom: 0.5rem;
-}
-
-/* line 442, ../scss/shared/_base.scss */
-div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
-  margin-bottom: 0;
-}
-
-/* line 451, ../scss/shared/_base.scss */
-div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
-  margin-top: 0.2rem;
-}
-
-/* line 455, ../scss/shared/_base.scss */
-div.section-screenlet-container.no-title.no-menu {
-  margin-top: 0;
-}
-
 /*  FOOTER */
-/* line 460, ../scss/shared/_base.scss */
+/* line 2, ../scss/shared/_footer.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 465, ../scss/shared/_base.scss */
+/* line 7, ../scss/shared/_footer.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 470, ../scss/shared/_base.scss */
+/* line 12, ../scss/shared/_footer.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 474, ../scss/shared/_base.scss */
+/* line 16, ../scss/shared/_footer.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
   width: 100%;
-}
-
-/*MISC*/
-/* line 484, ../scss/shared/_base.scss */
-.progress .meter {
-  transition-duration: 3s;
-}
-
-/* line 489, ../scss/shared/_base.scss */
-.button-group .text-entry {
-  padding-left: 1em;
-  padding-right: 1em;
-}
-
-/* no longer needed for now
-.form-field-label-asterisk {
-}
-.form-field-input-asterisk {
-  display: none;
-}
-*/
-@media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 504, ../scss/shared/_base.scss */
-  input, select, text-area {
-    max-width: 100%;
-  }
-}
-@media only screen and (max-width: 40em) {
-  /* line 509, ../scss/shared/_base.scss */
-  input, select, text-area {
-    max-width: 100%;
-  }
-
-  /* line 511, ../scss/shared/_base.scss */
-  .login-box {
-    min-width: 0;
-  }
-}
-/* FIXUPS */
-/* no longer used - quick custom workaround for be able to scroll tables.
-div.scrollable-table-container {
-  overflow-x: scroll;
-  // FIXME: should get same margin as table had, not hardcoded, but doesn't collapse
-  margin-bottom: 1.25rem;
-}
-div.scrollable-table-container > table {
-  margin-bottom: 0;
-}
-*/
-/* line 531, ../scss/shared/_base.scss */
-.field-entry-widget.field-entry-type-display:last-child {
-  margin-bottom: 1rem;
-}
-
-/* line 537, ../scss/shared/_base.scss */
-.radio-item-inline.radio-item-separator {
-  display: none;
-}
-
-/* line 540, ../scss/shared/_base.scss */
-.checkbox-item-inline.checkbox-item-separator {
-  display: none;
-}
-
-/* line 545, ../scss/shared/_base.scss */
-.asmListItemRemove {
-  margin-left: 1rem;
-}
-
-/* line 550, ../scss/shared/_base.scss */
-table.table-type-data .button {
-  margin-bottom: 0.1rem;
-}
-
-/*table .button {
-  margin-bottom:0.1rem;
-}*/
-/* Tables where having zero cellspacing is extremely important (should be rare) 
-  TODO?: along with this we could have styles for table.table-hint-spacing-tiny and similar... but in this theme currently seems minor...
-      .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
-      .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
-  */
-/* line 563, ../scss/shared/_base.scss */
-table.table-nocellspacing, table.table-nocellspacing-hint {
-  border-spacing: 0 !important;
-  border-collapse: collapse !important;
-}
-
-/* line 568, ../scss/shared/_base.scss */
-table.table-noborder, table.table-noborder-hint {
-  border: none !important;
-}
-
-/* line 574, ../scss/shared/_base.scss */
-input.field-inline, select.field-inline, textarea.field-inline {
-  display: inline;
-  width: auto;
-}
-
-/* line 580, ../scss/shared/_base.scss */
-.has-tip.field-tooltip-wrap {
-  font-weight: normal;
-  border-bottom: 0;
-}
-
-/*Tabs*/
-/* line 588, ../scss/shared/_base.scss */
-ul.tabs {
-  border-bottom: 1px solid #efefef;
-}
-/* line 590, ../scss/shared/_base.scss */
-ul.tabs li {
-  position: relative;
-  bottom: -1px;
-  border-top: 1px solid #efefef;
-  border-left: 1px solid #efefef;
-  border-right: 1px solid #efefef;
-  border-bottom: 1px solid #efefef;
-}
-/* line 597, ../scss/shared/_base.scss */
-ul.tabs li.active {
-  border-bottom: 1px solid #fff;
-}
-
-/* line 603, ../scss/shared/_base.scss */
-.tabs-content {
-  border-left: 1px solid #efefef;
-  border-right: 1px solid #efefef;
-  border-bottom: 1px solid #efefef;
-}
-/* line 607, ../scss/shared/_base.scss */
-.tabs-content .content {
-  padding: 20px;
-}
-
-/* Special panels */
-/* line 612, ../scss/shared/_base.scss */
-.text-line-list ul, ul.text-line-list {
-  list-style: none outside none;
-  margin-left: 0;
-}
-
-/* line 616, ../scss/shared/_base.scss */
-.text-line-list li:empty, .text-line-list .text-line:empty {
-  display: none;
-}
-
-/* GENERAL ELEMENT COLORS */
-/* line 624, ../scss/shared/_base.scss */
-.colored-elem.primary, .colored-elem {
-  color: #008cba;
-}
-
-/* line 625, ../scss/shared/_base.scss */
-.colored-elem.secondary {
-  color: #e7e7e7;
-}
-
-/* line 626, ../scss/shared/_base.scss */
-.colored-elem.info {
-  color: #a0d3e8;
-}
-
-/* line 627, ../scss/shared/_base.scss */
-.colored-elem.success {
-  color: #43ac6a;
-}
-
-/* line 628, ../scss/shared/_base.scss */
-.colored-elem.warning {
-  color: #f08a24;
-}
-
-/* line 629, ../scss/shared/_base.scss */
-.colored-elem.alert {
-  color: #f04124;
-}
-
-/* TEXT COLORS */
-/* line 634, ../scss/shared/_base.scss */
-.colored-text.primary, .colored-text {
-  color: #008cba;
-}
-
-/* line 635, ../scss/shared/_base.scss */
-.colored-text.secondary {
-  color: #e7e7e7;
-}
-
-/* line 636, ../scss/shared/_base.scss */
-.colored-text.info {
-  color: #a0d3e8;
-}
-
-/* line 637, ../scss/shared/_base.scss */
-.colored-text.success {
-  color: #43ac6a;
-}
-
-/* line 638, ../scss/shared/_base.scss */
-.colored-text.warning {
-  color: #f08a24;
-}
-
-/* line 639, ../scss/shared/_base.scss */
-.colored-text.alert {
-  color: #f04124;
-}
-
-/* ACTION (LINK) STYLES */
-/* 2016-01-18: DEV NOTE: colors here are not final style choices, only demos of things that can be done for action links. 
-  not all links and menu items have the appropriate classes yet, but many do. 
-  the most important is probably to have a different visual indication for .action-run.action-scope-sys.action-modify (see below) so that
-  actions that modify state of system are made clear to user. In stock ofbiz these are ambiguous and easily confused with nav links.
-  note that system- vs session- vs page- changing actions can be styled separately. */
-/* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
-  NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 652, ../scss/shared/_base.scss */
-.action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
-  background-color: #43ac6a;
-  border-color: #368a55;
-  color: white;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-nav.action-modify.action-add.button:hover, .action-nav.action-modify.action-add.button:focus, .action-nav.action-modify.action-add .button:hover, .action-nav.action-modify.action-add .button:focus {
-  background-color: #368a55;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-nav.action-modify.action-add.button:hover, .action-nav.action-modify.action-add.button:focus, .action-nav.action-modify.action-add .button:hover, .action-nav.action-modify.action-add .button:focus {
-  color: white;
-}
-
-/* REMOVED: no need to make this green, looks strange, so only do it for nav version (above); already covered by action-modify style further below
- individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) 
-.action-run.action-scope-sys.action-modify.action-add.button, .action-run.action-scope-sys.action-modify.action-add .button {
-   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
-}
-*/
-/* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 664, ../scss/shared/_base.scss */
-.action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
-  background-color: #43ac6a;
-  border-color: #368a55;
-  color: white;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-session.action-modify.action-continue.button:hover, .action-run.action-scope-session.action-modify.action-continue.button:focus, .action-run.action-scope-session.action-modify.action-continue .button:hover, .action-run.action-scope-session.action-modify.action-continue .button:focus {
-  background-color: #368a55;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-session.action-modify.action-continue.button:hover, .action-run.action-scope-session.action-modify.action-continue.button:focus, .action-run.action-scope-session.action-modify.action-continue .button:hover, .action-run.action-scope-session.action-modify.action-continue .button:focus {
-  color: white;
-}
-
-/* terminate actions (like cancel order) */
-/* line 669, ../scss/shared/_base.scss */
-.action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
-  background-color: #f08a24;
-  border-color: #cf6e0e;
-  color: white;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.action-terminate.button:hover, .action-run.action-scope-sys.action-modify.action-terminate.button:focus, .action-run.action-scope-sys.action-modify.action-terminate .button:hover, .action-run.action-scope-sys.action-modify.action-terminate .button:focus {
-  background-color: #cf6e0e;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.action-terminate.button:hover, .action-run.action-scope-sys.action-modify.action-terminate.button:focus, .action-run.action-scope-sys.action-modify.action-terminate .button:hover, .action-run.action-scope-sys.action-modify.action-terminate .button:focus {
-  color: white;
-}
-
-/* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
-  FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 676, ../scss/shared/_base.scss */
-.action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
-  background-color: #a0d3e8;
-  border-color: #61b6d9;
-  color: #333333;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.button:hover, .action-run.action-scope-sys.action-modify.button:focus, .action-run.action-scope-sys.action-modify .button:hover, .action-run.action-scope-sys.action-modify .button:focus {
-  background-color: #61b6d9;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.button:hover, .action-run.action-scope-sys.action-modify.button:focus, .action-run.action-scope-sys.action-modify .button:hover, .action-run.action-scope-sys.action-modify .button:focus {
-  color: white;
-}
-
-/* individual actions that modify only session or local state 
-  FIXME?: should use different color from system? removed for now...
-.action-run.action-scope-session.action-modify.button, .action-run.action-scope-session.action-modify .button,
-.action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button, {
-   @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
-}*/
-/* high-importance modify actions, like create order button */
-/* line 689, ../scss/shared/_base.scss */
-.action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
-  background-color: #f04124;
-  border-color: #cf2a0e;
-  color: white;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.action-importance-high.button:hover, .action-run.action-scope-sys.action-modify.action-importance-high.button:focus, .action-run.action-scope-sys.action-modify.action-importance-high .button:hover, .action-run.action-scope-sys.action-modify.action-importance-high .button:focus {
-  background-color: #cf2a0e;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.action-importance-high.button:hover, .action-run.action-scope-sys.action-modify.action-importance-high.button:focus, .action-run.action-scope-sys.action-modify.action-importance-high .button:hover, .action-run.action-scope-sys.action-modify.action-importance-high .button:focus {
-  color: white;
-}
-
-/* special nav cancel/back/return action button (alt regular color) */
-/* line 695, ../scss/shared/_base.scss */
-.action-nav.action-cancel.button, .action-nav.action-cancel .button {
-  background-color: #e7e7e7;
-  border-color: #b9b9b9;
-  color: #333333;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-nav.action-cancel.button:hover, .action-nav.action-cancel.button:focus, .action-nav.action-cancel .button:hover, .action-nav.action-cancel .button:focus {
-  background-color: #b9b9b9;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-nav.action-cancel.button:hover, .action-nav.action-cancel.button:focus, .action-nav.action-cancel .button:hover, .action-nav.action-cancel .button:focus {
-  color: #333333;
-}
-
-/* special run-action cancel action button (warning color) */
-/* line 700, ../scss/shared/_base.scss */
-.action-run.action-cancel.button, .action-run.action-cancel .button {
-  background-color: #f08a24;
-  border-color: #cf6e0e;
-  color: white;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-cancel.button:hover, .action-run.action-cancel.button:focus, .action-run.action-cancel .button:hover, .action-run.action-cancel .button:focus {
-  background-color: #cf6e0e;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-cancel.button:hover, .action-run.action-cancel.button:focus, .action-run.action-cancel .button:hover, .action-run.action-cancel .button:focus {
-  color: white;
-}
-
-/*Firefox specific fixes*/
-/* line 707, ../scss/shared/_base.scss */
-input::-moz-focus-inner {
-  border: 0;
-  padding: 0;
-}
-
-/*Complex radio selection stuff*/
-/* line 713, ../scss/shared/_base.scss */
-.new-item-selection-content {
-  margin-top: 0.6rem;
-}
-
-/*Radio and checkbox item long label wrapping workaround
-*/
-/* line 722, ../scss/shared/_base.scss */
-input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox"] + label {
-  display: inline;
 }
 
 /* line 1, ../scss/shared/_ui_autocomplete.scss */

@@ -24,7 +24,7 @@ under the License.
                 <parameter param-name="noConditionFind" value="Y" />
             </link>
         </menu-item>
-        <menu-item name="Request" title="${uiLabelMap.PartyPartyRequests}"><link target="FindRequests"/></menu-item>
+        <menu-item name="FindRequest" title="${uiLabelMap.PartyPartyRequests}"><link target="FindRequest"/></menu-item>
 
     </menu>
     <menu name="ServicesAppSideBar" title="${uiLabelMap.MarketingServices}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

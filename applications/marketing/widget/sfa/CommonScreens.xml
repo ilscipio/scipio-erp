@@ -235,7 +235,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    
     <screen name="main">
         <section>
             <actions>

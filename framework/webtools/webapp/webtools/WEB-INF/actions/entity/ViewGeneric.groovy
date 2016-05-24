@@ -16,24 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericPK;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.security.Security;
-import org.ofbiz.entity.model.ModelReader;
-import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.entity.model.ModelField;
-import org.ofbiz.entity.model.ModelFieldType;
-import org.ofbiz.entity.model.ModelRelation;
-import org.ofbiz.entity.model.ModelKeyMap;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
-import java.sql.Timestamp;
-import java.sql.Date;
-import java.sql.Time;
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.sql.Date
+import java.sql.Time
+import java.sql.Timestamp
+
+import javolution.util.FastList
+import javolution.util.FastMap
+
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilFormatOut
+import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilValidate
+import org.ofbiz.entity.GenericPK
+import org.ofbiz.entity.GenericValue
+import org.ofbiz.entity.model.ModelEntity
+import org.ofbiz.entity.model.ModelField
+import org.ofbiz.entity.model.ModelFieldType
+import org.ofbiz.entity.model.ModelKeyMap
+import org.ofbiz.entity.model.ModelReader
+import org.ofbiz.entity.model.ModelRelation
 
 String entityName = parameters.get("entityName");
 context.put("entityName", entityName);
@@ -77,7 +78,10 @@ while (pkIterator.hasNext()) {
 }
 context.put("findByPk", findByPK.toString());
 
-curFindString = UtilFormatOut.encodeQuery(curFindString);
+Debug.log("curFindString before enconding ============> " + curFindString);
+
+curFindString = UtilFormatOut.encodeQueryValue(curFindString);
+Debug.log("curFindString after enconding ============> " + curFindString);
 context.put("curFindString", curFindString);
 
 GenericValue value = null;

@@ -48,7 +48,6 @@ context.limitView = limitView;
 
 // Cato: prevent crash
 if (productCategoryId) {
-
     // get the product category & members
     andMap = [productCategoryId : productCategoryId,
             viewIndexString : viewIndex,
@@ -68,12 +67,11 @@ if (productCategoryId) {
         andMap.put("orderByFields", ["sequenceNum", "productId"]);
     }
     catResult = runService('getProductCategoryAndLimitedMembers', andMap);
-    productCategory = catResult.productCategory;
-    productCategoryMembers = catResult.productCategoryMembers;
 } else {
     catResult = ["productCategoryMembers":[], "productCategory":null];
 }
-
+productCategory = catResult.productCategory;
+productCategoryMembers = catResult.productCategoryMembers;
 context.productCategoryMembers = productCategoryMembers;
 context.productCategory = productCategory;
 context.viewIndex = catResult.viewIndex;

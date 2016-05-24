@@ -611,17 +611,21 @@ under the License.
                     <field-map field-name="lastNameFirst" value="Y"/>
                 </service>
             </actions>
-            <condition>
-                <not>
-                    <if-empty field="parameters.invoiceId"/>
-                </not>
-            </condition>
             <widgets>
-                <screenlet>        
-                    <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceInfo.ftl"/></html>
-                    </platform-specific>
-                </screenlet>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="parameters.invoiceId"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet>        
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceInfo.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -629,13 +633,13 @@ under the License.
     <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceApplications -->
     <screen name="CatoInvoiceAppliedPayment">
         <section>
-            <actions>
-            </actions>
             <condition>
                 <not>
                     <if-empty field="invoiceApplications"/>
                 </not>
             </condition>
+            <actions>
+            </actions>
             <widgets>
                 <screenlet>
                     <platform-specific>
@@ -649,13 +653,13 @@ under the License.
     <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceItems -->
     <screen name="CatoInvoiceItems">
         <section>
-            <actions>
-            </actions>
             <condition>
                 <not>
                     <if-empty field="invItemAndOrdItems"/>
                 </not>
             </condition>
+            <actions>
+            </actions>
             <widgets>
                 <screenlet>
                     <platform-specific>
@@ -687,13 +691,13 @@ under the License.
     <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceTerms -->
     <screen name="CatoInvoiceTerms">
         <section>
-            <actions>
-            </actions>
             <condition>
                 <not>
                     <if-empty field="invoiceTerms"/>
                 </not>
             </condition>
+            <actions>
+            </actions>
             <widgets>
                 <screenlet>
                     <platform-specific>
@@ -712,17 +716,21 @@ under the License.
                     <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
                 </service>
             </actions>
-            <condition>
-                <not>
-                    <if-empty field="invoicePaymentInfoList"/>
-                </not>
-            </condition>
             <widgets>
-                <screenlet>
-                    <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicePaymentInfo.ftl"/></html>
-                    </platform-specific>
-                </screenlet>
+                <section>
+                     <condition>
+                         <not>
+                             <if-empty field="invoicePaymentInfoList"/>
+                         </not>
+                     </condition>
+                     <widgets>
+                         <screenlet>
+                             <platform-specific>
+                                 <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicePaymentInfo.ftl"/></html>
+                             </platform-specific>
+                         </screenlet>
+                     </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

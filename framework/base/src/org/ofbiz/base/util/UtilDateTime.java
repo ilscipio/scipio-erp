@@ -58,6 +58,9 @@ public class UtilDateTime {
         {"24", "hour"},
         {"168", "week"}
     };
+    
+    public static final String[] TIME_INTERVALS =  {"hour", "day", "week", "month", "quarter", "semester", "year"};
+
 
     public static final DecimalFormat df = new DecimalFormat("0.00;-0.00");
     /**
@@ -1282,6 +1285,8 @@ public class UtilDateTime {
      */
     public static Map<String, Timestamp> getPeriodInterval(String period, Timestamp fromDate, Locale locale, TimeZone timezone) {
         Map<String, Timestamp> result = FastMap.newInstance();
+        if (!checkValidInterval(period))
+            return null;
         Timestamp date = (UtilValidate.isNotEmpty(fromDate)) ? fromDate : UtilDateTime.nowTimestamp();
         switch (period) {
         case "hour":
@@ -1330,6 +1335,8 @@ public class UtilDateTime {
      */
     public static Map<String, Object> getPeriodIntervalAndFormatter(String period, Timestamp fromDate, Locale locale, TimeZone timezone) {
         Map<String, Object> result = FastMap.newInstance();
+        if (!checkValidInterval(period))
+            return null;
         result.putAll(getPeriodInterval(period, fromDate, locale, timezone));
         switch (period) {
         case "hour":
@@ -1339,7 +1346,7 @@ public class UtilDateTime {
             result.put("dateFormatter", new SimpleDateFormat("yyyy-MM-dd"));
             break;
         case "week":
-            result.put("dateFormatter", new SimpleDateFormat("yyyy-MM W"));
+            result.put("dateFormatter", new SimpleDateFormat("YYYY-'W'ww"));
             break;
         case "month":
             result.put("dateFormatter", new SimpleDateFormat("yyyy-MM"));
@@ -1358,5 +1365,18 @@ public class UtilDateTime {
             break;
         }
         return result;
-    }    
+    }
+
+    /**
+     * Cato: Checks if the interval passed is a valid one
+     * 
+     * @param interval
+     * @return true or false depending on the result of evaluating the given
+     *         interval against the valid list of intervals represented by the
+     *         constant TIME_INTERVALS
+     */
+    public static boolean checkValidInterval(String interval) {
+        return Arrays.asList(TIME_INTERVALS).contains(interval);
+    }
+    
 }

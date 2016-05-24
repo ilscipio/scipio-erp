@@ -46,27 +46,34 @@ context.defaultViewSize = defaultViewSize;
 limitView = request.getAttribute("limitView") ?: true;
 context.limitView = limitView;
 
-// get the product category & members
-andMap = [productCategoryId : productCategoryId,
-        viewIndexString : viewIndex,
-        viewSizeString : viewSize,
-        defaultViewSize : defaultViewSize,
-        limitView : limitView];
-andMap.put("prodCatalogId", currentCatalogId);
-andMap.put("checkViewAllow", true);
-// Prevents out of stock product to be displayed on site
-productStore = ProductStoreWorker.getProductStore(request);
-if (productStore) {
-    andMap.put("productStoreId", productStore.productStoreId);
-}
-if (context.orderByFields) {
-    andMap.put("orderByFields", context.orderByFields);
+// Cato: prevent crash
+if (productCategoryId) {
+
+    // get the product category & members
+    andMap = [productCategoryId : productCategoryId,
+            viewIndexString : viewIndex,
+            viewSizeString : viewSize,
+            defaultViewSize : defaultViewSize,
+            limitView : limitView];
+    andMap.put("prodCatalogId", currentCatalogId);
+    andMap.put("checkViewAllow", true);
+    // Prevents out of stock product to be displayed on site
+    productStore = ProductStoreWorker.getProductStore(request);
+    if (productStore) {
+        andMap.put("productStoreId", productStore.productStoreId);
+    }
+    if (context.orderByFields) {
+        andMap.put("orderByFields", context.orderByFields);
+    } else {
+        andMap.put("orderByFields", ["sequenceNum", "productId"]);
+    }
+    catResult = runService('getProductCategoryAndLimitedMembers', andMap);
+    productCategory = catResult.productCategory;
+    productCategoryMembers = catResult.productCategoryMembers;
 } else {
-    andMap.put("orderByFields", ["sequenceNum", "productId"]);
+    catResult = ["productCategoryMembers":[], "productCategory":null];
 }
-catResult = runService('getProductCategoryAndLimitedMembers', andMap);
-productCategory = catResult.productCategory;
-productCategoryMembers = catResult.productCategoryMembers;
+
 context.productCategoryMembers = productCategoryMembers;
 context.productCategory = productCategory;
 context.viewIndex = catResult.viewIndex;

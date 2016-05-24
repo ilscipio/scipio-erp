@@ -93,6 +93,8 @@ if (userLogin) {
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 context.contentPathPrefix = contentPathPrefix;
 
+product = context.product;  // Cato: prevents crash if missing
+
 // get the product detail information
 if (product) {
     productId = product.productId;

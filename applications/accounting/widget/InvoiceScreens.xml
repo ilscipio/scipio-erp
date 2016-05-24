@@ -676,7 +676,9 @@ under the License.
     <screen name="CatoInvoices">
         <section>
             <actions>
-                <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+                <!-- INTERFACE: expects an "invoices" list in context -->
+                
+                <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}"/><!--  global="true" -->
             </actions>
             <widgets>
                 <screenlet>

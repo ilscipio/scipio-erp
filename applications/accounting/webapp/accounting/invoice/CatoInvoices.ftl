@@ -1,4 +1,5 @@
 <#-- CATO -->
+<#if invoices?has_content>
 <@table type="fields">
     <@thead>
         <@tr valign="bottom" class="header-row">
@@ -10,7 +11,7 @@
             <@th>${uiLabelMap.FormFieldTitle_amountToApply!}</@th>
         </@tr>
     </@thead>
-    <#list PastDueInvoices as item>
+    <#list invoices as item>
         <#assign total = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceTotal(delegator, item.invoiceId) />
         <#assign outstandingAmount = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceNotApplied(delegator, item.invoiceId) />       
         <#assign itemType = item.getRelatedOne("InvoiceType", false)/>
@@ -24,3 +25,6 @@
         </@tr>
     </#list>
 </@table>
+<#else>
+  <@commonMsg type="result-norecord" />
+</#if>

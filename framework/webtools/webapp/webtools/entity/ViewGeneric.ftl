@@ -42,11 +42,10 @@ function ShowTab(lname) {
     <@menu type="button">
       <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
       <#if enableEdit == "false">
-        <#if hasCreatePermission>
-           ${Static["org.ofbiz.base.util.Debug"].log("curFindString =============> " + curFindString)}
-          
+        <#if hasCreatePermission>          
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
-          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${curFindString}&enableEdit=true") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
+          <#--WARN: TODO: REVIEW for security issues-->
+          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}&enableEdit=true") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
         </#if>
         <#if value?has_content>
           <#if hasDeletePermission>

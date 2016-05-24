@@ -78,10 +78,7 @@ while (pkIterator.hasNext()) {
 }
 context.put("findByPk", findByPK.toString());
 
-Debug.log("curFindString before enconding ============> " + curFindString);
-
-curFindString = UtilFormatOut.encodeQueryValue(curFindString);
-Debug.log("curFindString after enconding ============> " + curFindString);
+curFindString = UtilFormatOut.encodeQuery(curFindString);
 context.put("curFindString", curFindString);
 
 GenericValue value = null;

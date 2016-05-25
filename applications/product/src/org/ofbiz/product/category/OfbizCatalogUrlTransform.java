@@ -23,8 +23,10 @@ import java.io.Writer;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.webapp.control.WebAppConfigurationException;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -47,10 +49,38 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
         return null;
     }
 
+    // Cato: Added and modified to support Boolean
+    @SuppressWarnings("unchecked")
+    public Boolean checkArg(Map args, String key, Boolean defaultValue) {
+        if (!args.containsKey(key)) {
+            return defaultValue;
+        } else {
+            Object o = args.get(key);
+            if (o instanceof SimpleScalar) {
+                SimpleScalar s = (SimpleScalar) o;
+                if ("true".equalsIgnoreCase(s.getAsString())) {
+                    return true;
+                } else if ("false".equalsIgnoreCase(s.getAsString())) { // Cato: require explicit false
+                    return false;
+                }
+                else {
+                    return defaultValue;
+                }
+            }
+            return defaultValue;
+        }
+    }
+    
     @Override
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, final Map args) throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
+        
+        // Cato: new flags
+        final Boolean fullPath = checkArg(args, "fullPath", null);
+        final Boolean secure = checkArg(args, "secure", null);
+        final Boolean encode = checkArg(args, "encode", null);
+        
         return new Writer(out) {
 
             @Override
@@ -73,10 +103,19 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         String currentCategoryId = getStringArg(args, "currentCategoryId");
                         String previousCategoryId = getStringArg(args, "previousCategoryId");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-                        String catalogUrl = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
+                        
+                        // CATO: now delegated to our new reusable method, and also support fullPath and secure flags
+                        BeanModel resp = (BeanModel) env.getVariable("response");
+                        HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
+                        
+                        String catalogUrl = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, 
+                                fullPath, secure, encode);
+
                         out.write(catalogUrl);
                     }
                 } catch (TemplateModelException e) {
+                    throw new IOException(e.getMessage());
+                } catch (WebAppConfigurationException e) {
                     throw new IOException(e.getMessage());
                 }
             }

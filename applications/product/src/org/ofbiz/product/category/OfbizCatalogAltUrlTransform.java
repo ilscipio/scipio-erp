@@ -24,6 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -65,6 +66,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     }
 
     // Cato: Modified to support Boolean
+    @SuppressWarnings("unchecked")
     public Boolean checkArg(Map args, String key, Boolean defaultValue) {
         if (!args.containsKey(key)) {
             return defaultValue;
@@ -92,6 +94,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
         final StringBuilder buf = new StringBuilder();
         final Boolean fullPath = checkArg(args, "fullPath", null); // Cato: changed from boolean to Boolean
         final Boolean secure = checkArg(args, "secure", null); // Cato: changed from boolean to Boolean
+        final Boolean encode = checkArg(args, "encode", null); // Cato: new flag
 
         return new Writer(out) {
             
@@ -122,40 +125,34 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     String searchString = getStringArg(args, "searchString");
                     if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-                        StringBuilder newURL = new StringBuilder();
-                        if (UtilValidate.isNotEmpty(productId)) {
-                            url = CatalogUrlFilter.makeProductUrl(request, previousCategoryId, productCategoryId, productId);
-                        } else {
-                            url = CatalogUrlFilter.makeCategoryUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
-                        }
-                        // make the link
-                        if (Boolean.TRUE.equals(fullPath)){ // Cato: safe check
-                            OfbizUrlBuilder builder = OfbizUrlBuilder.from(request);
-                            builder.buildHostPart(newURL, url, secure);
-                        }
-                        newURL.append(url);
-                        out.write(newURL.toString());
+                        //StringBuilder newURL = new StringBuilder();
+                        
+                        // CATO: now delegated to our new reusable method
+                        BeanModel resp = (BeanModel) env.getVariable("response");
+                        HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
+                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, 
+                                fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+
+                        out.write(url);
                     } else if (prefix != null) {
                         Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
                         Locale locale = (Locale) args.get("locale");
-                        if (UtilValidate.isNotEmpty(productId)) {
-                            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
-                            ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
-                            url = CatalogUrlFilter.makeProductUrl(delegator, wrapper, null, ((StringModel) prefix).getAsString(), previousCategoryId, productCategoryId, productId);
-                        } else {
-                            GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).queryOne();
-                            CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
-                            url = CatalogUrlFilter.makeCategoryUrl(delegator, wrapper, null, ((StringModel) prefix).getAsString(), previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
-                        }
-                        out.write(url.toString());
+                        
+                        // CATO: now delegated to our new reusable method, and add "webSiteId" support because no way to know it
+                        String prefixStr = ((StringModel) prefix).getAsString();
+                        String webSiteId = getStringArg(args, "webSiteId");
+                        url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefixStr, productCategoryId, 
+                                productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+                        
+                        out.write(url);
                     } else {
                         out.write(buf.toString());
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());
-                } catch (GenericEntityException e) {
-                    throw new IOException(e.getMessage());
+                //} catch (GenericEntityException e) {
+                //    throw new IOException(e.getMessage());
                 } catch (WebAppConfigurationException e) {
                     throw new IOException(e.getMessage());
                 }

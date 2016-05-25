@@ -38,6 +38,10 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.webapp.OfbizUrlBuilder;
+import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestLinkUtil;
+import org.ofbiz.webapp.control.WebAppConfigurationException;
 
 /**
  * ControlServlet.java - Master servlet for the web application.
@@ -215,4 +219,18 @@ public class CatalogUrlServlet extends HttpServlet {
 
         return urlBuilder.toString();
     }
+    
+    /**
+     * CATO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     */
+    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String productId, 
+            String currentCategoryId, String previousCategoryId, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+        
+        String url = CatalogUrlServlet.makeCatalogUrl(request, 
+                productId, currentCategoryId, previousCategoryId);
+        
+        return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
+    }
+    
 }

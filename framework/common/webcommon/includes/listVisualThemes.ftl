@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!--
+<#--
 <style type="text/css">
 .screenlet {
 margin: 1em;
@@ -24,6 +24,7 @@ margin: 1em;
 </style>
 -->
 
+<#-- CATO: TODO: implement image shadowboxes later
 <@script src="/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.pack.js" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.css</@ofbizContentUrl>" type="text/css" media="screen" />
 
@@ -42,6 +43,8 @@ margin: 1em;
         });
     });
 </@script>
+-->
+
 <@panel type="callout">${uiLabelMap.CommonVisualThemeUsage}</@panel>
 
 <@section title=uiLabelMap.CommonVisualThemes>
@@ -66,7 +69,9 @@ margin: 1em;
           <td>
             <#if screenshots?has_content>
               <#list screenshots as screenshot>
-                <a id="single_image" href="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>" width="150" alt=""/></a>
+                <#-- TODO: <a id="single_image" href="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>">-->
+                <img src="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>" width="150" alt=""/>
+                <#--</a>-->
               </#list>
            <#else>
               ${uiLabelMap.CommonVisualThemeNoScreenshots}

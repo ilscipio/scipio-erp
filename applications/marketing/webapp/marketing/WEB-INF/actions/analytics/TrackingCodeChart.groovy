@@ -1,21 +1,16 @@
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
-
-import javolution.util.FastList
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.entity.condition.EntityCondition
-import org.ofbiz.entity.condition.EntityJoinOperator;
+import org.ofbiz.entity.condition.EntityJoinOperator
 import org.ofbiz.entity.condition.EntityOperator
-
 
 
 //// use this helper to build a List of visits, orders, order totals, and conversion rates
 //trackingCodeVisitAndOrders = ReportHelper.calcConversionRates(visits, orders, "trackingCodeId");
 //context.trackingCodeVisitAndOrders = trackingCodeVisitAndOrders;
-
-Debug.log("nowTimestamp ============> " + context.nowTimestamp);
-
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 currentYearBegin = UtilDateTime.getYearStart(nowTimestamp, timeZone, locale);
 currentYearEnd  = UtilDateTime.getYearEnd(nowTimestamp, timeZone, locale);
@@ -25,8 +20,6 @@ cacheId = "marketingTracking_" + currentYearBeginText + "-" + currentYearEndText
 
 Map<Date, Integer> processResults() {
     Map<Date, Integer> visits = [:];
-    
-    Debug.log("context.trackingCodeId ============> " + context.trackingCodeId);
     if (!context.trackingCodeId && !parameters.trackingCodeId)
         return visits;
     
@@ -35,20 +28,21 @@ Map<Date, Integer> processResults() {
     
     // Check and sanitize fromDate/thruDate params 
     fromDate = parameters.fromDate;
-    thruDate = parameters.thruDate;    
-    if (fromDate)
-        fromDate = UtilDateTime.toTimestamp(fromDate);
-    if (thruDate)
-        thruDate = UtilDateTime.toTimestamp(thruDate);
-    else
-        thruDate = UtilDateTime.nowTimestamp();        
+    thruDate = parameters.thruDate;
+    Timestamp fromDateTimestamp = null;
+    Timestamp thruDateTimestamp = null;
     
-    if (fromDate && fromDate < thruDate) {
+    if (fromDate)
+        fromDateTimestamp = UtilDateTime.toTimestamp(fromDate);
+    if (thruDate)
+        thruDateTimestamp = UtilDateTime.toTimestamp(thruDate);   
+    
+    if (fromDateTimestamp && fromDateTimestamp < thruDateTimeStamp) {
         fromDate = null;
         thruDate = null;
     }
     
-    if (!fromDate) {
+    if (!fromDateTimestamp) {
         Calendar calendar = Calendar.getInstance();
         if (iScope.equals("day")) {
             if (iCount == -1)
@@ -71,33 +65,26 @@ Map<Date, Integer> processResults() {
             calendar.set(Calendar.MONTH, 1);
             calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - iCount);
         }
-        fromDate = UtilDateTime.toTimestamp(calendar.getTime());        
+        fromDateTimestamp = UtilDateTime.toTimestamp(calendar.getTime());        
     }
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDate, context.locale, context.timeZone);
-    if (dateIntervals["dateEnd"] < thruDate)
+    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
+    if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
         dateIntervals["dateEnd"] = thruDate;
-    
-    Debug.log("dateIntervals ===========> " + dateIntervals);
         
     exprList = EntityCondition.makeCondition("trackingCodeId", EntityOperator.EQUALS, context.trackingCodeId);        
         
     for (int i = 0; i <= iCount; i++) {
-        Map<String, Integer> auxMap = [:];
-            
+        int totalVisits = 0;
         fromDateAndExprs =  EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]),
-            EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, dateIntervals["dateEnd"])], EntityJoinOperator.AND);
-        
-        visitList = select("trackingCodeId", "visitId").from("TrackingCodeAndVisit").where(EntityCondition.makeCondition([exprList, fromDateAndExprs], EntityOperator.AND)).queryList();
+            EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, dateIntervals["dateEnd"])], EntityJoinOperator.AND);        
+        visitList = select("visitId").from("TrackingCodeAndVisit").where(EntityCondition.makeCondition([exprList, fromDateAndExprs], EntityOperator.AND)).queryList();
         for (v in visitList) {
-            Debug.log("dateBegin ========> " + dateIntervals["dateBegin"] + "     dateEnd ========> " + dateIntervals["dateEnd"] + "  visit ==============> " + v);
-            auxMap.put(v.trackingCodeId, v.visitId);
+            totalVisits += v.visitId;           
         }
-
-        visits.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), auxMap);
-            
+        visits.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), totalVisits);            
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, dateIntervals["dateEnd"] + 1, context.locale, context.timeZone);
-        if (dateIntervals["dateEnd"] < thruDate)
-            dateIntervals["dateEnd"] = thruDate;
+        if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
+            dateIntervals["dateEnd"] = thruDateTimestamp;
     }
     return visits;
     

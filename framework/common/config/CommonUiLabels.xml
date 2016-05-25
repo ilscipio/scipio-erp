@@ -5521,6 +5521,9 @@
         <value xml:lang="zh_CN">在</value>
         <value xml:lang="zh_TW">在</value>
     </property>
+    <property key="CommonIntervalScope">
+        <value xml:lang="en">Interval Scope</value>        
+    </property>
     <property key="CommonInclude">
         <value xml:lang="ar">يحتوي</value>
         <value xml:lang="cs">Zahrnout</value>

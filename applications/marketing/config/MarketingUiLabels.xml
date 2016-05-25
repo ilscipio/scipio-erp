@@ -248,6 +248,21 @@
         <value xml:lang="zh">销售预测标识</value>
         <value xml:lang="zh_TW">銷售預測識別</value>
     </property>
+    <property key="MarketingAnalyticsTrackingVisit">
+        <value xml:lang="en">Tracking Visit Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsForecast">
+        <value xml:lang="en">Forecast Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsSegments">
+        <value xml:lang="en">Segment Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsSales">
+        <value xml:lang="en">Sales Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsLeads">
+        <value xml:lang="en">Lead Analytics</value>
+    </property>
     <property key="MarketingCampaign">
         <value xml:lang="de">Marketing Kampagne</value>
         <value xml:lang="en">Marketing Campaign</value>

@@ -22,7 +22,7 @@ under the License.
         <menu-item name="AnalyticsSales" title="${uiLabelMap.MarketingAnalyticsSales}"><link target="AnalyticsSales" /></menu-item>
         <menu-item name="AnalyticsLeads" title="${uiLabelMap.MarketingAnalyticsLeads}"><link target="AnalyticsLeads"/></menu-item>
         <menu-item name="AnalyticsSegments" title="${uiLabelMap.MarketingAnalyticsSegments}"><link target="AnalyticsSegments"/></menu-item>
-        <menu-item name="AnalyticsTracking" title="${uiLabelMap.MarketingAnalyticsTracking}"><link target="AnalyticsTracking"/></menu-item>
+        <menu-item name="AnalyticsTracking" title="${uiLabelMap.MarketingAnalyticsTrackingVisit}"><link target="AnalyticsTracking"/></menu-item>
         <menu-item name="AnalyticsForecast" title="${uiLabelMap.MarketingAnalyticsForecast}"><link target="AnalyticsForecast"/></menu-item>
     </menu>
     <menu name="AnalyticsAppSideBar" title="${uiLabelMap.MarketingAnalytics}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

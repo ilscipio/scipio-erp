@@ -47,7 +47,7 @@ under the License.
     <screen name="AnalyticsTracking">
         <section>
             <actions>
-                <set field="titleProperty" value="MarketingAnalyticsTracking"/>
+                <set field="titleProperty" value="MarketingAnalyticsTrackingVisit"/>
                 <set field="activeMainMenuItem" value="AnalyticsTracking"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>             
                <!--  <script location="component://marketing/webapp/marketing/WEB-INF/actions/reports/TrackingCodeReport.groovy"/> -->
@@ -85,7 +85,7 @@ under the License.
                 <set field="chartData" value="week"/>
                 <set field="chartDatasets" value="1"/> 
                 <set field="chartLibrary" value="chart"/>
-                <set field="chartIntervalScope" value="week"/> <!-- day|week|month|year -->
+                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
                 <set field="chartIntervalCount" value="4"/>     <!-- Look back x days/weeks/months/years -->
                 <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>

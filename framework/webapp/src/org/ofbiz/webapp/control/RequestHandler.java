@@ -1373,7 +1373,7 @@ public class RequestHandler {
      * equivalent to appending <code>jsessionid</code>; it has other functionality such as calling servlet filter hooks.
      * Almost all navigation links to Ofbiz webapps whether inter-webapp or intra-webapp should have encode <code>true</code>.
      * If jsessionid must be prevented for a link, currently this can be done by calling
-     * {@link RequestUtil#removeJsessionId}.
+     * {@link RequestLinkUtil#removeJsessionId}.
      * TODO: Could use an extra Boolean arg to force jsessionid on/off (null for default behavior).
      * <p>
      * <strong>URL format</strong>: The passed <code>url</code> should either be a controller URI (if <code>controller</code> true)
@@ -1546,14 +1546,9 @@ public class RequestHandler {
             //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
             //    didFullStandard = true;
             //}
-            if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
-                || (webSiteProps.getEnableHttps() && requestMap != null && requestMap.securityHttps && (!request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
-                || (webSiteProps.getEnableHttps() && secure == null && Boolean.TRUE.equals(fullPath)) // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
-                ) {
+            if (isDoFullSecure(request, requestWebSiteProps, requestMap, fullPath, secure)) {
                 didFullSecure = true;
-            } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                    || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure())) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()
-                    ) {
+            } else if (isDoFullStandard(request, requestWebSiteProps, requestMap, fullPath, secure)) {
                 didFullStandard = true;
             }
         }
@@ -1639,55 +1634,8 @@ public class RequestHandler {
 
         String encodedUrl;
         if (encode) {
-            // Cato: do something different for inter-webapp links
-            if (interWebapp) {
-                if (response != null) {
-                    // Cato: We want to run inter-webapp links through URL encoding for outbound-rules and things,
-                    // but we should never add a jsessionId.
-                    encodedUrl = RequestUtil.encodeURLNoJsessionId(newURL.toString(), response);
-                } else {
-                    encodedUrl = newURL.toString();    
-                }
-            } else {
-                // Cato: stock case
-                boolean forceManualJsessionid = !cookies;
-                boolean isSpider = false;
-    
-                // if the current request comes from a spider, we will not add the jsessionid to the link
-                if (UtilHttp.checkURLforSpiders(request)) {
-                    isSpider = true;
-                }
-    
-                // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-                if (!request.isSecure() && didFullSecure) {
-                    forceManualJsessionid = true;
-                }
-    
-                // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-                if (request.isSecure() && didFullStandard) {
-                    forceManualJsessionid = true;
-                }
-    
-                if (response != null && !forceManualJsessionid && !isSpider) {
-                    encodedUrl = response.encodeURL(newURL.toString());
-                } else {
-                    if (!isSpider) {
-                        String sessionId = ";jsessionid=" + request.getSession().getId();
-                        // this should be inserted just after the "?" for the parameters, if there is one, or at the end of the string
-                        int questionIndex = newURL.indexOf("?");
-                        if (questionIndex == -1) {
-                            newURL.append(sessionId);
-                        } else {
-                            newURL.insert(questionIndex, sessionId);
-                        }
-                    }
-                    if (response != null) {
-                        encodedUrl = response.encodeURL(newURL.toString());
-                    } else {
-                        encodedUrl = newURL.toString();
-                    }
-                }
-            }
+            // CATO: Delegated code
+            encodedUrl = doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
         } else {
             encodedUrl = newURL.toString();
         }
@@ -1701,6 +1649,86 @@ public class RequestHandler {
         return encodedUrl;
     }
 
+    /**
+     * CATO: Factored-out makeLink code.
+     */
+    protected boolean isDoFullSecure(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
+            Boolean fullPath, Boolean secure) {
+        return (Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
+        || (webSiteProps.getEnableHttps() && requestMap != null && requestMap.securityHttps && (!request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
+        || (webSiteProps.getEnableHttps() && secure == null && Boolean.TRUE.equals(fullPath)); // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
+    }
+    
+    /**
+     * CATO: Factored-out makeLink code.
+     * WARN: result is only valid if isDoFullSecure is checked first! if isDoFullSecure true, do not call this.
+     */
+    protected boolean isDoFullStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
+            Boolean fullPath, Boolean secure) {
+        return Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
+                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure())); // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()  
+    }
+    
+    /**
+     * CATO: Factored-out makeLink code, that we must expose so other link-building code may reuse.
+     * <p>
+     * WARN: newURL is modified in-place, and then discarded, so only use the result. 
+     */
+    protected String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
+            boolean didFullStandard, boolean didFullSecure) {
+        String encodedUrl;
+        // Cato: do something different for inter-webapp links
+        if (interWebapp) {
+            if (response != null) {
+                // Cato: We want to run inter-webapp links through URL encoding for outbound-rules and things,
+                // but we should never add a jsessionId.
+                encodedUrl = RequestLinkUtil.encodeURLNoJsessionId(newURL.toString(), response);
+            } else {
+                encodedUrl = newURL.toString();    
+            }
+        } else {
+            // Cato: stock case
+            boolean forceManualJsessionid = !cookies;
+            boolean isSpider = false;
+
+            // if the current request comes from a spider, we will not add the jsessionid to the link
+            if (UtilHttp.checkURLforSpiders(request)) {
+                isSpider = true;
+            }
+
+            // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
+            if (!request.isSecure() && didFullSecure) {
+                forceManualJsessionid = true;
+            }
+
+            // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
+            if (request.isSecure() && didFullStandard) {
+                forceManualJsessionid = true;
+            }
+
+            if (response != null && !forceManualJsessionid && !isSpider) {
+                encodedUrl = response.encodeURL(newURL.toString());
+            } else {
+                if (!isSpider) {
+                    String sessionId = ";jsessionid=" + request.getSession().getId();
+                    // this should be inserted just after the "?" for the parameters, if there is one, or at the end of the string
+                    int questionIndex = newURL.indexOf("?");
+                    if (questionIndex == -1) {
+                        newURL.append(sessionId);
+                    } else {
+                        newURL.insert(questionIndex, sessionId);
+                    }
+                }
+                if (response != null) {
+                    encodedUrl = response.encodeURL(newURL.toString());
+                } else {
+                    encodedUrl = newURL.toString();
+                }
+            }
+        }
+        return encodedUrl;
+    }
+    
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
         return makeLink(request, response, url, null, null, null, fullPath, secure, encode);
         
@@ -2144,5 +2172,12 @@ public class RequestHandler {
             ;
         }
         return false;
+    }
+    
+    /**
+     * Cato: Necessary accessor method for external code.
+     */
+    public boolean isUseCookies() {
+        return cookies;
     }
 }

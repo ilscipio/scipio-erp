@@ -41,7 +41,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.RequestUtil;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.model.FieldInfo;

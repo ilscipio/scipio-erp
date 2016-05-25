@@ -443,7 +443,7 @@ Adds the external login key to given url
     escape                  = ((boolean), default: true) If true, use escaped param delimiter
 -->
 <#function addExtLoginKey url escape=true>
-  <#return rawString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(rawString(url), request, escape))>
+  <#return rawString(Static["org.ofbiz.webapp.control.RequestLinkUtil"].checkAddExternalLoginKey(rawString(url), request, escape))>
 </#function>
 
 <#-- 

@@ -34,7 +34,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.RequestUtil;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 
 import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
@@ -212,7 +212,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         String requestUrl = buf.toString();
                         // Cato: If requested, add external login key
                         if (extLoginKey) {
-                            requestUrl = RequestUtil.checkAddExternalLoginKey(requestUrl, request, true);
+                            requestUrl = RequestLinkUtil.checkAddExternalLoginKey(requestUrl, request, true);
                         }
                         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                         // Cato: Now use more advanced method

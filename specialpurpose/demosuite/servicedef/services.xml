@@ -43,4 +43,11 @@
         <implements service="demoDataGenerator"/>
         <attribute name="generatePassword" type="Boolean" mode="IN" optional="false" default-value="true"/>        
     </service>
+    
+    
+    <service name="createTrackingCodeVisitData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeData.groovy" 
+        invoke="createDemoTrackingCodeVisit" transaction-timeout="7200">
+        <description>Creates a number of TrackingCodeVisit demo data</description>
+        <implements service="demoDataGenerator"/>
+    </service>
 </services>

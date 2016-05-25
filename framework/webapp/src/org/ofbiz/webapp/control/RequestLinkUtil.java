@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -184,4 +185,55 @@ public abstract class RequestLinkUtil {
         return (Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure));
     }
     
+    /**
+     * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
+     */
+    public static String makeLinkAuto(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, String uri) {
+        RequestHandler rh = RequestHandler.getRequestHandler(servletContext);
+        return rh.makeLinkAuto(request, response, uri, null, null, null, null, null, null, null);
+    }
+
+    /**
+     * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
+     */
+    public static String makeLinkAuto(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, 
+            String uri, Boolean fullPath, Boolean secure, Boolean encode) {
+        RequestHandler rh = RequestHandler.getRequestHandler(servletContext);
+        return rh.makeLinkAuto(request, response, uri, null, null, null, null, fullPath, secure, encode);
+    }
+    
+    /**
+     * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
+     */
+    public static String makeLinkAuto(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, 
+            String uri, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, Boolean fullPath, Boolean secure, Boolean encode) {
+        RequestHandler rh = RequestHandler.getRequestHandler(servletContext);
+        return rh.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
+    }
+    
+    /**
+     * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
+     */
+    public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String uri) {
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+        return rh.makeLinkAuto(request, response, uri, null, null, null, null, null, null, null);
+    }
+
+    /**
+     * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
+     */
+    public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, 
+            String uri, Boolean fullPath, Boolean secure, Boolean encode) {
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+        return rh.makeLinkAuto(request, response, uri, null, null, null, null, fullPath, secure, encode);
+    }
+    
+    /**
+     * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
+     */
+    public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, 
+            String uri, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, Boolean fullPath, Boolean secure, Boolean encode) {
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+        return rh.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
+    }
 }

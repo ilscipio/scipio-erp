@@ -72,7 +72,6 @@ public abstract class RequestLinkUtil {
         }
     }
     
-    
     public static String encodeURLNoJsessionId(String url, HttpServletResponse response) {
         return RequestLinkUtil.removeJsessionId(response.encodeURL(url));
     }
@@ -83,6 +82,21 @@ public abstract class RequestLinkUtil {
             url = url + (url.contains("?") ? (escaped ? "&amp;" : "&") : "?") + "externalLoginKey=" + extLoginKey;
         }
         return url;
+    }
+    
+    public static String removeQueryStringParam(String queryString, String paramName) {
+        // WARNING: UNTESTED
+        final Pattern pat = Pattern.compile("(^|[?&])" + paramName + "=[^#?;&]*");
+        
+        Matcher m = pat.matcher(queryString);
+        String res = m.replaceAll("");
+        
+        if (queryString.startsWith("?") && !res.startsWith("?")) {
+            return "?" + res;
+        }
+        else {
+            return res;
+        }
     }
     
     public static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,

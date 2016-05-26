@@ -15,5 +15,5 @@
             </#list>
         </@field>
         <@field name="run" type="submit" value="" text=uiLabelMap.CommonSubmit />
-
+    </form>
 </@section>

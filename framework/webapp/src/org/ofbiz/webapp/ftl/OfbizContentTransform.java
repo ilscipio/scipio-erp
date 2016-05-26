@@ -23,11 +23,14 @@ import java.io.Writer;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.webapp.content.ContentRequestWorker;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 
 import freemarker.core.Environment;
@@ -85,37 +88,12 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     BeanModel req = (BeanModel)env.getVariable("request");
                     HttpServletRequest request = req == null ? null : (HttpServletRequest) req.getWrappedObject();
 
-                    String requestUrl = buf.toString();
-
-                    // If the URL starts with http(s) then there is nothing for us to do here
-                    if (requestUrl.startsWith("http")) {
-                        out.write(requestUrl);
-                        return;
-                    }
-
-                    requestUrl = UtilCodec.getDecoder("url").decode(requestUrl);
-
-                    // make the link
-                    StringBuilder newURL = new StringBuilder();
-                    ContentUrlTag.appendContentPrefix(request, newURL);
-                    if ((newURL.length() > 0 && newURL.charAt(newURL.length() - 1) != '/') 
-                            && (requestUrl.length()> 0 && requestUrl.charAt(0) != '/')) {
-                        newURL.append('/');
-                    }
-
-                    if(UtilValidate.isNotEmpty(imgSize)){
-                        if(!"/images/defaultImage.jpg".equals(requestUrl)){
-                            int index = requestUrl.lastIndexOf(".");
-                            if (index > 0) {
-                                String suffix = requestUrl.substring(index);
-                                String imgName = requestUrl.substring(0, index);
-                                requestUrl = imgName + "-" + imgSize + suffix;
-                            }
-                        }
-                    }
-
-                    newURL.append(requestUrl);
-                    out.write(newURL.toString());
+                    // CATO: delegated to our new method
+                    BeanModel resp = (BeanModel) env.getVariable("response");
+                    HttpServletResponse response = resp == null ? null : (HttpServletResponse) resp.getWrappedObject();
+                    String url = ContentRequestWorker.makeContentLink(request, response, buf.toString(), imgSize);
+                            
+                    out.write(url);
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());
                 }

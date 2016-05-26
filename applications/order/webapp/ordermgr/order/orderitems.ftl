@@ -46,6 +46,8 @@ under the License.
                         <@tr class="${rowColor!}">
                             <#assign orderItemType = orderItem.getRelatedOne("OrderItemType", false)!>
                             <#assign productId = orderItem.productId!>
+                            <#-- CATO: This product lookup added by us, missing from upstream patch -->
+                            <#assign product = orderItem.getRelatedOne("Product", false)!>
                             <#if productId?? && productId == "shoppingcart.CommentLine">
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>

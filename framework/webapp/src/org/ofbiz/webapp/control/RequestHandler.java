@@ -1536,20 +1536,19 @@ public class RequestHandler {
         //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
         {
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
-            // Cato: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
-            // We will NEVER build insecure URLs to requests marked secure.
-            // This way, there is less control, but fullPath becomes easier and safer to use.
-            // 2016-04-06: WE DO NOT DOWNGRADE CONNECTIONS WITH didFullStandard UNLESS EXPLICITLY REQUESTED
-            // 2016-04-06: secure flag no longer forces a fullPath link, but we can only omit the full path in cases where we are already secure
+            // Cato: These conditions have been change (see method)
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
             //    didFullSecure = true;
             //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
             //    didFullStandard = true;
             //}
-            if (isDoFullSecure(request, requestWebSiteProps, requestMap, fullPath, secure)) {
+            Boolean secureFullPathFlag = checkFullSecureOrStandard(request, requestWebSiteProps, requestMap, interWebapp, fullPath, secure);
+            if (secureFullPathFlag == Boolean.TRUE) {
                 didFullSecure = true;
-            } else if (isDoFullStandard(request, requestWebSiteProps, requestMap, fullPath, secure)) {
+            } else if (secureFullPathFlag == Boolean.FALSE) {
                 didFullStandard = true;
+            } else {
+                ;
             }
         }
         StringBuilder newURL = new StringBuilder(250);
@@ -1651,22 +1650,34 @@ public class RequestHandler {
 
     /**
      * CATO: Factored-out makeLink code.
+     * <p>
+     * Returns null if no full required. Returns true if secure fullpath required. Returns false if standard fullpath required.
      */
-    protected boolean isDoFullSecure(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
-            Boolean fullPath, Boolean secure) {
-        return (Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
-        || (webSiteProps.getEnableHttps() && requestMap != null && requestMap.securityHttps && (!request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
-        || (webSiteProps.getEnableHttps() && secure == null && Boolean.TRUE.equals(fullPath)); // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
-    }
-    
-    /**
-     * CATO: Factored-out makeLink code.
-     * WARN: result is only valid if isDoFullSecure is checked first! if isDoFullSecure true, do not call this.
-     */
-    protected boolean isDoFullStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
-            Boolean fullPath, Boolean secure) {
-        return Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure())); // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()  
+    protected Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
+            Boolean interWebapp, Boolean fullPath, Boolean secure) {
+        // Cato: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
+        // We will NEVER build insecure URLs to requests marked secure.
+        // This way, there is less control, but fullPath becomes easier and safer to use.
+        // 2016-04-06: WE DO NOT DOWNGRADE CONNECTIONS WITH didFullStandard UNLESS EXPLICITLY REQUESTED
+        // 2016-04-06: secure flag no longer forces a fullPath link, but we can only omit the full path in cases where we are already secure
+        //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
+        //    didFullSecure = true;
+        //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
+        //    didFullStandard = true;
+        //}
+        if (interWebapp == null) {
+            interWebapp = Boolean.FALSE;
+        }
+        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
+            || (webSiteProps.getEnableHttps() && requestMap != null && requestMap.securityHttps && (!request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
+            || (webSiteProps.getEnableHttps() && secure == null && Boolean.TRUE.equals(fullPath) && request.isSecure())) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
+            return Boolean.TRUE;
+        } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
+                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure()))) { // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()  
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
     }
     
     /**

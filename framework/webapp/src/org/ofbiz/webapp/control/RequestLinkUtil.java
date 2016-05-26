@@ -115,7 +115,14 @@ public abstract class RequestLinkUtil {
         boolean didFullSecure = false;
         StringBuilder newURL = new StringBuilder();
         
-        if (isFullPathLinkRequired(request, response, fullPath, secure)) { // Cato: safe check
+        Boolean secureFullPathFlag = checkFullSecureOrStandard(request, response, false, fullPath, secure);
+        if (secureFullPathFlag != null) {
+            if (secureFullPathFlag) {
+                didFullSecure = true;
+            } else {
+                didFullStandard = true;
+            }
+            
             OfbizUrlBuilder builder;
             try {
                 builder = OfbizUrlBuilder.from(request);
@@ -123,13 +130,7 @@ public abstract class RequestLinkUtil {
                 throw new IOException(e);
             } 
 
-            builder.buildHostPart(newURL, url, secure);
-            
-            if (Boolean.TRUE.equals(secure)) {
-                didFullSecure = true;
-            } else {
-                didFullStandard = true;
-            }
+            builder.buildHostPart(newURL, url, secureFullPathFlag);
         }
         newURL.append(url);
         
@@ -144,8 +145,8 @@ public abstract class RequestLinkUtil {
         return res;
     }
     
-    public static boolean isFullPathLinkRequired(HttpServletRequest request, HttpServletResponse response, 
-            Boolean fullPath, Boolean secure) {
+    public static Boolean checkFullSecureOrStandard(HttpServletRequest request, HttpServletResponse response, 
+            Boolean interWebapp, Boolean fullPath, Boolean secure) {
         WebSiteProperties webSiteProps;
         try {
             webSiteProps = WebSiteProperties.from(request);
@@ -154,14 +155,40 @@ public abstract class RequestLinkUtil {
             return false;
         }
         RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-        return (rh.isDoFullSecure(request, webSiteProps, null, fullPath, secure) || 
-                rh.isDoFullStandard(request, webSiteProps, null, fullPath, secure));
+        return rh.checkFullSecureOrStandard(request, webSiteProps, null, interWebapp, fullPath, secure);
+    }
+    
+    public static Boolean checkFullSecureOrStandard(Delegator delegator, WebSiteProperties webSiteProps,
+            Boolean interWebapp, Boolean fullPath, Boolean secure) {
+        // FIXME: This case is too simplistic currently, check the website
+        if (Boolean.TRUE.equals(secure)) {
+            return Boolean.TRUE;
+        } else if (Boolean.TRUE.equals(fullPath)) {
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
+    }
+    
+    public static Boolean checkFullSecureOrStandard(Delegator delegator, String webSiteId,
+            Boolean interWebapp, Boolean fullPath, Boolean secure) {
+        // FIXME: This case is too simplistic currently, check the website
+        if (Boolean.TRUE.equals(secure)) {
+            return Boolean.TRUE;
+        } else if (Boolean.TRUE.equals(fullPath)) {
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
     }
     
     public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
             Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
         StringBuilder newURL = new StringBuilder();
-        if (RequestLinkUtil.isFullPathLinkRequired(fullPath, secure)) { // Cato: safe check
+        
+        // NOTE: this is always treated as inter-webapp, because we don't know our webapp
+        Boolean secureFullPathFlag = checkFullSecureOrStandard(delegator, webSiteId, true, fullPath, secure);
+        if (secureFullPathFlag != null) {
             OfbizUrlBuilder builder;
             if (UtilValidate.isNotEmpty(webSiteId)) {
                 WebappInfo webAppInfo;
@@ -188,15 +215,10 @@ public abstract class RequestLinkUtil {
                     throw new IOException(e);
                 }
             }
-            builder.buildHostPart(newURL, url, secure);
+            builder.buildHostPart(newURL, url, Boolean.TRUE.equals(secureFullPathFlag));
         }
         newURL.append(url);
         return newURL.toString();
-    }
-    
-    
-    public static boolean isFullPathLinkRequired(Boolean fullPath, Boolean secure) {
-        return (Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure));
     }
     
     /**

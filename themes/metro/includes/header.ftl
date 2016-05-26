@@ -16,8 +16,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#--
 
-<#-- Applications -->
+
+********************
+*       METRO      *
+********************
+
+ -->
+<#-- Variables -->
 <#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
 <#if externalLoginKey??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
 <#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
@@ -39,6 +46,8 @@ under the License.
 <#else>
   <#assign orgName = "">
 </#if>
+
+<#-- Macro for rendering the general menu (userprofile etc.) -->
 <#macro generalMenu>
     <#if userLogin??>
         <#--
@@ -68,6 +77,7 @@ under the License.
     </#if>
 </#macro>
 
+<#-- Macro for rendering the primary applications in a list -->
 <#macro primaryAppsMenu>
   <#assign appCount = 0>
   <#assign firstApp = true>
@@ -98,6 +108,7 @@ under the License.
   </#list>
 </#macro>
 
+<#-- Macro for rendering the secondary applications in a list -->
 <#macro secondaryAppsMenu>
     <li><label>${uiLabelMap["CommonSecondaryApps"]}</label></li>
     <#list displaySecondaryApps as display>
@@ -122,18 +133,16 @@ under the License.
     </#list>
 </#macro>
 
-<#-- in theory there is a transform that converts the selected menu to a proper list on these screens. It is never used by any of the other ofbiz screens, however and poorly documented
-so for now we have to split the screens in half and rely on the menu widget renderer to get the same effect
-<#macro currentAppMenu>
-    <#if appModelMenu?has_content>
-        <li class="has-dropdown not-click active"><a href="#">${title!"TEST"}</a>
-            <ul class="dropdown">
-                
-            </ul>
-        </li>
+<#-- Macro for rendering the sidebar. Relies on a tiny screenwidget that we are using for rendering menus-->
+<#macro sideBarMenu>
+    <#if applicationMenuLocation?has_content && applicationMenuName?has_content>
+        <#local menuLocation = applicationMenuLocation+"#"+applicationMenuName/>    
+        <@render resource="component://common/widget/CommonScreens.xml#MenuWrapper" ctxVars={"menuName":applicationMenuName, "menuLocation":applicationMenuLocation}
+                 restoreValues=true />
     </#if>
-</#macro>-->
+</#macro>
 
+<#-- Macro for rendering your company logo. Uses a smaller version of your logo if isSmall=true. -->
 <#macro logoMenu hasLink=true isSmall=false>
     <#if layoutSettings.headerImageUrl??>
         <#assign headerImageUrl = layoutSettings.headerImageUrl>
@@ -254,10 +263,105 @@ so for now we have to split the screens in half and rely on the menu widget rend
 
 <div class="off-canvas-wrap" data-offcanvas id="body-content">
 <div class="inner-wrap">
+                    <#-- Sidebar -->    
+                    <nav class="side-bar  hide-for-small-only">
+                        <!-- Profile -->
+                        <ul class="title-area">
+                            <li class="name">
+                                <h1><@logoMenu isSmall=true/></h1>   
+                              </li>
+                          </ul>
+                        <!-- End of Profile -->
 
-    <!-- Off Canvas Menu -->
+                        <!-- Menu sidebar begin-->
+                        <ul class="side-nav" id="menu_2">
+                            <@sideBarMenu/>                       
+                            <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
+                            <#if helpLink?has_content><li><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>
+                        </ul>
+                    </nav>
+                    
+                    <#-- Topbar -->
+                    <nav class="top-bar" data-topbar role="navigation" data-options="is_hover: false">
+                        <ul class="title-area left">
+
+                            
+                            <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                            <li class="toggle-topbar menu-icon"><a href="#"><span>#</span></a>
+                            </li>
+                        </ul>
+
+                        <section class="top-bar-section ">
+                            <!-- Right Nav Section -->
+                            <ul class="left">
+                                <li class="has-dropdown bg-white">
+                                    <a class="" href="#"><i class="fi-home text-blue"></i><#--${uiLabelMap["CommonPrimaryApps"]}--></a>
+                                    <ul class="dropdown">
+                                        <@primaryAppsMenu/>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a class="" href="#"><i class="fi-widget text-green"></i><#--${uiLabelMap["CommonSecondaryApps"]}--></a>
+                                    <ul class="dropdown">
+                                        <@secondaryAppsMenu/>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <#-- Left Nav Section
+                            <ul class="left">
+
+                                <li class="has-form bg-white">
+                                    <div class="row collapse">
+
+                                        <div class="large-12 columns">
+                                            <div class="dark"> </div>
+                                            <input class="input-top" type="text" placeholder="search">
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>-->
+
+                            <ul class="right">
+                                <li class="has-dropdown">
+                                   <#if userLogin??><i class="fi-torso"></i> ${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if>
+                                    <ul class="dropdown">
+                                        <@generalMenu />
+                                    </ul>
+                                </li>
+                            </ul>
+                        </section>
+                    </nav>
+                        
+                    <#-- Off-Canvas Menus -->    
+                    <aside class="right-off-canvas-menu">
+                        <ul class="off-canvas-list">
+                          <@generalMenu />
+                          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
+                          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>   
+                        </ul>
+                    </aside>
+                    
+                    <aside class="left-off-canvas-menu">
+                      <ul class="off-canvas-list">
+                          <@primaryAppsMenu/>
+                          <@secondaryAppsMenu/>
+                       </ul>
+                    </aside>
+                
+                    <nav class="tab-bar show-for-small">
+                        <section class="left-small">
+                            <a class="left-off-canvas-toggle menu-icon"><span></span></a>
+                        </section>
+                        <section class="middle tab-bar-section">
+                            <h1><@logoMenu isSmall=true/></h1>
+                        </section>
+                        <section class="right-small">
+                            <a class="right-off-canvas-toggle menu-icon"><span></span></a>
+                        </section>
+                    </nav>
+<#--
+    <header id="header" class="navbar navbar-fixed-top">
     <aside class="right-off-canvas-menu">
-        <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
           <@generalMenu />
           <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
@@ -283,7 +387,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
             <a class="right-off-canvas-toggle menu-icon"><span></span></a>
         </section>
     </nav>
-    
+
     <nav class="top-bar hide-for-small" data-topbar role="navigation">
       <ul class="title-area">
         <li class="name">
@@ -293,7 +397,6 @@ so for now we have to split the screens in half and rely on the menu widget rend
     
     
       <section class="top-bar-section">
-        <!-- Right Nav Section -->
         <ul class="right">
           <li class="has-dropdown not-click">
             <#if userLogin??><a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if></a>
@@ -323,3 +426,4 @@ so for now we have to split the screens in half and rely on the menu widget rend
                 </ul>
               </li>
         </#if>
+-->

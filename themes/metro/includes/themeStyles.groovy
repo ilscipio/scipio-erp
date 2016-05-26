@@ -20,7 +20,12 @@ import org.ofbiz.base.util.*;
 GroovyUtil.runScriptAtLocation("component://common/webcommon/includes/cato/lib/standard/htmlVariables.groovy", null, context);
 
 context.styles.putAll([
-    
+  /*Metro specific*/
+	"customSideBar" : true,
+	"menu_sidebar" : "topnav slicknav",
+	"menu_sidebar_wrap" :"",
+	"menu_sidebar_specialtype" : "side-bar",	
+	  
   /* Specific display elements */
     /* Address picker */
     "address_list" : "address-list",

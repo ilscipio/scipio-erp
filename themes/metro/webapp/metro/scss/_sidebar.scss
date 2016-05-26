@@ -1,0 +1,186 @@
+/* 
+Sidebar Menu
+*/
+
+
+/********************
+*     VARIABLES     *
+*********************/
+// 26. Side Nav
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// $include-html-nav-classes: $include-html-classes;
+
+// We use this to control padding.
+// $side-nav-padding: rem-calc(14 0);
+
+// We use these to control list styles.
+// $side-nav-list-type: none;
+// $side-nav-list-position: inside;
+// $side-nav-list-margin: rem-calc(0 0 7 0);
+
+// We use these to control link styles.
+$side-nav-link-color: $white;
+$side-nav-link-color-active: scale-color($side-nav-link-color, $lightness: 30%);
+$side-nav-link-color-hover: scale-color($side-nav-link-color, $lightness: 20%);
+$side-nav-link-bg-hover: $monsoon;
+// $side-nav-link-margin: 0;
+// $side-nav-link-padding: rem-calc(7 14);
+// $side-nav-font-size: rem-calc(14);
+// $side-nav-font-weight: $font-weight-normal;
+// $side-nav-font-weight-active: $side-nav-font-weight;
+// $side-nav-font-family: $body-font-family;
+// $side-nav-active-font-family: $side-nav-font-family;
+
+// We use these to control heading styles.
+// $side-nav-heading-color: $side-nav-link-color;
+// $side-nav-heading-font-size: $side-nav-font-size;
+// $side-nav-heading-font-weight: bold;
+// $side-nav-heading-text-transform: uppercase;
+
+// We use these to control border styles
+// $side-nav-divider-size: 1px;
+// $side-nav-divider-style: solid;
+// $side-nav-divider-color: scale-color($white, $lightness: 10%);
+
+// Non foundation specific vars
+$side-bar-bg: #2f323a;
+$dot-sidebar:rgba(255, 255, 255, 0.1);
+$boder-notf-color:rgba(255, 255, 255, 0.1);
+
+
+
+
+/********************
+*   IMPLEMENTATION  *
+*********************/
+
+/* Cato: duplicated from "side-nav" mixin and modified */
+@mixin side-nav-nested(
+  $divider-color:$side-nav-divider-color,
+  $font-size:$side-nav-font-size,
+  $link-color:$side-nav-link-color,
+  $link-color-active:$side-nav-link-color-active,
+  $link-color-hover:$side-nav-link-color-hover,
+  $link-bg-hover:$side-nav-link-bg-hover) {
+  
+  display: block;
+  font-family: $side-nav-font-family;
+  list-style-position: $side-nav-list-position;
+  list-style-type: $side-nav-list-type;
+  //margin: 0;
+  padding: $side-nav-padding;
+
+  li {
+    font-size: $font-size;
+    font-weight: $side-nav-font-weight;
+    margin: $side-nav-list-margin;
+
+    // Cato: added child selector here
+    > a:not(.button) {
+      color: $link-color;
+      display: block;
+      margin: $side-nav-link-margin;
+      padding: $side-nav-link-padding;
+      
+      &:hover,
+      &:focus {
+        background: $link-bg-hover;
+        color: $link-color-hover;
+      }
+      &:active {
+        color: $link-color-active;
+      }
+    }
+
+    &.active > a:first-child:not(.button) {
+      color: $side-nav-link-color-active;
+      font-family: $side-nav-font-family-active;
+      font-weight: $side-nav-font-weight-active;
+    }
+
+    &.divider {
+      border-top: $side-nav-divider-size $side-nav-divider-style;
+      height: 0;
+      list-style: none;
+      padding: 0;
+      border-top-color: $divider-color;
+    }
+
+    &.heading {
+      color: $side-nav-heading-color;
+      font: {
+        size: $side-nav-heading-font-size;
+        weight: $side-nav-heading-font-weight;
+      }
+      text-transform: $side-nav-heading-text-transform;
+    }
+    
+    &.dashboard {
+            background-color: $monsoon;
+            
+            a {
+                color: $white;
+            }
+        }
+        
+    &.disabled {
+            padding: $side-nav-link-padding;
+            color: $aluminum;
+            cursor: $input-disabled-cursor;
+            
+            > a, > a:hover, > a:visited, > a:active, > a:focus {
+                color: $aluminum;
+                cursor: $input-disabled-cursor;
+            }
+        }
+  }
+}
+
+
+.inner-wrap {
+    background-color: $side-bar-bg;
+    display:block;
+    height:100%;
+}
+
+#content-main-section {
+    color: $body-bg;
+    background-color: $white-smoke;
+    padding-top:50px;  
+    min-height:100%;
+}
+
+@media #{$medium-up} {
+  .side-bar {
+    @include side-nav-nested;
+    display:block;
+    background-color: $side-bar-bg;    
+    left: 0px;
+    top: 0px;
+    bottom: 0;
+    position: absolute;
+    width: 200px;
+    overflow-x: hidden;
+    
+    .name img{
+        width: 55px;
+        height: 55px;
+        opacity: 0.9;
+        position: relative;
+        top: 10px;
+        background: $white;
+        border-radius: 50%;
+        padding: 7px;
+    }
+  }
+  .top-bar {
+      margin: 0 0 -35px;
+      margin-left: 200px;
+  }
+  
+  #content-main-section {
+    width:auto;
+    margin-left: 200px;
+  }
+}

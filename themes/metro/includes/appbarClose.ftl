@@ -1,2 +1,1 @@
-
-<#include "component://base-theme/includes/appbarClose.ftl">
+<#--<#include "component://base-theme/includes/appbarClose.ftl">-->

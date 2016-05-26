@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
+import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -51,24 +52,8 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
 
     // Cato: Added and modified to support Boolean
     @SuppressWarnings("unchecked")
-    public Boolean checkArg(Map args, String key, Boolean defaultValue) {
-        if (!args.containsKey(key)) {
-            return defaultValue;
-        } else {
-            Object o = args.get(key);
-            if (o instanceof SimpleScalar) {
-                SimpleScalar s = (SimpleScalar) o;
-                if ("true".equalsIgnoreCase(s.getAsString())) {
-                    return true;
-                } else if ("false".equalsIgnoreCase(s.getAsString())) { // Cato: require explicit false
-                    return false;
-                }
-                else {
-                    return defaultValue;
-                }
-            }
-            return defaultValue;
-        }
+    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
+        return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
     }
     
     @Override
@@ -77,9 +62,9 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
         final StringBuilder buf = new StringBuilder();
         
         // Cato: new flags
-        final Boolean fullPath = checkArg(args, "fullPath", null);
-        final Boolean secure = checkArg(args, "secure", null);
-        final Boolean encode = checkArg(args, "encode", null);
+        final Boolean fullPath = checkBooleanArg(args, "fullPath", null);
+        final Boolean secure = checkBooleanArg(args, "secure", null);
+        final Boolean encode = checkBooleanArg(args, "encode", null);
         
         return new Writer(out) {
 

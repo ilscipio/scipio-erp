@@ -66,7 +66,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizUrlTransform.class.getName();
 
     @SuppressWarnings("rawtypes")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
+    public static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
         Object o = args.get(key);
         // Cato (2016-02): we now support real booleans. 
         // In addition, SimpleScalar was a bad type to use.

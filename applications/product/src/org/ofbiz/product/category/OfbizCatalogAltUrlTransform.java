@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -37,6 +38,7 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
+import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -44,7 +46,9 @@ import freemarker.ext.beans.NumberModel;
 import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
 
 public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
@@ -67,24 +71,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
 
     // Cato: Modified to support Boolean
     @SuppressWarnings("unchecked")
-    public Boolean checkArg(Map args, String key, Boolean defaultValue) {
-        if (!args.containsKey(key)) {
-            return defaultValue;
-        } else {
-            Object o = args.get(key);
-            if (o instanceof SimpleScalar) {
-                SimpleScalar s = (SimpleScalar) o;
-                if ("true".equalsIgnoreCase(s.getAsString())) {
-                    return true;
-                } else if ("false".equalsIgnoreCase(s.getAsString())) { // Cato: require explicit false
-                    return false;
-                }
-                else {
-                    return defaultValue;
-                }
-            }
-            return defaultValue;
-        }
+    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
+        return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
     }
 
     @Override
@@ -92,9 +80,9 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, final Map args)
             throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
-        final Boolean fullPath = checkArg(args, "fullPath", null); // Cato: changed from boolean to Boolean
-        final Boolean secure = checkArg(args, "secure", null); // Cato: changed from boolean to Boolean
-        final Boolean encode = checkArg(args, "encode", null); // Cato: new flag
+        final Boolean fullPath = checkBooleanArg(args, "fullPath", null); // Cato: changed from boolean to Boolean
+        final Boolean secure = checkBooleanArg(args, "secure", null); // Cato: changed from boolean to Boolean
+        final Boolean encode = checkBooleanArg(args, "encode", null); // Cato: new flag
 
         return new Writer(out) {
             

@@ -64,7 +64,7 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
   $link-color-hover:$side-nav-link-color-hover,
   $link-bg-hover:$side-nav-link-bg-hover) {
   
-  display: block;
+  //display: block;
   font-family: $side-nav-font-family;
   list-style-position: $side-nav-list-position;
   list-style-type: $side-nav-list-type;
@@ -75,6 +75,7 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
     font-size: $font-size;
     font-weight: $side-nav-font-weight;
     margin: $side-nav-list-margin;
+    list-style: none;
 
     // Cato: added child selector here
     > a:not(.button) {
@@ -140,26 +141,23 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
 
 .inner-wrap {
     background-color: $side-bar-bg;
-    display:block;
-    height:100%;
 }
 
 #content-main-section {
     color: $body-bg;
     background-color: $white-smoke;
     padding-top:50px;  
-    min-height:100%;
 }
 
 @media #{$medium-up} {
   .side-bar {
     @include side-nav-nested;
-    display:block;
+    
     background-color: $side-bar-bg;    
     left: 0px;
     top: 0px;
     bottom: 0;
-    position: absolute;
+    position: fixed;
     width: 200px;
     overflow-x: hidden;
     

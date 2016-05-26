@@ -10994,35 +10994,30 @@ Sidebar Menu
 *   IMPLEMENTATION  *
 *********************/
 /* Cato: duplicated from "side-nav" mixin and modified */
-/* line 141, ../scss/_sidebar.scss */
+/* line 142, ../scss/_sidebar.scss */
 .inner-wrap {
   background-color: #2f323a;
-  display: block;
-  height: 100%;
 }
 
-/* line 147, ../scss/_sidebar.scss */
+/* line 146, ../scss/_sidebar.scss */
 #content-main-section {
   color: white;
   background-color: whitesmoke;
   padding-top: 50px;
-  min-height: 100%;
 }
 
 @media only screen and (min-width: 40.0625em) {
-  /* line 155, ../scss/_sidebar.scss */
+  /* line 153, ../scss/_sidebar.scss */
   .side-bar {
-    display: block;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     list-style-position: outside;
     list-style-type: none;
     padding: 0.875rem 0;
-    display: block;
     background-color: #2f323a;
     left: 0px;
     top: 0px;
     bottom: 0;
-    position: absolute;
+    position: fixed;
     width: 200px;
     overflow-x: hidden;
   }
@@ -11031,30 +11026,31 @@ Sidebar Menu
     font-size: 0.875rem;
     font-weight: normal;
     margin: 0 0 0.4375rem 0;
+    list-style: none;
   }
-  /* line 80, ../scss/_sidebar.scss */
+  /* line 81, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button) {
     color: white;
     display: block;
     margin: 0;
     padding: 0.4375rem 0.875rem;
   }
-  /* line 86, ../scss/_sidebar.scss */
+  /* line 87, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):hover, .side-bar li > a:not(.button):focus {
     background: #777777;
     color: white;
   }
-  /* line 91, ../scss/_sidebar.scss */
+  /* line 92, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):active {
     color: white;
   }
-  /* line 96, ../scss/_sidebar.scss */
+  /* line 97, ../scss/_sidebar.scss */
   .side-bar li.active > a:first-child:not(.button) {
     color: white;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     font-weight: normal;
   }
-  /* line 102, ../scss/_sidebar.scss */
+  /* line 103, ../scss/_sidebar.scss */
   .side-bar li.divider {
     border-top: 1px solid;
     height: 0;
@@ -11062,33 +11058,33 @@ Sidebar Menu
     padding: 0;
     border-top-color: #e6e6e6;
   }
-  /* line 110, ../scss/_sidebar.scss */
+  /* line 111, ../scss/_sidebar.scss */
   .side-bar li.heading {
     color: #b61525;
     font-size: 0.875rem;
     font-weight: bold;
     text-transform: uppercase;
   }
-  /* line 119, ../scss/_sidebar.scss */
+  /* line 120, ../scss/_sidebar.scss */
   .side-bar li.dashboard {
     background-color: #777777;
   }
-  /* line 122, ../scss/_sidebar.scss */
+  /* line 123, ../scss/_sidebar.scss */
   .side-bar li.dashboard a {
     color: white;
   }
-  /* line 127, ../scss/_sidebar.scss */
+  /* line 128, ../scss/_sidebar.scss */
   .side-bar li.disabled {
     padding: 0.4375rem 0.875rem;
     color: #999999;
     cursor: default;
   }
-  /* line 132, ../scss/_sidebar.scss */
+  /* line 133, ../scss/_sidebar.scss */
   .side-bar li.disabled > a, .side-bar li.disabled > a:hover, .side-bar li.disabled > a:visited, .side-bar li.disabled > a:active, .side-bar li.disabled > a:focus {
     color: #999999;
     cursor: default;
   }
-  /* line 166, ../scss/_sidebar.scss */
+  /* line 164, ../scss/_sidebar.scss */
   .side-bar .name img {
     width: 55px;
     height: 55px;
@@ -11100,13 +11096,13 @@ Sidebar Menu
     padding: 7px;
   }
 
-  /* line 177, ../scss/_sidebar.scss */
+  /* line 175, ../scss/_sidebar.scss */
   .top-bar {
     margin: 0 0 -35px;
     margin-left: 200px;
   }
 
-  /* line 182, ../scss/_sidebar.scss */
+  /* line 180, ../scss/_sidebar.scss */
   #content-main-section {
     width: auto;
     margin-left: 200px;

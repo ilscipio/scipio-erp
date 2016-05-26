@@ -27,6 +27,10 @@ under the License.
             <actions>
                 <set field="titleProperty" value="MarketingAnalyticsSales"/>
                 <set field="activeMainMenuItem" value="AnalyticsSales"/>
+                
+                <entity-condition entity-name="Enumeration" list="salesChannelList">
+                    <condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
+                </entity-condition>
                 <!-- <script location="component://marketing/webapp/sfa/WEB-INF/actions/analytics/FindMyCommunication.groovy"/> -->
             </actions>
             <widgets>
@@ -34,15 +38,45 @@ under the License.
 			        <decorator-section name="body">
 			             <section>
 			                 <widgets>                     
-                                <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsSales.ftl"/></html></platform-specific>		                                    
+			                    <screenlet>
+                                    <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/FindAnalyticsSales.ftl"/></html></platform-specific>
+                                </screenlet>
+                                <screenlet>
+                                    <include-screen name="AnalyticsSalesStats"/>
+                                </screenlet>
 			                 </widgets>
 			             </section>
 			        </decorator-section>
 			    </decorator-screen>
-    
             </widgets>
         </section>
     </screen>
+    <screen name="AnalyticsSalesStats">
+        <section>            
+            <condition>
+                <not><if-empty field="trackingCodeId"/></not>            
+            </condition>
+            <actions>
+                <set field="chartType" value="bar"/>                
+                <set field="chartData" value="week"/>
+                <set field="chartDatasets" value="1"/> 
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
+                <!-- <set field="chartIntervalCount" value="4"/>  -->    <!-- Look back x days/weeks/months/years -->               
+                <set field="label1" value="${uiLabelMap.VisitTotal}"/>
+                
+                <set field="fromDate" from-field="requestParameters.fromDate" type="Timestamp"/>
+                <set field="thruDate" from-field="requestParameters.thruDate" type="Timestamp"/>
+                
+                <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsTrackingChart.ftl"/></html></platform-specific>
+            </widgets>
+        </section>    
+    </screen>
+    
+    
     
     <screen name="AnalyticsTracking">
         <section>
@@ -74,7 +108,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
     <screen name="AnalyticsTrackingStats">
         <section>            
             <condition>
@@ -86,9 +119,7 @@ under the License.
                 <set field="chartDatasets" value="1"/> 
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
-                <set field="chartIntervalCount" value="4"/>     <!-- Look back x days/weeks/months/years -->
-                <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
-                <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
+                <!-- <set field="chartIntervalCount" value="4"/>  -->    <!-- Look back x days/weeks/months/years -->               
                 <set field="label1" value="${uiLabelMap.VisitTotal}"/>
                 
                 <set field="fromDate" from-field="requestParameters.fromDate" type="Timestamp"/>
@@ -101,7 +132,5 @@ under the License.
             </widgets>
         </section>    
     </screen>
-
-
 
 </screens>

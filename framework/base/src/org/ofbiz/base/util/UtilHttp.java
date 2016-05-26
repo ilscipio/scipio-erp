@@ -1252,11 +1252,31 @@ public class UtilHttp {
         return null;
     }
 
-    /** Obtains the session ID from the request, or "unknown" if no session pressent. */
+    /** 
+     * Obtains the session ID from the request, or "unknown" if no session present. 
+     * <p>
+     * Cato: <strong>WARN:</strong> Despite what is written above (by stock), at time of writing
+     * (2016-05-26), this method will in fact cause new session creation, and may be unsafe to fix directly.
+     * To avoid completely, call {@link #getSessionIdIfSet} instead, which guarantees
+     * no session creation.
+     */
     public static String getSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return (session == null ? "unknown" : session.getId());
     }
+    
+    /** 
+     * Cato: Obtains the session ID from the request, or "unknown" if no session present. 
+     * <p>
+     * <strong>NOTE</strong>: Currently (2016-05-26) This version unlike {@link #getSessionId} ACTUALLY does
+     * what the description says, and will never implicitly create a new session if none 
+     * existed. If the above is ever fixed, this one should remain the same.
+     */
+    public static String getSessionIdIfSet(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        return (session == null ? "unknown" : session.getId());
+    }
+    
     /**
      * checks, if the current request comes from a searchbot
      *

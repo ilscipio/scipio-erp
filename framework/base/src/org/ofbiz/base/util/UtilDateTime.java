@@ -1313,7 +1313,7 @@ public class UtilDateTime {
             Calendar calendar = toCalendar(date);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             int month = UtilDateTime.getMonth(date, timezone, locale);            
-            int quarter = 1;
+            int quarter = 0;
             if (month >= 2 && month < 5)
                 quarter = 3;
             else if (month >= 5 && month < 8)
@@ -1321,18 +1321,25 @@ public class UtilDateTime {
             else if (month >= 8 && month < 11)
                 quarter = 9;
             else if (month == 11)
-                quarter = 11;
-//                calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1);            
+                quarter = 12;           
             calendar.set(Calendar.MONTH, quarter);
-            Timestamp monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()));
-            Timestamp monthEnd = UtilDateTime.getMonthStart(monthStart, 0, 2);
+            Timestamp monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()));            
             result.put("dateBegin", monthStart);
-            result.put("dateEnd", UtilDateTime.getMonthEnd(monthEnd, timezone, locale));
+            result.put("dateEnd", UtilDateTime.getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 2), timezone, locale));
             break;
         case "semester":
-//            timeLater ++;
-            result.put("dateBegin", UtilDateTime.getMonthStart(date, 0, 6));
-            result.put("dateEnd", UtilDateTime.getMonthEnd(result.get("dateBegin"), timezone, locale));
+            calendar = toCalendar(date);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            month = UtilDateTime.getMonth(date, timezone, locale);            
+            int semester = 0;
+            if (month >= 0 && month < 5)
+                semester = 5;           
+            else if (month >= 5)
+                semester = 12;
+            calendar.set(Calendar.MONTH, semester);
+            monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()));            
+            result.put("dateBegin", monthStart);
+            result.put("dateEnd", UtilDateTime.getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 5), timezone, locale));
             break;
         case "year":
             result.put("dateBegin", UtilDateTime.getYearStart(date, 0, timeLater));
@@ -1379,16 +1386,20 @@ public class UtilDateTime {
         case "quarter":
             int month = UtilDateTime.getMonth((Timestamp) result.get("beginDate"), timezone, locale);
             int quarter = 1;
-            if (month >= 4 && month < 7)
+            if (month >= 3 && month < 6)
                 quarter = 2;
-            if (month >= 7 && month < 10)
+            if (month >= 6 && month < 9)
                 quarter = 3;
-            if (month >= 10) 
+            if (month >= 9) 
                 quarter = 4;
             result.put("dateFormatter", new SimpleDateFormat("yyyy-'" + quarter + "T'"));
             break;
         case "semester":
-            result.put("dateFormatter", new SimpleDateFormat("yyyy-MM"));
+            month = UtilDateTime.getMonth((Timestamp) result.get("beginDate"), timezone, locale);
+            int semester = 1;
+            if (month >= 5)
+                semester = 2;          
+            result.put("dateFormatter", new SimpleDateFormat("yyyy-'" + semester + "S'"));
             break;
         case "year":
             result.put("dateFormatter", new SimpleDateFormat("yyyy"));
@@ -1410,6 +1421,52 @@ public class UtilDateTime {
      */
     public static boolean checkValidInterval(String interval) {
         return Arrays.asList(TIME_INTERVALS).contains(interval);
+    }
+    
+    public static Timestamp getTimeStampFromIntervalScope(String iScope) {
+        return getTimeStampFromIntervalScope(iScope, -1);
+    }
+    
+    public static Timestamp getTimeStampFromIntervalScope(String iScope, int iCount) {
+        if (iCount < 0)
+            iCount = getIntervalDefaultCount(iScope);
+        Calendar calendar = Calendar.getInstance();
+        if (iScope.equals("hour")) {            
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - iCount);       
+        } else if (iScope.equals("day")) {            
+            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - iCount);
+        } else if (iScope.equals("week")) {           
+            calendar.set(Calendar.DAY_OF_WEEK, 1);
+            calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - iCount);
+        } else if (iScope.equals("month") || iScope.equals("quarter") || iScope.equals("semester")) {           
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - iCount);        
+        } else if (iScope.equals("year")) {           
+            calendar.set(Calendar.DAY_OF_YEAR, 1);
+            calendar.set(Calendar.MONTH, 1);
+            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - iCount);
+        }
+        return UtilDateTime.toTimestamp(calendar.getTime());
+    }
+    
+    public static int getIntervalDefaultCount(String iScope) {
+        int iCount = 0;
+        if (iScope.equals("hour")) {
+            iCount = 12;
+        } else if (iScope.equals("day")) {
+            iCount = 30;
+        } else if (iScope.equals("week")) {
+            iCount = 4;
+        } else if (iScope.equals("month")) {
+            iCount = 12;
+        } else if (iScope.equals("quarter")) {
+            iCount = 16;
+        } else if (iScope.equals("semester")) { 
+            iCount = 18;
+        } else if (iScope.equals("year")) {
+            iCount = 5;
+        }
+        return iCount;
     }
     
 }

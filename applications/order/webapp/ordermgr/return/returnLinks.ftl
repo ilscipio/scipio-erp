@@ -42,9 +42,9 @@ under the License.
             <#if shipGroup?? && shipGroup.shipmentMethodTypeId != "NO_SHIPPING">
               <#assign shipGroupShipment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("Shipment", {"primaryOrderId" : shipGroup.orderId, "primaryShipGroupSeqId" : shipGroup.shipGroupSeqId}, null, false))/>
               <#if shipGroupShipment??>
-                <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipGroupShipment.shipmentId}, null, false))>
+                <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipGroupShipment.shipmentId}, null, false))!>
                 <#if shipmentRouteSegment??>
-                  <#if "UPS" == shipmentRouteSegment.carrierPartyId>
+                  <#if "UPS" == shipmentRouteSegment.carrierPartyId!>
                     <@menuitem type="link" href="javascript:document.upsEmailReturnLabel.submit();" text=uiLabelMap.ProductEmailReturnShippingLabelUPS class="+${styles.action_run_sys!} ${styles.action_send!}">
                       <form name="upsEmailReturnLabel" method="post" action="<@ofbizUrl>upsEmailReturnLabelReturn</@ofbizUrl>">
                         <input type="hidden" name="returnId" value="${returnId}"/>

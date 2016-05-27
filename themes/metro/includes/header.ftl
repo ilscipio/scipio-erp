@@ -323,7 +323,7 @@ under the License.
 
                             <ul class="right">
                                 <li class="has-dropdown">
-                                   <#if userLogin??><i class="fi-torso"></i> ${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if>
+                                   <#if userLogin??><a class="" href="#"><i class="fi-torso"></i> ${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a><#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if>
                                     <ul class="dropdown">
                                         <@generalMenu />
                                     </ul>

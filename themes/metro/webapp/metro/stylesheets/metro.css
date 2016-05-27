@@ -6873,7 +6873,7 @@ meta.foundation-mq-topbar {
 /* line 119, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
 .contain-to-grid {
   width: 100%;
-  background: white;
+  background: whitesmoke;
 }
 /* line 123, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
 .contain-to-grid .top-bar {
@@ -6909,7 +6909,7 @@ meta.foundation-mq-topbar {
 
 /* line 156, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
 .top-bar {
-  background: white;
+  background: whitesmoke;
   height: 2.8125rem;
   line-height: 2.8125rem;
   margin-bottom: 0;
@@ -7032,7 +7032,7 @@ meta.foundation-mq-topbar {
 }
 /* line 272, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
 .top-bar.expanded .title-area {
-  background: white;
+  background: whitesmoke;
 }
 /* line 277, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
 .top-bar.expanded .toggle-topbar a {
@@ -7073,7 +7073,7 @@ meta.foundation-mq-topbar {
 /* line 323, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
 .top-bar-section .divider,
 .top-bar-section [role="separator"] {
-  border-top: solid 1px gray;
+  border-top: solid 1px #7b7b7b;
   clear: both;
   height: 1px;
   width: 100%;
@@ -7396,7 +7396,7 @@ meta.foundation-mq-topbar {
 @media only screen and (min-width: 40.0625em) {
   /* line 492, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
   .top-bar {
-    background: white;
+    background: whitesmoke;
     overflow: visible;
   }
   /* line 239, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_global.scss */
@@ -7445,7 +7445,7 @@ meta.foundation-mq-topbar {
   }
   /* line 525, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
   .top-bar.expanded {
-    background: white;
+    background: whitesmoke;
   }
 
   /* line 530, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
@@ -7482,7 +7482,7 @@ meta.foundation-mq-topbar {
   }
   /* line 563, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
   .top-bar-section li:not(.has-form) a:not(.button) {
-    background: white;
+    background: whitesmoke;
     line-height: 2.8125rem;
     padding: 0 0.9375rem;
   }
@@ -7598,7 +7598,7 @@ meta.foundation-mq-topbar {
   /* line 676, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
   .top-bar-section > ul > .divider,
   .top-bar-section > ul > [role="separator"] {
-    border-right: solid 1px white;
+    border-right: solid 1px #f6f6f6;
     border-bottom: none;
     border-top: none;
     clear: none;
@@ -7607,7 +7607,7 @@ meta.foundation-mq-topbar {
   }
   /* line 686, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
   .top-bar-section .has-form {
-    background: white;
+    background: whitesmoke;
     height: 2.8125rem;
     padding: 0 0.9375rem;
   }
@@ -11001,8 +11001,7 @@ Sidebar Menu
 
 /* line 146, ../scss/_sidebar.scss */
 #content-main-section {
-  color: white;
-  background-color: whitesmoke;
+  background-color: white;
   padding-top: 50px;
 }
 
@@ -11103,6 +11102,11 @@ Sidebar Menu
   }
 
   /* line 180, ../scss/_sidebar.scss */
+  .top-bar-section ul li {
+    background: none;
+  }
+
+  /* line 184, ../scss/_sidebar.scss */
   #content-main-section {
     width: auto;
     margin-left: 200px;

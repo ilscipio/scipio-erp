@@ -144,8 +144,8 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
 }
 
 #content-main-section {
-    color: $body-bg;
-    background-color: $white-smoke;
+    //background-color: $white-smoke;
+    background-color: $body-bg;
     padding-top:50px;  
 }
 
@@ -175,6 +175,10 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
   .top-bar {
       margin: 0 0 -35px;
       margin-left: 200px;
+  }
+  
+  .top-bar-section ul li {
+    background: none;
   }
   
   #content-main-section {

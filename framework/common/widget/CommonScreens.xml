@@ -716,6 +716,23 @@ under the License.
             </fail-widgets>
         </section>            
     </screen>
+    
+    <!-- CATO: Menu wrapper for rendering menus in the screen context.
+               Relies on 
+     -->
+    <screen name="MenuWrapper">
+        <section>
+            <condition>
+                <not>
+                    <if-empty field="menuLocation"/>
+                    <if-empty field="menuName"/>
+                </not>
+            </condition>
+            <widgets>     
+                <include-menu location="${menuLocation}" name="${menuName}"/>
+            </widgets>
+        </section>
+    </screen>
 
     <!-- fo decorator for pdf documents (invoices, sales orders, purchase orders etc...). -->
     <screen name="FoReportDecorator">

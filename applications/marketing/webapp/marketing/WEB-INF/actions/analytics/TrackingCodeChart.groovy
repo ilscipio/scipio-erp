@@ -43,36 +43,13 @@ Map<Date, Integer> processResults() {
     }
     
     if (!fromDateTimestamp) {
-        Calendar calendar = Calendar.getInstance();
-        if (iScope.equals("hour")) {
-            if (iCount == -1)
-                iCount = 12;
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - iCount);       
-        } else if (iScope.equals("day")) {
-            if (iCount == -1)
-                iCount = 30;
-            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - iCount);
-        } else if (iScope.equals("week")) {
-            if (iCount == -1)
-                iCount = 4;
-            calendar.set(Calendar.DAY_OF_WEEK, 1);
-            calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - iCount);
-        } else if (iScope.equals("month") || iScope.equals("quarter") || iScope.equals("semester")) {
-            if (iCount == -1)
-                iCount = 12;
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - iCount);        
-        } else if (iScope.equals("year")) {
-            if (iCount == -1)
-                iCount = 5;
-            calendar.set(Calendar.DAY_OF_YEAR, 1);
-            calendar.set(Calendar.MONTH, 1);
-            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - iCount);
-        }
-        fromDateTimestamp = UtilDateTime.toTimestamp(calendar.getTime());        
+        iCount = UtilDateTime.getIntervalDefaultCount(iScope);        
+        fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
+        if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
+        if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
     }
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]); 
+//    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]); 
     
     if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
         dateIntervals["dateEnd"] = thruDate;
@@ -89,13 +66,13 @@ Map<Date, Integer> processResults() {
         }
         visits.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), totalVisits);            
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateEnd"], context.locale, context.timeZone);
-        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
+//        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
         if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
             dateIntervals["dateEnd"] = thruDateTimestamp;
     }
     return visits;
     
 }
-visits = processResults();
 
+visits = processResults();
 context.visits = visits;

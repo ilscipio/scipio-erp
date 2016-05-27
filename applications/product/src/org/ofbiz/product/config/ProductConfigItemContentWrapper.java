@@ -19,6 +19,7 @@
 package org.ofbiz.product.config;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Locale;
@@ -52,7 +53,7 @@ import org.ofbiz.service.ServiceContainer;
  * Product Config Item Content Worker: gets product content to display
  */
 @SuppressWarnings("serial")
-public class ProductConfigItemContentWrapper implements ContentWrapper {
+public class ProductConfigItemContentWrapper implements ContentWrapper, Serializable { // Cato: Added Serializable
 
     public static final String module = ProductConfigItemContentWrapper.class.getName();
 

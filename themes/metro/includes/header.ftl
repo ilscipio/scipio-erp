@@ -136,8 +136,7 @@ under the License.
 <#-- Macro for rendering the sidebar. Relies on a tiny screenwidget that we are using for rendering menus-->
 <#macro sideBarMenu>
     <#if applicationMenuLocation?has_content && applicationMenuName?has_content>
-        <#local menuLocation = applicationMenuLocation+"#"+applicationMenuName/>    
-        <@render resource="component://common/widget/CommonScreens.xml#MenuWrapper" ctxVars={"menuName":applicationMenuName, "menuLocation":applicationMenuLocation}
+        <@render resource="component://common/widget/CommonScreens.xml#catoMenuWidgetWrapper" ctxVars={"catoWidgetWrapperResName":applicationMenuName, "catoWidgetWrapperResLocation":applicationMenuLocation}
                  restoreValues=true />
     </#if>
 </#macro>
@@ -294,14 +293,14 @@ under the License.
                         <section class="top-bar-section ">
                             <!-- Right Nav Section -->
                             <ul class="left">
-                                <li class="has-dropdown bg-white">
-                                    <a class="" href="#"><i class="fi-home text-blue"></i><#--${uiLabelMap["CommonPrimaryApps"]}--></a>
+                                <li class="has-dropdown">
+                                    <a class="" href="#"><i class="fi-home text-blue"></i> ${uiLabelMap["CommonPrimaryApps"]}</a>
                                     <ul class="dropdown">
                                         <@primaryAppsMenu/>
                                     </ul>
                                 </li>
                                 <li class="has-dropdown">
-                                    <a class="" href="#"><i class="fi-widget text-green"></i><#--${uiLabelMap["CommonSecondaryApps"]}--></a>
+                                    <a class="" href="#"><i class="fi-widget text-green"></i> ${uiLabelMap["CommonSecondaryApps"]}</a>
                                     <ul class="dropdown">
                                         <@secondaryAppsMenu/>
                                     </ul>

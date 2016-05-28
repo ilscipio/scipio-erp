@@ -135,8 +135,8 @@ $include-html-global-classes: $include-html-classes;
 // $shiny-edge-active-color: rgba($black, .2);
 
 // We use these to control various global styles
-// $body-bg: $white;
-// $body-font-color: $jet;
+ $body-bg: #f5f5f5;
+ $body-font-color: $oil;
    @import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
    $body-font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: $font-weight-normal;
@@ -201,7 +201,7 @@ $include-html-global-classes: $include-html-classes;
 // $header-font-family: $body-font-family;
 // $header-font-weight: $font-weight-normal;
 // $header-font-style: normal;
-// $header-font-color: $jet;
+$header-font-color: $steel;
 // $header-line-height: 1.4;
 // $header-top-margin: .2rem;
 // $header-bottom-margin: .5rem;
@@ -1270,30 +1270,30 @@ $include-html-global-classes: $include-html-classes;
 // $include-html-table-classes: $include-html-classes;
 
 // These control the background color for the table and even rows
-// $table-bg: $white;
-// $table-even-row-bg: $snow  ;
+$table-bg: $white;
+$table-even-row-bg: $white-smoke ;
 
 // These control the table cell border style
-// $table-border-style: solid;
-// $table-border-size: 1px;
-// $table-border-color: $gainsboro;
+$table-border-style: solid;
+$table-border-size: 1px;
+$table-border-color: $gainsboro;
 
 // These control the table head styles
-// $table-head-bg: $white-smoke  ;
-// $table-head-font-size: rem-calc(14);
-// $table-head-font-color: $jet;
-// $table-head-font-weight: $font-weight-bold;
-// $table-head-padding: rem-calc(8 10 10);
+$table-head-bg: #73879C  ;
+$table-head-font-size: rem-calc(14);
+$table-head-font-color: $white;
+//$table-head-font-weight: $font-weight-bold;
+$table-head-padding: rem-calc(8 10 10);
 
 // These control the row padding and font styles
-// $table-row-padding: rem-calc(9 10);
-// $table-row-font-size: rem-calc(14);
-// $table-row-font-color: $jet;
-// $table-line-height: rem-calc(18);
+$table-row-padding: rem-calc(9 10);
+$table-row-font-size: rem-calc(14);
+$table-row-font-color: $jet;
+$table-line-height: rem-calc(18);
 
 // These are for controlling the display and margin of tables
-// $table-display: table-cell;
-// $table-margin-bottom: rem-calc(20);
+$table-display: table-cell;
+$table-margin-bottom: rem-calc(20);
 
 // 31. Tabs
 // - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1363,7 +1363,7 @@ $include-html-global-classes: $include-html-classes;
 // $include-html-top-bar-classes: $include-html-classes;
 
 // Background color for the top bar
- $topbar-bg-color: $white-smoke;
+ $topbar-bg-color: $white;
  $topbar-bg: $topbar-bg-color;
 
 // Height and margin
@@ -1380,20 +1380,20 @@ $topbar-dropdown-link-color: $oil;
 $topbar-dropdown-link-bg: $white;
 //$topbar-dropdown-link-weight: $font-weight-normal;
 $topbar-dropdown-toggle-size: 5px;
-$topbar-dropdown-toggle-color: $white;
+$topbar-dropdown-toggle-color: $topbar-dropdown-link-color;
 $topbar-dropdown-toggle-alpha: 0.4;
 
 // Set the link colors and styles for top-level nav
 $topbar-link-color: $oil;
-$topbar-link-color-hover: $oil;
+$topbar-link-color-hover: $smoke;
 $topbar-link-color-active: $white;
 $topbar-link-color-active-hover: $jet;
 // $topbar-link-weight: $font-weight-normal;
-// $topbar-link-font-size: rem-calc(13);
+$topbar-link-font-size: rem-calc(14);
 $topbar-link-hover-lightness: -10%; // Darken by 10%
 $topbar-link-bg: $topbar-bg;
 $topbar-link-bg-color-hover: $white;
-$topbar-link-bg-hover: $white;
+$topbar-link-bg-hover: $oil;
 $topbar-link-bg-active: $primary-color;
 $topbar-link-bg-active-hover: scale-color($primary-color, $lightness: -14%);
 // $topbar-link-font-family: $body-font-family;
@@ -1405,15 +1405,15 @@ $topbar-link-bg-active-hover: scale-color($primary-color, $lightness: -14%);
 // $topbar-button-font-size: 0.75rem;
 // $topbar-button-top: 7px;
 
-// $topbar-dropdown-label-color: $white;
+$topbar-dropdown-label-color: $white;
 // $topbar-dropdown-label-text-transform: uppercase;
 // $topbar-dropdown-label-font-weight: $font-weight-bold;
-// $topbar-dropdown-label-font-size: rem-calc(10);
-// $topbar-dropdown-label-bg: $white;
+$topbar-dropdown-label-font-size: rem-calc(13);
+$topbar-dropdown-label-bg: $primary-color;
 
 // Top menu icon styles
 // $topbar-menu-link-transform: uppercase;
-// $topbar-menu-link-font-size: rem-calc(13);
+// $topbar-menu-link-font-size: rem-calc(12);
 // $topbar-menu-link-weight: $font-weight-bold;
 // $topbar-menu-link-color: $white;
 // $topbar-menu-icon-color: $white;
@@ -1432,7 +1432,7 @@ $topbar-link-bg-active-hover: scale-color($primary-color, $lightness: -14%);
 
 // Sticky Class
 // $topbar-sticky-class: ".sticky";
-// $topbar-arrows: true; //Set false to remove the triangle icon from the menu item
+$topbar-arrows: true; //Set false to remove the triangle icon from the menu item
 
 // 36. Visibility Classes
 // - - - - - - - - - - - - - - - - - - - - - - - - -

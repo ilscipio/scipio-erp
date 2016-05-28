@@ -20,7 +20,7 @@ Sidebar Menu
 // $side-nav-list-margin: rem-calc(0 0 7 0);
 
 // We use these to control link styles.
-$side-nav-link-color: $white;
+$side-nav-link-color: $smoke;
 $side-nav-link-color-active: scale-color($side-nav-link-color, $lightness: 30%);
 $side-nav-link-color-hover: scale-color($side-nav-link-color, $lightness: 20%);
 $side-nav-link-bg-hover: $monsoon;
@@ -47,7 +47,7 @@ $side-nav-link-bg-hover: $monsoon;
 $side-bar-bg: #2f323a;
 $dot-sidebar:rgba(255, 255, 255, 0.1);
 $boder-notf-color:rgba(255, 255, 255, 0.1);
-
+$sidebar-width: 200px;
 
 
 
@@ -96,6 +96,7 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
 
     &.active > a:first-child:not(.button) {
       color: $side-nav-link-color-active;
+      border-left: 5px solid $primary-color;
       font-family: $side-nav-font-family-active;
       font-weight: $side-nav-font-weight-active;
     }
@@ -118,7 +119,8 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
     }
     
     &.dashboard {
-            background-color: $monsoon;
+            background-color: $primary-color;
+            border-left: 5px solid $jet;
             
             a {
                 color: $white;
@@ -143,6 +145,18 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
     background-color: $side-bar-bg;
 }
 
+.fixed {margin-left:$sidebar-width;}
+
+
+// Box styling
+.box,canvas {
+    background: $white;
+    padding: 7px 10px;
+    border: 1px solid #E6E9ED;
+    
+    canvas {border:none; padding:0px;}
+}
+
 #content-main-section {
     //background-color: $white-smoke;
     background-color: $body-bg;
@@ -158,7 +172,7 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
     top: 0px;
     bottom: 0;
     position: fixed;
-    width: 200px;
+    width: $sidebar-width;
     overflow-x: hidden;
     
     .name img{
@@ -173,8 +187,10 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
     }
   }
   .top-bar {
-      margin: 0 0 -35px;
-      margin-left: 200px;
+      background:$topbar-bg-color;
+      border-bottom: 1px solid #D9DEE4;
+      margin-left: $sidebar-width;
+      padding-left:10px;
   }
   
   .top-bar-section ul li {
@@ -183,6 +199,6 @@ $boder-notf-color:rgba(255, 255, 255, 0.1);
   
   #content-main-section {
     width:auto;
-    margin-left: 200px;
+    margin-left: $sidebar-width;
   }
 }

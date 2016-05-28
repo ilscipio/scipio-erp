@@ -7381,7 +7381,7 @@ meta.foundation-mq-topbar {
 /* line 476, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_top-bar.scss */
 .top-bar-section .dropdown label {
   color: white;
-  font-size: 0.8125rem;
+  font-size: 0.625rem;
   font-weight: bold;
   margin-bottom: 0;
   padding: 8px 0.9375rem 2px;
@@ -11060,18 +11060,19 @@ Sidebar Menu
     display: block;
     margin: 0;
     padding: 0.4375rem 0.875rem;
+    border-left: 5px solid #222222;
   }
-  /* line 90, ../scss/_sidebar.scss */
+  /* line 91, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):hover, .side-bar li > a:not(.button):focus {
     background: #777777;
     color: #f1f1f1;
     border-left: 5px solid #b61525;
   }
-  /* line 96, ../scss/_sidebar.scss */
+  /* line 97, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):active {
     color: #f3f3f3;
   }
-  /* line 101, ../scss/_sidebar.scss */
+  /* line 102, ../scss/_sidebar.scss */
   .side-bar li.active > a:first-child:not(.button) {
     background: #777777;
     color: #f3f3f3;
@@ -11079,7 +11080,7 @@ Sidebar Menu
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     font-weight: normal;
   }
-  /* line 109, ../scss/_sidebar.scss */
+  /* line 110, ../scss/_sidebar.scss */
   .side-bar li.divider {
     border-top: 1px solid;
     height: 0;
@@ -11087,20 +11088,17 @@ Sidebar Menu
     padding: 0;
     border-top-color: #e6e6e6;
   }
-  /* line 117, ../scss/_sidebar.scss */
+  /* line 118, ../scss/_sidebar.scss */
   .side-bar li.heading {
     color: #b61525;
     font-size: 0.875rem;
     font-weight: bold;
     text-transform: uppercase;
   }
-  /* line 126, ../scss/_sidebar.scss */
-  .side-bar li.dashboard {
+  /* line 128, ../scss/_sidebar.scss */
+  .side-bar li.dashboard a {
     background-color: #222222;
     border-left: 5px solid #222222;
-  }
-  /* line 130, ../scss/_sidebar.scss */
-  .side-bar li.dashboard a {
     color: white;
   }
   /* line 135, ../scss/_sidebar.scss */
@@ -11119,8 +11117,8 @@ Sidebar Menu
     width: 55px;
     height: 55px;
     opacity: 0.9;
-    position: relative;
-    top: 10px;
+    margin-left: 10px;
+    margin-right: 4px;
     background: white;
     border-radius: 50%;
     padding: 7px;

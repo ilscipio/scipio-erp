@@ -86,6 +86,7 @@ $sidebar-width: 200px;
       display: block;
       margin: $side-nav-link-margin;
       padding: $side-nav-link-padding;
+      border-left: 5px solid $jet;
       
       &:hover,
       &:focus {
@@ -124,10 +125,9 @@ $sidebar-width: 200px;
     }
     
     &.dashboard {
-            background-color: $jet;
-            border-left: 5px solid $jet;
-            
             a {
+                background-color: $jet;
+                border-left: 5px solid $jet;
                 color: $white;
             }
         }
@@ -184,8 +184,8 @@ $sidebar-width: 200px;
         width: 55px;
         height: 55px;
         opacity: 0.9;
-        position: relative;
-        top: 10px;
+        margin-left:10px;
+        margin-right:4px;
         background: $white;
         border-radius: 50%;
         padding: 7px;

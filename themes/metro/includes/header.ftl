@@ -268,11 +268,11 @@ under the License.
                     <#-- Sidebar -->    
                     <nav class="side-bar  hide-for-small-only">
                         <!-- Profile -->
-                        <ul class="title-area">
-                            <li class="name">
-                                <h1><@logoMenu isSmall=true/></h1>   
-                              </li>
-                          </ul>
+                        <div class="title-area">
+                            <div class="name">
+                                <h1><@logoMenu isSmall=true/> <#if activeApp?has_content>${activeApp}</#if></h1>   
+                              </div>
+                          </div>
                         <!-- End of Profile -->
 
                         <!-- Menu sidebar begin-->

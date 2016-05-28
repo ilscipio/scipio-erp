@@ -70,6 +70,8 @@ $sidebar-width: 200px;
   list-style-type: $side-nav-list-type;
   //margin: 0;
   padding: $side-nav-padding;
+  
+  h1{color: $link-color; font-size: 18px;}
 
   li {
     font-size: $font-size;

@@ -1287,26 +1287,26 @@ public class UtilDateTime {
         return getPeriodInterval(period, 0, fromDate, locale, timezone);
     }
     
-    public static Map<String, Timestamp> getPeriodInterval(String period, int timeLater, Timestamp fromDate, Locale locale, TimeZone timezone) {
+    public static Map<String, Timestamp> getPeriodInterval(String period, int timeShift, Timestamp fromDate, Locale locale, TimeZone timezone) {
         Map<String, Timestamp> result = FastMap.newInstance();
         if (!checkValidInterval(period))
             return null;
         Timestamp date = (UtilValidate.isNotEmpty(fromDate)) ? fromDate : UtilDateTime.nowTimestamp();
         switch (period) {
         case "hour":
-            result.put("dateBegin", UtilDateTime.getHourStart(date, timeLater, timezone, locale));
+            result.put("dateBegin", UtilDateTime.getHourStart(date, timeShift, timezone, locale));
             result.put("dateEnd", UtilDateTime.getHourEnd(result.get("dateBegin"), timezone, locale));
             break;
         case "day":
-            result.put("dateBegin", UtilDateTime.getDayStart(date, timeLater));
+            result.put("dateBegin", UtilDateTime.getDayStart(date, timeShift));
             result.put("dateEnd", UtilDateTime.getDayEnd(result.get("dateBegin")));
             break;
         case "week":
-            result.put("dateBegin", UtilDateTime.getWeekStart(date, 0, timeLater));
+            result.put("dateBegin", UtilDateTime.getWeekStart(date, 0, timeShift));
             result.put("dateEnd", UtilDateTime.getWeekEnd(result.get("dateBegin")));
             break;
         case "month":
-            result.put("dateBegin", UtilDateTime.getMonthStart(date, 0, timeLater));
+            result.put("dateBegin", UtilDateTime.getMonthStart(date, 0, timeShift));
             result.put("dateEnd", UtilDateTime.getMonthEnd(result.get("dateBegin"), timezone, locale));
             break;
         case "quarter":
@@ -1342,7 +1342,7 @@ public class UtilDateTime {
             result.put("dateEnd", UtilDateTime.getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 5), timezone, locale));
             break;
         case "year":
-            result.put("dateBegin", UtilDateTime.getYearStart(date, 0, timeLater));
+            result.put("dateBegin", UtilDateTime.getYearStart(date, 0, timeShift));
             result.put("dateEnd", UtilDateTime.getYearEnd(result.get("dateBegin"), timezone, locale));
             break;
         default:
@@ -1365,11 +1365,11 @@ public class UtilDateTime {
         return getPeriodIntervalAndFormatter(period, 0, fromDate, locale, timezone);
     }
     
-    public static Map<String, Object> getPeriodIntervalAndFormatter(String period, int timeLater, Timestamp fromDate, Locale locale, TimeZone timezone) {
+    public static Map<String, Object> getPeriodIntervalAndFormatter(String period, int timeShift, Timestamp fromDate, Locale locale, TimeZone timezone) {
         Map<String, Object> result = FastMap.newInstance();
         if (!checkValidInterval(period))
             return null;
-        result.putAll(getPeriodInterval(period, timeLater, fromDate, locale, timezone));
+        result.putAll(getPeriodInterval(period, timeShift, fromDate, locale, timezone));
         switch (period) {
         case "hour":
             result.put("dateFormatter", new SimpleDateFormat("yyyy-MM-dd hha"));

@@ -52,31 +52,24 @@ under the License.
         </section>
     </screen>
     <screen name="AnalyticsSalesStats">
-        <section>            
-            <condition>
-                <not><if-empty field="trackingCodeId"/></not>            
-            </condition>
-            <actions>
-                <set field="chartType" value="bar"/>                
-                <set field="chartData" value="week"/>
+      <section>
+            <actions> 
+                <set field="chartType" value="line"/>
                 <set field="chartDatasets" value="1"/> 
                 <set field="chartLibrary" value="chart"/>
-                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
-                <!-- <set field="chartIntervalCount" value="4"/>  -->    <!-- Look back x days/weeks/months/years -->               
-                <set field="label1" value="${uiLabelMap.VisitTotal}"/>
-                
-                <set field="fromDate" from-field="requestParameters.fromDate" type="Timestamp"/>
-                <set field="thruDate" from-field="requestParameters.thruDate" type="Timestamp"/>
-                
+                <set field="title" value="${uiLabelMap.OrderOrders}"/>
+                <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
+                <set field="label1" value="${uiLabelMap.ProductProductsSold}"/>
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsTrackingChart.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsSalesChart.ftl"/></html></platform-specific>
             </widgets>
-        </section>    
-    </screen>
-    
-    
+      </section>
+    </screen>      
     
     <screen name="AnalyticsTracking">
         <section>

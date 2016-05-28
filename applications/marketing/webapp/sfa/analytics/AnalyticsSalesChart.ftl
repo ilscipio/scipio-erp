@@ -2,15 +2,14 @@
 <#assign library=chartLibrary!"chart"/>
 <#assign datasets=chartDatasets?number!1 />
 
-<#if visits?has_content> 
+<#if sales?has_content> 
     <#if chartType == "line" || chartType == "bar">        
-        <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"">
-            <#list visits.keySet() as key>
-                <#assign currData = visits[key] />
+        <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"" label2=label2!"">
+            <#list sales.keySet() as key>
+                <#assign currData = sales[key] />
+                ${Static["org.ofbiz.base.util.Debug"].log("currData =====> " + currData)}
                 <#if currData?has_content>                          
-                    <#if datasets == 1>
-                        <@chartdata value="${currData!0}"  title="${key!}"/>                    
-                    </#if>
+                   <@chartdata value="${(currData.total)!0}" value2="${(currData.count)!0}" title="${key}"/>
                 </#if>
             </#list>
         </@chart>

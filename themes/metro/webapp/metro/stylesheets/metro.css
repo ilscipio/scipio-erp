@@ -10994,39 +10994,40 @@ Sidebar Menu
 *   IMPLEMENTATION  *
 *********************/
 /* Cato: duplicated from "side-nav" mixin and modified */
-/* line 146, ../scss/_sidebar.scss */
+/* line 149, ../scss/_sidebar.scss */
 .inner-wrap {
   background-color: #2f323a;
 }
 
-/* line 150, ../scss/_sidebar.scss */
+/* line 153, ../scss/_sidebar.scss */
 .fixed {
   margin-left: 200px;
 }
 
-/* line 154, ../scss/_sidebar.scss */
+/* line 157, ../scss/_sidebar.scss */
 .box, canvas {
   background: white;
   padding: 7px 10px;
   border: 1px solid #E6E9ED;
 }
-/* line 159, ../scss/_sidebar.scss */
+/* line 162, ../scss/_sidebar.scss */
 .box canvas, canvas canvas {
   border: none;
   padding: 0px;
 }
 
-/* line 162, ../scss/_sidebar.scss */
+/* line 165, ../scss/_sidebar.scss */
 #content-main-section {
   background-color: whitesmoke;
   padding-top: 50px;
 }
 
 @media only screen and (min-width: 40.0625em) {
-  /* line 169, ../scss/_sidebar.scss */
+  /* line 172, ../scss/_sidebar.scss */
   .side-bar {
+    margin: 0;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    list-style-position: outside;
+    list-style-position: inside;
     list-style-type: none;
     padding: 0.875rem 0;
     background-color: #2f323a;
@@ -11042,37 +11043,43 @@ Sidebar Menu
     color: #eeeeee;
     font-size: 18px;
   }
-  /* line 76, ../scss/_sidebar.scss */
+  /* line 75, ../scss/_sidebar.scss */
+  .side-bar ul {
+    margin: 0;
+  }
+  /* line 77, ../scss/_sidebar.scss */
   .side-bar li {
     font-size: 0.875rem;
     font-weight: normal;
-    margin: 0 0 0.4375rem 0;
+    margin: 0 0 0 0;
     list-style: none;
   }
-  /* line 83, ../scss/_sidebar.scss */
+  /* line 84, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button) {
     color: #eeeeee;
     display: block;
     margin: 0;
     padding: 0.4375rem 0.875rem;
   }
-  /* line 89, ../scss/_sidebar.scss */
+  /* line 90, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):hover, .side-bar li > a:not(.button):focus {
     background: #777777;
     color: #f1f1f1;
+    border-left: 5px solid #b61525;
   }
-  /* line 94, ../scss/_sidebar.scss */
+  /* line 96, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):active {
     color: #f3f3f3;
   }
-  /* line 99, ../scss/_sidebar.scss */
+  /* line 101, ../scss/_sidebar.scss */
   .side-bar li.active > a:first-child:not(.button) {
+    background: #777777;
     color: #f3f3f3;
     border-left: 5px solid #b61525;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     font-weight: normal;
   }
-  /* line 106, ../scss/_sidebar.scss */
+  /* line 109, ../scss/_sidebar.scss */
   .side-bar li.divider {
     border-top: 1px solid;
     height: 0;
@@ -11080,34 +11087,34 @@ Sidebar Menu
     padding: 0;
     border-top-color: #e6e6e6;
   }
-  /* line 114, ../scss/_sidebar.scss */
+  /* line 117, ../scss/_sidebar.scss */
   .side-bar li.heading {
     color: #b61525;
     font-size: 0.875rem;
     font-weight: bold;
     text-transform: uppercase;
   }
-  /* line 123, ../scss/_sidebar.scss */
+  /* line 126, ../scss/_sidebar.scss */
   .side-bar li.dashboard {
-    background-color: #b61525;
+    background-color: #222222;
     border-left: 5px solid #222222;
   }
-  /* line 127, ../scss/_sidebar.scss */
+  /* line 130, ../scss/_sidebar.scss */
   .side-bar li.dashboard a {
     color: white;
   }
-  /* line 132, ../scss/_sidebar.scss */
+  /* line 135, ../scss/_sidebar.scss */
   .side-bar li.disabled {
     padding: 0.4375rem 0.875rem;
     color: #999999;
     cursor: default;
   }
-  /* line 137, ../scss/_sidebar.scss */
+  /* line 140, ../scss/_sidebar.scss */
   .side-bar li.disabled > a, .side-bar li.disabled > a:hover, .side-bar li.disabled > a:visited, .side-bar li.disabled > a:active, .side-bar li.disabled > a:focus {
     color: #999999;
     cursor: default;
   }
-  /* line 180, ../scss/_sidebar.scss */
+  /* line 183, ../scss/_sidebar.scss */
   .side-bar .name img {
     width: 55px;
     height: 55px;
@@ -11119,7 +11126,7 @@ Sidebar Menu
     padding: 7px;
   }
 
-  /* line 191, ../scss/_sidebar.scss */
+  /* line 194, ../scss/_sidebar.scss */
   .top-bar {
     background: white;
     border-bottom: 1px solid #D9DEE4;
@@ -11127,12 +11134,12 @@ Sidebar Menu
     padding-left: 10px;
   }
 
-  /* line 198, ../scss/_sidebar.scss */
+  /* line 201, ../scss/_sidebar.scss */
   .top-bar-section ul li {
     background: none;
   }
 
-  /* line 202, ../scss/_sidebar.scss */
+  /* line 205, ../scss/_sidebar.scss */
   #content-main-section {
     width: auto;
     margin-left: 200px;

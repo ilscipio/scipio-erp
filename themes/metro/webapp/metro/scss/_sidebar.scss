@@ -15,9 +15,9 @@ Sidebar Menu
 // $side-nav-padding: rem-calc(14 0);
 
 // We use these to control list styles.
-// $side-nav-list-type: none;
-// $side-nav-list-position: inside;
-// $side-nav-list-margin: rem-calc(0 0 7 0);
+$side-nav-list-type: none;
+$side-nav-list-position: inside;
+$side-nav-list-margin: rem-calc(0 0 0 0);
 
 // We use these to control link styles.
 $side-nav-link-color: $smoke;
@@ -64,14 +64,15 @@ $sidebar-width: 200px;
   $link-color-hover:$side-nav-link-color-hover,
   $link-bg-hover:$side-nav-link-bg-hover) {
   
-  //display: block;
+  margin: 0;
   font-family: $side-nav-font-family;
   list-style-position: $side-nav-list-position;
   list-style-type: $side-nav-list-type;
-  //margin: 0;
+  
   padding: $side-nav-padding;
   
   h1{color: $link-color; font-size: 18px;}
+  ul {margin: 0;}
 
   li {
     font-size: $font-size;
@@ -90,6 +91,7 @@ $sidebar-width: 200px;
       &:focus {
         background: $link-bg-hover;
         color: $link-color-hover;
+        border-left: 5px solid $primary-color;
       }
       &:active {
         color: $link-color-active;
@@ -97,6 +99,7 @@ $sidebar-width: 200px;
     }
 
     &.active > a:first-child:not(.button) {
+      background: $side-nav-link-bg-hover;
       color: $side-nav-link-color-active;
       border-left: 5px solid $primary-color;
       font-family: $side-nav-font-family-active;
@@ -121,7 +124,7 @@ $sidebar-width: 200px;
     }
     
     &.dashboard {
-            background-color: $primary-color;
+            background-color: $jet;
             border-left: 5px solid $jet;
             
             a {

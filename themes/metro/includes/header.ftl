@@ -69,7 +69,10 @@ under the License.
         <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>
     </#if>
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
-        <#include "component://common/webcommon/includes/helplink.ftl" />
+            <#include "component://common/webcommon/includes/helplink.ftl" />
+        <#else>
+            <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
+            <#if helpLink?has_content><li><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>
     </#if>
     <#if userLogin??>
         <li class="divider"></li>
@@ -135,10 +138,10 @@ under the License.
 
 <#-- Macro for rendering the sidebar. Relies on a tiny screenwidget that we are using for rendering menus-->
 <#macro sideBarMenu>
-    <#if applicationMenuLocation?has_content && applicationMenuName?has_content>
-        <@render resource="component://common/widget/CommonScreens.xml#catoMenuWidgetWrapper" ctxVars={"catoWidgetWrapperResName":applicationMenuName, "catoWidgetWrapperResLocation":applicationMenuLocation}
-                 restoreValues=true />
-    </#if>
+    <#--<#if applicationMenuLocation?has_content && applicationMenuName?has_content>
+        <@render type="menu" name=applicationMenuName resource=applicationMenuLocation restoreValues=true/>
+    </#if>-->
+    ${sections.render("left-column")}
 </#macro>
 
 <#-- Macro for rendering your company logo. Uses a smaller version of your logo if isSmall=true. -->
@@ -275,8 +278,6 @@ under the License.
                         <!-- Menu sidebar begin-->
                         <ul class="side-nav" id="menu_2">
                             <@sideBarMenu/>                       
-                            <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-                            <#if helpLink?has_content><li><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>
                         </ul>
                     </nav>
                     

@@ -3,7 +3,7 @@
  * Used to add classes to elements, so that they can be styled as boxes.
  * */
 var elSelector = 'pre.scrollable,.section-screenlet-content';
-var notSubSelector = 'pre.scrollable,.section-screenlet-content, table';
+var notSubSelector = 'pre.scrollable,.section-screenlet-content, table,.orbit-container, .steps, .tile-container';
 var catoBoxClass = 'box';
 
 

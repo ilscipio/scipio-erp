@@ -103,6 +103,8 @@
                         <!-- ?
                         <condition-expr field-name="statusId" value="EMPL_POS_PLANNEDFOR"/>
                         -->
+                        <!-- CATO: NOTE: this status is unusual and used only in one place, but support it anyway -->
+                        <condition-expr field-name="statusId" value="IJP_APPLIED"/>
                     </condition-list>
                     <order-by field-name="-applicationDate" />
                 </entity-condition>

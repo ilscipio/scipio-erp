@@ -37,9 +37,9 @@ function ShowTab(lname) {
   }
 }
 </@script>-->
-<@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
-    <@menu type="button">
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
       <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
       <#if enableEdit == "false">
         <#if hasCreatePermission>          
@@ -54,12 +54,17 @@ function ShowTab(lname) {
         </#if>
       </#if>
     </@menu>
-    <br/>
+</#macro>
+
+<@section menuContent=menuContent><#-- redundant:  title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}" -->
+
     <@nav type="magellan">
         <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>
         <#--<@mli arrival="common-view"><a href="#common-view">${uiLabelMap.CommonView}</a></@mli>-->
         <@mli arrival="current-view"><a href="#current-view">${uiLabelMap.WebtoolsEntityCurrentValue}</a></@mli>
+      <#if relationFieldList?has_content>
         <@mli arrival="related-view"><a href="#related-view">${uiLabelMap.WebtoolsRelatedEntity}</a></@mli>
+      </#if>
     </@nav>
     <br/>
     

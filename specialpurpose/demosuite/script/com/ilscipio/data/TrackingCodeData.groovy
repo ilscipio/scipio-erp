@@ -6,6 +6,9 @@ import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityJoinOperator
+import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.entity.util.*
 import org.ofbiz.service.ServiceUtil
 
@@ -37,7 +40,6 @@ public Map createDemoTrackingCodeVisit() {
         
     for (int i = 0; i < num; i++) {
         fromDate = UtilRandom.generateRandomDate(UtilDateTime.toDate(minDate), context);
-
         
         String newSeqId = delegator.getNextSeqId("Visit");
         GenericValue visit = delegator.makeValue("Visit");        
@@ -68,6 +70,68 @@ public Map createDemoTrackingCodeVisit() {
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                 "TrackingVisitErrorCannotStoreChanges", locale) + e.getMessage());
+        }
+    }
+    
+    return result;
+}
+
+
+public Map createDemoTrackingCodeOrder() {
+    final String resource_error = "DemoSuiteUiLabels";
+    
+    final String DEFAULT_WEBAPP_NAME = "shop";
+
+    Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING ORDER DATA-=-=-=-", "");
+    Map result = ServiceUtil.returnSuccess();
+    
+    List<GenericValue> toBeStored = new ArrayList<GenericValue>();
+    int num = context.num;
+    Locale locale = context.locale;
+    
+    minDate = context.minDate;
+    if (!minDate) {
+        calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp()).set(Calendar.MONTH, -6);
+        minDate = UtilDateTime.getTimestamp(calendar.getTimeInMillis());
+    }
+    maxDate = context.maxDate;
+    if (!maxDate) {
+        maxDate = UtilDateTime.nowTimestamp();
+    }
+    conditionList = EntityCondition.makeCondition(
+        EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, minDate),      
+            EntityJoinOperator.AND,
+            EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, maxDate));
+    
+    orderHeaderList = from("OrderHeader").where(conditionList).queryList();    
+    if (orderHeaderList) {
+        for (int i = 0; i < num; i++) {
+//            fromDate = UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context);
+//            Debug.log("fromDate ============> " + fromDate);
+            trackingCodeTypeList = delegator.findAll("TrackingCodeType",  true);
+            if (trackingCodeTypeList)
+                trackingCodeType =  trackingCodeTypeList.get(UtilRandom.random(trackingCodeTypeList));
+        
+            orderHeader = orderHeaderList.get(UtilRandom.random(orderHeaderList));
+            
+            trackingCodeList = delegator.findByAnd("TrackingCode", null, null, false);
+            trackingCode = trackingCodeList.get(UtilRandom.random(trackingCodeList));
+          
+            GenericValue trackingCodeOrder = delegator.makeValue("TrackingCodeOrder",
+                    UtilMisc.toMap("trackingCodeId", trackingCode.trackingCodeId, "orderId", orderHeader.orderId, "trackingCodeTypeId", trackingCodeType.trackingCodeTypeId));
+            toBeStored.add(trackingCodeOrder);
+        }
+    }
+    
+    // store the changes
+    if (toBeStored.size() > 0) {
+        try {
+            Debug.log("Storing tracking code orders")
+            delegator.storeAll(toBeStored);
+            result.put("generatedData", toBeStored);
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                "TrackingOrderErrorCannotStoreChanges", locale) + e.getMessage());
         }
     }
     

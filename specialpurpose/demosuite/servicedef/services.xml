@@ -50,4 +50,9 @@
         <description>Creates a number of TrackingCodeVisit demo data</description>
         <implements service="demoDataGenerator"/>
     </service>
+    <service name="createTrackingCodeOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeData.groovy" 
+        invoke="createDemoTrackingCodeOrder" transaction-timeout="7200">
+        <description>Creates a number of TrackingCodeOrder demo data</description>
+        <implements service="demoDataGenerator"/>
+    </service>
 </services>

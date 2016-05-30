@@ -86,10 +86,10 @@ Map processResults() {
             // Get orders
             conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(exprList), EntityJoinOperator.AND, EntityCondition.makeCondition([EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]),
                     EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, dateIntervals["dateEnd"])], EntityJoinOperator.AND));
-            orderList = select("grandTotal").from("TrackingCodeAndOrderHeader").where(conditionList).queryList();
+            orderList = select("orderId").from("TrackingCodeAndOrderHeader").where(conditionList).queryList();
             for (o in orderList) {
                 Debug.log("order ============> " + o);
-                totalOrders.plus((o.grandTotal)?o.grandTotal:BigDecimal.ZERO);
+                totalOrders += o.orderId;
             }
             
             dateBeginFormatted = dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]);           

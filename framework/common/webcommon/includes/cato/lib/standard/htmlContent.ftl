@@ -1552,6 +1552,9 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
 
   * Parameters *
     src                     = (string) image location
+                              WARN: At current time, do not pass unsanitized input for this parameter; escaping not implemented
+                                  If you must use user input in src, do not use this macro for time being (expect escaping to be applied later).
+                              FIXME: escaping for style urls
     class                   = ((css-class)) CSS classes 
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -1593,7 +1596,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
     <#switch type>
         <#case "bgcover">
             <#local imgStyle>
-                background:url('${src}') no-repeat center center fixed;        
+                background:url('${escapeFullUrl(src, 'style')}') no-repeat center center fixed;        
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;

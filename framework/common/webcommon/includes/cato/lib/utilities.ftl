@@ -1871,10 +1871,12 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
 
   * Parameters *
     str                     = The string to escape
-    lang                    = (html|js|jsdq|json|js-html|jsdq-html|xml|raw) The target language
+    lang                    = (html|js|jsdq|json|js-html|jsdq-html|xml|style|raw) The target language
                               {{{jsdq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
+                              WARN: {{{style}}} is not properly implemented!
+                              FIXME: escaping for {{{style}}}
 -->
 <#function escapeFullUrl str lang>
   <#local str = rawString(str)>
@@ -1901,6 +1903,10 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
       <#break>
     <#case "xml">
       <#return str?xml>
+      <#break>
+    <#case "style">
+      <#-- TODO: FIXME: IMPLEMENT -->
+      <#return str>
       <#break>
     <#case "raw">
     <#default>
@@ -1934,12 +1940,14 @@ NOTE: There are a few rare stock Ofbiz templates where this should not be used, 
 
   * Parameters *
     str                     = The string to escape
-    lang                    = (js|jsdq|json|html|url|xml|raw) The target language
+    lang                    = (js|jsdq|json|html|url|xml|style|raw) The target language
                               These are similar to the Freemarker built-in counterparts, but may
                               not produce the exact same results.
                               {{{jsdq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
+                              WARN: {{{style}}} is not properly implemented!
+                              FIXME: escaping for {{{style}}}
                     
   * Related*
     #escapeFull
@@ -1964,6 +1972,10 @@ NOTE: There are a few rare stock Ofbiz templates where this should not be used, 
       <#break>
     <#case "url">
       <#return str?url>
+      <#break>
+    <#case "style">
+      <#-- TODO: FIXME: IMPLEMENT -->
+      <#return str>
       <#break>
     <#case "raw">
     <#default>

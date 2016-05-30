@@ -2,14 +2,16 @@
 <#assign library=chartLibrary!"chart"/>
 <#assign datasets=chartDatasets?number!1 />
 
-<#if visits?has_content> 
+<#if result?has_content>
     <#if chartType == "line" || chartType == "bar">        
-        <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"">
-            <#list visits.keySet() as key>
-                <#assign currData = visits[key] />
-                <#if currData?has_content>                          
-                    <#if datasets == 1>
-                        <@chartdata value="${currData!0}"  title="${key!}"/>                    
+        <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"" label2=label2!"">
+            <#list result.keySet() as key>
+                <#assign currData = result[key] />
+                <#if currData?has_content> 
+                    <#if datasets == 1>                         
+                        <@chartdata value="${currData.totalVisits!0}" title="${key!}"/>
+                    <#elseif datasets == 2>
+                        <@chartdata value="${currData.totalVisits!0}" value2="${currData.totalOrders!0}"  title="${key!}"/>                    
                     </#if>
                 </#if>
             </#list>

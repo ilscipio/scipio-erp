@@ -20,10 +20,10 @@ under the License.
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="AnalyticsAppBar" title="${uiLabelMap.MarketingAnalytics}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="AnalyticsSales" title="${uiLabelMap.MarketingAnalyticsSales}"><link target="AnalyticsSales" /></menu-item>
-        <menu-item name="AnalyticsLeads" title="${uiLabelMap.MarketingAnalyticsLeads}"><link target="AnalyticsLeads"/></menu-item>
-        <menu-item name="AnalyticsSegments" title="${uiLabelMap.MarketingAnalyticsSegments}"><link target="AnalyticsSegments"/></menu-item>
-        <menu-item name="AnalyticsTracking" title="${uiLabelMap.MarketingAnalyticsTrackingVisit}"><link target="AnalyticsTracking"/></menu-item>
-        <menu-item name="AnalyticsForecast" title="${uiLabelMap.MarketingAnalyticsForecast}"><link target="AnalyticsForecast"/></menu-item>
+        <!-- <menu-item name="AnalyticsLeads" title="${uiLabelMap.MarketingAnalyticsLeads}"><link target="AnalyticsLeads"/></menu-item> -->
+        <!-- <menu-item name="AnalyticsSegments" title="${uiLabelMap.MarketingAnalyticsSegments}"><link target="AnalyticsSegments"/></menu-item> -->
+        <menu-item name="AnalyticsTracking" title="${uiLabelMap.MarketingAnalytics}"><link target="AnalyticsTracking"/></menu-item>
+        <!-- <menu-item name="AnalyticsForecast" title="${uiLabelMap.MarketingAnalyticsForecast}"><link target="AnalyticsForecast"/></menu-item> -->
     </menu>
     <menu name="AnalyticsAppSideBar" title="${uiLabelMap.MarketingAnalytics}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AnalyticsAppBar" recursive="full" />

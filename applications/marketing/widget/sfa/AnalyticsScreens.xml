@@ -74,12 +74,13 @@ under the License.
     <screen name="AnalyticsTracking">
         <section>
             <actions>
-                <set field="titleProperty" value="MarketingAnalyticsTrackingVisit"/>
+                <set field="titleProperty" value="MarketingAnalytics"/>
                 <set field="activeMainMenuItem" value="AnalyticsTracking"/>
-                <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>             
-               <!--  <script location="component://marketing/webapp/marketing/WEB-INF/actions/reports/TrackingCodeReport.groovy"/> -->
-                
-                <entity-condition list="trackingCodeList" entity-name="TrackingCode" filter-by-date="true"/>
+                <!-- <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsTracking.groovy"/> -->
+                <entity-condition list="marketingCampaignList" entity-name="MarketingCampaign" filter-by-date="true"/>
+                <entity-condition list="trackingCodeList" entity-name="TrackingCode" >
+                    <condition-expr field-name="marketingCampaignId" operator="equals" from-field="parameters.marketingCampaignId"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">               
@@ -87,13 +88,11 @@ under the License.
                          <section>
                              <widgets>     
                                 <screenlet>
-                                    <!-- <include-form name="TrackingCodeReportOptions" location="component://marketing/widget/ReportForms.xml"/> -->
                                     <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/FindAnalyticsTracking.ftl"/></html></platform-specific>
                                 </screenlet>
                                 <screenlet>
                                     <include-screen name="AnalyticsTrackingStats"/>
-                                </screenlet>
-                                <!-- <include-form name="TrackingCodeReport" location="component://marketing/widget/ReportForms.xml"/> -->                                  
+                                </screenlet>          
                              </widgets>
                          </section>
                     </decorator-section>
@@ -102,22 +101,18 @@ under the License.
         </section>
     </screen>
     <screen name="AnalyticsTrackingStats">
-        <section>            
-            <condition>
-                <not><if-empty field="trackingCodeId"/></not>            
-            </condition>
+        <section>
             <actions>
-                <set field="chartType" value="bar"/>                
+                <set field="chartType" value="line"/>                
                 <set field="chartData" value="week"/>
-                <set field="chartDatasets" value="1"/> 
+                <set field="chartDatasets" value="2"/> 
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
-                <!-- <set field="chartIntervalCount" value="4"/>  -->    <!-- Look back x days/weeks/months/years -->               
+                <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
                 <set field="label1" value="${uiLabelMap.VisitTotal}"/>
-                
-                <set field="fromDate" from-field="requestParameters.fromDate" type="Timestamp"/>
-                <set field="thruDate" from-field="requestParameters.thruDate" type="Timestamp"/>
-                
+                <!-- <set field="label1" value="${uiLabelMap.ProductProductsSold}"/> -->
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/TrackingCodeChart.groovy"/>
             </actions>
             <widgets>

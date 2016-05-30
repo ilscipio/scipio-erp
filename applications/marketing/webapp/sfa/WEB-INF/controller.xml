@@ -276,10 +276,15 @@ under the License.
     
     <!-- CATO: Analytics entries -->
     <request-map uri="AnalyticsSales"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsSales"/></request-map>
-    <request-map uri="AnalyticsLeads"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsLeads"/></request-map>
-    <request-map uri="AnalyticsSegments"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsSegments"/></request-map>
+    <!-- <request-map uri="AnalyticsLeads"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsLeads"/></request-map>
+    <request-map uri="AnalyticsSegments"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsSegments"/></request-map> -->
     <request-map uri="AnalyticsTracking"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsTracking"/></request-map>
-    <request-map uri="AnalyticsForecast"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsForecast"/></request-map>
+    <request-map uri="AnalyticsFindTrackingCodes">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsTracking.groovy" invoke="findTrackingCodes"></event>
+        <response name="success" type="request" value="json" />
+    </request-map>
+    <!-- <request-map uri="AnalyticsForecast"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsForecast"/></request-map> -->
     
     <!-- CATO: Request entries: duplicated from component://order/webapp/ordermgr/WEB-INF/controller.xml -->
     <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>

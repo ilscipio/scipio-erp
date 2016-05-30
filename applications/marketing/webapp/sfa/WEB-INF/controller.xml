@@ -266,8 +266,8 @@ under the License.
     <request-map uri="FindAccounts"><security https="true" auth="true"/><response name="success" type="view" value="FindAccounts"/></request-map>
     <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>    
     <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>
-    <request-map uri="Calendar"><security https="true" auth="true"/><response name="success" type="view" value="Calendar"/></request-map>
-    <request-map uri="Settings"><security https="true" auth="true"/><response name="success" type="view" value="Settings"/></request-map>
+    <request-map uri="Calendar"><security https="true" auth="true"/><response name="success" type="view" value="Calendar"/></request-map>    
+    <request-map uri="DataSources"><security https="true" auth="true"/><response name="success" type="view" value="FindDataSource"/></request-map>
     
     <!-- CATO: Services entries -->
     <request-map uri="Communication"><security https="true" auth="true"/><response name="success" type="view" value="Communication"/></request-map>
@@ -296,9 +296,6 @@ under the License.
         <response name="success" type="view" value="FindRequest"/>
         <response name="error" type="view" value="EditRequest"/>
     </request-map>
-
-    <!-- CATO: Settings entries -->
-    <request-map uri="DataSources"><security https="true" auth="true"/><response name="success" type="view" value="DataSources"/></request-map>
 
     <!-- Lookup requests -->
     <request-map uri="LookupSalesForecast"><security https="true" auth="true"/><response name="success" type="view" value="LookupSalesForecast"/></request-map>

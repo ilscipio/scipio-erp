@@ -985,6 +985,9 @@
     <property key="SfaServices">
         <value xml:lang="en">Services</value>
     </property>
+    <property key="SfaSettings">
+        <value xml:lang="en">Settings</value>
+    </property>
     <property key="MarketingNoOfEmployees">
         <value xml:lang="de">Anzahl Angestellte</value>
         <value xml:lang="en">No of Employees</value>

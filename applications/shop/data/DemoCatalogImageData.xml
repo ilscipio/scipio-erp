@@ -22,50 +22,50 @@ under the License.
 
     <!-- Regular Catalog Products -->
     <Product productId="PH-1000" smallImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/full.jpg"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG1" mimeTypeId="text/plain" dataResourceName="PH-1000 Additional Image 1" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG2" mimeTypeId="text/plain" dataResourceName="PH-1000 Additional Image 2" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG3" mimeTypeId="text/plain" dataResourceName="PH-1000 Additional Image 3" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG1" dataResourceName="PH-1000 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG2" dataResourceName="PH-1000 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-AIMG3" dataResourceName="PH-1000 Additional Image 3" isPublic="Y"/>
     <ElectronicText dataResourceId="PH-1000-AIMG1" textData="/images/products/shop/gallery/01/tech/iphone-01/large.jpg"/>
     <ElectronicText dataResourceId="PH-1000-AIMG2" textData="/images/products/shop/gallery/01/tech/iphone-02/large.jpg"/>
     <ElectronicText dataResourceId="PH-1000-AIMG3" textData="/images/products/shop/gallery/01/tech/iphone-05/large.jpg"/>
-    <Content contentId="PH-1000-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG1" mimeTypeId="text/plain" contentName="PH-1000 Additional Image 1"/>
-    <Content contentId="PH-1000-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG2" mimeTypeId="text/plain" contentName="PH-1000 Additional Image 2"/>
-    <Content contentId="PH-1000-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG3" mimeTypeId="text/plain" contentName="PH-1000 Additional Image 3"/>
+    <Content contentId="PH-1000-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG1" contentName="PH-1000 Additional Image 1"/>
+    <Content contentId="PH-1000-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG2" contentName="PH-1000 Additional Image 2"/>
+    <Content contentId="PH-1000-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1000-AIMG3" contentName="PH-1000 Additional Image 3"/>
     <ProductContent productId="PH-1000" contentId="PH-1000-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1000" contentId="PH-1000-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1000" contentId="PH-1000-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="PH-1001" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-03/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/iphone-03/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-03/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/iphone-03/full.jpg"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG1" mimeTypeId="text/plain" dataResourceName="PH-1001 Additional Image 1" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG2" mimeTypeId="text/plain" dataResourceName="PH-1001 Additional Image 2" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG3" mimeTypeId="text/plain" dataResourceName="PH-1001 Additional Image 3" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG4" mimeTypeId="text/plain" dataResourceName="PH-1001 Additional Image 4" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG1" dataResourceName="PH-1001 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG2" dataResourceName="PH-1001 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG3" dataResourceName="PH-1001 Additional Image 3" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-AIMG4" dataResourceName="PH-1001 Additional Image 4" isPublic="Y"/>
     <ElectronicText dataResourceId="PH-1001-AIMG1" textData="/images/products/shop/gallery/01/tech/iphone-06/large.jpg"/>
     <ElectronicText dataResourceId="PH-1001-AIMG2" textData="/images/products/shop/gallery/01/tech/iphone-07/large.jpg"/>
     <ElectronicText dataResourceId="PH-1001-AIMG3" textData="/images/products/shop/gallery/01/tech/iphone-08/large.jpg"/>
     <ElectronicText dataResourceId="PH-1001-AIMG4" textData="/images/products/shop/gallery/01/tech/iphone-09/large.jpg"/>
-    <Content contentId="PH-1001-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG1" mimeTypeId="text/plain" contentName="PH-1001 Additional Image 1"/>
-    <Content contentId="PH-1001-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG2" mimeTypeId="text/plain" contentName="PH-1001 Additional Image 2"/>
-    <Content contentId="PH-1001-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG3" mimeTypeId="text/plain" contentName="PH-1001 Additional Image 3"/>
-    <Content contentId="PH-1001-AIMG4" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG4" mimeTypeId="text/plain" contentName="PH-1001 Additional Image 4"/>
+    <Content contentId="PH-1001-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG1" contentName="PH-1001 Additional Image 1"/>
+    <Content contentId="PH-1001-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG2" contentName="PH-1001 Additional Image 2"/>
+    <Content contentId="PH-1001-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG3" contentName="PH-1001 Additional Image 3"/>
+    <Content contentId="PH-1001-AIMG4" contentTypeId="DOCUMENT" dataResourceId="PH-1001-AIMG4" contentName="PH-1001 Additional Image 4"/>
     <ProductContent productId="PH-1001" contentId="PH-1001-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1001" contentId="PH-1001-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1001" contentId="PH-1001-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1001" contentId="PH-1001-AIMG4" productContentTypeId="ADDITIONAL_IMAGE_4" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="PH-1004" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-04/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/iphone-04/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-04/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/iphone-04/full.jpg"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG1" mimeTypeId="text/plain" dataResourceName="PH-1004 Additional Image 1" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG2" mimeTypeId="text/plain" dataResourceName="PH-1004 Additional Image 2" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG3" mimeTypeId="text/plain" dataResourceName="PH-1004 Additional Image 3" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG4" mimeTypeId="text/plain" dataResourceName="PH-1004 Additional Image 4" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG1" dataResourceName="PH-1004 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG2" dataResourceName="PH-1004 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG3" dataResourceName="PH-1004 Additional Image 3" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-AIMG4" dataResourceName="PH-1004 Additional Image 4" isPublic="Y"/>
     <ElectronicText dataResourceId="PH-1004-AIMG1" textData="/images/products/shop/gallery/01/tech/smartphone-03/large.jpg"/>
     <ElectronicText dataResourceId="PH-1004-AIMG2" textData="/images/products/shop/gallery/01/tech/smartphone-04/large.jpg"/>
     <ElectronicText dataResourceId="PH-1004-AIMG3" textData="/images/products/shop/gallery/01/tech/smartphone-05/large.jpg"/>
     <ElectronicText dataResourceId="PH-1004-AIMG4" textData="/images/products/shop/gallery/01/tech/smartphone-06/large.jpg"/>
-    <Content contentId="PH-1004-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG1" mimeTypeId="text/plain" contentName="PH-1004 Additional Image 1"/>
-    <Content contentId="PH-1004-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG2" mimeTypeId="text/plain" contentName="PH-1004 Additional Image 2"/>
-    <Content contentId="PH-1004-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG3" mimeTypeId="text/plain" contentName="PH-1004 Additional Image 3"/>
-    <Content contentId="PH-1004-AIMG4" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG4" mimeTypeId="text/plain" contentName="PH-1004 Additional Image 4"/>
+    <Content contentId="PH-1004-AIMG1" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG1" contentName="PH-1004 Additional Image 1"/>
+    <Content contentId="PH-1004-AIMG2" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG2" contentName="PH-1004 Additional Image 2"/>
+    <Content contentId="PH-1004-AIMG3" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG3" contentName="PH-1004 Additional Image 3"/>
+    <Content contentId="PH-1004-AIMG4" contentTypeId="DOCUMENT" dataResourceId="PH-1004-AIMG4" contentName="PH-1004 Additional Image 4"/>
     <ProductContent productId="PH-1004" contentId="PH-1004-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1004" contentId="PH-1004-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1004" contentId="PH-1004-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
@@ -78,18 +78,18 @@ under the License.
     <Product productId="CD-2002" smallImageUrl="/images/products/shop/gallery/02/music/cd-158817/small.png" mediumImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/large.jpg" detailImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/full.jpg"/>
 
     <Product productId="CAM-2644" smallImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-02/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/full.jpg"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG1" mimeTypeId="text/plain" dataResourceName="CAM-2644 Additional Image 1" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG2" mimeTypeId="text/plain" dataResourceName="CAM-2644 Additional Image 2" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG3" mimeTypeId="text/plain" dataResourceName="CAM-2644 Additional Image 3" isPublic="Y"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG4" mimeTypeId="text/plain" dataResourceName="CAM-2644 Additional Image 4" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG1" dataResourceName="CAM-2644 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG2" dataResourceName="CAM-2644 Additional Image 2" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG3" dataResourceName="CAM-2644 Additional Image 3" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CAM-2644-AIMG4" dataResourceName="CAM-2644 Additional Image 4" isPublic="Y"/>
     <ElectronicText dataResourceId="CAM-2644-AIMG1" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-01/large.jpg"/>
     <ElectronicText dataResourceId="CAM-2644-AIMG2" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-03/large.jpg"/>
     <ElectronicText dataResourceId="CAM-2644-AIMG3" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/large.jpg"/>
     <ElectronicText dataResourceId="CAM-2644-AIMG4" textData="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-05/large.jpg"/>
-    <Content contentId="CAM-2644-AIMG1" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG1" mimeTypeId="text/plain" contentName="CAM-2644 Additional Image 1"/>
-    <Content contentId="CAM-2644-AIMG2" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG2" mimeTypeId="text/plain" contentName="CAM-2644 Additional Image 2"/>
-    <Content contentId="CAM-2644-AIMG3" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG3" mimeTypeId="text/plain" contentName="CAM-2644 Additional Image 3"/>
-    <Content contentId="CAM-2644-AIMG4" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG4" mimeTypeId="text/plain" contentName="CAM-2644 Additional Image 4"/>
+    <Content contentId="CAM-2644-AIMG1" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG1" contentName="CAM-2644 Additional Image 1"/>
+    <Content contentId="CAM-2644-AIMG2" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG2" contentName="CAM-2644 Additional Image 2"/>
+    <Content contentId="CAM-2644-AIMG3" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG3" contentName="CAM-2644 Additional Image 3"/>
+    <Content contentId="CAM-2644-AIMG4" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-AIMG4" contentName="CAM-2644 Additional Image 4"/>
     <ProductContent productId="CAM-2644" contentId="CAM-2644-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="CAM-2644" contentId="CAM-2644-AIMG2" productContentTypeId="ADDITIONAL_IMAGE_2" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="CAM-2644" contentId="CAM-2644-AIMG3" productContentTypeId="ADDITIONAL_IMAGE_3" fromDate="2001-05-13 12:00:00.0"/>
@@ -103,9 +103,9 @@ under the License.
     <Product productId="VH-9944" smallImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/large.jpg" detailImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/full.jpg"/>
 
     <Product productId="KB-5569" smallImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/large.jpg" detailImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/full.jpg"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="KB-5569-AIMG1" mimeTypeId="text/plain" dataResourceName="KB-5569 Additional Image 1" isPublic="Y"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="KB-5569-AIMG1" dataResourceName="KB-5569 Additional Image 1" isPublic="Y"/>
     <ElectronicText dataResourceId="KB-5569-AIMG1" textData="/images/products/shop/gallery/01/tech/keyboard-01/large.jpg"/>
-    <Content contentId="KB-5569-AIMG1" contentTypeId="DOCUMENT" dataResourceId="KB-5569-AIMG1" mimeTypeId="text/plain" contentName="KB-5569 Additional Image 1"/>
+    <Content contentId="KB-5569-AIMG1" contentTypeId="DOCUMENT" dataResourceId="KB-5569-AIMG1" contentName="KB-5569 Additional Image 1"/>
     <ProductContent productId="KB-5569" contentId="KB-5569-AIMG1" productContentTypeId="ADDITIONAL_IMAGE_1" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="NEWS-01-1MO" smallImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/small.png" mediumImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/medium.png" largeImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/large.png" detailImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/full.png"/>

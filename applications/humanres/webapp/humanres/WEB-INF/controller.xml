@@ -1139,7 +1139,7 @@ under the License.
     <view-map name="LookupAgreement" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupAgreement"/>
     <view-map name="LookupJobRequisition" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupJobRequisition"/>
 
-    <view-map name="main" type="screen" page="component://humanres/widget/CommonScreens.xml#Main"/>
+    <view-map name="main" type="screen" page="component://humanres/widget/CommonScreens.xml#main"/>
 
     <view-map name="FindEmployments" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindEmployments"/>
     <view-map name="EditEmployment" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditEmployment"/>

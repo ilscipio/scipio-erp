@@ -72,7 +72,7 @@
     <screen name="EditEmplPosition">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditEmplPosition"/>
+                <set field="titleProperty" value="HumanResEditEmplPosition"/>
                 <set field="activeSubMenuItem" value="EditEmplPosition"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
@@ -80,7 +80,7 @@
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.HumanResEditEmplPosition}">
+                        <screenlet>
                             <include-form name="EditEmplPosition" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -325,6 +325,28 @@
         <section>
             <widgets>
                 <platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/internalorg/removeinternalorg.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoOpenPositions">
+        <section>
+            <actions>
+                <!-- FIXME: review: what about JobRequisition? -->
+                <entity-condition entity-name="EmplPosition" list="positionList" >
+                    <condition-list combine="or">
+                        <condition-expr field-name="statusId" value="EMPL_POS_ACTIVE"/>
+                        <!-- ?
+                        <condition-expr field-name="statusId" value="EMPL_POS_PLANNEDFOR"/>
+                        -->
+                    </condition-list>
+                    <order-by field-name="-estimatedFromDate" />
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://humanres/webapp/humanres/humanres/emplposition/CatoPositionsSummary.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

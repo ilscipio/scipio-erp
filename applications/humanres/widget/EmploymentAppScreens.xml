@@ -93,4 +93,25 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="CatoNewApplications">
+        <section>
+            <actions>
+                <entity-condition entity-name="EmploymentApp" list="emplAppList" >
+                    <condition-list combine="or">
+                        <condition-expr field-name="statusId" value="EMPL_POS_ACTIVE"/>
+                        <!-- ?
+                        <condition-expr field-name="statusId" value="EMPL_POS_PLANNEDFOR"/>
+                        -->
+                    </condition-list>
+                    <order-by field-name="-applicationDate" />
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://humanres/webapp/humanres/humanres/emplapp/CatoApplicationsSummary.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

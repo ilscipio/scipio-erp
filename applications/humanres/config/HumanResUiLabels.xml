@@ -3383,4 +3383,25 @@
         <value xml:lang="zh">查看个人培训</value>
         <value xml:lang="zh_TW">檢視個人教育訓練</value>
     </property>
+    <!-- CATO: TODO: Localize -->
+    <property key="HumanResResourcePlanning">
+        <value xml:lang="en">Resource Planning</value>
+        <value xml:lang="de">Ressourcenplanung</value>
+        <value xml:lang="fr">Planification des ressources</value>
+    </property>
+    <property key="HumanResNewApplicants">
+        <value xml:lang="en">New Applicants</value>
+        <value xml:lang="de">Neue Bewerber</value>
+        <value xml:lang="fr">Nouveaux candidats</value>
+    </property>
+    <property key="HumanResCurrentOpenings">
+        <value xml:lang="en">Current Openings</value>
+        <value xml:lang="de">Aktuelle Stellenangebote</value>
+        <value xml:lang="fr">Postes à pourvoir</value>
+    </property>
+    <property key="HumanResPositions">
+        <value xml:lang="de">Positionen</value>
+        <value xml:lang="en">Positions</value>
+        <value xml:lang="fr">Positions</value>
+    </property>
 </resource>

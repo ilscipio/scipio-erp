@@ -270,7 +270,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.HumanResEmplPositionReportingStruct}:${uiLabelMap.HumanResReportsTo}">
+                <screenlet title="${uiLabelMap.HumanResEmplPositionReportingStruct}: ${uiLabelMap.HumanResReportsTo}">
                     <section>
                         <widgets>
                             <include-form name="ListEmplPositionReportsToInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>

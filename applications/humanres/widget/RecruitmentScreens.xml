@@ -78,7 +78,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.HumanResEditJobRequisition}">
+                        <screenlet>
                             <section>
                                 <widgets>
                                     <include-form name="EditJobRequisition" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
@@ -214,7 +214,7 @@ under the License.
                         <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section>
                             <widgets>
-                                <screenlet title="${uiLabelMap.HumanResEditJobInterview}">
+                                <screenlet>
                                     <include-form name="EditJobInterview" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -274,7 +274,7 @@ under the License.
                 <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <screenlet id="EditApprovalStatus" title="${uiLabelMap.HumanResEditApprovalStatus}" collapsible="true">
+                        <screenlet id="EditApprovalStatus" collapsible="true">
                             <include-form name="EditApprovalStatus" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
                         </screenlet>
                     </decorator-section>

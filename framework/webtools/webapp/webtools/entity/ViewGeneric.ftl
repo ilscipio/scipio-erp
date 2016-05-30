@@ -16,7 +16,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign enableEdit = parameters.enableEdit!"false">
+<#assign enableEdit = parameters.enableEdit!false>
+<#if !enableEdit?is_boolean>
+  <#if enableEdit?is_string && enableEdit == "true">
+    <#assign enableEdit = true>
+  <#else>
+    <#assign enableEdit = false>
+  </#if>
+</#if>
 <#--
 <@script>
 var numTabs=${(entity.getRelationsSize()+1)};
@@ -41,7 +48,7 @@ function ShowTab(lname) {
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
       <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
-      <#if enableEdit == "false">
+      <#if !enableEdit>
         <#if hasCreatePermission>          
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
           <#--WARN: TODO: REVIEW for security issues-->
@@ -49,7 +56,7 @@ function ShowTab(lname) {
         </#if>
         <#if value?has_content>
           <#if hasDeletePermission>
-            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&${curFindString}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
           </#if>
         </#if>
       </#if>
@@ -102,7 +109,7 @@ function ShowTab(lname) {
     
 
    
-    <#if enableEdit == "true" && ( hasUpdatePermission || hasCreatePermission)>
+    <#if enableEdit && ( hasUpdatePermission || hasCreatePermission)>
         <#assign alt_row = false>
            <@row>
             <@cell>
@@ -110,7 +117,7 @@ function ShowTab(lname) {
           <#if pkNotFound>
             <p>${uiLabelMap.WebtoolsEntityName} ${entityName} ${uiLabelMap.WebtoolsWithPk} ${findByPk} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</p>
           </#if>
-          <form action="<@ofbizUrl>UpdateGeneric?entityName=${entityName}</@ofbizUrl>" method="post" name="updateForm">
+          <form action="<@ofbizUrl>UpdateGeneric?entityName=${entityName}&amp;enableEdit=true</@ofbizUrl>" method="post" name="updateForm">
             <@fields type="default-manual">
             <#assign showFields = true>
             <#-- FIXME: inputs within table elems -->

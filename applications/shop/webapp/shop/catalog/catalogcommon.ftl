@@ -27,8 +27,10 @@
         <#assign largeImage = "https://placehold.it/800x300">
     </#if>
     <@img src=largeImage width="100%" height="300px" type="contain" class="product-image"/>
+    
     <#-- CATO: We are using the clearing mechanism in foundation here. This may be migrated to the grid macro at a later stage. -->
     <#if productAdditionalImage1?has_content>
+      <div class="product-image-thumbs">
         <ul class="clearing-thumbs" data-clearing>
             <#if productAdditionalImage1?has_content>
                 <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage1!}</@ofbizContentUrl></#assign>
@@ -47,6 +49,7 @@
                 <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
             </#if>
         </ul>
+      </div>
     </#if>
 </#macro>
 

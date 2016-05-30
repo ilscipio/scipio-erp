@@ -40,7 +40,7 @@ under the License.
           </li>
         <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
         <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
-        <li><a href="#">FAQ's</a></li>
+        <li><a href="http://www.cato-commerce.com/products/faq">FAQ's</a></li>
       </ul>
     </@cell>
     <@cell columns=3>      

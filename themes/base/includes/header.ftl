@@ -287,7 +287,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
     <nav class="top-bar hide-for-small" data-topbar role="navigation">
       <ul class="title-area">
         <li class="name">
-            <h1><@logoMenu/></h1>   
+            <h1><@logoMenu isSmall=true/></h1>   
           </li>
       </ul>
     

@@ -12824,8 +12824,8 @@
     </property>
     <property key="CommonVisualThemeUsage">
         <value xml:lang="cs">Klikněte na obrázku pro získání náhledu, na odkazu pro výběr tématu a na Dokončit pro potvrzení volby</value>
-        <value xml:lang="en">Click on an image to have a preview, on a link to select a theme, and then on Done to validate your
-            choice</value>
+        <value xml:lang="de">Klicken Sie auf einen Link, um die Layoutvorlage auszuwählen.</value>
+        <value xml:lang="en">Click on a link to select a theme. Your choice will be applied immediately.</value>
         <value xml:lang="es">Click en una imagen para obtener una vista previa, en un enlace para seleccionar un tema, y después en
             Hecho para validar la elección</value>
         <value xml:lang="fr">Cliquer sur l'image pour afficher un aperçu, sur le lien pour sélectionner le thème puis sur terminer

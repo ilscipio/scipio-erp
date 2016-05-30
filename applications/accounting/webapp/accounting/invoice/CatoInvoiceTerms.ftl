@@ -11,10 +11,10 @@
             </@tr>
         </@thead>
        <#list invoiceTerms as item>
-            <#assign itemType = item.getRelatedOne("TermType", false)/>
+            <#assign itemType = item.getRelatedOne("TermType", false)!/>
             <@tr>
                 <@td>${item.termDays!}</@td>
-                <@td>${itemType.get("description",locale)!}</@td>
+                <@td>${(itemType.get("description",locale))!}</@td>
                 <@td><@ofbizCurrency isoCode=item.uomId amount=(item.termvalue!)/></@td>
                 <@td>${item.FormFieldTitle_textData!}</@td>
                 <@td>${item.FormFieldTitle_textValue!}</@td>

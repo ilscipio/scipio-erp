@@ -11,9 +11,13 @@
             </@tr>
         </@thead>
         <#list invoicePaymentInfoList as item>
-            <#assign itemType = item.getRelatedOne("TermType", false)/>
+            <#if item.termTypeId?has_content>
+              <#assign itemType = delegator.findOne("TermType", {"termTypeId":item.termTypeId!""}, false)!>
+            <#else>
+              <#assign itemType = {}>
+            </#if>
             <@tr>
-                <@td>${itemType.get("description",locale)!}</@td>
+                <@td>${(itemType.get("description",locale))!}</@td>
                 <@td><@formattedDateTime date=item.dueDate /></@td>
                 
                 <@td><@ofbizCurrency isoCode=invoice.currencyUomId amount=(item.amount!)/></@td>

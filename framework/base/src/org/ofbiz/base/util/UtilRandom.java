@@ -42,18 +42,35 @@ public class UtilRandom {
         return beginTime;
     }
 
-    public static String generateRandomDate(Map<String, Object> context) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date randomDate = new Date(getRandomTimeBetweenTwoDates(null, context));
-        return dateFormat.format(randomDate);
+    public static String generateRandomDate(Map<String, Object> context) {       
+        return generateRandomDate(null, context);
     }
 
     public static String generateRandomDate(Date beginDate, Map<String, Object> context) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date randomDate = new Date(getRandomTimeBetweenTwoDates(new Timestamp(beginDate.getTime()), context));
+        Date randomDate;
+        if (UtilValidate.isNotEmpty(beginDate)) {
+            randomDate = new Date(getRandomTimeBetweenTwoDates(new Timestamp(beginDate.getTime()), context));
+        } else {
+            randomDate = new Date(getRandomTimeBetweenTwoDates(null, context));
+        }
         return dateFormat.format(randomDate);
     }
 
+    public static Timestamp generateRandomTimestamp(Map<String, Object> context) {
+        return generateRandomTimestamp(null, context);
+    }
+    
+    public static Timestamp generateRandomTimestamp(Date beginDate, Map<String, Object> context) {        
+        Timestamp randomDate;
+        if (UtilValidate.isNotEmpty(beginDate)) {
+            randomDate = new Timestamp(getRandomTimeBetweenTwoDates(new Timestamp(beginDate.getTime()), context));
+        } else {
+            randomDate = new Timestamp(getRandomTimeBetweenTwoDates(null, context));
+        }
+        return randomDate;
+    }
+    
     public static int random(List myList) {
         int size = myList.size();
         int index = new Random().nextInt(size);

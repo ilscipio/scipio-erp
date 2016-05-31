@@ -165,7 +165,7 @@ under the License.
         </field>
         <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"><date-time type="date"/></field>
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}" position="2"><date-time type="date"/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><textarea maxlength="255"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListQuoteRoles" target="" title="" type="list" list-name="quoteRoles"

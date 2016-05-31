@@ -888,6 +888,52 @@ under the License.
             <key-map field-name="jobPostingTypeEnumId" rel-field-name="enumId"/>
         </relation>
     </entity>
+    
+    <!-- Cato: New fields for JobRequisition -->
+    <extend-entity entity-name="JobRequisition">
+        <field name="emplPositionId" type="id">
+            <description>Cato: Optional (but usually wanted) specific position for this requisition</description>
+        </field>
+        <relation type="one-nofk" fk-name="JOB_REQ_APP_POS" rel-entity-name="EmplPosition">
+            <key-map field-name="emplPositionId"/>
+        </relation>
+    </extend-entity>
+    
+    <!-- Cato: New view-entity for JobRequisition to link with Position -->
+    <view-entity entity-name="JobRequisitionAndEmplPosition"
+          package-name="org.ofbiz.humanres.recruitment"
+          title="Job Requisition and Position">
+        <member-entity entity-alias="JR" entity-name="JobRequisition"/>
+        <member-entity entity-alias="EP" entity-name="EmplPosition"/>
+        <alias-all entity-alias="JR"/>
+        <alias-all entity-alias="EP"/>
+        <view-link entity-alias="JR" rel-entity-alias="EP">
+            <key-map field-name="emplPositionId"/>
+        </view-link>
+        <relation type="one" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+        <relation type="one" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="BudgetItem">
+            <key-map field-name="budgetId"/>
+            <key-map field-name="budgetItemSeqId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="EmplPositionType">
+            <key-map field-name="emplPositionTypeId"/>
+        </relation>
+        <relation type="one" rel-entity-name="SkillType">
+            <key-map field-name="skillTypeId"/>
+        </relation>
+        <relation type="one" title="ExamType" rel-entity-name="Enumeration">
+            <key-map field-name="examTypeEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" title="JobPostingType" rel-entity-name="Enumeration">
+            <key-map field-name="jobPostingTypeEnumId" rel-field-name="enumId"/>
+        </relation>
+    </view-entity>
+    
     <entity entity-name="JobInterview"
             package-name="org.ofbiz.humanres.recruitment"
             title="Entity for storing data about Interviews conducted">

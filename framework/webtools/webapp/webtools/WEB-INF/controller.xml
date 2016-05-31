@@ -620,6 +620,12 @@ under the License.
         <response name="success" type="view" value="WebtoolsLayoutDemo"/>
     </request-map>
     
+    <!-- Cato: EntityUtilityServices -->
+    <request-map uri="EntityUtilityServices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EntityUtilityServices"/>
+    </request-map>    
+    
     <!-- Cato: Demo data generator -->
     <request-map uri="ListDemoDataGeneratorServices">
         <security https="true" auth="true"/>
@@ -742,6 +748,8 @@ under the License.
     
     <view-map name="WebtoolsLayoutDemo" page="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemo" type="screen"/>
     
+    
+    <view-map name="EntityUtilityServices" type="screen" page="component://webtools/widget/EntityScreens.xml#EntityUtilityServices"/>
     <!-- Cato: Demo data generator -->    
     <view-map name="ListDemoDataGeneratorServices" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorServices"/>
     <view-map name="RunDemoDataGeneratorService" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#RunDemoDataGeneratorService"/>

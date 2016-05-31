@@ -583,6 +583,8 @@
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
       <@field type="input" name="input3nolabel" />
+
+      <@field type="lookup" name="lookup1" label="Lookup 1 (Geo)" formName="form1" fieldFormName="LookupGeo" tooltip="Lookup geos!"/>
       <#macro custLabelAreaTest args={}>
         <label for="${args.fieldId}"><strong>${args.test1} (required and custom label content)</strong></label><#t>
       </#macro>

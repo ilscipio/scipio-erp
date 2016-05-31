@@ -894,6 +894,9 @@ under the License.
         <field name="emplPositionId" type="id">
             <description>Cato: Optional (but usually wanted) specific position for this requisition</description>
         </field>
+        <field name="jobDescription" type="very-long">
+            <description>Cato: Job description, which may be tailored to this requisition</description>
+        </field>
         <relation type="one-nofk" fk-name="JOB_REQ_APP_POS" rel-entity-name="EmplPosition">
             <key-map field-name="emplPositionId"/>
         </relation>
@@ -933,6 +936,12 @@ under the License.
             <key-map field-name="jobPostingTypeEnumId" rel-field-name="enumId"/>
         </relation>
     </view-entity>
+    
+    <!-- Cato: TODO: inevitably will need multiple skill requirements per job requisition:
+    <entity entity-name="JobRequisitionSkillType">
+    ...
+    </entity>
+    -->
     
     <entity entity-name="JobInterview"
             package-name="org.ofbiz.humanres.recruitment"

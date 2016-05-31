@@ -82,6 +82,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <!-- TODO: this looks too awful
                         <screenlet title="${uiLabelMap.HumanResResourcePlanning}">
                             <container style="${styles.grid_row}">
                                 <container style="${styles.grid_large}6 ${styles.grid_cell} ${styles.grid_end}">
@@ -91,6 +92,7 @@ under the License.
                                 </container>
                             </container>
                         </screenlet>
+                        -->
                         
                         <screenlet title="${uiLabelMap.AccountingApplications}">
                             <container style="${styles.grid_row}">

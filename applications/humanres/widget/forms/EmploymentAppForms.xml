@@ -49,6 +49,7 @@ under the License.
             </drop-down>
         </field>
         <field name="emplPositionId" title="${uiLabelMap.FormFieldTitle_emplPositionId}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="jobRequisitionId" title="${uiLabelMap.FormFieldTitle_jobRequisitionId}"><lookup target-form-name="LookupJobRequisition"/></field>
         <field name="employmentAppSourceTypeId">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${employmentAppSourceTypeId}" key-field-name="employmentAppSourceTypeId" entity-name="EmploymentAppSourceType">
@@ -99,7 +100,7 @@ under the License.
         </field>
         <field name="referredByPartyId" use-when="referredByPartyId!=null"><hidden/></field>
         <field name="approverPartyId"><hidden/></field>
-        <field name="jobRequisitionId"><hidden/></field>
+        <field name="jobRequisitionId"><lookup target-form-name="LookupJobRequisition"/></field><!-- Cato: show -->
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="AddEmploymentApp" type="single" target="createEmploymentApp" default-entity-name="EmploymentApp" paginate-target="FindEmploymentApps"
@@ -108,9 +109,11 @@ under the License.
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>
         <alt-target use-when="insideEmployee != null" target="createEmploymentAppExt"/>
+        <!-- CATO: I think this auto- may be necessary even if hidden for some field initializations? 
+            prevents us from reordering fields -->
         <auto-fields-service service-name="createEmploymentApp" default-field-type="hidden"/>
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
-        <field name="applicationId"><lookup target-form-name="LookupEmploymentApp"/></field><!-- Cato: this should auto-generated if absent: required-field="true" -->
+        <field name="applicationId"><text/></field><!-- Cato: this should auto-generated if absent: required-field="true" --><!-- Cato: don't look this up, makes no sense: <lookup target-form-name="LookupEmploymentApp"/> -->
         <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
         <!-- Cato: you should be able to specify job req instead of position -->
         <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>

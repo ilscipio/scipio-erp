@@ -3598,6 +3598,7 @@ public class ModelFormField {
         private final int rows;
         private final FlexibleStringExpander visualEditorButtons;
         private final boolean visualEditorEnable;
+        private final Integer maxlength; // CATO: new 
 
         public TextareaField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -3631,6 +3632,18 @@ public class ModelFormField {
             this.rows = rows;
             this.visualEditorButtons = FlexibleStringExpander.getInstance(element.getAttribute("visual-editor-buttons"));
             this.visualEditorEnable = "true".equals(element.getAttribute("visual-editor-enable"));
+            // CATO: new
+            Integer maxlength = null;
+            String maxlengthStr = element.getAttribute("maxlength");
+            if (!maxlengthStr.isEmpty()) {
+                try {
+                    maxlength = Integer.valueOf(maxlengthStr);
+                } catch (Exception e) {
+                    Debug.logError("Could not parse the max-length value of the text element: [" + maxlengthStr
+                            + "], setting to null; default of no maxlength will be used", module);
+                }
+            }
+            this.maxlength = maxlength;
         }
 
         public TextareaField(int fieldSource, ModelFormField modelFormField) {
@@ -3641,6 +3654,7 @@ public class ModelFormField {
             this.rows = 2;
             this.visualEditorButtons = FlexibleStringExpander.getInstance("");
             this.visualEditorEnable = false;
+            this.maxlength = null;
         }
 
         public TextareaField(ModelFormField modelFormField) {
@@ -3655,6 +3669,7 @@ public class ModelFormField {
             this.readOnly = original.readOnly;
             this.cols = original.cols;
             this.rows = original.rows;
+            this.maxlength = original.maxlength;
         }
 
         @Override
@@ -3703,6 +3718,10 @@ public class ModelFormField {
             return readOnly;
         }
 
+        public Integer getMaxlength() { // CATO: new
+            return maxlength;
+        }
+        
         @Override
         public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
                 throws IOException {

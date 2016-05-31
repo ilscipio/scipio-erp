@@ -430,6 +430,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String id = modelFormField.getCurrentContainerId(context);
         String className = "";
         String alert = "false";
+        String maxlength = ""; // CATO: new
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
             className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
@@ -464,6 +465,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (userLogin != null) {
             language = UtilValidate.isEmpty((String) userLogin.get("lastLocale")) ? "en" : (String) userLogin.get("lastLocale");
         }
+        if (textareaField.getMaxlength() != null) {
+            maxlength = Integer.toString(textareaField.getMaxlength());
+        }
         String value = modelFormField.getEntry(context, textareaField.getDefaultValue(context));
         StringWriter sr = new StringWriter();
         sr.append("<@renderTextareaField ");
@@ -490,6 +494,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(language);
         sr.append("\" buttons=\"");
         sr.append(buttons);
+        // CATO: maxlength added
+        sr.append("\" maxlength=\"");
+        sr.append(maxlength);
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);

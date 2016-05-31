@@ -26,7 +26,7 @@ under the License.
 
 <#macro renderTextField name className alert value textSize maxlength id event action disabled clientAutocomplete ajaxUrl ajaxEnabled mask><@renderField value /></#macro>
 
-<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable language buttons><@renderField value /></#macro>
+<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable language="" buttons="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false maxlength=""><@renderField value /></#macro>
 
 <#macro renderDateTimeField name className alert title value size maxlength step timeValues id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName mask><@renderField value /></#macro>
 

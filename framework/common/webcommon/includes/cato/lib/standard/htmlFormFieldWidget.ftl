@@ -117,6 +117,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#assign field_textarea_widget_defaultArgs = {
   "name":"", "class":"", "style":"", "alert":"", "cols":"", "rows":"", "id":"", "readonly":"", "value":"", "visualEditorEnable":true, 
   "buttons":"", "language":"", "placeholder":"", "tooltip":"", "title":"", "fieldTitleBlank":false, "collapse":false, 
+  "maxlength":"",
   "inlineLabel":false, "wrap":"", "passArgs":{}
 }>
 <#macro field_textarea_widget args={} inlineArgs...>
@@ -131,12 +132,12 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     </#if>
   </#if>
   <@field_textarea_markup_widget name=name class=class style=style alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
-    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
+    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title maxlength=maxlength fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textarea_markup_widget name="" class="" style="" alert="" cols="" rows="" id="" readonly=false value="" visualEditorEnable=true 
-    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" origArgs={} passArgs={} catchArgs...>
+    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" maxlength="" origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textarea_tooltip!styles.field_default_tooltip!"")>

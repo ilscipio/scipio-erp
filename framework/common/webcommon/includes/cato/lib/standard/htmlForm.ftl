@@ -1655,6 +1655,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               placeholder=placeholder
                               tooltip=tooltip
                               inlineLabel=effInlineLabel
+                              maxlength=maxlength
                               wrap=wrap
                               passArgs=passArgs>${text}${value}<#nested></@field_textarea_widget>
         <#break>

@@ -85,5 +85,5 @@ elif [ $START_ACTION -eq 2 ]; then
         sh ant $ANT_TARGET > /dev/null 2>&1
     fi   
 elif [ $START_ACTION -eq 3 ]; then
-    sh ant cato-default-start -S -e -q
+    sh ant cato-default-start -logger com.ilscipio.cato.util.ant.logger.CatoLogger -lib ./framework/base/lib/ant
 fi

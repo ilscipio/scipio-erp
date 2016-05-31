@@ -572,9 +572,9 @@ under the License.
 	
     <!-- Cato: Targets used by start.(sh|bat) scripts --> 
 	<target name="cato-check-default-rdbms">
-		<taskdef name="check-rdbms" classname="com.ilscipio.cato.util.CatoAntRDBMSTask">
+		<taskdef name="check-rdbms" classname="com.ilscipio.cato.util.ant.task.CatoAntRDBMSTask">			
             <classpath>     
-                <path location="framework/common/build/lib/ofbiz-common.jar" />
+                <path location="framework/base/lib/ant/cato-ant-util.jar" />
             </classpath>
         </taskdef>
 		<check-rdbms/>
@@ -586,9 +586,9 @@ under the License.
         <if>
             <equals arg1="${fs.rdbms.result}" arg2="presentWithNoData" />
             <then>       
-            	<echo message="Cato-Commerce: No demo data found. Compiling and loading demo data. Please wait, this may take a few minutes..."/>
+            	<echo message="No demo data found. Compiling and loading demo data. Please wait, this may take a few minutes..."/>
                 <antcall target="load-demo"/>            	
-            	<echo message="Cato-Commerce: Starting framework..." />
+            	<echo message="Starting framework..." />
             	<antcall target="start">
                   <param name="cato.start.spawn" value="true" />
                 </antcall>
@@ -596,9 +596,9 @@ under the License.
             <elseif>
                <equals arg1="${fs.rdbms.result}" arg2="presentWithData" />
                <then>
-                   <echo message="Cato-Commerce: Starting framework..." />
+                   <!--echo message="Starting framework..." /-->
                    <antcall target="start">
-                      <param name="cato.start.spawn" value="true" />
+                      <!--param name="cato.start.spawn" value="true" /-->
                    </antcall>
                </then>
             </elseif>

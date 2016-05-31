@@ -8979,8 +8979,8 @@
     <property key="AccountingManagerApplication">
         <value xml:lang="ar">تطبيق تسيير المحاسبة</value>
         <value xml:lang="de">Buchhaltung</value>
-        <value xml:lang="en">Accounting Manager Application</value>
-        <value xml:lang="es">Aplicación Administrador Contable</value>
+        <value xml:lang="en">Accounting</value>
+        <value xml:lang="es">Aplicación Administrador Contable</value
         <value xml:lang="fr">Module de Gestion comptable</value>
         <value xml:lang="hi_IN">लेखांकन प्रबंधक अनुप्रयोग</value>
         <value xml:lang="it">Applicazione gestione contabilità</value>

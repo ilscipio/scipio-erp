@@ -927,7 +927,7 @@
         <value xml:lang="zh_TW">首頁</value>
     </property>
     <property key="MarketingManager">
-        <value xml:lang="de">CRM-Anwendung</value>
+        <value xml:lang="de">Marketing Manager</value>
         <value xml:lang="en">Marketing Manager</value>
         <value xml:lang="es">Gestión de Marketing</value>
         <value xml:lang="fr">Application de gestion marketing</value>
@@ -3342,7 +3342,7 @@
         <value xml:lang="zh_TW">營業支援(SFA)管理</value>
     </property>
     <property key="SfaManagerApplication">
-        <value xml:lang="en">CRM-Anwendung</value>
+        <value xml:lang="en">CRM</value>
         <value xml:lang="fr">Application de gestion des ventes</value>
         <value xml:lang="it">Applicazione gestione forze esterne</value>
         <value xml:lang="ja">営業支援(SFA)管理業務</value>

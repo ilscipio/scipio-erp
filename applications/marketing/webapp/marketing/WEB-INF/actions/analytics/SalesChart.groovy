@@ -77,17 +77,22 @@ Map processResult() {
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
     Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
     
-    if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-        dateIntervals["dateEnd"] = thruDate;
-
-    fromDateText = UtilDateTime.timeStampToString(fromDateTimestamp, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
-    thruDateText = null;
-    if (thruDateTimestamp)
-        thruDateText = UtilDateTime.timeStampToString(thruDateTimestamp, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+//    if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
+//        dateIntervals["dateEnd"] = thruDate;
+//
+//    fromDateText = UtilDateTime.timeStampToString(fromDateTimestamp, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+//    thruDateText = null;
+//    if (thruDateTimestamp)
+//        thruDateText = UtilDateTime.timeStampToString(thruDateTimestamp, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+    fromDateText = UtilDateTime.timeStampToString(dateIntervals["dateBegin"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+    thruDateText = UtilDateTime.timeStampToString(dateIntervals["dateEnd"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
         
     Map resultMap = new TreeMap<String, Object>();
     for (int i = 0; i <= iCount; i++) {
         Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("minDate", fromDateText, "maxDate", thruDateText,"userLogin",userLogin));
+        
+        Debug.log("findOrderMap =====================> " + findOrderMap);
+        
         List orderList = findOrderMap.orderList;
 
         orderList.each { header ->        
@@ -115,9 +120,7 @@ Map processResult() {
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateBegin"], context.locale, context.timeZone);
         Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
         fromDateText = UtilDateTime.timeStampToString(dateIntervals["dateBegin"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
-        thruDateText = null;
-        if (thruDateTimestamp)
-            thruDateText = UtilDateTime.timeStampToString(dateIntervals["dateEnd"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+        thruDateText = UtilDateTime.timeStampToString(dateIntervals["dateEnd"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
     }
     return resultMap;
 }

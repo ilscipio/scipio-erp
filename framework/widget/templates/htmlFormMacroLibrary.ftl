@@ -600,14 +600,19 @@ Parameter: showDescription, String, optional - If the showDescription parameter 
 Parameter: initiallyCollapsed, Not used.
 Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true, the contents of lastViewName will be appended to the Ajax URL.
 -->
-<#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main"  title="" fieldType="" fieldTitleBlank=false>
+<#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main" title="" fieldType="" fieldTitleBlank=false tooltip="">
   <#-- delegate to cato libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
     <#local events = {}>
   </#if>
-  <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=className alert=alert value=value size=size maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=className alert=alert value=value 
+    size=size maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete 
+    descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl 
+    ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground 
+    clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName 
+    title=title fieldTitleBlank=fieldTitleBlank tooltip=tooltip />
 </#macro>
 
 <#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*

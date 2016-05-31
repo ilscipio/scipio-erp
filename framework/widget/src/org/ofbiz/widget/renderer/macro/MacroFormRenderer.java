@@ -2243,6 +2243,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isEmpty(fadeBackground)) {
             fadeBackground = "false";
         }
+        String tooltip = modelFormField.getTooltip(context); // CATO: new arg
+        if (UtilValidate.isEmpty(tooltip)) {
+            tooltip = "";
+        }
         Boolean isInitiallyCollapsed = lookupField.getInitiallyCollapsed();
         String clearText = "";
         Map<String, Object> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
@@ -2327,6 +2331,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Boolean.toString(isInitiallyCollapsed));
         sr.append("\" lastViewName=\"");
         sr.append(lastViewName);
+        sr.append("\" tooltip=\"");
+        sr.append(tooltip); // CATO: new arg
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);

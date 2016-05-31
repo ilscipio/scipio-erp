@@ -12,7 +12,13 @@
             <#-- TODO: move to groovy -->
             <#assign emplPosType = emplPos.getRelatedOne("EmplPositionType", false)!>
      
-            <#-- TODO: how to get department? -->
+            <#assign groupName = "">
+            <#if (emplPos.partyId?has_content)>
+              <#assign depParty = delegator.findOne("PartyGroup", {"partyId":emplPos.partyId}, false)!>
+              <#if depParty?has_content>
+                <#assign groupName = depParty.get("groupName", locale)!"">
+              </#if>
+            </#if>
 
             <#assign qualIds = []>
             <#if emplPos.qualification?has_content>
@@ -26,7 +32,7 @@
                     ${(emplPosType.get("description", locale))!}
                   <#if (emplPos.emplPositionId)?has_content></a></#if>
                 </@td>
-                <@td class="${styles.text_right!}"></@td>
+                <@td class="${styles.text_right!}">${groupName}</@td>
                 <@td class="${styles.text_right!}">   
                  <#list qualIds as qualId>
                     ${(delegator.findOne("PartyQualType", {"partyQualTypeId": qualId}, false).get("description", locale))!}<#if qualId_has_next>, </#if>

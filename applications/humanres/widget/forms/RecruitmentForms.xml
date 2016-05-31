@@ -111,7 +111,7 @@ under the License.
             </drop-down>
         </field>
         <field name="durationMonths"><text/></field>
-        <field name="qualification" widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
+        <field name="qualification" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PartyQualType" key-field-name="partyQualTypeId" description="${description}">
                     <entity-constraint name="parentTypeId" operator="equals" value="DEGREE"/>

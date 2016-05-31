@@ -223,7 +223,7 @@ under the License.
     </request-map>
     <request-map uri="updateEmploymentApp">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateEmploymentApp"/>
+        <event type="service-multi" invoke="updateEmploymentApp" global-transaction="false"/>
         <response name="success" type="request" value="FindEmploymentApps"/>
         <response name="error" type="view" value="FindEmploymentApps"/>
     </request-map>

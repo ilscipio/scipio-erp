@@ -138,8 +138,10 @@ under the License.
         <field name="experienceMonths" required-field="true"><text/></field>
         <field name="experienceYears" required-field="true"><text/></field>
         <field name="jobPostingTypeEnumId"><hidden value="JOB_POSTING_INTR"/></field>
-        <!-- Cato: new field -->
-        <field name="emplPositionId"><lookup target-form-name="LookupEmplPosition"/></field>
+        <!-- Cato: new field 
+            NOTE: emplPositionId was not in original Ofbiz schema and was never required to make a job requisition,
+            but it will simply prevent confusion if we require it in this form -->
+        <field name="emplPositionId" required-field="true"><lookup target-form-name="LookupEmplPosition"/></field>
         <field name="submitAction" use-when="jobRequisition==null" title="Create" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="jobRequisition!=null" title="Update" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>

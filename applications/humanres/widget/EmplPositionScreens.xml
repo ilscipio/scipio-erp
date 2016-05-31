@@ -80,9 +80,21 @@
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
-                            <include-form name="EditEmplPosition" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
-                        </screenlet>
+                        <section>
+                            <condition>
+                                <if-empty field="emplPosition.emplPositionId"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.CommonAdd} ${uiLabelMap.FormFieldTitle_position}">
+                                    <include-form name="EditEmplPosition" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet>
+                                    <include-form name="EditEmplPosition" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -332,7 +344,7 @@
     <screen name="CatoOpenPositions">
         <section>
             <actions>
-                <!-- FIXME: review: what about JobRequisition? -->
+                <!-- TODO: include open positions without requisitions? (but not really needed?) -->
                 <entity-condition entity-name="JobRequisitionAndEmplPosition" list="positionList" >
                     <condition-list combine="or">
                         <condition-expr field-name="statusId" value="EMPL_POS_ACTIVE"/>
@@ -340,7 +352,14 @@
                         <condition-expr field-name="statusId" value="EMPL_POS_PLANNEDFOR"/>
                         -->
                     </condition-list>
+                    <!-- TODO: find the best date to sort by here... -->
                     <order-by field-name="-estimatedFromDate" />
+                    <!-- 
+                    <order-by field-name="-jobRequisitionDate" />
+                    -->
+                    <!-- 
+                    <order-by field-name="-requiredOnDate" />
+                    -->
                 </entity-condition>
             </actions>
             <widgets>

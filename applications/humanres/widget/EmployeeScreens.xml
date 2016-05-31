@@ -67,7 +67,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.HumanResNewEmployee}">
+                        <screenlet><!-- CATO: title="${uiLabelMap.HumanResNewEmployee}" -->
                             <section>
                                 <widgets>
                                     <include-form name="NewEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>

@@ -63,7 +63,7 @@ under the License.
         <field use-when="emplPosition!=null" name="emplPositionId" title="${uiLabelMap.HumanResEmplPositionId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="emplPosition==null&amp;&amp;emplPositionId==null" name="emplPositionId" title="${uiLabelMap.HumanResEmplPositionId}"><lookup target-form-name="LookupEmplPosition"/></field>
         <field use-when="emplPosition==null&amp;&amp;emplPositionId!=null" name="emplPositionId" title="${uiLabelMap.HumanResEmplPositionId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${emplPositionId}]"><display/></field>
-        <field name="partyId" parameter-name="partyId" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.HumanResEmploymentPartyIdFromToolTip}">
+        <field name="partyId" parameter-name="partyId" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.HumanResEmploymentPartyIdFromToolTip}" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options description="${groupName}" entity-name="PartyRoleAndPartyDetail" key-field-name="partyId">
                     <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
@@ -78,7 +78,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>-->
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- Cato: added required-field -->
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_POSITION_STATUS"/>
@@ -88,7 +88,7 @@ under the License.
         </field>
         <field name="budgetId"><lookup target-form-name="LookupBudget"/></field>
         <field name="budgetItemSeqId"><lookup target-form-name="LookupBudgetItem"/></field>
-        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmployeePositionTypeId}">
+        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmployeePositionTypeId}" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="emplPositionTypeId" entity-name="EmplPositionType">
                     <entity-order-by field-name="description"/>

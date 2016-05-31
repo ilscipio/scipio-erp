@@ -21,15 +21,17 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
+<#-- CATO: show at bottom 
   <#if parameters.hideFields?default("N") == "Y">
     <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
   <#else>
     <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/></#if>
-    <#--<@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />-->
+    <#-<@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />->
   </#if>
+-->
   </@menu>
 </#macro>
-<@section id="findEmployee" title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" menuContent=menuContent>
+<@section id="findEmployee" menuContent=menuContent><#-- Cato: duplicate: title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" -->
     <#if parameters.hideFields?default("N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:
@@ -81,6 +83,13 @@ under the License.
                 <@field type="submitarea">
                     <@field type="submit" text=uiLabelMap.PartyLookupParty onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
                     <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
+
+                  <#if parameters.hideFields?default("N") == "Y">
+                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.link_run_sys!} ${styles.action_show!}"/>
+                  <#else>
+                    <#if partyList??><@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.link_run_sys!} ${styles.action_hide!}"/></#if>
+                  </#if>
+
                 </@field>
         </form>
     </#if>
@@ -88,7 +97,9 @@ under the License.
 
   <#if parameters.hideFields?default("N") != "Y">
     <@script>
-      document.lookupparty.partyId.focus();
+      jQuery(document).ready(function() {
+        document.lookupparty.partyId.focus();
+      });
     </@script>
   </#if>
     

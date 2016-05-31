@@ -78,13 +78,21 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
-                            <section>
-                                <widgets>
+                        <section>
+                            <condition>
+                                <if-empty field="jobRequisition.jobRequisitionId"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.CommonAdd} ${uiLabelMap.HumanResJobRequisition}">
                                     <include-form name="EditJobRequisition" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                </widgets>
-                            </section>
-                        </screenlet>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet>
+                                    <include-form name="EditJobRequisition" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

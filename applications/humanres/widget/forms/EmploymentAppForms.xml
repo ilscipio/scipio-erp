@@ -110,17 +110,19 @@ under the License.
         <alt-target use-when="insideEmployee != null" target="createEmploymentAppExt"/>
         <auto-fields-service service-name="createEmploymentApp" default-field-type="hidden"/>
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
-        <field name="applicationId" required-field="true"><lookup target-form-name="LookupEmploymentApp"/></field>
-        <field name="emplPositionId"><lookup target-form-name="LookupEmplPosition"/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <drop-down allow-empty="true" current-description="">
+        <field name="applicationId"><lookup target-form-name="LookupEmploymentApp"/></field><!-- Cato: this should auto-generated if absent: required-field="true" -->
+        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <!-- Cato: you should be able to specify job req instead of position -->
+        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- Cato: required to avoid errors -->
+            <drop-down current-description=""><!-- Cato: don't allow empty, to avoid confusion: allow-empty="true"  -->
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_POSITION_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="applyingPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field><!-- Cato: required to avoid errors, somewhat nonsensical to leave empty -->
         <field name="referredByPartyId" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field>
         <field name="referredByPartyId" use-when="employmentApp!=null"><hidden/></field>
         <field name="employmentAppSourceTypeId">
@@ -130,7 +132,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applicationDate"><date-time/></field>
+        <field name="applicationDate"><date-time default-value="${nowTimestamp}"/></field><!-- Cato: pre-fill to now -->
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -3404,4 +3404,9 @@
         <value xml:lang="en">Positions</value>
         <value xml:lang="fr">Positions</value>
     </property>
+    <property key="HumanResEitherPositionOrRequisitionMustBeSpecified">
+        <value xml:lang="de">Entweder Position oder Jobanforderung angegeben werden muss (solange Job Anforderung an eine Position gebunden ist)</value>
+        <value xml:lang="en">Either position or job requisition must be specified (as long as job requisition is linked to a position)</value>
+        <value xml:lang="fr">Soit poste ou réquisition doit être spécifié (aussi longtemps que la réquisition est liée à une position)</value>
+    </property>
 </resource>

@@ -583,13 +583,29 @@ public final class MacroFormRenderer implements FormStringRenderer {
             builder.setEncodeOutput(memEncodeOutput);
         }
         modelFormField = builder.build();
-        String contextValue = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
+        
+        // CATO: any escaping must be done AFTER max length concat
+        // TODO: review this entire encoding stuff
+        //String contextValue = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
+        //String value = contextValue;
+        //if (UtilValidate.isNotEmpty(value)) {
+        //    if (value.length() > maxlength) {
+        //        value = value.substring(0, maxlength);
+        //    }
+        //}
+        String contextValue = modelFormField.getEntryRaw(context, dateTimeField.getDefaultValue(context));
         String value = contextValue;
         if (UtilValidate.isNotEmpty(value)) {
             if (value.length() > maxlength) {
                 value = value.substring(0, maxlength);
             }
+            // Cato: NOW do escaping TODO: review encoding in general
+            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
+            if (simpleEncoder != null) {
+                value = simpleEncoder.encode(value);
+            }
         }
+        
         String id = modelFormField.getCurrentContainerId(context);
         ModelForm modelForm = modelFormField.getModelForm();
         String formName = FormRenderer.getCurrentFormName(modelForm, context);

@@ -891,7 +891,7 @@ under the License.
     
     <!-- Cato: New fields for JobRequisition -->
     <extend-entity entity-name="JobRequisition">
-        <!-- Cato: NOTE: this covers only the case where the requisition if for at most one position. It is conceivable
+        <!-- Cato: NOTE: this covers only the case where the requisition is for at most one position. It is conceivable
             that a job req could link to multiple positions, in which case we might want a a JobRequisitionEmplPosition
             entity for one-to-many (or many-to-many), but I think it may be overkill. Can always add later.
             NOTE: explicitly rejected having EmplPosition.jobRequisitionId because it also seems conceivable to have multiple

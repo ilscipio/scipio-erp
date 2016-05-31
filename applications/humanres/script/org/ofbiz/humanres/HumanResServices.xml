@@ -222,4 +222,128 @@
         <check-errors/>
     </simple-method>
 
+
+    <simple-method method-name="createEmploymentApp" short-description="Cato: Create Employment App">
+        <call-simple-method method-name="validateEmploymentAppParams" />
+        <check-errors />
+        
+        <make-value entity-name="EmploymentApp" value-field="emplAppValue"/>
+        <set-pk-fields map="parameters" value-field="emplAppValue"/>
+        <if-empty field="parameters.applicationId">
+            <make-next-seq-id seq-field-name="applicationId" value-field="emplAppValue"/>
+        </if-empty>
+        <set-nonpk-fields map="parameters" value-field="emplAppValue"/>
+
+        <call-simple-method method-name="validateEmploymentApp" />
+        <check-errors />
+        
+        <create-value value-field="emplAppValue"/>
+        <check-errors />
+    </simple-method>
+    
+    <simple-method method-name="updateEmploymentApp" short-description="Cato: Update Employment App">
+        <call-simple-method method-name="validateEmploymentAppParams" />
+        <check-errors />
+        
+        <entity-one entity-name="EmploymentApp" value-field="emplAppValue"/>
+        <!--<set-pk-fields map="parameters" value-field="emplAppValue"/>-->
+        <set-nonpk-fields map="parameters" value-field="emplAppValue"/>
+    
+        <call-simple-method method-name="validateEmploymentApp" />
+        <check-errors />
+   
+        <store-value value-field="emplAppValue"/>
+        <check-errors />
+    </simple-method>
+    
+    <simple-method method-name="validateEmploymentAppParams" short-description="Cato: Validate Employment App Params">
+        <if-not-empty field="parameters.emplPositionId">
+            <entity-one entity-name="EmplPosition" value-field="emplPosValue" auto-field-map="false">
+                <field-map field-name="emplPositionId" from-field="parameters.emplPositionId"/>
+            </entity-one>
+            <!--<check-errors/>-->
+            <if-empty field="emplPosValue">
+                <add-error><fail-property property="HumanResErrorInvalidEmplPosition" resource="HumanResErrorUiLabels" /></add-error>
+                <!--<check-errors/>-->
+            </if-empty>
+        </if-not-empty>
+        <if-not-empty field="parameters.jobRequisitionId">
+            <entity-one entity-name="JobRequisition" value-field="jobReqValue" auto-field-map="false">
+                <field-map field-name="jobRequisitionId" from-field="parameters.jobRequisitionId"/>
+            </entity-one>
+            <!--<check-errors/>-->
+            <if-empty field="jobReqValue">
+                <add-error><fail-property property="HumanResErrorInvalidJobRequisition" resource="HumanResErrorUiLabels" /></add-error>
+                <!--<check-errors/>-->
+            </if-empty>
+        </if-not-empty>
+    </simple-method>
+    
+    <simple-method method-name="validateEmploymentApp" short-description="Cato: Validate Employment App">
+        <!-- check that emplPositionId and/or jobRequisition are set to valid values, and optionally
+            if position not specified, transfer it from the job requisition -->
+        <if-empty field="emplAppValue.emplPositionId">
+            <!-- get it from jobRequisition -->
+            <if-empty field="emplAppValue.jobRequisitionId">
+                <add-error><fail-property property="HumanResErrorPositionOrRequisitionMustBeSpecified" resource="HumanResErrorUiLabels" /></add-error>
+                <check-errors/>
+            <else>
+                <entity-one entity-name="JobRequisition" value-field="jobReqValue" auto-field-map="false">
+                    <field-map field-name="jobRequisitionId" from-field="emplAppValue.jobRequisitionId"/>
+                </entity-one>
+                <check-errors/>
+                <if-empty field="jobReqValue">
+                    <add-error><fail-property property="HumanResErrorInvalidJobRequisition" resource="HumanResErrorUiLabels" /></add-error>
+                    <check-errors/>
+                <else>
+                    <!-- Cato: NOTE: this is a new field in cato -->
+                    <if-not-empty field="jobReqValue.emplPositionId">
+                        <!-- get the position from the requisition -->
+                        <set field="emplAppValue.emplPositionId" from-field="jobReqValue.emplPositionId" />
+                    </if-not-empty>
+                    <check-errors/>
+                </else>
+                </if-empty>
+            </else>
+            </if-empty>
+        <else>
+            <entity-one entity-name="EmplPosition" value-field="emplPosValue" auto-field-map="false">
+                <field-map field-name="emplPositionId" from-field="emplAppValue.emplPositionId"/>
+            </entity-one>
+            <check-errors/>
+            <if-empty field="emplPosValue">
+                <add-error><fail-property property="HumanResErrorInvalidEmplPosition" resource="HumanResErrorUiLabels" /></add-error>
+                <check-errors/>
+            <else>
+                <if-not-empty field="emplAppValue.jobRequisitionId">
+                    <entity-one entity-name="JobRequisition" value-field="jobReqValue" auto-field-map="false">
+                        <field-map field-name="jobRequisitionId" from-field="emplAppValue.jobRequisitionId"/>
+                    </entity-one>
+                    <check-errors/>
+                    <if-empty field="jobReqValue">
+                        <add-error><fail-property property="HumanResErrorInvalidJobRequisition" resource="HumanResErrorUiLabels" /></add-error>
+                        <check-errors/>
+                    <else>
+                        <if-not-empty field="jobReqValue.emplPositionId">
+                            <!-- Verify that the requisition links to the same position as us -->
+                            <if-compare-field field="emplAppValue.emplPositionId" operator="not-equals" to-field="jobReqValue.emplPositionId">
+                                <add-error><fail-property property="HumanResErrorAppPositionMustEqualRequisitionPosition" resource="HumanResErrorUiLabels" /></add-error>
+                                <check-errors/>
+                            </if-compare-field>
+                        <else>
+                            <!-- TODO: REVIEW: this case is ambiguous, so don't fail; it is allowed by stock though in most cases you probably
+                                want the job req to link to a position -->
+                            <log level="warning" message="WARNING: Job requisition ${emplAppValue.jobRequisitionId} is not linked to an employee position; 
+                                this is allowed by stock ofbiz, but in most cases you want to a link to a position (emplPositionId)" />
+                        </else>
+                        </if-not-empty>
+                    </else>
+                    </if-empty>
+                </if-not-empty>
+            </else>
+            </if-empty>
+        </else>
+        </if-empty>
+    </simple-method>
+
 </simple-methods>

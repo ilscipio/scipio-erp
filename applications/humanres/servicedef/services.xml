@@ -176,6 +176,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
+    <!-- CATO: stock services are unsatisfactory, we need to do checks on emplPositionId and jobRequisitionId, required
     <service name="createEmploymentApp" engine="entity-auto" default-entity-name="EmploymentApp" invoke="create" auth="true">
         <description>Create an Employment Application</description>
         <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
@@ -184,6 +185,22 @@ under the License.
     </service>
 
     <service name="updateEmploymentApp" engine="entity-auto" default-entity-name="EmploymentApp" invoke="update" auth="true">
+        <description>Update an Employment Application</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    -->
+    <service name="createEmploymentApp" engine="simple" default-entity-name="EmploymentApp" 
+        location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createEmploymentApp" auth="true">
+        <description>Create an Employment Application</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateEmploymentApp" engine="simple" default-entity-name="EmploymentApp" 
+        location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmploymentApp" auth="true">
         <description>Update an Employment Application</description>
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>

@@ -623,7 +623,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
   "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
-  "inlineLabel":false, "passArgs":{}
+  "inlineLabel":false, "tooltip":"", "passArgs":{}
 }>
 <#macro field_lookup_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_lookup_widget_defaultArgs)>
@@ -640,7 +640,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
     height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed 
-    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
+    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel tooltip=tooltip origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -648,8 +648,14 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     maxlength="" id="" events={} readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=false presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
-    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
+    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false tooltip="" origArgs={} passArgs={} catchArgs...>
+  <#--<#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
+  </#if>-->
+  <#local attribs = {}>
+  <#if tooltip?has_content> 
+    <#local class = addClassArg(class, styles.field_input_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_input_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
   <#if (!ajaxUrl?has_content) && ajaxEnabled>
     <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, fieldFormName)/>
@@ -676,10 +682,11 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if size?has_content && size=="0">
       <input type="hidden" <#if name?has_content> name="${name}"/></#if>
     <#else>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if style?has_content> style="${style}"</#if><#rt/>
+      <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if style?has_content> style="${style}"</#if><#rt/>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#t/>
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
-        <#if autocomplete?has_content> autocomplete="off"</#if>/></#if><#t/>
+        <#if autocomplete?has_content> autocomplete="off"</#if><#rt/>
+        <#if title?has_content> title="${title}"</#if>/></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
       <a href="javascript:call_fieldlookup3(document.${escapePart(formName, 'js-html')}.${escapePart(name, 'js-html')}, <#rt/>
           document.${escapePart(formName, 'js-html')}.${escapePart(descriptionFieldName, 'js-html')},'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#t/>

@@ -1807,7 +1807,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#break>
       <#case "lookup">
         <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert="false" value=value 
-          size=size?string maxlength=maxlength id=id events=events passArgs=passArgs/>
+          size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip passArgs=passArgs/>
       <#break>
       <#case "checkbox">
         <#if !checkboxType?has_content>

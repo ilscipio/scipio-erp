@@ -595,10 +595,10 @@ public class FormRenderer {
         Map<String, Integer> fieldCount = new HashMap<String, Integer>();
         while (innerDisplayHyperlinkFieldsBeginIter.hasNext()) {
             ModelFormField modelFormField = innerDisplayHyperlinkFieldsBeginIter.next();
-            if (fieldCount.containsKey(modelFormField.getFieldName())) {
-                fieldCount.put(modelFormField.getFieldName(), fieldCount.get(modelFormField.getFieldName()) + 1);
+            if (fieldCount.containsKey(modelFormField.getName())) {
+                fieldCount.put(modelFormField.getName(), fieldCount.get(modelFormField.getName()) + 1);
             } else {
-                fieldCount.put(modelFormField.getFieldName(), 1);
+                fieldCount.put(modelFormField.getName(), 1);
             }
         }
 

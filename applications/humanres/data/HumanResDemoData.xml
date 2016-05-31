@@ -18,6 +18,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
+
+    <!-- CATO: demo skill types; there are none in stock Ofbiz
+        TODO: localize -->
+    <SkillType skillTypeId="DATA_ENTRY" description="Software data entry" hasTable="N" />  
+    <SkillType skillTypeId="SW_MS_OFFICE" description="Microsoft Office" hasTable="N" />  
+    <SkillType skillTypeId="PROG_JAVA" description="Java language programming" hasTable="N" />  
+    <SkillType skillTypeId="LANG_EN" description="English language skills" hasTable="N" />    
+    <SkillType skillTypeId="LANG_DE" description="German language skills" hasTable="N" />    
+
     <Party partyId="DemoEmployee"/><PartyRole partyId="DemoEmployee" roleTypeId="EMPLOYEE"/><!-- data completed by components loaded later -->
 
     <RateAmount rateTypeId="AVERAGE_PAY_RATE" rateCurrencyUomId="USD" periodTypeId="RATE_MONTH" workEffortId="_NA_" partyId="DemoEmployee" emplPositionTypeId="_NA_" fromDate="2000-01-30 17:58:56.038" rateAmount="2300"/>

@@ -401,7 +401,10 @@ public final class WidgetWorker {
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);                     
+        // CATO: don't call if target is empty (probably shouldn't happen, but does)
+        if (UtilValidate.isNotEmpty(target)) {
+            WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);   
+        }
         writer.append("\"");
 
         if (UtilValidate.isNotEmpty(targetWindow)) {

@@ -8,13 +8,18 @@
                 <@th class="${styles.text_right!}" width="40%">${uiLabelMap.HumanResPartyQualification}</@th>
             </@tr>
         </@thead>
-        <#list positionList as emplPos>
+        <#list positionList as emplPos><#-- emplPos is JobRequisitionAndEmplPosition -->
             <#-- TODO: move to groovy -->
             <#assign emplPosType = emplPos.getRelatedOne("EmplPositionType", false)!>
      
-            <#-- FIXME: how to get department? -->
-            <#-- FIXME: cannot get qualifications from position because no link to job requisition -->
-            
+            <#-- TODO: how to get department? -->
+
+            <#assign qualIds = []>
+            <#if emplPos.qualification?has_content>
+              <#-- only one supported for now -->
+              <#assign qualIds = [emplPos.qualification]>
+            </#if>
+
             <@tr>
                 <@td class="${styles.text_right!}">
                   <#if (emplPos.emplPositionId)?has_content><a href="<@ofbizUrl>EditEmplPosition?emplPositionId=${emplPos.emplPositionId?html}</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_view!}"></#if>
@@ -23,7 +28,9 @@
                 </@td>
                 <@td class="${styles.text_right!}"></@td>
                 <@td class="${styles.text_right!}">   
-        
+                 <#list qualIds as qualId>
+                    ${(delegator.findOne("PartyQualType", {"partyQualTypeId": qualId}, false).get("description", locale))!}<#if qualId_has_next>, </#if>
+                  </#list>
                 </@td>
             </@tr>
         </#list>

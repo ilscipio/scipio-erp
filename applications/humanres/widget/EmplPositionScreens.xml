@@ -333,7 +333,7 @@
         <section>
             <actions>
                 <!-- FIXME: review: what about JobRequisition? -->
-                <entity-condition entity-name="EmplPosition" list="positionList" >
+                <entity-condition entity-name="JobRequisitionAndEmplPosition" list="positionList" >
                     <condition-list combine="or">
                         <condition-expr field-name="statusId" value="EMPL_POS_ACTIVE"/>
                         <!-- ?

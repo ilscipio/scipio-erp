@@ -31,7 +31,7 @@ under the License.
 -->
   </@menu>
 </#macro>
-<@section id="findEmployee" menuContent=menuContent><#-- Cato: duplicate: title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" -->
+<@section id="findEmployee"><#--Cato: no entries:  menuContent=menuContent --><#-- Cato: duplicate: title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" -->
     <#if parameters.hideFields?default("N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:
@@ -85,13 +85,22 @@ under the License.
                     <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
 
                   <#if parameters.hideFields?default("N") == "Y">
-                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.link_run_sys!} ${styles.action_show!}"/>
+                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=N${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.link_run_sys!} ${styles.action_show!}"/>
                   <#else>
-                    <#if partyList??><@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.link_run_sys!} ${styles.action_hide!}"/></#if>
+                    <#if partyList??><@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=Y${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.link_run_sys!} ${styles.action_hide!}"/></#if>
                   </#if>
 
                 </@field>
         </form>
+    <#else>
+      <@menu type="button">
+      <#if parameters.hideFields?default("N") == "Y">
+        <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
+      <#else>
+        <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/></#if>
+        <#-<@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />->
+      </#if>
+      </@menu>
     </#if>
 </@section>
 
@@ -130,7 +139,7 @@ under the License.
             <#list partyList as partyRow>
             <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>
             <@tr valign="middle">
-                <@td><#if partyRow.getModelEntity().isField("lastName") && lastName?has_content>
+                <@td><#if partyRow.getModelEntity().isField("lastName") && partyRow.lastName?has_content>
                         <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if></a>
                     <#elseif partyRow.getModelEntity().isField("groupName") && partyRow.groupName?has_content>
                         <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${partyRow.groupName}</a>

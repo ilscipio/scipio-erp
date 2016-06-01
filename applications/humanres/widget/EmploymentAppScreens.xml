@@ -20,6 +20,9 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- CATO: FIXME: ALL THESE SCREENS ARE MISSING PERMISSION CHECKS -->
+    
     <screen name="FindEmploymentApps">
         <section>
             <actions>
@@ -35,7 +38,8 @@
                                 <section>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="NewEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
+                                            <!-- Cato: link to our new screen instead: NewEmploymentApp -->
+                                            <link target="EditEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -74,6 +78,8 @@
             </widgets>
         </section>
     </screen>
+    <!-- CATO: NOTE: This screen would be mainly for applicants to fill out themselves; e.g.
+        can't edit once submitted -->
     <screen name="NewEmploymentApp">
         <section>
             <actions>
@@ -87,6 +93,81 @@
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: new simple screen for editing individual appl (not in stock - stock only has new, above) 
+        Simpler version of EditEmploymentApps above.
+        NOTE: this screen would be mainly for admins, who can edit submitted applications. In admin
+        case it supersedes NewEmploymentApp -->
+    <screen name="EditEmploymentApp">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="EmploymentApp"/>
+                <set field="applicationId" from-field="parameters.applicationId"/>
+                <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-empty field="employmentApp.applicationId"/>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <actions>
+                                <set field="titleProperty" value="HumanResNewEmploymentApp"/>
+                            </actions>
+                            <widgets>
+                                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                                    <decorator-section name="body">
+                                        <screenlet>
+                                            <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                                        </screenlet>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </widgets>
+                    <fail-widgets>
+                        <!-- FIXME: in this case should check if have rights to view/edit applicationId -->
+                        <section>
+                            <actions>
+                                <set field="titleProperty" value="HumanResEditEmploymentApp"/>
+                            </actions>
+                            <widgets>
+                                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                                    <decorator-section name="body">
+                                        <screenlet>
+                                            <include-form name="EditEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                                        </screenlet>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: new simple screen for viewing appl (not in stock)  -->
+    <screen name="ViewEmploymentApp">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEmploymentApplication"/>
+                <set field="activeMainMenuItem" value="EmploymentApp"/>
+                <set field="applicationId" from-field="parameters.applicationId"/>
+                <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="ViewEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

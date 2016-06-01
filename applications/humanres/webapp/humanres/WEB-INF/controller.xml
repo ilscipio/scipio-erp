@@ -215,17 +215,33 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewEmploymentApp"/>
     </request-map>
+    <!-- Cato: simple view and edit screens -->
+    <request-map uri="ViewEmploymentApp">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewEmploymentApp"/>
+    </request-map>
+    <request-map uri="EditEmploymentApp">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditEmploymentApp"/>
+    </request-map>
     <request-map uri="createEmploymentApp">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmploymentApp"/>
-        <response name="success" type="view" value="FindEmploymentApps"/>
-        <response name="error" type="view" value="NewEmploymentApp"/>
+        <response name="success" type="view" value="EditEmploymentApp"/>
+        <response name="error" type="view" value="EditEmploymentApp"/>
     </request-map>
     <request-map uri="updateEmploymentApp">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="updateEmploymentApp" global-transaction="false"/>
         <response name="success" type="request" value="FindEmploymentApps"/>
         <response name="error" type="view" value="FindEmploymentApps"/>
+    </request-map>
+    <!-- Cato: need single update version -->
+    <request-map uri="updateEmploymentAppSingle">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmploymentApp"/>
+        <response name="success" type="request" value="EditEmploymentApp"/>
+        <response name="error" type="view" value="EditEmploymentApp"/>
     </request-map>
     <request-map uri="deleteEmploymentApp">
         <security https="true" auth="true"/>
@@ -802,14 +818,21 @@ under the License.
     <request-map uri="createEmploymentAppExt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmploymentApp"/>
-        <response name="success" type="view" value="EditEmploymentApps"/>
-        <response name="error" type="view" value="EditEmploymentApps"/>
+        <response name="success" type="view" value="EditEmploymentApp"/><!-- Cato: go back to singular form:  value="EditEmploymentApps" -->
+        <response name="error" type="view" value="EditEmploymentApp"/>
     </request-map>
     <request-map uri="updateEmploymentAppExt">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="updateEmploymentApp"/>
         <response name="success" type="request" value="EditEmploymentApps"/>
         <response name="error" type="view" value="EditEmploymentApps"/>
+    </request-map>
+    <!-- Cato: single version -->
+    <request-map uri="updateEmploymentAppExtSingle">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmploymentApp"/>
+        <response name="success" type="request" value="EditEmploymentApp"/>
+        <response name="error" type="view" value="EditEmploymentApp"/>
     </request-map>
     <request-map uri="createEmplLeaveExt">
         <security https="true" auth="true"/>
@@ -1183,6 +1206,8 @@ under the License.
 
     <view-map name="FindEmploymentApps" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#FindEmploymentApps"/>
     <view-map name="NewEmploymentApp" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#NewEmploymentApp"/>
+    <view-map name="ViewEmploymentApp" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#ViewEmploymentApp"/>
+    <view-map name="EditEmploymentApp" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#EditEmploymentApp"/>
 
     <view-map name="FindPartyResumes" type="screen" page="component://humanres/widget/PartyResumeScreens.xml#FindPartyResumes"/>
     <view-map name="EditPartyResume" type="screen" page="component://humanres/widget/PartyResumeScreens.xml#EditPartyResume"/>

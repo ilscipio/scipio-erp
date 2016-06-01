@@ -141,6 +141,12 @@
                             <widgets>
                                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
+                                        <!-- CATO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
+                                        <container>
+                                            <link target="ViewEmploymentApp" text="${uiLabelMap.CommonView}" style="${styles.link_nav}">
+                                                <parameter param-name="applicationId" from-field="applicationId"/>
+                                            </link>
+                                        </container>
                                         <screenlet>
                                             <include-form name="EditEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
                                         </screenlet>
@@ -166,6 +172,12 @@
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <!-- CATO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
+                        <container>
+                            <link target="EditEmploymentApp" text="${uiLabelMap.CommonEdit}" style="${styles.link_nav}">
+                                <parameter param-name="applicationId" from-field="applicationId"/>
+                            </link>
+                        </container>
                         <screenlet>
                             <include-form name="ViewEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
                         </screenlet>

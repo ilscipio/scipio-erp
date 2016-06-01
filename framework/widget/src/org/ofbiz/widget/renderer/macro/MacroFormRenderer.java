@@ -373,6 +373,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isNotEmpty(textField.getMask())) {
             mask = textField.getMask();
         }
+        String tooltip = modelFormField.getTooltip(context); // CATO: new arg
+        if (UtilValidate.isEmpty(tooltip)) {
+            tooltip = "";
+        }
         String ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
         boolean disabled = textField.getDisabled();
         StringWriter sr = new StringWriter();
@@ -412,6 +416,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(mask);
         sr.append("\" placeholder=\"");
         sr.append(placeholder);
+        sr.append("\" tooltip=\""); // CATO: new arg
+        sr.append(tooltip);
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = textField.getSubHyperlink();

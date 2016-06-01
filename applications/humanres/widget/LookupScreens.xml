@@ -58,7 +58,7 @@
 
                 <!-- CATO: added -->
                 <set field="entityName" value="BudgetItem"/>
-                <set field="searchFields" value="[budgetId, budgetItemSeqId]"/>
+                <set field="searchFields" value="[budgetItemSeqId, budgetId]"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
@@ -186,7 +186,7 @@
 
                 <!-- CATO: added -->
                 <set field="entityName" value="PayRollPreference"/>
-                <set field="searchFields" value="[partyId, roleTypeId, payrollPreferenceSeqId]"/>
+                <set field="searchFields" value="[payrollPreferenceSeqId, roleTypeId, partyId]"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
@@ -260,7 +260,7 @@
 
                 <!-- CATO: added -->
                 <set field="entityName" value="AgreementEmploymentAppl"/>
-                <set field="searchFields" value="[agreementId, agreementItemSeqId]"/>
+                <set field="searchFields" value="[agreementItemSeqId, agreementId]"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
@@ -286,7 +286,7 @@
 
                 <!-- CATO: added -->
                 <set field="entityName" value="PerfReview"/>
-                <set field="searchFields" value="[employeePartyId, employeeRoleTypeId, perfReviewId]"/>
+                <set field="searchFields" value="[perfReviewId, employeeRoleTypeId, employeePartyId]"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
@@ -362,7 +362,7 @@
                 
                 <!-- CATO: added -->
                 <set field="entityName" value="JobRequisition"/>
-                <set field="searchFields" value="[emplPositionId, jobRequisitionId]"/>
+                <set field="searchFields" value="[jobRequisitionId, emplPositionId]"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">

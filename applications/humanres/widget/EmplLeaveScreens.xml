@@ -130,9 +130,22 @@
                  <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
-                            <include-form name="EditEmplLeave" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
-                        </screenlet>
+                        <section>
+                            <condition>
+                                <if-empty field="leaveApp" />
+                            
+                            </condition>
+                            <widgets>
+                                <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
+                                    <include-form name="EditEmplLeave" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet id="AddEmplLeavePanel" collapsible="true">
+                                    <include-form name="EditEmplLeave" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

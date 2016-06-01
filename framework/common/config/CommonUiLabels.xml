@@ -16219,4 +16219,9 @@
         <value xml:lang="en">Specifications</value>
         <value xml:lang="fr">Spécifications</value>
     </property>
+    <property key="CommonLeaveEmptyAutoValue">
+        <value xml:lang="de">Leer lassen, um einen Wert automatisch zu generieren</value>
+        <value xml:lang="en">Leave empty to auto-generate a value</value>
+        <value xml:lang="fr">Laisser vide pour générer automatiquement une valeur</value>
+    </property>
 </resource>

@@ -270,8 +270,11 @@ under the License.
         <menu-item name="entityPerformanceTest" title="${uiLabelMap.WebtoolsPerformanceTests}">
             <link target="EntityPerformanceTest"/>
         </menu-item>
-        <menu-item name="EntityUtilityServices" title="${uiLabelMap.WebtoolsUtilityAndDataGen}">
+        <menu-item name="EntityUtilityServices" title="Cato ${uiLabelMap.WebtoolsUtilityServices}">
             <link target="EntityUtilityServices"/>
+        </menu-item>
+        <menu-item name="ListDemoDataGeneratorServices" title="Cato ${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">
+            <link target="ListDemoDataGeneratorServices"/>
         </menu-item>
     </menu>
     <menu name="EntitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

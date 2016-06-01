@@ -25,10 +25,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
-                <!-- 
-                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>
+                <!-- not there
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>  
                 -->
-                <set field="activeSubMenuItem" value="EntityUtilityServices" />              
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>        
                 <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorList.groovy"/>
             </actions>
             <widgets>
@@ -47,11 +47,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
-                <!-- 
-                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>
+                <!-- not there
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>  
                 -->
-                <set field="activeSubMenuItem" value="EntityUtilityServices" />              
-                <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>                  <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonDemoDataGeneratorDecorator" location="${parameters.mainDecoratorLocation}">
@@ -70,11 +69,11 @@ under the License.
 	<screen name="DemoDataGeneratorResult">
 		<section>
 			<actions>
-			     <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
-                <!-- 
-                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>
+			    <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
+                <!-- not there
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>  
                 -->
-                <set field="activeSubMenuItem" value="EntityUtilityServices" />			     <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorResult.groovy"/>	 
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>                  <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorResult.groovy"/>	 
 			</actions>
 			<widgets>
 			     <decorator-screen name="CommonDemoDataGeneratorDecorator" location="${parameters.mainDecoratorLocation}">
@@ -96,11 +95,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
-                <!-- 
-                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>
+                <!-- not there
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorProviders"/>  
                 -->
-                <set field="activeSubMenuItem" value="EntityUtilityServices" />
-                <!-- <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorList.groovy"/> -->
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>                  <!-- <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorList.groovy"/> -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonDemoDataGeneratorDecorator" location="${parameters.mainDecoratorLocation}">

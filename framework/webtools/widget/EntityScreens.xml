@@ -487,7 +487,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WebtoolsEntityUtilityServices"/>
                 <set field="activeSubMenuItem" value="EntityUtilityServices"/>                
-                <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorList.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEntityDecorator" location="${parameters.mainDecoratorLocation}">
@@ -495,9 +494,18 @@ under the License.
                         <platform-specific>
                             <html><html-template location="component://webtools/webapp/webtools/entity/EntityUtilityServices.ftl"/></html>
                         </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://webtools/webapp/webtools/demoDataGenerator/DemoDataGeneratorList.ftl"/></html>
-                        </platform-specific>
+                        <!--
+                        <section>
+                            <actions>
+                                <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorList.groovy"/>
+                            </actions>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://webtools/webapp/webtools/demoDataGenerator/DemoDataGeneratorList.ftl"/></html>
+                                </platform-specific>                            
+                            </widgets>
+                        </section>
+                        -->
                     </decorator-section>
                 </decorator-screen>
             </widgets>

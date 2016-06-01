@@ -5936,6 +5936,10 @@
         <value xml:lang="de">Entity Utility Services</value>  
         <value xml:lang="en">Entity Utility Services</value>                
     </property>
+    <property key="WebtoolsUtilityServices">
+        <value xml:lang="de">Utility Services</value>  
+        <value xml:lang="en">Utility Services</value>                
+    </property>
     <!-- Cato: TODO: Localize -->
     <property key="WebtoolsUtilityAndDataGen">
         <value xml:lang="de">Dienstprogramm und Datengenerierung </value>  

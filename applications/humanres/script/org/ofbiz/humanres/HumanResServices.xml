@@ -239,9 +239,11 @@
         
         <create-value value-field="emplAppValue"/>
         <check-errors />
+        <field-to-result field="emplAppValue.applicationId" result-name="applicationId"/>
     </simple-method>
     
     <simple-method method-name="updateEmploymentApp" short-description="Cato: Update Employment App">
+        <field-to-result field="parameters.applicationId" result-name="applicationId"/>
         <call-simple-method method-name="validateEmploymentAppParams" />
         <check-errors />
         

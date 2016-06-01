@@ -203,7 +203,7 @@ under the License.
         location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmploymentApp" auth="true">
         <description>Update an Employment Application</description>
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="INOUT" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 

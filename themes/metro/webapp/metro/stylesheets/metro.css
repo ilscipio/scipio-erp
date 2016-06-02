@@ -1,4 +1,4 @@
-/* CATO METRO Theme */
+/* SCIPIO METRO Theme */
 @import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
 /* line 431, ../../../../base/webapp/base/bower_components/foundation/scss/foundation/components/_global.scss */
 meta.foundation-version {
@@ -10993,7 +10993,7 @@ Sidebar Menu
 /********************
 *   IMPLEMENTATION  *
 *********************/
-/* Cato: duplicated from "side-nav" mixin and modified */
+/* Scipio: duplicated from "side-nav" mixin and modified */
 /* line 149, ../scss/_sidebar.scss */
 .inner-wrap {
   background-color: #2f323a;

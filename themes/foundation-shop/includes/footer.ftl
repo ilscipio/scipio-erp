@@ -30,7 +30,7 @@ under the License.
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit impedit consequuntur at! Amet sed itaque nostrum, distinctio eveniet odio, id ipsam fuga quam minima cumque nobis veniam voluptates deserunt!</p>
     </@cell>
     <@cell columns=3>
-      <@heading>CATO Webstore</@heading>
+      <@heading>SCIPIO Webstore</@heading>
       <ul class="other-links">
         <#-- language select --> 
           <li>
@@ -40,7 +40,7 @@ under the License.
           </li>
         <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
         <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
-        <li><a href="http://www.cato-commerce.com/products/faq">FAQ's</a></li>
+        <li><a href="http://www.scipio-commerce.com/products/faq">FAQ's</a></li>
       </ul>
     </@cell>
     <@cell columns=3>      
@@ -69,7 +69,7 @@ under the License.
     <@row>
         <@cell columns=12>
          <small>
-         ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+         ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
          View <a href="<@ofbizUrl>license</@ofbizUrl>">LICENSE</a>.
          <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />
          </small>
@@ -78,7 +78,7 @@ under the License.
 </footer> <#-- END FOOTER -->
 
   <@scripts output=true> <#-- ensure @script elems here will always output -->
-    <#-- New in cato; priority footer javascripts (before screen footer javascripts) -->
+    <#-- New in scipio; priority footer javascripts (before screen footer javascripts) -->
     <#if layoutSettings.VT_FTPR_JAVASCRIPT?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->
@@ -91,7 +91,7 @@ under the License.
         </#list>
     </#if>
 
-    <#-- New in cato; for app scripts that aren't (exclusively) styling but must go at end of page -->
+    <#-- New in scipio; for app scripts that aren't (exclusively) styling but must go at end of page -->
     <#if layoutSettings.javaScriptsFooter?has_content>
         <#assign javaScriptsSet = toSet(layoutSettings.javaScriptsFooter)/>
         <#list layoutSettings.javaScriptsFooter as javaScript>
@@ -115,7 +115,7 @@ under the License.
         </#list>
     </#if>
 
-    <#-- New in cato; always-bottom guaranteed-last javascripts -->
+    <#-- New in scipio; always-bottom guaranteed-last javascripts -->
     <#if layoutSettings.VT_BTM_JAVASCRIPT?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->

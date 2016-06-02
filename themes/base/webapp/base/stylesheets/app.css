@@ -10408,7 +10408,7 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
 }
 
 /* NAVIGATION */
-/* Cato: duplicated from "side-nav" mixin and modified */
+/* Scipio: duplicated from "side-nav" mixin and modified */
 /* line 68, ../scss/shared/_sidebar.scss */
 .side-nav {
   margin-top: 0px;

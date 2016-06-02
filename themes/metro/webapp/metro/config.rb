@@ -1,5 +1,5 @@
 # Require any additional compass plugins here.
-# CATO: Load styles from our base theme
+# SCIPIO: Load styles from our base theme
 add_import_path "../../../base/webapp/base/bower_components/foundation/scss"
 add_import_path "../../../base/webapp/base/bower_components/pizza/scss"
 add_import_path "../../../base/webapp/base/bower_components/sass-to-js/sass"

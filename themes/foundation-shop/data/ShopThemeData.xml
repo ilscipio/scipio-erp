@@ -18,8 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-    CATO: 
-    The following is a basic theme for the CATO Shop component. 
+    SCIPIO: 
+    The following is a basic theme for the SCIPIO Shop component. 
     It is not available for the backoffice and only adds minor new styles to the layout.
 -->    
 <entity-engine-xml>

@@ -55,7 +55,7 @@ $sidebar-width: 200px;
 *   IMPLEMENTATION  *
 *********************/
 
-/* Cato: duplicated from "side-nav" mixin and modified */
+/* Scipio: duplicated from "side-nav" mixin and modified */
 @mixin side-nav-nested(
   $divider-color:$side-nav-divider-color,
   $font-size:$side-nav-font-size,
@@ -80,7 +80,7 @@ $sidebar-width: 200px;
     margin: $side-nav-list-margin;
     list-style: none;
 
-    // Cato: added child selector here
+    // Scipio: added child selector here
     > a:not(.button) {
       color: $link-color;
       display: block;

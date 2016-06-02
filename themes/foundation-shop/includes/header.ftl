@@ -96,7 +96,7 @@ under the License.
             <#else><#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(headerImageUrl)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
         </#if>
         <#else>
-        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/cato/<#if isSmall>cato-logo-small.png<#else>cato-logo.svg</#if></@ofbizContentUrl>"/></a>
+        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@ofbizContentUrl>"/></a>
     </#if>
 </#macro>
 
@@ -203,7 +203,7 @@ under the License.
 </div>
 
 <#macro rightMenu>
-      <#-- Cato: NOTE: We must display something for the anonymous user that has a partyId
+      <#-- Scipio: NOTE: We must display something for the anonymous user that has a partyId
           attached (created during anon checkout), because otherwise he has no way to clear his session.
           His temporary partyId is now (and must be) kept after checkout is done, for technical reasons,
           but also it's very convenient. 

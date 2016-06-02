@@ -39,7 +39,7 @@ function collapseFieldset(){
 
 $(function(){
 	$(document).foundation();
-	catoObjectFit();
+	scipioObjectFit();
 	collapseFieldset();
 	$('.ui-autocomplete').addClass('f-dropdown');
 	
@@ -68,17 +68,17 @@ jQuery(document).ready(function() {
 */
 
 /**
- * Cato upload progress handler. Instance represents one upload form.
+ * Scipio upload progress handler. Instance represents one upload form.
  */
-function CatoUploadProgress(options) {
+function ScipioUploadProgress(options) {
 	if (!options) {
 		options = {};
 	}
 	
 	this.uploading = false; // can check this from caller as well
 	
-	CatoUploadProgress.instCount = CatoUploadProgress.instCount + 1;
-	this.instNum = CatoUploadProgress.instCount;
+	ScipioUploadProgress.instCount = ScipioUploadProgress.instCount + 1;
+	this.instNum = ScipioUploadProgress.instCount;
 	this.uploadCount = 0;
     
 	// All options that end in -Id specify a unique html/css ID.
@@ -124,13 +124,13 @@ function CatoUploadProgress(options) {
     }
     
     if (!this.msgContainerId) {
-    	this.msgContainerId = "cato_progupl_content_messages_" + this.instNum;
+    	this.msgContainerId = "scipio_progupl_content_messages_" + this.instNum;
     }
     if (!this.msgContainerInsertMode) {
     	this.msgContainerInsertMode = "prepend";
     }
     
-    this.iframeBaseId = "cato_progupl_target_upload_" + this.instNum;
+    this.iframeBaseId = "scipio_progupl_target_upload_" + this.instNum;
     if (typeof this.errorResultAddWrapper !== 'boolean') {
     	this.errorResultAddWrapper = false;
     }
@@ -186,9 +186,9 @@ function CatoUploadProgress(options) {
     /* Private functions */
     
     this.delayedInit = function() {
-    	CatoUploadProgress.loadUiLabels();
+    	ScipioUploadProgress.loadUiLabels();
     	if (this.uiLabelMap == null) {
-    		this.uiLabelMap = CatoUploadProgress.uiLabelMap;
+    		this.uiLabelMap = ScipioUploadProgress.uiLabelMap;
     	}
     };
     
@@ -206,7 +206,7 @@ function CatoUploadProgress(options) {
 	};
 	
 	this.setProgressState = function(classStr) {
-		var stateStyles = [catoStyles.progress_state_info, catoStyles.progress_state_success, catoStyles.progress_state_alert].join(" ");
+		var stateStyles = [scipioStyles.progress_state_info, scipioStyles.progress_state_success, scipioStyles.progress_state_alert].join(" ");
 		if (this.progBarId) {
 			jQuery("#"+this.progBarId).removeClass(stateStyles).addClass(classStr);
 		}
@@ -223,7 +223,7 @@ function CatoUploadProgress(options) {
 	
 	this.resetProgress = function() {
 		this.setProgressValue(0);
-		this.setProgressState(catoStyles.color_info)
+		this.setProgressState(scipioStyles.color_info)
 	};
 	
 	this.showError = function(errdata, errorWrapper) {
@@ -232,25 +232,25 @@ function CatoUploadProgress(options) {
 		}
 		if (this.msgContainerId) {
 			if (errorWrapper) {
-				jQuery("#"+this.msgContainerId).html('<div data-alert class="' + catoStyles.alert_wrap + ' ' + catoStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
+				jQuery("#"+this.msgContainerId).html('<div data-alert class="' + scipioStyles.alert_wrap + ' ' + scipioStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
 			}
 			else {
 				jQuery("#"+this.msgContainerId).html(errdata);
 			}
 		}
-		this.setProgressState(catoStyles.color_alert);
+		this.setProgressState(scipioStyles.color_alert);
 		this.setProgressText(this.uiLabelMap.CommonError);
 	};
 	
 	this.resetInitContainers = function(uploadInfo) {
 		this.resetProgress();
 		if (this.progBarId) {
-			jQuery("#"+this.progBarId).removeClass(catoStyles.hidden);
+			jQuery("#"+this.progBarId).removeClass(scipioStyles.hidden);
 		}
 	    
 	    var infodiv = jQuery("#"+this.msgContainerId);
 	    if(infodiv.length < 1){
-	        var infodivbox = jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>');
+	        var infodivbox = jQuery('<div class="' + scipioStyles.grid_row + '"><div class="' + scipioStyles.grid_large + '12 ' + scipioStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>');
 	        
 	        var infodivparent = null;
 	        if (this.msgContainerParentSel) {
@@ -269,7 +269,7 @@ function CatoUploadProgress(options) {
 	    }
 	    jQuery("#"+this.msgContainerId).empty();
 	    
-	    // Cato: we always create a new iframe for safety, but leaving guard code in case change
+	    // Scipio: we always create a new iframe for safety, but leaving guard code in case change
 	    var targetFrame = jQuery("#"+uploadInfo.iframeId);
 	    if (targetFrame.length < 1) {
 	    	var iframeParent;
@@ -327,7 +327,7 @@ function CatoUploadProgress(options) {
 	    
 	    if (!error) {
 		    this.setProgressValue(100);
-		    this.setProgressState(catoStyles.color_success);
+		    this.setProgressState(scipioStyles.color_success);
 		    this.setProgressText(this.uiLabelMap.CommonCompleted);
 	    }
 	    
@@ -468,14 +468,14 @@ function CatoUploadProgress(options) {
 	};
 }
 
-CatoUploadProgress.instCount = 0;
-CatoUploadProgress.uiLabelMap = null;
-CatoUploadProgress.loadUiLabels = function() {
-	if (CatoUploadProgress.uiLabelMap == null) {
+ScipioUploadProgress.instCount = 0;
+ScipioUploadProgress.uiLabelMap = null;
+ScipioUploadProgress.loadUiLabels = function() {
+	if (ScipioUploadProgress.uiLabelMap == null) {
 	    var labelObject = {
 	            "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError", "CommonUnexpectedError"]
 	          };
-	    CatoUploadProgress.uiLabelMap = getJSONuiLabelMap(labelObject);
+	    ScipioUploadProgress.uiLabelMap = getJSONuiLabelMap(labelObject);
 	}	
 };
 
@@ -485,16 +485,16 @@ CatoUploadProgress.loadUiLabels = function() {
  * https://medium.com/@primozcigler/neat-trick-for-css-object-fit-fallback-on-edge-and-other-browsers-afbc53bbb2c3#.cwwk7mtx0
  * 
  * */
-function catoObjectFit(){
+function scipioObjectFit(){
 	Modernizr.addTest('objectfit',
 			!!Modernizr.prefixed('objectFit')
 		);
 	if ( !Modernizr.objectfit ) {
-		  $('.cato-image-container').each(function () {
+		  $('.scipio-image-container').each(function () {
 		    var $container = $(this),
 		        imgUrl = $container.find('img').prop('src');
 		    if (imgUrl) {
-		    	var type= $container.attr('catoFit');
+		    	var type= $container.attr('scipioFit');
 			    $container
 			    	.css('backgroundImage', 'url(' + imgUrl + ')')
 			    	.css('background-size',type)

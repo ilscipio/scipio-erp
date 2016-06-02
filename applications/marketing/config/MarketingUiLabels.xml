@@ -251,7 +251,7 @@
     <property key="MarketingAnalytics">
         <value xml:lang="en">Marketing Analytics</value>
     </property>
-    <!-- CATO: Commented out for now -->
+    <!-- SCIPIO ERP: Commented out for now -->
 <!--     <property key="MarketingAnalyticsForecast">
         <value xml:lang="en">Forecast Analytics</value>
     </property>
@@ -387,38 +387,38 @@
         <value xml:lang="zh_TW">活動摘要</value>
     </property>
     <property key="MarketingCompanyName">
-        <value xml:lang="de">CATO - Vermarktungsmanager</value>
-        <value xml:lang="en">CATO - Marketing Manager</value>
-        <value xml:lang="es">CATO - Gestión de Marketing</value>
-        <value xml:lang="fr">CATO - Gestion du Marketing</value>
-        <value xml:lang="it">CATO - Gestione vendite</value>
-        <value xml:lang="ja">CATO - マーケティング管理</value>
-        <value xml:lang="nl">CATO - Marketing Manager</value>
-        <value xml:lang="pt_BR">CATO - Gerente de Marketing</value>
-        <value xml:lang="ro">CATO - Gestione Vendite</value>
-        <value xml:lang="th">CATO - การจัดการทางการตลาด</value>
-        <value xml:lang="vi">CATO - Quản trị Tiếp thị</value>
-        <value xml:lang="zh">CATO - 市场宣传管理</value>
-        <value xml:lang="zh_TW">CATO - 行銷管理</value>
+        <value xml:lang="de">SCIPIO ERP - Vermarktungsmanager</value>
+        <value xml:lang="en">SCIPIO ERP - Marketing Manager</value>
+        <value xml:lang="es">SCIPIO ERP - Gestión de Marketing</value>
+        <value xml:lang="fr">SCIPIO ERP - Gestion du Marketing</value>
+        <value xml:lang="it">SCIPIO ERP - Gestione vendite</value>
+        <value xml:lang="ja">SCIPIO ERP - マーケティング管理</value>
+        <value xml:lang="nl">SCIPIO ERP - Marketing Manager</value>
+        <value xml:lang="pt_BR">SCIPIO ERP - Gerente de Marketing</value>
+        <value xml:lang="ro">SCIPIO ERP - Gestione Vendite</value>
+        <value xml:lang="th">SCIPIO ERP - การจัดการทางการตลาด</value>
+        <value xml:lang="vi">SCIPIO ERP - Quản trị Tiếp thị</value>
+        <value xml:lang="zh">SCIPIO ERP - 市场宣传管理</value>
+        <value xml:lang="zh_TW">SCIPIO ERP - 行銷管理</value>
     </property>
     <property key="MarketingCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
-        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família CATO - de software de código livre</value>
-        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família SCIPIO ERP - de software de código livre</value>
+        <value xml:lang="pt_PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-        <value xml:lang="ru">Входит в состав семейства CATO</value>
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở CATO -</value>
-        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
-        <value xml:lang="zh_CN">CATO -的一部分</value>
-        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
+        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở SCIPIO ERP -</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP -家族的一部分</value>
+        <value xml:lang="zh_CN">SCIPIO ERP -的一部分</value>
+        <value xml:lang="zh_TW">開源軟體SCIPIO ERP -家族的一部分</value>
     </property>
     <property key="MarketingContactList">
         <value xml:lang="de">Kontaktliste</value>
@@ -2931,16 +2931,16 @@
         <value xml:lang="zh_TW">關閉日期</value>
     </property>
     <property key="SfaCompanyName">
-        <value xml:lang="de">CATO - CRM</value>
-        <value xml:lang="en">CATO - CRM</value>
+        <value xml:lang="de">SCIPIO ERP - CRM</value>
+        <value xml:lang="en">SCIPIO ERP - CRM</value>
         <value xml:lang="es">Gestor de fuerzas de ventas</value>
-        <value xml:lang="fr">CATO - gestion des ventes</value>
-        <value xml:lang="it">CATO - Gestione forze di vendita</value>
-        <value xml:lang="ja">CATO - 営業支援(SFA)管理</value>
-        <value xml:lang="pt_BR">CATO - gestor da equipe de vendas</value>
-        <value xml:lang="vi">CATO - Quản trị Chiến dịch tiếp thị</value>
-        <value xml:lang="zh">CATO - 销售管理程序</value>
-        <value xml:lang="zh_TW">CATO - 營業支援(SFA)管理</value>
+        <value xml:lang="fr">SCIPIO ERP - gestion des ventes</value>
+        <value xml:lang="it">SCIPIO ERP - Gestione forze di vendita</value>
+        <value xml:lang="ja">SCIPIO ERP - 営業支援(SFA)管理</value>
+        <value xml:lang="pt_BR">SCIPIO ERP - gestor da equipe de vendas</value>
+        <value xml:lang="vi">SCIPIO ERP - Quản trị Chiến dịch tiếp thị</value>
+        <value xml:lang="zh">SCIPIO ERP - 销售管理程序</value>
+        <value xml:lang="zh_TW">SCIPIO ERP - 營業支援(SFA)管理</value>
     </property>
     <property key="SfaCompetitors">
         <value xml:lang="de">Wettbewerber &amp; Partner </value>

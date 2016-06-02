@@ -1133,26 +1133,26 @@
         <value xml:lang="zh_TW">預算專案識別</value>
     </property>
     <property key="HumanResCompanyName">
-        <value xml:lang="en">CATO - Human Resources Manager</value>
-        <value xml:lang="fr">CATO - : gestion de ressources humaines</value>
-        <value xml:lang="it">CATO - Gestione Risorse Umane</value>
-        <value xml:lang="ja">CATO - 人事管理</value>
-        <value xml:lang="pt_BR">CATO - Gestão de recursos humanos</value>
-        <value xml:lang="th">CATO - การจัดการบุคคล</value>
-        <value xml:lang="vi">CATO - Ứng dụng quản trị Nhân sự</value>
-        <value xml:lang="zh">CATO - 人力资源管理</value>
-        <value xml:lang="zh_TW">CATO - 人力資源管理</value>
+        <value xml:lang="en">SCIPIO ERP - Human Resources Manager</value>
+        <value xml:lang="fr">SCIPIO ERP - : gestion de ressources humaines</value>
+        <value xml:lang="it">SCIPIO ERP - Gestione Risorse Umane</value>
+        <value xml:lang="ja">SCIPIO ERP - 人事管理</value>
+        <value xml:lang="pt_BR">SCIPIO ERP - Gestão de recursos humanos</value>
+        <value xml:lang="th">SCIPIO ERP - การจัดการบุคคล</value>
+        <value xml:lang="vi">SCIPIO ERP - Ứng dụng quản trị Nhân sự</value>
+        <value xml:lang="zh">SCIPIO ERP - 人力资源管理</value>
+        <value xml:lang="zh_TW">SCIPIO ERP - 人力資源管理</value>
     </property>
     <property key="HumanResCompanySubtitle">
-        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
         <value xml:lang="fr">Partie de l'ouverture pour la famille d'affaires du logiciel libre</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
-        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da Família CATO de Software livre</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da Família SCIPIO ERP de Software livre</value>
         <value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành viên của gia đình mã nguồn mở CATO -</value>
-        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
-        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
+        <value xml:lang="vi">Thành viên của gia đình mã nguồn mở SCIPIO ERP -</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP -家族的一部分</value>
+        <value xml:lang="zh_TW">開源軟體SCIPIO ERP -家族的一部分</value>
     </property>
     <property key="HumanResCurrentEmploymentData">
         <value xml:lang="en">Current Employment information</value>
@@ -3383,7 +3383,7 @@
         <value xml:lang="zh">查看个人培训</value>
         <value xml:lang="zh_TW">檢視個人教育訓練</value>
     </property>
-    <!-- CATO: TODO: Localize -->
+    <!-- SCIPIO ERP: TODO: Localize -->
     <property key="HumanResResourcePlanning">
         <value xml:lang="en">Resource Planning</value>
         <value xml:lang="de">Ressourcenplanung</value>

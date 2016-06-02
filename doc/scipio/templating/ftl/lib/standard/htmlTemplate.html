@@ -7,7 +7,7 @@
 
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Master HTML template include, standard Cato markup</title>
+      <title>Master HTML template include, standard Scipio markup</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -60,16 +60,16 @@ pre {
 
   
     <div>
-        <h1 class="lib-pagetitle">Master HTML template include, standard Cato markup</h1>
+        <h1 class="lib-pagetitle">Master HTML template include, standard Scipio markup</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlTemplate.ftl</span></em></p>
 
         <div class="lib-pagedesc">
         <p>
-A set of HTML templating macros, part of standard Cato Freemarker API - master include.
+A set of HTML templating macros, part of standard Scipio Freemarker API - master include.
 Automatically included at all times, unless overridden by properties or themes.
 Intended to be swappable.
-Includes all other default Cato standard markup macros.        </p>
+Includes all other default Scipio standard markup macros.        </p>
         <p>
 Alongside this master include exists a global variables and styles definition file,
 <code>htmlVariables.groovy</code>, which defines global styles used by most macros and utilities
@@ -94,7 +94,7 @@ Macros should almost never use &quot;request&quot; object directly - use setRequ
           </div>
         <h4>Macro Interfaces</h4>
         <p>
-Cato standard macros have versatile interfaces. There are template-facing macros (most of which support
+Scipio standard macros have versatile interfaces. There are template-facing macros (most of which support
 an advanced arguments interface) and a separate set of delegated macros for theme implementation (markup macros).        </p>
         <p>
 <strong>General remarks:</strong>
@@ -106,7 +106,7 @@ All macros expect to be invoked using named parameters only (always <code>&lt;@r
       </li>
       <li>
         <span>
-Functions in Freemarker only support positional arguments, but some Cato functions support
+Functions in Freemarker only support positional arguments, but some Scipio functions support
 an &quot;args&quot; argument as a map, which emulates named arguments. This is also done
 as part of the advanced args interface (documented below).        </span>
       </li>
@@ -325,7 +325,7 @@ Code this file is responsible for defining. Intended for use in production templ
       <div>
         <hr />
         <small>
-          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
         </small>
       </div>
     </footer>

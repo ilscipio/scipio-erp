@@ -66,12 +66,12 @@ pre {
 
         <div class="lib-pagedesc">
         <p>
-The CATO framework comes with a set of standard content elements. The elements are largely based on standard
+The SCIPIO framework comes with a set of standard content elements. The elements are largely based on standard
 html elements so the transition should be straight forward. Since all macros also standardize the html patterns,
-it is recommended to rely on the CATO tag alternatives for all html. All macros start with &quot;&lt;@&quot;, so tags can
+it is recommended to rely on the SCIPIO tag alternatives for all html. All macros start with &quot;&lt;@&quot;, so tags can
 be converted by adding an @ in front of them.        </p>
         <p>
-The CATO content elements add new options that can be added as attributes. For example, whereas &lt;<a href="#entry-table">@table</a>&gt; will create a
+The SCIPIO content elements add new options that can be added as attributes. For example, whereas &lt;<a href="#entry-table">@table</a>&gt; will create a
 default table, &lt;@table responsive=true&gt; will generate the very same with added resizing for smaller devices.
 The available options and their respective use are outlined by this document.        </p>
         <p>
@@ -85,7 +85,7 @@ Included by htmlTemplate.ftl.        </p>
   <ul>
       <li>
         <span>
-May have implicit dependencies on other parts of Cato API.        </span>
+May have implicit dependencies on other parts of Scipio API.        </span>
       </li>
   </ul>
           </div>
@@ -744,7 +744,7 @@ similar to defining an html &lt;table&gt; manually, but more powerful.        </
         </span>
         <h4>DEFAULT STYLES TYPES</h4>
         <span>
-The following are recognized by Cato standard markup:
+The following are recognized by Scipio standard markup:
         </span>
         <div>  <ul>
       <li>
@@ -1276,7 +1276,7 @@ Responsive tables may break when no header is present (may require a &lt;thead&g
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 In complete absence of global styles, default is &quot;generic&quot;.
-In default cato styles, default is &quot;generic&quot; for &quot;generic&quot; tables, and &quot;content&quot; for all other table types.
+In default scipio styles, default is &quot;generic&quot; for &quot;generic&quot; tables, and &quot;content&quot; for all other table types.
 Standard types:
         </span>
         <div>  <ul>
@@ -2488,7 +2488,7 @@ If boolean, false prevents any; true will allow global styles hash lookup.      
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Image tag - eases the positioning/styling of images with inline styles. Uses <a href="https://www.w3.org/TR/css3-images/#the-object-fit">https://www.w3.org/TR/css3-images/#the-object-fit</a> .
-Relies on custom catoObjectFit Javascript function as a fallback for IE.</p>
+Relies on custom scipioObjectFit Javascript function as a fallback for IE.</p>
                   </div>
             
               
@@ -2509,7 +2509,13 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.</p>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> image location</span>
+                            <span class="lib-entry-param-desc-shortdesc">image location</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+At current time, do not pass unsanitized input for this parameter; escaping not implemented
+If you must use user input in src, do not use this macro for time being (expect escaping to be applied later).          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2640,7 +2646,7 @@ If boolean, false prevents any; true will allow global styles hash lookup.      
       <div>
         <hr />
         <small>
-          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
         </small>
       </div>
     </footer>

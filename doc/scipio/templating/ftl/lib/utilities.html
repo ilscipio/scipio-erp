@@ -68,7 +68,7 @@ pre {
         <p>
 A set of standalone utility functions and macros, largely devoid of markup and
 independent from templating macros and styles and with minimal dependencies,
-part of standard Cato Freemarker API.
+part of standard Scipio Freemarker API.
 Generally CSS-framework-agnostic.
 Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
 Automatically included at all times, for all themes, independently of theme markup override files.        </p>
@@ -81,13 +81,13 @@ Macros expect to be called using named arguments, except where otherwise noted. 
       </li>
       <li>
         <span>
-Functions in Freemarker only support positional arguments, but some Cato functions support
+Functions in Freemarker only support positional arguments, but some Scipio functions support
 an &quot;args&quot; argument as a map, which emulates named arguments.        </span>
       </li>
       <li>
         <span>
 Default markup-producing macros are found in <a href="standard/htmlTemplate.html">standard/htmlTemplate.ftl</a>.
-Utilities found in utilities.ftl should not contain their logic in general.        </span>
+In general, utilities found in utilities.ftl should not contain their logic.        </span>
       </li>
       <li>
         <span>
@@ -211,13 +211,13 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getAbsContainerSizeFactors">getAbsContainerSizeFactors</a>, 
                   <a href="#entry-getAllContainerSizes">getAllContainerSizes</a>, 
                   <a href="#entry-getAttribMapAllExcludes">getAttribMapAllExcludes</a>, 
-                  <a href="#entry-getCatoMacroDefaultArgs">getCatoMacroDefaultArgs</a>, 
                   <a href="#entry-getClassArgPrefix">getClassArgPrefix</a>, 
                   <a href="#entry-getHeadingElemSpecFromStyleStr">getHeadingElemSpecFromStyleStr</a>, 
                   <a href="#entry-getLastContainerSizes">getLastContainerSizes</a>, 
                   <a href="#entry-getPlainClassArgNames">getPlainClassArgNames</a>, 
                   <a href="#entry-getRequestStackAsList">getRequestStackAsList</a>, 
                   <a href="#entry-getRequestVar">getRequestVar</a>, 
+                  <a href="#entry-getScipioMacroDefaultArgs">getScipioMacroDefaultArgs</a>, 
                   <a href="#entry-globalsPutAll">globalsPutAll</a>, 
                   <a href="#entry-localsPutAll">localsPutAll</a>, 
                   <a href="#entry-makeAttribMapFromArgMap">makeAttribMapFromArgMap</a>, 
@@ -245,7 +245,7 @@ completely static) so that any macro or function here can easily be interchanged
 </li>
             <li><a href="#section-CONTEXT AND SYSTEM UTILITIES">CONTEXT AND SYSTEM UTILITIES                </a>
                 <p>
-                  <a href="#entry-getDefaultCatoLibLocation">getDefaultCatoLibLocation</a>, 
+                  <a href="#entry-getDefaultScipioLibLocation">getDefaultScipioLibLocation</a>, 
                   <a href="#entry-getMacroLibraryLocationStaticFromResources">getMacroLibraryLocationStaticFromResources</a>, 
                   <a href="#entry-getRenderContextType">getRenderContextType</a>, 
                   <a href="#entry-getRenderPlatformType">getRenderPlatformType</a>
@@ -303,12 +303,11 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-getAbsContainerSizeFactors">getAbsContainerSizeFactors</a>, 
         <a href="#entry-getAllContainerSizes">getAllContainerSizes</a>, 
         <a href="#entry-getAttribMapAllExcludes">getAttribMapAllExcludes</a>, 
-        <a href="#entry-getCatoMacroDefaultArgs">getCatoMacroDefaultArgs</a>, 
         <a href="#entry-getClassArgPrefix">getClassArgPrefix</a>, 
         <a href="#entry-getCurrentHeadingLevel">getCurrentHeadingLevel</a>, 
         <a href="#entry-getCurrentSectionLevel">getCurrentSectionLevel</a>, 
-        <a href="#entry-getDefaultCatoLibLocation">getDefaultCatoLibLocation</a>, 
         <a href="#entry-getDefaultHeadingLevel">getDefaultHeadingLevel</a>, 
+        <a href="#entry-getDefaultScipioLibLocation">getDefaultScipioLibLocation</a>, 
         <a href="#entry-getDefaultSectionLevel">getDefaultSectionLevel</a>, 
         <a href="#entry-getHeadingElemSpecFromStyleStr">getHeadingElemSpecFromStyleStr</a>, 
         <a href="#entry-getLabel">getLabel</a>, 
@@ -322,6 +321,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-getRenderPlatformType">getRenderPlatformType</a>, 
         <a href="#entry-getRequestStackAsList">getRequestStackAsList</a>, 
         <a href="#entry-getRequestVar">getRequestVar</a>, 
+        <a href="#entry-getScipioMacroDefaultArgs">getScipioMacroDefaultArgs</a>, 
         <a href="#entry-getStyleNamesByPrefix">getStyleNamesByPrefix</a>, 
         <a href="#entry-getTextLabelFromExpr">getTextLabelFromExpr</a>, 
         <a href="#entry-globalsPutAll">globalsPutAll</a>, 
@@ -450,7 +450,7 @@ Screens are rendered using Ofbiz&#39;s <code>screens.render</code> utility funct
                             <code>resource</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
                             <span class="lib-entry-param-desc-shortdesc">The resource identifier, with format depending on type</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
@@ -472,7 +472,11 @@ e.g.,
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> A resource name part, if not already included in the resource</span>
+                            <span class="lib-entry-param-desc-shortdesc">A resource name part, if not already included in the resource</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If there is no path for the type or path is optional, then name alone should be specified.        </span>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -480,13 +484,29 @@ e.g.,
                             <code>type</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(screen, default: screen)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(screen|menu|form|tree, default: screen)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">The type of resource to render</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
-<code>screen</code>: an Ofbiz screen by <code>component://</code> location        </span>
+<code>screen</code>: an Ofbiz screen (widget) by <code>component://</code> location        </span>
+      </li>
+      <li>
+        <span>
+<code>menu</code>: an Ofbiz menu (widget) by <code>component://</code> location        </span>
+      </li>
+      <li>
+        <span>
+<code>form</code>: an Ofbiz form (widget) by <code>component://</code> location        </span>
+      </li>
+      <li>
+        <span>
+<code>tree</code>: an Ofbiz tree (widget) by <code>component://</code> location        </span>
+      </li>
+      <li>
+        <span>
+<code>section</code>: an Ofbiz screen (widget) decorator section, with <code>name</code> arg        </span>
       </li>
   </ul>
 </div>
@@ -504,7 +524,7 @@ e.g.,
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setContextField">#setContextField</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
 </span>
                         </td>
                       </tr>
@@ -519,7 +539,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setGlobalContextField">#setGlobalContextField</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
 </span>
                         </td>
                       </tr>
@@ -534,7 +554,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setRequestAttribute">#setRequestAttribute</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
 </span>
                         </td>
                       </tr>
@@ -582,7 +602,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation URL.</p>
                       <div class="lib-entry-extradesc">
         <p>
-STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.        </p>
           <div class="lib-text-note">
             <strong>WARN: </strong>
 This utility and all similar link-generating utilities do NOT escape the URLs for
@@ -594,10 +614,10 @@ for URLs, resulting in some dangerous URLs, particularly in javascript but also 
             <strong>WARN: </strong>
 <code>fullPath</code> and <code>secure</code> parameters have different behavior than stock Ofbiz!          </div>
         <p>
-With Cato, boolean arguments can be given as booleans, string representation of booleans
+With Scipio, boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).        </p>
         <p>
-<strong>fullPath behavior change:</strong> In Cato, when fullPath is specified for a controller request, if the
+<strong>fullPath behavior change:</strong> In Scipio, when fullPath is specified for a controller request, if the
 request is defined as secure, a secure URL will be created. This method will now never allow an
 insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was
 different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will
@@ -605,12 +625,12 @@ by default no longer downgrade HTTPS connections. To allow downgrades, you must 
 request it by passing secure false, and this may still produce a secure link if the target
 is marked secure. Currently, this applies to all links including inter-webapp links.        </p>
         <p>
-<strong>secure behavior change:</strong> In Cato, if current browsing is secure, we NEVER downgrade to HTTPS unless
+<strong>secure behavior change:</strong> In Scipio, if current browsing is secure, we NEVER downgrade to HTTPS unless
 explicitly requested by passing secure false, and secure false may still produce a secure link if
 needed. Currently (2016-04-06), for security reasons, this
 downgrading request request only applies to the case where the target link is marked as non-secure, such
 that in general, setting secure false does not may the link will be insecure in all cases.
-In addition, in Cato, secure flag no longer forces a fullPath link. Specify fullPath true in addition to
+In addition, in Scipio, secure flag no longer forces a fullPath link. Specify fullPath true in addition to
 secure to force a fullPath link. Links may still generate full-path secure links when needed even
 if not requested, however.        </p>
                       </div>
@@ -643,7 +663,7 @@ It can be identified using either webSiteId or using an absolute full path to th
   </ul>
 </div>
         <span>
-(New in Cato)        </span>
+(New in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -657,7 +677,7 @@ It can be identified using either webSiteId or using an absolute full path to th
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 If true, same as type=&quot;inter-webapp&quot;; if false, same as type=&quot;&quot; (intra-webapp implied).
-(New in Cato)        </span>
+(New in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -675,7 +695,7 @@ to webapp root, excluding webapp context root).
 For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
 server root, containing webapp context root and servlet path; if webSiteId specified,
 this should specified relative like intra-webapp (unless absPath forced to true).
-(New in Cato)        </span>
+(New in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -721,7 +741,7 @@ Behavior when unspecified is NOT currently influenced by present of starting sla
 to try to preserve compability with legacy Ofbiz behavior that accepted one for all link types.
 It is also ambiguous in the case of intra-webapp non-controller links.          </div>
         <span>
-(New in Cato)        </span>
+(New in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -741,7 +761,7 @@ Will determine the specific target webapp to use.
             <strong>NOTE: </strong>
 Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.          </div>
         <span>
-(Stock arg, some fixes in Cato)        </span>
+(Stock arg, some fixes in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -778,7 +798,7 @@ Otherwise, generally defaults to true.        </span>
   </ul>
 </div>
         <span>
-(New in Cato)        </span>
+(New in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -798,7 +818,7 @@ If true, this will add the external login key as parameter.
 This is currently FALSE by default in all cases including inter-webapp links
 while details are sorted out.          </div>
         <span>
-(New in Cato)        </span>
+(New in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -815,11 +835,11 @@ If true, forces a full URL with protocol (HTTP or HTTPS).
         </span>
           <div class="lib-text-note">
             <strong>WARN: </strong>
-MODIFIED IN CATO: In Cato, specifying fullPath true for a controller request
+MODIFIED IN SCIPIO: In Scipio, specifying fullPath true for a controller request
 marked as secure will always generate a secure URL, not a plain URL. Some control
 is sacrificed to allow this flag to be used safely and more easily.          </div>
         <span>
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)        </span>
+(Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)        </span>
 </span>
                         </td>
                       </tr>
@@ -836,12 +856,12 @@ If true, ensures the resulting URL will be a secure link.
         </span>
           <div class="lib-text-note">
             <strong>WARN: </strong>
-MODIFIED IN CATO: This does not guarantee a full URL will be built, only when needed.
+MODIFIED IN SCIPIO: This does not guarantee a full URL will be built, only when needed.
 Pass fullPath <code>true</code> to always force a full path. In addition, this parameter now
 recognizes the value <code>false</code> to force downgrades to HTTP when the target controller request
 is marked as non-secure.          </div>
         <span>
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)        </span>
+(Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)        </span>
 </span>
                         </td>
                       </tr>
@@ -855,7 +875,7 @@ is marked as non-secure.          </div>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)        </span>
+(Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)        </span>
 </span>
                         </td>
                       </tr>
@@ -1285,7 +1305,7 @@ If args is specified as map, &quot;webSiteId&quot; must be passed in args, not a
                       <p class="lib-entry-shortdesc">Builds an Ofbiz content/resource URL.</p>
                       <div class="lib-entry-extradesc">
         <p>
-STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.        </p>
                       </div>
                   </div>
             
@@ -1510,9 +1530,9 @@ Order of arguments is strict; args will be stripped.          </div>
                       <p class="lib-entry-shortdesc">Sets a request attribute.</p>
                       <div class="lib-entry-extradesc">
         <p>
-STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.        </p>
         <p>
-This function is enhanced to support more value types and the special value catoNullObject
+This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.        </p>
                       </div>
                   </div>
@@ -1566,9 +1586,9 @@ to indicate the value null.        </p>
                       <p class="lib-entry-shortdesc">Sets a field value in context</p>
                       <div class="lib-entry-extradesc">
         <p>
-STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.        </p>
         <p>
-This function is enhanced to support more value types and the special value catoNullObject
+This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.        </p>
                       </div>
                   </div>
@@ -1622,9 +1642,9 @@ to indicate the value null.        </p>
                       <p class="lib-entry-shortdesc">Sets a field value in global context.</p>
                       <div class="lib-entry-extradesc">
         <p>
-New in Cato.        </p>
+New in Scipio.        </p>
         <p>
-This function is enhanced to support more value types and the special value catoNullObject
+This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.        </p>
                       </div>
                   </div>
@@ -1678,7 +1698,7 @@ to indicate the value null.        </p>
                       <p class="lib-entry-shortdesc">Sets context variables and request attributes.</p>
                       <div class="lib-entry-extradesc">
         <p>
-This function is enhanced to support more value types and the special value catoNullObject
+This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.        </p>
                       </div>
                   </div>
@@ -1705,7 +1725,7 @@ to indicate the value null.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setContextField">#setContextField</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
       </li>
       <li>
         <span>
@@ -1714,7 +1734,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setGlobalContextField">#setGlobalContextField</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
       </li>
       <li>
         <span>
@@ -1723,7 +1743,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setRequestAttribute">#setRequestAttribute</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
       </li>
   </ul>
 </div>
@@ -1756,7 +1776,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
                       <p class="lib-entry-shortdesc">Sets context variables and request attributes.</p>
                       <div class="lib-entry-extradesc">
         <p>
-This function is enhanced to support more value types and the special value catoNullObject
+This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.        </p>
                       </div>
                   </div>
@@ -1819,7 +1839,7 @@ to indicate the value null.        </p>
                       <p class="lib-entry-shortdesc">Gets all the named attributes and context vars.</p>
                       <div class="lib-entry-extradesc">
         <p>
-This function is enhanced to support more value types and the special value catoNullObject
+This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.        </p>
                       </div>
                   </div>
@@ -1862,7 +1882,7 @@ to indicate the value null.        </p>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If true, null/missing values will get map entries with <code>CatoNullObject</code>; otherwise, omitted from results</span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true, null/missing values will get map entries with <code>ScipioNullObject</code>; otherwise, omitted from results</span>
                         </td>
                       </tr>
               </table>
@@ -1898,7 +1918,7 @@ A map of maps with same keys as parameters.                    </p>
                       <p class="lib-entry-shortdesc">Sets context variables and request attributes around a nested block. Can also be used alone.</p>
                       <div class="lib-entry-extradesc">
         <p>
-This function is enhanced to support more value types and the special value catoNullObject
+This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.        </p>
                       </div>
                   </div>
@@ -1920,7 +1940,7 @@ to indicate the value null.        </p>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setContextField">#setContextField</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
 </span>
                         </td>
                       </tr>
@@ -1935,7 +1955,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setGlobalContextField">#setGlobalContextField</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
 </span>
                         </td>
                       </tr>
@@ -1950,7 +1970,7 @@ object found in the global <code>catoNullObject</code> variable.          </div>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, this uses <a href="#entry-setRequestAttribute">#setRequestAttribute</a>. To set null, the key values may be set to a special null-representing
-object found in the global <code>catoNullObject</code> variable.          </div>
+object found in the global <code>scipioNullObject</code> variable.          </div>
 </span>
                         </td>
                       </tr>
@@ -2786,7 +2806,7 @@ a string of combined style names                    </p>
                       <div class="lib-entry-extradesc">
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-now recognizes special syntax cato class args.          </div>
+now recognizes special syntax scipio class args.          </div>
                       </div>
                   </div>
             
@@ -2860,7 +2880,7 @@ true if class/style string contains given style, false otherwise                
                       <div class="lib-entry-extradesc">
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-now recognizes special syntax cato class args.          </div>
+now recognizes special syntax scipio class args.          </div>
                       </div>
                   </div>
             
@@ -2980,7 +3000,7 @@ strips lead/trailing space.</p>
                       <div class="lib-entry-extradesc">
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-now recognizes special syntax cato class args.          </div>
+now recognizes special syntax scipio class args.          </div>
                       </div>
                   </div>
             
@@ -4722,14 +4742,17 @@ Ideally, we should not receive escaped delimiters here, but Ofbiz frequently esc
                             <code>lang</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|jsdq|json|js-html|jsdq-html|xml|raw)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|jsdq|json|js-html|jsdq-html|xml|style|raw)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">The target language</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 <code>jsdq</code>: special case of js where it is assumed the value
         </span>
 <pre>will be contained in double quotes, such that single quotes
-don&#39;t need to be escaped.</pre></span>
+don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
+            <strong>WARN: </strong>
+<code>style</code> is not properly implemented!          </div>
+</span>
                         </td>
                       </tr>
               </table>
@@ -4797,7 +4820,7 @@ There are a few rare stock Ofbiz templates where this should not be used, on acc
                             <code>lang</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(js|jsdq|json|html|url|xml|raw)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(js|jsdq|json|html|url|xml|style|raw)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">The target language</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
@@ -4806,7 +4829,10 @@ not produce the exact same results.
 <code>jsdq</code>: special case of js where it is assumed the value
         </span>
 <pre>will be contained in double quotes, such that single quotes
-don&#39;t need to be escaped.</pre>        <span>
+don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
+            <strong>WARN: </strong>
+<code>style</code> is not properly implemented!          </div>
+        <span>
 
         </span>
         <h4>Related</h4>
@@ -4910,7 +4936,7 @@ be empty or populating depending on the specific point of use.</p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Merges cato macro inlineArgs/args/defaultArgs/overrideArgs argument maps for macros implementing
+                      <p class="lib-entry-shortdesc">Merges scipio macro inlineArgs/args/defaultArgs/overrideArgs argument maps for macros implementing
 the advanced argument interface.</p>
                       <div class="lib-entry-extradesc">
         <p>
@@ -4922,7 +4948,7 @@ pattern, whereby inlineArgs map is merged over the args map, over defaults.     
 It cannot be used for the &#39;attribs={} inlineAttribs...&#39; pattern (see mergeAttribMaps).
 Instead, it can help in implementing that pattern within the &#39;args={} inlineArgs...&#39; pattern.        </p>
         <p>
-This is specific to cato macro patterns and may contain extra handling besides concatenating maps.        </p>
+This is specific to scipio macro patterns and may contain extra handling besides concatenating maps.        </p>
         <p>
 For one, this currently records the macro&#39;s static named args as passed in the defaultArgs and overrideArgs maps
 in a list of names with the key &quot;localArgNames&quot; in the resulting map.
@@ -5115,19 +5141,19 @@ operations on them.</p>
           
           
           <hr />
-          <a name="entry-getCatoMacroDefaultArgs"></a>
+          <a name="entry-getScipioMacroDefaultArgs"></a>
           <div class="lib-entry lib-entry-type-function">
 
-            <h3 class="lib-entry-title">getCatoMacroDefaultArgs</h3>
+            <h3 class="lib-entry-title">getScipioMacroDefaultArgs</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getCatoMacroDefaultArgs</code></span>
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getScipioMacroDefaultArgs</code></span>
                   </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns all the known args and default args for a cato macro that uses the advanced
+                      <p class="lib-entry-shortdesc">Returns all the known args and default args for a scipio macro that uses the advanced
 args pattern, where the macro resides in the given namespace (or namespace-like map).</p>
                       <div class="lib-entry-extradesc">
         <p>
@@ -5178,7 +5204,7 @@ If namespace is omitted, currently (2015-12-14), this will use &quot;.vars&quot;
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Merges cato macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros implementing
+                      <p class="lib-entry-shortdesc">Merges scipio macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros implementing
 a special attribs/inlineAttribs pattern for HTML element attributes.</p>
                       <div class="lib-entry-extradesc">
         <p>
@@ -5715,7 +5741,7 @@ It does this by prefixing result with &quot;+&quot; string where necessary.     
         <p>
 ADD CLASS ARG FUNCTIONS        </p>
         <p>
-These functions take a template-level/logical cato macro &quot;class&quot; arg and add to it the given class.
+These functions take a template-level/logical scipio macro &quot;class&quot; arg and add to it the given class.
 Should be called by the implementing macros only.        </p>
         <p>
 Depending on the previous value in class, non-essential (default) values may simply be discarded, but
@@ -5946,7 +5972,7 @@ for compatibility in some cases</p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Logically combines two template-level cato macro &quot;class&quot; arguments.
+                      <p class="lib-entry-shortdesc">Logically combines two template-level scipio macro &quot;class&quot; arguments.
 The second almost always overrides the first, except when second is appending a class
 with &quot;+&quot;, in which case depends on the first.</p>
                       <div class="lib-entry-extradesc">
@@ -5955,7 +5981,7 @@ Essentially it extends the intended use of the class arg to mean &quot;+&quot; a
 of previous values (in addition of being an appending value itself).        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-Even if the second arg is merely &quot;+&quot; (which usually means &quot;use defaults&quot; for cato macros),
+Even if the second arg is merely &quot;+&quot; (which usually means &quot;use defaults&quot; for scipio macros),
 this method will return &quot;+&quot; and dismiss the first argument. &quot;+&quot; is not treated as
 pass-through here. This does not seem consistent,
 but is chosen explicitly so that caller/macro decides what the &quot;pass-through&quot; value
@@ -6015,7 +6041,7 @@ In other words, can see this as another kludge for lack of null values in freema
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns class names without their Cato-supported prefix.</p>
+                      <p class="lib-entry-shortdesc">Returns class names without their Scipio-supported prefix.</p>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -6052,7 +6078,7 @@ In other words, can see this as another kludge for lack of null values in freema
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns the Cato-supported class prefix from a class arg.</p>
+                      <p class="lib-entry-shortdesc">Returns the Scipio-supported class prefix from a class arg.</p>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -8201,19 +8227,19 @@ Context and system utilities.        </span>
           
           
           <hr />
-          <a name="entry-getDefaultCatoLibLocation"></a>
+          <a name="entry-getDefaultScipioLibLocation"></a>
           <div class="lib-entry lib-entry-type-function">
 
-            <h3 class="lib-entry-title">getDefaultCatoLibLocation</h3>
+            <h3 class="lib-entry-title">getDefaultScipioLibLocation</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultCatoLibLocation</code></span>
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultScipioLibLocation</code></span>
                   </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns a cato library location.</p>
+                      <p class="lib-entry-shortdesc">Returns a scipio library location.</p>
                       <div class="lib-entry-extradesc">
         <p>
 Supported names: &quot;variables&quot;, &quot;template&quot;
@@ -8435,7 +8461,7 @@ If true, looks up current render.        </span>
       <div>
         <hr />
         <small>
-          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
         </small>
       </div>
     </footer>

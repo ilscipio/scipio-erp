@@ -66,13 +66,13 @@ pre {
 
         <div class="lib-pagedesc">
         <p>
-In the same fashion as the content elements, CATO form elements are meant as a mean to standardize
+In the same fashion as the content elements, SCIPIO form elements are meant as a mean to standardize
 the development of complexe forms. The elements follow standard html patterns, with the only difference
 being the <a href="#entry-field">@field</a> attribute replacing the input tag.        </p>
         <p>
 All elements come with additional options, that simplifies their use quite a bit. A good example are the
 &lt;@field definitions, where each element are wrapped in containing rows and cells, labels added when defined
-and ids set automatically. The use of the CATO elements largely simplify the creation of complexe forms and
+and ids set automatically. The use of the SCIPIO elements largely simplify the creation of complexe forms and
 standardize the html output for visualization.        </p>
         <p>
 Included by htmlTemplate.ftl.        </p>
@@ -81,7 +81,7 @@ Included by htmlTemplate.ftl.        </p>
   <ul>
       <li>
         <span>
-May have implicit dependencies on other parts of Cato API.        </span>
+May have implicit dependencies on other parts of Scipio API.        </span>
       </li>
   </ul>
           </div>
@@ -98,9 +98,9 @@ May have implicit dependencies on other parts of Cato API.        </span>
         <a href="#entry-fieldset">fieldset</a>, 
         <a href="#entry-form">form</a>, 
         <a href="#entry-getDefaultFieldGridStyles">getDefaultFieldGridStyles</a>, 
-        <a href="#entry-mapCatoFieldTypeToStyleName">mapCatoFieldTypeToStyleName</a>, 
-        <a href="#entry-mapOfbizFieldTypeToCatoFieldType">mapOfbizFieldTypeToCatoFieldType</a>, 
+        <a href="#entry-mapOfbizFieldTypeToScipioFieldType">mapOfbizFieldTypeToScipioFieldType</a>, 
         <a href="#entry-mapOfbizFieldTypeToStyleName">mapOfbizFieldTypeToStyleName</a>, 
+        <a href="#entry-mapScipioFieldTypeToStyleName">mapScipioFieldTypeToStyleName</a>, 
         <a href="#entry-progress">progress</a>, 
         <a href="#entry-progressScript">progressScript</a>
       </p>
@@ -328,7 +328,7 @@ Occasionally needed in templates as FTL workaround.        </span>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">Elem IDs and options passed to CatoUploadProgress Javascript class</span>
+                            <span class="lib-entry-param-desc-shortdesc">Elem IDs and options passed to ScipioUploadProgress Javascript class</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 In addition, supports:
@@ -361,7 +361,7 @@ In addition, supports:
   </ul>
 </div>
         <span>
-See CatoUploadProgress javascript class for available options.        </span>
+See ScipioUploadProgress javascript class for available options.        </span>
 </span>
                         </td>
                       </tr>
@@ -419,7 +419,7 @@ See CatoUploadProgress javascript class for available options.        </span>
                       <div class="lib-entry-extradesc">
         <p>
 Can be animated using Javascript manually or by using progressOptions argument.
-Presence of progressOptions activates use of CatoUploadProgress script for this progress bar by linking it
+Presence of progressOptions activates use of ScipioUploadProgress script for this progress bar by linking it
 to a form submit.        </p>
                       </div>
                   </div>
@@ -981,12 +981,12 @@ or even multiple per fieldset.</p>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 Affects layout and styling of contained fields.
-Cato standard markup types:
+Scipio standard markup types:
         </span>
         <div>  <ul>
       <li>
         <span>
-<code>default</code>: default cato field arrangement. This is the type assumed when no <a href="#entry-fields">@fields</a> element is present.
+<code>default</code>: default scipio field arrangement. This is the type assumed when no <a href="#entry-fields">@fields</a> element is present.
 Currently, it mostly influences the label area (present for all <a href="#entry-field">@field</a> types except submit).        </span>
       </li>
       <li>
@@ -1014,12 +1014,12 @@ use &quot;inherit&quot;, or to prevent inheritance completely, use any other typ
       </li>
       <li>
         <span>
-<code>default-nolabelarea</code>: default cato field arrangement for common sets of fields with no label area.
+<code>default-nolabelarea</code>: default scipio field arrangement for common sets of fields with no label area.
 It expects that @field entries won&#39;t be passed any labels except for field types where they may trickle inline into the widget&#39;s inline label area.        </span>
       </li>
       <li>
         <span>
-<code>default-compact</code>: default cato field arrangement for fields that are in limited space.
+<code>default-compact</code>: default scipio field arrangement for fields that are in limited space.
 By default, this means the labels will be arranged vertically with the fields.        </span>
       </li>
       <li>
@@ -1303,19 +1303,19 @@ e.g.
           
           
           <hr />
-          <a name="entry-mapCatoFieldTypeToStyleName"></a>
+          <a name="entry-mapScipioFieldTypeToStyleName"></a>
           <div class="lib-entry lib-entry-type-function">
 
-            <h3 class="lib-entry-title">mapCatoFieldTypeToStyleName</h3>
+            <h3 class="lib-entry-title">mapScipioFieldTypeToStyleName</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mapCatoFieldTypeToStyleName</code></span>
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mapScipioFieldTypeToStyleName</code></span>
                   </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Maps a cato field type to a style name representing the type.</p>
+                      <p class="lib-entry-shortdesc">Maps a scipio field type to a style name representing the type.</p>
                       <div class="lib-entry-extradesc">
         <p>
 Should be coordinated with mapOfbizFieldTypeToStyleName to produce common field type style names.        </p>
@@ -1359,7 +1359,7 @@ Should be coordinated with mapOfbizFieldTypeToStyleName to produce common field 
                       <p class="lib-entry-shortdesc">Maps an Ofbiz field type to a style name representing the type.</p>
                       <div class="lib-entry-extradesc">
         <p>
-Should be coordinated with mapCatoFieldTypeToStyleName to produce common field type style names.        </p>
+Should be coordinated with mapScipioFieldTypeToStyleName to produce common field type style names.        </p>
                       </div>
                   </div>
             
@@ -1385,19 +1385,19 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
           
           
           <hr />
-          <a name="entry-mapOfbizFieldTypeToCatoFieldType"></a>
+          <a name="entry-mapOfbizFieldTypeToScipioFieldType"></a>
           <div class="lib-entry lib-entry-type-function">
 
-            <h3 class="lib-entry-title">mapOfbizFieldTypeToCatoFieldType</h3>
+            <h3 class="lib-entry-title">mapOfbizFieldTypeToScipioFieldType</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mapOfbizFieldTypeToCatoFieldType</code></span>
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mapOfbizFieldTypeToScipioFieldType</code></span>
                   </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Maps an Ofbiz field type to a Cato field type.</p>
+                      <p class="lib-entry-shortdesc">Maps an Ofbiz field type to a Scipio field type.</p>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -1458,7 +1458,7 @@ look out of the box.        </p>
         <p>
 To use @field as a low-level control, it should be given a parent @fields with &quot;generic&quot; type.        </p>
         <p>
-This system can accodomate custom @fields types, but a default set are provided in the cato
+This system can accodomate custom @fields types, but a default set are provided in the scipio
 standard markup.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
@@ -1479,9 +1479,25 @@ All @field arg defaults can be overridden by the @fields fieldArgs argument.    
       &lt;@field attr=&quot;&quot; /&gt;
     &lt;/@fields&gt;
 
-    &lt;@fields type=&quot;default-manual&quot;&gt; &lt;#- use @field as low-level control -&gt;
+    &lt;@fields type=&quot;default-compact&quot;&gt; &lt;#- compactified arrangement -&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+    &lt;/@fields&gt;
+
+    &lt;@fields type=&quot;default-manual&quot;&gt; &lt;#- use @field as low-level control (also possible: type=&quot;generic&quot;) -&gt;
       &lt;@field attr=&quot;&quot; labelArea=true label=&quot;My Label&quot; /&gt;
     &lt;/@fields&gt;
+
+    &lt;@row&gt; &lt;#- widget-only field: no containers, label area or postfix area, and label automatically inlines as widget label (checkbox label); do everything yourself -&gt;
+      &lt;@cell columns=3&gt;My Text&lt;/@cell&gt;
+      &lt;@cell columns=9&gt;
+        &lt;@field type=&quot;checkbox&quot; widgetOnly=true label=&quot;My Checkbox&quot; name=&quot;check1&quot; /&gt;
+      &lt;/@cell&gt;
+    &lt;/@row&gt;
+
+    &lt;p&gt;My &lt;@field type=&quot;input&quot; inline=true name=&quot;check1&quot; value=&quot;inlined&quot; /&gt; field&lt;/p&gt; &lt;#- inlined field: no containers, label area or postfix area, display:inline, no width spanning -&gt;
+
+    &lt;@field attr=&quot;&quot; label=&quot;My Label&quot; class=&quot;+${styles.field_inline!}&quot; /&gt; &lt;#- special form of regular field where the widget element alone is inlined and no spanning, but still has label area and container; widget element receives an inlining class -&gt;
+
 </pre>                  </div>
             
               
@@ -1739,26 +1755,11 @@ currently this is treated as an alternative arg for tooltip          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>totalColumns</code>
+                            <code>gridArgs</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Total number of columns spanned by the outer container, including label area, widget and postfix</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>widgetPostfixColumns</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">Number of grid columns to use as size for widget + postfix area (combined)</span>
-                            <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
-If totalColumns is kept the same, any space removed from this value is given to the label area,
-and any space added is removed from the label area, also depending on the configuration of the label area.
-        </span>
-</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Grid size and configuration arguments roughly equivalent to <a href="#entry-getDefaultFieldGridStyles">#getDefaultFieldGridStyles</a> arguments</span>
                         </td>
                       </tr>
                       <tr>
@@ -1767,11 +1768,47 @@ and any space added is removed from the label area, also depending on the config
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -markup decision, usually true-)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">Overridable setting to force or prevent widget and postfix having their own sub-container</span>
+                            <span class="lib-entry-param-desc-shortdesc">CONVENIENCE alias for <code>gridArgs.widgetPostfixCombined</code> - Overridable setting to force or prevent widget and postfix having their own sub-container</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
+It is strongly encouraged to leave this alone in most cases. In Scipio standard markup,
 the default is usually true unless prevented by other settings.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>totalColumns</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> CONVENIENCE alias for <code>gridArgs.totalColumns</code> - Total number of columns spanned by the outer container, including label area, widget and postfix</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelColumns</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CONVENIENCE alias for <code>gridArgs.labelColumns</code> - Number of grid columns to use as size for label area, IF one is to be rendered</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If totalColumns is kept the same, any space removed from this value is removed from widget and postfix (combined).        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelSmallDiffColumns</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), fallback default: 1)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CONVENIENCE alias for <code>gridArgs.labelSmallDiffColumns</code> - Difference between large and small columns of the label area (added to label area columns for &quot;small&quot; container)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+By default, this setting is set to 1 so that on small screens the label area gets a slightly larger size.
+Sometimes it is needed to set this to zero for custom markup.        </span>
 </span>
                         </td>
                       </tr>
@@ -1922,6 +1959,19 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
       </li>
   </ul>
 </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>style</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Legacy HTML style string for compatibility</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+This is currently only implemented on a few field types and sub-types.          </div>
 </span>
                         </td>
                       </tr>
@@ -2128,7 +2178,13 @@ When there is no label area, the <code>label</code> arg trickles down into the w
                             <span class="lib-entry-param-desc-extradesc">        <span>
 In other words, turns it into a logically inline element (traditionally, CSS &quot;display: inline;&quot;).
 Theme should act on this style to prevent taking up all the width.
-In addition, this will force <code>labelArea</code> false and any label specified will use the inlined label (area).        </span>
+In addition, this will force <code>labelArea</code> false and any label specified will use the inlined label (area).
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If you want to have a widget-only containerless field without inlining, use <code>widgetOnly=true</code>.
+If you want a regular field with containers where only the widget element is inlined (i.e. not full-width-spanning),
+use <code>class=&quot;+${styles.field_inline}&quot;</code>.          </div>
 </span>
                         </td>
                       </tr>
@@ -2138,7 +2194,12 @@ In addition, this will force <code>labelArea</code> false and any label specifie
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If true, render without the rows-container</span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, render without the rows-container</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is a low-level control for advanced markup cases and global style presets (<a href="#entry-fields">@fields</a>).          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2147,7 +2208,12 @@ In addition, this will force <code>labelArea</code> false and any label specifie
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If true, render without the cells-container</span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, render without the cells-container</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is a low-level control for advanced markup cases and global style presets (<a href="#entry-fields">@fields</a>).          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2156,7 +2222,13 @@ In addition, this will force <code>labelArea</code> false and any label specifie
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If false, sets norows=true and nocells=true</span>
+                            <span class="lib-entry-param-desc-shortdesc">If false, sets norows=true and nocells=true</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is a low-level control for advanced markup cases and global style presets (<a href="#entry-fields">@fields</a>).
+In most cases you should use <code>widgetOnly</code> parameter in templates if you want to omit container.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2504,6 +2576,15 @@ If dateType is &quot;date-time&quot; (timestamp), it is possible to specify date
 This means the user will be presented with a short date only, but the data sent to the server
 will be a full timestamp.        </span>
 </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>datePostfix</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Override for date-widget-specific postfix</span>
                         </td>
                       </tr>
                       <tr>
@@ -2880,7 +2961,7 @@ Generic:
   </ul>
 </div>
         <span>
-Cato standard theme:
+Scipio standard theme:
         </span>
         <div>  <ul>
       <li>
@@ -3007,7 +3088,7 @@ Generic:
   </ul>
 </div>
         <span>
-Cato standard theme:
+Scipio standard theme:
         </span>
         <div>  <ul>
       <li>
@@ -3255,22 +3336,6 @@ but other characters should not be manually escaped (apart from URL parameter en
                             <span class="lib-entry-param-desc-shortdesc">Same as for submitarea, but only works if this is a top-level submit</span>
                         </td>
                       </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>style</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Legacy HTML style string for compatibility</span>
-                            <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
-This is set only on the widget itself (not any container).
-        </span>
-          <div class="lib-text-note">
-            <strong>WARN: </strong>
-Currently this arg only works for submits, not other field types.          </div>
-</span>
-                        </td>
-                      </tr>
               </table>
                             </div>
                             <div class="lib-entry-paramsection lib-entry-paramsection-reset">
@@ -3481,11 +3546,74 @@ This does not have to be 12.          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>widgetPostfixColumns</code>
+                            <code>totalLarge</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -value of totalColumns-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Total columns override for large</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>totalSmall</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -value of totalColumns-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Total columns override for small</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelColumns</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -from global styles-)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> The columns size of widget and postfix combined (regardless of <code>widgetPostfixCombined</code>).</span>
+                            <span class="lib-entry-param-desc-shortdesc"> The columns size of label area, if <code>labelArea</code> and <code>labelInRow</code> are true</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelLarge</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -value of labelColumns-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Label area columns override for large</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelSmallLarge</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -value of labelColumns-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">  Label area columns override for small</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>postfixColumns</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -from global styles-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Postfix columns</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>postfixLarge</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -value of postfixColumns-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Postfix columns override for large</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>postfixSmall</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -value of postfixColumns-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Postfix columns override for small</span>
                         </td>
                       </tr>
                       <tr>
@@ -3511,13 +3639,6 @@ This does not have to be 12.          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>postfixColumns</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
                             <code>isLargeParent</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -3525,7 +3646,14 @@ This does not have to be 12.          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>labelSmallColDiff</code>
+                            <code>labelSmallDiffColumns</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelSmall</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
@@ -3556,7 +3684,7 @@ This does not have to be 12.          </div>
       <div>
         <hr />
         <small>
-          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
         </small>
       </div>
     </footer>

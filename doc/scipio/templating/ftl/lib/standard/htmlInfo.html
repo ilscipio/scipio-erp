@@ -75,7 +75,7 @@ Included by htmlTemplate.ftl.        </p>
   <ul>
       <li>
         <span>
-May have implicit dependencies on other parts of Cato API.        </span>
+May have implicit dependencies on other parts of Scipio API.        </span>
       </li>
   </ul>
           </div>
@@ -129,6 +129,8 @@ May have implicit dependencies on other parts of Cato API.        </span>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Creates a modal UI element.</p>
+                      <div class="lib-entry-extradesc">
+                      </div>
                   </div>
             
               
@@ -478,6 +480,42 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>topContent</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((directive)|(string))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Additional content directly inside panel container at top (before title)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>topContentArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Additional args for topContent</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>bottomContent</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((directive)|(string))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Additional content directly inside panel container at bottom (after body)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>bottomContentArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Additional args for bottomContent</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>passArgs</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -576,7 +614,7 @@ Basic types:
         <div>  <ul>
       <li>
         <span>
-<code>default</code>: default. in standard Cato markup, same as generic.        </span>
+<code>default</code>: default. in standard Scipio markup, same as generic.        </span>
       </li>
       <li>
         <span>
@@ -585,7 +623,7 @@ Basic types:
   </ul>
 </div>
         <span>
-Types recognizes by Cato standard markup (theme-defined types are possible):
+Types recognizes by Scipio standard markup (theme-defined types are possible):
         </span>
         <div>  <ul>
       <li>
@@ -678,6 +716,20 @@ If a string is not specified, uses nested content instead.        </span>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>closable</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether the message should be closable</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is not implemented for all types and defaults vary, but if unsure and need to prevent closing, best to specify explicit false.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>passArgs</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -709,7 +761,7 @@ If a string is not specified, uses nested content instead.        </span>
       <div>
         <hr />
         <small>
-          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
         </small>
       </div>
     </footer>

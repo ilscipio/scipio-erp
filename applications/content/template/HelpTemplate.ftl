@@ -42,7 +42,7 @@ under the License.
   </#list>
 </#macro>
 
-<#-- Cato: FIXME: hides cato macro of same name -->
+<#-- Scipio: FIXME: hides cato macro of same name -->
 <#macro section inSection level first="no">
   <#list inSection.* as subSection>
     <#if subSection?node_name == "title">

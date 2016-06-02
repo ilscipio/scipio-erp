@@ -165,7 +165,7 @@ public class SurveyWrapper {
      * Renders the Survey
      * @param templateUrl the template URL
      * @param writer the write
-     * @param parentContext (Cato) the parent rendering context at the point of rendering of this survey
+     * @param parentContext (Scipio) the parent rendering context at the point of rendering of this survey
      * @throws SurveyWrapperException
      */
     public void render(URL templateUrl, Writer writer, Map<String, Object> parentContext) throws SurveyWrapperException {
@@ -193,7 +193,7 @@ public class SurveyWrapper {
             this.templateContext = FastMap.newInstance();
         }
         
-        // Cato: create local context that includes parent context.
+        // Scipio: create local context that includes parent context.
         Map<String, Object> templateContext = FastMap.newInstance();
         if (parentContext != null) {
             templateContext.putAll(parentContext);

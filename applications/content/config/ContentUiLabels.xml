@@ -1521,7 +1521,7 @@
         <value xml:lang="zh">文件路径</value>
         <value xml:lang="zh_TW">檔案路徑</value>
     </property>
-    <property key="ContentFileRelToCATO -Home">
+    <property key="ContentFileRelToSCIPIO -Home">
         <value xml:lang="da">Fil relativt til SCIPIO ERP -_HOME</value>
         <value xml:lang="en">File Rel. to SCIPIO ERP -_HOME</value>
         <value xml:lang="fr">Fichier au nom relatif à SCIPIO ERP -_HOME</value>

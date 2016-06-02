@@ -188,7 +188,7 @@ under the License.
       <#assign lastSurveyMultiRespId = ""/>
     </#if>
 
-    <#-- CATO: FIXME: STRUCTURE BROKEN FOR @table, CAN'T SPLIT @table, NEEDS REWRITE -->
+    <#-- SCIPIO: FIXME: STRUCTURE BROKEN FOR @table, CAN'T SPLIT @table, NEEDS REWRITE -->
 
     <#-- this is before the rest because it will be done if the current row is not a MultiResp (or is different MultiResp) but the last row was... -->
     <#if closeMultiRespHeader>

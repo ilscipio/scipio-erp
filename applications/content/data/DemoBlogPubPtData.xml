@@ -20,7 +20,7 @@ under the License.
 
 <entity-engine-xml>
 
-<!-- Cato: Unneeded
+<!-- Scipio: Unneeded
 <Content contentId="BLOGROOTBIGAL"  contentTypeId="WEB_SITE_PUB_PT"
  ownerContentId="BLOGROOT"
  contentName="Big Al"

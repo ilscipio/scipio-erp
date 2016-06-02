@@ -289,7 +289,7 @@ public class ContentSearch {
 
             EntityListIterator eli = null;
             try {
-                // Cato: prevent crash if maxResults == null
+                // Scipio: prevent crash if maxResults == null
                 //eli = EntityQuery.use(delegator)
                 //        .select(fieldsToSelect).from(dynamicViewEntity)
                 //        .where(whereCondition)

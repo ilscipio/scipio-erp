@@ -20,7 +20,7 @@ under the License.
 
 <entity-engine-xml>
 
-    <!-- Cato: Unneeded
+    <!-- Scipio: Unneeded
     <Party partyId="BLOGUSER_ADMIN" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="BLOGUSER_ADMIN" lastName="Blog" firstName="Admin"/>
     <UserLogin userLoginId="blog_admin" partyId="BLOGUSER_ADMIN" currentPassword="{SHA}273a08e1cdf0eb5d698acd40a95ce6098a2420fa"/>
@@ -56,7 +56,7 @@ under the License.
     <!-- Updating BLOGROOTBIGAL with bigal as creator so that he will be found as "owner" for subrecords.
          This is used in a screen permission test.
          -->
-    <!-- Cato: Unneeded
+    <!-- Scipio: Unneeded
     <Party partyId="BLOG_USERS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_EDITORS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_ADMINS" partyTypeId="PARTY_GROUP"/>
@@ -93,7 +93,7 @@ under the License.
     <!-- Updating biBLOGROOTMADMAXgal with madmax as creator so that he will be found as "owner" for subrecords.
          This is used in a screen permission test.
          -->
-    <!-- Cato: Unneeded
+    <!-- Scipio: Unneeded
     <Content contentId="BLOGROOTMADMAX"
      createdByUserLogin="madmax"
      lastModifiedByUserLogin="madmax"

@@ -224,7 +224,7 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("RateV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            // Cato: Handle config errors more gracefully and use logError
+            // Scipio: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
                 Debug.logError(e.getMessage(), module);
             } else {
@@ -384,7 +384,7 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("IntlRate", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            // Cato: Handle config errors more gracefully and use logError
+            // Scipio: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
                 Debug.logError(e.getMessage(), module);
             } else {
@@ -473,7 +473,7 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("TrackV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            // Cato: Handle config errors more gracefully and use logError
+            // Scipio: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
                 Debug.logError(e.getMessage(), module);
             } else {
@@ -576,7 +576,7 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("Verify", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            // Cato: Handle config errors more gracefully and use logError
+            // Scipio: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
                 Debug.logError(e.getMessage(), module);
             } else {
@@ -667,7 +667,7 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("CityStateLookup", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            // Cato: Handle config errors more gracefully and use logError
+            // Scipio: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
                 Debug.logError(e.getMessage(), module);
             } else {
@@ -786,7 +786,7 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest(type, requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            // Cato: Handle config errors more gracefully and use logError
+            // Scipio: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
                 Debug.logError(e.getMessage(), module);
             } else {
@@ -896,7 +896,7 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("Rate", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            // Cato: Handle config errors more gracefully and use logError
+            // Scipio: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
                 Debug.logError(e.getMessage(), module);
             } else {
@@ -1156,7 +1156,7 @@ public class UspsServices {
                 try {
                     responseDocument = sendUspsRequest("Rate", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
                 } catch (UspsRequestException e) {
-                    // Cato: Handle config errors more gracefully and use logError
+                    // Scipio: Handle config errors more gracefully and use logError
                     if (e instanceof UspsConfigurationException) {
                         Debug.logError(e.getMessage(), module);
                     } else {
@@ -1427,7 +1427,7 @@ public class UspsServices {
                 try {
                     responseDocument = sendUspsRequest("DeliveryConfirmationV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
                 } catch (UspsRequestException e) {
-                    // Cato: Handle config errors more gracefully and use logError
+                    // Scipio: Handle config errors more gracefully and use logError
                     if (e instanceof UspsConfigurationException) {
                         Debug.logError(e.getMessage(), module);
                     } else {
@@ -1687,7 +1687,7 @@ public class UspsServices {
             try {
                 responseDocument = sendUspsRequest(api, requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
             } catch (UspsRequestException e) {
-                // Cato: Handle config errors more gracefully and use logError
+                // Scipio: Handle config errors more gracefully and use logError
                 if (e instanceof UspsConfigurationException) {
                     Debug.logError(e.getMessage(), module);
                 } else {
@@ -1745,7 +1745,7 @@ public class UspsServices {
             conUrl = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "connectUrl", resource, "shipment.usps.connect.url");
         }
         if (UtilValidate.isEmpty(conUrl)) {
-            // Cato: Throw config exception to can handle more gracefully
+            // Scipio: Throw config exception to can handle more gracefully
             throw new UspsConfigurationException(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsConnectUrlIncomplete", locale));
         }
@@ -1877,7 +1877,7 @@ class UspsRequestException extends GeneralException {
 }
 
 /**
- * Cato: Special case to identify config errors
+ * Scipio: Special case to identify config errors
  */
 @SuppressWarnings("serial")
 class UspsConfigurationException extends UspsRequestException {

@@ -63,7 +63,7 @@ under the License.
         </entity-one>
         <call-bsh><![CDATA[
             request.setParameter("orderMode", "SALES_ORDER");
-            request.setParameter("productStoreId", "CatoShop");
+            request.setParameter("productStoreId", "ScipioShop");
             request.setParameter("partyId", "DemoCustomer");
             request.setParameter("currencyUom", "USD");
             session = request.getSession();
@@ -185,7 +185,7 @@ under the License.
         </entity-one>
         <call-bsh><![CDATA[
             request.setParameter("orderMode", "SALES_ORDER");
-            request.setParameter("productStoreId", "CatoShop");
+            request.setParameter("productStoreId", "ScipioShop");
             request.setParameter("partyId", "DemoCustomer");
             request.setParameter("currencyUom", "USD");
             session = request.getSession();

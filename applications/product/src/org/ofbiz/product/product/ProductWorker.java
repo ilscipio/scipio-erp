@@ -343,7 +343,7 @@ public class ProductWorker {
                 }
 
                 // got to here, default to PRODUCT_NAME
-                // CATO: Do NOT HTML-escape this here
+                // SCIPIO: Do NOT HTML-escape this here
                 String alternativeProductName = ProductContentWrapper.getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "raw");
                 // Debug.logInfo("Using PRODUCT_NAME: " + alternativeProductName, module);
                 return alternativeProductName;
@@ -482,7 +482,7 @@ public class ProductWorker {
     }    
     
     /**
-     * CATO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
+     * SCIPIO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
      * @param product
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      * */

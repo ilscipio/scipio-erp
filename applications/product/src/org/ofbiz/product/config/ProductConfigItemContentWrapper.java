@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceContainer;
  * Product Config Item Content Worker: gets product content to display
  */
 @SuppressWarnings("serial")
-public class ProductConfigItemContentWrapper implements ContentWrapper, Serializable { // Cato: Added Serializable
+public class ProductConfigItemContentWrapper implements ContentWrapper, Serializable { // Scipio: Added Serializable
 
     public static final String module = ProductConfigItemContentWrapper.class.getName();
 

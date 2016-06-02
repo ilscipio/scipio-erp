@@ -107,7 +107,7 @@ public class ProductSearchEvents {
         return "success";
     }
 
-   /** Sets the thru date of the results of a search to the specified date for the specified catogory
+   /** Sets the thru date of the results of a search to the specified date for the specified category
     *@param request The HTTPRequest object for the current request
     *@param response The HTTPResponse object for the current request
     *@return String specifying the exit status of this event
@@ -180,7 +180,7 @@ public class ProductSearchEvents {
        return "success";
    }
 
-   /**  Adds the results of a search to the specified catogory
+   /**  Adds the results of a search to the specified category
     *@param request The HTTPRequest object for the current request
     *@param response The HTTPResponse object for the current request
     *@return String specifying the exit status of this event

@@ -54,7 +54,7 @@ public class ImportProductHelper {
         fields.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
         fields.put("productId", productId);
         fields.put("ownerPartyId", "Company");
-        fields.put("facilityId", "CatoShopWarehouse");
+        fields.put("facilityId", "ScipioShopWarehouse");
         fields.put("quantityOnHandTotal", quantityOnHand);
         fields.put("availableToPromiseTotal", quantityOnHand);
         return fields;

@@ -69,9 +69,9 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
         return null;
     }
 
-    // Cato: Modified to support Boolean
+    // Scipio: Modified to support Boolean
     @SuppressWarnings("unchecked")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
+    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Scipio: NOTE: can now return null
         return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
     }
 
@@ -80,9 +80,9 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, final Map args)
             throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
-        final Boolean fullPath = checkBooleanArg(args, "fullPath", null); // Cato: changed from boolean to Boolean
-        final Boolean secure = checkBooleanArg(args, "secure", null); // Cato: changed from boolean to Boolean
-        final Boolean encode = checkBooleanArg(args, "encode", null); // Cato: new flag
+        final Boolean fullPath = checkBooleanArg(args, "fullPath", null); // Scipio: changed from boolean to Boolean
+        final Boolean secure = checkBooleanArg(args, "secure", null); // Scipio: changed from boolean to Boolean
+        final Boolean encode = checkBooleanArg(args, "encode", null); // Scipio: new flag
 
         return new Writer(out) {
             
@@ -115,7 +115,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         //StringBuilder newURL = new StringBuilder();
                         
-                        // CATO: now delegated to our new reusable method
+                        // SCIPIO: now delegated to our new reusable method
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
                         url = CatalogUrlFilter.makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, 
@@ -127,7 +127,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
                         Locale locale = (Locale) args.get("locale");
                         
-                        // CATO: now delegated to our new reusable method, and add "webSiteId" support because no way to know it
+                        // SCIPIO: now delegated to our new reusable method, and add "webSiteId" support because no way to know it
                         String prefixStr = ((StringModel) prefix).getAsString();
                         String webSiteId = getStringArg(args, "webSiteId");
                         url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefixStr, productCategoryId, 

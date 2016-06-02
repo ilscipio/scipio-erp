@@ -23,7 +23,7 @@ under the License.
 
     <simple-method method-name="testGetInventoryAvailableByFacility" short-description="Test case for service getInventoryAvailableByFacility" login-required="false">
         <set field="serviceCtx.productId" value="CAM-2644"/>
-        <set field="serviceCtx.facilityId" value="CatoShopWarehouse"/>
+        <set field="serviceCtx.facilityId" value="ScipioShopWarehouse"/>
         <call-service service-name="getInventoryAvailableByFacility" in-map-name="serviceCtx">
             <result-to-field result-name="quantityOnHandTotal"/>
             <result-to-field result-name="availableToPromiseTotal"/>

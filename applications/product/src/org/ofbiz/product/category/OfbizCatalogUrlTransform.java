@@ -50,9 +50,9 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
         return null;
     }
 
-    // Cato: Added and modified to support Boolean
+    // Scipio: Added and modified to support Boolean
     @SuppressWarnings("unchecked")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
+    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Scipio: NOTE: can now return null
         return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
     }
     
@@ -61,7 +61,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, final Map args) throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
         
-        // Cato: new flags
+        // Scipio: new flags
         final Boolean fullPath = checkBooleanArg(args, "fullPath", null);
         final Boolean secure = checkBooleanArg(args, "secure", null);
         final Boolean encode = checkBooleanArg(args, "encode", null);
@@ -89,7 +89,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         String previousCategoryId = getStringArg(args, "previousCategoryId");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         
-                        // CATO: now delegated to our new reusable method, and also support fullPath and secure flags
+                        // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
                         

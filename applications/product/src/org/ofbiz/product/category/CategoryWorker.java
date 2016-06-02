@@ -375,7 +375,7 @@ public class CategoryWorker {
 
     public static List<String> getTrail(ServletRequest request) {
         HttpSession session = ((HttpServletRequest) request).getSession();
-        // Cato: 2016-13-22: Trail must also be checked in request attributes to ensure the request is consistent
+        // Scipio: 2016-13-22: Trail must also be checked in request attributes to ensure the request is consistent
         //List<String> crumb = UtilGenerics.checkList(session.getAttribute("_BREAD_CRUMB_TRAIL_"));
         List<String> crumb = UtilGenerics.checkList(request.getAttribute("_BREAD_CRUMB_TRAIL_"));
         if (crumb == null) {
@@ -385,7 +385,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Version that returns a copy of the trail without the TOP category.
+     * Scipio: Version that returns a copy of the trail without the TOP category.
      */
     public static List<String> getTrailNoTop(ServletRequest request) {
         List<String> fullTrail = getTrail(request);
@@ -406,24 +406,24 @@ public class CategoryWorker {
     /**
      * Sets breadcrumbs trail to the exact given value.
      * <p>
-     * Cato: This is modified to accept a onlyIfNewInRequest boolean that will check to see
+     * Scipio: This is modified to accept a onlyIfNewInRequest boolean that will check to see
      * if a breadcrumb was already set in the request. Default is false. 
      * This is needed in some places to prevent squashing breadcrumbs set in servlets and filters.
      */
     public static List<String> setTrail(ServletRequest request, List<String> crumb, boolean onlyIfNewInRequest) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         if (onlyIfNewInRequest) {
-            // Cato: Check if was already set
+            // Scipio: Check if was already set
             if (request.getAttribute("_BREAD_CRUMB_TRAIL_") == null) {
                 session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
-                // Cato: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
+                // Scipio: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
                 request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
             }
         }
         else {
-            // Cato: stock case
+            // Scipio: stock case
             session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
-            // Cato: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
+            // Scipio: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
             request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
         }
         return crumb;
@@ -437,7 +437,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Sets breadcrumbs trail to the exact given value but only if not yet set during request.
+     * Scipio: Sets breadcrumbs trail to the exact given value but only if not yet set during request.
      */
     public static List<String> setTrailIfFirstInRequest(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, true);
@@ -598,7 +598,7 @@ public class CategoryWorker {
     }
 
     /**
-     * Cato: Retrieves categories based on either a list of
+     * Scipio: Retrieves categories based on either a list of
      * ProductCategoryRollup or ProdCatalogCategory and returns a list of
      * TreeDataItem representing categories
      * 
@@ -639,14 +639,14 @@ public class CategoryWorker {
                 
                 String categoryName = null;
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
-                // CATO: Do NOT HTML-escape this here
+                // SCIPIO: Do NOT HTML-escape this here
                 StringWrapper categoryNameWrapper = wrapper.get("CATEGORY_NAME", "raw");
                 if (categoryNameWrapper != null) {
                     categoryName = categoryNameWrapper.toString();
                 }
                 if (UtilValidate.isEmpty(categoryName)) {
                     // 2016-03-22: Some categories don't have a name but have description
-                    // CATO: Do NOT HTML-escape this here
+                    // SCIPIO: Do NOT HTML-escape this here
                     categoryNameWrapper = wrapper.get("DESCRIPTION", "raw");
                     if (categoryNameWrapper != null) {
                         categoryName = categoryNameWrapper.toString();
@@ -678,7 +678,7 @@ public class CategoryWorker {
     }
 
     /**
-     * Cato: Retrieves products members for a given category and returns a list
+     * Scipio: Retrieves products members for a given category and returns a list
      * of JsTreeDataItem representing products
      * 
      * @param delegator
@@ -700,7 +700,7 @@ public class CategoryWorker {
                 if (UtilValidate.isEmpty(productName)) {
                     productName = productId;
                     ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null);
-                    // CATO: Do NOT HTML-escape this here
+                    // SCIPIO: Do NOT HTML-escape this here
                     if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME", "raw").toString()))
                         productName = wrapper.get("CATEGORY_NAME", "raw").toString();
                 }
@@ -717,7 +717,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Returns true only if the category ID is child of the given parent category ID.
+     * Scipio: Returns true only if the category ID is child of the given parent category ID.
      * <p>
      * NOTE: is caching
      */
@@ -736,7 +736,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Returns true only if the category ID is child of the given parent category ID.
+     * Scipio: Returns true only if the category ID is child of the given parent category ID.
      * <p>
      * NOTE: is caching
      */
@@ -746,7 +746,7 @@ public class CategoryWorker {
     }    
     
     /**
-     * Cato: Returns true only if the category ID is a top category.
+     * Scipio: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
@@ -767,7 +767,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Returns true only if the category ID is a top category.
+     * Scipio: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
@@ -777,7 +777,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Returns true only if the category ID is a top category.
+     * Scipio: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
@@ -799,7 +799,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Returns true only if the category contains the product, NON-recursive.
+     * Scipio: Returns true only if the category contains the product, NON-recursive.
      * <p>
      * NOTE: is caching
      */
@@ -812,7 +812,7 @@ public class CategoryWorker {
     
     
     /**
-     * Cato: Returns a valid category path/trail (as parts) from the given trail,
+     * Scipio: Returns a valid category path/trail (as parts) from the given trail,
      * starting with the top category (but without the fake "TOP" category). 
      * If none could be determined, returns null.
      * <p>
@@ -848,7 +848,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Returns a valid category path/trail (as parts) from the current request trail in session,
+     * Scipio: Returns a valid category path/trail (as parts) from the current request trail in session,
      * starting with the top category (but without the fake "TOP" category). 
      * If none could be determined, returns null.
      */
@@ -857,7 +857,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Checks the given trail for the last recorded top category ID, if any.
+     * Scipio: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      * <p>
      * NOTE: is caching
@@ -880,7 +880,7 @@ public class CategoryWorker {
     
     
     /**
-     * Cato: Checks the given trail for the last recorded top category ID, if any.
+     * Scipio: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      */
     public static String getTopCategoryFromTrail(ServletRequest request, List<String> trail) {
@@ -889,7 +889,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Cato: Checks the current trail for the last recorded top category ID, if any.
+     * Scipio: Checks the current trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      */
     public static String getTopCategoryFromTrail(ServletRequest request) {
@@ -898,7 +898,7 @@ public class CategoryWorker {
     
     
     /**
-     * Cato: Attempts to determine a suitable category for the given product from given trail.
+     * Scipio: Attempts to determine a suitable category for the given product from given trail.
      */
     public static String getCategoryForProductFromTrail(ServletRequest request, String productId, List<String> trail) {
         if (UtilValidate.isNotEmpty(productId)) {
@@ -915,7 +915,7 @@ public class CategoryWorker {
     }   
     
     /**
-     * Cato: Attempts to determine a suitable category for the given product from the trail in session.
+     * Scipio: Attempts to determine a suitable category for the given product from the trail in session.
      */
     public static String getCategoryForProductFromTrail(ServletRequest request, String productId) {
         return getCategoryForProductFromTrail(request, productId, CategoryWorker.getTrail(request));

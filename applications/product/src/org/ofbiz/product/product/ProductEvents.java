@@ -977,7 +977,7 @@ public class ProductEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String emailType = "PRDS_TELL_FRIEND";
-        // Cato: now points to shop
+        // Scipio: now points to shop
         String defaultScreenLocation = "component://shop/widget/EmailProductScreens.xml#TellFriend";
 
         GenericValue productStore = ProductStoreWorker.getProductStore(request);
@@ -1098,7 +1098,7 @@ public class ProductEvents {
             compareList.add(product);
         }
         session.setAttribute("productCompareList", compareList);
-        // CATO: Do NOT HTML-escape this here
+        // SCIPIO: Do NOT HTML-escape this here
         String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
         String eventMsg = UtilProperties.getMessage("ProductUiLabels", "ProductAddToCompareListSuccess", UtilMisc.toMap("name", productName), UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", eventMsg);
@@ -1136,7 +1136,7 @@ public class ProductEvents {
             }
         }
         session.setAttribute("productCompareList", compareList);
-        // CATO: Do NOT HTML-escape this here
+        // SCIPIO: Do NOT HTML-escape this here
         String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
         String eventMsg = UtilProperties.getMessage("ProductUiLabels", "ProductRemoveFromCompareListSuccess", UtilMisc.toMap("name", productName), UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", eventMsg);

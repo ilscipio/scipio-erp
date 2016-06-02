@@ -458,7 +458,7 @@ public class CategoryServices {
     @SuppressWarnings("unchecked")
     @Deprecated
     /**
-     * Cato: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
+     * Scipio: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
      * If an event is wanted though, use TODO: Implement the required events so they can be used to populate a jsTree via ajax too.
      */
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {
@@ -528,7 +528,7 @@ public class CategoryServices {
                         CategoryContentWrapper categoryContentWrapper = new CategoryContentWrapper(cate, request);
 
                         String title = null;
-                        // CATO: Do NOT HTML-escape this here
+                        // SCIPIO: Do NOT HTML-escape this here
                         if (UtilValidate.isNotEmpty(categoryContentWrapper.get(catNameField, "raw").toString())) {
                             title = new StringBuffer(categoryContentWrapper.get(catNameField, "raw").toString()).append(" [").append(catId).append("]")
                                     .toString();

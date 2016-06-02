@@ -22,12 +22,12 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
-    <!-- Cato: FIXME?: The content controller may need to be split up so as not to have to
+    <!-- Scipio: FIXME?: The content controller may need to be split up so as not to have to
         include its full main controller here (redefinitions, breakage/security risks) -
         content has both its own public interface and a common interface for other apps, 
         which are not (should not be assumed) equal. NOTE: This was a new (non-stock) include. -->
     <include location="component://content/webapp/content/WEB-INF/controller.xml"/>
-    <!-- CATO: Disabled for now -->  
+    <!-- SCIPIO: Disabled for now -->  
     <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/> -->
     <description>Catalog Module Site Configuration File</description>
     
@@ -547,7 +547,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryContent"/>
     </request-map>
-   <!-- CATO: Remove -->
+   <!-- SCIPIO: Remove -->
    <!--  <request-map uri="EditCategoryContentContent">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryContentContent"/>
@@ -1434,7 +1434,7 @@ under the License.
     </request-map>
 
     <!-- ================ ProdCatalog Stores Requests ================= -->
-    <!-- CATO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
+    <!-- SCIPIO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
 <!--     <request-map uri="EditProdCatalogStores">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProdCatalogStores"/>
@@ -2695,7 +2695,7 @@ under the License.
     </request-map>
     
     <!-- ================ Image Management Requests ================= -->
-    <!-- CATO - Remove; will be replaced with content app features -->
+    <!-- SCIPIO - Remove; will be replaced with content app features -->
 <!--     <request-map uri="Imagemanagement"><security https="true" auth="true"/>
         <response name="success" type="view" value="Imagemanagement"/>
     </request-map>
@@ -3079,7 +3079,7 @@ under the License.
     </request-map>
     
     <!-- ================ Product Tag Requests ================= -->
-     <!-- CATO: Remove
+     <!-- SCIPIO: Remove
     <request-map uri="EditProductTag">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductTag"/>
@@ -3109,7 +3109,7 @@ under the License.
     <view-map name="FindCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#FindCatalog"/>
     <view-map name="EditProdCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalog"/>
     <view-map name="EditProdCatalogCategories" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogCategories"/>
-    <!-- CATO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
+    <!-- SCIPIO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
    <!--  <view-map name="EditProdCatalogStores" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogStores"/> -->
     <view-map name="EditProdCatalogParties" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogParties"/>
     <view-map name="EditProdCatalogSection" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogSection"/>
@@ -3196,7 +3196,7 @@ under the License.
     <view-map name="CreateFeature" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#CreateFeature"/>
 
 
-    <!-- CATO: The following is duplicated in component://marketing/webapp/marketing/WEB-INF/controller.xml -->
+    <!-- SCIPIO: The following is duplicated in component://marketing/webapp/marketing/WEB-INF/controller.xml -->
     <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromo"/>
     <view-map name="EditProductPromoRules" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromoRules"/>
@@ -3255,7 +3255,7 @@ under the License.
     <view-map name="ListShipmentMethodTypes" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListShipmentMethodTypes"/>
     <view-map name="ListCarrierShipmentMethods" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListCarrierShipmentMethods"/>
 
-    <!-- CATO: Remove    
+    <!-- SCIPIO: Remove    
     <view-map name="EditProductTag" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductTag"/> -->
 
     <!-- Lookup request mappings -->
@@ -3282,7 +3282,7 @@ under the License.
     <view-map name="LookupContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupContactList"/>
 
     <!-- Image Management request mappings -->
-    <!-- CATO - Remove; will be replaced with content app features -->
+    <!-- SCIPIO - Remove; will be replaced with content app features -->
 <!--     <view-map name="Imagemanagement" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#Imagemanagement"/>
     <view-map name="ImageGallery" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageGallery" type="screen"/>
     <view-map name="ImageUpload" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageUpload" type="screen"/>

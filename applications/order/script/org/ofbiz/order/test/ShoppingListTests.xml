@@ -24,7 +24,7 @@ under the License.
     <simple-method method-name="testCreateShoppingList" short-description="Test create shopping list" login-required="false">
         <set field="serviceCtx.partyId" value="DemoCustomer"/>
         <set field="serviceCtx.shoppingListTypeId" value="SLT_WISH_LIST"/>
-        <set field="serviceCtx.productStoreId" value="CatoShop"/>
+        <set field="serviceCtx.productStoreId" value="ScipioShop"/>
         <set field="serviceCtx.listName" value="Demo Wish List 1"/>
         <set field="serviceCtx.isActive" value="Y"/>
         <set field="serviceCtx.currencyUom" value="USD"/>
@@ -50,7 +50,7 @@ under the License.
         <set field="serviceCtx.shoppingListId" from-field="shoppingListId"/>
         <set field="serviceCtx.productId" value="CL-8544"/>
         <set field="serviceCtx.quantity" value="3" type="BigDecimal"/>
-        <set field="serviceCtx.productStoreId" value="CatoShop"/>
+        <set field="serviceCtx.productStoreId" value="ScipioShop"/>
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="DemoCustomer"/>
         </entity-one>
@@ -72,7 +72,7 @@ under the License.
         <set field="serviceCtx.shoppingListId" from-field="shoppingListId"/>
         <set field="serviceCtx.productId" value="CAM-2644"/>
         <set field="serviceCtx.quantity" value="2" type="BigDecimal"/>
-        <set field="serviceCtx.productStoreId" value="CatoShop"/>
+        <set field="serviceCtx.productStoreId" value="ScipioShop"/>
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="DemoCustomer"/>
         </entity-one>

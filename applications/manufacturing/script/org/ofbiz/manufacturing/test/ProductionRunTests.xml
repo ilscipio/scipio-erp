@@ -26,7 +26,7 @@ under the License.
     -->
     <simple-method method-name="testProductionRunCreation" short-description="Test the creation of a production run" login-required="false">
         <set field="productId" value="PROD_MANUF"/>
-        <set field="facilityId" value="CatoShopWarehouse"/>
+        <set field="facilityId" value="ScipioShopWarehouse"/>
         <set field="quantity" value="5.0" type="BigDecimal"/>
         <now-timestamp field="nowTimestamp"/>
         <set-calendar field="productionRunStartDate" from-field="nowTimestamp" days="1"/>
@@ -132,7 +132,7 @@ under the License.
 
     <simple-method method-name="testProductionRunScheduleConfirm" short-description="Test the production run status change to scheduled and confirmed" login-required="false">
         <set field="productId" value="PROD_MANUF"/>
-        <set field="facilityId" value="CatoShopWarehouse"/>
+        <set field="facilityId" value="ScipioShopWarehouse"/>
         <set field="quantity" value="5.0" type="BigDecimal"/>
         <now-timestamp field="nowTimestamp"/>
         <set-calendar field="productionRunStartDate" from-field="nowTimestamp" days="1"/>
@@ -217,7 +217,7 @@ under the License.
 
     <simple-method method-name="testProductionRunDateChange" short-description="Test the production run start date change" login-required="false">
         <set field="productId" value="PROD_MANUF"/>
-        <set field="facilityId" value="CatoShopWarehouse"/>
+        <set field="facilityId" value="ScipioShopWarehouse"/>
         <set field="quantity" value="5.0" type="BigDecimal"/>
         <now-timestamp field="nowTimestamp"/>
         <set-calendar field="productionRunStartDate" from-field="nowTimestamp" days="1"/>
@@ -285,7 +285,7 @@ under the License.
 
     <simple-method method-name="testProductionRunCancelled" short-description="Test the process of cancelling a production run" login-required="false">
         <set field="productId" value="PROD_MANUF"/>
-        <set field="facilityId" value="CatoShopWarehouse"/>
+        <set field="facilityId" value="ScipioShopWarehouse"/>
         <set field="quantity" value="5.0" type="BigDecimal"/>
         <now-timestamp field="nowTimestamp"/>
         <set-calendar field="productionRunStartDate" from-field="nowTimestamp" days="1"/>
@@ -364,7 +364,7 @@ under the License.
 
     <simple-method method-name="testProductionRunQuickIssueAndProduce" short-description="Test the production run quick issuance of materials and production of finished product" login-required="false">
         <set field="productId" value="PROD_MANUF"/>
-        <set field="facilityId" value="CatoShopWarehouse"/>
+        <set field="facilityId" value="ScipioShopWarehouse"/>
         <set field="quantity" value="2.0" type="BigDecimal"/>
         <now-timestamp field="nowTimestamp"/>
         <set-calendar field="productionRunStartDate" from-field="nowTimestamp" days="1"/>
@@ -741,7 +741,7 @@ under the License.
 
     <simple-method method-name="testQuickRunProductionRun" short-description="Test the quick execution of a production run" login-required="false">
         <set field="productId" value="PROD_MANUF"/>
-        <set field="facilityId" value="CatoShopWarehouse"/>
+        <set field="facilityId" value="ScipioShopWarehouse"/>
         <set field="quantity" value="1.0" type="BigDecimal"/>
         <now-timestamp field="nowTimestamp"/>
         <set-calendar field="productionRunStartDate" from-field="nowTimestamp" days="1"/>
@@ -795,7 +795,7 @@ under the License.
 
     <simple-method method-name="testQuickCloseProductionRun" short-description="Test the quick finalization of a production run" login-required="false">
         <set field="productId" value="PROD_MANUF"/>
-        <set field="facilityId" value="CatoShopWarehouse"/>
+        <set field="facilityId" value="ScipioShopWarehouse"/>
         <set field="quantity" value="1.0" type="BigDecimal"/>
         <now-timestamp field="nowTimestamp"/>
         <set-calendar field="productionRunStartDate" from-field="nowTimestamp" days="1"/>
@@ -908,7 +908,7 @@ under the License.
 
         <assert>
             <if-compare field="productionRunHeader.workEffortTypeId" operator="equals" value="PROD_ORDER_HEADER"/>
-            <if-compare field="productionRunHeader.facilityId" operator="equals" value="CatoShopWarehouse"/>
+            <if-compare field="productionRunHeader.facilityId" operator="equals" value="ScipioShopWarehouse"/>
             <if-compare field="productionRunHeader.currentStatusId" operator="equals" value="PRUN_CREATED"/>
             <if-compare field="productionRunTask.currentStatusId" operator="equals" value="PRUN_CREATED"/>
             <if-compare field="productionRunHeader.quantityToProduce" operator="equals" value="1.0" type="BigDecimal"/>
@@ -977,7 +977,7 @@ under the License.
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
         <set field="serviceCtx.productId" from-field="productId"/>
         <set field="serviceCtx.requirementTypeId" value="INTERNAL_REQUIREMENT"/>
-        <set field="serviceCtx.facilityId" value="CatoShopWarehouse"/>
+        <set field="serviceCtx.facilityId" value="ScipioShopWarehouse"/>
         <set field="serviceCtx.requirementStartDate" from-field="startDate"/>
 
         <call-service service-name="createRequirement" in-map-name="serviceCtx">
@@ -1004,7 +1004,7 @@ under the License.
 
         <assert>
             <if-compare field="productionRunHeader.workEffortTypeId" operator="equals" value="PROD_ORDER_HEADER"/>
-            <if-compare field="productionRunHeader.facilityId" operator="equals" value="CatoShopWarehouse"/>
+            <if-compare field="productionRunHeader.facilityId" operator="equals" value="ScipioShopWarehouse"/>
             <if-compare field="productionRunHeader.currentStatusId" operator="equals" value="PRUN_CREATED"/>
             <if-compare field="productionRunTask.currentStatusId" operator="equals" value="PRUN_CREATED"/>
             <if-compare field="productionRunHeader.quantityToProduce" operator="equals" value="1.0" type="BigDecimal"/>

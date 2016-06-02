@@ -275,7 +275,7 @@ under the License.
                     </condition>
                     <widgets>
                         <screenlet title="${uiLabelMap.AccountingAccountsPayable}">
-                            <include-screen name="CatoInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
+                            <include-screen name="ScipioInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
                         </screenlet>
                     </widgets>              
                 </section>
@@ -297,7 +297,7 @@ under the License.
                     </condition>
                     <widgets>
                         <screenlet title="${uiLabelMap.AccountingInvoicesDueSoon}: (${InvoicesDueSoonTotalAmount})">
-                            <include-screen name="CatoInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
+                            <include-screen name="ScipioInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
                         </screenlet>
                     </widgets>              
                 </section>

@@ -367,15 +367,15 @@ under the License.
                             <widgets>
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoPaymentInfo"/>
+                                        <include-screen name="ScipioPaymentInfo"/>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoPaymentAppliedPayment"/>
+                                        <include-screen name="ScipioPaymentAppliedPayment"/>
                                     </container>
                                </container>
                                <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoPaymentFinancialTrans"/>
+                                        <include-screen name="ScipioPaymentFinancialTrans"/>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     </container>
@@ -391,15 +391,15 @@ under the License.
                             <fail-widgets>
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoPaymentInfo"/>
+                                        <include-screen name="ScipioPaymentInfo"/>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoPaymentAppliedPayment"/>
+                                        <include-screen name="ScipioPaymentAppliedPayment"/>
                                     </container>
                                </container>
                                <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoPaymentFinancialTrans"/>
+                                        <include-screen name="ScipioPaymentFinancialTrans"/>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     </container>
@@ -545,7 +545,7 @@ under the License.
     
     <!-- SCIPIO: Form migration -->
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentHeader -->
-    <screen name="CatoPaymentInfo">
+    <screen name="ScipioPaymentInfo">
         <section>
             <actions>
                 <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
@@ -567,7 +567,7 @@ under the License.
             <widgets>
                 <screenlet>        
                     <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/payment/CatoPaymentInfo.ftl"/></html>
+                        <html><html-template location="component://accounting/webapp/accounting/payment/ScipioPaymentInfo.ftl"/></html>
                     </platform-specific>
                 </screenlet>
             </widgets>
@@ -575,7 +575,7 @@ under the License.
     </screen>
     
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentApplication -->
-    <screen name="CatoPaymentAppliedPayment">
+    <screen name="ScipioPaymentAppliedPayment">
         <section>
             <actions>
                 <set field="appliedAmount" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
@@ -599,7 +599,7 @@ under the License.
             <widgets>
                 <screenlet>        
                     <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/payment/CatoPaymentAppliedPayment.ftl"/></html>
+                        <html><html-template location="component://accounting/webapp/accounting/payment/ScipioPaymentAppliedPayment.ftl"/></html>
                     </platform-specific>
                 </screenlet>
             </widgets>
@@ -607,7 +607,7 @@ under the License.
     </screen>
     
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/PaymentForms.xml#FinAccountTransAssociatedWithPayment -->
-    <screen name="CatoPaymentFinancialTrans">
+    <screen name="ScipioPaymentFinancialTrans">
         <section>
             <actions>
                 <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
@@ -618,7 +618,7 @@ under the License.
             <widgets>
                 <screenlet>        
                     <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/payment/CatoPaymentFinancialTrans.ftl"/></html>
+                        <html><html-template location="component://accounting/webapp/accounting/payment/ScipioPaymentFinancialTrans.ftl"/></html>
                     </platform-specific>
                 </screenlet>
             </widgets>

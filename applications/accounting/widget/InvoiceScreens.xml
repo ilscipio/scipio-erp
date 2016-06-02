@@ -218,12 +218,12 @@ under the License.
                             <widgets>
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoInvoiceInfo"/>
+                                        <include-screen name="ScipioInvoiceInfo"/>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoInvoiceTerms"/>
-                                        <include-screen name="CatoInvoicePaymentInfo"/>
-                                        <include-screen name="CatoInvoiceAppliedPayment"/>
+                                        <include-screen name="ScipioInvoiceTerms"/>
+                                        <include-screen name="ScipioInvoicePaymentInfo"/>
+                                        <include-screen name="ScipioInvoiceAppliedPayment"/>
                                     </container>
                                 </container>
                             
@@ -239,7 +239,7 @@ under the License.
                                 
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                        <include-screen name="CatoInvoiceItems"/>
+                                        <include-screen name="ScipioInvoiceItems"/>
                                     </container>
                                </container>
                                 <!--    
@@ -271,17 +271,17 @@ under the License.
                             <fail-widgets>
                                <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoInvoiceInfo"/>
+                                        <include-screen name="ScipioInvoiceInfo"/>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="CatoInvoiceTerms"/>
-                                        <include-screen name="CatoInvoicePaymentInfo"/>
-                                        <include-screen name="CatoInvoiceAppliedPayment"/>
+                                        <include-screen name="ScipioInvoiceTerms"/>
+                                        <include-screen name="ScipioInvoicePaymentInfo"/>
+                                        <include-screen name="ScipioInvoiceAppliedPayment"/>
                                     </container>
                                </container>
                                <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                        <include-screen name="CatoInvoiceItems"/>
+                                        <include-screen name="ScipioInvoiceItems"/>
                                     </container>
                                </container>
                                 <!-- 
@@ -596,7 +596,7 @@ under the License.
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceHeader 
                                         component://accounting/widget/InvoiceForms.xml#ListInvoiceStatus
     -->
-    <screen name="CatoInvoiceInfo">
+    <screen name="ScipioInvoiceInfo">
         <section>
             <actions>
                 <set field="total" value="${groovy:return(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice));}"/>
@@ -621,7 +621,7 @@ under the License.
                     <widgets>
                         <screenlet>        
                             <platform-specific>
-                                <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceInfo.ftl"/></html>
+                                <html><html-template location="component://accounting/webapp/accounting/invoice/ScipioInvoiceInfo.ftl"/></html>
                             </platform-specific>
                         </screenlet>
                     </widgets>
@@ -631,7 +631,7 @@ under the License.
     </screen>
     
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceApplications -->
-    <screen name="CatoInvoiceAppliedPayment">
+    <screen name="ScipioInvoiceAppliedPayment">
         <section>
             <condition>
                 <not>
@@ -643,7 +643,7 @@ under the License.
             <widgets>
                 <screenlet>
                     <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceAppliedPayment.ftl"/></html>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/ScipioInvoiceAppliedPayment.ftl"/></html>
                     </platform-specific>
                 </screenlet>
             </widgets>
@@ -651,7 +651,7 @@ under the License.
     </screen>
     
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceItems -->
-    <screen name="CatoInvoiceItems">
+    <screen name="ScipioInvoiceItems">
         <section>
             <condition>
                 <not>
@@ -663,7 +663,7 @@ under the License.
             <widgets>
                 <screenlet>
                     <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceItems.ftl"/></html>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/ScipioInvoiceItems.ftl"/></html>
                     </platform-specific>
                 </screenlet>
             </widgets>
@@ -673,7 +673,7 @@ under the License.
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/ap/InvoiceForms.xml#ListReports
                                         component://accounting/widget/ar/InvoiceForms.xml#ListReports
     -->
-    <screen name="CatoInvoices">
+    <screen name="ScipioInvoices">
         <section>
             <actions>
                 <!-- INTERFACE: expects an "invoices" list in context -->
@@ -683,7 +683,7 @@ under the License.
             <widgets>
                 <screenlet>
                     <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoices.ftl"/></html>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/ScipioInvoices.ftl"/></html>
                     </platform-specific>
                 </screenlet>
             </widgets>
@@ -691,7 +691,7 @@ under the License.
     </screen>
     
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceTerms -->
-    <screen name="CatoInvoiceTerms">
+    <screen name="ScipioInvoiceTerms">
         <section>
             <condition>
                 <not>
@@ -703,7 +703,7 @@ under the License.
             <widgets>
                 <screenlet>
                     <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceTerms.ftl"/></html>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/ScipioInvoiceTerms.ftl"/></html>
                     </platform-specific>
                 </screenlet>
             </widgets>
@@ -711,7 +711,7 @@ under the License.
     </screen>
     
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoicePaymentInfo -->
-    <screen name="CatoInvoicePaymentInfo">
+    <screen name="ScipioInvoicePaymentInfo">
         <section>
             <actions>
                 <service service-name="getInvoicePaymentInfoList" result-map-list="invoicePaymentInfoList">
@@ -728,7 +728,7 @@ under the License.
                      <widgets>
                          <screenlet>
                              <platform-specific>
-                                 <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicePaymentInfo.ftl"/></html>
+                                 <html><html-template location="component://accounting/webapp/accounting/invoice/ScipioInvoicePaymentInfo.ftl"/></html>
                              </platform-specific>
                          </screenlet>
                      </widgets>

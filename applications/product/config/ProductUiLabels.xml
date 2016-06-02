@@ -62,7 +62,7 @@
         <value xml:lang="zh">网站分析类型</value>
         <value xml:lang="zh_TW">網站分析型態</value>
     </property>
-    <!-- Cato: TODO: translate -->
+    <!-- Scipio: TODO: translate -->
     <property key="CatalogWebAnalyticsType">
         <value xml:lang="de">Web Analytik Type</value>
         <value xml:lang="en">Web Analytics Type</value>
@@ -105,30 +105,30 @@
         <value xml:lang="nl">Cat.</value>
     </property>
     <property key="FacilityCompanyName">
-        <value xml:lang="de">CATO - Einrichtungen Verwaltung</value>
-        <value xml:lang="en">CATO - Warehouse Manager</value>
-        <value xml:lang="es">CATO - Administrador de Almacén</value>
-        <value xml:lang="fr">CATO - Gestion de stock</value>
-        <value xml:lang="it">CATO - Gestione stabilimenti</value>
-        <value xml:lang="ja">CATO - 拠点管理</value>
-        <value xml:lang="nl">CATO - Faciliteit Manager</value>
-        <value xml:lang="ro">CATO - Gestiune Compartimente</value>
-        <value xml:lang="ru">CATO - Управление объектами</value>
-        <value xml:lang="th">CATO - การจัดการคลังสินค้า</value>
-        <value xml:lang="vi">CATO - Quản trị Chi nhánh / Cơ sở</value>
-        <value xml:lang="zh">CATO -：场所管理程序</value>
-        <value xml:lang="zh_TW">CATO -場所管理程式</value>
+        <value xml:lang="de">SCIPIO - Einrichtungen Verwaltung</value>
+        <value xml:lang="en">SCIPIO - Warehouse Manager</value>
+        <value xml:lang="es">SCIPIO - Administrador de Almacén</value>
+        <value xml:lang="fr">SCIPIO - Gestion de stock</value>
+        <value xml:lang="it">SCIPIO - Gestione stabilimenti</value>
+        <value xml:lang="ja">SCIPIO - 拠点管理</value>
+        <value xml:lang="nl">SCIPIO - Faciliteit Manager</value>
+        <value xml:lang="ro">SCIPIO - Gestiune Compartimente</value>
+        <value xml:lang="ru">SCIPIO - Управление объектами</value>
+        <value xml:lang="th">SCIPIO - การจัดการคลังสินค้า</value>
+        <value xml:lang="vi">SCIPIO - Quản trị Chi nhánh / Cơ sở</value>
+        <value xml:lang="zh">SCIPIO -：场所管理程序</value>
+        <value xml:lang="zh_TW">SCIPIO -場所管理程式</value>
     </property>
     <property key="FacilityCompanySubtitle">
-        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
-        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de 'CATO' familie van open source software</value>
+        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
+        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de 'SCIPIO' familie van open source software</value>
         <value xml:lang="vi">Một phần của Đại gia đình phần mềm mã mở dành cho kinh doanh</value>
-        <value xml:lang="zh">开源软件CATO -的组成部分</value>
-        <value xml:lang="zh_TW">開源軟體CATO -的組成部分</value>
+        <value xml:lang="zh">开源软件SCIPIO -的组成部分</value>
+        <value xml:lang="zh_TW">開源軟體SCIPIO -的組成部分</value>
     </property>
     <property key="FacilityEstimatedShippingCharges">
         <value xml:lang="de">Voraussichtliche Versandkosten</value>
@@ -12235,7 +12235,7 @@
         <value xml:lang="zh">添加新促销规则</value>
         <value xml:lang="zh_TW">增加新促銷規則</value>
     </property>
-    <!-- CATO -->
+    <!-- SCIPIO -->
     <property key="ProductAddPromoCategory">
         <value xml:lang="de">Neue Aktionskategorie hinzufügen</value>
         <value xml:lang="en">Add promotion category</value>
@@ -13769,18 +13769,18 @@
         <value xml:lang="zh_TW">產品型錄分類類型</value>
     </property>
     <property key="ProductCatalogCompanyName">
-        <value xml:lang="de">CATO - Katalogverwaltung</value>
-        <value xml:lang="en">CATO - Catalog Manager</value>
-        <value xml:lang="es">CATO - Administrador del Catálogo</value>
-        <value xml:lang="fr">CATO - Gestion des articles</value>
-        <value xml:lang="it">CATO - Gestione cataloghi</value>
-        <value xml:lang="ja">CATO - カタログ管理</value>
-        <value xml:lang="ro">CATO - Gestiune Catalog</value>
-        <value xml:lang="ru">CATO - Управление каталогами</value>
-        <value xml:lang="th">CATO - การจัดการหมวดหมู่</value>
-        <value xml:lang="vi">CATO - Quản trị Phân loại Trình diễn</value>
-        <value xml:lang="zh">CATO -：目录管理程序</value>
-        <value xml:lang="zh_TW">CATO -型錄管理程式</value>
+        <value xml:lang="de">SCIPIO - Katalogverwaltung</value>
+        <value xml:lang="en">SCIPIO - Catalog Manager</value>
+        <value xml:lang="es">SCIPIO - Administrador del Catálogo</value>
+        <value xml:lang="fr">SCIPIO - Gestion des articles</value>
+        <value xml:lang="it">SCIPIO - Gestione cataloghi</value>
+        <value xml:lang="ja">SCIPIO - カタログ管理</value>
+        <value xml:lang="ro">SCIPIO - Gestiune Catalog</value>
+        <value xml:lang="ru">SCIPIO - Управление каталогами</value>
+        <value xml:lang="th">SCIPIO - การจัดการหมวดหมู่</value>
+        <value xml:lang="vi">SCIPIO - Quản trị Phân loại Trình diễn</value>
+        <value xml:lang="zh">SCIPIO -：目录管理程序</value>
+        <value xml:lang="zh_TW">SCIPIO -型錄管理程式</value>
     </property>
     <property key="ProductCatalogDetailList">
         <value xml:lang="de">Katalog Detailliste</value>
@@ -14509,29 +14509,29 @@
     <property key="ProductCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
-    <!--value xml:lang="nl">Onderdeel van de CATO'-suite</value-->
-        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família SCIPIO - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
-    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din CATO Family of Open Source Software</value-->
+        <value xml:lang="pt_PT">Parte da família SCIPIO - de software de fonte aberta</value>
+    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din SCIPIO Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО CATO</valuevalue xml:lang="ru">Часть семейства "CATO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства CATO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở CATO -</value>
-    <!--value xml:lang="zh">开源软件CATO -的组成部分</valuevalue xml:lang="zh">开源软件CATO -的组成部分</value-->
-        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
-        <value xml:lang="zh_CN">CATO -一部分</value>
-        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
+        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở SCIPIO -</value>
+    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
+        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
+        <value xml:lang="zh_CN">SCIPIO -一部分</value>
+        <value xml:lang="zh_TW">開源軟體SCIPIO -家族的一部分</value>
     </property>
     <property key="ProductCompareAtPrice">
         <value xml:lang="cs">Porovnat cenu</value>
@@ -16006,7 +16006,7 @@
         <value xml:lang="zh_TW">為其他檔中的畫面使用類似於</value>
     </property>
     <property key="ProductDetailSubScreenTooltip">
-        <!-- Cato: Now points to shop -->
+        <!-- Scipio: Now points to shop -->
         <value xml:lang="en">example: component://shop/widget/CatalogScreens.xml#categorydetail</value>
         <value xml:lang="it">esempio: component://shop/widget/CatalogScreens.xml#categorydetail</value>
         <value xml:lang="ja">例: component://shop/widget/CatalogScreens.xml#categorydetail</value>
@@ -18037,18 +18037,18 @@
         <value xml:lang="zh_TW">未來團體/角色清單</value>
     </property>
     <property key="ProductGeneralMessage">
-        <value xml:lang="de">Für etwas Interessantes melden Sie sich an, versuchen Sie Benutzername:admin, Passwort:CATO -</value>
-        <value xml:lang="en">For something interesting make sure you are logged in, try username:admin, password:CATO -</value>
-        <value xml:lang="es">Para ver algo interesante asegúrese de estar conectado, pruebe el usuario: admin y la contraseña: CATO -</value>
-        <value xml:lang="fr">Si vous êtes intéressé, connectez-vous sous l'utilisateur admin, mot de passe : CATO -</value>
-        <value xml:lang="it">Per qualsiasi interesse devi essere sicuro di essere loggato, provare nome utente:admin, password:CATO -</value>
-        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;admin;Password CATO - でログインしてください</value>
-        <value xml:lang="ro">Pentru orice interese trebuie sa fii sigur ca esti logat, incearca nume utilizator :admin, password:CATO -</value>
-        <value xml:lang="ru">Для того, чтобы сделать что-нибудь полезное вы должны зарегистрироваться в система, попробуйте имя пользователя:admin, пароль:CATO -</value>
-        <value xml:lang="th">For something interesting make sure you are logged in, try username:admin, password:CATO -</value>
-        <value xml:lang="vi">Để trải nghiệm hãy chắc chắn rằng bạn đã đăng nhập hệ thống, bạn hãy thử với tài khoản admin / CATO -</value>
-        <value xml:lang="zh">如果有感兴趣的内容，请确信你登录了，可以尝试使用用户名:admin、密码:CATO -登录</value>
-        <value xml:lang="zh_TW">如果有感興趣的內容,請確信你登入了,可以嘗試使用使用者名:admin、密碼:CATO -登入</value>
+        <value xml:lang="de">Für etwas Interessantes melden Sie sich an, versuchen Sie Benutzername:admin, Passwort:SCIPIO -</value>
+        <value xml:lang="en">For something interesting make sure you are logged in, try username:admin, password:SCIPIO -</value>
+        <value xml:lang="es">Para ver algo interesante asegúrese de estar conectado, pruebe el usuario: admin y la contraseña: SCIPIO -</value>
+        <value xml:lang="fr">Si vous êtes intéressé, connectez-vous sous l'utilisateur admin, mot de passe : SCIPIO -</value>
+        <value xml:lang="it">Per qualsiasi interesse devi essere sicuro di essere loggato, provare nome utente:admin, password:SCIPIO -</value>
+        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;admin;Password SCIPIO - でログインしてください</value>
+        <value xml:lang="ro">Pentru orice interese trebuie sa fii sigur ca esti logat, incearca nume utilizator :admin, password:SCIPIO -</value>
+        <value xml:lang="ru">Для того, чтобы сделать что-нибудь полезное вы должны зарегистрироваться в система, попробуйте имя пользователя:admin, пароль:SCIPIO -</value>
+        <value xml:lang="th">For something interesting make sure you are logged in, try username:admin, password:SCIPIO -</value>
+        <value xml:lang="vi">Để trải nghiệm hãy chắc chắn rằng bạn đã đăng nhập hệ thống, bạn hãy thử với tài khoản admin / SCIPIO -</value>
+        <value xml:lang="zh">如果有感兴趣的内容，请确信你登录了，可以尝试使用用户名:admin、密码:SCIPIO -登录</value>
+        <value xml:lang="zh_TW">如果有感興趣的內容,請確信你登入了,可以嘗試使用使用者名:admin、密碼:SCIPIO -登入</value>
     </property>
     <property key="ProductGenerateShipmentManifestReport">
         <value xml:lang="de">Lieferschein Bericht erstellen</value>
@@ -25503,7 +25503,7 @@
         <value xml:lang="zh">促销代码</value>
         <value xml:lang="zh_TW">促銷代碼</value>
     </property>
-    <!-- CATO: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="ProductPromotionCodes">
         <value xml:lang="de">Aktionscodes</value>
         <value xml:lang="en">Promotion Codes</value>
@@ -31743,7 +31743,7 @@
         <value xml:lang="en">Lot Ref.</value>
         <value xml:lang="nl">Batch ref.</value>
     </property>
-    <!-- Cato: new. TODO: localize -->
+    <!-- Scipio: new. TODO: localize -->
     <property key="ProductSettings">
         <value xml:lang="de">Produkteinstellungen</value>
         <value xml:lang="en">Product Settings</value>
@@ -31779,7 +31779,7 @@
     <property key="ProductReceiveInventoryItems">
         <value xml:lang="en">Receive Inventory</value>
     </property>
-    <!--  Cato: TODO: Localize -->
+    <!--  Scipio: TODO: Localize -->
     <property key="ProductRooms">
         <value xml:lang="de">Zimmer</value>
         <value xml:lang="en">Rooms</value>

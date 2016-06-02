@@ -88,7 +88,7 @@ function gwAll(e) {
     }
     cform.submit();
 }
-<#-- CATO: To be removed -->
+<#-- SCIPIO: To be removed -->
 <#-- function quicklookup_popup(element) {
     target = element;  // note: global var target comes from fieldlookup.js
     var searchTerm = element.value;

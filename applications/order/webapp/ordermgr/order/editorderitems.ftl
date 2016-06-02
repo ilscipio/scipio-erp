@@ -43,7 +43,7 @@ under the License.
             <@commonMsg type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@commonMsg>
         </#if>
         
-        <#-- CATO: FIXME: this whole template is full of forms inside table elems = invalid HTML -->
+        <#-- SCIPIO: FIXME: this whole template is full of forms inside table elems = invalid HTML -->
         
         <@table type="data-complex" class="+order-items"> <#-- orig: class="basic-table order-items" --> <#-- orig: cellspacing="0" -->
 
@@ -53,7 +53,7 @@ under the License.
             <input type="hidden" name="orderItemSeqId" value=""/>
             <input type="hidden" name="shipGroupSeqId" value=""/>
             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
-              <#-- Cato: FIXME? why is supplierPartyId the partyId? should have a supplierPartyId explicitly in groovy script to clarify this -->
+              <#-- Scipio: FIXME? why is supplierPartyId the partyId? should have a supplierPartyId explicitly in groovy script to clarify this -->
               <input type="hidden" name="supplierPartyId" value="${partyId!}"/>
               <input type="hidden" name="orderTypeId" value="PURCHASE_ORDER"/>
             </#if>
@@ -110,10 +110,10 @@ under the License.
                                       </#if>
                                   </div>
                                   <#if productId??>
-                                  <#-- Cato: these are duplicates from far right column
+                                  <#-- Scipio: these are duplicates from far right column
                                   <div>
                                       <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
-                                      <#- Cato: Now points to shop ->
+                                      <#- Scipio: Now points to shop ->
                                       <a href="<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${getLabel("Shop", "ShopUiLabels")}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")!?string?has_content>
                                       <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
@@ -247,7 +247,7 @@ under the License.
                               </@td>
                               <@td>
                                     <@menu type="button">
-                                        <#-- Cato: order by ProductContent.sequenceNum -->
+                                        <#-- Scipio: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                        
                                         <#if downloadContents?has_content>
@@ -267,7 +267,7 @@ under the License.
                                           </@modal>
                                         </#if>
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
-                                        <#-- Cato: Now points to shop -->
+                                        <#-- Scipio: Now points to shop -->
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")!?string?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />

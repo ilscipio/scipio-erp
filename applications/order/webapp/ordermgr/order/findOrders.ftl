@@ -20,7 +20,7 @@ under the License.
 <@script>
 function lookupOrders(click) {
     orderIdValue = document.lookuporder.orderId.value;
-    <#-- Cato: don't lookup if ID contains search wildcards -->
+    <#-- Scipio: don't lookup if ID contains search wildcards -->
     if (orderIdValue.length > 1 && !orderIdValue.match(/[%*]/)) {
         document.lookuporder.action = "<@ofbizUrl>orderview</@ofbizUrl>";
         document.lookuporder.method = "get";

@@ -179,7 +179,7 @@ function getConfigDetails() {
 
   <hr class="sepbar"/>
 
-  <#-- Cato: open form earlier than stock code so don't produce invalid html... -->
+  <#-- Scipio: open form earlier than stock code so don't produce invalid html... -->
   <#assign action><@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl></#assign>
   <@form method="post" action=action name="addform">
 
@@ -330,7 +330,7 @@ function getConfigDetails() {
             <#else>
               <#assign hiddenStyle = styles.hidden!>
             </#if>
-            <#-- Cato: NOTE: amount is kg or either; quantity is the number of units buying -->
+            <#-- Scipio: NOTE: amount is kg or either; quantity is the number of units buying -->
             <@field type="input" containerId="add_amount" label=uiLabelMap.OrderAmount containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
             <#if !configwrapper.isCompleted()>
               <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
@@ -452,7 +452,7 @@ function getConfigDetails() {
           <@row>
             <@cell columns=4>${question.question}</@cell>
             <@cell columns=8 class="+${styles.text_right!}">
-              <#-- Cato: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
+              <#-- Scipio: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 

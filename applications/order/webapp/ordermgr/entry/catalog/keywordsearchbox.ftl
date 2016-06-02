@@ -32,7 +32,7 @@ under the License.
         -->
     </form>
 
-<#-- CATO: Replaced by tiny form
+<#-- SCIPIO: Replaced by tiny form
 <@section title=uiLabelMap.ProductSearchCatalog id="keywordsearchbox">
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <@fields type="default-manual">

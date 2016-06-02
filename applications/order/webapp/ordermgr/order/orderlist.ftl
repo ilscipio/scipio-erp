@@ -38,7 +38,7 @@ under the License.
 <#-- order list -->
 <@section>
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
-      <#-- Cato: Use alt/simple checkboxes, currently implied by default-alt1
+      <#-- Scipio: Use alt/simple checkboxes, currently implied by default-alt1
         FIXME: here, manually override checkboxType for now to preserve the old look (because default-alt1 is slightly non-standard) but really it should be left to styles hash! 
             Needs to be sorted out globally... -->
       <@fields type="default-alt1" checkboxType="simple-standard"> 

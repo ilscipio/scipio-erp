@@ -1,8 +1,8 @@
 <#--
-Cato: Local order template common defs
+Scipio: Local order template common defs
 -->
 
-<#-- Cato: local macro where cells of label and widget areas are inverted and tweaked 
+<#-- Scipio: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType-->
 <#macro checkoutInvField type="generic" labelContentFieldsType="default-compact" postfixColumns="" labelContent="" labelContentArgs={} widgetAreaClass="" labelColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--
@@ -11,7 +11,7 @@ Cato: Local order template common defs
     <@cell class=addClassArg(gridStyles.labelArea, "${styles.text_right!}")>
       <#nested>
     </@cell>
-    <#local id = (getRequestVar("catoLastFieldInfo").id)!"">
+    <#local id = (getRequestVar("scipioLastFieldInfo").id)!"">
     <@cell class=gridStyles.widgetArea>
       ${labelContent}
     </@cell>  

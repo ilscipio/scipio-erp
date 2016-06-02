@@ -86,7 +86,7 @@ function submitForm(form, mode, value) {
     </#assign>
     <@section title=sectionTitle>
         <@fields type="default-manual">
-            <#-- Cato: TODO: convert tables -->
+            <#-- Scipio: TODO: convert tables -->
                 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
                   <@tr>
                     <@td colspan="2">

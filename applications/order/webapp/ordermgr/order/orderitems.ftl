@@ -46,7 +46,7 @@ under the License.
                         <@tr class="${rowColor!}">
                             <#assign orderItemType = orderItem.getRelatedOne("OrderItemType", false)!>
                             <#assign productId = orderItem.productId!>
-                            <#-- CATO: This product lookup added by us, missing from upstream patch -->
+                            <#-- SCIPIO: This product lookup added by us, missing from upstream patch -->
                             <#assign product = orderItem.getRelatedOne("Product", false)!>
                             <#if productId?? && productId == "shoppingcart.CommentLine">
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
@@ -76,7 +76,7 @@ under the License.
                                             </#list>
                                             </ul>
                                         </#if>
-                                        <#-- Cato: order by ProductContent.sequenceNum -->
+                                        <#-- Scipio: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                         <#if downloadContents?has_content>
                                            <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload class="${styles.link_nav!} ${styles.action_export!}">

@@ -19,7 +19,7 @@ under the License.
 
 <@section title=uiLabelMap.ProductProductSearch>
 
-<#-- CATO: ToDo: reimplement refined search
+<#-- SCIPIO: ToDo: reimplement refined search
 <@row>
     <@cell>
     ${uiLabelMap.ProductYouSearchedFor}

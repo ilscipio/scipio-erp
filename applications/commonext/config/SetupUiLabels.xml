@@ -48,40 +48,40 @@
         <value xml:lang="zh_TW">設置應用程式</value>
     </property>
     <property key="SetupCompanyName">
-        <value xml:lang="en">CATO - Setup Application </value>
-        <value xml:lang="it">CATO - componente di configurazione</value>
-        <value xml:lang="ja">CATO - 設定アプリケーション</value>
-        <value xml:lang="pt_BR">CATO - Aplicativo de instalação</value>
-        <value xml:lang="vi">CATO - Khởi tạo Ứng dụng</value>
-        <value xml:lang="zh">CATO -：安装程序</value>
-        <value xml:lang="zh_TW">CATO - 設置應用程式</value>
+        <value xml:lang="en">SCIPIO - Setup Application </value>
+        <value xml:lang="it">SCIPIO - componente di configurazione</value>
+        <value xml:lang="ja">SCIPIO - 設定アプリケーション</value>
+        <value xml:lang="pt_BR">SCIPIO - Aplicativo de instalação</value>
+        <value xml:lang="vi">SCIPIO - Khởi tạo Ứng dụng</value>
+        <value xml:lang="zh">SCIPIO -：安装程序</value>
+        <value xml:lang="zh_TW">SCIPIO - 設置應用程式</value>
     </property>
     <property key="SetupCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
-    <!--value xml:lang="nl">Onderdeel van de CATO'-suite</value-->
-        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família SCIPIO - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="pt_PT">Parte da família SCIPIO - de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО CATO</valuevalue xml:lang="ru">Часть семейства "CATO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства CATO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件CATO -的组成部分</valuevalue xml:lang="zh">开源软件CATO -的组成部分</value-->
-        <value xml:lang="vi">Thành viên của gia đình 'CATO Family' của 'Open Source Software'</value>
-        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
-        <value xml:lang="zh_CN">CATO -的一部分</value>
-        <value xml:lang="zh_TW">開放源碼軟體CATO -家族一份子</value>
+    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
+        <value xml:lang="vi">Thành viên của gia đình 'SCIPIO Family' của 'Open Source Software'</value>
+        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
+        <value xml:lang="zh_CN">SCIPIO -的一部分</value>
+        <value xml:lang="zh_TW">開放源碼軟體SCIPIO -家族一份子</value>
     </property>
     <property key="SetupCreateNewOrganization">
         <value xml:lang="en">Create New Organization</value>

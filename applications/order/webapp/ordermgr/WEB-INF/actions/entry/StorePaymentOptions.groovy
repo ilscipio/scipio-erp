@@ -32,9 +32,9 @@ while (productStorePaymentSettingIter.hasNext()) {
 }
 context.put("productStorePaymentMethodTypeIdMap", productStorePaymentMethodTypeIdMap);
 
-context.productStorePaymentSettingList = productStorePaymentSettingList; // Cato: make available
+context.productStorePaymentSettingList = productStorePaymentSettingList; // Scipio: make available
 
-// Cato: we can put more info than just booleans...
+// Scipio: we can put more info than just booleans...
 productStorePaymentMethodSettingByTypeMap = new HashMap();
 for (productStorePaymentSetting in productStorePaymentSettingList) {
     productStorePaymentMethodSettingByTypeMap.put(productStorePaymentSetting.get("paymentMethodTypeId"), productStorePaymentSetting);

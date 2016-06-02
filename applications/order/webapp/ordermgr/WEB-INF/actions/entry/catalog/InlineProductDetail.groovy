@@ -51,7 +51,7 @@ if (inlineProductId) {
     if (inlineProduct) {
         context.product = inlineProduct;
         contentWrapper = new ProductContentWrapper(inlineProduct, request);
-        // Cato: Do NOT HTML-escape this here
+        // Scipio: Do NOT HTML-escape this here
         context.put("title", contentWrapper.get("PRODUCT_NAME", "raw").toString());
         context.put("metaDescription", contentWrapper.get("DESCRIPTION", "raw").toString());
         productTemplate = product.detailScreen;
@@ -190,7 +190,7 @@ if (inlineProduct) {
 
                 if (variantTree && imageMap) {
                     jsBuf = new StringBuffer();
-                    // Cato: FIXME: shouldn't be HTML tags here...
+                    // Scipio: FIXME: shouldn't be HTML tags here...
                     jsBuf.append("<script language=\"JavaScript\" type=\"text/javascript\">");
                     jsBuf.append("var DET" + inlineCounter + "= new Array(" + variantTree.size() + ");");
                     jsBuf.append("var IMG" + inlineCounter + " = new Array(" + variantTree.size() + ");");

@@ -42,14 +42,14 @@ metaKeywords = null;
 
 // get the product entity
 if (productId) {
-    // Cato: Save the orig (requested) product ID as well
+    // Scipio: Save the orig (requested) product ID as well
     origProductId = productId;
     origProduct = null;
     context.origProductId = productId;
     
     product = from("Product").where("productId", productId).cache(true).queryOne();
     if (product) {
-        // Cato: Save the orig product
+        // Scipio: Save the orig product
         origProduct = product;
         context.origProduct = origProduct;
         
@@ -100,12 +100,12 @@ if (productId) {
         context.product = product;
         contentWrapper = new ProductContentWrapper(product, request);
 
-        // Cato: don't want page title overridden/forced by groovy
+        // Scipio: don't want page title overridden/forced by groovy
         if (pageTitle) {
             //context.title = pageTitle.textData;
             context.productTitle = pageTitle.textData;
         } else {
-            // Cato: NOTE: There is no need to encrypt as HTML here because the screen will automatically
+            // Scipio: NOTE: There is no need to encrypt as HTML here because the screen will automatically
             // encode and we are causing forced/hard-to-manage double-encoding in string substitutions
             // WARN: when using "raw" this way, you should always call toString()!
             //context.put("title", contentWrapper.get("PRODUCT_NAME", "raw").toString());
@@ -122,7 +122,7 @@ if (productId) {
             context.metaKeywords = metaKeywords.textData;
         } else {
             keywords = [];
-            // Cato: Do NOT HTML-escape this here
+            // Scipio: Do NOT HTML-escape this here
             keywords.add(contentWrapper.get("PRODUCT_NAME", "raw").toString());
             keywords.add(catalogName);
             members = from("ProductCategoryMember").where("productId", productId).cache(true).queryList();
@@ -130,7 +130,7 @@ if (productId) {
                 category = member.getRelatedOne("ProductCategory", true);
                 if (category.description) {
                     categoryContentWrapper = new CategoryContentWrapper(category, request);
-                    // Cato: Do NOT HTML-escape this here
+                    // Scipio: Do NOT HTML-escape this here
                     categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
                     if (categoryDescription) {
                             keywords.add(categoryDescription);
@@ -151,7 +151,7 @@ if (productId) {
         }
     }
     
-    Debug.logInfo("Cato: Orig/requested product: '" + origProductId + "' " + (origProduct ? "(found)" : "(not found)") + 
+    Debug.logInfo("Scipio: Orig/requested product: '" + origProductId + "' " + (origProduct ? "(found)" : "(not found)") + 
         "; effective product: '" + context.productId + "' "+ (product ? "(found)" : "(not found)"), module);
 }
 

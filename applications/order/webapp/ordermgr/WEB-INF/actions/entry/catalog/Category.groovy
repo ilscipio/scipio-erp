@@ -18,7 +18,7 @@
  */
 
 /*
- * This script is also referenced by the [Cato: shop]'s screens and
+ * This script is also referenced by the [Scipio shop]'s screens and
  * should not contain order component's specific code.
  */
 
@@ -79,15 +79,15 @@ if (category) {
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request);
     
-    // Cato: Do NOT HTML-escape this here
+    // Scipio: Do NOT HTML-escape this here
     categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
 
-    // Cato: don't want page title overridden/forced by groovy
+    // Scipio: don't want page title overridden/forced by groovy
     if (pageTitle) {
         //context.title = pageTitle.textData;
         context.categoryTitle = pageTitle.textData;
     } else {
-        // Cato: Do NOT HTML-escape this here
+        // Scipio: Do NOT HTML-escape this here
         //context.title = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
         context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "raw".toString());
     }

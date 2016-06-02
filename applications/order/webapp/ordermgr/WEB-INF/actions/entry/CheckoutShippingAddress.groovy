@@ -28,7 +28,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import javolution.util.FastList;
 
-// Cato: NOTE: some patches so doesn't crash without userLogin
+// Scipio: NOTE: some patches so doesn't crash without userLogin
 
 cart = session.getAttribute("shoppingCart");
 party = userLogin?.getRelatedOne("Party", false);
@@ -54,7 +54,7 @@ context.userLogin = userLogin;
 context.productStoreId = productStoreId;
 context.shippingContactMechList = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
 
-// CATO: SPECIAL CASE:
+// SCIPIO: SPECIAL CASE:
 // It is possible that a new address was created during event and committed even though a later error occurred
 // So to handle this we need a special check to avoid a resubmission of address and to select the newly-created
 context.newShipAddrParams = parameters;

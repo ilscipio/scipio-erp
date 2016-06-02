@@ -18,7 +18,7 @@
  */
 
 /*
- * NOTE: This script is also referenced by the webpos and [Cato: shop]'s screens and
+ * NOTE: This script is also referenced by the webpos and [Scipio: shop]'s screens and
  * should not contain order component's specific code.
  */
 
@@ -46,7 +46,7 @@ context.defaultViewSize = defaultViewSize;
 limitView = request.getAttribute("limitView") ?: true;
 context.limitView = limitView;
 
-// Cato: prevent crash
+// Scipio: prevent crash
 if (productCategoryId) {
     // get the product category & members
     andMap = [productCategoryId : productCategoryId,

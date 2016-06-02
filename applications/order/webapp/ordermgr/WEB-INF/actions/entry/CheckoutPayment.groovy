@@ -50,7 +50,7 @@ context.checkOutPaymentId = checkOutPaymentId;
 paymentMethodList = EntityUtil.filterByDate(party?.getRelated("PaymentMethod", null, ["paymentMethodTypeId"], false), true);
 context.paymentMethodList = paymentMethodList;
 
-billingAccountList = (party) ? BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher) : null; // Cato: missing party check
+billingAccountList = (party) ? BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher) : null; // Scipio: missing party check
 if (billingAccountList) {
     context.selectedBillingAccountId = cart.getBillingAccountId();
     context.billingAccountList = billingAccountList;
@@ -75,7 +75,7 @@ if (checkIdealPayment) {
     }
 }
 
-// Cato: Make party, person, partyGroup available
+// Scipio: Make party, person, partyGroup available
 context.party = party;
 person = from("Person").where("partyId", partyId).cache(true).queryOne();
 context.person = person;
@@ -83,7 +83,7 @@ partyGroup = from("PartyGroup").where("partyId", partyId).cache(true).queryOne()
 context.partyGroup = partyGroup;
 
 
-// Cato: Need a list of ALL payment meths selected in cart
+// Scipio: Need a list of ALL payment meths selected in cart
 // WARN: Th
 checkOutPaymentIdSet = [] as Set;
 if (cart) {
@@ -98,7 +98,7 @@ context.checkOutPaymentIdSet = checkOutPaymentIdSet;
 context.checkOutPaymentIdList = checkOutPaymentIdSet as List;
 
 
-// CATO: SPECIAL CASE:
+// SCIPIO: SPECIAL CASE:
 // It is possible that a new CC && EFT were created during event and committed even though a later error occurred
 // So to handle this we need a special check to avoid a resubmissions and to select the newly-created
 context.newEftAccountParams = parameters;
@@ -166,7 +166,7 @@ if (parameters.checkOutPaymentId || "Y" == parameters.addGiftCard) {
 }
 
 
-// Cato: group pay methods by payment method type
+// Scipio: group pay methods by payment method type
 paymentMethodListsByType = new LinkedHashMap();
 if (paymentMethodList) {
     for (paymentMethod in paymentMethodList) {

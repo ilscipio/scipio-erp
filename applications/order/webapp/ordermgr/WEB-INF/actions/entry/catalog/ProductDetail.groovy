@@ -18,7 +18,7 @@
  */
 
 /*
- * This script is also referenced by the [Cato: shop]'s screens and
+ * This script is also referenced by the [Scipio: shop]'s screens and
  * should not contain order component's specific code.
  */
 
@@ -93,7 +93,7 @@ if (userLogin) {
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 context.contentPathPrefix = contentPathPrefix;
 
-product = context.product;  // Cato: prevents crash if missing
+product = context.product;  // Scipio: prevents crash if missing
 
 // get the product detail information
 if (product) {
@@ -125,7 +125,7 @@ if (product) {
     context.productContentWrapper = productContentWrapper;
 
     // get the main detail image (virtual or single product)
-    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "raw"); // Cato: changed to raw (let templating escape)
+    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "raw"); // Scipio: changed to raw (let templating escape)
     if (mainDetailImage) {
         mainDetailImageUrl = ContentUrlTag.getContentPrefix(request) + mainDetailImage;
         context.mainDetailImageUrl = mainDetailImageUrl.toString();
@@ -246,7 +246,7 @@ if (product) {
     sizeProductFeatureAndAppls = from("ProductFeatureAndAppl").where("productId", productId, "productFeatureTypeId", "SIZE").orderBy("sequenceNum", "defaultSequenceNum").queryList();
     context.sizeProductFeatureAndAppls = sizeProductFeatureAndAppls;
     
-    // Cato: always get selectable features, in case need (affects nothing else)
+    // Scipio: always get selectable features, in case need (affects nothing else)
     if (true) {
         selFeatureMap = runService('getProductFeatureSet', [productId : productId, productFeatureApplTypeId : "SELECTABLE_FEATURE"]);
         selFeatureSet = selFeatureMap.featureSet;
@@ -284,7 +284,7 @@ if (product) {
                 quantityUom = mainProduct.getRelatedOne("QuantityUom", true);
                 mainProductMap.productId = mainProduct.productId;
                 mainProductMap.piecesIncluded = mainProduct.piecesIncluded;
-                if (quantityUom) { // Cato: This could be missing
+                if (quantityUom) { // Scipio: This could be missing
                     mainProductMap.uomDesc = quantityUom.description;
                 }
                 mainProducts.add(mainProductMap);
@@ -340,13 +340,13 @@ if (product) {
                     context.featureOrderFirst = featureOrder[0];
                 }
 				
-				// CATO: The original OFBiz code was removed here. 
+				// SCIPIO: The original OFBiz code was removed here. 
                 if (variantTree && imageMap) {
                     // make a list of variant sku with requireAmount
                     variantsRes = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_VARIANT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
                     variants = variantsRes.assocProducts;
                     variantPriceList = [];
-                    variantProductInfoMap = [:]; // CATO: Maps productId to a more detailed product info map, including requireAmount flag and price
+                    variantProductInfoMap = [:]; // SCIPIO: Maps productId to a more detailed product info map, including requireAmount flag and price
                     if (variants) {
                         if (productStore) {
                             localeString = productStore.defaultLocaleString;
@@ -389,7 +389,7 @@ if (product) {
                                 variantPriceMap = runService('calculatePurchasePrice', priceContext);
                             }
                             
-                            // CATO: Save requireAmount flag and base price for variant
+                            // SCIPIO: Save requireAmount flag and base price for variant
                             variantProductInfo = [:];
                             variantProductInfo.putAll(variant);
                             variantProductInfo.requireAmount = (variant.requireAmount ?: "N");
@@ -434,18 +434,18 @@ if (product) {
                                             }
                                         }
                                         variantPriceList.add(virtualPriceMap);
-                                        // CATO: Save product info for virtual
+                                        // SCIPIO: Save product info for virtual
                                         variantProductInfo = [:];
                                         variantProductInfo.putAll(virtual);
-                                        //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // CATO: This doesn't apply for virtuals
+                                        //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // SCIPIO: This doesn't apply for virtuals
                                         variantProductInfo.price = variantPriceMap.basePrice;
                                         variantProductInfoMap[virtual.productId] = variantProductInfo;
                                     } else {
                                         virtualPriceMap = runService('calculatePurchasePrice', priceContext);
-                                        // CATO: Save product info for virtual
+                                        // SCIPIO: Save product info for virtual
                                         variantProductInfo = [:];
                                         variantProductInfo.putAll(virtual);
-                                        //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // CATO: This doesn't apply for virtuals
+                                        //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // SCIPIO: This doesn't apply for virtuals
                                         variantProductInfo.price = variantPriceMap.price;
                                         variantProductInfoMap[virtual.productId] = variantProductInfo;
                                     }
@@ -456,7 +456,7 @@ if (product) {
                     }
                     context.variantPriceList = variantPriceList;
 					context.virtualVariants = virtualVariants;
-                    context.variantProductInfoMap = variantProductInfoMap; // CATO: Save map
+                    context.variantProductInfoMap = variantProductInfoMap; // SCIPIO: Save map
                 }
             }
         }
@@ -538,7 +538,7 @@ if (product) {
     context.accessoryProducts = accessoryProducts.assocProducts;
 
     // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
-    // Cato: This should order by sequenceNum
+    // Scipio: This should order by sequenceNum
     downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").orderBy("sequenceNum ASC").cache(true).queryList();
     context.downloadProductContentAndInfoList = downloadProductContentAndInfoList;
 
@@ -582,7 +582,7 @@ if (product) {
     }
 }
 
-// Cato: Decide the next possible reserv start date (next day)
+// Scipio: Decide the next possible reserv start date (next day)
 nextDayTimestamp = UtilDateTime.getDayStart(nowTimestamp, 1, timeZone, locale);
 context.nextDayTimestamp = nextDayTimestamp;
 earliestReservStartDate = nextDayTimestamp;

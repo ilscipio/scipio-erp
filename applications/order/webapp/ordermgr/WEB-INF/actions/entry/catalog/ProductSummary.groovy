@@ -18,7 +18,7 @@
  */
 
 /*
- * This script is also referenced by the [Cato: shop]'s screens and
+ * This script is also referenced by the [Scipio: shop]'s screens and
  * should not contain order component's specific code.
  */
 
@@ -149,7 +149,7 @@ if (product) {
                 quantityUom = mainProduct.getRelatedOne("QuantityUom", true);
                 mainProductMap.productId = mainProduct.productId;
                 mainProductMap.piecesIncluded = mainProduct.piecesIncluded;
-                if (quantityUom) { // Cato: This could be missing
+                if (quantityUom) { // Scipio: This could be missing
                     mainProductMap.uomDesc = quantityUom.description;
                 }
                 mainProducts.add(mainProductMap);

@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="savePartyNameChange" short-description="Save Party Name Change">
-        <!-- for special case in [Cato: shop], if no partyId is passed in use userLogin.partyId -->
+        <!-- for special case in [Scipio: shop], if no partyId is passed in use userLogin.partyId -->
         <if-empty field="parameters.partyId">
             <set field="parameters.partyId" from-field="userLogin.partyId"/>
         </if-empty>

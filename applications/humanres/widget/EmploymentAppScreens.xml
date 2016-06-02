@@ -21,7 +21,7 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
         
-    <!-- CATO: FIXME: ALL THESE SCREENS ARE MISSING PERMISSION CHECKS -->
+    <!-- SCIPIO: FIXME: ALL THESE SCREENS ARE MISSING PERMISSION CHECKS -->
     
     <screen name="FindEmploymentApps">
         <section>
@@ -38,7 +38,7 @@
                                 <section>
                                     <widgets>
                                         <container style="button-bar">
-                                            <!-- Cato: link to our new screen instead: NewEmploymentApp -->
+                                            <!-- Scipio: link to our new screen instead: NewEmploymentApp -->
                                             <link target="EditEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                     </widgets>
@@ -78,7 +78,7 @@
             </widgets>
         </section>
     </screen>
-    <!-- CATO: NOTE: This screen would be mainly for applicants to fill out themselves; e.g.
+    <!-- SCIPIO: NOTE: This screen would be mainly for applicants to fill out themselves; e.g.
         can't edit once submitted -->
     <screen name="NewEmploymentApp">
         <section>
@@ -100,7 +100,7 @@
         </section>
     </screen>
     
-    <!-- Cato: new simple screen for editing individual appl (not in stock - stock only has new, above) 
+    <!-- Scipio: new simple screen for editing individual appl (not in stock - stock only has new, above) 
         Simpler version of EditEmploymentApps above.
         NOTE: this screen would be mainly for admins, who can edit submitted applications. In admin
         case it supersedes NewEmploymentApp -->
@@ -141,7 +141,7 @@
                             <widgets>
                                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
-                                        <!-- CATO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
+                                        <!-- SCIPIO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
                                         <container>
                                             <link target="ViewEmploymentApp" text="${uiLabelMap.CommonView}" style="${styles.link_nav}">
                                                 <parameter param-name="applicationId" from-field="applicationId"/>
@@ -160,7 +160,7 @@
         </section>
     </screen>
     
-    <!-- Cato: new simple screen for viewing appl (not in stock)  -->
+    <!-- Scipio: new simple screen for viewing appl (not in stock)  -->
     <screen name="ViewEmploymentApp">
         <section>
             <actions>
@@ -172,7 +172,7 @@
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!-- CATO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
+                        <!-- SCIPIO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
                         <container>
                             <link target="EditEmploymentApp" text="${uiLabelMap.CommonEdit}" style="${styles.link_nav}">
                                 <parameter param-name="applicationId" from-field="applicationId"/>
@@ -187,7 +187,7 @@
         </section>
     </screen>
     
-    <screen name="CatoNewApplications">
+    <screen name="ScipioNewApplications">
         <section>
             <actions>
                 <entity-condition entity-name="EmploymentApp" list="emplAppList" >
@@ -196,7 +196,7 @@
                         <!-- ?
                         <condition-expr field-name="statusId" value="EMPL_POS_PLANNEDFOR"/>
                         -->
-                        <!-- CATO: NOTE: this status is unusual and used only in one place, but support it anyway -->
+                        <!-- SCIPIO: NOTE: this status is unusual and used only in one place, but support it anyway -->
                         <condition-expr field-name="statusId" value="IJP_APPLIED"/>
                     </condition-list>
                     <order-by field-name="-applicationDate" />
@@ -204,7 +204,7 @@
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://humanres/webapp/humanres/humanres/emplapp/CatoApplicationsSummary.ftl"/></html>
+                    <html><html-template location="component://humanres/webapp/humanres/humanres/emplapp/ScipioApplicationsSummary.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>

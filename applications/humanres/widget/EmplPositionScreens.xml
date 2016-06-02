@@ -341,7 +341,7 @@
         </section>
     </screen>
     
-    <screen name="CatoOpenPositions">
+    <screen name="ScipioOpenPositions">
         <section>
             <actions>
                 <!-- TODO: include open positions without requisitions? (but not really needed?) -->
@@ -364,7 +364,7 @@
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://humanres/webapp/humanres/humanres/emplposition/CatoPositionsSummary.ftl"/></html>
+                    <html><html-template location="component://humanres/webapp/humanres/humanres/emplposition/ScipioPositionsSummary.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>

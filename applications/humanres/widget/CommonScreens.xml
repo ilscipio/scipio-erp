@@ -98,12 +98,12 @@ under the License.
                             <container style="${styles.grid_row}">
                                 <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     <screenlet title="${uiLabelMap.HumanResNewApplicants}">
-                                        <include-screen name="CatoNewApplications" location="component://humanres/widget/EmploymentAppScreens.xml"/>
+                                        <include-screen name="ScipioNewApplications" location="component://humanres/widget/EmploymentAppScreens.xml"/>
                                     </screenlet>
                                 </container>
                                 <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     <screenlet title="${uiLabelMap.HumanResCurrentOpenings}">
-                                        <include-screen name="CatoOpenPositions" location="component://humanres/widget/EmplPositionScreens.xml"/>
+                                        <include-screen name="ScipioOpenPositions" location="component://humanres/widget/EmplPositionScreens.xml"/>
                                     </screenlet>
                                 </container>
                             </container>

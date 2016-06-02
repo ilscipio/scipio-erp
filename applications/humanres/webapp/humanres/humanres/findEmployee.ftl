@@ -21,7 +21,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-<#-- CATO: show at bottom 
+<#-- SCIPIO: show at bottom 
   <#if parameters.hideFields?default("N") == "Y">
     <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
   <#else>
@@ -31,7 +31,7 @@ under the License.
 -->
   </@menu>
 </#macro>
-<@section id="findEmployee"><#--Cato: no entries:  menuContent=menuContent --><#-- Cato: duplicate: title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" -->
+<@section id="findEmployee"><#--Scipio: no entries:  menuContent=menuContent --><#-- Scipio: duplicate: title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" -->
     <#if parameters.hideFields?default("N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:

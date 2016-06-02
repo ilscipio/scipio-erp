@@ -19,7 +19,7 @@ under the License.
 -->
 <entity-engine-xml>
 
-    <!-- CATO: demo skill types; there are none in stock Ofbiz
+    <!-- SCIPIO: demo skill types; there are none in stock Ofbiz
         TODO: localize -->
     <SkillType skillTypeId="DATA_ENTRY" description="Software data entry" hasTable="N" />  
     <SkillType skillTypeId="SW_MS_OFFICE" description="Microsoft Office" hasTable="N" />  

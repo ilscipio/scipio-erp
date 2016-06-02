@@ -3,10 +3,10 @@ import org.ofbiz.entity.condition.EntityComparisonOperator
 import org.ofbiz.entity.condition.EntityExpr
 import org.ofbiz.service.LocalDispatcher
 
-import com.ilscipio.cato.treeMenu.jsTree.JsTreeCore
-import com.ilscipio.cato.treeMenu.jsTree.JsTreeHelper
-import com.ilscipio.cato.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin
-import com.ilscipio.cato.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin.JsTreeType
+import com.ilscipio.scipio.treeMenu.jsTree.JsTreeCore
+import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper
+import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin
+import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin.JsTreeType
 
 productStoreId = (context.productStoreId) ? context.productStoreId : parameters.productStoreId;
 if (!productStoreId) {

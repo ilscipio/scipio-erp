@@ -1,4 +1,4 @@
-package com.ilscipio.cato.treeMenu.jsTree;
+package com.ilscipio.scipio.treeMenu.jsTree;
 
 import java.util.Arrays;
 import java.util.HashMap;

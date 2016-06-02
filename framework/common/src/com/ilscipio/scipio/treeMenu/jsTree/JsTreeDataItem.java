@@ -1,11 +1,11 @@
-package com.ilscipio.cato.treeMenu.jsTree;
+package com.ilscipio.scipio.treeMenu.jsTree;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilValidate;
 
-import com.ilscipio.cato.treeMenu.TreeDataItem;
+import com.ilscipio.scipio.treeMenu.TreeDataItem;
 
 import javolution.util.FastMap;
 

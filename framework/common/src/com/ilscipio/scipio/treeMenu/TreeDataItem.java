@@ -1,4 +1,4 @@
-package com.ilscipio.cato.treeMenu;
+package com.ilscipio.scipio.treeMenu;
 
 /**
  * Cato: An interface representing a tree item. All tree menu libraries

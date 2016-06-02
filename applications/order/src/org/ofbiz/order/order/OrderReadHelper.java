@@ -1048,7 +1048,7 @@ public class OrderReadHelper {
     }
     
     /**
-     * Cato: Get the total payment preference amount for each payment method or type.
+     * Scipio: Get the total payment preference amount for each payment method or type.
      */
     public Map<String, BigDecimal> getOrderPaymentPreferenceTotalsByIdOrType() {
         Map<String, BigDecimal> totals = new HashMap<String, BigDecimal>();
@@ -1268,7 +1268,7 @@ public class OrderReadHelper {
     }
     
     /**
-     * Cato: Alternate to getOrderEmailString that returns as a list.
+     * Scipio: Alternate to getOrderEmailString that returns as a list.
      */
     public List<String> getOrderEmailList() {
         Delegator delegator = orderHeader.getDelegator();

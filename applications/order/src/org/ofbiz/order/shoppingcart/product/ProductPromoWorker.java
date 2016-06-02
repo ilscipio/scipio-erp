@@ -712,7 +712,7 @@ public class ProductPromoWorker {
                 if (UtilValidate.isEmpty(messageContext.get("partyId"))) messageContext.put("partyId", "any");
                 GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
                 if (product != null) {
-                    // CATO: No need to HTML-escape this
+                    // SCIPIO: No need to HTML-escape this
                     messageContext.put("productName", ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", locale, null, "raw"));
                 }
 
@@ -1589,7 +1589,7 @@ public class ProductPromoWorker {
                     }
                 } catch (CartItemModifyException e) {
                     int gwpItemIndex = cart.getItemIndex(gwpItem);
-                    // Cato: patched to pass triggerExternalOps false
+                    // Scipio: patched to pass triggerExternalOps false
                     cart.removeCartItem(gwpItemIndex, false, dispatcher);
                     throw e;
                 }

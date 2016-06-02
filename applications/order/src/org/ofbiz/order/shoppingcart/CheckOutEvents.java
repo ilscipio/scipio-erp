@@ -90,7 +90,7 @@ public class CheckOutEvents {
         HttpSession session = request.getSession();
 
         //Locale locale = UtilHttp.getLocale(request);
-        // CATO: Read the "checkoutpage" from attributes first, so events may modify
+        // SCIPIO: Read the "checkoutpage" from attributes first, so events may modify
         //String curPage = request.getParameter("checkoutpage");
         String curPage = getRequestAttribOrParam(request, "checkoutpage");
         Debug.logInfo("CheckoutPage: " + curPage, module);
@@ -115,7 +115,7 @@ public class CheckOutEvents {
 
         if ("shippingaddress".equals(curPage) == true) {
             // Set the shipping address options
-            // Cato: Allow inlined address creation
+            // Scipio: Allow inlined address creation
             //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
             String shippingContactMechId;
             try {
@@ -195,7 +195,7 @@ public class CheckOutEvents {
             }
         } else if ("payment".equals(curPage) == true) {
             // Set the payment options
-            // Cato: Handle new error cases
+            // Scipio: Handle new error cases
             Map<String, Map<String, Object>> selectedPaymentMethods;
             try {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
@@ -222,7 +222,7 @@ public class CheckOutEvents {
 
             List<String> singleUsePayments = new ArrayList<String>();
 
-            // Cato: Support single-use for arbitrary pay methods
+            // Scipio: Support single-use for arbitrary pay methods
             addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
             
             // check for gift card not on file
@@ -240,14 +240,14 @@ public class CheckOutEvents {
                         singleUsePayments.add(gcPaymentMethodId);
                     }
                     
-                    // CATO: Save the info of which paymentMethodId was just created for the new card
+                    // SCIPIO: Save the info of which paymentMethodId was just created for the new card
                     saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
                 }
             }
 
-            // CATO: 2016-05-09: This check moved AFTER gift card check so can use GC alone
+            // SCIPIO: 2016-05-09: This check moved AFTER gift card check so can use GC alone
             if (UtilValidate.isEmpty(selectedPaymentMethods)) {
-                // CATO: 2016-04-21: patch is based on logic from org.ofbiz.order.shoppingcart.CheckOutHelper.setCheckOutPaymentInternal
+                // SCIPIO: 2016-04-21: patch is based on logic from org.ofbiz.order.shoppingcart.CheckOutHelper.setCheckOutPaymentInternal
                 // we need an error message and the behavior for whether to require it is now based on ProductStore.reqPayMethForFreeOrders,
                 // otherwise the different checkout methods known to stock are too inconsistent.
                 // The default is Y which was the original behavior of this part of code, and is the most "safe" default.
@@ -274,7 +274,7 @@ public class CheckOutEvents {
     }
 
     /**
-     * Cato: Adds the IDs of single use payments from selected methods to the given list.
+     * Scipio: Adds the IDs of single use payments from selected methods to the given list.
      */
     static void addSingleUsePayments(HttpServletRequest request, Map<String, Map<String, Object>> selectedPaymentMethods, List<String> singleUsePayments) {
         if (selectedPaymentMethods != null) {
@@ -310,7 +310,7 @@ public class CheckOutEvents {
     }
 
     public static String setCheckOutError(HttpServletRequest request, HttpServletResponse response) {
-        // CATO: Read the "checkoutpage" from attributes first, so events may modify
+        // SCIPIO: Read the "checkoutpage" from attributes first, so events may modify
         //String currentPage = request.getParameter("checkoutpage");
         String currentPage = getRequestAttribOrParam(request, "checkoutpage");
         if (UtilValidate.isEmpty(currentPage)) {
@@ -331,7 +331,7 @@ public class CheckOutEvents {
     }
 
     public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
-        // Cato: We currently *may* run into additional problems if try to create new records during partial saves.
+        // Scipio: We currently *may* run into additional problems if try to create new records during partial saves.
         // Also, note the fixme below is a stock fixme, not by us; it shouldn't be changed with current implementation (which is a "best-effort")...
         request.setAttribute("checkoutUseNewRecords", Boolean.FALSE);
         
@@ -364,7 +364,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Cato: Alternative event to {@link #checkPaymentMethods} that may be run <i>before</i> payment method
+     * Scipio: Alternative event to {@link #checkPaymentMethods} that may be run <i>before</i> payment method
      * selection.
      * <p>
      * TODO?: Currently, this event does nothing. See comments.
@@ -375,7 +375,7 @@ public class CheckOutEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
         
-        // Cato: TODO?: Currently, in this event we do nothing. This is because checkOutHelper.validatePaymentMethods()
+        // Scipio: TODO?: Currently, in this event we do nothing. This is because checkOutHelper.validatePaymentMethods()
         // performs mainly a total amount validation which causes errors when going backward in checkout due
         // to change shipping options which can affect totals and result a negative balance error.
         // This method is thus currently a placeholder.
@@ -394,7 +394,7 @@ public class CheckOutEvents {
         //Locale locale = UtilHttp.getLocale(request);
         Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<String, Map<String, Object>>();
         
-        // Cato: Allow override via request attribs
+        // Scipio: Allow override via request attribs
         String[] paymentMethods;
         if (request.getAttribute("checkOutPaymentId") != null) {
             Object copid = request.getAttribute("checkOutPaymentId");
@@ -403,7 +403,7 @@ public class CheckOutEvents {
             } else if (copid instanceof List) {
                 paymentMethods = (UtilGenerics.<String>checkList(copid)).toArray(new String[]{});
             } else {
-                Debug.logError("Cato: checkOutPaymentId request attrib was neither string nor list; treating as null", module);
+                Debug.logError("Scipio: checkOutPaymentId request attrib was neither string nor list; treating as null", module);
                 //paymentMethods = request.getParameterValues("checkOutPaymentId");
                 paymentMethods = null;
             }
@@ -421,7 +421,7 @@ public class CheckOutEvents {
             for (int i = 0; i < paymentMethods.length; i++) {
                 Map<String, Object> paymentMethodInfo = FastMap.newInstance();
 
-                // Cato: Allow inlined address creation
+                // Scipio: Allow inlined address creation
                 String paymentMethodId = paymentMethods[i];
                 String origPaymentMethodId = paymentMethods[i];
                 Map<String, Object> payMethResult = checkPaymentMethodIdForNew(request, paymentMethodId, "newCreditCard_", "newEftAccount_");
@@ -446,7 +446,7 @@ public class CheckOutEvents {
                     try {
                         amount = new BigDecimal(amountStr);
                     } catch (NumberFormatException e) {
-                        // Cato: Let caller handle
+                        // Scipio: Let caller handle
                         throw new ServiceErrorException("Invalid amount set for payment method: " + amountStr, ServiceUtil.returnError(
                                 UtilProperties.getMessage(resource_error, "checkevents.invalid_amount_set_for_payment_method", (cart != null ? cart.getLocale() : Locale.getDefault()))));
                         //Debug.logError(e, module);
@@ -457,7 +457,7 @@ public class CheckOutEvents {
                 }
                 paymentMethodInfo.put("amount", amount);
                 
-                // Cato: Get single-use flag
+                // Scipio: Get single-use flag
                 Boolean singleUseBool = null;
                 String singleUseFlag = request.getParameter("singleUsePayment_" + origPaymentMethodId);
                 if ("Y".equals(singleUseFlag)) {
@@ -467,7 +467,7 @@ public class CheckOutEvents {
                 }
                 paymentMethodInfo.put("singleUsePayment", singleUseBool);
                 
-                selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // Cato: edited
+                selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // Scipio: edited
             }
         }
         Debug.logInfo("Selected Payment Methods : " + selectedPaymentMethods, module);
@@ -481,7 +481,7 @@ public class CheckOutEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         // Set the payment options
-        // Cato: Handle new error cases
+        // Scipio: Handle new error cases
         Map<String, Map<String, Object>> selectedPaymentMethods;
         try {
             selectedPaymentMethods = getSelectedPaymentMethods(request);
@@ -515,7 +515,7 @@ public class CheckOutEvents {
 
         String shippingMethod = request.getParameter("shipping_method");
         
-        // Cato: Allow inlined address creation
+        // Scipio: Allow inlined address creation
         //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String shippingContactMechId;
         try {
@@ -548,7 +548,7 @@ public class CheckOutEvents {
 
         List<String> singleUsePayments = new ArrayList<String>();
 
-        // Cato: Support single-use for arbitrary pay methods
+        // Scipio: Support single-use for arbitrary pay methods
         addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
         
         // get a request map of parameters
@@ -585,7 +585,7 @@ public class CheckOutEvents {
                 singleUsePayments.add(gcPaymentMethodId);
             }
             
-            // CATO: Save the info of which paymentMethodId was just created for the new card
+            // SCIPIO: Save the info of which paymentMethodId was just created for the new card
             saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
         }
 
@@ -1069,7 +1069,7 @@ public class CheckOutEvents {
             Map<String, Object> errorMaps = new HashMap<String, Object>();
 
             // Set the payment options
-            // Cato: Handle new error cases
+            // Scipio: Handle new error cases
             Map<String, Map<String, Object>> selectedPaymentMethods;
             try {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
@@ -1097,7 +1097,7 @@ public class CheckOutEvents {
 
             // If the user has just created a new payment method, add it to the map with a null amount, so that
             //  it becomes the sole payment method for the order.
-            // Cato: FIXME?: This is stock code and it appears to be deprecated or not work properly.
+            // Scipio: FIXME?: This is stock code and it appears to be deprecated or not work properly.
             String newPaymentMethodId = (String) request.getAttribute("paymentMethodId");
             if (! UtilValidate.isEmpty(newPaymentMethodId)) {
                 selectedPaymentMethods.put(newPaymentMethodId, null);
@@ -1115,7 +1115,7 @@ public class CheckOutEvents {
                 String gcPaymentMethodId = (String) callResult.get("paymentMethodId");
                 BigDecimal giftCardAmount = (BigDecimal) callResult.get("amount");
                 
-                // CATO: Save the info of which paymentMethodId was just created for the new card
+                // SCIPIO: Save the info of which paymentMethodId was just created for the new card
                 if (gcPaymentMethodId != null) {
                     saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
                 }
@@ -1385,7 +1385,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Cato: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
+     * Scipio: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
      * params and try to create a new address before returning the new contact mech ID. This allows inlining
      * new ship address forms.
      * <p>
@@ -1457,7 +1457,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Cato: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_ as prefix, it will check other
+     * Scipio: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_ as prefix, it will check other
      * params and try to create new records before returning the new contact mech ID. This allows inlining
      * new ship address forms. NOTE: it can support multiple of each.
      * <p>
@@ -1489,7 +1489,7 @@ public class CheckOutEvents {
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
                 if ("_NEW_".equals(addrContactMechId)) {
-                    // Cato: NOTE: Unlike stock code elsewhere, here we assume the _NEW_ is accompanied with
+                    // Scipio: NOTE: Unlike stock code elsewhere, here we assume the _NEW_ is accompanied with
                     // other inline stuff already (not delayed to another screen)
                     serviceName = "createCreditCardAndAddress";
                     paramValidators = UtilMisc.<MapProcessor>toList(
@@ -1588,7 +1588,7 @@ public class CheckOutEvents {
     
     
     /**
-     * Cato: Service invocation helper; uses combine req attribs + params.
+     * Scipio: Service invocation helper; uses combine req attribs + params.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
@@ -1623,7 +1623,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Cato: Local util to get request attrib or param of same name. If request attrib is null, falls back
+     * Scipio: Local util to get request attrib or param of same name. If request attrib is null, falls back
      * to params.
      * <p>
      * <strong>WARN</strong>: If request attrib is non-null but empty, params are ignored. This is
@@ -1637,7 +1637,7 @@ public class CheckOutEvents {
                 res = (String) resObj;
             } else {
                 res = resObj.toString();
-                Debug.logWarning("Cato: WARNING: Reading non-string request attribute '" + name + 
+                Debug.logWarning("Scipio: WARNING: Reading non-string request attribute '" + name + 
                         "' as string (value: '" + res + "')", module);
             }
         } else {
@@ -1657,9 +1657,9 @@ public class CheckOutEvents {
         return res;
     }
     
-    // Cato: Alternative pattern meant for integration with setCheckoutError; not yet needed.
+    // Scipio: Alternative pattern meant for integration with setCheckoutError; not yet needed.
 //    /**
-//     * Cato: This creates a note in the request of the type of error we ran into. 
+//     * Scipio: This creates a note in the request of the type of error we ran into. 
 //     */
 //    static void registerCheckoutError(HttpServletRequest request, String errorType) {
 //        List<String> errors = getCheckoutErrors(request);
@@ -1668,7 +1668,7 @@ public class CheckOutEvents {
 //    }
 //    
 //    /**
-//     * Cato: Gets a list of checkout error types recorded during the request so far.
+//     * Scipio: Gets a list of checkout error types recorded during the request so far.
 //     */
 //    static List<String> getCheckoutErrors(HttpServletRequest request) {
 //        List<String> errors = UtilGenerics.checkList(request.getAttribute("checkoutErrors"));

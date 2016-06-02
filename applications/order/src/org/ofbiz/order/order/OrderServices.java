@@ -1793,7 +1793,7 @@ public class OrderServices {
                 createOrderAdjContext.put("description", "Tax adjustment due to order change");
                 createOrderAdjContext.put("amount", orderTaxDifference);
                 
-                // CATO: STOCK BUGFIX: createOrderAdjustment performs a strict perm check and will fail when
+                // SCIPIO: STOCK BUGFIX: createOrderAdjustment performs a strict perm check and will fail when
                 // called from storefront. We already do a perm check in this service, so run as system user.
                 //createOrderAdjContext.put("userLogin", userLogin);
                 try {
@@ -2265,7 +2265,7 @@ public class OrderServices {
                     "OrderErrorCannotCancelItemItemNotFound", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
         }
 
-        // Cato: Return a basic success message if it worked
+        // Scipio: Return a basic success message if it worked
         // NOTE: It's possible this gets mixed up with errors in ECAs and SECAs, but leave it for now.
         //return ServiceUtil.returnSuccess();
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "OrderOrderItemCancelled", locale));
@@ -4666,8 +4666,8 @@ public class OrderServices {
     // sample test services
     public static Map<String, Object> shoppingCartTest(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        // Cato: Default product store and web site have changed
-        ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "CatoShop", "CatoWebStore", locale, "USD");
+        // Scipio: Default product store and web site have changed
+        ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "ScipioShop", "ScipioWebStore", locale, "USD");
         try {
             cart.addOrIncreaseItem("PH-1005", null, BigDecimal.ONE, null, null, null, null, null, null, null, "DemoCatalog", null, null, null, null, dctx.getDispatcher());
         } catch (CartItemModifyException e) {

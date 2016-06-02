@@ -217,7 +217,7 @@ public class CheckOutHelper {
         }
 
         // set any additional notification emails
-        // Cato: Validation for add. emails (error prone)
+        // Scipio: Validation for add. emails (error prone)
         List<String> emailErrorMessages = new ArrayList<String>();
         orderAdditionalEmails = cleanVerifyEmailListToString(orderAdditionalEmails, emailErrorMessages);
         if (errorMessages.size() <= 0) {
@@ -232,7 +232,7 @@ public class CheckOutHelper {
     /**
      * Stores checkout payment in cart.
      * <p>
-     * Cato: WARN: The stock code in this method does not adjust pay meth amounts. That is done later
+     * Scipio: WARN: The stock code in this method does not adjust pay meth amounts. That is done later
      * by {@link #validatePaymentMethods()}.
      */
     public Map<String, Object> setCheckOutPayment(Map<String, Map<String, Object>> selectedPaymentMethods, List<String> singleUsePayments, String billingAccountId) {
@@ -362,7 +362,7 @@ public class CheckOutHelper {
                 }
             }
         } else { // if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0) 
-            // CATO: 2016-04-21: This is patched so that storefront and backend processes can be tweaked
+            // SCIPIO: 2016-04-21: This is patched so that storefront and backend processes can be tweaked
             // and also will have same behavior. The default here is changed to Y so that the backend
             // functions the same as the frontend, and default Y is chosen because it is the most "safe" default
             // and is the stock default for ecommerce.
@@ -459,7 +459,7 @@ public class CheckOutHelper {
         Map<String, Object> result = new HashMap<String, Object>();
         String errMsg = null;
         // handle gift card payment
-        // Cato: This is too sensitive. Make a check for "Y" instead.
+        // Scipio: This is too sensitive. Make a check for "Y" instead.
         //if (params.get("addGiftCard") != null) {
         if ("Y".equals(params.get("addGiftCard"))) {
             String gcNum = (String) params.get("giftCardNumber");
@@ -1403,7 +1403,7 @@ public class CheckOutHelper {
      */
     public Map<String, Object> finalizeOrderEntryOptions(int shipGroupIndex, String shippingMethod, String shippingInstructions, String maySplit,
             String giftMessage, String isGift, String internalCode, String shipBeforeDate, String shipAfterDate, String orderAdditionalEmails) {
-        // Cato: Validation for add. emails (error prone)
+        // Scipio: Validation for add. emails (error prone)
         List<String> errorMessages = new ArrayList<String>();
         orderAdditionalEmails = cleanVerifyEmailListToString(orderAdditionalEmails, errorMessages);
         if (errorMessages.size() > 0) {
@@ -1542,10 +1542,10 @@ public class CheckOutHelper {
     /**
      * Validates payment methods.
      * <p>
-     * Cato: WARN: The stock code in this method does not only check the validity of current pay methods in cart; it
+     * Scipio: WARN: The stock code in this method does not only check the validity of current pay methods in cart; it
      * also updates pay meth amounts for those that were previously left null.
      * <p>
-     * Cato: NOTE: Logic must reflect that of {@link ShoppingCart#isPaymentAdequate()}.
+     * Scipio: NOTE: Logic must reflect that of {@link ShoppingCart#isPaymentAdequate()}.
      */
     public Map<String, Object> validatePaymentMethods() {
         String errMsg = null;
@@ -1562,13 +1562,13 @@ public class CheckOutHelper {
         // payment by billing account only requires more checking
         List<String> paymentMethods = cart.getPaymentMethodIds();
         
-        // Cato: Patched: We want to consider the pay meths that have no paymentMethodIds!
+        // Scipio: Patched: We want to consider the pay meths that have no paymentMethodIds!
         // WARN: we are changing the definition of paymentMethods by doing this; some code may need to use paymentMethodsWithPaymentMethodId instead
         List<String> paymentMethodsWithPaymentMethodId = cart.getPaymentMethodIds();
         paymentMethods.addAll(cart.getPaymentMethodTypeIdsNoPaymentMethodIds()); // add offline, cod, etc, so they can auto calculate totals
         
         List<String> paymentTypes = cart.getPaymentMethodTypeIds();
-        if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && (paymentMethods.size() == 0 || (paymentMethods.size() == 1 && paymentMethods.contains("EXT_BILLACT")))) { // Cato: length 1 check added
+        if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && (paymentMethods.size() == 0 || (paymentMethods.size() == 1 && paymentMethods.contains("EXT_BILLACT")))) { // Scipio: length 1 check added
             if (cart.getGrandTotal().compareTo(availableAmount) > 0) {
                 errMsg = UtilProperties.getMessage(resource_error, "checkevents.insufficient_credit_available_on_account", (cart != null ? cart.getLocale() : Locale.getDefault()));
                 return ServiceUtil.returnError(errMsg);
@@ -1627,7 +1627,7 @@ public class CheckOutHelper {
             BigDecimal changeAmount = selectedPaymentTotal.subtract(requiredAmount);
             if (!paymentTypes.contains("CASH")) {
                 Debug.logError("Change Amount : " + changeAmount + " / No cash.", module);
-                // Cato: Use less cryptic message
+                // Scipio: Use less cryptic message
                 //errMsg = UtilProperties.getMessage(resource_error, "checkhelper.change_returned_cannot_be_greater_than_cash", (cart != null ? cart.getLocale() : Locale.getDefault()));
                 errMsg = UtilProperties.getMessage(resource_error, "checkevents.payment_cannot_be_greater_than_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
                 return ServiceUtil.returnError(errMsg);
@@ -1637,7 +1637,7 @@ public class CheckOutHelper {
                 BigDecimal cashAmount = cart.getPaymentAmount(cashId);
                 if (cashAmount.compareTo(changeAmount) < 0) {
                     Debug.logError("Change Amount : " + changeAmount + " / Cash Amount : " + cashAmount, module);
-                    // Cato: Use less cryptic message
+                    // Scipio: Use less cryptic message
                     //errMsg = UtilProperties.getMessage(resource_error, "checkhelper.change_returned_cannot_be_greater_than_cash", (cart != null ? cart.getLocale() : Locale.getDefault()));
                     errMsg = UtilProperties.getMessage(resource_error, "checkevents.payment_cannot_be_greater_than_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
                     return ServiceUtil.returnError(errMsg);
@@ -1648,7 +1648,7 @@ public class CheckOutHelper {
     }
     
     /**
-     * Cato: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
+     * Scipio: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
      * other words the cart payments in current state can effectively be used to pay for the order.
      * <p>
      * The definition of "adequate" is abstracted by this method. Currently, it requires that the payment method
@@ -1669,7 +1669,7 @@ public class CheckOutHelper {
     }
     
     /**
-     * Cato: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
+     * Scipio: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
      * other words the cart payments in current state can effectively be used to pay for the order.
      */
     public boolean isPaymentsAdequate() {

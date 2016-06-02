@@ -1101,7 +1101,7 @@ public class PartyServices {
         }
         result.put("viewIndex", Integer.valueOf(viewIndex));
 
-        // Cato: unhardcode default
+        // Scipio: unhardcode default
         //int viewSize = 20;
         int viewSize;
         try {

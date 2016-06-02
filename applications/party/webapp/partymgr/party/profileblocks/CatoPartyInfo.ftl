@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <@section title=uiLabelMap.CommonOverview>
     <@table type="fields">
         <#if partyContentList?has_content>

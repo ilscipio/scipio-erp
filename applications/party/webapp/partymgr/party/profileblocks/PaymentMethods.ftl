@@ -34,7 +34,7 @@ under the License.
   ${cardNumberDisplay!}
 </#macro>
 
-  <#-- CATO: Removed
+  <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>

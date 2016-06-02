@@ -10,7 +10,7 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 
 /**
- * Cato: Generalized helper class to help implement one-shot macros.
+ * Scipio: Generalized helper class to help implement one-shot macros.
  * <p>
  * This produces a single macro invocation with the old Ofbiz sub-invocations converted
  * to map arguments, which may then contain further maps within.
@@ -76,7 +76,7 @@ class OneShotMacro {
     public void appendData(Appendable origWriter, String macroName, Map<String, Object> macroParameters) {
         Entry entry = macroNameMap.get(macroName);
         if (entry == null) {
-            throw new IllegalStateException("Cato: unknown widget menu render entry type (" + macroName + "). Did Ofbiz source change?");
+            throw new IllegalStateException("Scipio: unknown widget menu render entry type (" + macroName + "). Did Ofbiz source change?");
         }
         entry.appendData(state, macroParameters, origWriter);
     }
@@ -123,7 +123,7 @@ class OneShotMacro {
         }
         
         public String addSubstituteVarText(String varName, String text) {
-            final String identifier = "##CATO_SUBS_" + subsituteVarCounter;
+            final String identifier = "##SCIPIO_SUBS_" + subsituteVarCounter;
             subsituteVarCounter++;
             substituteVarMap.put(identifier, new VarTextValuePair(varName, text));
             return identifier;

@@ -8,7 +8,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 
 /**
- * Cato: Class to represent an extra attribs expression expressed by a JSON-/FTL-like syntax. Immutable.
+ * Scipio: Class to represent an extra attribs expression expressed by a JSON-/FTL-like syntax. Immutable.
  * <p>
  * Can be used on most any widget elements, e.g.:
  * <pre>
@@ -27,7 +27,7 @@ public class AttribsExpression {
     }
     
     /**
-     * Cato: Builds an attrib expression for internal storage.
+     * Scipio: Builds an attrib expression for internal storage.
      */
     static AttribsExpression makeAttribsExpr(String attribsExprStr, AttribsExpression parentAttribsExpr) {
         FlexibleStringExpander attribsExpr;
@@ -59,7 +59,7 @@ public class AttribsExpression {
     }
 
     /**
-     * Cato: Merges otherExpr into this one, producing a new.
+     * Scipio: Merges otherExpr into this one, producing a new.
      */
     public AttribsExpression putAll(AttribsExpression otherExpr) {
         String origStr = otherExpr.attribsExpr.getOriginal();

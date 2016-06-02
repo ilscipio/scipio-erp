@@ -1,2 +1,2 @@
-<#-- Cato: simple include file that currently delegates to cato template macros -->
+<#-- Scipio: simple include file that currently delegates to scipio template macros -->
 <@htmlHeadOpen />

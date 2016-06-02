@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Cato: Basic interface for a map processor.
+ * Scipio: Basic interface for a map processor.
  * <p>
  * Generalization of the logical minilang SimpleMapProcessor interface; processors may be written in any language.
  * <p>

@@ -114,7 +114,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: Compact version of list locales -->
+    <!-- Scipio: Compact version of list locales -->
     <screen name="ListLocalesCompact">
         <section>
             <actions>

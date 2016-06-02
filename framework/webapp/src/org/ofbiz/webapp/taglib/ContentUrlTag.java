@@ -59,9 +59,9 @@ public class ContentUrlTag {
         appendContentPrefix(webSite, isSecure, urlBuffer);
     }
 
-    // Cato: Modified to support Boolean
+    // Scipio: Modified to support Boolean
     public static void appendContentPrefix(GenericValue webSite, Boolean secure, Appendable urlBuffer) throws IOException {
-        // Cato: WARN: Don't have request, can't determine sane default when secure null, so assume false
+        // Scipio: WARN: Don't have request, can't determine sane default when secure null, so assume false
         secure = Boolean.TRUE.equals(secure); // default false 
         if (secure) {
             if (webSite != null && UtilValidate.isNotEmpty(webSite.getString("secureContentPrefix"))) {

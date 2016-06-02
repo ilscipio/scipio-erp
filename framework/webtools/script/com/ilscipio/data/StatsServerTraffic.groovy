@@ -18,7 +18,7 @@ import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasField;
 
 
 /**
- * This is based on the new CATO getServerRequests services. Sample implementation only
+ * This is based on the new SCIPIO getServerRequests services. Sample implementation only
  * */
 Map findDataMap = [:];
 Timestamp startDate = UtilDateTime.getMonthStart(context.nowTimestamp, context.timeZone, context.locale); // This month (Begin)

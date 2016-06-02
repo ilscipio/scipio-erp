@@ -18,13 +18,13 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Cato: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
 -->
 <#macro renderScreenBegin>
-<#-- Cato: NOTE: HTML head open is now in cato template macros. 
-     In OOTB ofbiz no context is passed here (locale, etc.) so did not belong here and cleaner if in cato macros. -->
+<#-- Scipio: NOTE: HTML head open is now in scipio template macros. 
+     In OOTB ofbiz no context is passed here (locale, etc.) so did not belong here and cleaner if in scipio macros. -->
 <!DOCTYPE html>
 </#macro>
 
@@ -47,7 +47,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</@script>
   </#if>
-  <#-- Cato: now support a few more containers -->
+  <#-- Scipio: now support a few more containers -->
   <#local elem = "">
   <#if ["div", "span", "p"]?seq_contains(style)>
     <#local elem = style>
@@ -57,7 +57,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local elem = parts[0]>
     <#local style = parts[1]>
   </#if>
-  <#-- Cato: delegate to cato libs -->
+  <#-- Scipio: delegate to scipio libs -->
   <@container open=true close=false class=style id=id elem=elem />
 </#macro>
 
@@ -157,9 +157,9 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
-<#-- Cato: new params: menuRole, titleStyle -->
+<#-- Scipio: new params: menuRole, titleStyle -->
 <#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="">
-    <#-- now delegates to Cato implementation. TODO? this call is still too closely based on this macro and its args; rework later -->
+    <#-- now delegates to Scipio implementation. TODO? this call is still too closely based on this macro and its args; rework later -->
     <@section_core open=true close=false id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
         showMore=showMore collapsed=collapsed javaScriptEnabled=javaScriptEnabled fromScreenDef=true menuRole=menuRole requireMenu=false forceEmptyMenu=false hasContent=true titleStyle=titleStyle titleContainerStyle="" titleConsumeLevel=true 
         autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" />
@@ -243,7 +243,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local firstColumn = (columnIndex <= 0)>
   <#local lastColumn = (columnIndex >= (columnCount - 1))>
   
-  <#-- Cato: calc and adapt width to possible grid widths + record grid used so far in global var -->
+  <#-- Scipio: calc and adapt width to possible grid widths + record grid used so far in global var -->
   <#local columnSize = calcPortalPageColumnGridSize(columnCount, columnIndex, gridSize, portalPageGridUsed, width)>
   <#global portalPageGridUsed = portalPageGridUsed + columnSize>
   

@@ -51,7 +51,7 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
             list = result[responseName];
             // Create and show dependent select options            
             if (list) {
-            	// Cato: supports new _previous_ selected option; it allows using markup to specify the initial value
+            	// Scipio: supports new _previous_ selected option; it allows using markup to specify the initial value
             	if (selected === '_previous_') {
             		selected = jQuery(target).val();
             		if (!selected) {
@@ -61,7 +61,7 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
                 jQuery.each(list, function(key, value){
                     if (typeof value == 'string') {
                         values = value.split(': ');
-                        if (selected && values[1].indexOf(selected) >= 0) { // Cato: check fixed
+                        if (selected && values[1].indexOf(selected) >= 0) { // Scipio: check fixed
                             optionList += '<option selected="selected" value="' + values[1] + '">' + values[0] + '</option>';
                         } else {
                             optionList += '<option value="' + values[1] + '">' + values[0] + '</option>';
@@ -77,7 +77,7 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
                 if(allowEmpty) {
                 	var preOptionList = "";
                     // Allow null selection in dependent and set it as default if no selection exists.
-                    if (!selected || selected === "_none_") { // Cato: check fixed
+                    if (!selected || selected === "_none_") { // Scipio: check fixed
                     	preOptionList += '<option selected="selected" value=""></option>';
                     } else {
                     	preOptionList += "<option value=''></option>";

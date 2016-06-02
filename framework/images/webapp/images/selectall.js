@@ -32,7 +32,7 @@ function toggle(e) {
 function checkToggleDefault(e) {
     checkToggle(e, "selectAllForm");
 }
-// Cato: Extended with prefix and exact name options (optional)
+// Scipio: Extended with prefix and exact name options (optional)
 function checkToggle(e, formName, name, namePrefix) {
 	if (!name && !namePrefix) {
 		namePrefix = "_rowSubmit";
@@ -62,7 +62,7 @@ function checkToggle(e, formName, name, namePrefix) {
 function toggleAllDefault(e) {
     toggleAll(e, "selectAllForm");
 }
-// Cato: Extended with prefix and exact name options (optional)
+// Scipio: Extended with prefix and exact name options (optional)
 function toggleAll(e, formName, name, namePrefix) {
 	if (!name && !namePrefix) {
 		namePrefix = "_rowSubmit";
@@ -113,19 +113,19 @@ function highlightRow(e,rowId){
     var currentClassName = document.getElementById(rowId).className;
     if (e.checked) {
         if (currentClassName == '') {
-            document.getElementById(rowId).className = catoStyles.row_selected;
-        } else if (currentClassName == catoStyles.row_reg) {
-            document.getElementById(rowId).className = catoStyles.row_reg + ' ' + catoStyles.row_selected;
-        } else if (currentClassName == catoStyles.row_alt) {
-            document.getElementById(rowId).className = catoStyles.row_alt + ' ' + catoStyles.row_selected;
+            document.getElementById(rowId).className = scipioStyles.row_selected;
+        } else if (currentClassName == scipioStyles.row_reg) {
+            document.getElementById(rowId).className = scipioStyles.row_reg + ' ' + scipioStyles.row_selected;
+        } else if (currentClassName == scipioStyles.row_alt) {
+            document.getElementById(rowId).className = scipioStyles.row_alt + ' ' + scipioStyles.row_selected;
         }
     } else {
-        if (currentClassName == catoStyles.row_selected) {
+        if (currentClassName == scipioStyles.row_selected) {
             document.getElementById(rowId).className = '';
-        } else if (currentClassName == (catoStyles.row_reg + ' ' + catoStyles.row_selected)) {
-            document.getElementById(rowId).className = catoStyles.row_reg;
-        } else if (currentClassName == (catoStyles.row_alt + ' ' + catoStyles.row_selected)) {
-            document.getElementById(rowId).className = catoStyles.row_alt;
+        } else if (currentClassName == (scipioStyles.row_reg + ' ' + scipioStyles.row_selected)) {
+            document.getElementById(rowId).className = scipioStyles.row_reg;
+        } else if (currentClassName == (scipioStyles.row_alt + ' ' + scipioStyles.row_selected)) {
+            document.getElementById(rowId).className = scipioStyles.row_alt;
         }
     }
 }
@@ -836,7 +836,7 @@ function waitSpinnerHide() {
 
 /**
  * Reads the requiered uiLabels from the uiLabelXml Files
- * FIXME: Cato: Method requires sync ajax if it's going to return a value (added); should find a better way to write this
+ * FIXME: Scipio: Method requires sync ajax if it's going to return a value (added); should find a better way to write this
  * @param requiredLabels JSON Object {resource : [label1, label2 ...], resource2 : [label1, label2, ...]}
  * @return JSON Object
  */
@@ -860,7 +860,7 @@ function getJSONuiLabels(requiredLabels) {
 }
 
 /**
- * Cato: reads the required ui labels and returns as an object similar to screen uiLabelMap, with all labels in root map. 
+ * Scipio: reads the required ui labels and returns as an object similar to screen uiLabelMap, with all labels in root map. 
  * @param requiredLabels JSON Object {resource : [label1, label2 ...], resource2 : [label1, label2, ...]}
  * @return JSON Object
  */
@@ -880,7 +880,7 @@ function getJSONuiLabelMap(requiredLabels) {
 
 /**
  * Read the requiered uiLabel from the uiLabelXml Resource
- * FIXME: Cato: Method requires sync ajax if it's going to return a value (added); should find a better way to write this
+ * FIXME: Scipio: Method requires sync ajax if it's going to return a value (added); should find a better way to write this
  * @param uiResource String
  * @param errUiLabel String
  * @returns String with Label
@@ -979,7 +979,7 @@ function showErrorAlert(errBoxTitle, errMessage) {
         return;
     }
 
-    // Cato: FIXME: The code below this is currently not working, so just show an alert box for time being
+    // Scipio: FIXME: The code below this is currently not working, so just show an alert box for time being
     alert(errMessage);
     return;
 
@@ -1024,7 +1024,7 @@ function submitPagination(obj, url) {
 }
 
 /**
- * Cato: Submit the pagination request, always as a POST request of some type.
+ * Scipio: Submit the pagination request, always as a POST request of some type.
  * @param obj The DOM object of pagination anchor or select element
  * @param url The pagination URL
  */
@@ -1037,7 +1037,7 @@ function submitPaginationPost(obj, url) {
 }
 
 /**
- * Cato: Submit the pagination request, always specifically as a POST form.
+ * Scipio: Submit the pagination request, always specifically as a POST form.
  * @param obj The DOM object of pagination anchor or select element
  * @param url The pagination URL
  */
@@ -1065,7 +1065,7 @@ function submitPaginationPostForm(obj, url) {
 }
 
 /**
- * Cato: Transforms a partial date into a normalized date-time/timestamp value (yyyy-MM-dd HH:mm:ss.SSS), optionally
+ * Scipio: Transforms a partial date into a normalized date-time/timestamp value (yyyy-MM-dd HH:mm:ss.SSS), optionally
  * completing the unspecified parts with a filler date.
  * It will also truncate.
  * NOTE: Normalized means the value can be submitted by form to service and entity update code.
@@ -1107,7 +1107,7 @@ function convertToDateTimeNorm(date, fillerDate) {
 }
 
 /**
- * Cato: Transforms or truncates a date into normalize simple date format (yyyy-MM-dd).
+ * Scipio: Transforms or truncates a date into normalize simple date format (yyyy-MM-dd).
  * TODO: more robust and user-friendly date handling
  */
 function convertToDateNorm(date, fillerDate) {
@@ -1142,7 +1142,7 @@ function convertToDateNorm(date, fillerDate) {
 }
 
 /**
- * Cato: Transforms or truncates a time into normalized time (HH:mm:ss.SSS).
+ * Scipio: Transforms or truncates a time into normalized time (HH:mm:ss.SSS).
  * TODO: more robust and user-friendly date handling
  */
 function convertToTimeNorm(time, fillerTime) {

@@ -111,7 +111,7 @@ public class ModelMenu extends ModelWidget {
     private final String orientation;
     private final ModelMenu parentMenu;
     /**
-     * Cato: List of selected menu item context field names.
+     * Scipio: List of selected menu item context field names.
      * <p>
      * We now support multiple lookups instead of only one.
      */
@@ -129,7 +129,7 @@ public class ModelMenu extends ModelWidget {
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
-        // Cato: This MUST be set early so the menu item constructor can get the location!
+        // Scipio: This MUST be set early so the menu item constructor can get the location!
         this.menuLocation = menuLocation;
         ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
         String defaultAlign = "";
@@ -155,7 +155,7 @@ public class ModelMenu extends ModelWidget {
         Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
         String menuWidth = "";
         String orientation = "horizontal";
-        // Cato: now using list
+        // Scipio: now using list
         //FlexibleMapAccessor<String> selectedMenuItemContextFieldName = FlexibleMapAccessor.getInstance("");
         List<FlexibleMapAccessor<String>> selectedMenuItemContextFieldName = new ArrayList<FlexibleMapAccessor<String>>();
         String selectedMenuItemContextFieldNameStr = "";
@@ -198,7 +198,7 @@ public class ModelMenu extends ModelWidget {
                 defaultAlignStyle = parent.defaultAlignStyle;
                 fillStyle = parent.fillStyle;
                 extraIndex = parent.extraIndex;
-                // Cato: copy list
+                // Scipio: copy list
                 //selectedMenuItemContextFieldName = parent.selectedMenuItemContextFieldName;
                 selectedMenuItemContextFieldName = new ArrayList<FlexibleMapAccessor<String>>(parent.selectedMenuItemContextFieldName);
                 selectedMenuItemContextFieldNameStr = parent.selectedMenuItemContextFieldNameStr;
@@ -222,7 +222,7 @@ public class ModelMenu extends ModelWidget {
             tooltip = menuElement.getAttribute("tooltip");
         if (!menuElement.getAttribute("default-entity-name").isEmpty())
             defaultEntityName = menuElement.getAttribute("default-entity-name");
-        // Cato: MUST pass all the -style attributes through buildStyle to combine with parent values
+        // Scipio: MUST pass all the -style attributes through buildStyle to combine with parent values
         if (!menuElement.getAttribute("default-title-style").isEmpty())
             defaultTitleStyle = buildStyle(menuElement.getAttribute("default-title-style"), parent != null ? parent.defaultTitleStyle : null, "");
         if (!menuElement.getAttribute("default-selected-style").isEmpty())
@@ -267,7 +267,7 @@ public class ModelMenu extends ModelWidget {
         if (!menuElement.getAttribute("extra-index").isEmpty())
             extraIndex = FlexibleStringExpander.getInstance(menuElement.getAttribute("extra-index"));
         
-        // Cato: include-actions and actions
+        // Scipio: include-actions and actions
         Map<String, Element> menuElemCache = new HashMap<String, Element>();
         processIncludeActions(menuElement, actions, menuLocation, true, menuElemCache);
         
@@ -293,14 +293,14 @@ public class ModelMenu extends ModelWidget {
         this.id = id;
         this.menuContainerStyleExdr = menuContainerStyleExdr;
         
-        // Cato: include-menu-items and menu-item
+        // Scipio: include-menu-items and menu-item
         processIncludeMenuItems(menuElement, menuItemList, menuItemMap, 
                 menuLocation, true, null, menuElemCache);
         
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
-        // Cato: This MUST be set early so the menu item constructor can get the location!
+        // Scipio: This MUST be set early so the menu item constructor can get the location!
         //this.menuLocation = menuLocation;
         this.menuWidth = menuWidth;
         this.orientation = orientation;
@@ -315,11 +315,11 @@ public class ModelMenu extends ModelWidget {
     }
 
     /**
-     * Cato: Menu loading factored out of main constructor and modified for reuse.
+     * Scipio: Menu loading factored out of main constructor and modified for reuse.
      */
     static ModelMenu getMenuDefinition(String resource, String name, String menuLocation, Element anyMenuElement) {
         ModelMenu modelMenu = null;
-        // Cato: Added a superficial check for same-location to prevent some endless loops.
+        // Scipio: Added a superficial check for same-location to prevent some endless loops.
         // WARN: this is only a superficial check to prevent endless loops while refactoring menus.
         if (resource != null && !resource.isEmpty() && !(menuLocation.equals(resource))) {
             try {
@@ -347,7 +347,7 @@ public class ModelMenu extends ModelWidget {
     }
         
     /**
-     * Cato: implements include-actions and actions reading (moved here).
+     * Scipio: implements include-actions and actions reading (moved here).
      * Also does include-elements.
      */
     private void processIncludeActions(Element menuElement, List<ModelAction> actions, 
@@ -422,7 +422,7 @@ public class ModelMenu extends ModelWidget {
     }
     
     /**
-     * Cato: implements include-menu-items and menu-item reading (moved here).
+     * Scipio: implements include-menu-items and menu-item reading (moved here).
      * Also does include-elements.
      */
     private void processIncludeMenuItems(Element menuElement, List<ModelMenuItem> menuItemList,
@@ -574,7 +574,7 @@ public class ModelMenu extends ModelWidget {
                 }
             }
             //else {
-                // Cato: No! we must reload the orig doc always because the Elements get written to!
+                // Scipio: No! we must reload the orig doc always because the Elements get written to!
                 // must have fresh versions.
                 // try to find a menu definition in the same file
                 //inclRootElem = currMenuElem.getOwnerDocument().getDocumentElement();
@@ -609,7 +609,7 @@ public class ModelMenu extends ModelWidget {
             Map<String, ModelMenuItem> menuItemMap) {
         ModelMenuItem existingMenuItem = menuItemMap.get(modelMenuItem.getName());
         if (existingMenuItem != null) {
-            // Cato: support a replace mode as well
+            // Scipio: support a replace mode as well
             ModelMenuItem mergedMenuItem;
             if ("replace".equals(modelMenuItem.getOverrideMode())) {
                 mergedMenuItem = modelMenuItem;
@@ -747,7 +747,7 @@ public class ModelMenu extends ModelWidget {
 
     
     /**
-     * Cato: Builds a style string from current, parent, and default, based on "+"/"="
+     * Scipio: Builds a style string from current, parent, and default, based on "+"/"="
      * combination logic.
      * <p>
      * NOTE: subtle difference between null and empty string.
@@ -761,7 +761,7 @@ public class ModelMenu extends ModelWidget {
     static String buildStyle(String style, String parentStyle, String defaultStyle) {
         String res;
         if (!style.isEmpty()) {
-            // Cato: support extending styles
+            // Scipio: support extending styles
             if (style.startsWith("+")) {
                 String addStyles = style.substring(1);
                 String inheritedStyles;
@@ -803,7 +803,7 @@ public class ModelMenu extends ModelWidget {
     }
     
     /**
-     * Cato: Combines an extra style (like selected-style) to a main style 
+     * Scipio: Combines an extra style (like selected-style) to a main style 
      * string (like widget-style).
      * <p>
      * NOTE: currently, the extra style is always added as an extra, and
@@ -1027,9 +1027,9 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getSelectedMenuItemContextFieldName(Map<String, Object> context) {
-        // Cato: we support multiple lookups.
+        // Scipio: we support multiple lookups.
         //String menuItemName = this.selectedMenuItemContextFieldName.get(context);
-        // Cato: New code start...
+        // Scipio: New code start...
         String menuItemName = null;
         String firstMenuItemName = null;
         for (FlexibleMapAccessor<String> fieldNameExpr : this.selectedMenuItemContextFieldName) {
@@ -1056,7 +1056,7 @@ public class ModelMenu extends ModelWidget {
         if (UtilValidate.isEmpty(menuItemName) && UtilValidate.isNotEmpty(firstMenuItemName)) {
             menuItemName = firstMenuItemName;
         }
-        // Cato: ... new code end
+        // Scipio: ... new code end
         if (UtilValidate.isEmpty(menuItemName)) {
             return this.defaultMenuItemName;
         }
@@ -1146,7 +1146,7 @@ public class ModelMenu extends ModelWidget {
     }
     
     /**
-     * Cato: make list of flexible accessors from a semicolon-separated string.
+     * Scipio: make list of flexible accessors from a semicolon-separated string.
      * TODO: support escaping semicolons
      */
     private static List<FlexibleMapAccessor<String>> makeAccessorList(String accessorsStr) {

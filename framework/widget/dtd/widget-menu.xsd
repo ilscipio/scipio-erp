@@ -18,23 +18,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Cato: In Cato, the form widget language is modified from stock Ofbiz with new elements and
-modifications to existing elements. Changes are prefixed with the string "Cato:" in annotations.
+Scipio: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
+modifications to existing elements. Changes are prefixed with the string "Scipio:" in annotations.
 
 Features and Modifications:
 * All default-xxx-style and xxx-style attributes now support an extended "+/=" prefix.
-  It works similarly to the one used for "class" arguments in Cato Freemarker standard macros.
+  It works similarly to the one used for "class" arguments in Scipio Freemarker standard macros.
   "+": means this style will be appended to this menu's default or to the parent menu's default,
        and in general will never replace another style.
   "=": means this style will replace the menu's default or the parent (extended) menu's default.
        This is effectively the DEFAULT for all non-empty styles.
-       Currently, this _may_ also affect defaults looked up in the Cato standard widget macro Freemarker implementation
+       Currently, this _may_ also affect defaults looked up in the Scipio standard widget macro Freemarker implementation
        (component://widget/templates/htmlMenuMacroLibrary.ftl).
-* Secondary/extra styles behavior: In Cato menu widgets, secondary styles such as
+* Secondary/extra styles behavior: In Scipio menu widgets, secondary styles such as
   selected-style and disabled-title-style are now always APPENDED to the main widget-style (and
   +/= prefix does not affect this).
   In stock Ofbiz, this behavior is inconsistent; earlier versions used replacement by default.
-  The new appending behavior is the same as used in the Cato Freemarker @menu macro.
+  The new appending behavior is the same as used in the Scipio Freemarker @menu macro.
   It is simpler to use, but has some limitations (can't replace the widget-style).
 * Menus can include each other's elements, independently of "extends".
   (include-elements, include-actions, include-menu-items)
@@ -78,7 +78,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="default-widget-style" />
             <xs:attribute type="xs:string" name="default-link-style">
                 <xs:annotation>
-                    <xs:documentation>Cato: Default link style for the links in the menu items of this menu.
+                    <xs:documentation>Scipio: Default link style for the links in the menu items of this menu.
                         Each menu item can override with either "link-style" on menu-item element (preferred) or "style" on link element (discouraged).
                         NOTE: This is currently the only </xs:documentation>
                 </xs:annotation>
@@ -114,7 +114,7 @@ Features and Modifications:
                 <xs:annotation>
                     <xs:documentation>Selected menu item context field name. Name of a field in context (usually set by screens) that will be checked for a menu item name.
                         The menu item that matches this field value by name will receive a selection style ('default-selected-style' or 'selected-style').
-                        Cato: This is a STOCK attribute. This attribute has been upgraded to support multiple field names, semicolon-separated (;).
+                        Scipio: This is a STOCK attribute. This attribute has been upgraded to support multiple field names, semicolon-separated (;).
                         With a single field name or expression, the behavior is unchanged from the STOCK implementation.
                         With multiple semicolon-separated names, in the order given, if the first field's value in context is empty OR does not
                         match any menu item name in this menu, it will check the next, and so on.
@@ -141,7 +141,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="default-permission-entity-action" />
             <xs:attribute name="items-sort-mode">
                 <xs:annotation>
-                    <xs:documentation>Cato: If true, sort final menu items by some attribute, defined by the value. Default off.
+                    <xs:documentation>Scipio: If true, sort final menu items by some attribute, defined by the value. Default off.
                         displaytext means try to use linktext, if none use title, if none use name.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
@@ -162,7 +162,7 @@ Features and Modifications:
     </xs:element>
     <xs:element name="include-elements">
         <xs:annotation>
-            <xs:documentation>Cato: Includes another menu's elements (actions and menu items) into this one. Works on a textual xml level.
+            <xs:documentation>Scipio: Includes another menu's elements (actions and menu items) into this one. Works on a textual xml level.
                 This is a convenience directive and same as declaring all the other include-* directives individually.
                 Can use to include all elements from another menu at first, then later split into more precise directives as needed.
                 The more precise directives will override this one for a given menu.</xs:documentation>
@@ -172,7 +172,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="resource" />
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Cato: If and what to recurse when included menus have their own extends and includes, to find elements.
+                    <xs:documentation>Scipio: If and what to recurse when included menus have their own extends and includes, to find elements.
                         'includes-only' means it will follow includes in the target menu. 
                         'extends-only' means it will follow extends directives in the target menu.
                         'full' means will follow all of the above.
@@ -191,7 +191,7 @@ Features and Modifications:
     </xs:element>
     <xs:element name="include-actions">
         <xs:annotation>
-            <xs:documentation>Cato: Includes another menu's actions into this one. Works on a textual xml level.
+            <xs:documentation>Scipio: Includes another menu's actions into this one. Works on a textual xml level.
                 Warning: diamond-like include+extends patterns can result in duplicate actions; use recursive with care.
                 Usually "includes-only" or "no" for recursive option is safest.</xs:documentation>
         </xs:annotation>
@@ -200,7 +200,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="resource" />
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Cato: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                    <xs:documentation>Scipio: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -215,14 +215,14 @@ Features and Modifications:
     </xs:element>
     <xs:element name="include-menu-items">
         <xs:annotation>
-            <xs:documentation>Cato: Includes another menu's items into this one. Works on a textual xml level.
+            <xs:documentation>Scipio: Includes another menu's items into this one. Works on a textual xml level.
                 Note: duplicates are not concern as menu items are keyed by name.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="exclude-item" minOccurs="0">
                     <xs:annotation>
-                        <xs:documentation>Cato: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
+                        <xs:documentation>Scipio: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:attribute type="xs:string" name="name" use="required" />
@@ -233,7 +233,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="resource" />
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Cato: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                    <xs:documentation>Scipio: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -311,7 +311,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="override-mode" default="merge">
                 <xs:annotation>
-                    <xs:documentation>Cato: Can be used to change the default override behavior.
+                    <xs:documentation>Scipio: Can be used to change the default override behavior.
                         'replace' causes this item to override any prior definition instead of merging (merging in STOCK can be problematic).
                         'remove-replace' is the same as replace but explicitly removes the previous item before replacing it;
                         this is almost the same as 'replace' but allows changing the ordering.</xs:documentation>
@@ -326,7 +326,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="sort-mode" default="auto">
                 <xs:annotation>
-                    <xs:documentation>Cato: Controls whether sorting applies to this item or
+                    <xs:documentation>Scipio: Controls whether sorting applies to this item or
                         not. Only meaningful when items-sort-mode is enabled.
                         If set to off, item will try to remain at the same index of the menu items
                         in which it was declared.
@@ -341,19 +341,19 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="sub-menu-style">
                 <xs:annotation>
-                    <xs:documentation>Cato: Style string for the sub-menu within this menu item.
+                    <xs:documentation>Scipio: Style string for the sub-menu within this menu item.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="sub-menu-title">
                 <xs:annotation>
-                    <xs:documentation>Cato: Title for the sub-menu within this menu item.
+                    <xs:documentation>Scipio: Title for the sub-menu within this menu item.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="sub-menu-model">
                 <xs:annotation>
-                    <xs:documentation>Cato: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
+                    <xs:documentation>Scipio: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
                         attribute defaults such as styles, instead of this top-level menu's default attributes.
                         Can be used to implement sub-menus of different types than the top-level menu.
                         If no # separator, assumes name lookup in current file.

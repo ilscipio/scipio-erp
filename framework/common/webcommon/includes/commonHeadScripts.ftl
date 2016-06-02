@@ -22,7 +22,7 @@
     <#-- theme style variables 
          TODO?: could be optimized via static JS generated manually or cached -->
   <#if styles?has_content>
-    var catoStyles = <@objectAsScript lang="js" object=styles />;
+    var scipioStyles = <@objectAsScript lang="js" object=styles />;
   </#if>  
   
 

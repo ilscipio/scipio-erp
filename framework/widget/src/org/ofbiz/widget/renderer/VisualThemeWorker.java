@@ -24,7 +24,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
- * Cato: Helper utils to get/set renderer visual theme resources.
+ * Scipio: Helper utils to get/set renderer visual theme resources.
  */
 public class VisualThemeWorker {
 
@@ -32,7 +32,7 @@ public class VisualThemeWorker {
     private static final Map<String, Object> emptyContext = Collections.unmodifiableMap(new HashMap<String, Object>());
     
     /**
-     * Cato: Gets visual theme resources from context or if missing, calculates appropriate
+     * Scipio: Gets visual theme resources from context or if missing, calculates appropriate
      * based on values in context, best-effort, using as generalized logic as possible, saves in context and returns.
      * <p>
      * Resources are cached in <code>rendererVisualThemeResources</code> context variable.
@@ -57,7 +57,7 @@ public class VisualThemeWorker {
     }
 
     /**
-     * Cato: Loads visual theme resources from context, best-effort, using as generalized logic as possible.
+     * Scipio: Loads visual theme resources from context, best-effort, using as generalized logic as possible.
      * <p>
      * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest, HttpServletResponse, Map<String, Object>, Writer)}.
      * Original code only checked for preference of userPreferences.
@@ -109,7 +109,7 @@ public class VisualThemeWorker {
     }
 
     /**
-     * Cato: Gets resources from user preferences already in context.
+     * Scipio: Gets resources from user preferences already in context.
      * <p>
      * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest, 
      * HttpServletResponse, Map<String, Object>, Writer)}.
@@ -139,7 +139,7 @@ public class VisualThemeWorker {
     }
 
     /**
-     * Cato: Gets default system visual theme resources, i.e. for _NA_ user login.
+     * Scipio: Gets default system visual theme resources, i.e. for _NA_ user login.
      */
     public static Map<String, List<String>> getDefaultVisualThemeResources(Map<String, Object> context) throws GenericServiceException {
         // emulate default call exactly, but with no userLogin
@@ -156,7 +156,7 @@ public class VisualThemeWorker {
     }
 
     /**
-     * Cato: Invokes a script to choose a visualThemeId and load its resources.
+     * Scipio: Invokes a script to choose a visualThemeId and load its resources.
      */
     public static Map<String, List<String>> loadVisualThemeResourcesFromScript(Map<String, Object> context, 
             String script, GenericValue webSite) throws GenericServiceException {
@@ -181,7 +181,7 @@ public class VisualThemeWorker {
 
  
     /**
-     * Cato: Gets a library location from a library location expression for the given rendering platform.
+     * Scipio: Gets a library location from a library location expression for the given rendering platform.
      * <p>
      * The values returned from this method are cached in a global cache, so they should
      * not be used for arbitrary inputs.
@@ -227,7 +227,7 @@ public class VisualThemeWorker {
     }    
     
     /**
-     * Cato: Gets a library location from a library location expression for the given rendering platform.
+     * Scipio: Gets a library location from a library location expression for the given rendering platform.
      * <p>
      * The expression is either a simple location or a flexible EL defining a map.
      * The map maps platform names to locations.

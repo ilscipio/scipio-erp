@@ -70,25 +70,25 @@ public class ModelViewEntity extends ModelEntity {
         functionPrefixMap.put("extract-year", "EXTRACT(YEAR FROM ");
         functionPrefixMap.put("extract-month", "EXTRACT(MONTH FROM ");
         functionPrefixMap.put("extract-day", "EXTRACT(DAY FROM ");
-        functionPrefixMap.put("extract-hour", "EXTRACT(HOUR FROM ");	// CATO Extension
-        functionPrefixMap.put("extract-minute", "EXTRACT(MINUTE FROM ");// CATO Extension
-        functionPrefixMap.put("year", "YEAR(");		// CATO Extension
-        functionPrefixMap.put("month", "MONTH(");	// CATO Extension
-        functionPrefixMap.put("day", "DAY(");		// CATO Extension
-        functionPrefixMap.put("hour", "HOUR(");		// CATO Extension
-        functionPrefixMap.put("minute", "MINUTE(");	// CATO Extension
+        functionPrefixMap.put("extract-hour", "EXTRACT(HOUR FROM ");	// SCIPIO Extension
+        functionPrefixMap.put("extract-minute", "EXTRACT(MINUTE FROM ");// SCIPIO Extension
+        functionPrefixMap.put("year", "YEAR(");		// SCIPIO Extension
+        functionPrefixMap.put("month", "MONTH(");	// SCIPIO Extension
+        functionPrefixMap.put("day", "DAY(");		// SCIPIO Extension
+        functionPrefixMap.put("hour", "HOUR(");		// SCIPIO Extension
+        functionPrefixMap.put("minute", "MINUTE(");	// SCIPIO Extension
         numericFunctionsSet.add("count");
         numericFunctionsSet.add("count-distinct");
         numericFunctionsSet.add("extract-year");
         numericFunctionsSet.add("extract-month");
         numericFunctionsSet.add("extract-day");
-        numericFunctionsSet.add("extract-hour");	// CATO Extension
-        numericFunctionsSet.add("extract-minute"); 	// CATO Extension
-        numericFunctionsSet.add("year");	// CATO Extension
-        numericFunctionsSet.add("month");	// CATO Extension
-        numericFunctionsSet.add("day");		// CATO Extension
-        numericFunctionsSet.add("hour");	// CATO Extension
-        numericFunctionsSet.add("minute"); 	// CATO Extension
+        numericFunctionsSet.add("extract-hour");	// SCIPIO Extension
+        numericFunctionsSet.add("extract-minute"); 	// SCIPIO Extension
+        numericFunctionsSet.add("year");	// SCIPIO Extension
+        numericFunctionsSet.add("month");	// SCIPIO Extension
+        numericFunctionsSet.add("day");		// SCIPIO Extension
+        numericFunctionsSet.add("hour");	// SCIPIO Extension
+        numericFunctionsSet.add("minute"); 	// SCIPIO Extension
     }
 
     /** Contains member-entity alias name definitions: key is alias, value is ModelMemberEntity */

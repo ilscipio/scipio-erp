@@ -88,7 +88,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     BeanModel req = (BeanModel)env.getVariable("request");
                     HttpServletRequest request = req == null ? null : (HttpServletRequest) req.getWrappedObject();
 
-                    // CATO: delegated to our new method
+                    // SCIPIO: delegated to our new method
                     BeanModel resp = (BeanModel) env.getVariable("response");
                     HttpServletResponse response = resp == null ? null : (HttpServletResponse) resp.getWrappedObject();
                     String url = ContentRequestWorker.makeContentLink(request, response, buf.toString(), imgSize);

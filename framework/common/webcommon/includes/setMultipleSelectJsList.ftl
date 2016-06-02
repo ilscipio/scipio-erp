@@ -18,12 +18,12 @@ under the License.
 -->
 <#if asm_listField??> <#-- we check only this var and suppose the others are also present -->
     <#list asm_listField as row>
-      <#-- Cato: we've taken this over in macro form so more reusable -->
+      <#-- Scipio: we've taken this over in macro form so more reusable -->
       <@asmSelectScript id=row.asm_multipleSelect!"" title=row.asm_title!"" sortable=row.asm_sortable!false formId=asm_multipleSelectForm!""
         relatedFieldId=row.asm_relatedField!"" relatedTypeName=row.asm_type!"" relatedTypeFieldId=row.asm_typeField!""
         paramKey=row.asm_paramKey!"" requestName=row.asm_requestName!"" responseName=row.asm_responseName!"" />
     </#list>
-    <#-- Cato: FIXME: this greaks grid 
+    <#-- Scipio: FIXME: this greaks grid 
     <style type="text/css">
     #${asm_multipleSelectForm} {
         width: ${asm_formSize!700}px; 

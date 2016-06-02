@@ -18,8 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Cato: In Cato, the form widget language is modified from stock Ofbiz with new elements and
-modifications to existing elements. Changes are prefixed with the string "Cato:" in annotations.
+Scipio: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
+modifications to existing elements. Changes are prefixed with the string "Scipio:" in annotations.
 
 Features and Modifications:
 * In our renderer implementation, the field positions are treated like a true grid of
@@ -305,45 +305,45 @@ Features and Modifications:
             -->
             <xs:attribute type="xs:string" name="hide-header-when">
                 <xs:annotation>
-                    <xs:documentation>Cato: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>Scipio: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="hide-table-when">
                 <xs:annotation>
-                    <xs:documentation>Cato: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>Scipio: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="use-alternate-text-when">
                 <xs:annotation>
-                    <xs:documentation>Cato: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>Scipio: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="alternate-text">
                 <xs:annotation>
-                    <xs:documentation>Cato: For list forms, alternate text to show when use-alternate-text-when evaluates to true. Display markup is influenced by hide-header/table-* options. See widget.properties for renderer-specific defaults.</xs:documentation>
+                    <xs:documentation>Scipio: For list forms, alternate text to show when use-alternate-text-when evaluates to true. Display markup is influenced by hide-header/table-* options. See widget.properties for renderer-specific defaults.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="alternate-text-style">
                 <xs:annotation>
-                    <xs:documentation>Cato: For list forms, style of alternate text. See widget.properties for renderer-specific defaults.</xs:documentation>
+                    <xs:documentation>Scipio: For list forms, style of alternate text. See widget.properties for renderer-specific defaults.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="positions" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Cato: Explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
+                    <xs:documentation>Scipio: Explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="default-position-span" type="xs:integer" default="1">
                 <xs:annotation>
-                    <xs:documentation>Cato: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>Scipio: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="default-combine-action-fields" default="true">
                 <xs:annotation>
-                    <xs:documentation>Cato: If true, uses combine-previous on groups of adjacent action-button-like field (submit, reset, hyperlink with no title) so they render together</xs:documentation>
+                    <xs:documentation>Scipio: If true, uses combine-previous on groups of adjacent action-button-like field (submit, reset, hyperlink with no title) so they render together</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -354,14 +354,14 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Cato: A json-/freemarker-like object (map) of per-form extra attributes passed to the underlying theme implementation (template macros).
+                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-form extra attributes passed to the underlying theme implementation (template macros).
                       Note that if a parent (extended) form already had extra attribs, only top-level attribs will be merged; sub-maps will replace those from parent (shallow merge).
                       
-                      The default Cato implementation currently recognizes (but is not limited to) these map entries:
+                      The default Scipio implementation currently recognizes (but is not limited to) these map entries:
                       {
                         'showProgress' : true/false,  // for upload forms only: boolean (or string repr of boolean, 'true/false') show upload progress dynamically. 
                                                       // With dynamic progress, a special action is usually needed upon success (see progress-success-action).
-                        'progressOptions' : {},       // Upload forms only: a map (or empty string) of progress options, mainly element selectors and IDs (see CatoUploadProgress js class). 
+                        'progressOptions' : {},       // Upload forms only: a map (or empty string) of progress options, mainly element selectors and IDs (see ScipioUploadProgress js class). 
                                                       // e.g.: { 'errorResultContainerSel': '#main-alert', 'errorResultAddWrapper': false }
                         'progressSuccessAction' : ''  // Upload forms only: action to take when upload succeeds. Format and values are:
                                                       // 'none' - stay on current page (progress will indicate success)
@@ -375,7 +375,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="method">
                 <xs:annotation>
-                    <xs:documentation>Cato: Essential setting to control whether form is a post or get action. 
+                    <xs:documentation>Scipio: Essential setting to control whether form is a post or get action. 
                       Implied default is "post".
                       Only meaningful for widget form types with submit forms generated.</xs:documentation>
                 </xs:annotation>
@@ -689,12 +689,12 @@ Features and Modifications:
             <xs:attribute name="default-position" type="xs:positiveInteger" default="1" />
             <xs:attribute name="default-position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Cato: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>Scipio: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Cato: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
+                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -716,12 +716,12 @@ Features and Modifications:
             <xs:attribute type="xs:positiveInteger" name="default-position" default="1" />
             <xs:attribute name="default-position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Cato: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>Scipio: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Cato: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
+                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -792,7 +792,7 @@ Features and Modifications:
             <xs:attribute name="position" type="xs:positiveInteger" />
             <xs:attribute name="position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Cato: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>Scipio: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -930,12 +930,12 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Cato: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>Scipio: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="combine-previous">
                 <xs:annotation>
-                    <xs:documentation>Cato: If true, the field body will be combined with the previous field</xs:documentation>
+                    <xs:documentation>Scipio: If true, the field body will be combined with the previous field</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -1062,7 +1062,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Cato: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros).</xs:documentation>
+                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros).</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -1740,7 +1740,7 @@ Features and Modifications:
             <xs:attribute type="xs:positiveInteger" name="rows" default="3" />
             <xs:attribute type="xs:positiveInteger" name="maxlength">
                 <xs:annotation>
-                    <xs:documentation>Cato: Textarea maxlength</xs:documentation>
+                    <xs:documentation>Scipio: Textarea maxlength</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="default-value" />

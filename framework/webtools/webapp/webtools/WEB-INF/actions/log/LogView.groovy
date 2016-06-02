@@ -24,7 +24,7 @@ try {
     File logFile = FileUtil.getFile(logFileName);
     type = '';
     logFile.eachLine { line ->
-        // Cato: All of these checks modified to be more strict and precise
+        // Scipio: All of these checks modified to be more strict and precise
         if (line.startsWith("[INFO]")) {
             type = 'INFO';
         } else if (line.startsWith("[WARN]")) {

@@ -38,7 +38,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
-import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 /**
  * OfbizAmountTransform - Freemarker Transform for content links
@@ -57,7 +57,7 @@ public class OfbizAmountTransform implements TemplateTransformModel {
             if (o instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) o;
                 try {
-                    // Cato: bypass auto-escaping on this
+                    // Scipio: bypass auto-escaping on this
                     //result = s.getAsString();
                     result = LangFtlUtil.getAsStringNonEscaping(s);
                 } catch (TemplateModelException e) {
@@ -90,7 +90,7 @@ public class OfbizAmountTransform implements TemplateTransformModel {
             }
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
-                // Cato: bypass auto-escaping on this
+                // Scipio: bypass auto-escaping on this
                 //return Double.valueOf(s.getAsString());
                 try {
                     return Double.valueOf(LangFtlUtil.getAsStringNonEscaping(s));

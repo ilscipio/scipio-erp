@@ -21,7 +21,7 @@ under the License.
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
-    <!-- CATO: Disabled for now -->   
+    <!-- SCIPIO: Disabled for now -->   
     <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/> -->
     <include location="component://common/webcommon/WEB-INF/security-controller.xml"/>
     <include location="component://common/webcommon/WEB-INF/tempexpr-controller.xml"/>
@@ -350,7 +350,7 @@ under the License.
     </request-map>
     
     <!-- Ajax Requests -->
-    <!-- CATO Dashboard example -->
+    <!-- SCIPIO Dashboard example -->
     <request-map uri="ajaxDashboardCurrentRequest">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="getServerRequestsThisHour"/>
@@ -548,7 +548,7 @@ under the License.
     </request-map>
 
     <!-- PortalPage administration  -->
-    <!-- CATO: Disabled for now -->
+    <!-- SCIPIO: Disabled for now -->
     <!-- <request-map uri="FindPortalPage">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPortalPage"/>
@@ -620,13 +620,13 @@ under the License.
         <response name="success" type="view" value="WebtoolsLayoutDemo"/>
     </request-map>
     
-    <!-- Cato: EntityUtilityServices -->
+    <!-- Scipio: EntityUtilityServices -->
     <request-map uri="EntityUtilityServices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EntityUtilityServices"/>
     </request-map>    
     
-    <!-- Cato: Demo data generator -->
+    <!-- Scipio: Demo data generator -->
     <request-map uri="ListDemoDataGeneratorServices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListDemoDataGeneratorServices"/>
@@ -735,7 +735,7 @@ under the License.
     <view-map name="findTemporalExpression" type="screen" page="component://webtools/widget/TempExprScreens.xml#FindTemporalExpression"/>
 
     <!-- PortalPage administration  -->
-    <!-- CATO: Disabled for now -->
+    <!-- SCIPIO: Disabled for now -->
    <!--  <view-map name="FindPortalPage" type="screen" page="component://webtools/widget/PortalAdmScreens.xml#FindPortalPage"/>
     <view-map name="CreatePortalPage" type="screen" page="component://webtools/widget/PortalAdmScreens.xml#CreatePortalPage"/>
     <view-map name="EditPortalPage" type="screen" page="component://webtools/widget/PortalAdmScreens.xml#EditPortalPage"/> -->
@@ -750,7 +750,7 @@ under the License.
     
     
     <view-map name="EntityUtilityServices" type="screen" page="component://webtools/widget/EntityScreens.xml#EntityUtilityServices"/>
-    <!-- Cato: Demo data generator -->    
+    <!-- Scipio: Demo data generator -->    
     <view-map name="ListDemoDataGeneratorServices" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorServices"/>
     <view-map name="RunDemoDataGeneratorService" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#RunDemoDataGeneratorService"/>
     <view-map name="DemoDataGeneratorResult" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#DemoDataGeneratorResult"/>

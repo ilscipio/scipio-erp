@@ -817,7 +817,7 @@ under the License.
         <attribute name="name" mode="IN" type="String" optional="false"/>
     </service>
     
-    <!-- Cato services: Common demo data generator interface. 
+    <!-- Scipio services: Common demo data generator interface. 
         Services must implement this interface in order to have the demo data generator using the common in/out attributes and also to be listed in the demoDataGenerator screen.
     -->
     <service name="demoDataGenerator" engine="interface">

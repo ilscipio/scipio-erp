@@ -41,7 +41,7 @@ function lookup_error(str_message) {
 }
 
 function lookup_popup1(view_name, form_name, viewWidth, viewheight) {
-	// Cato: NOTE: some added checks here
+	// Scipio: NOTE: some added checks here
     var obj_lookupwindow = window.open(getViewNameWithSeparator(view_name) + 'formName=' + form_name + '&presentation=' + (this.presentation ? this.presentation : "") 
             + '&id=' + (this.id ? this.id : ""), '_blank', 'width=' + viewWidth + ',height=' + viewheight + ',scrollbars=yes,status=no,resizable=yes,top='
             + my + ',left=' + mx + ',dependent=yes,alwaysRaised=yes');

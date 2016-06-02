@@ -791,7 +791,7 @@ public class UtilMisc {
     }
     
     /**
-     * Cato: Gets map entries matching the given prefix.
+     * Scipio: Gets map entries matching the given prefix.
      */
     public static Map<String, Object> getPrefixedMapEntries(Map<String, Object> map, String prefix) {
         Map<String, Object> res = new HashMap<String, Object>();

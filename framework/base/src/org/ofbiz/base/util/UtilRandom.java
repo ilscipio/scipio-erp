@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Cato: Randomization utilities.
+ * Scipio: Randomization utilities.
  */
 public class UtilRandom {
 

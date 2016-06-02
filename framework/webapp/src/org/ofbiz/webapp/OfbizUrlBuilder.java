@@ -104,7 +104,7 @@ public final class OfbizUrlBuilder {
     }
     
     /**
-     * Cato: Returns an <code>OfbizUrlBuilder</code> instance. Mixed method that allows
+     * Scipio: Returns an <code>OfbizUrlBuilder</code> instance. Mixed method that allows
      * using WebSiteProperties different than the WebappInfo instance.
      * <p>
      * This is needed because not every webapp has its own webSiteId, which means
@@ -138,7 +138,7 @@ public final class OfbizUrlBuilder {
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;
     private final String servletPath;
-    private final String contextPath;   // Cato: this class should record the context path (webapp mount-point)
+    private final String contextPath;   // Scipio: this class should record the context path (webapp mount-point)
 
     private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath, String contextPath) {
         this.config = config;
@@ -167,7 +167,7 @@ public final class OfbizUrlBuilder {
     /**
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
      * <p>
-     * Cato: Modified to support omitting controller lookup. Also supports Boolean instead of boolean.
+     * Scipio: Modified to support omitting controller lookup. Also supports Boolean instead of boolean.
      * 
      * @param buffer
      * @param url
@@ -179,7 +179,7 @@ public final class OfbizUrlBuilder {
      * @throws IOException
      */
     public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL, Boolean controller) throws WebAppConfigurationException, IOException {
-        // Cato: support Boolean
+        // Scipio: support Boolean
         useSSL = Boolean.TRUE.equals(useSSL); // default false
         controller = !Boolean.FALSE.equals(useSSL); // default true
         
@@ -191,7 +191,7 @@ public final class OfbizUrlBuilder {
             requestMapUri = requestMapUri.substring(0, queryIndex);
         }
         RequestMap requestMap = null;
-        // Cato: only lookup if controller lookup requested
+        // Scipio: only lookup if controller lookup requested
         if (controller) {
             if (config != null) {
                 requestMap = config.getRequestMapMap().get(requestMapUri);
@@ -228,7 +228,7 @@ public final class OfbizUrlBuilder {
     /**
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
      * <p>
-     * Cato: Version that assumes controller is to be used. Also accepts Boolean instead of boolean.
+     * Scipio: Version that assumes controller is to be used. Also accepts Boolean instead of boolean.
      * 
      * @param buffer
      * @param url
@@ -255,7 +255,7 @@ public final class OfbizUrlBuilder {
             throw new IllegalStateException("Servlet path is unknown");
         }
         buffer.append(servletPath);
-        // Cato: added check to make sure servletPath doesn't already end with "/"
+        // Scipio: added check to make sure servletPath doesn't already end with "/"
         // FIXME: we should really check buffer instead of servletPath, but we can't because Appendable...
         if (!servletPath.endsWith("/") && !url.startsWith("/")) {
             buffer.append("/");
@@ -264,7 +264,7 @@ public final class OfbizUrlBuilder {
     }
     
     /**
-     * Cato: Builds a partial URL - including the context path, but not the scheme or host or servlet.
+     * Scipio: Builds a partial URL - including the context path, but not the scheme or host or servlet.
      * 
      * @param buffer
      * @param url
@@ -276,7 +276,7 @@ public final class OfbizUrlBuilder {
             throw new IllegalStateException("Context path is unknown");
         }
         buffer.append(contextPath);
-        // Cato: added check to make sure contextPath doesn't already end with "/"
+        // Scipio: added check to make sure contextPath doesn't already end with "/"
         // FIXME: we should really check buffer instead of contextPath, but we can't because Appendable...
         if (!contextPath.endsWith("/") && !url.startsWith("/")) {
             buffer.append("/");
@@ -286,14 +286,14 @@ public final class OfbizUrlBuilder {
     
     
     /**
-     * Cato: Get serlvet path.
+     * Scipio: Get serlvet path.
      */
     public String getServletPath() throws WebAppConfigurationException, IOException {
         return servletPath;
     }
     
     /**
-     * Cato: Get context path.
+     * Scipio: Get context path.
      */
     public String getContextPath() throws WebAppConfigurationException, IOException {
         return contextPath;

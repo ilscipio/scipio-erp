@@ -86,7 +86,7 @@ public class RequestHandler {
     private final String charset;
     
     /**
-     * Cato: Allows or prevents override view URIs, based on web.xml config. Default: true (stock behavior).
+     * Scipio: Allows or prevents override view URIs, based on web.xml config. Default: true (stock behavior).
      */
     private final boolean allowOverrideViewUri;
 
@@ -117,7 +117,7 @@ public class RequestHandler {
         this.cookies = !"false".equalsIgnoreCase(context.getInitParameter("cookies"));
         this.charset = context.getInitParameter("charset");
         
-        // Cato: New (currently true by default)
+        // Scipio: New (currently true by default)
         this.allowOverrideViewUri = !"false".equalsIgnoreCase(context.getInitParameter("allowOverrideViewUri"));
     }
 
@@ -174,7 +174,7 @@ public class RequestHandler {
             }
         }
 
-        // Cato: may now prevent this
+        // Scipio: may now prevent this
         //String overrideViewUri = RequestHandler.getOverrideViewUri(request.getPathInfo());
         String overrideViewUri = null;
         if (allowOverrideViewUri) {
@@ -243,7 +243,7 @@ public class RequestHandler {
             if (request.getAttribute("_POST_CHAIN_VIEW_") != null) {
                 overrideViewUri = (String) request.getAttribute("_POST_CHAIN_VIEW_");
             } else {
-                // Cato: may now prevent this
+                // Scipio: may now prevent this
                 if (allowOverrideViewUri) {
                     overrideViewUri = RequestHandler.getOverrideViewUri(chain);
                 }
@@ -314,7 +314,7 @@ public class RequestHandler {
                     if (request.getQueryString() != null) {
                         urlBuf.append("?").append(request.getQueryString());
                     }
-                    // Cato: Always make full URL for redirect so uses host from entities
+                    // Scipio: Always make full URL for redirect so uses host from entities
                     //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
                     String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                     if (newUrl.toUpperCase().startsWith("HTTPS")) {
@@ -332,7 +332,7 @@ public class RequestHandler {
                 if (request.getQueryString() != null) {
                     urlBuf.append("?").append(request.getQueryString());
                 }
-                // Cato: Call proper method for this
+                // Scipio: Call proper method for this
                 //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
                 String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                 if (newUrl.toUpperCase().startsWith("HTTP")) {
@@ -606,7 +606,7 @@ public class RequestHandler {
                     redirectTarget += "?" + queryString;
                 }
                 
-                // Cato: Always make full link early
+                // Scipio: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
                 callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString);
 
@@ -633,7 +633,7 @@ public class RequestHandler {
             throw new RequestHandlerException("Illegal response; handler could not process request [" + requestMap.uri + "] and event return [" + eventReturn + "].");
         }
 
-        // Cato: Parse value
+        // Scipio: Parse value
         String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse.value, requestMap);
         
         if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ", parsed-value=" + nextRequestResponseValue + ", sessionId=" + UtilHttp.getSessionId(request), module);
@@ -684,73 +684,73 @@ public class RequestHandler {
             
             if ("url".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
-                    Debug.logError("Cato: Redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
-                // Cato: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
+                // Scipio: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
                 callRedirect(nextRequestResponseValue, response, request, statusCodeString);
             } else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
-                    Debug.logError("Cato: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
                 String url = nextRequestResponseValue.startsWith("/") ? nextRequestResponseValue : "/" + nextRequestResponseValue;
-                // Cato: Modified to pass through encodeURL and more intelligent link-building method
+                // Scipio: Modified to pass through encodeURL and more intelligent link-building method
                 // NOTE: no support for webSiteId, so absPath assumed true
                 //callRedirect(url + this.makeQueryString(request, nextRequestResponse), response, request, statusCodeString);
-                // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                // Scipio: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 String targetUrl = makeLinkAutoFull(request, response, url + this.makeQueryString(request, nextRequestResponse), true, true, null, null);
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (targetUrl == null || targetUrl.isEmpty()) {
-                    Debug.logError("Cato: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
-                    Debug.logError("Cato: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")");
                 }
-                // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                // Scipio: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse), response, request, statusCodeString);
                 String targetUrl = makeLinkFullWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse);
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (targetUrl == null || targetUrl.isEmpty()) {
-                    Debug.logError("Cato: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
-                    Debug.logError("Cato: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")");
                 }
-                // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                // Scipio: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLink(request, response, nextRequestResponseValue), response, request, statusCodeString);
                 String targetUrl = makeLinkFull(request, response, nextRequestResponseValue);
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (targetUrl == null || targetUrl.isEmpty()) {
-                    Debug.logError("Cato: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 // check for an override view, only used if "success" = eventReturn
                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (viewName == null || viewName.isEmpty()) {
-                    Debug.logError("Cato: view name is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: view name is empty (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, saveName);
             } else if ("view-last".equals(nextRequestResponse.type)) {
@@ -783,10 +783,10 @@ public class RequestHandler {
                         }
                     }
                 }
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (viewName == null || viewName.isEmpty()) {
-                    Debug.logError("Cato: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: view-last view name is empty (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, null);
             } else if ("view-last-noparam".equals(nextRequestResponse.type)) {
@@ -805,10 +805,10 @@ public class RequestHandler {
                  } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
                      viewName = nextRequestResponseValue;
                  }
-                 // Cato: Sanity check
+                 // Scipio: Sanity check
                  if (viewName == null || viewName.isEmpty()) {
-                     Debug.logError("Cato: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
-                     throw new RequestHandlerException("Cato: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
+                     Debug.logError("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
+                     throw new RequestHandlerException("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
                  }
                  renderView(viewName, requestMap.securityExternalView, request, response, null);
             } else if ("view-home".equals(nextRequestResponse.type)) {
@@ -828,10 +828,10 @@ public class RequestHandler {
                         request.setAttribute(urlParamEntry.getKey(), urlParamEntry.getValue());
                     }
                 }
-                // Cato: Sanity check
+                // Scipio: Sanity check
                 if (viewName == null || viewName.isEmpty()) {
-                    Debug.logError("Cato: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
-                    throw new RequestHandlerException("Cato: view-last view name is empty (request map URI: " + requestMap.uri + ")");
+                    Debug.logError("Scipio: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, null);
             } else if ("none".equals(nextRequestResponse.type)) {
@@ -845,7 +845,7 @@ public class RequestHandler {
     }
 
     /**
-     * Cato: New feature that allows controller responses to dig values out of request attributes using the 
+     * Scipio: New feature that allows controller responses to dig values out of request attributes using the 
      * EL-like syntax: ${scope.name}. The value must be a string otherwise an error is logged.
      * returned.
      * <p>
@@ -894,10 +894,10 @@ public class RequestHandler {
                     return attrStr;
                 } else {
                     if (requestMap != null) {
-                        Debug.logError("Cato: Error in request handler: The interpreted request response value '" +
+                        Debug.logError("Scipio: Error in request handler: The interpreted request response value '" +
                                 attrValue.toString() + "' from request URI '" + requestMap.uri + "' did not evaluate to a string; treating as empty", module);
                     } else {
-                        Debug.logError("Cato: Error in request handler: The interpreted request response value '" +
+                        Debug.logError("Scipio: Error in request handler: The interpreted request response value '" +
                                 attrValue.toString() + "' did not evaluate to a string; treating as empty", module);
                     }
                 }
@@ -986,19 +986,19 @@ public class RequestHandler {
     /**
      * Performs HTTP redirect to the given URL.
      * <p>
-     * Cato: NOTE: All the code currently calling this may append jsessionIds (through processing
+     * Scipio: NOTE: All the code currently calling this may append jsessionIds (through processing
      * of changing encode to true to correct filter hook behavior).
      * Currently I don't see how this is bad.
      * If need to remove jsessionId from redirects, could uncomment the lines below.
      */
     private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString) throws RequestHandlerException {
-        // Cato: Uncomment this to force remove jsessionId from controller redirects...
+        // Scipio: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
         if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "], sessionId=" + UtilHttp.getSessionId(req), module);
-        // Cato: sanity check
+        // Scipio: sanity check
         if (url == null || url.isEmpty()) {
-            Debug.logError("Cato: Redirect URL is empty", module);
-            throw new RequestHandlerException("Cato: Redirect URL is empty");
+            Debug.logError("Scipio: Redirect URL is empty", module);
+            throw new RequestHandlerException("Scipio: Redirect URL is empty");
         }
         // set the attributes in the session so we can access it.
         Enumeration<String> attributeNameEnum = UtilGenerics.cast(req.getAttributeNames());
@@ -1034,10 +1034,10 @@ public class RequestHandler {
         }
     }
     private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName) throws RequestHandlerException {
-        // Cato: sanity check
+        // Scipio: sanity check
         if (view == null || view.isEmpty()) {
-            Debug.logError("Cato: View name is empty", module);
-            throw new RequestHandlerException("Cato: View name is empty");
+            Debug.logError("Scipio: View name is empty", module);
+            throw new RequestHandlerException("Scipio: View name is empty");
         }
         
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
@@ -1307,7 +1307,7 @@ public class RequestHandler {
     /**
      * Builds links with added query string.
      * <p>
-     * Cato: Modified overload to allow boolean flags.
+     * Scipio: Modified overload to allow boolean flags.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode, 
             ConfigXMLReader.RequestResponse requestResponse) {
@@ -1319,14 +1319,14 @@ public class RequestHandler {
     /**
      * Builds links with added query string.
      * <p>
-     * Cato: Original signature method, now delegates.
+     * Scipio: Original signature method, now delegates.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
         return makeLinkWithQueryString(request, response, url, null, null, null, requestResponse);
     }
     
     /**
-     * Cato: Builds a full-path link (HTTPS as necessary) with added query string.
+     * Scipio: Builds a full-path link (HTTPS as necessary) with added query string.
      */
     public String makeLinkFullWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
         return makeLinkWithQueryString(request, response, url, true, null, null, requestResponse);
@@ -1337,7 +1337,7 @@ public class RequestHandler {
     }
     
     /**
-     * Cato: Builds a full-path link (HTTPS as necessary).
+     * Scipio: Builds a full-path link (HTTPS as necessary).
      */
     public String makeLinkFull(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeLink(request, response, url, true, null, null);
@@ -1346,12 +1346,12 @@ public class RequestHandler {
     /**
      * Builds an Ofbiz navigation link.
      * <p>
-     * Cato: This function is heavily modified to support non-controller intra-webapp links
+     * Scipio: This function is heavily modified to support non-controller intra-webapp links
      * as well as inter-webapp links. It should be able to generate all possible types of webapp
      * navigation links. However, it will only build links for webapps recognized by the server,
      * because in most cases we require information from the webapp.
      * <p>
-     * <strong>fullPath behavior change</strong>: In Cato, when fullPath is specified for a controller request, if the 
+     * <strong>fullPath behavior change</strong>: In Scipio, when fullPath is specified for a controller request, if the 
      * request is defined as secure, a secure URL will be created. This method will now never allow an 
      * insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was 
      * different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will 
@@ -1359,12 +1359,12 @@ public class RequestHandler {
      * request it by passing secure false, and this may still produce a secure link if the target
      * is marked secure. Currently, this applies to all links including inter-webapp links.
      * <p>
-     * <strong>secure behavior change</strong>: In Cato, if current browsing is secure, we NEVER downgrade to HTTPS unless 
+     * <strong>secure behavior change</strong>: In Scipio, if current browsing is secure, we NEVER downgrade to HTTPS unless 
      * explicitly requested by passing secure false, and secure false may still produce a secure link if
      * needed. Currently (2016-04-06), for security reasons, this 
      * downgrading request request only applies to the case where the target link is marked as non-secure, such
      * that in general, setting secure false does not may the link will be insecure in all cases.
-     * In addition, in Cato, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
+     * In addition, in Scipio, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
      * secure to force a fullPath link. Links may still generate full-path secure links when needed even 
      * if not requested, however.
      * <p>
@@ -1399,62 +1399,62 @@ public class RequestHandler {
      * @param request the request (required)
      * @param response the response (required)
      * @param url the path or URI (required), relative (relative to controller servlet if controller true, or relative to webapp context root if controller false)
-     * @param interWebapp if true, treat the link as inter-webapp (default: null/false) (Cato: new parameter)
-     * @param webappInfo the webapp info of the link's target webapp (optional, conditionally required) (Cato: new parameter)
-     * @param controller if true, assume is a controller link and refer to controller for building link (default: null/true) (Cato: new parameter)
-     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: null/false) (Cato: changed to Boolean instead of boolean, and changed behavior)
-     * @param secure if true, resulting links is guaranteed to be secure (default: null/false) (Cato: changed to Boolean instead of boolean, and changed behavior)
-     * @param encode if true, pass through response.encodeURL (default: null/true) (Cato: changed to Boolean instead of boolean)
+     * @param interWebapp if true, treat the link as inter-webapp (default: null/false) (Scipio: new parameter)
+     * @param webappInfo the webapp info of the link's target webapp (optional, conditionally required) (Scipio: new parameter)
+     * @param controller if true, assume is a controller link and refer to controller for building link (default: null/true) (Scipio: new parameter)
+     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: null/false) (Scipio: changed to Boolean instead of boolean, and changed behavior)
+     * @param secure if true, resulting links is guaranteed to be secure (default: null/false) (Scipio: changed to Boolean instead of boolean, and changed behavior)
+     * @param encode if true, pass through response.encodeURL (default: null/true) (Scipio: changed to Boolean instead of boolean)
      * @return the resulting URL
      */
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller, 
             Boolean fullPath, Boolean secure, Boolean encode) {
-        // Cato: We now accept nulls for all booleans to prevent rehardcoding defaults and allow more options
+        // Scipio: We now accept nulls for all booleans to prevent rehardcoding defaults and allow more options
         if (interWebapp == null) {
             interWebapp = Boolean.FALSE;
         }
         if (controller == null) {
             controller = Boolean.TRUE;
         }
-        // Cato: Code must be aware of whether these were explicitly requested or not
-        // Cato: NOTE: change to Boolean not fully exploited yet
+        // Scipio: Code must be aware of whether these were explicitly requested or not
+        // Scipio: NOTE: change to Boolean not fully exploited yet
         //if (fullPath == null) {
         //    fullPath = Boolean.FALSE;
         //}
         //if (secure == null) {
-        //    // Cato: NOTE: this does not mean the link is "insecure"!
+        //    // Scipio: NOTE: this does not mean the link is "insecure"!
         //    secure = Boolean.FALSE;
         //}
         if (encode == null) {
             encode = Boolean.TRUE;
         }
         
-        Delegator delegator = (Delegator) request.getAttribute("delegator"); // Cato: need delegator
-        OfbizUrlBuilder builder = null; // Cato: reuse this outside
-        WebSiteProperties webSiteProps; // Cato: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
-        WebSiteProperties requestWebSiteProps; // Cato: will always need request web site props, for comparisons
+        Delegator delegator = (Delegator) request.getAttribute("delegator"); // Scipio: need delegator
+        OfbizUrlBuilder builder = null; // Scipio: reuse this outside
+        WebSiteProperties webSiteProps; // Scipio: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
+        WebSiteProperties requestWebSiteProps; // Scipio: will always need request web site props, for comparisons
 
-        // Cato: enforce this check for time being
+        // Scipio: enforce this check for time being
         if (interWebapp && webappInfo == null) {
-            throw new IllegalArgumentException("Cato: Cannot build inter-webapp URL without webapp info");
+            throw new IllegalArgumentException("Scipio: Cannot build inter-webapp URL without webapp info");
         }
         
-        // Cato: Sanity check: null/missing URL
+        // Scipio: Sanity check: null/missing URL
         if (url == null || url.isEmpty()) {
-            Debug.logError("Cato: makeLink received null URL; returning null", module);
+            Debug.logError("Scipio: makeLink received null URL; returning null", module);
             return null;
         }
         
-        // Cato: always get current request webSiteProps
+        // Scipio: always get current request webSiteProps
         try {
             requestWebSiteProps = WebSiteProperties.from(request);
-        } catch (Exception e) { // Cato: just catch everything: GenericEntityException
+        } catch (Exception e) { // Scipio: just catch everything: GenericEntityException
             // If the entity engine is throwing exceptions, then there is no point in continuing.
             Debug.logError(e, "Exception thrown while getting web site properties: ", module);
             return null;
         }
         
-        // Cato: Multiple possible ways to get webSiteProps
+        // Scipio: Multiple possible ways to get webSiteProps
         if (interWebapp) {
             try {
                 if (webappInfo != null) {
@@ -1469,17 +1469,17 @@ public class RequestHandler {
                 else {
                     webSiteProps = WebSiteProperties.defaults(delegator);
                 }
-            } catch (Exception e) { // Cato: just catch everything: GenericEntityException
+            } catch (Exception e) { // Scipio: just catch everything: GenericEntityException
                 // If the entity engine is throwing exceptions, then there is no point in continuing.
                 Debug.logError(e, "Exception thrown while getting web site properties: ", module);
                 return null;
             }
         } else {
-            // Cato: stock case (get from request, or defaults)
+            // Scipio: stock case (get from request, or defaults)
             webSiteProps = requestWebSiteProps;
         }
         
-        // Cato: Special case: If we have inter-webapp, we need to check if the web site properties
+        // Scipio: Special case: If we have inter-webapp, we need to check if the web site properties
         // for this link different from the current webapp's. If so, we have to force full-path
         // link. 
         // TODO? It is possible we could want to always force fullPath for all inter-webapp links.
@@ -1493,13 +1493,13 @@ public class RequestHandler {
         String requestUri = null;
         ConfigXMLReader.RequestMap requestMap = null;
         
-        // Cato: only lookup if we want to use controller
+        // Scipio: only lookup if we want to use controller
         if (controller) {
             requestUri = RequestHandler.getRequestUri(url);
             
             if (requestUri != null) {
                 try {
-                    // Cato: Lookup correct controller for webapp
+                    // Scipio: Lookup correct controller for webapp
                     if (interWebapp) {
                         try {
                             requestMap = ConfigXMLReader.getControllerConfig(webappInfo).getRequestMapMap().get(requestUri);
@@ -1509,7 +1509,7 @@ public class RequestHandler {
                         }
                     }
                     else {
-                        // Cato: stock case
+                        // Scipio: stock case
                         requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
                     }
                 } catch (WebAppConfigurationException e) {
@@ -1519,24 +1519,24 @@ public class RequestHandler {
                 }
             }
             
-            // Cato: 2016-05-06: If controller requested and request could not be found, show an error and return null.
+            // Scipio: 2016-05-06: If controller requested and request could not be found, show an error and return null.
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.logError("Cato: Cannot build link: could not locate the expected request '" + requestUri + "' in controller config", module);
+                Debug.logError("Scipio: Cannot build link: could not locate the expected request '" + requestUri + "' in controller config", module);
                 return null; 
             }
         }
         
         boolean didFullSecure = false;
         boolean didFullStandard = false;
-        // Cato: We need to enter even if no controller (and other cases)
+        // Scipio: We need to enter even if no controller (and other cases)
         //if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
         // We don't need this condition anymore, because it doesn't make sense to require enableHttps to produce full path URLs
         //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
         {
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
-            // Cato: These conditions have been change (see method)
+            // Scipio: These conditions have been change (see method)
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
             //    didFullSecure = true;
             //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
@@ -1557,14 +1557,14 @@ public class RequestHandler {
             try {
                 if (builder == null) {
                     if (interWebapp) {
-                        // Cato: builder should be made using webappInfo if one was passed to us 
+                        // Scipio: builder should be made using webappInfo if one was passed to us 
                         builder = OfbizUrlBuilder.from(webappInfo, webSiteProps, delegator);
                     } else {
-                        // Cato: stock case
+                        // Scipio: stock case
                         builder = OfbizUrlBuilder.from(request);
                     }
                 }
-                builder.buildHostPart(newURL, url, didFullSecure, controller); // Cato: controller flag
+                builder.buildHostPart(newURL, url, didFullSecure, controller); // Scipio: controller flag
             } catch (GenericEntityException e) {
                 // If the entity engine is throwing exceptions, then there is no point in continuing.
                 Debug.logError(e, "Exception thrown while getting web site properties: ", module);
@@ -1578,20 +1578,20 @@ public class RequestHandler {
                 Debug.logError(e, "Exception thrown while writing to StringBuilder: ", module);
                 return null;
             } catch (SAXException e) {
-                // Cato: new case
-                Debug.logError(e, "Cato: Exception thrown while getting web site properties: ", module);
+                // Scipio: new case
+                Debug.logError(e, "Scipio: Exception thrown while getting web site properties: ", module);
                 return null;
             }
         }
         
-        // Cato: build the path part (context root, servlet/controller path)
+        // Scipio: build the path part (context root, servlet/controller path)
         if (interWebapp) {
             if (builder == null) {
                 try {
                     builder = OfbizUrlBuilder.from(webappInfo, webSiteProps, delegator);
                 } catch (Exception e) {
-                    // Cato: new case
-                    Debug.logError(e, "Cato: Exception thrown while getting web site properties: ", module);
+                    // Scipio: new case
+                    Debug.logError(e, "Scipio: Exception thrown while getting web site properties: ", module);
                     return null;
                 }
             }
@@ -1604,22 +1604,22 @@ public class RequestHandler {
                     builder.buildPathPartWithContextRoot(newURL, url);
                 }
             } catch (WebAppConfigurationException e) {
-                // Cato: new case
-                Debug.logError(e, "Cato: Exception thrown while building url path part: ", module);
+                // Scipio: new case
+                Debug.logError(e, "Scipio: Exception thrown while building url path part: ", module);
                 return null;
             } catch (IOException e) {
-                // Cato: new case
-                Debug.logError(e, "Cato: Exception thrown while building url path part: ", module);
+                // Scipio: new case
+                Debug.logError(e, "Scipio: Exception thrown while building url path part: ", module);
                 return null;
             }
         } else {
             if (controller) { 
-                // Cato: This is the original stock case: intra-webapp, controller link
+                // Scipio: This is the original stock case: intra-webapp, controller link
                 // create the path to the control servlet
                 String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
                 newURL.append(controlPath);
             } else {
-                // Cato: Here we point to any servlet or file in the webapp, so only append context path
+                // Scipio: Here we point to any servlet or file in the webapp, so only append context path
                 String contextPath = request.getContextPath();
                 newURL.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
             }
@@ -1633,7 +1633,7 @@ public class RequestHandler {
 
         String encodedUrl;
         if (encode) {
-            // CATO: Delegated code
+            // SCIPIO: Delegated code
             encodedUrl = doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
         } else {
             encodedUrl = newURL.toString();
@@ -1649,13 +1649,13 @@ public class RequestHandler {
     }
 
     /**
-     * CATO: Factored-out makeLink code.
+     * SCIPIO: Factored-out makeLink code.
      * <p>
      * Returns null if no full required. Returns true if secure fullpath required. Returns false if standard fullpath required.
      */
     protected Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
-        // Cato: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
+        // Scipio: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
         // We will NEVER build insecure URLs to requests marked secure.
         // This way, there is less control, but fullPath becomes easier and safer to use.
         // 2016-04-06: WE DO NOT DOWNGRADE CONNECTIONS WITH didFullStandard UNLESS EXPLICITLY REQUESTED
@@ -1681,24 +1681,24 @@ public class RequestHandler {
     }
     
     /**
-     * CATO: Factored-out makeLink code, that we must expose so other link-building code may reuse.
+     * SCIPIO: Factored-out makeLink code, that we must expose so other link-building code may reuse.
      * <p>
      * WARN: newURL is modified in-place, and then discarded, so only use the result. 
      */
     protected String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
             boolean didFullStandard, boolean didFullSecure) {
         String encodedUrl;
-        // Cato: do something different for inter-webapp links
+        // Scipio: do something different for inter-webapp links
         if (interWebapp) {
             if (response != null) {
-                // Cato: We want to run inter-webapp links through URL encoding for outbound-rules and things,
+                // Scipio: We want to run inter-webapp links through URL encoding for outbound-rules and things,
                 // but we should never add a jsessionId.
                 encodedUrl = RequestLinkUtil.encodeURLNoJsessionId(newURL.toString(), response);
             } else {
                 encodedUrl = newURL.toString();    
             }
         } else {
-            // Cato: stock case
+            // Scipio: stock case
             boolean forceManualJsessionid = !cookies;
             boolean isSpider = false;
 
@@ -1743,7 +1743,7 @@ public class RequestHandler {
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
         return makeLink(request, response, url, null, null, null, fullPath, secure, encode);
         
-        /* Cato: Below is the original implementation of this method (with this signature), for reference only; unmaintained and may become out of date
+        /* Scipio: Below is the original implementation of this method (with this signature), for reference only; unmaintained and may become out of date
         WebSiteProperties webSiteProps = null;
         try {
             webSiteProps = WebSiteProperties.from(request);
@@ -1857,7 +1857,7 @@ public class RequestHandler {
     }
     
     /**
-     * Cato: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * Scipio: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
      * <p>
      * The <code>url</code> may be a relative URI such as controller URI, a servlet path relative to context root,
@@ -1951,7 +1951,7 @@ public class RequestHandler {
                 try {
                     webappInfo = WebAppUtil.getWebappInfoFromPath(url);
                 } catch (Exception e) {
-                    Debug.logError(e, "Cato: Could not get webapp info from absolute path '" + url + "'", module);
+                    Debug.logError(e, "Scipio: Could not get webapp info from absolute path '" + url + "'", module);
                     return null;
                 }
                 absContextPathChecked = true; // since we built the webapp info from the URL, this is guaranteed fine
@@ -1960,7 +1960,7 @@ public class RequestHandler {
             try {
                 webappInfo = WebAppUtil.getWebappInfoFromRequest(request);
             } catch (Exception e) {
-                Debug.logError(e, "Cato: Could not get webapp info from request (url: " + url + ")", module);
+                Debug.logError(e, "Scipio: Could not get webapp info from request (url: " + url + ")", module);
                 return null;
             }
         }
@@ -1988,7 +1988,7 @@ public class RequestHandler {
             // In some cases need to get controlPath AND this provides a sanity check
             controlPath = WebAppUtil.getControlServletPathSafeSlash(webappInfo);
             if (controlPath == null) {
-                Debug.logError("Cato: In makeLinkAuto, trying to make a controller "
+                Debug.logError("Scipio: In makeLinkAuto, trying to make a controller "
                         + "link for a webapp that has no valid controller (" + webappInfo.getName() + ")", module);
                 return null;
             }
@@ -2000,7 +2000,7 @@ public class RequestHandler {
             if (controller) {
                 if (!absControlPathChecked) {
                     if (!url.startsWith(controlPath)) {
-                        Debug.logError("Cato: In makeLinkAuto, trying to make a controller "
+                        Debug.logError("Scipio: In makeLinkAuto, trying to make a controller "
                                 + "link using absolute path url, but prefix does not match (url: " + url + ", control path: " + controlPath + ")", module);
                         return null;
                     }
@@ -2010,7 +2010,7 @@ public class RequestHandler {
             else {
                 if (!absContextPathChecked) {
                     if (!url.startsWith(contextPath)) {
-                        Debug.logError("Cato: In makeLinkAuto, trying to make a webapp "
+                        Debug.logError("Scipio: In makeLinkAuto, trying to make a webapp "
                                 + "link using absolute path url, but context root does not match (url: " + url + ", context path: " + contextPath + ")", module);
                         return null;
                     }
@@ -2036,7 +2036,7 @@ public class RequestHandler {
     }
 
     /**
-     * Cato: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * Scipio: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
      * 
      * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
@@ -2046,7 +2046,7 @@ public class RequestHandler {
     }
     
     /**
-     * Cato: Builds an Ofbiz navigation full link (with HTTPS as necessary), where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * Scipio: Builds an Ofbiz navigation full link (with HTTPS as necessary), where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
      * 
      * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
@@ -2058,13 +2058,13 @@ public class RequestHandler {
     /**
      * Builds an Ofbiz URL.
      * <p>
-     * Cato: This is modified to pass encode <code>true</code> (<code>null</code>) instead of <code>false</code>.
+     * Scipio: This is modified to pass encode <code>true</code> (<code>null</code>) instead of <code>false</code>.
      * This is <string>necessary</strong> to achieve filter hooks.
      * <strong>WARN</strong>: This may lead to extra jsessionid added in some cases.
      * See {@link #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)} for details.
      */
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
-        // Cato: Pass encode = true
+        // Scipio: Pass encode = true
         //return makeUrl(request, response, url, false, false, false);
         return makeUrl(request, response, url, null, null, null);
     }
@@ -2076,7 +2076,7 @@ public class RequestHandler {
     }
     
     /**
-     * Cato: Builds a full-path link (HTTPS as necessary).
+     * Scipio: Builds a full-path link (HTTPS as necessary).
      */
     public static String makeUrlFull(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeUrl(request, response, url, true, null, null);
@@ -2156,7 +2156,7 @@ public class RequestHandler {
     }
     
     /**
-     * Cato: Utility method that can be used for security checks to check if controller of current webapp
+     * Scipio: Utility method that can be used for security checks to check if controller of current webapp
      * has the specified URI and allows direct/public access.
      */
     public static boolean controllerHasRequestUriDirect(HttpServletRequest request, String uri) {
@@ -2168,7 +2168,7 @@ public class RequestHandler {
     }
     
     /**
-     * Cato: Utility method that can be used for security checks to check if controller of current webapp
+     * Scipio: Utility method that can be used for security checks to check if controller of current webapp
      * has the specified URI and allows direct/public access.
      */
     public boolean controllerHasRequestUriDirect(String uri) {
@@ -2186,7 +2186,7 @@ public class RequestHandler {
     }
     
     /**
-     * Cato: Necessary accessor method for external code.
+     * Scipio: Necessary accessor method for external code.
      */
     public boolean isUseCookies() {
         return cookies;

@@ -24,7 +24,7 @@ margin: 1em;
 </style>
 -->
 
-<#-- CATO: TODO: implement image shadowboxes later
+<#-- SCIPIO: TODO: implement image shadowboxes later
 <@script src="/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.pack.js" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.css</@ofbizContentUrl>" type="text/css" media="screen" />
 

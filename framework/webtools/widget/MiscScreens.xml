@@ -198,7 +198,7 @@ under the License.
                 </screenlet>
                 <screenlet title="Specific markup labels">
                     <label style="generic" text="Generic markup"/>
-                    <label text="Default markup"/> <!-- Cato: NOTE: at time of writing this defaults to "p" -->
+                    <label text="Default markup"/> <!-- Scipio: NOTE: at time of writing this defaults to "p" -->
                     <label style="p" text="Paragraph"/>
                     <label style="span" text="Span"/>
                     <label style="div" text="Div"/>

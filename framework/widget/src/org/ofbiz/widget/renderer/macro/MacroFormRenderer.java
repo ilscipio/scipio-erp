@@ -131,7 +131,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     /**
-     * Cato: Returns macro library path used for this renderer. 
+     * Scipio: Returns macro library path used for this renderer. 
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
@@ -162,7 +162,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            // Cato: custom render context
+            // Scipio: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
@@ -373,7 +373,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isNotEmpty(textField.getMask())) {
             mask = textField.getMask();
         }
-        String tooltip = modelFormField.getTooltip(context); // CATO: new arg
+        String tooltip = modelFormField.getTooltip(context); // SCIPIO: new arg
         if (UtilValidate.isEmpty(tooltip)) {
             tooltip = "";
         }
@@ -416,7 +416,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(mask);
         sr.append("\" placeholder=\"");
         sr.append(placeholder);
-        sr.append("\" tooltip=\""); // CATO: new arg
+        sr.append("\" tooltip=\""); // SCIPIO: new arg
         sr.append(tooltip);
         sr.append("\" />");
         executeMacro(writer, sr.toString());
@@ -436,7 +436,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String id = modelFormField.getCurrentContainerId(context);
         String className = "";
         String alert = "false";
-        String maxlength = ""; // CATO: new
+        String maxlength = ""; // SCIPIO: new
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
             className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
@@ -500,7 +500,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(language);
         sr.append("\" buttons=\"");
         sr.append(buttons);
-        // CATO: maxlength added
+        // SCIPIO: maxlength added
         sr.append("\" maxlength=\"");
         sr.append(maxlength);
         sr.append("\" />");
@@ -590,7 +590,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         modelFormField = builder.build();
         
-        // CATO: any escaping must be done AFTER max length concat
+        // SCIPIO: any escaping must be done AFTER max length concat
         // TODO: review this entire encoding stuff
         //String contextValue = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
         //String value = contextValue;
@@ -605,7 +605,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (value.length() > maxlength) {
                 value = value.substring(0, maxlength);
             }
-            // Cato: NOW do escaping TODO: review encoding in general
+            // Scipio: NOW do escaping TODO: review encoding in general
             UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
             if (simpleEncoder != null) {
                 value = simpleEncoder.encode(value);
@@ -1156,7 +1156,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
         }
         
-        // Cato: Getting the id of the element from the context
+        // Scipio: Getting the id of the element from the context
         String id = null;
         if (submitField.getModelFormField().getCurrentContainerId(context) != null) {
             id = submitField.getModelFormField().getCurrentContainerId(context);
@@ -1388,10 +1388,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
             autocomplete = "off";
         }
         
-        // Cato: extra attribs map (json-like)
+        // Scipio: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
         
-        // Cato: form method
+        // Scipio: form method
         String method = modelForm.getMethod(context);
 
         StringWriter sr = new StringWriter();
@@ -1454,7 +1454,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         
-        // Cato: same as the multi type form, I think this is the cleanest way to do it
+        // Scipio: same as the multi type form, I think this is the cleanest way to do it
         // see if there is anything that needs to be added outside of the list-form
         Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
         Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
@@ -1472,7 +1472,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         //FIXME copy from HtmlFormRenderer.java (except for the closing form tag itself, that is now converted)
         if (!modelForm.getUseRowSubmit()) {    
-            // Cato: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
+            // Scipio: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
             this.renderSubmitForm(writer, context, modelForm);
         }
         
@@ -1536,7 +1536,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         columnStyleList = StringUtil.quoteStrList(columnStyleList);
         String columnStyleListString = StringUtil.join(columnStyleList, ", ");
         
-        // Cato: extra attribs map (json-like)
+        // Scipio: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
@@ -1550,7 +1550,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             // this is a fix for forms with no fields
             sr.append(columnStyleListString);
         }
-        // Cato: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
+        // Scipio: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
         sr.append("] formType=\"");
         sr.append(modelForm.getType());        
         sr.append("\" attribs=(");
@@ -1647,7 +1647,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String oddRowStyle = "";
         if (itemIndex != null) {
             altRowStyles = modelForm.getStyleAltRowStyle(context);
-            // Cato: this is silly, pass both and let FTL make the check so it has more info
+            // Scipio: this is silly, pass both and let FTL make the check so it has more info
             //if (itemIndex.intValue() % 2 == 0) {
             //    evenRowStyle = modelForm.getEvenRowStyle();
             //} else {
@@ -1757,7 +1757,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
     
     /**
-     * Cato: appends position params.
+     * Scipio: appends position params.
      */
     private void appendPositionParams(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         Integer positions = (Integer) context.get("formFieldRender_positions");
@@ -1789,7 +1789,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String style = modelFormField.getTitleAreaStyle();
         
-        // Cato: extra attribs map (json-like)
+        // Scipio: extra attribs map (json-like)
         String attribs = modelFormField.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
@@ -1820,7 +1820,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowWidgetCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) throws IOException {
         String areaStyle = modelFormField.getWidgetAreaStyle();
         
-        // Cato: extra attribs map (json-like)
+        // Scipio: extra attribs map (json-like)
         String attribs = modelFormField.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
@@ -1874,7 +1874,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         Locale locale = (Locale) context.get("locale");
-        // Cato: pass options hide setting to macro
+        // Scipio: pass options hide setting to macro
         boolean hideOptions = textFindField.getHideOptions();
         if (!hideOptions) {
             opEquals = UtilProperties.getMessage("conditional", "equals", locale);
@@ -1937,7 +1937,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" ignoreCase=\"");
         sr.append(ignoreCase);
         sr.append("\"");
-        // Cato: new args
+        // Scipio: new args
         sr.append(" hideOptions=");
         sr.append(Boolean.toString(hideOptions));
         sr.append(" />");
@@ -2205,7 +2205,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             autoCompleterTarget = autoCompleterTarget + "ajaxLookup=Y";
             updateAreas = new LinkedList<ModelForm.UpdateArea>();
-            //Cato: ugly hack but seems to work for now, so the lookup field can find the proper field
+            //Scipio: ugly hack but seems to work for now, so the lookup field can find the proper field
             String updateAreaId = id;
             if (modelFormField.getModelForm().getType().equals("list"))
                 updateAreaId = name;
@@ -2265,7 +2265,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isEmpty(fadeBackground)) {
             fadeBackground = "false";
         }
-        String tooltip = modelFormField.getTooltip(context); // CATO: new arg
+        String tooltip = modelFormField.getTooltip(context); // SCIPIO: new arg
         if (UtilValidate.isEmpty(tooltip)) {
             tooltip = "";
         }
@@ -2354,7 +2354,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\" lastViewName=\"");
         sr.append(lastViewName);
         sr.append("\" tooltip=\"");
-        sr.append(tooltip); // CATO: new arg
+        sr.append(tooltip); // SCIPIO: new arg
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -2374,7 +2374,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         return result;
     }
 
-    // Cato: new param: position
+    // Scipio: new param: position
     public void renderNextPrev(Appendable writer, Map<String, Object> context, ModelForm modelForm, String position) throws IOException {
         boolean ajaxEnabled = false;
         List<ModelForm.UpdateArea> updateAreas = modelForm.getOnPaginateUpdateAreas();
@@ -2413,7 +2413,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             commonDisplaying = UtilProperties.getMessage("CommonUiLabels", "CommonDisplaying", messageMap, (Locale) context.get("locale"));
         }
         
-        // Cato: realHighIndex needed for macro
+        // Scipio: realHighIndex needed for macro
         int realHighIndex = Integer.valueOf(lowIndex + actualPageSize);
         
         // for legacy support, the viewSizeParam is VIEW_SIZE and viewIndexParam is VIEW_INDEX when the fields are "viewSize" and "viewIndex"
@@ -2438,7 +2438,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String urlPath = UtilHttp.removeQueryStringFromTarget(targetService);
         String prepLinkText = UtilHttp.getQueryStringFromTarget(targetService);
         
-        // Cato: Also prevent duplicate params between queryString and targetService
+        // Scipio: Also prevent duplicate params between queryString and targetService
         if (!UtilValidate.isEmpty(queryString) && !queryString.equals("null") &&
             !UtilValidate.isEmpty(prepLinkText)) {
             // get queryString param names
@@ -2636,7 +2636,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(paginateLastLabel);
         sr.append("\" paginateViewSizeLabel=\"");
         sr.append(paginateViewSizeLabel);
-        // Cato: new params
+        // Scipio: new params
         sr.append("\" paginate=");
         sr.append(Boolean.toString(paginate));
         sr.append(" lowIndex=");
@@ -3172,7 +3172,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
     
     /**
-     * Cato: Factors out renderAstericks macro args.
+     * Scipio: Factors out renderAstericks macro args.
      */
     public void appendAsterisksParams(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String requiredField = "false";

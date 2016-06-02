@@ -1,5 +1,5 @@
 /**
- * Cato: Returns the visualThemeId for the product store for the site, best-effort.
+ * Scipio: Returns the visualThemeId for the product store for the site, best-effort.
  * <p>
  * For use with WebSite.visualThemeSelectorScript entity field.
  * <p>

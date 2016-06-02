@@ -37,7 +37,7 @@ under the License.
     <#assign eventMessageList = requestAttributes._EVENT_MESSAGE_LIST_!>
   </#if>
 
-  <#-- Cato: FIXME: All the rawString calls here are dangerous and not right, 
+  <#-- Scipio: FIXME: All the rawString calls here are dangerous and not right, 
        they should be fixed in the upstream code instead! -->
 
   <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
@@ -81,7 +81,7 @@ under the License.
     </div>
   </#if>
 
-  <#-- Cato: only if it is gotten from context and needs to include explicit content only -->
+  <#-- Scipio: only if it is gotten from context and needs to include explicit content only -->
   <#if infoMessage?has_content>
     <div id="main-info-box">
         <@alert type="info">      

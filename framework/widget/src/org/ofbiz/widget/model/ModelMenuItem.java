@@ -91,13 +91,13 @@ public class ModelMenuItem extends ModelWidget {
     private final String widgetStyle;
     private final String linkStyle;
     
-    private final String overrideMode; // Cato: override mode
-    private final String sortMode; // Cato: sort mode
+    private final String overrideMode; // Scipio: override mode
+    private final String sortMode; // Scipio: sort mode
     
-    private final FlexibleStringExpander subMenuStyle;  // Cato: sub-menu style (no relation to subMenu)
-    private final FlexibleStringExpander subMenuTitle;  // Cato: sub-menu title (no relation to subMenu)
-    private final ModelMenu subMenuModel;  // Cato: sub-menu model (no relation to subMenu), for child items
-    private final ModelMenu altModelMenu; // Cato: alt model menu to (for some attributes) use in place of modelMenu to query defaults, for THIS item
+    private final FlexibleStringExpander subMenuStyle;  // Scipio: sub-menu style (no relation to subMenu)
+    private final FlexibleStringExpander subMenuTitle;  // Scipio: sub-menu title (no relation to subMenu)
+    private final ModelMenu subMenuModel;  // Scipio: sub-menu model (no relation to subMenu), for child items
+    private final ModelMenu altModelMenu; // Scipio: alt model menu to (for some attributes) use in place of modelMenu to query defaults, for THIS item
 
     // ===== CONSTRUCTORS =====
 
@@ -105,7 +105,7 @@ public class ModelMenuItem extends ModelWidget {
         this(menuItemElement, modelMenu, null, null);
     }
 
-    // Cato: constructor modified to take subMenuModel
+    // Scipio: constructor modified to take subMenuModel
     private ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ModelMenuItem parentMenuItem, ModelMenu altModelMenu) {
         super(menuItemElement);
         this.modelMenu = modelMenu;
@@ -155,7 +155,7 @@ public class ModelMenuItem extends ModelWidget {
             this.link = null;
         }
         
-        // Cato: sub-menu-model lookup for child menu-items of this menu-item (NOT for _this_ menu-item!)
+        // Scipio: sub-menu-model lookup for child menu-items of this menu-item (NOT for _this_ menu-item!)
         String subMenuModelLocation = menuItemElement.getAttribute("sub-menu-model");
         ModelMenu subMenuModel = altModelMenu;
         if (!subMenuModelLocation.isEmpty()) {
@@ -305,7 +305,7 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.sortMode = existingMenuItem.sortMode;
         }
-        // Cato: TODO? there is no +/= combination logic here for now...
+        // Scipio: TODO? there is no +/= combination logic here for now...
         if (overrideMenuItem.subMenuStyle != null) {
             this.subMenuStyle = overrideMenuItem.subMenuStyle;
         } else {
@@ -352,7 +352,7 @@ public class ModelMenuItem extends ModelWidget {
             Map<String, ModelMenuItem> menuItemMap) {
         ModelMenuItem existingMenuItem = menuItemMap.get(modelMenuItem.getName());
         if (existingMenuItem != null) {
-            // Cato: support a replace mode as well
+            // Scipio: support a replace mode as well
             ModelMenuItem mergedMenuItem;
             if ("replace".equals(modelMenuItem.getOverrideMode())) {
                 mergedMenuItem = modelMenuItem;
@@ -542,7 +542,7 @@ public class ModelMenuItem extends ModelWidget {
     }
     
     /**
-     * Cato: Gets the logical link style. The style on <link> element has priority
+     * Scipio: Gets the logical link style. The style on <link> element has priority
      * over the link-style on <menu-item>.
      */
     public String getLinkStyle() {
@@ -557,7 +557,7 @@ public class ModelMenuItem extends ModelWidget {
     }
     
     /**
-     * Cato: Gets style.
+     * Scipio: Gets style.
      * <p>
      * TODO?: this could probably cache based on passed name for faster access, but not certain
      * if safe. OR it could be integrated into constructor,
@@ -590,14 +590,14 @@ public class ModelMenuItem extends ModelWidget {
     }
     
     /**
-     * Cato: Returns the alt model menu for this item's CHILDREN.
+     * Scipio: Returns the alt model menu for this item's CHILDREN.
      */
     public ModelMenu getSubMenuModel() {
         return this.subMenuModel;
     }
     
     /**
-     * Cato: Returns THIS item's alt model menu.
+     * Scipio: Returns THIS item's alt model menu.
      */
     public ModelMenu getAltModelMenu() {
         return this.altModelMenu;
@@ -665,9 +665,9 @@ public class ModelMenuItem extends ModelWidget {
             if (linkElement.getAttribute("text").isEmpty()) {
                 linkElement.setAttribute("text", parentMenuItem.getTitle().getOriginal());
             }
-            // Cato: This whole block was removed in ofbiz branch 14.12 r1720933, AFTER we already removed the code inside the block
+            // Scipio: This whole block was removed in ofbiz branch 14.12 r1720933, AFTER we already removed the code inside the block
             //if (linkElement.getAttribute("style").isEmpty()) {
-                // Cato: this was changed by us...
+                // Scipio: this was changed by us...
                 // WARN: removing this effectively changed the behavior of menu-item's widget-style for all widgets!
                 //linkElement.setAttribute("style", parentMenuItem.getWidgetStyle());
                 // The following was added by us instead of previous line, but we don't need to do this here anymore.
@@ -700,11 +700,11 @@ public class ModelMenuItem extends ModelWidget {
             return link.getAutoServiceParameters();
         }
 
-        public Boolean getEncode() { // Cato: changed from boolean to Boolean
+        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
+        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -756,12 +756,12 @@ public class ModelMenuItem extends ModelWidget {
             return link.getPrefixExdr();
         }
 
-        public Boolean getSecure() { // Cato: changed from boolean to Boolean
+        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
             return link.getSecure();
         }
 
         public String getStyle(Map<String, Object> context) {
-            // Cato: use more advanced style inheritance
+            // Scipio: use more advanced style inheritance
             //return link.getStyle(context);
             // We can simply delegate to the parent menu item. it will fetch back the style from us on its own.
             // This makes sure getLinkStyle will be logical.

@@ -59,7 +59,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     public static final String module = MacroMenuRenderer.class.getName();
     
     /**
-     * Cato: Maps traditional Ofbiz macro names to one-shot macro render entries.
+     * Scipio: Maps traditional Ofbiz macro names to one-shot macro render entries.
      */
     static final Map<String, OneShotMacro.Entry> renderEntryMacroNameMap;
     static {
@@ -83,10 +83,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
     
     /**
-     * Cato: One-shot macro helper class. Controls whether render macros piecemeal or
+     * Scipio: One-shot macro helper class. Controls whether render macros piecemeal or
      * in one invocation upon close.
      */
-    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("catoWebapp", "cato.templating.widget.oneshotmacros", false), 
+    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "cato.templating.widget.oneshotmacros", false), 
             "renderMenuFull", renderEntryMacroNameMap);
     
     public MacroMenuRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
@@ -96,7 +96,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     /**
-     * Cato: Returns macro library path used for this renderer. 
+     * Scipio: Returns macro library path used for this renderer. 
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
@@ -114,9 +114,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(src) && request != null && response != null) {
             String urlMode = image.getUrlMode();
             if ("ofbiz".equalsIgnoreCase(urlMode)) {
-                Boolean fullPath = null; // Cato: changed from boolean to Boolean
-                Boolean secure = null; // Cato: changed from boolean to Boolean
-                Boolean encode = false; // Cato: changed from boolean to Boolean
+                Boolean fullPath = null; // Scipio: changed from boolean to Boolean
+                Boolean secure = null; // Scipio: changed from boolean to Boolean
+                Boolean encode = false; // Scipio: changed from boolean to Boolean
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 src = rh.makeLink(request, response, src, fullPath, secure, encode);
@@ -142,7 +142,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     /**
-     * Cato: This is the original executeMacro.
+     * Scipio: This is the original executeMacro.
      */
     private void executeMacroReal(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
         StringBuilder sb = new StringBuilder("<@");
@@ -170,7 +170,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
     
     /**
-     * Cato: Modified executeMacro.
+     * Scipio: Modified executeMacro.
      */
     private void executeMacro(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
         if (oneShotMacro.isEnabled()) {
@@ -184,7 +184,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            // Cato: custom render context
+            // Scipio: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
@@ -217,7 +217,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
     
     /**
-     * Cato: Renders full menu in one macro call using data previously collected in buffer.
+     * Scipio: Renders full menu in one macro call using data previously collected in buffer.
      */
     protected void renderMenuFull(Appendable writer, Map<String, Object> context, ModelMenu menu, StringBuffer sb) throws IOException {
         try {
@@ -269,12 +269,12 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = new HashMap<String, Object>();
         String target = link.getTarget(context);
         ModelMenuItem menuItem = link.getLinkMenuItem();
-        // Cato: Let macro decide what to do when disabled.
+        // Scipio: Let macro decide what to do when disabled.
         //if (isDisableIfEmpty(menuItem, context)) {
         //    target = null;
         //}
         boolean disabled = isDisableIfEmpty(menuItem, context);
-        // Cato: tell macro which selected and disabled
+        // Scipio: tell macro which selected and disabled
         boolean selected = menuItem.isSelected(context);
         parameters.put("id", link.getId(context));
         parameters.put("style", link.getStyle(context));
@@ -341,7 +341,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         parameters.put("menuCtxRole", menuCtxRole);
         
-        // Cato: add disabled and selected
+        // Scipio: add disabled and selected
         parameters.put("disabled", disabled);
         parameters.put("selected", selected);
         
@@ -375,7 +375,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         } catch (TemplateException e) {
             throw new IOException(e);
         }
-        // Cato: reset one-shot macro buffer
+        // Scipio: reset one-shot macro buffer
         if (oneShotMacro.isReady()) {
             renderMenuFull(writer, context, menu, oneShotMacro.getBuffer());
             oneShotMacro.resetState();
@@ -389,11 +389,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             return;
         Map<String, Object> parameters = new HashMap<String, Object>();
         String style = menuItem.getWidgetStyle();
-        // Cato: tell macro which selected and disabled
+        // Scipio: tell macro which selected and disabled
         boolean selected = menuItem.isSelected(context);
         if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
-            // Cato: Must use new combination logic
+            // Scipio: Must use new combination logic
             //if (UtilValidate.isEmpty(selectedStyle)) {
             //    selectedStyle = "selected";
             //}
@@ -408,7 +408,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         boolean disabled = this.isDisableIfEmpty(menuItem, context);
         if (disabled) {
-            // Cato: Must use new combination logic
+            // Scipio: Must use new combination logic
             //style = menuItem.getDisabledTitleStyle();
             style = ModelMenu.combineExtraStyle(style, menuItem.getDisabledTitleStyle());
         }
@@ -417,12 +417,12 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         String alignStyle = menuItem.getAlignStyle();
         if (UtilValidate.isNotEmpty(alignStyle)) {
-            // Cato: Must use new combination logic
+            // Scipio: Must use new combination logic
             //style = style.concat(" ").concat(alignStyle);
             style = ModelMenu.combineExtraStyle(style, alignStyle);
         }
         
-        // Cato: expand the style here (not done previously, and _may_ expand on its own through FTL, but
+        // Scipio: expand the style here (not done previously, and _may_ expand on its own through FTL, but
         // may not produce expected results!)
         style = FlexibleStringExpander.expandString(style, context).trim();
                 
@@ -445,23 +445,23 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
         parameters.put("containsNestedMenus", containsNestedMenus);
         
-        // Cato: menu context role
+        // Scipio: menu context role
         String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
         if (menuCtxRole == null) {
             menuCtxRole = "";
         }
         parameters.put("menuCtxRole", menuCtxRole);
         
-        // Cato: sub menu style
+        // Scipio: sub menu style
         // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
         String subMenuStyle = menuItem.getSubMenuStyle(context);
         parameters.put("subMenuStyle", subMenuStyle);
         
-        // Cato: sub menu title
+        // Scipio: sub menu title
         String subMenuTitle = menuItem.getSubMenuTitle(context);
         parameters.put("subMenuTitle", subMenuTitle);
         
-        // Cato: disabled and selected
+        // Scipio: disabled and selected
         parameters.put("selected", selected);
         parameters.put("disabled", disabled);
         

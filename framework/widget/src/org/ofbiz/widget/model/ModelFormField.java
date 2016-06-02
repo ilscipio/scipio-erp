@@ -143,7 +143,7 @@ public class ModelFormField {
     private final String parentFormName;
 
     /**
-     * Cato: string expression representing a json-like map of extra form attributes.
+     * Scipio: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
@@ -998,7 +998,7 @@ public class ModelFormField {
             this.allChecked = FlexibleStringExpander.getInstance("");
         }
         
-        // Cato: Allow adding options to check fields
+        // Scipio: Allow adding options to check fields
         public CheckField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);
             this.allChecked = FlexibleStringExpander.getInstance("");
@@ -1369,7 +1369,7 @@ public class ModelFormField {
                 fieldKey = getModelFormField().fieldName;
 
             Delegator delegator = WidgetWorker.getDelegator(context);
-            // Cato: only encode after the lookup
+            // Scipio: only encode after the lookup
             //String fieldValue = getModelFormField().getEntry(context);
             String fieldValue = getModelFormField().getEntryRaw(context);
             try {
@@ -2341,11 +2341,11 @@ public class ModelFormField {
             return link.getAutoServiceParameters();
         }
 
-        public Boolean getEncode() { // Cato: changed from boolean to Boolean
+        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
+        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -2401,7 +2401,7 @@ public class ModelFormField {
             return link.getPrefixExdr();
         }
 
-        public Boolean getSecure() { // Cato: changed from boolean to Boolean
+        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
             return link.getSecure();
         }
 
@@ -3121,7 +3121,7 @@ public class ModelFormField {
             super(original, modelFormField);
         }
         
-        // Cato: Allow adding options to radio fields
+        // Scipio: Allow adding options to radio fields
         public RadioField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);            
         }
@@ -3318,11 +3318,11 @@ public class ModelFormField {
             return link.getAutoServiceParameters();
         }
 
-        public Boolean getEncode() { // Cato: changed from boolean to Boolean
+        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
+        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -3378,7 +3378,7 @@ public class ModelFormField {
             return link.getPrefixExdr();
         }
 
-        public Boolean getSecure() { // Cato: changed from boolean to Boolean
+        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
             return link.getSecure();
         }
 
@@ -3598,7 +3598,7 @@ public class ModelFormField {
         private final int rows;
         private final FlexibleStringExpander visualEditorButtons;
         private final boolean visualEditorEnable;
-        private final Integer maxlength; // CATO: new 
+        private final Integer maxlength; // SCIPIO: new 
 
         public TextareaField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -3632,7 +3632,7 @@ public class ModelFormField {
             this.rows = rows;
             this.visualEditorButtons = FlexibleStringExpander.getInstance(element.getAttribute("visual-editor-buttons"));
             this.visualEditorEnable = "true".equals(element.getAttribute("visual-editor-enable"));
-            // CATO: new
+            // SCIPIO: new
             Integer maxlength = null;
             String maxlengthStr = element.getAttribute("maxlength");
             if (!maxlengthStr.isEmpty()) {
@@ -3718,7 +3718,7 @@ public class ModelFormField {
             return readOnly;
         }
 
-        public Integer getMaxlength() { // CATO: new
+        public Integer getMaxlength() { // SCIPIO: new
             return maxlength;
         }
         

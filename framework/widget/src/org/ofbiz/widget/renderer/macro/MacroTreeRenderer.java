@@ -62,7 +62,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     private ContextHandler contextHandler = new ContextHandler("tree");
     
     /**
-     * Cato: environments now stored in WeakHashMap, same as other macro renderers.
+     * Scipio: environments now stored in WeakHashMap, same as other macro renderers.
      */
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
 
@@ -71,7 +71,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     }
     
     /**
-     * Cato: Old tree renderer constructor.
+     * Scipio: Old tree renderer constructor.
      * 
      * @deprecated environments now stored in WeakHashMap so writer from individual calls used instead.
      */
@@ -81,7 +81,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     }
     
     /**
-     * Cato: Returns macro library path used for this renderer. 
+     * Scipio: Returns macro library path used for this renderer. 
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
@@ -106,7 +106,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            // Cato: custom render context
+            // Scipio: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
@@ -350,9 +350,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         String border = image.getBorder(context);
         String alt = ""; //TODO add alt to tree images image.getAlt(context);
  
-        Boolean fullPath = null; // Cato: changed from boolean to Boolean
-        Boolean secure = null; // Cato: changed from boolean to Boolean
-        Boolean encode = false; // Cato: changed from boolean to Boolean
+        Boolean fullPath = null; // Scipio: changed from boolean to Boolean
+        Boolean secure = null; // Scipio: changed from boolean to Boolean
+        Boolean encode = false; // Scipio: changed from boolean to Boolean
         String urlString = "";
         
         if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {

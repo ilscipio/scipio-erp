@@ -8,7 +8,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 
 /**
- * CATO: new class for content request-related implementations.
+ * SCIPIO: new class for content request-related implementations.
  */
 public abstract class ContentRequestWorker {
 
@@ -16,7 +16,7 @@ public abstract class ContentRequestWorker {
         String requestUrl = uri;
 
         // If the URL starts with http(s) then there is nothing for us to do here
-        if (requestUrl.startsWith("http://") || requestUrl.startsWith("https://") || requestUrl.startsWith("//")) { // CATO: better tests
+        if (requestUrl.startsWith("http://") || requestUrl.startsWith("https://") || requestUrl.startsWith("//")) { // SCIPIO: better tests
             return requestUrl;
         }
 

@@ -18,23 +18,23 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Cato: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
 -->
 <#macro renderField text>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_generic_widget text=text />
 </#macro>
 
 <#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=""collapse=false fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_display_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt fieldTitleBlank=fieldTitleBlank />
 </#macro>
 <#macro renderHyperlinkField></#macro>
 
 <#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -44,12 +44,12 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true language="" buttons="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false maxlength="">
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_textarea_widget name=name class=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable buttons=buttons language=language tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse fieldTitleBlank=fieldTitleBlank maxlength=maxlength/>
 </#macro>
 
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -63,7 +63,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -73,7 +73,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -97,7 +97,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -112,7 +112,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if !(showProgress?is_boolean && showProgress == false) && 
      ((showProgress?is_boolean && showProgress == true) ||
       ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
-    <#local baseId = htmlFormRenderFormInfo.name!"" + "_catouplprogform">       
+    <#local baseId = htmlFormRenderFormInfo.name!"" + "_scipiouplprogform">       
     <#local progressOptions = {
       "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
       "progBarId" : "${baseId}_progbar",
@@ -144,7 +144,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     </#if>
   </#if>
 
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -154,12 +154,12 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_reset_widget class=className alert=alert name=name text=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderHiddenField name value id event action>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -189,7 +189,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   </#if>
   <#-- showProgress=false progressOptions="" progressSuccessAction=""  -->
   <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
-  <#-- Cato: process extra attribs -->
+  <#-- Scipio: process extra attribs -->
   <#local showProgress = (attribs.showProgress)!false>
   <#if !showProgress?is_boolean>
     <#if showProgress?has_content>
@@ -198,7 +198,7 @@ WARN: no code run here or indirectly from here should assume full current contex
       <#local showProgress = false>
     </#if>
   </#if>
-  <#-- Cato: support fieldsType="xxx" in form widget extra attribs, equivalent to setting @fields type="xxx" -->
+  <#-- Scipio: support fieldsType="xxx" in form widget extra attribs, equivalent to setting @fields type="xxx" -->
   <#if attribs.fieldsType?has_content>
     <@fields type=attribs.fieldsType open=true close=false />
   </#if>
@@ -217,7 +217,7 @@ WARN: no code run here or indirectly from here should assume full current contex
       </#if>
     </#if>
 </#macro>
-<#-- Cato: WARN: also exists renderMultiFormClose below -->
+<#-- Scipio: WARN: also exists renderMultiFormClose below -->
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField>
   <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   </form><#lt/>
@@ -256,7 +256,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={}>
-  <#-- Cato: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
+  <#-- Scipio: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
   <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   <#if !htmlFormRenderFormInfo?has_content>
     <#local htmlFormRenderFormInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
@@ -265,8 +265,8 @@ WARN: no code run here or indirectly from here should assume full current contex
 
   <#-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#local styleSet = splitStyleNamesToSet(style)>
-  <#-- Cato: support setting and removing responsive/scrollable settings from widget table via style attribute -->
-  <#local responsive = ""> <#-- Cato: empty string means table type default takes effect -->
+  <#-- Scipio: support setting and removing responsive/scrollable settings from widget table via style attribute -->
+  <#local responsive = ""> <#-- Scipio: empty string means table type default takes effect -->
   <#if styleSet.contains("responsive")>
     <#local responsive = true>
     <#local style = removeStyleNames(style, "responsive")>
@@ -283,7 +283,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local style = removeStyleNames(style, "non-scrollable")>
   </#if>
   <#local dummy = pushRequestStack("renderFormatListWrapperStack", {"formName":formName, "style":style, "responsive":responsive, "scrollable":scrollable})>
-  <#-- Cato: use @table macro to open -->
+  <#-- Scipio: use @table macro to open -->
   <#if style?has_content>
     <#-- specified style will replace default class from @table (unless prefixed with "+" in widget defs) -->
     <#-- always added below <#local class = addClassArg(style, styles.table_formwidget_type!)>-->
@@ -305,7 +305,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 <#macro renderFormatListWrapperClose formName>
   <#local stackValues = popRequestStack("renderFormatListWrapperStack")!{}>
   <@table close=true open=false />
-  <#-- Cato: unset form info, but only if it was the list wrapper that set it -->
+  <#-- Scipio: unset form info, but only if it was the list wrapper that set it -->
   <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>
     <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
@@ -313,7 +313,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>
-<#-- Cato: TODO: translate all thead/td/th/td/etc to @thead open/close
+<#-- Scipio: TODO: translate all thead/td/th/td/etc to @thead open/close
      I've done @thead because required by responsive tables at the moment -->
   <@thead open=true close=false />
     <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
@@ -342,7 +342,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderFormatFooterRowOpen style>
-<#-- Cato: TODO: translate all tfoot/td/th/td/etc to @thead open/close -->
+<#-- Scipio: TODO: translate all tfoot/td/th/td/etc to @thead open/close -->
 <tfoot>
   <tr class="<#if style?has_content>${style}<#else>footer-row</#if>">
 </#macro>
@@ -352,7 +352,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle>
-  <#-- Cato: translate stock "alternate-row" odd-row-style to odd+even -->
+  <#-- Scipio: translate stock "alternate-row" odd-row-style to odd+even -->
   <#local oddRowStyleSet = splitStyleNamesToSet(oddRowStyle)>
   <#if oddRowStyleSet.contains("alternate-row")>
     <#local remOddRowStyles = removeStyleNames(oddRowStyle, "alternate-row")>
@@ -402,7 +402,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={}>
   <!-- extra form field attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
-  <#-- Cato: save common field info
+  <#-- Scipio: save common field info
       NOTE: because of the way these are organized, following macros may need to add extra info to this map. -->
   <#local htmlFormRenderFieldInfo = { "attribs":attribs }>
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", htmlFormRenderFieldInfo)> <#-- unset in renderFormatFieldRowWidgetCellClose -->
@@ -450,7 +450,7 @@ WARN: no code run here or indirectly from here should assume full current contex
        renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
        fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
-  <#-- Cato: widget-area-style now supports a more complex syntax similar to @heading, mainly to be able to add extra containers 
+  <#-- Scipio: widget-area-style now supports a more complex syntax similar to @heading, mainly to be able to add extra containers 
       e.g. widget-area-style="area-class;container:sub-div-class" -->
   <#local styleParts = style?split(";")>
   <#local extraContainerStyles = []>
@@ -469,12 +469,12 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#-- NOTE: using explicit version for compatibility! -->
   <#local outerClasses = compileClassArgExplicit(outerClass, outerClassDefault)>
 
-  <#-- Cato: TODO: form widgets currently only support left-position grid-like label arrangement; @field supports much more;
+  <#-- Scipio: TODO: form widgets currently only support left-position grid-like label arrangement; @field supports much more;
       not currently sure if easy way to reuse the stuff in @field here -->
   <@cell open=true close=false class=outerClasses />
     <@row open=true close=false class="+form-field-entry ${fieldEntryTypeClass}" />
     
-  <#-- Cato: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
+  <#-- Scipio: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
   <#-- Column size factors: <@objectAsScript lang="raw" escape=false object=absColSizes /> -->
   <#-- All parent/current col sizes: <@objectAsScript lang="raw" escape=false object=getAllContainerSizes()![] /> -->
@@ -500,7 +500,7 @@ WARN: no code run here or indirectly from here should assume full current contex
           required=renderAsterisksIsRequired(requiredField, requiredStyle) 
           collapse=false fieldId=renderFieldTitleCurrentForId!""
           labelType="horizontal" labelPosition="left" 
-          fieldType=mapOfbizFieldTypeToCatoFieldType(fieldType)
+          fieldType=mapOfbizFieldTypeToScipioFieldType(fieldType)
           origArgs={}/>
       </div>
   </#if>
@@ -510,7 +510,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if !isActionField>
       <#local innerClassDefault = defaultGridStyles.widgetPostfixArea>
   <#else>
-      <#-- Cato: NOTE: This must be 12 hardcoded, NOT totalColumns -->
+      <#-- Scipio: NOTE: This must be 12 hardcoded, NOT totalColumns -->
       <#local innerClassDefault>${styles.grid_small!}12 ${styles.grid_end!}</#local>
   </#if>
       <#-- NOTE: using explicit version for compatibility! -->
@@ -549,21 +549,21 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", {})>
 </#macro>
 
-<#-- Cato: only render empty space if not running within title open section -->
+<#-- Scipio: only render empty space if not running within title open section -->
 <#macro renderFormatEmptySpace><#if (renderFormatFieldRowTitleCellOpened!false) != true>&nbsp;<#else><#global renderFieldTitleCurrentTitle = "&nbsp;"></#if></#macro>
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false hideOptions=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_textfind_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains opIsEmpty=opIsEmpty opNotEqual=opNotEqual class=className alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle hideIgnoreCase=hideIgnoreCase ignoreCase=ignCase ignoreCaseMsg=ignoreCase title=title fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions/>
 </#macro>
 
 <#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_datefind_widget class=className alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty />
 </#macro>
 
 <#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_rangefind_widget class=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru />
 </#macro>
 
@@ -601,7 +601,7 @@ Parameter: initiallyCollapsed, Not used.
 Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true, the contents of lastViewName will be appended to the Ajax URL.
 -->
 <#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main" title="" fieldType="" fieldTitleBlank=false tooltip="">
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
@@ -615,10 +615,10 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     title=title fieldTitleBlank=fieldTitleBlank tooltip=tooltip />
 </#macro>
 
-<#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
+<#-- Scipio: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
      paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false paginateOn=true ajaxPaginateOnUrl="" paginateOnUrl="" paginateOnStyle="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffStyle="" paginateOffLabel="" lowIndex=0 realHighIndex=-1 position="">
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <#-- don't pass commonDisplaying - let paginate markup use its default message and showCount default -->
   <#local countMsg = "">
   <@paginate_core paginateClass=paginateStyle paginateFirstClass=paginateFirstStyle viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl paginateFirstLabel=paginateFirstLabel paginatePreviousClass=paginatePreviousStyle ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl countMsg=countMsg paginateNextClass=paginateNextStyle ajaxNextUrl=ajaxNextUrl nextUrl=nextUrl 
@@ -626,11 +626,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderFileField className alert name value size maxlength autocomplete id="" title="" fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_file_widget class=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 <#macro renderPasswordField className alert name value size maxlength id autocomplete title="" fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
+  <#-- delegate to scipio libs -->
   <@field_password_widget class=className alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 <#macro renderImageField value description alternate style event action title="" fieldType="" fieldTitleBlank=false>
@@ -650,7 +650,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderContainerField id className><div id="${id}" class="${className}"/></#macro>
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
-    <#-- delegate to cato libs -->
+    <#-- delegate to scipio libs -->
     <@fieldset_core open=true close=false class=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible />
 </#macro>
 
@@ -659,7 +659,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N">
-  <#-- Cato: only render immediately if not falling within title open/close -->
+  <#-- Scipio: only render immediately if not falling within title open/close -->
   <#local titleDetail>
     <#if showSelectAll="Y"><input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${name}');"/></#if>
   </#local>
@@ -687,18 +687,18 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#if className?has_content || alert?string == "true"> class="${className!}<#if alert?string == "true"> alert</#if>" </#if>
 </#macro>
 
-<#-- Cato: new macro to isolate this code -->
+<#-- Scipio: new macro to isolate this code -->
 <#macro renderAsterisksCommon requiredField requiredStyle>
   <#if requiredField?string == "true"><#if !requiredStyle?has_content><span class="form-field-input-asterisk">*</span></#if></#if>
 </#macro>
 
-<#-- Cato: function to isolate this if-required logic -->
+<#-- Scipio: function to isolate this if-required logic -->
 <#function renderAsterisksIsRequired requiredField requiredStyle>
   <#return requiredField?string == "true" && !requiredStyle?has_content>
 </#function>
 
 <#macro renderAsterisks requiredField requiredStyle>
-  <#-- Cato: don't run this here anymore; see widget cell open
+  <#-- Scipio: don't run this here anymore; see widget cell open
   <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /> -->
 </#macro>
 

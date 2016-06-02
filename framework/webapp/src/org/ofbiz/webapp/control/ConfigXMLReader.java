@@ -499,8 +499,8 @@ public class ConfigXMLReader {
         public String invoke;
         public boolean globalTransaction = true;
         public Metrics metrics = null;
-        public Boolean transaction = null; // Cato: A generic transaction flag
-        public String abortTransaction = ""; // Cato: Allow aborting transaction 
+        public Boolean transaction = null; // Scipio: A generic transaction flag
+        public String abortTransaction = ""; // Scipio: Allow aborting transaction 
 
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
@@ -512,7 +512,7 @@ public class ConfigXMLReader {
             if (metricsElement != null) {
                 this.metrics = MetricsFactory.getInstance(metricsElement);
             }
-            // Cato: new attribs
+            // Scipio: new attribs
             String transStr = eventElement.getAttribute("transaction");
             if ("true".equals(transStr)) {
                 transaction = Boolean.TRUE;
@@ -599,7 +599,7 @@ public class ConfigXMLReader {
             RequestResponse requestResponse = new RequestResponse();
             requestResponse.name = "empty-none";
             requestResponse.type = "none";
-            // Cato: This is an error; Element.getAttribute returns empty string if missing, so this is not equivalent to
+            // Scipio: This is an error; Element.getAttribute returns empty string if missing, so this is not equivalent to
             // rest of code
             //requestResponse.value = null;
             requestResponse.value = "";

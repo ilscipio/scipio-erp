@@ -115,7 +115,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final Map<String, Object> context;
         private final Appendable writer;
         
-        // Cato feature: ability to render previously-defined sections (from a caller) as if part of these sections.
+        // Scipio feature: ability to render previously-defined sections (from a caller) as if part of these sections.
         // Essentially we mix sections from different decorators therefore different contexts.
         // This is not well encapsulated; SectionsRenderer implements
         // Map and that part is public. but context is private so it should be
@@ -177,7 +177,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         /** This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker */
         public String render(String sectionName) throws GeneralException, IOException {
             if (includePrevSections) {
-                // Cato: new handling for previous section support
+                // Scipio: new handling for previous section support
                 ModelScreenWidget section = localSectionMap.get(sectionName);
                 // if no section by that name, write nothing
                 if (section != null) {
@@ -902,7 +902,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander locationExdr;
         private final Map<String, ModelScreenWidget> sectionMap;
         
-        // Cato: if true, automatically include sections defined in higher screens
+        // Scipio: if true, automatically include sections defined in higher screens
         private final boolean autoDecoratorSectionIncludes;
 
         public DecoratorScreen(ModelScreen modelScreen, Element decoratorScreenElement) {
@@ -925,7 +925,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
 
             SectionsRenderer prevSections = (SectionsRenderer) context.get("sections");
-            // Cato: filter the sections to render by the new use-when condition and overrides
+            // Scipio: filter the sections to render by the new use-when condition and overrides
             Map<String, ModelScreenWidget> filteredSectionMap = new HashMap<String, ModelScreenWidget>();
             for(Map.Entry<String, ModelScreenWidget> entry : this.sectionMap.entrySet()) {
                 ModelScreenWidget section = entry.getValue();
@@ -942,7 +942,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             filteredSectionMap = Collections.unmodifiableMap(filteredSectionMap);
             
-            // Cato: get previous sections renderer and include if auto-decorator-section-include enabled
+            // Scipio: get previous sections renderer and include if auto-decorator-section-include enabled
             // Must not recognize any sections from prev for which this decorator-screen already had a decorator-section in xml
             Map<String, ModelScreenWidget> filteredPrevSectionMap = new HashMap<String, ModelScreenWidget>();
             if (prevSections != null) {
@@ -1034,7 +1034,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public static final String TAG_NAME = "decorator-section";
         private final List<ModelScreenWidget> subWidgets;
         
-        // Cato feature: conditional section definitions
+        // Scipio feature: conditional section definitions
         private final FlexibleStringExpander useWhen;
         private final boolean fallbackAutoInclude;
         private final boolean overrideByAutoInclude;
@@ -1079,7 +1079,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
          * Based on {@link ModelFormField#shouldUse(Map)} but converted
          * to support more than just the bsh interpreter.
          * <p>
-         * Cato addition.
+         * Scipio addition.
          */
         public boolean shouldUse(Map<String, Object> context) {
             if (this.getUseWhen() == null || UtilValidate.isEmpty(this.getUseWhen().toString())) {
@@ -1881,15 +1881,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
             return link.getPrefix(context);
         }
 
-        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
+        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
             return link.getFullPath();
         }
 
-        public Boolean getSecure() { // Cato: changed from boolean to Boolean
+        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
             return link.getSecure();
         }
 
-        public Boolean getEncode() { // Cato: changed from boolean to Boolean
+        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
             return link.getEncode();
         }
 
@@ -2181,7 +2181,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                         context.put("prevColumnSeqId", prevColumnSeqId);
                         context.put("nextColumnSeqId", nextColumnSeqId);
                         
-                        // Cato: make these available to portlets
+                        // Scipio: make these available to portlets
                         context.put("columnWidthPercentage", columnValue.getString("columnWidthPercentage"));
                         context.put("columnWidthPixels", columnValue.getString("columnWidthPixels"));
                        

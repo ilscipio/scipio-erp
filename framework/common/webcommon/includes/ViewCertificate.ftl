@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: moved to data prep:
+<#-- Scipio: moved to data prep:
 <#assign components = Static["org.ofbiz.base.component.ComponentConfig"].getAllComponents()!/>
 <#if (requestParameters.certString?has_content)>
     <#assign cert = Static["org.ofbiz.base.util.KeyStoreUtil"].pemToCert(requestParameters.certString)/>

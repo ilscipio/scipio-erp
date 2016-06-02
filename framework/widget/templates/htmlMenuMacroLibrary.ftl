@@ -18,17 +18,17 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Cato: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
 -->
 
 <#-- 
 *************************************
-* CATO: NEW MENU MACROS (ONE-SHOT) *
+* SCIPIO: NEW MENU MACROS (ONE-SHOT) *
 *************************************
 These render a whole single item without splitting into begin/end sections, using data in hashes.
-Must be enabled in catoWebapp.properties (enabled by default in Cato).
+Must be enabled in scipioWebapp.properties (enabled by default in Scipio).
 
 TODO/FIXME:
 * Currently the new renderMenuFull partly shares code with @menu, but only markup macros;
@@ -39,7 +39,7 @@ TODO/FIXME:
   on how much end up using and where
 -->
 
-<#-- Cato: One-shot macro full menu
+<#-- Scipio: One-shot macro full menu
   Data structure (indented means member of): 
   items: List of maps, each entry corresponding to old @renderMenuItemBegin arguments
     (item)
@@ -57,7 +57,7 @@ TODO/FIXME:
   
   NOTE: This may be called recursively. In stock Ofbiz, @renderMenuBegin was never called recursively.
   
-  TODO?: menu-container-style does not currently fully support the standard Cato +/= class prefix; generally, "+" will be assumed.
+  TODO?: menu-container-style does not currently fully support the standard Scipio +/= class prefix; generally, "+" will be assumed.
 -->
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
 <#if boundaryComment?has_content>
@@ -115,9 +115,9 @@ TODO/FIXME:
   </#if>
 
   <#-- Count menu and make sure has ID -->
-  <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
+  <#local menuIdNum = getRequestVar("scipioMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
-  <#local dummy = setRequestVar("catoMenuIdNum", menuIdNum)>
+  <#local dummy = setRequestVar("scipioMenuIdNum", menuIdNum)>
   <#if !id?has_content>
     <#local id = "menu_" + menuIdNum> <#-- FIXME? is this name too general? -->
   </#if>
@@ -184,7 +184,7 @@ TODO/FIXME:
 </#if>
 </#macro>
 
-<#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
+<#-- Scipio: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
 <#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] subMenuStyle="" subMenuTitle="" itemIndex=0 menuInfo={} disabled=false selected=false>
   <#local class = style>
@@ -198,7 +198,7 @@ TODO/FIXME:
   <#if toolTip?has_content>
     <#local attribs = attribs + {"title":toolTip}>
   </#if>
-  <#-- NOTE: our "selected" actually means "active" to the Cato macros -->
+  <#-- NOTE: our "selected" actually means "active" to the Scipio macros -->
   <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
       style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
       disabled=disabled active=selected
@@ -212,7 +212,7 @@ TODO/FIXME:
       ${linkStr}
     </#if><#t>
     <#if containsNestedMenus>
-      <#-- NEW IN CATO: Use recursion to render sub-menu... must be careful... -->
+      <#-- NEW IN SCIPIO: Use recursion to render sub-menu... must be careful... -->
       <@renderMenuFull boundaryComment="" id="" style=subMenuStyle title=subMenuTitle inlineEntries=false menuCtxRole=menuInfo.menuCtxRole items=items />
       <#-- Previous code (manual, no recursion, unmaintained)...
       <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}<@compiledClassAttribStr class=subMenuStyle />></#if>
@@ -229,11 +229,11 @@ TODO/FIXME:
 
 <#-- 
 *************************************
-* CATO: TRANSITION MENU MACROS *
+* SCIPIO: TRANSITION MENU MACROS *
 *************************************
 -->
 
-<#-- Cato: Delegating implementation of one shot menu - used as reference
+<#-- Scipio: Delegating implementation of one shot menu - used as reference
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
   <@renderMenuBegin boundaryComment=boundaryComment id=id style=style title=title inlineEntries=inlineEntries menuCtxRole=menuCtxRole />
   <#list items as item>
@@ -265,7 +265,7 @@ TODO/FIXME:
 
 <#-- 
 *************************************
-* CATO: TRADITIONAL MENU MACROS *
+* SCIPIO: TRADITIONAL MENU MACROS *
 *************************************
 Mostly deprecated and no longer need to maintain except where noted.
 -->
@@ -277,16 +277,16 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     * menu-button
     * menu-tab // ToDo
 -->
-<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
   <#local remStyle = "">
 <#if boundaryComment?has_content>
 <!- ${boundaryComment} ->
 </#if>
-  <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
+  <#local menuIdNum = getRequestVar("scipioMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
-  <#local dummy = setRequestVar("catoMenuIdNum", menuIdNum)>
+  <#local dummy = setRequestVar("scipioMenuIdNum", menuIdNum)>
   <#if !id?has_content>
     <#local id = "menu_" + menuIdNum>
   </#if>
@@ -336,7 +336,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#macro>
 -->
 
-<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
   <#local menu = popRequestStack("renderMenuStack")>
@@ -386,11 +386,11 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
   <img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
 </#macro>
 
-<#-- Cato: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
+<#-- Scipio: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
 <#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false itemIndex=0 menuInfo={}>
   <#local class = style>
   <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
-  <#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
+  <#-- Scipio: hack: for screenlet nav menus, always impose buttons if no style specified, 
        because can't centralize these menus easily anywhere else. -->
   <#if menuCtxRole == "screenlet-nav-menu">
     <#if !class?has_content && isLink>
@@ -408,7 +408,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#local dummy = setRequestVar("renderMenuHiddenFormContent", renderMenuHiddenFormContent+hiddenFormContent)>
   </#if>
-  <#local innerContent> <#-- Cato: WARN: this capture is only safe because nested sub-menus are outside link (outside this call) -->
+  <#local innerContent> <#-- Scipio: WARN: this capture is only safe because nested sub-menus are outside link (outside this call) -->
     <#if imgArgs?has_content>
       <@renderImage src=imgArgs.src id=imgArgs.id style=imgArgs.style width=imgArgs.width height=imgArgs.height 
           border=imgArgs.border menuCtxRole=imgArgs.menuCtxRole /><#t>
@@ -419,7 +419,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       ${text}<#t>
     </#if>
   </#local>
-  <#-- NOTE: our "selected" actually means "active" to the Cato macros -->
+  <#-- NOTE: our "selected" actually means "active" to the Scipio macros -->
   <#if isLink>
     <#local href><#if linkType == "hidden-form">javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if></#local>
     <#-- FIXME? We have inconsistent kludge lookup here for extra contentClass because the widgets currently don't support
@@ -440,12 +440,12 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
   </#if>
 </#macro>
 
-<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuItemBegin style toolTip="" linkStr="" containsNestedMenus=false menuCtxRole="">
         <li<#if style?has_content> class="${style}"</#if><#if toolTip?has_content> title="${toolTip}"</#if>><#if linkStr?has_content>${linkStr}</#if><#if containsNestedMenus><ul></#if><#rt/>
 </#macro>-->
 
-<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuItemEnd containsNestedMenus=false menuCtxRole="">
 <#if containsNestedMenus></ul></#if></li>
 </#macro>-->

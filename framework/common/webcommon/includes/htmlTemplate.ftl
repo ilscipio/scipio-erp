@@ -16,13 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: THIS LIBRARY IS DEPRECATED AND OBSOLETE. DO NOT USE IN CATO-BASED TEMPLATES. -->
+<#-- Scipio: THIS LIBRARY IS DEPRECATED AND OBSOLETE. DO NOT USE IN SCIPIO-BASED TEMPLATES. -->
 
-<#-- Cato: use same ones loaded by renderer 
+<#-- Scipio: use same ones loaded by renderer 
      WARN: ability to use same ones as renderer currently depends on rendering context;
         currently may only work for web requests specifically using macro renderer, and not other contexts such as emails,
         but in general in stock code this file was used in regular screens, so not fatal. 
-        This file should be avoided in favor of cato macros.
+        This file should be avoided in favor of scipio macros.
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
 <#include "component://widget/templates/htmlScreenMacroLibrary.ftl"> 
 <#include "component://widget/templates/htmlMenuMacroLibrary.ftl">
@@ -37,7 +37,7 @@ under the License.
     <#assign screenMacroLibIncludeDirective = getRequestVar("screenMacroLibIncludeDirective")!"">
     <#assign menuMacroLibIncludeDirective = getRequestVar("menuMacroLibIncludeDirective")!"">
 <#else>
-    <#-- note: getMacroLibraryPath only available since cato renderer mod -->
+    <#-- note: getMacroLibraryPath only available since scipio renderer mod -->
     <#assign formMacroLibraryPath = rawString((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
     <#assign screenMacroLibraryPath = rawString((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
     <#assign menuMacroLibraryPath = rawString((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
@@ -77,7 +77,7 @@ under the License.
     <@renderLookupField name formName fieldFormName className alert value size maxlength id event action readonly autocomplete descriptionFieldName targetParameterIter imgSrc ajaxUrl ajaxEnabled presentation width height position fadeBackground clearText showDescription initiallyCollapsed/>
 </#macro>
 
-<#-- Cato: new params: showCount 
+<#-- Scipio: new params: showCount 
     WARN: commonDisplaying may be ignored (by renderNextPrev) -->
 <#macro nextPrev commonUrl="" ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=0 highIndex=0 listSize=0 viewSize=1 ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" showCount=true position="">
     <#local javaScriptEnabled = javaScriptEnabled />

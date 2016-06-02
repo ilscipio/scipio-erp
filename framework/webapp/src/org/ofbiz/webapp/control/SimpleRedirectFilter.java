@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Cato: SimpleRedirectFilter - Redirects all incoming requests match an incoming
+ * Scipio: SimpleRedirectFilter - Redirects all incoming requests match an incoming
  * path to a target.
  */
 public class SimpleRedirectFilter implements Filter {
@@ -77,7 +77,7 @@ public class SimpleRedirectFilter implements Filter {
                     fullTargetSb.append(getFullPostContextPath(httpRequest).toString());
                 }
                 
-                // Cato: NOTE: It's possible this should be encodeURL + strip jsessionid instead (even if redirect)...
+                // Scipio: NOTE: It's possible this should be encodeURL + strip jsessionid instead (even if redirect)...
                 String fullTarget = httpResponse.encodeRedirectURL(fullTargetSb.toString());
 
                 if (usePermanentRedirect) {

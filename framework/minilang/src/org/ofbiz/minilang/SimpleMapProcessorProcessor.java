@@ -11,7 +11,7 @@ import org.ofbiz.base.util.MapProcessor;
 import org.ofbiz.base.util.UtilGenerics;
 
 /**
- * Cato: A wrapper around simple map processor invocations to fit MapProcessor interface.
+ * Scipio: A wrapper around simple map processor invocations to fit MapProcessor interface.
  */
 public class SimpleMapProcessorProcessor implements MapProcessor {
 
@@ -36,7 +36,7 @@ public class SimpleMapProcessorProcessor implements MapProcessor {
         //try {
         SimpleMapProcessor.runSimpleMapProcessor(xmlResource, name, inMap, results, UtilGenerics.checkList(errorMessages), locale);
         //} catch (MiniLangException e) {
-        //    Debug.logError(e, "Cato: Error invoking simple map processor '" + name + "' in resource '" + xmlResource + "'", module);
+        //    Debug.logError(e, "Scipio: Error invoking simple map processor '" + name + "' in resource '" + xmlResource + "'", module);
         //    errorMessages.add("Internal error");
         //}
     }

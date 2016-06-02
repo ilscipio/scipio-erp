@@ -61,7 +61,7 @@ under the License.
         <menu-item name="geoManagement" title="${uiLabelMap.WebtoolsGeoManagement}">
             <link target="FindGeo"/>
         </menu-item> 
-        <!-- CATO: Disabled for now -->       
+        <!-- SCIPIO: Disabled for now -->       
         <!-- <menu-item name="portalAdmin" title="${uiLabelMap.WebtoolsAdminPortalPage}">
             <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
             <link target="FindPortalPage"/>
@@ -178,7 +178,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <!-- CATO: new Sidebar menu. Includes LogView, Cache Maintenance, Statistics, Certificates -->
+    <!-- SCIPIO: new Sidebar menu. Includes LogView, Cache Maintenance, Statistics, Certificates -->
     <menu name="ServerSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ServerTabBar" recursive="includes-only" />
     </menu>
@@ -270,10 +270,10 @@ under the License.
         <menu-item name="entityPerformanceTest" title="${uiLabelMap.WebtoolsPerformanceTests}">
             <link target="EntityPerformanceTest"/>
         </menu-item>
-        <menu-item name="EntityUtilityServices" title="Cato ${uiLabelMap.WebtoolsUtilityServices}">
+        <menu-item name="EntityUtilityServices" title="Scipio ${uiLabelMap.WebtoolsUtilityServices}">
             <link target="EntityUtilityServices"/>
         </menu-item>
-        <menu-item name="ListDemoDataGeneratorServices" title="Cato ${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">
+        <menu-item name="ListDemoDataGeneratorServices" title="Scipio ${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">
             <link target="ListDemoDataGeneratorServices"/>
         </menu-item>
     </menu>
@@ -420,7 +420,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <!-- Cato: DemoDataGenerator sidebar menu -->
+    <!-- Scipio: DemoDataGenerator sidebar menu -->
     <menu name="DemoDataGeneratorSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ListDemoDataGeneratorServices" title="${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">
             <link target="ListDemoDataGeneratorServices">                
@@ -449,7 +449,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <!-- Cato: nested menu test -->
+    <!-- Scipio: nested menu test -->
     <menu name="LayoutDemoNestedButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="top1" title="Toplevel1">
             <link target="${demoTargetUrl}">
@@ -484,7 +484,7 @@ under the License.
                         <parameter param-name="demoParam3"/>
                     </link>
                 </menu-item>
-                <!-- Cato: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
+                <!-- Scipio: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
                 <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
                     <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
                         <link target="${demoTargetUrl}">
@@ -522,12 +522,12 @@ under the License.
         </menu-item>
     </menu>
     
-    <!-- Cato: Just here to demonstrate sub-menu-model local lookup -->
+    <!-- Scipio: Just here to demonstrate sub-menu-model local lookup -->
     <menu name="LayoutDemoButtonDropdownMenuModel" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-link-style="+my-dropdown-item-link">
     </menu>
     
-    <!-- Cato: button menu with nested button-dropdown test -->
+    <!-- Scipio: button menu with nested button-dropdown test -->
     <menu name="LayoutDemoButton2" menu-container-style="+my-special-button-menu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
         default-widget-style="+my-list-item">
         <menu-item name="top1" title="Toplevel1" widget-style="my-list-item-override-style">
@@ -544,7 +544,7 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <!-- Cato: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
+        <!-- Scipio: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
             use sub-menu-title instead). sub-menu-model means the default styles will be fetched from the specified menu
             instead of this top-level menu. -->
         <menu-item name="top3" sub-menu-model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" sub-menu-title="Sub-menu, as button-dropdown">

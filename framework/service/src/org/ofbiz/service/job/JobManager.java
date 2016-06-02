@@ -112,7 +112,7 @@ public final class JobManager {
     private boolean crashedJobsReloaded = false;
     
     /**
-     * Cato: Determines if run-at-start jobs have been queued or not.
+     * Scipio: Determines if run-at-start jobs have been queued or not.
      * <p>
      * TODO?: later might need to substitute this with a more comprehensive
      * queue or message stack ("SCH_EVENT_STARTUP", etc.).
@@ -192,7 +192,7 @@ public final class JobManager {
         EntityCondition poolCondition = EntityCondition.makeCondition(poolsExpr, EntityOperator.OR);
         EntityCondition mainCondition = EntityCondition.makeCondition(UtilMisc.toList(baseCondition, poolCondition));
         
-        // Cato: We must add to the main condition that the special new field eventId must be null
+        // Scipio: We must add to the main condition that the special new field eventId must be null
         EntityCondition commonCondition = mainCondition;
         mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", null));
         
@@ -200,7 +200,7 @@ public final class JobManager {
         
         boolean beganTransaction = false;
         
-        // Cato: first, add the run-at-startup jobs
+        // Scipio: first, add the run-at-startup jobs
         if (!startupJobsQueued) {
             try {
                 beganTransaction = TransactionUtil.begin();
@@ -213,12 +213,12 @@ public final class JobManager {
                 
                 // NOTE: due to synchronization, we could have null here
                 if (jobsIterator != null) {
-                    // Cato: FIXME?: We currently ignore the limit for the startup jobs;
+                    // Scipio: FIXME?: We currently ignore the limit for the startup jobs;
                     // might want to find way to delay them to next poll, because we violate the limit request from caller...
                     ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll);
                     
                     if (Debug.infoOn()) {
-                        Debug.logInfo("Cato: Collected " + poll.size() + 
+                        Debug.logInfo("Scipio: Collected " + poll.size() + 
                                 " SCH_EVENT_STARTUP run-at-startup jobs for queuing", module);
                     }
                 }
@@ -255,7 +255,7 @@ public final class JobManager {
 
             jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
             
-            // Cato: factored out into method
+            // Scipio: factored out into method
             ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll);
             
             TransactionUtil.commit(beganTransaction);
@@ -333,7 +333,7 @@ public final class JobManager {
     }
 
     /**
-     * Cato: Takes ownership of job and adds to list.
+     * Scipio: Takes ownership of job and adds to list.
      * <p>
      * Factored out from {@link #poll}.
      */
@@ -347,7 +347,7 @@ public final class JobManager {
                 int rowsUpdated = delegator.storeByCondition("JobSandbox", UtilMisc.toMap("runByInstanceId", instanceId), EntityCondition.makeCondition(updateExpression));
                 if (rowsUpdated == 1) {
                     poll.add(new PersistedServiceJob(dctx, jobValue, null));
-                    if (limit >= 0 && poll.size() == limit) { // Cato: modified to support limit = -1
+                    if (limit >= 0 && poll.size() == limit) { // Scipio: modified to support limit = -1
                         break;
                     }
                 }
@@ -357,7 +357,7 @@ public final class JobManager {
     }
     
     /**
-     * Cato: Queries run-at-start Job entities if not already done.
+     * Scipio: Queries run-at-start Job entities if not already done.
      * If already done, returns null.
      * @throws GenericEntityException 
      */
@@ -371,7 +371,7 @@ public final class JobManager {
     }
     
     /**
-     * Cato: Queries run-at-start Job entities.
+     * Scipio: Queries run-at-start Job entities.
      * <p>
      * TODO: If commonCondition null, build it (requires more refactor); commonCondition should be optimization only
      */
@@ -403,7 +403,7 @@ public final class JobManager {
                 try {
                     if (Debug.infoOn()) Debug.logInfo("Scheduling Job : " + job, module);
                     
-                    // Cato: IMPORTANT: If the job was supposed to trigger on specific event, DO NOT
+                    // Scipio: IMPORTANT: If the job was supposed to trigger on specific event, DO NOT
                     // reschedule anything. Otherwise, we may be running services during times at
                     // which they were never meant to run and cause unexpected problems.
                     if (job.getString("eventId") == null) {
@@ -424,7 +424,7 @@ public final class JobManager {
                         delegator.createSetNextSeqId(newJob);
                     }
                     else {
-                        if (Debug.infoOn()) Debug.logInfo("Cato: Not rescheduling crashed job '" + job.getString("jobId") + 
+                        if (Debug.infoOn()) Debug.logInfo("Scipio: Not rescheduling crashed job '" + job.getString("jobId") + 
                                 "' with event ID '" + job.getString("eventId") + "'", module);
                     }
                     
@@ -563,7 +563,7 @@ public final class JobManager {
     /**
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
-     * Cato: Modified to accept an event ID.
+     * Scipio: Modified to accept an event ID.
      * 
      * @param jobName
      *            The name of the job
@@ -611,7 +611,7 @@ public final class JobManager {
     /**
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
-     * Cato: This is now delegating.
+     * Scipio: This is now delegating.
      * 
      * @param jobName
      *            The name of the job
@@ -642,7 +642,7 @@ public final class JobManager {
     /**
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
-     * Cato: Modified to accept an event ID.
+     * Scipio: Modified to accept an event ID.
      * 
      * @param jobName
      *            The name of the job
@@ -685,7 +685,7 @@ public final class JobManager {
         if (UtilValidate.isEmpty(jobName)) {
             jobName = Long.toString((new Date().getTime()));
         }
-        // Cato: now set eventId
+        // Scipio: now set eventId
         Map<String, Object> jFields = UtilMisc.<String, Object> toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
                 "serviceName", serviceName, "statusId", "SERVICE_PENDING", "recurrenceInfoId", infoId, "runtimeDataId", dataId,
                 "eventId", eventId);
@@ -717,7 +717,7 @@ public final class JobManager {
     /**
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
-     * Cato: Now delegating.
+     * Scipio: Now delegating.
      * 
      * @param jobName
      *            The name of the job

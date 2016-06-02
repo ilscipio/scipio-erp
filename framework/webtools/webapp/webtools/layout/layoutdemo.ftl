@@ -1,5 +1,5 @@
 
-<#-- Cato: TODO: show some cases only if debug mode is on -->
+<#-- Scipio: TODO: show some cases only if debug mode is on -->
 <#if debugMode>
 <p>Debug mode: ON</p>
 </#if>
@@ -255,7 +255,7 @@
 
 <@section>
     <@heading attribs=makeMagTargetAttribMap("charts") id="charts" level=2>Charts</@heading>
-    <#-- CATO: Deprecated
+    <#-- SCIPIO: Deprecated
     <@heading level=3>Foundation</@heading>
     <@row>
         <@cell columns="4">
@@ -1177,7 +1177,7 @@
   <@argsTestOuter args=args outerArg2="some-value-from-caller" extraAttrib2="some-value-from-caller"/>
 
   <@section title="Macro inspection">
-    <p>@field macro default args: <@objectAsScript lang="raw" escape=false object=getCatoMacroDefaultArgs("field") /></p>
+    <p>@field macro default args: <@objectAsScript lang="raw" escape=false object=getScipioMacroDefaultArgs("field") /></p>
   </@section>
 </@section>
 
@@ -1224,7 +1224,7 @@
     <li><@ofbizUrl fullPath=true secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl fullPath=true secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl uri="main" webSiteId="CatoWebStore"/></li>
+    <li><@ofbizUrl uri="main" webSiteId="ScipioWebStore"/></li>
     <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" /></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true/></li>
@@ -1232,15 +1232,15 @@
     <li><@ofbizInterWebappUrl uri="/shop/control/main" secure=false/></li>
     <#-- Explicitly allow downgrading to HTTP -->
     <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true secure=false/></li>
-    <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" /></li>
+    <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" /></li>
     <li>${makeOfbizInterWebappUrl("/shop/control/main")}</li>
-    <li>${makeOfbizInterWebappUrl("main", "CatoWebStore")}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"CatoWebStore", "extLoginKey": true})}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"CatoWebStore", "extLoginKey": true})}</li>
+    <li>${makeOfbizInterWebappUrl("main", "ScipioWebStore")}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
   </ul>
   
   <ul>Non-standard URLs:
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" webSiteId="CatoWebStore" absPath=true /></li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" webSiteId="ScipioWebStore" absPath=true /></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=true /></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false /></li>
     <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
@@ -1248,8 +1248,8 @@
     <#-- Allow downgrade -->
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true secure=false/></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false secure=true/></li>
-    <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="CatoWebStore" controller=false /></li>
-    <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" controller=true /></li>
+    <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="ScipioWebStore" controller=false /></li>
+    <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" controller=true /></li>
     <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/admin/control/main" /></li>
     <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
     <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>

@@ -65,7 +65,7 @@ public class HtmlWidget extends ModelScreenWidget {
     protected static Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version));
 
     // not sure if this is the best way to get FTL to use my fancy MapModel derivative, but should work at least...
-    public static class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapper { // Cato: Now implements EscapingObjectWrapper for identification purposes
+    public static class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapper { // Scipio: Now implements EscapingObjectWrapper for identification purposes
         public ExtendedWrapper(Version version) {
             super(version);
         }
@@ -84,7 +84,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
     }
 
-    public static class StringHtmlWrapperForFtl extends StringModel implements EscapingModel { // Cato: special interface
+    public static class StringHtmlWrapperForFtl extends StringModel implements EscapingModel { // Scipio: special interface
         public StringHtmlWrapperForFtl(String str, BeansWrapper wrapper) {
             super(str, wrapper);
         }
@@ -94,7 +94,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
     }
 
-    public static class CollectionHtmlWrapperForFtl extends CollectionModel implements EscapingModel { // Cato: special interface
+    public static class CollectionHtmlWrapperForFtl extends CollectionModel implements EscapingModel { // Scipio: special interface
 
         public CollectionHtmlWrapperForFtl(Collection<?> collection, BeansWrapper wrapper) {
             super(collection, wrapper);

@@ -1255,7 +1255,7 @@ public class UtilHttp {
     /** 
      * Obtains the session ID from the request, or "unknown" if no session present. 
      * <p>
-     * Cato: <strong>WARN:</strong> Despite what is written above (by stock), at time of writing
+     * Scipio: <strong>WARN:</strong> Despite what is written above (by stock), at time of writing
      * (2016-05-26), this method will in fact cause new session creation, and may be unsafe to fix directly.
      * To avoid completely, call {@link #getSessionIdIfSet} instead, which guarantees
      * no session creation.
@@ -1266,7 +1266,7 @@ public class UtilHttp {
     }
     
     /** 
-     * Cato: Obtains the session ID from the request, or "unknown" if no session present. 
+     * Scipio: Obtains the session ID from the request, or "unknown" if no session present. 
      * <p>
      * <strong>NOTE</strong>: Currently (2016-05-26) This version unlike {@link #getSessionId} ACTUALLY does
      * what the description says, and will never implicitly create a new session if none 

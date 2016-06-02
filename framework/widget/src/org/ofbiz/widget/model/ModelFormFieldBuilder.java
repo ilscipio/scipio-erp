@@ -109,7 +109,7 @@ public class ModelFormFieldBuilder {
     private String parentFormName = "";
     
     /**
-     * Cato: string expression representing a json-like map of extra form attributes.
+     * Scipio: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private AttribsExpression attribsExpr = AttribsExpression.makeAttribsExpr();
@@ -789,7 +789,7 @@ public class ModelFormFieldBuilder {
             this.onChangeUpdateAreas.addAll(builder.getOnChangeUpdateAreas());
         if (UtilValidate.isNotEmpty(builder.getOnClickUpdateAreas()))
             this.onClickUpdateAreas.addAll(builder.getOnClickUpdateAreas());
-        // Cato: don't forget to merge attribsExpr
+        // Scipio: don't forget to merge attribsExpr
         if (UtilValidate.isNotEmpty(builder.getAttribsExpr()))
             this.attribsExpr = this.attribsExpr.putAll(builder.getAttribsExpr());
         this.encodeOutput = builder.getEncodeOutput();

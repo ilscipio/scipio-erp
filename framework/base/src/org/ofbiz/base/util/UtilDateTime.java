@@ -498,7 +498,7 @@ public class UtilDateTime {
     }
     
     /**
-     * CATO: Converts a timestamp  into a Date
+     * SCIPIO: Converts a timestamp  into a Date
      *
      * @param dateTime a Timestamp
      * @return The corresponding Date
@@ -1276,7 +1276,7 @@ public class UtilDateTime {
     }
     
     /**
-     * Cato: Returns a map with begin/end timestamp for a given period. Defaults to month.
+     * Scipio: Returns a map with begin/end timestamp for a given period. Defaults to month.
      * @param period
      * @param fromDate
      * @param locale
@@ -1354,7 +1354,7 @@ public class UtilDateTime {
     }
     
     /**
-     * Cato: Enhanced version of getPeriodInterval that returns also a date formatter for a given period.
+     * Scipio: Enhanced version of getPeriodInterval that returns also a date formatter for a given period.
      * @param period
      * @param locale
      * @param timezone
@@ -1412,7 +1412,7 @@ public class UtilDateTime {
     }
 
     /**
-     * Cato: Checks if the interval passed is a valid one
+     * Scipio: Checks if the interval passed is a valid one
      * 
      * @param interval
      * @return true or false depending on the result of evaluating the given

@@ -490,7 +490,7 @@ public class CommonEvents {
     }
 
     /**
-     * Cato: Prepares a redirect or forward based on a targetPage request URI passed by the screens.
+     * Scipio: Prepares a redirect or forward based on a targetPage request URI passed by the screens.
      * The targetPage is re-saved in request attributes as "targetPage". targetPage must be a controller
      * request URI within current controller that supports direct (public) requests.
      * <p>
@@ -512,7 +512,7 @@ public class CommonEvents {
      *  If there is another error such as security-related error,
      * returns error. The passed values must be valid public controller URIs in current webapp.
      * <p>
-     * NOTE: This event requires the Cato-enhanced RequestHandler to function properly.
+     * NOTE: This event requires the Scipio-enhanced RequestHandler to function properly.
      * <p>
      * NOTE: This does not set any error messages in request, because they are all internal errors.
      * The event response "error" can point to another event which sets an error.
@@ -548,22 +548,22 @@ public class CommonEvents {
                 }
                 
                 if (UtilValidate.isEmpty(targetPage)) {
-                    Debug.logError("Cato: Missing target page for targetPageResponse " + targetPageResponse, module);
+                    Debug.logError("Scipio: Missing target page for targetPageResponse " + targetPageResponse, module);
                     return "error";
                 } else {
-                    // Cato: SECURITY CHECK: In case this is not checked anywhere else - at least make sure
+                    // Scipio: SECURITY CHECK: In case this is not checked anywhere else - at least make sure
                     // we link within our controller
                     if (RequestHandler.controllerHasRequestUriDirect(request, targetPage)) {
                         request.setAttribute("targetPage", targetPage);
                         return targetPageResponse.substring(0, targetPageResponse.indexOf('-'));
                     } else {
-                        Debug.logError("Cato: targetPage is not a valid direct controller request URI for redirect/forward "
+                        Debug.logError("Scipio: targetPage is not a valid direct controller request URI for redirect/forward "
                                 + "('" + targetPage + "')", module);
                         return "error";
                     }
                 }
             } else {
-                Debug.logError("Cato: Invalid targetPageResponse: " + targetPageResponse, module);
+                Debug.logError("Scipio: Invalid targetPageResponse: " + targetPageResponse, module);
                 return "error";
             }
         }

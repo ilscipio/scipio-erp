@@ -6,7 +6,7 @@ import java.util.Map;
 import org.ofbiz.base.util.GeneralException;
 
 /**
- * Cato: Thrown by some methods when a service or service-like function returned an error requiring an exception.
+ * Scipio: Thrown by some methods when a service or service-like function returned an error requiring an exception.
  * <p>
  * Small exception class to pass back service results without requiring the method
  * result to be a service result.

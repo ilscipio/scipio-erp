@@ -624,7 +624,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="full-path"><!-- Cato: default removed - default is null: default="false" -->
+        <xs:attribute name="full-path"><!-- Scipio: default removed - default is null: default="false" -->
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true" />
@@ -632,7 +632,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="secure"><!-- Cato: default removed - default is null: default="false" -->
+        <xs:attribute name="secure"><!-- Scipio: default removed - default is null: default="false" -->
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true" />
@@ -640,7 +640,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="encode"><!-- Cato: default removed - default is null (should be true, not false!): default="false" -->
+        <xs:attribute name="encode"><!-- Scipio: default removed - default is null (should be true, not false!): default="false" -->
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true" />

@@ -100,10 +100,10 @@ under the License.
                                 <screenlet title="${uiLabelMap.WebtoolsServer}">
                                     <container style="${styles.grid_row}">                                      
                                         <container style="${styles.grid_large}6 ${styles.grid_cell}">    
-                                            <include-screen name="CatoMemoryInfo" location="component://webtools/widget/CommonScreens.xml"/>                                                 
+                                            <include-screen name="ScipioMemoryInfo" location="component://webtools/widget/CommonScreens.xml"/>                                                 
                                         </container>
                                         <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                            <include-screen name="CatoUserRequestCount" location="component://webtools/widget/CommonScreens.xml"/>
+                                            <include-screen name="ScipioUserRequestCount" location="component://webtools/widget/CommonScreens.xml"/>
                                         </container>
                                     </container>
                                 </screenlet>
@@ -112,11 +112,11 @@ under the License.
                         <container style="${styles.grid_row}">
                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
 		                        <screenlet>
-                                    <include-screen name="CatoLogView" location="component://webtools/widget/CommonScreens.xml"/>
+                                    <include-screen name="ScipioLogView" location="component://webtools/widget/CommonScreens.xml"/>
 		                        </screenlet>
 		                   </container>
 		                   <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                               <include-screen name="CatoSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                               <include-screen name="ScipioSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
                            </container>
                         </container>
                     </decorator-section>
@@ -125,8 +125,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Dashboard widget implementation -->
-    <screen name="CatoMemoryInfo">
+    <!-- SCIPIO: Dashboard widget implementation -->
+    <screen name="ScipioMemoryInfo">
         <section>
             <actions>
                 <set field="chartType" value="pie"/>                                    
@@ -156,7 +156,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CatoUserRequestCount">
+    <screen name="ScipioUserRequestCount">
         <section>
             <actions>
                 <set field="chartType" value="bar"/>                                    
@@ -188,7 +188,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CatoLogView">
+    <screen name="ScipioLogView">
          <section>
              <actions>
                  <property-to-field resource="debug" property="log4j.appender.css.File" field="logFileName" default="runtime/logs/ofbiz.log" no-locale="true"/>

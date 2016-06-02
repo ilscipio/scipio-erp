@@ -233,7 +233,7 @@ public interface LocalDispatcher {
     void schedule(String jobName, String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException;
 
     /**
-     * Cato: Schedule a service to run asynchronously at specified event
+     * Scipio: Schedule a service to run asynchronously at specified event
      * @param jobName Name of the job
      * @param poolName Name of the service pool to send to.
      * @param serviceName Name of the service to invoke.

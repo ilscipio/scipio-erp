@@ -250,7 +250,7 @@ public class FormRenderer {
 
         
         // find the highest position number to get the max positions used
-        // Cato: use explicit if set, and also take position-span into account here
+        // Scipio: use explicit if set, and also take position-span into account here
         Integer positions = modelForm.getPositions();
         if (positions == null || positions < 1) {
             positions = 1;
@@ -408,7 +408,7 @@ public class FormRenderer {
             if (UtilValidate.isNotEmpty(innerFormFields))
                 maxNumOfColumns += innerFormFields.size();
             
-            // Cato: Add an extra column to hold a checkbox or radio button depending on the type of form.
+            // Scipio: Add an extra column to hold a checkbox or radio button depending on the type of form.
             if ((modelForm.getType().equals("list") || modelForm.getType().equals("multi")) && modelForm.getUseRowSubmit()) {
                 ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
                 ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
@@ -465,7 +465,7 @@ public class FormRenderer {
 //                            formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                         Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
                         
-                        // Cato: There is currently an issue where sometimes the title separator gets printed
+                        // Scipio: There is currently an issue where sometimes the title separator gets printed
                         // in BETWEEN cell items. I don't know what started causing this, but am adding a sanity
                         // check boolean that will fix at least that specific problem (but there could be others).
                         boolean cellOpened = false;
@@ -495,7 +495,7 @@ public class FormRenderer {
                             if (innerFormFieldsIt.hasNext()) {
                                 // TODO: determine somehow if this is the last one... how?
                                 if (!modelForm.getSeparateColumns() && !modelFormField.getSeparateColumn()) {
-                                    // Cato: ONLY do this if we know we have an open cell
+                                    // Scipio: ONLY do this if we know we have an open cell
                                     if (cellOpened) {
                                         formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
                                             modelFormField, false);
@@ -603,7 +603,7 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
-            // Cato: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
+            // Scipio: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
                 ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
                 List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
@@ -667,7 +667,7 @@ public class FormRenderer {
             if (innerFormFields.size() > 0) {
                 // render the "form" cell                
                 formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
-                // Cato: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
+                // Scipio: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
                 boolean cellOpen = true;
 
                 if (formPerItem) {
@@ -756,7 +756,7 @@ public class FormRenderer {
     }
 
     /**
-     * Cato: callbacks for important render item rows events.
+     * Scipio: callbacks for important render item rows events.
      */
     private interface RenderItemRowsEventHandler {
         void notifyHasList() throws IOException;
@@ -989,7 +989,7 @@ public class FormRenderer {
                         currentPosition = modelFormField.getPosition();
                     }
                           
-                    // Cato: Adding submit buttons if use-row-submit flag in the form definition is set to false
+                    // Scipio: Adding submit buttons if use-row-submit flag in the form definition is set to false
                     if ("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) {
                         Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                         while (submitFields.hasNext()) {
@@ -1040,7 +1040,7 @@ public class FormRenderer {
     }
 
     /**
-     * Cato: Helper object to handle renderer the table wrappers, headers, etc.
+     * Scipio: Helper object to handle renderer the table wrappers, headers, etc.
      */
     private class RenderListFormHandler implements RenderItemRowsEventHandler {
         
@@ -1153,7 +1153,7 @@ public class FormRenderer {
         }
 
         public void renderTableFooter() throws IOException {
-            // Cato: Renders the submit button in the tfoot
+            // Scipio: Renders the submit button in the tfoot
             if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
                 Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                 formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
@@ -1196,7 +1196,7 @@ public class FormRenderer {
         
         listFormHandler.renderTableClose();
         
-        // Cato: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
+        // Scipio: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
         formStringRenderer.renderSubmitForm(writer, context, modelForm);
         
        
@@ -1409,7 +1409,7 @@ public class FormRenderer {
             }
 
             Integer nextPositionInRow = null;
-            // Cato: support a specific position span. note: the value we pass to macro is one less.
+            // Scipio: support a specific position span. note: the value we pass to macro is one less.
             Integer fieldPositionSpan = currentFormField.getPositionSpan();
             int positionSpan;
             if (fieldPositionSpan != null && fieldPositionSpan > 0) {
@@ -1439,7 +1439,7 @@ public class FormRenderer {
                 }
             }
 
-            // Cato: pass these (and unset below)
+            // Scipio: pass these (and unset below)
             context.put("formFieldRender_positions", positions);
             
             if (stayingOnRow) {
@@ -1472,7 +1472,7 @@ public class FormRenderer {
             
             context.remove("formFieldRender_positions");
             
-            // Cato: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
+            // Scipio: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
             // This allows delayed render so more info available and fixes ofbiz bug where nextFormField was
             // sometimes a field that was not going to be rendered, giving invalid positions.
             // render form field
@@ -1501,7 +1501,7 @@ public class FormRenderer {
     }
 
     /**
-     * Cato: Factored out field entry render code
+     * Scipio: Factored out field entry render code
      */
     private class RenderFieldEntry {
         private final ModelFormField formField;
@@ -1583,7 +1583,7 @@ public class FormRenderer {
     }
     
     /**
-     * Cato: renders accumulated field entries all at once (for delayed render).
+     * Scipio: renders accumulated field entries all at once (for delayed render).
      */
     private class RenderRowFieldEntrySequencer {
         private List<RenderFieldEntry> fieldEntries = new ArrayList<RenderFieldEntry>();
@@ -1628,7 +1628,7 @@ public class FormRenderer {
                 }
                     
                 Integer nextPositionInRow = null;
-                // Cato: support a specific position span. note: the value we pass to macro is one less.
+                // Scipio: support a specific position span. note: the value we pass to macro is one less.
                 Integer fieldPositionSpan = currentFormField.getPositionSpan();
                 int positionSpan;
                 if (fieldPositionSpan != null && fieldPositionSpan > 0) {

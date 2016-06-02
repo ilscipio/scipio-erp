@@ -146,7 +146,7 @@ public final class WebSiteProperties {
     }
     
     /**
-     * Cato: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
+     * Scipio: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
      * in the WebSite entity value for the given webSiteId.
      * 
      * @param delegator
@@ -158,7 +158,7 @@ public final class WebSiteProperties {
         if (webSiteValue != null) {
             return from(webSiteValue);
         } else {
-            throw new GenericEntityException("Cato: Could not find WebSite for webSiteId '" + webSiteId + "'");
+            throw new GenericEntityException("Scipio: Could not find WebSite for webSiteId '" + webSiteId + "'");
         }
     }    
 
@@ -231,7 +231,7 @@ public final class WebSiteProperties {
     }
     
     /**
-     * Cato: Returns true if and only if all fields in this object match 
+     * Scipio: Returns true if and only if all fields in this object match 
      * the ones in the other WebSiteProperties.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
@@ -256,7 +256,7 @@ public final class WebSiteProperties {
     }
     
     /**
-     * Cato: Returns true if and only if all fields in this object match 
+     * Scipio: Returns true if and only if all fields in this object match 
      * the ones in the other WebSiteProperties. Fields which are missing, 
      * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when 
      * performing the comparison.
@@ -285,7 +285,7 @@ public final class WebSiteProperties {
     }
     
     private static boolean sameFields(String first, String second) {
-        // Cato: treat null and empty the same, just to be safe
+        // Scipio: treat null and empty the same, just to be safe
         if (first != null && !first.isEmpty()) {
             return first.equals(second);
         }

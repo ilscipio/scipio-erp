@@ -150,7 +150,7 @@ function ShowTab(lname) {
                         <@td>${entityField.name}</@td>
                         <@td>
                           <#if entityField.fieldType == 'DateTime'>
-                            <#-- Cato: NOTE: when using default-manual, there is no label area, and label="xxx" arg won't turn on label area. label="xxx" is specified so it gets picked up by title/tooltip. -->
+                            <#-- Scipio: NOTE: when using default-manual, there is no label area, and label="xxx" arg won't turn on label area. label="xxx" is specified so it gets picked up by title/tooltip. -->
                             <@field type="datetime" label="${entityField.name}" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                           <#elseif entityField.fieldType == 'Date'>
                             <@field type="datetime" label="${entityField.name}" dateType="date" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
@@ -249,7 +249,7 @@ function ShowTab(lname) {
                     <@th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</@th>
                   </@tr>
                   </@thead>
-                  <#list context.fields as entityField> <#-- Cato: WARN: name clash with macros if don't use context. map -->
+                  <#list context.fields as entityField> <#-- Scipio: WARN: name clash with macros if don't use context. map -->
                     <@tr>
                       <@td>${entityField.name}</@td>
                       <@td>${entityField.value}</@td>

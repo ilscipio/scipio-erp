@@ -36,7 +36,7 @@ import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
-import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
@@ -66,9 +66,9 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizUrlTransform.class.getName();
 
     @SuppressWarnings("rawtypes")
-    public static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
+    public static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Scipio: NOTE: can now return null
         Object o = args.get(key);
-        // Cato (2016-02): we now support real booleans. 
+        // Scipio (2016-02): we now support real booleans. 
         // In addition, SimpleScalar was a bad type to use.
         //if (o instanceof SimpleScalar) {
         //    SimpleScalar s = (SimpleScalar) o;
@@ -85,7 +85,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             TemplateScalarModel s = (TemplateScalarModel) o;
             try {
                 String val = s.getAsString();
-                // Cato: empty check is desirable and makes it so caller can request default by specifying ""
+                // Scipio: empty check is desirable and makes it so caller can request default by specifying ""
                 if (!val.isEmpty()) {
                     return "true".equalsIgnoreCase(s.getAsString());
                 }
@@ -118,7 +118,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             if (o instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) o;
                 try {
-                    // Cato: FIXME: This should probably bypass auto-escaping,
+                    // Scipio: FIXME: This should probably bypass auto-escaping,
                     // but currently we cannot do this because in some cases there
                     // may be security risks in existing templates, largely because 
                     // HTML and javascript escaping are not really done properly.
@@ -139,13 +139,13 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     @SuppressWarnings("rawtypes")
     public Writer getWriter(final Writer out, Map args) {
         final StringBuilder buf = new StringBuilder();
-        final Boolean fullPath = checkBooleanArg(args, "fullPath", null); // Cato: modified to remove default; leave centralized
-        final Boolean secure = checkBooleanArg(args, "secure", null); // Cato: modified to remove default; leave centralized
-        final Boolean encode = checkBooleanArg(args, "encode", null); // Cato: modified to remove default; leave centralized
+        final Boolean fullPath = checkBooleanArg(args, "fullPath", null); // Scipio: modified to remove default; leave centralized
+        final Boolean secure = checkBooleanArg(args, "secure", null); // Scipio: modified to remove default; leave centralized
+        final Boolean encode = checkBooleanArg(args, "encode", null); // Scipio: modified to remove default; leave centralized
         final String webSiteId = convertToString(args.get("webSiteId"));
-        // Cato: We now support a "uri" arg as alternative to #nested
+        // Scipio: We now support a "uri" arg as alternative to #nested
         final String uriArg = getStringArg(args, "uri", null);
-        // Cato: more new parameters
+        // Scipio: more new parameters
         final String type = getStringArg(args, "type", null);
         final Boolean absPath = checkBooleanArg(args, "absPath", null); 
         final Boolean interWebapp = checkBooleanArg(args, "interWebapp", null); // Alias for type="inter-webapp"
@@ -157,7 +157,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             @Override
             public void close() throws IOException {
                 try {
-                    // Cato: can use uri instead of buffer
+                    // Scipio: can use uri instead of buffer
                     if (uriArg != null) {
                         buf.append(uriArg);
                     }
@@ -178,7 +178,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         return;
                     }
                     HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
-                    /* Cato: This part is limited and incomplete. Instead, delegate to our improved makeLink* method(s).
+                    /* Scipio: This part is limited and incomplete. Instead, delegate to our improved makeLink* method(s).
                     // Handle web site ID.
                     if (!webSiteId.isEmpty()) {
                         Delegator delegator = FreeMarkerWorker.unwrap(env.getVariable("delegator"));
@@ -194,7 +194,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         builder.buildFullUrl(newUrlBuff, buf.toString(), secure);
                         String newUrl = newUrlBuff.toString();
                         if (encode) {
-                            // Cato: This was invalid! This is not what the "encode" boolean is supposed to mean!
+                            // Scipio: This was invalid! This is not what the "encode" boolean is supposed to mean!
                             // It means pass through response.encodeURL.
                             //newUrl = URLEncoder.encode(newUrl, "UTF-8");
                             HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
@@ -210,12 +210,12 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                         HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
                         String requestUrl = buf.toString();
-                        // Cato: If requested, add external login key
+                        // Scipio: If requested, add external login key
                         if (extLoginKey) {
                             requestUrl = RequestLinkUtil.checkAddExternalLoginKey(requestUrl, request, true);
                         }
                         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                        // Cato: Now use more advanced method
+                        // Scipio: Now use more advanced method
                         //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
                         Boolean interWebappEff = interWebapp;
                         if (interWebappEff == null) {
@@ -234,7 +234,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                             out.write(link);
                         }
                         else {
-                            // Cato: If link is null, it means there was an error building link; write nothing, so that
+                            // Scipio: If link is null, it means there was an error building link; write nothing, so that
                             // it's possible for templates to catch this case if they need to.
                             //out.write(requestUrl);
                         }

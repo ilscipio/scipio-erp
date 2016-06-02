@@ -142,7 +142,7 @@ under the License.
         <attribute name="localeComments" type="List" mode="IN" optional="true"/>
     </service>
     
-    <!-- CATO Services -->
+    <!-- SCIPIO Services -->
     <service name="getServerRequests" engine="groovy" location="component://webtools/script/com/ilscipio/data/ServerData.groovy" 
              invoke="getServerRequests" auth="true">
         <description>Returns a list of Maps, containing the contentIds (List of requested paths) and hitcount (number of requests) grouped by DateInterval</description>

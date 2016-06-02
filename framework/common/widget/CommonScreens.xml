@@ -143,8 +143,8 @@ under the License.
                 </service>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
                 
-                <set field="setContextCatoTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
-                <script location="component://common/webcommon/WEB-INF/actions/includes/cato/SetContextCatoTmplGlobalVars.groovy" />
+                <set field="setContextScipioTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/SetContextScipioTmplGlobalVars.groovy" />
             </actions>
             <widgets />
         </section>
@@ -643,10 +643,10 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true"/>
                 <!-- The default (global) shortcut icon -->
-                <set field="layoutSettings.shortcutIcon" value="/images/cato/favicon.ico" global="true"/>
+                <set field="layoutSettings.shortcutIcon" value="/images/scipio/favicon.ico" global="true"/>
                 <!-- The settings below are used for xsl-fo screens -->
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/cato/cato-logo.svg"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
                 <!--<set field="defaultFontFamily" value="Arial"/>-->
             </actions>
             <widgets>
@@ -722,7 +722,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/cato/cato-logo.svg" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
                 <property-to-field resource="fop.properties" field="defaultFontFamily" property="fop.font.family" default="Arial"/>
             </actions>
             <widgets>
@@ -735,7 +735,7 @@ under the License.
     <screen name="GlobalFoDecorator">
         <section>
             <actions>
-                <set field="layoutSettings.commonHeaderImageUrl" value="/images/cato/cato-logo.svg"/>
+                <set field="layoutSettings.commonHeaderImageUrl" value="/images/scipio/scipio-logo.svg"/>
             </actions>
             <widgets>
                 <platform-specific>
@@ -756,7 +756,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/cato/cato-logo.svg"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -849,7 +849,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Locales Screen (Cato: Note there is also a lookup version in LookupScreens) -->
+    <!-- Locales Screen (Scipio: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocales">
         <section>
             <actions>
@@ -879,7 +879,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: Compact version of list locales (Cato: Note there is also a lookup version in LookupScreens) -->
+    <!-- Scipio: Compact version of list locales (Scipio: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocalesCompact">
         <section>
             <actions>
@@ -911,7 +911,7 @@ under the License.
         </section>
     </screen>  
 
-    <!-- Timezones Screen (Cato: Note there is also a lookup version in LookupScreens) -->
+    <!-- Timezones Screen (Scipio: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListTimezones">
         <section>
             <actions>
@@ -941,7 +941,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- List visual themes (Cato: Note there is also a lookup version in LookupScreens) -->
+    <!-- List visual themes (Scipio: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListVisualThemes">
         <section>
             <actions>
@@ -1124,7 +1124,7 @@ under the License.
     <screen name="countries">
         <section>
             <actions>
-                <!-- Cato: we now support currentCountryGeoId -->
+                <!-- Scipio: we now support currentCountryGeoId -->
                 <set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
@@ -1189,7 +1189,7 @@ under the License.
     </screen>
     
     <!-- 
-        Cato: WIP - Common decorator for dashboards 
+        Scipio: WIP - Common decorator for dashboards 
         Render all child sections in a grid. Grid size may be overriden by passing a 'columns' argument. 
         Although, dashboard grids have size constraints (min col/max col size), defined in widget.properties, 
         in order to force screens that use this decorator to look like as a dashboard.           
@@ -1201,12 +1201,12 @@ under the License.
                     <decorator-section name="body">                     
                         <section>
                             <actions>
-                                <script location="component://common/webcommon/WEB-INF/actions/includes/cato/DashboardLayout.groovy" />                         
+                                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DashboardLayout.groovy" />                         
                             </actions>
                             <widgets>
                                 <label style="h1">${uiLabelMap.CommonDashboard}</label>
                                 <screenlet>
-                                    <platform-specific><html><html-template location="component://common/webcommon/includes/cato/dashboard.ftl"/></html></platform-specific>                                 
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/dashboard.ftl"/></html></platform-specific>                                 
                                 </screenlet>
                             </widgets>
                         </section>
@@ -1217,24 +1217,24 @@ under the License.
     </screen>
     -->
     
-    <screen name="catoMenuWidgetWrapper">
+    <screen name="scipioMenuWidgetWrapper">
         <section>
             <widgets>
-                <include-menu name="${catoWidgetWrapperResName}" location="${catoWidgetWrapperResLocation}" />
+                <include-menu name="${scipioWidgetWrapperResName}" location="${scipioWidgetWrapperResLocation}" />
             </widgets>
         </section>
     </screen>
-    <screen name="catoFormWidgetWrapper">
+    <screen name="scipioFormWidgetWrapper">
         <section>
             <widgets>
-                <include-form name="${catoWidgetWrapperResName}" location="${catoWidgetWrapperResLocation}" />
+                <include-form name="${scipioWidgetWrapperResName}" location="${scipioWidgetWrapperResLocation}" />
             </widgets>
         </section>
     </screen>
-    <screen name="catoTreeWidgetWrapper">
+    <screen name="scipioTreeWidgetWrapper">
         <section>
             <widgets>
-                <include-tree name="${catoWidgetWrapperResName}" location="${catoWidgetWrapperResLocation}" />
+                <include-tree name="${scipioWidgetWrapperResName}" location="${scipioWidgetWrapperResLocation}" />
             </widgets>
         </section>
     </screen>

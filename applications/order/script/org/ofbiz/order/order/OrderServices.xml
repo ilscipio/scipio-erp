@@ -21,7 +21,7 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="getOrderedSummaryInformation" short-description="Get Summary Information About Orders for a Customer">
-        <!-- The permission checking is commented out to make this service work also when triggered from [Cato: shop] -->
+        <!-- The permission checking is commented out to make this service work also when triggered from [Scipio: shop] -->
         <!--if>
             <condition>
                 <and>
@@ -125,7 +125,7 @@ under the License.
 
     <!-- order requirement methods -->
     <simple-method method-name="createOrderRequirementCommitment" short-description="Create OrderRequirementCommitment">
-        <!-- The permission checking is commented out to make this service work also when triggered from [Cato: shop] orders -->
+        <!-- The permission checking is commented out to make this service work also when triggered from [Scipio: shop] orders -->
         <!--
         <check-permission permission="ORDERMGR" action="_CREATE">
             <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCheckCreateOrderRequirementCommitment"/>

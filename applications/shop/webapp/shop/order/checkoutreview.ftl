@@ -40,7 +40,7 @@ under the License.
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
   <@checkoutActionsMenu directLinks=true>
     <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
-      <#if (parameters.checkoutpage)?has_content><#-- Cato: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
+      <#if (parameters.checkoutpage)?has_content><#-- Scipio: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
         <input type="hidden" name="checkoutpage" value="${parameters.checkoutpage}" /><#-- ${requestParameters.checkoutpage} -->
       </#if>
       <#if (requestAttributes.issuerId)?has_content>

@@ -18,18 +18,18 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- CATO: TODO?: Create shopping list from order (commented) -->
-<#-- CATO: TODO: This is unable to list selected config product options (harder than showcart) -->
+<#-- SCIPIO: TODO?: Create shopping list from order (commented) -->
+<#-- SCIPIO: TODO: This is unable to list selected config product options (harder than showcart) -->
 
-<#-- CATO: NOTE: DO NOT COMMENT STUFF, USE FLAGS INSTEAD -->
+<#-- SCIPIO: NOTE: DO NOT COMMENT STUFF, USE FLAGS INSTEAD -->
 
-<#-- CATO: Extra toggle for (some of the) detailed info (some other detailed is required) 
+<#-- SCIPIO: Extra toggle for (some of the) detailed info (some other detailed is required) 
     FIXME: some of the detail can only be turned off with maySelect=false currently, but it may also disable needed functionality -->
 <#assign showDetailed = showDetailed!true>
 
 <#assign showDetailedAdjustments = showDetailedAdjustments!true>
 
-<#-- CATO: I have set sales tax details to not show because they are especially extremely confusing due to way they combining with promotions -->
+<#-- SCIPIO: I have set sales tax details to not show because they are especially extremely confusing due to way they combining with promotions -->
 <#assign showDetailedTax = showDetailedTax!false>
 
 <#assign maySelect = ((maySelectItems!"N") == "Y")>
@@ -40,7 +40,7 @@ under the License.
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 
 
-<#-- Cato: extra dummy column by default
+<#-- Scipio: extra dummy column by default
 <#assign numColumns = 8>-->
 <#assign numColumns = 9>
 <#if maySelect && (roleTypeId!) == "PLACING_CUSTOMER">
@@ -52,7 +52,7 @@ under the License.
       <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddCheckedToCart />
-          <#-- Cato: TODO?: At current time this is the only link to shopping list we had, makes no sense to show while user menu provides no other shopping list management options
+          <#-- Scipio: TODO?: At current time this is the only link to shopping list we had, makes no sense to show while user menu provides no other shopping list management options
           <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
       </#if>
     </@menu>
@@ -62,7 +62,7 @@ under the License.
     <@thead>
     <@tr>
       <#if maySelect>
-        <#-- Cato: TODO? could want to omit some these when showDetailed==false -->
+        <#-- Scipio: TODO? could want to omit some these when showDetailed==false -->
         <@th width="25%">${uiLabelMap.OrderProduct}</@th>
         <@th width="10%">${uiLabelMap.OrderQtyOrdered}</@th>
         <@th width="10%">${uiLabelMap.OrderQtyPicked}</@th>
@@ -82,7 +82,7 @@ under the License.
       <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
         <@th colspan="3"></@th>
       <#else>
-        <#-- Cato: even if maySelect false, add extra column to standardize look -->
+        <#-- Scipio: even if maySelect false, add extra column to standardize look -->
         <@th>&nbsp;</@th>
       </#if>
     </@tr>
@@ -112,17 +112,17 @@ under the License.
       <#--<@tr><@td colspan="${numColumns}"></@td></@tr>-->
 
       <@tr>
-        <#-- Cato: Workaround for access from macros -->
+        <#-- Scipio: Workaround for access from macros -->
         <#assign orderItem = orderItem>
 
-        <#-- Cato: Use a cancel link form toggle to prevent cluttering up things by default -->
+        <#-- Scipio: Use a cancel link form toggle to prevent cluttering up things by default -->
         <#assign cancelItemLabel = getLabel("StatusValidChange.transitionName.ITEM_APPROVED.ITEM_CANCELLED", "CommonEntityLabels")?replace(" ", "&nbsp;")>
         <#macro cancelItemForm>
-            <#-- Cato: FIXME: -->
+            <#-- Scipio: FIXME: -->
             <@alert type="warning">${uiLabelMap.CommonWarning}: Cancel may fail for some payment methods</@alert>
             
             <@field type="select" name="irm_${orderItem.orderItemSeqId}" label=uiLabelMap.OrderReturnReason>
-              <#-- Cato: Usually stores want a reason...<option value=""></option>-->
+              <#-- Scipio: Usually stores want a reason...<option value=""></option>-->
               <#list orderItemChangeReasons as reason>
                 <option value="${reason.enumId}"<#if (parameters["irm_${orderItem.orderItemSeqId}"]!) == reason.enumId> selected="selected"</#if>>${reason.get("description",locale)!(reason.enumId)}</option>
               </#list>
@@ -131,12 +131,12 @@ under the License.
             <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
                 class="${styles.link_run_sys!} ${styles.action_terminate!}" text=cancelItemLabel />
             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-            <#-- Cato: Extra hidden input to help with hide/show logic -->
+            <#-- Scipio: Extra hidden input to help with hide/show logic -->
             <input type="hidden" name="cancelitem_${orderItem.orderItemSeqId}" value="Y"/>
         </#macro>
 
         <#macro cancelLinkContent>
-          <#-- Cato: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
+          <#-- Scipio: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
           <a href="javascript:jQuery('#row_orderitem_cancel_${orderItem.orderItemSeqId}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
           <#--<@modal id="row_orderitem_cancel_${orderItem.orderItemSeqId}" label="[${cancelItemLabel}]">
             <@section title="${cancelItemLabel}: ${orderItem.itemDescription!}">
@@ -169,7 +169,7 @@ under the License.
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
           <@td>
             <#if !printable><a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
-            <#-- Cato: Link to downloads to consume -->
+            <#-- Scipio: Link to downloads to consume -->
             <#-- TODO: delegate status tests -->
             <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
               <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
@@ -179,7 +179,7 @@ under the License.
               </#if>
             </#if>
 
-            <#-- Cato: TODO: LIST CONFIG OPTIONS HERE -->
+            <#-- Scipio: TODO: LIST CONFIG OPTIONS HERE -->
 
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
             <#if orderItemAttributes?has_content>
@@ -263,7 +263,7 @@ under the License.
             <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/>
           </@td>
           <@td>
-            <#-- CATO: THIS IS WRONG - MUST USE getOrderItemSubTotal INSTEAD!
+            <#-- SCIPIO: THIS IS WRONG - MUST USE getOrderItemSubTotal INSTEAD!
             <#if workEfforts??>
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem)*rentalQuantity isoCode=currencyUomId/>
             <#else>
@@ -287,7 +287,7 @@ under the License.
         </#if>
       </@tr>
       <#-- now cancel reason and comment field -->
-      <#-- CATO: Inlined cancel item form -->
+      <#-- SCIPIO: Inlined cancel item form -->
       <#if !printable && maySelect && mayCancelItem>
         <#assign style = "">
         <#-- only display initially if there was an attempt to cancel (which presumably failed, otherwise mayCancelItem will go false) -->
@@ -322,7 +322,7 @@ under the License.
       <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
       <#if showDetailed && showDetailedAdjustments>
       <#list itemAdjustments as orderItemAdjustment>
-        <#-- CATO: tax adjustments are especially confusing, so have their own option to hide -->
+        <#-- SCIPIO: tax adjustments are especially confusing, so have their own option to hide -->
         <#if showDetailedTax || !["SALES_TAX"]?seq_contains(orderItemAdjustment.orderAdjustmentTypeId)>
         <@tr>
           <@td>
@@ -330,7 +330,7 @@ under the License.
             <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
             ${uiLabelMap.EcommerceAdjustment}: ${adjustmentType.get("description",locale)!}
             
-            <#-- Cato: WARN: description here potentially unsafe, but may contain HTML, allow for now -->
+            <#-- Scipio: WARN: description here potentially unsafe, but may contain HTML, allow for now -->
             <#if orderItemAdjustment.description?has_content>: ${htmlContentString(orderItemAdjustment.get("description",locale))}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
               <#if orderItemAdjustment.primaryGeoId?has_content>
@@ -369,7 +369,7 @@ under the License.
               ${uiLabelMap.OrderShipGroup}: [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.CommonNA)}
             </@td>
             <@td>
-              <#-- Cato: Don't show this if maySelect false because in that case there's no header and the quantity comes out of thin air. -->
+              <#-- Scipio: Don't show this if maySelect false because in that case there's no header and the quantity comes out of thin air. -->
             <#if maySelect>
               ${shipGroupAssoc.quantity?string.number}
             </#if>
@@ -384,7 +384,7 @@ under the License.
     </#if>
     <@tr><@td colspan="${numColumns}"></@td></@tr>
 
-    <#-- Cato: styling issues
+    <#-- Scipio: styling issues
     </@tbody>
     <@tfoot>-->
 

@@ -206,7 +206,7 @@ if (orderHeader) {
     context.paymentMethods = paymentMethods;
 
     /*
-     * CATO: There is a stock ofbiz bug here, should be fixed if necessary
+     * SCIPIO: There is a stock ofbiz bug here, should be fixed if necessary
      * context.productStore = productStore;
     context.isDemoStore = isDemoStore;*/
 
@@ -216,16 +216,16 @@ if (orderHeader) {
     orderItemChangeReasons = from("Enumeration").where("enumTypeId", "ODR_ITM_CH_REASON").queryList();
     context.orderItemChangeReasons = orderItemChangeReasons;
     
-    // CATO: Get placing party
+    // SCIPIO: Get placing party
     context.placingParty = orderReadHelper.getPlacingParty();
     
-    // CATO: Get order date
+    // SCIPIO: Get order date
     context.orderDate = orderHeader.orderDate;
     
-    // CATO: Get emails (includes both party's contact emails and additional order emails)
+    // SCIPIO: Get emails (includes both party's contact emails and additional order emails)
     context.orderEmailList = orderReadHelper.getOrderEmailList();
     
-    // CATO: exact payment amounts for all pay types
+    // SCIPIO: exact payment amounts for all pay types
     context.paymentMethodAmountMap = orderReadHelper.getOrderPaymentPreferenceTotalsByIdOrType();
 
 }

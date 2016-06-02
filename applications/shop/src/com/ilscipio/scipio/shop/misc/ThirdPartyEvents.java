@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.shop.misc;
+package com.ilscipio.scipio.shop.misc;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -107,11 +107,11 @@ public class ThirdPartyEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         GenericValue party = null;
 
-        // Cato: now points to shop
+        // SCIPIO: now points to shop
         java.net.URL shopPropertiesUrl = null;
 
         try {
-            // Cato: now points to shop
+            // SCIPIO: now points to shop
             shopPropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
@@ -189,11 +189,11 @@ public class ThirdPartyEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         GenericValue party = null;
 
-        // Cato: now points to shop
+        // SCIPIO: now points to shop
         java.net.URL shopPropertiesUrl = null;
 
         try {
-            // Cato: now points to shop
+            // SCIPIO: now points to shop
             shopPropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);

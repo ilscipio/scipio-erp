@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Cato: Generic products defined using a template to help fill up categories and test
+Scipio: Generic products defined using a template to help fill up categories and test
  -->
 <entity-engine-transform-xml template="component://shop/data/templates/commonproduct.ftl">
     <products>

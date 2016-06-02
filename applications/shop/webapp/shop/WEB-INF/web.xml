@@ -21,18 +21,18 @@ under the License.
 
 <web-app version="3.0">
 
-    <display-name>CATO - Shop</display-name>
+    <display-name>SCIPIO - Shop</display-name>
     <description>Demo eCommerce Store</description>
 
     <context-param>
         <description>A unique ID used to look up the WebSite entity</description>
         <param-name>webSiteId</param-name>
-        <param-value>CatoWebStore</param-value>
+        <param-value>ScipioWebStore</param-value>
     </context-param>
     <context-param>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
         <param-name>localDispatcherName</param-name>
-        <param-value>cato-shop</param-value>
+        <param-value>scipio-shop</param-value>
     </context-param>
     <context-param>
         <description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>
@@ -54,7 +54,7 @@ under the License.
     </context-param>
     <context-param>
         <description>
-            Cato: Enables or disables controller target view overrides (/control/requestname/viewname) in request handler. Default: true (enabled - stock behavior).
+            Scipio: Enables or disables controller target view overrides (/control/requestname/viewname) in request handler. Default: true (enabled - stock behavior).
         </description>
         <param-name>allowOverrideViewUri</param-name>
         <param-value>true</param-value>
@@ -178,13 +178,13 @@ under the License.
     </servlet-mapping>
 
     <session-config>
-        <!-- Cato: Increase shop session timeout to 24 hours. If more frequent logins are desired (as in some shops - for security),
+        <!-- Scipio: Increase shop session timeout to 24 hours. If more frequent logins are desired (as in some shops - for security),
             they would need to be coded in a less brute way, because by default this method will destroy the cart, which is rarely desired.
         <session-timeout>60</session-timeout>-->
         <session-timeout>1440</session-timeout>
         <cookie-config>
           <http-only>true</http-only>
-          <!-- Cato: FIXME?: Currently can't enable this, it is causing secure flag even for HTTP requests and
+          <!-- Scipio: FIXME?: Currently can't enable this, it is causing secure flag even for HTTP requests and
               causing a new session to be recreated at every non-HTTPS request
           <secure>true</secure>-->
         </cookie-config>

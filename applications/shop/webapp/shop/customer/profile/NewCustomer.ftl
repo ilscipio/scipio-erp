@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- CATO: DEPRECATED? This was an alternate newcustomer template not even in use in stock ecommerce screens -->
+<#-- SCIPIO: DEPRECATED? This was an alternate newcustomer template not even in use in stock ecommerce screens -->
 
 <@section title=uiLabelMap.EcommerceMyAccount>
     <form id="newUserForm" method="post" action="<@ofbizUrl>createCustomerProfile</@ofbizUrl>">

@@ -1,8 +1,8 @@
 /**
- * Cato: Specific to orderitems template.
+ * Scipio: Specific to orderitems template.
  */
 
-// Cato: Each item may have downloadable files; make them available here (by productId)
+// Scipio: Each item may have downloadable files; make them available here (by productId)
 productDownloads = [:];
 orderItems = context.orderItems;
 if (orderItems) {

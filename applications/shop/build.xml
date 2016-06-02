@@ -18,15 +18,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="CATO - Commerce Component" default="jar" basedir=".">
+<project name="SCIPIO - Commerce Component" default="jar" basedir=".">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <property name="desc" value="CATO Commerce Component (Shop)"/>
-    <property name="name" value="cato-commerce"/>
+    <property name="desc" value="SCIPIO Commerce Component (Shop)"/>
+    <property name="name" value="scipio-commerce"/>
     <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">

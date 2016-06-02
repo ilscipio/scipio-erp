@@ -21,7 +21,7 @@ under the License.
   <@section title="${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}">
   <div id="cartSummaryPanel" style="display: none;">
     <a href="javascript:void(0);" id="openCartPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
-    <#-- Cato: Always disable responsive on this one or it won't play nice with JS... -->
+    <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->
     <@table type="data-list" responsive=false id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">
       <@thead>
         <@tr>
@@ -45,7 +45,7 @@ under the License.
                 <#else>
                   <#assign parentProductId = cartLine.getProductId() />
                 </#if>
-                <#-- CATO: Uncomment if you want to use the image placeholders
+                <#-- SCIPIO: Uncomment if you want to use the image placeholders
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
                   <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
@@ -97,7 +97,7 @@ under the License.
             <@td>&nbsp;</@td>
             </@tr>
         </#list>
-        <#--Cato: styling issues: 
+        <#--Scipio: styling issues: 
         </@tbody>
         <@tfoot>-->
         <@tr>
@@ -143,7 +143,7 @@ under the License.
            </@td>
            <@td>&nbsp;</@td>     
         </@tr>
-      <#--Cato: styling issues: 
+      <#--Scipio: styling issues: 
       </@tfoot>-->
         </@tbody>
     </@table>
@@ -157,7 +157,7 @@ under the License.
           <div id="cartFormServerError" class="errorMessage"></div>
         </@alert>
 
-        <#-- Cato: Always disable responsive on this one or it won't play nice with JS... -->
+        <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->
         <@table type="data-list" responsive=false id="editCartPanel_cartItems">
           <@thead>
             <@tr>
@@ -181,7 +181,7 @@ under the License.
                     <#else>
                       <#assign parentProductId = cartLine.getProductId() />
                     </#if>
-                      <#-- CATO: Uncomment if you want to use the image placeholders
+                      <#-- SCIPIO: Uncomment if you want to use the image placeholders
                       <#if cartLine.getProductId()??>
                         <#if cartLine.getParentProductId()??>
                           <#assign parentProductId = cartLine.getParentProductId() />
@@ -268,7 +268,7 @@ under the License.
                 </#if>
               </@tr>
             </#list>
-            <#--Cato: styling issues: 
+            <#--Scipio: styling issues: 
             </@tbody>
             <@tfoot>-->
             <@tr>
@@ -331,7 +331,7 @@ under the License.
             </@tr>
 
             <#--
-            Cato: styling issues: 
+            Scipio: styling issues: 
             </@tfoot>-->
             </@tbody>
         </@table>

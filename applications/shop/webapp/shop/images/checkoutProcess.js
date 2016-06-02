@@ -21,7 +21,7 @@ var isShipStepValidate = false;
 var isShipOptionStepValidate = false;
 var isBillStepValidate = false;
 
-// Cato: Flag to request trigger reset of billing info when the form comes up
+// Scipio: Flag to request trigger reset of billing info when the form comes up
 var useResetBillingInfo = true;
 
 jQuery(document).ready(function(){
@@ -61,7 +61,7 @@ jQuery(document).ready(function(){
     // Update Shipping Address
     jQuery('#savePartyAndShippingContact').click(function() {
         if (validateShip.valid()) {
-        	useResetBillingInfo = true; // Cato: This will trigger a reset of billing info (which may depend on shipping info, but not always)
+        	useResetBillingInfo = true; // Scipio: This will trigger a reset of billing info (which may depend on shipping info, but not always)
             jQuery('#savePartyAndShippingContact').fadeOut('fast');
             jQuery('#processingShippingOptions').fadeIn('fast');
             if (createUpdateCustomerAndShippingAddress()){
@@ -120,7 +120,7 @@ jQuery(document).ready(function(){
     // For Billing Address Same As Shipping
     jQuery('#useShippingAddressForBilling').click(function() {
         useShippingAddressForBillingToggle();
-        // Cato: this should happen upon submit only...
+        // Scipio: this should happen upon submit only...
         //validateBill.valid();
     });
 
@@ -163,7 +163,7 @@ function getServerError(data) {
     if (jQuery.type(data._ERROR_MESSAGE_LIST_) !== 'undefined') {
         serverErrorHash = data._ERROR_MESSAGE_LIST_;
         jQuery.each(serverErrorHash, function(i, error) {
-        	// Cato: error appears to be a simple string, not an object; test to make sure
+        	// Scipio: error appears to be a simple string, not an object; test to make sure
         	var encodedErrorMessage = null;
         	if (jQuery.type(error.message) == 'string') {
             	encodedErrorMessage = jQuery('<div/>').text(error.message).html();
@@ -258,36 +258,36 @@ function showEditBillingPanel() {
          hideOrderSubmitPanel();
          jQuery('#editBillingPanel').slideDown();
     }
-    // Cato: We will only change these settings if it's the first time the panel is shown OR
+    // Scipio: We will only change these settings if it's the first time the panel is shown OR
     // whenever ship info panel info gets resubmitted.
     // Otherwise user loses input if he goes back and forth
     if (useResetBillingInfo) {
-	    // Cato: New case: if there was no initial billing contact mech, we use shipping by default
+	    // Scipio: New case: if there was no initial billing contact mech, we use shipping by default
 	    // IN ADDITION we can also pre-populate the first and last name
 	    if (!jQuery('#billToContactMechId').val()) {
-	    	// Cato: This doesn't work
+	    	// Scipio: This doesn't work
 	    	//jQuery('#useShippingAddressForBilling').val('true');
-	    	copyShippingAddressToBilling(true); // Cato: override
-	    	copyShippingFieldsToBilling(false); // Cato: don't override these ones, no harm to keep names
+	    	copyShippingAddressToBilling(true); // Scipio: override
+	    	copyShippingFieldsToBilling(false); // Scipio: don't override these ones, no harm to keep names
 	    	jQuery('#billingAddress').slideUp();
-	    	// Cato: This doesn't make sense, value should always be "N"
+	    	// Scipio: This doesn't make sense, value should always be "N"
 	    	//jQuery('#useShippingAddressForBilling').val('Y');
 	    	jQuery('#useShippingAddressForBilling').prop('checked', true);
 	    } else if (jQuery('#shipToContactMechId').val() != jQuery('#billToContactMechId').val()) {
-	    	// Cato: NOTE: I think we never transfer anything here because relying on a past or default bill method.
+	    	// Scipio: NOTE: I think we never transfer anything here because relying on a past or default bill method.
 	    	// If it was changed, it's still based on an existing bill method.
-	    	// Cato: This doesn't work
+	    	// Scipio: This doesn't work
 	        //jQuery('#useShippingAddressForBilling').val('false');
 	        jQuery('#billingAddress').slideDown();
-	        // Cato: This doesn't make sense, value should always be "N"
+	        // Scipio: This doesn't make sense, value should always be "N"
 	        //jQuery('#useShippingAddressForBilling').val('N');
 	        jQuery('#useShippingAddressForBilling').prop('checked', false);
 	    } else if (jQuery('#shipToContactMechId').val() == jQuery('#billToContactMechId').val()) {
-	    	// Cato: New case: Even if contact mech IDs were the same we still have to retransfer these
+	    	// Scipio: New case: Even if contact mech IDs were the same we still have to retransfer these
 	    	// because they may have changed since page loads. I think if don't it becomes inconsistent, but
 	    	// it's not 100% clear.
-	    	copyShippingAddressToBilling(true); // Cato: override
-	    	copyShippingFieldsToBilling(false); // Cato: don't override these ones, no harm to keep names
+	    	copyShippingAddressToBilling(true); // Scipio: override
+	    	copyShippingFieldsToBilling(false); // Scipio: don't override these ones, no harm to keep names
 	    }
 	    useResetBillingInfo = false;
     }
@@ -432,18 +432,18 @@ function setShippingOption() {
 function useShippingAddressForBillingToggle() {
     if (jQuery('#useShippingAddressForBilling').is(':checked') ) {
     	copyShippingAddressToBilling(true);
-    	// Cato: This doesn't make sense
+    	// Scipio: This doesn't make sense
         //jQuery('#useShippingAddressForBilling').val("Y");
     	jQuery('#useShippingAddressForBilling').prop('checked', true);
         jQuery('#billingAddress').slideUp();
     } else {
         jQuery('#billingAddress').slideDown();
-        // Cato: This doesn't make sense
+        // Scipio: This doesn't make sense
         //jQuery('#useShippingAddressForBilling').val("N");
         jQuery('#useShippingAddressForBilling').prop('checked', false);
     }
 }
-// Cato: Factored out copy of shipping address to billing, also FIXED
+// Scipio: Factored out copy of shipping address to billing, also FIXED
 // so that we first check if fields are empty before overriding
 function copyShippingAddressToBilling(override) {
 	if (override !== true) {
@@ -476,7 +476,7 @@ function copyShippingAddressToBilling(override) {
 	    jQuery('#billToStateProvinceGeoId').val(jQuery('#shipToStateProvinceGeoId').val());
 	}
 }
-// Cato: Copies shipping name to billing for convenience, but ONLY if they are not already filled
+// Scipio: Copies shipping name to billing for convenience, but ONLY if they are not already filled
 function copyShippingFieldsToBilling(override) {
 	if (override !== true) {
 		override = false;

@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 <#macro fieldErrors fieldName>
   <#if errorMessageList?has_content>
@@ -30,7 +30,7 @@ under the License.
     </ul>
   </#if>
 </#macro>
-<#-- Cato: invoker usable with @field pre/PostWidgetContent -->
+<#-- Scipio: invoker usable with @field pre/PostWidgetContent -->
 <#macro fieldErrorsInvoker args={}>
   <@fieldErrors fieldName=args.fieldName />
 </#macro>
@@ -44,7 +44,7 @@ under the License.
     </ul>
   </#if>
 </#macro>
-<#-- Cato: invoker usable with @field pre/PostWidgetContent -->
+<#-- Scipio: invoker usable with @field pre/PostWidgetContent -->
 <#macro fieldErrorsMultiInvoker args={}>
   <@fieldErrorsMulti fieldName1=args.fieldName1 fieldName2=args.fieldName2 fieldName3=args.fieldName3 fieldName4=args.fieldName4 />
 </#macro>

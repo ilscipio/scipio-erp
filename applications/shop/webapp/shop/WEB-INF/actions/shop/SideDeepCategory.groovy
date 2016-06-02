@@ -28,7 +28,7 @@ import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
 import org.apache.commons.lang.StringUtils;
 
-// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+// Scipio: NOTE: This script is responsible for checking whether solr is applicable.
 
 final module = "SideDeepCategoryGroovy";
 
@@ -37,7 +37,7 @@ currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrai
 Debug.logInfo("currentTrail: " + currentTrail, module);
 
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-// Cato: IMPORTANT: Check request attribs before parameters map
+// Scipio: IMPORTANT: Check request attribs before parameters map
 curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getAttribute("productCategoryId") ?: parameters.productCategoryId ?: "";
 //curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";    
 topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);
@@ -48,11 +48,11 @@ if (curCategoryId) {
     catLevel = res.get("categories");
 }
 
-// Cato: promo category (added for testing purposes; uncomment line below to remove again)
+// Scipio: promo category (added for testing purposes; uncomment line below to remove again)
 promoCategoryId = CatalogWorker.getCatalogPromotionsCategoryId(request, currentCatalogId);
 //promoCategoryId = null;
 
-// Cato: best-sell category (added for testing purposes; uncomment line below to remove again)
+// Scipio: best-sell category (added for testing purposes; uncomment line below to remove again)
 bestSellCategoryId = CatalogWorker.getCatalogBestSellCategoryId(request, currentCatalogId);
 //bestSellCategoryId = null;
 
@@ -69,7 +69,7 @@ Debug.logInfo("currentCategoryPath: " + currentCategoryPath, module)
 context.catList = catLevel;
 topLevelList = [topCategoryId];
 if (promoCategoryId) {
-    // Cato: Adding best-sell to top-levels for testing
+    // Scipio: Adding best-sell to top-levels for testing
     topLevelList.add(promoCategoryId);
 }
 if (bestSellCategoryId) {
@@ -82,7 +82,7 @@ context.topCategoryId = topCategoryId;
 context.promoCategoryId = promoCategoryId;
 context.bestSellCategoryId = bestSellCategoryId;
 
-// Cato: if multiple top categories, need to record the current base category
+// Scipio: if multiple top categories, need to record the current base category
 if (topLevelList.size() >= 2) {
     baseCategoryId = topCategoryId; // default if somehow none found
     if (currentCategoryPath) {
@@ -103,6 +103,6 @@ else {
 }
 context.baseCategoryId = baseCategoryId;
 
-context.catHelper = com.ilscipio.cato.shop.category.CategoryHelper.newInstance(context);
+context.catHelper = com.ilscipio.scipio.shop.category.CategoryHelper.newInstance(context);
 
 

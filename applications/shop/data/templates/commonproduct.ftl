@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <#--
-Cato: Template for generic Cato Shop products.
+Scipio: Template for generic Scipio Shop products.
 
 TODO: Should group entities together so faster data load, but can't without globals
 NOTE: This template does not support globals as-is (#global)
@@ -102,9 +102,9 @@ NOTE: This template does not support globals as-is (#global)
     <ProductCategoryMember productCategoryId="${extraCategoryId2}" productId="${productId}" fromDate="2001-05-13 12:00:00.0"/>
   </#if>
 
-    <ProductFacility productId="${productId}" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
-    <ProductFacilityLocation productId="${productId}" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02" minimumStock="2" moveQuantity="20"/>
-    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
+    <ProductFacility productId="${productId}" facilityId="ScipioShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
+    <ProductFacilityLocation productId="${productId}" facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" minimumStock="2" moveQuantity="20"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="${inventoryItemId}" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="${productId}" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
     <InventoryItemDetail inventoryItemId="${inventoryItemId}" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="${inventoryQuantity}" quantityOnHandDiff="${inventoryQuantity}" accountingQuantityDiff="${inventoryQuantity}"/>
     

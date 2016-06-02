@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 <@section><#-- title=uiLabelMap.OrderShippingInformation -->
   <form id="shipOptionsAndShippingInstructions" method="post" action="<@ofbizUrl>processShipOptions</@ofbizUrl>" name="${parameters.formNameValue}">

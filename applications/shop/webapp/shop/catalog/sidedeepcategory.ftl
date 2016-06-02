@@ -23,7 +23,7 @@ under the License.
     <#if catInfo?is_boolean>
       <#local catInfo = catHelper.makeCategoryInfo(productCategoryId)>
     </#if>
-    <#-- Cato: sometimes this happens for reasons I'm not sure... just prevent it here -->
+    <#-- Scipio: sometimes this happens for reasons I'm not sure... just prevent it here -->
     <#if previousCategoryId == productCategoryId>
       <#local previousCategoryId = "">
     </#if>
@@ -45,7 +45,7 @@ under the License.
     <#local class = addClassArg(class, "menu-${level}")>
     <@menuitem type="link" href=categoryUrl text=linkText class=class active=active>
       <#if isMultiLevel>
-        <#-- Cato: NOTE: this code does not work properly, use urlContainsPathPart
+        <#-- Scipio: NOTE: this code does not work properly, use urlContainsPathPart
         <#if currentCategoryPath.contains("/"+productCategoryId)>-->
         <#if isOnCurrentCatPath>
             <#assign nextLevel=level+1/>
@@ -59,7 +59,7 @@ under the License.
 </#macro>
 
 <#macro iterateList currentList currentLevel isMultiLevel previousCategoryId="">
-        <#-- Cato: NOTE: this will automatically figure out it's a nested menu and it will inherit the type of the parent -->
+        <#-- Scipio: NOTE: this will automatically figure out it's a nested menu and it will inherit the type of the parent -->
         <@menu id="menu-${currentLevel!0}">
           <#list catHelper.makeCategoryInfos(currentList)?sort_by("displayName") as catInfo>
               <#local item = catInfo.item>
@@ -71,21 +71,21 @@ under the License.
 <#if catList?has_content || topLevelList?has_content>
     <@menu id="menu-0" type="sidebar">
         <#-- NOTE: don't use has_content on this for now, empty list means no sub-cats, missing list means no top cat selected -->
-        <#if catList?? && catList.get("menu-0")??><#-- CATO: Display each categoryItem -->
+        <#if catList?? && catList.get("menu-0")??><#-- SCIPIO: Display each categoryItem -->
           <#-- current categories -->
           <@categoryList productCategoryId=baseCategoryId level=0 isMultiLevel=false path="" count=0 class=styles.menu_sidebar_itemdashboard! />
           <#list catHelper.makeCategoryInfos(catList.get("menu-0"))?sort_by("displayName") as catInfo>
-              <#-- Cato: sanity check - each item should have as parent the top category - should be able to remove this check later for speed, 
+              <#-- Scipio: sanity check - each item should have as parent the top category - should be able to remove this check later for speed, 
                   but helps in case something went wrong with query -->
               <#assign item = catInfo.item>
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, catInfo.productCategoryId)>
                 <@categoryList catInfo=catInfo productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=baseCategoryId!""/>
               <#else>
-                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: WARN: Side deep category " + item.catId + 
+                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Scipio: WARN: Side deep category " + item.catId + 
                     " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
               </#if>
           </#list>
-        <#elseif topLevelList?has_content><#-- Cato: Fallback for empty categories / catalogs -->
+        <#elseif topLevelList?has_content><#-- Scipio: Fallback for empty categories / catalogs -->
           <#-- top categories -->
           <#list catHelper.makeCategoryInfos(topLevelList) as catInfo>
               <@categoryList catInfo=catInfo productCategoryId=catInfo.productCategoryId level=0 isMultiLevel=false path="" count=0 previousCategoryId=""/>

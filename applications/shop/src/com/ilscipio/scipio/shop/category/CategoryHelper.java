@@ -1,4 +1,4 @@
-package com.ilscipio.cato.shop.category;
+package com.ilscipio.scipio.shop.category;
 
 import java.util.List;
 import java.util.Locale;

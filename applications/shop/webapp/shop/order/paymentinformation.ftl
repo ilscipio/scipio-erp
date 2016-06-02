@@ -18,14 +18,14 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = "${requestParameters.paymentMethodTypeId!}">
 </#if>
 <@script>
 function shipBillAddr() {
-    <#-- Cato: NOTE: delim here is &, NOT &amp; -->
+    <#-- Scipio: NOTE: delim here is &, NOT &amp; -->
     <#if (requestParameters.singleUsePayment!"N") == "Y">
       <#assign singleUse = "&singleUsePayment=Y">
     <#else>

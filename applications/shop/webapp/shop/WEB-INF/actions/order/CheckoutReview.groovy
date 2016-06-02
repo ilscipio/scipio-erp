@@ -63,7 +63,7 @@ context.paymentMethods = cart.getPaymentMethods();
 paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 paymentMethodType = null;
 paymentMethodTypeId = null;
-/* Cato: This contradicts OrderStatus.groovy. paymentMethodType should only be set to a 
+/* Scipio: This contradicts OrderStatus.groovy. paymentMethodType should only be set to a 
 if (paymentMethodTypeIds) {
     paymentMethodTypeId = paymentMethodTypeIds[0];
     paymentMethodType = from("PaymentMethodType").where("paymentMethodTypeId", paymentMethodTypeId).queryOne();
@@ -117,7 +117,7 @@ context.orderGrandTotal = cart.getGrandTotal();
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
 
-// CATO: Get placing party
+// SCIPIO: Get placing party
 placingPartyId = cart.getPlacingCustomerPartyId();
 context.placingPartyId = placingPartyId;
 placingParty = null;
@@ -130,13 +130,13 @@ if (placingPartyId) {
 }
 context.placingParty = placingParty;
 
-// CATO: Get order date. If it's not yet set, use nowTimestamp
+// SCIPIO: Get order date. If it's not yet set, use nowTimestamp
 context.orderDate = cart.getOrderDate() ?: nowTimestamp;
 
-// CATO: Get emails (all combined)
+// SCIPIO: Get emails (all combined)
 context.orderEmailList = cart.getOrderEmailList();
 
-// CATO: exact payment amounts for all pay types
+// SCIPIO: exact payment amounts for all pay types
 context.paymentMethodAmountMap = cart.getPaymentAmountsByIdOrType();
 
 

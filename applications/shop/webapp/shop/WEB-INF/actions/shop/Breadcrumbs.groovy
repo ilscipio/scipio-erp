@@ -26,7 +26,7 @@ import javolution.util.FastList;
 import com.ilscipio.solr.SolrUtil;
 import org.ofbiz.product.product.ProductContentWrapper;
 
-// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+// Scipio: NOTE: This script is responsible for checking whether solr is applicable.
 
 module = "Breadcrumbs.groovy";
 breadcrumbsList = FastList.newInstance();
@@ -36,7 +36,7 @@ try{
 	currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
 	
 	currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-	// Cato: IMPORTANT: Check request attribs before parameters map
+	// Scipio: IMPORTANT: Check request attribs before parameters map
 	curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getAttribute("productCategoryId") ?: parameters.productCategoryId ?: "";
 	curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";
 	if(UtilValidate.isEmpty(curCategoryId)){

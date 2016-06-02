@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 <@script>
 function shipBillAddr() {
@@ -37,7 +37,7 @@ function shipBillAddr() {
 
 <#macro menuContent menuArgs={}>
   <#if (requestParameters.singleUsePayment!"N") != "Y">
-    <#-- Cato: WARN: Freemarker does not support capturing output of screens.render currently, we must
+    <#-- Scipio: WARN: Freemarker does not support capturing output of screens.render currently, we must
         pass our args to the screen so it will do the @menu itself -->
     <@render resource=anonymoustrailScreen ctxVars={"anontrailMenuArgs":menuArgs}/>
   </#if>

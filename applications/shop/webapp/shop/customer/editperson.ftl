@@ -18,11 +18,11 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Cato: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
-<#assign sectionTitle><#if person??><#-- Cato: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
+<#assign sectionTitle><#if person??><#-- Scipio: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
@@ -30,7 +30,7 @@ under the License.
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
-  <#-- Cato: Bugfix? action used to be this: <#if person??>updatePerson<#else>createPerson/${donePage}</#if> 
+  <#-- Scipio: Bugfix? action used to be this: <#if person??>updatePerson<#else>createPerson/${donePage}</#if> 
     but the view override is inconsistent with the other edit*.ftl pages. -->
   <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>createPerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editpersonform">    
 

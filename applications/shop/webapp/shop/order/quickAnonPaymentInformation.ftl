@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = (requestParameters.paymentMethodTypeId!"")?string>
@@ -140,7 +140,7 @@ function getPaymentInformation() {
            <option value="EXT_OFFLINE"<#if (parameters.paymentMethodTypeId!"") == "EXT_OFFLINE"> selected="selected"</#if>>${uiLabelMap.OrderPaymentOfflineCheckMoney}</option>
          </#if>
       </@field>
-      <#-- Cato: Loaded using javascript... -->
+      <#-- Scipio: Loaded using javascript... -->
       <div id="paymentInfoSection"></div>
       
       <#--<hr />-->
@@ -148,7 +148,7 @@ function getPaymentInformation() {
         <#-- gift card fields -->
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
           <@field type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" onClick="javascript:getGCInfo();" label=uiLabelMap.AccountingCheckGiftCard />
-          <#-- Cato: Loaded using javascript... -->
+          <#-- Scipio: Loaded using javascript... -->
           <div id="giftCardSection"></div>
         </#if>
     </form>

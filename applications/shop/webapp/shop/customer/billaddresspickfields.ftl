@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Cato: Based on editcreditcard.ftl -->
+<#-- Scipio: Based on editcreditcard.ftl -->
 
 <#if !bapfParams??>
   <#assign bapfParams = parameters>
@@ -27,7 +27,7 @@ under the License.
 <#-- NOTE: You can override the look of the new address (postal code, country, etc.) fields 
     specifically using this map, which is args to @fields (see checkoutpayment.ftl for example)
     This is a map that itself may contain fieldArgs map 
-    This is where the Cato macro arg map support unleashes its power! -->
+    This is where the Scipio macro arg map support unleashes its power! -->
 <#assign newAddressFieldsWrapperArgs = bapfNewAddressFieldsWrapperArgs!{
     "type":"default", "ignoreParentField":true,
     "fieldArgs": {
@@ -143,7 +143,7 @@ under the License.
     <@addrContent />
   </#if>
 
-    <#if !postalAddressInfos?has_content && !curContactMech?? && !useNewAddr><#-- Cato: Don't show if also showing "new" option -->
+    <#if !postalAddressInfos?has_content && !curContactMech?? && !useNewAddr><#-- Scipio: Don't show if also showing "new" option -->
       <@commonMsg type="info">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
     </#if>
 </@fields>

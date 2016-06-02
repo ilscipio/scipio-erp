@@ -1,5 +1,5 @@
 
-<#-- Cato: common shop-wide helper definitions and macros -->
+<#-- Scipio: common shop-wide helper definitions and macros -->
 
 <#macro addressUpdateLink address updateLink class="">
   <#local class = addClassArg(class, styles.action_update!)>
@@ -169,16 +169,16 @@
 <#macro initItemSelectionWithContentFormScript itemFieldClass contentItems=[]
     updateCallbackPerElemJs="" updateCallbackPreVisibJs="" updateCallbackPostVisibJs="">
 
-if (typeof getCatoFieldCheckElems === 'undefined') {
+if (typeof getScipioFieldCheckElems === 'undefined') {
     <#-- returns radio and/or checkbox with given class -->
-    function getCatoFieldCheckElemsByClass(fieldClass) {
+    function getScipioFieldCheckElemsByClass(fieldClass) {
         <#-- NOTE: alt markup support -->
         return jQuery.merge(jQuery('input.'+fieldClass), jQuery('.'+fieldClass+' input'))
     }
 }  
   
 jQuery(document).ready(function() {
-    var allItems = getCatoFieldCheckElemsByClass('${escapePart(itemFieldClass, 'js')}');
+    var allItems = getScipioFieldCheckElemsByClass('${escapePart(itemFieldClass, 'js')}');
     
     var contentItemMap = {
       <#list contentItems as item>
@@ -252,7 +252,7 @@ jQuery(document).ready(function() {
 
 </#macro>
 
-<#-- Cato: local macro where cells of label and widget areas are inverted and tweaked 
+<#-- Scipio: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: You can set labelContentFieldsType="default-compact" for a different default look
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType -->
 <#macro commonInvField args={} inlineArgs...>
@@ -268,7 +268,7 @@ jQuery(document).ready(function() {
     <@cell class=addClassArg(gridStyles.labelArea, "${styles.text_right!}")>
       <#nested>
     </@cell>
-    <#local id = (getRequestVar("catoLastFieldInfo").id)!"">
+    <#local id = (getRequestVar("scipioLastFieldInfo").id)!"">
     <@cell class=gridStyles.widgetArea>
       ${labelContent}
     </@cell>  
@@ -369,7 +369,7 @@ jQuery(document).ready(function() {
   </#if>
     <#local args = inlineArgs>
     <@field type="select" name=name label=label>
-        <#-- Cato: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+        <#-- Scipio: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
             This is probably an error because the values read from DB become hard to re-localize.
             It is better to store these as values coded in english (and localize on print only). -->
         <#assign personalTitle = params[name]!(args.personalTitle)!"">
@@ -403,7 +403,7 @@ jQuery(document).ready(function() {
 
 
 <#function getLocalizedPersonalTitle personalTitle>
-    <#-- Cato: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+    <#-- Scipio: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
         This is probably an error because the values read from DB become hard to re-localize.
         It is better to store these as values coded in english (and localize on print only). 
         But otherwise, this function is a best-effort only. -->

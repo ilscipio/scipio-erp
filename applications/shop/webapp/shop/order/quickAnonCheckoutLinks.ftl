@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 <@script>
 function submitForm(form) {
@@ -27,7 +27,7 @@ function submitForm(form) {
 </@script>
 
 <@menu type="button">
-    <#-- Cato: TODO: localize -->
+    <#-- Scipio: TODO: localize -->
     <#assign submitFormOnClick><#if callSubmitForm??>javascript:submitForm(document.${parameters.formNameValue!});</#if></#assign>
     <@menuitem type="link" href=makeOfbizUrl("quickAnonSetCustomer") class="+${styles.action_run_session!} ${styles.action_update!}" onClick=submitFormOnClick text="Personal Info" />
     <@menuitem type="link" href=makeOfbizUrl("quickAnonOrderReview") class="+${styles.action_run_session!} ${styles.action_update!}" onClick=submitFormOnClick text="Review Order" disabled=(!enableShipmentMethod??) />

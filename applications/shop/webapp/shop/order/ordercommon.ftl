@@ -1,5 +1,5 @@
 <#--
-Cato: Local order template common defs
+Scipio: Local order template common defs
 -->
 <#include "../common/common.ftl">
 

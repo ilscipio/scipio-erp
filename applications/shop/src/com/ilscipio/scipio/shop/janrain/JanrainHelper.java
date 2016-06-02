@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.shop.janrain;
+package com.ilscipio.scipio.shop.janrain;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
 public class JanrainHelper {
 
     public static final String module = JanrainHelper.class.getName();
-    // Cato: now points to shop
+    // SCIPIO: now points to shop
     private static String apiKey = UtilProperties.getPropertyValue("shop.properties", "janrain.apiKey");
     private static String baseUrl = UtilProperties.getPropertyValue("shop.properties", "janrain.baseUrl");
     public JanrainHelper(String apiKey, String baseUrl) {

@@ -19,13 +19,13 @@ under the License.
 
 <#include "customercommon.ftl">
 
-<#-- Cato: TODO?: Some of this is redundant with newcustomer.ftl - investigate -->
+<#-- Scipio: TODO?: Some of this is redundant with newcustomer.ftl - investigate -->
 
 <#if !cbfParams??>
   <#assign cbfParams = parameters>
 </#if>
 
-<#-- Cato: NOTE: fields duplicated from old checkout custsettings.ftl -->
+<#-- Scipio: NOTE: fields duplicated from old checkout custsettings.ftl -->
 <#-- FIXME: these only source from parameters map, need more fallbacks/sources... -->
 
     <@personalTitleField params=cbfParams name="${fieldNamePrefix}personalTitle" label=uiLabelMap.CommonTitle />

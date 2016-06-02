@@ -367,7 +367,7 @@
         <value xml:lang="zh">确信包括了你的订单 #</value>
         <value xml:lang="zh_TW">確任包括你的訂單 #</value>
     </property>
-    <!-- CATO: ToDO: Remove-->
+    <!-- SCIPIO: ToDO: Remove-->
     <!-- 
     <property key="EcommerceBlogAddResponse">
         <value xml:lang="da">Tilføj et svar</value>

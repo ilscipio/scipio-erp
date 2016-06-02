@@ -21,7 +21,7 @@ under the License.
 <entity-engine-xml>
     <ProductStore productStoreId="RentalStore" storeName="Open Travel system Demo Site" companyName="Open Travel Ltd" title="Ready for your reservation"
         subtitle="Part of the Apache OFBiz Family of Open Source Software" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y" isImmediatelyFulfilled="Y"
-        inventoryFacilityId="CatoShopWarehouse" oneInventoryFacility="N" checkInventory="N" reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="N" checkInventory="N" reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="EUR" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y"
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
@@ -62,7 +62,7 @@ headerLogo="/images/opentravelsystem_logo.jpg"
 
     <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_PWD_RETRIEVE" bodyScreenLocation="component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@example.com"/>
 
-    <ProductStoreFacility productStoreId="RentalStore" facilityId="CatoShopWarehouse" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductStoreFacility productStoreId="RentalStore" facilityId="ScipioShopWarehouse" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="RentalStore" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreKeywordOvrd productStoreId="RentalStore" keyword="rental" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
 

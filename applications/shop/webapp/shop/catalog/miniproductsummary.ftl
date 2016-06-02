@@ -42,7 +42,7 @@ under the License.
                ${productImage!""}
             </@pli>
         <@pli type="description">
-            <#-- Cato: TODO: Localize -->
+            <#-- Scipio: TODO: Localize -->
             ${miniProductContentWrapper.get("PRODUCT_NAME", "html")!"No Name Available"}
          </@pli>
 

@@ -13,15 +13,15 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.category.CategoryContentWrapper;
 
-// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+// Scipio: NOTE: This script is responsible for checking whether solr is applicable.
 
-// Cato: this allows to use the script for local scopes without affecting request
+// Scipio: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;
 if (localVarsOnly == null) {
     localVarsOnly = false;
 }
 context.remove("localVarsOnly");
-// Cato: In some screens may need to read request vars/params, but not update request...
+// Scipio: In some screens may need to read request vars/params, but not update request...
 updateRequestVars = context.updateRequestVars;
 if (updateRequestVars == null) {
     if (localVarsOnly) {
@@ -41,7 +41,7 @@ if (!localVarsOnly) {
         productCategoryId = request.getAttribute("productCategoryId") ?: parameters.category_id;
     }
     if (updateRequestVars) {
-        // Cato: If we're allowed to update request vars, do this call which will ensure
+        // Scipio: If we're allowed to update request vars, do this call which will ensure
         // the session trail and request attributes are set in the case that it was not already done previously in request.
         // In stock Ofbiz, this was only done in special filter requests, but this leaves other requests barren.
         // NOTE: This could also be done in uri="category" request as event, but here it has more chances of running
@@ -78,7 +78,7 @@ if (category) {
         detailScreen = category.detailScreen;
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request);
-    // Cato: don't want page title overridden/forced by groovy
+    // Scipio: don't want page title overridden/forced by groovy
     //context.title = categoryContentWrapper.get("CATEGORY_NAME","raw").toString();
     context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME","raw").toString();
     categoryDescription = categoryContentWrapper.get("DESCRIPTION","raw").toString();
@@ -99,9 +99,9 @@ if (templatePathPrefix) {
 context.detailScreen = detailScreen;
 
 if (updateRequestVars) {
-    // Cato: NOTE: If this happens more than once in a request, you need to set updateRequestVars Boolean false in some of the screens
+    // Scipio: NOTE: If this happens more than once in a request, you need to set updateRequestVars Boolean false in some of the screens
     // Ideally this should only be done from the actions of full screen definitions (not screen parts)
-    Debug.logInfo("Cato: Setting request-wide productCategoryId (should be once per request only!): " + productCategoryId, "Category.groovy");
+    Debug.logInfo("Scipio: Setting request-wide productCategoryId (should be once per request only!): " + productCategoryId, "Category.groovy");
     // Never do this; it is already done better in a previous call (if needed)
     //request.setAttribute("productCategoryId", productCategoryId);
     request.setAttribute("defaultViewSize", "9");

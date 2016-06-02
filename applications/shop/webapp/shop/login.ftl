@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: now points to shop -->
+<#-- Scipio: now points to shop -->
 <#assign janrainEnabled = getPropertyValue("shop.properties", "janrain.enabled")!"">
 <#assign appName = getPropertyValue("shop.properties", "janrain.appName")!"">
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
@@ -24,7 +24,7 @@ under the License.
 <@row class="+Signlogin">
     <@cell columns=6>
         <@section title=uiLabelMap.CommonRegistered>
-            <#-- CATO: Janrain is not fully tested. Use at your own risk -->
+            <#-- SCIPIO: Janrain is not fully tested. Use at your own risk -->
             <#if janrainEnabled == "Y">
                 <@script>
                 (function() {
@@ -91,7 +91,7 @@ under the License.
                                         <@row>
                                             <@cell class="${styles.grid_large!}centered">
                                                 <@section title=uiLabelMap.CommonPassword>
-                                                    <#-- Cato: WARN: Proper HTML-escaping of params high importance here -->
+                                                    <#-- Scipio: WARN: Proper HTML-escaping of params high importance here -->
                                                     <form method="post" action="${escapeFullUrl(makeOfbizUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
                                                         <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
                                                         <@row>
@@ -109,7 +109,7 @@ under the License.
                                 </small>
                              </@cell>
                             <@cell class="+${styles.text_right!}" columns=3>
-                                <#-- Cato: workaround for form-within-form and form fields getting mixed up (form closed earlier):
+                                <#-- Scipio: workaround for form-within-form and form fields getting mixed up (form closed earlier):
                                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>-->
                                 <@field type="submit" submitType="link" href="javascript:document.loginform.submit();" widgetOnly=true value=uiLabelMap.CommonLogin class="${styles.link_run_session!} ${styles.action_login!}"/>
                             </@cell>

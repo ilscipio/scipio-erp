@@ -21,7 +21,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- Cato: new -->
+    <!-- Scipio: new -->
     <screen name="customerBasicFields">
         <section>
             <actions>
@@ -33,7 +33,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: new -->
+    <!-- Scipio: new -->
     <screen name="eftAccountFields">
         <section>
             <actions>
@@ -45,7 +45,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: Original: component://accounting/widget/CommonScreens.xml#creditCardFields -->
+    <!-- Scipio: Original: component://accounting/widget/CommonScreens.xml#creditCardFields -->
     <screen name="creditCardFields">
         <section>
             <actions>
@@ -58,7 +58,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: Based on a combination of editcreditcard and editcontactmech -->
+    <!-- Scipio: Based on a combination of editcreditcard and editcontactmech -->
     <screen name="billaddresspickfields">
         <section>
             <actions>
@@ -101,7 +101,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: new -->
+    <!-- Scipio: new -->
     <screen name="postalAddressFields">
         <section>
             <actions>
@@ -887,7 +887,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: Duplicated from: component://marketing/widget/ContactListScreens.xml#OptOutResponse -->
+    <!-- Scipio: Duplicated from: component://marketing/widget/ContactListScreens.xml#OptOutResponse -->
     <screen name="OptOutResponse">
         <section>
             <actions>
@@ -904,7 +904,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: Duplicated from: component://marketing/widget/ContactListScreens.xml#DefaultOptOutScreen -->
+    <!-- Scipio: Duplicated from: component://marketing/widget/ContactListScreens.xml#DefaultOptOutScreen -->
     <screen name="DefaultOptOutScreen">
         <section>            
             <widgets>

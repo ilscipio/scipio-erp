@@ -20,37 +20,37 @@ under the License.
 
 <entity-engine-xml>
 
-    <Facility facilityId="CatoShopWarehouse" facilityTypeId="WAREHOUSE" facilityName="Web Store Warehouse" description="Warehouse exclusively for the Web Store" ownerPartyId="Company" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" defaultWeightUomId="WT_lb" defaultDaysToShip="25" geoPointId="9000"/>
+    <Facility facilityId="ScipioShopWarehouse" facilityTypeId="WAREHOUSE" facilityName="Web Store Warehouse" description="Warehouse exclusively for the Web Store" ownerPartyId="Company" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" defaultWeightUomId="WT_lb" defaultDaysToShip="25" geoPointId="9000"/>
 
     <ContactMech contactMechId="9200" contactMechTypeId="POSTAL_ADDRESS"/>
     <ContactMech contactMechId="9201" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMech contactMechId="9202" contactMechTypeId="EMAIL_ADDRESS" infoString="ofbiztest@example.com"/>
     <PostalAddress contactMechId="9200" toName="Company XYZ" attnName="ZJAA" address1="2003 Open Blvd" city="Orem" postalCode="84058" countryGeoId="USA" stateProvinceGeoId="UT" geoPointId="9000"/>
     <TelecomNumber contactMechId="9201" areaCode="801" contactNumber="555-5555"/>
-    <FacilityContactMech facilityId="CatoShopWarehouse" contactMechId="9200" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityContactMech facilityId="CatoShopWarehouse" contactMechId="9201" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityContactMech facilityId="CatoShopWarehouse" contactMechId="9202" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityContactMechPurpose facilityId="CatoShopWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityContactMechPurpose facilityId="CatoShopWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityContactMechPurpose facilityId="CatoShopWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityContactMechPurpose facilityId="CatoShopWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityContactMechPurpose facilityId="CatoShopWarehouse" contactMechId="9202" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 12:00:00.0"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL01" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="01"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL01" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="01"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL02" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="02"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="02"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL03" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="03"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL03" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="03"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL04" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="04"/>
-    <FacilityLocation facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL04" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="04"/>
-    <FacilityLocationGeoPoint facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL01" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
-    <FacilityLocationGeoPoint facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
-    <FacilityLocationGeoPoint facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL03" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
-    <FacilityLocationGeoPoint facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL04" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
+    <FacilityContactMech facilityId="ScipioShopWarehouse" contactMechId="9200" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="ScipioShopWarehouse" contactMechId="9201" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="ScipioShopWarehouse" contactMechId="9202" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="ScipioShopWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="ScipioShopWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="ScipioShopWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="ScipioShopWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="ScipioShopWarehouse" contactMechId="9202" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLLL01" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="01"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="01"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLLL02" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="02"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="02"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLLL03" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="03"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL03" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="03"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLLL04" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="04"/>
+    <FacilityLocation facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL04" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="04"/>
+    <FacilityLocationGeoPoint facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLLL01" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
+    <FacilityLocationGeoPoint facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
+    <FacilityLocationGeoPoint facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLLL03" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
+    <FacilityLocationGeoPoint facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL04" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
 
-    <ProductStore productStoreId="CatoShop" storeName="CATO Shop" companyName="ilscipio GmbH" title="CATO"
+    <ProductStore productStoreId="ScipioShop" storeName="SCIPIO Shop" companyName="ilscipio GmbH" title="SCIPIO"
         subtitle="Modern eCommerce" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
-        inventoryFacilityId="CatoShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
@@ -60,62 +60,62 @@ under the License.
         storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
         visualThemeId="FOUNDATION_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
 
-    <!-- <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="testRandomAuthorize"/> -->
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease" paymentCustomMethodId="CC_RELEASE_TEST"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture" paymentCustomMethodId="CC_CAPTURE_TEST"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund" paymentCustomMethodId="CC_REFUND_TEST"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor" paymentCustomMethodId="EFT_AUTH_ALWAYSAPPRO"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveGCProcessor" paymentCustomMethodId="GIFT_AUTH_ALWAYSAPPR"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease" paymentCustomMethodId="GIFT_RELEASE_TEST"/>
+    <!-- <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="testRandomAuthorize"/> -->
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease" paymentCustomMethodId="CC_RELEASE_TEST"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture" paymentCustomMethodId="CC_CAPTURE_TEST"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund" paymentCustomMethodId="CC_REFUND_TEST"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor" paymentCustomMethodId="EFT_AUTH_ALWAYSAPPRO"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveGCProcessor" paymentCustomMethodId="GIFT_AUTH_ALWAYSAPPR"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease" paymentCustomMethodId="GIFT_RELEASE_TEST"/>
 
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="PAYPAL_CONFIG"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="WORLDPAY_CONFIG"/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="EXT_OFFLINE" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="EXT_COD" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
-    <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="EXT_BILLACT" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="PAYPAL_CONFIG"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="WORLDPAY_CONFIG"/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="EXT_OFFLINE" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="EXT_COD" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
+    <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="EXT_BILLACT" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_ODR_CONFIRM" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice" xslfoAttachScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNoticePdf" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_ODR_COMPLETE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="OFBiz Demo - Order Payment Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="OFBiz Demo - Shipment Complete Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_CONFIRM" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice" xslfoAttachScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNoticePdf" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_COMPLETE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="OFBiz Demo - Order Payment Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="OFBiz Demo - Shipment Complete Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="OFBiz Demo - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnComplete" subject="OFBiz Demo - Return Completed #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_RTN_CANCEL" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnCancel" subject="OFBiz Demo - Return Cancelled #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="OFBiz Demo - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnComplete" subject="OFBiz Demo - Return Completed #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_RTN_CANCEL" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnCancel" subject="OFBiz Demo - Return Cancelled #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_GC_PURCHASE" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase" fromAddress="ofbiztest@example.com" subject="A Gift From ${senderName}!"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_GC_RELOAD" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload" fromAddress="ofbiztest@example.com" subject="Gift Card Reload Results"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_GC_PURCHASE" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase" fromAddress="ofbiztest@example.com" subject="A Gift From ${senderName}!"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_GC_RELOAD" bodyScreenLocation="component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload" fromAddress="ofbiztest@example.com" subject="Gift Card Reload Results"/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_TELL_FRIEND" bodyScreenLocation="component://shop/widget/EmailProductScreens.xml#TellFriend" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_TELL_FRIEND" bodyScreenLocation="component://shop/widget/EmailProductScreens.xml#TellFriend" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@example.com"/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_PWD_RETRIEVE" bodyScreenLocation="component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail" subject="OFBiz Demo - Password Reminder (${userLogin.userLoginId})" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_PWD_RETRIEVE" bodyScreenLocation="component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail" subject="OFBiz Demo - Password Reminder (${userLogin.userLoginId})" fromAddress="ofbiztest@example.com"/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_QUO_CONFIRM" bodyScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple" xslfoAttachScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#QuoteReport" subject="OFBiz Demo - Quote Confirmation #${quoteId}" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_QUO_CONFIRM" bodyScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple" xslfoAttachScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#QuoteReport" subject="OFBiz Demo - Quote Confirmation #${quoteId}" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PARTY_REGIS_CONFIRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_CUST_REGISTER" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="UPD_PRSNL_INF_CNFRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#ChangePersonalInfoNotification" subject="Personal Information Updated" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_EMAIL_VERIFY" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#VerifyEmailAddressNotification" subject="Email Address Verification" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="PRDS_CUST_ACTIVATED" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#AccountActivatedNotification" subject="Account Activated" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PARTY_REGIS_CONFIRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_CUST_REGISTER" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="UPD_PRSNL_INF_CNFRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#ChangePersonalInfoNotification" subject="Personal Information Updated" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_EMAIL_VERIFY" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#VerifyEmailAddressNotification" subject="Email Address Verification" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_CUST_ACTIVATED" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#AccountActivatedNotification" subject="Account Activated" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
 
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="CONT_NOTI_EMAIL" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactUsEmailNotification" subject="Contact-us Information Notification" fromAddress="ofbiztest@example.com" />
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="CONT_NOTI_EMAIL" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactUsEmailNotification" subject="Contact-us Information Notification" fromAddress="ofbiztest@example.com" />
     
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="SUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListSubscribeEmail" subject="Subscribe Contact List" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="UNSUB_CONT_LIST_VERI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeVerifyEmail" subject="Verify Unsubscribe Contact List" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="UNSUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeEmail" subject="Unsubscribe Contact List" fromAddress="ofbiztest@example.com"/>
-    <ProductStoreEmailSetting productStoreId="CatoShop" emailType="CONT_EMAIL_TEMPLATE" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListEmailTemplate"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="SUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListSubscribeEmail" subject="Subscribe Contact List" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="UNSUB_CONT_LIST_VERI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeVerifyEmail" subject="Verify Unsubscribe Contact List" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="UNSUB_CONT_LIST_NOTI" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListUnsubscribeEmail" subject="Unsubscribe Contact List" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="CONT_EMAIL_TEMPLATE" bodyScreenLocation="component://shop/widget/EmailContactListScreens.xml#ContactListEmailTemplate"/>
 
-    <WebAnalyticsConfig webSiteId="CatoWebStore" webAnalyticsTypeId="GOOGLE_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
-    <WebAnalyticsConfig webSiteId="CatoWebStore" webAnalyticsTypeId="BING_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
+    <WebAnalyticsConfig webSiteId="ScipioWebStore" webAnalyticsTypeId="GOOGLE_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
+    <WebAnalyticsConfig webSiteId="ScipioWebStore" webAnalyticsTypeId="BING_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
 
-    <WebSite webSiteId="CatoWebStore" siteName="CATO Shop Web Site" productStoreId="CatoShop" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+    <WebSite webSiteId="ScipioWebStore" siteName="SCIPIO Shop Web Site" productStoreId="ScipioShop" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
 
-    <ProductStoreFacility productStoreId="CatoShop" facilityId="CatoShopWarehouse" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="CatoShop" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductStoreKeywordOvrd productStoreId="CatoShop" keyword="electronic" fromDate="2001-05-13 12:00:00.0" target="ELTRN-100" targetTypeEnumId="KOTT_PRODCAT"/>
+    <ProductStoreFacility productStoreId="ScipioShop" facilityId="ScipioShopWarehouse" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="ScipioShop" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="electronic" fromDate="2001-05-13 12:00:00.0" target="ELTRN-100" targetTypeEnumId="KOTT_PRODCAT"/>
 
 </entity-engine-xml>

@@ -17,10 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 
-<#-- Cato: DEPRECATED old (preserve for links) Superseded by checkoutstepsfull.ftl
+<#-- Scipio: DEPRECATED old (preserve for links) Superseded by checkoutstepsfull.ftl
 <@script>
 function submitForm(form) {
    form.submit();

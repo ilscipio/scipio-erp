@@ -23,7 +23,7 @@ under the License.
 
     <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
     
-      <#-- Cato: NOTE: Not all divs below need to be @sections, only those that had "screenlet" -->
+      <#-- Scipio: NOTE: Not all divs below need to be @sections, only those that had "screenlet" -->
     
       <div id="checkoutPanel">
 
@@ -220,7 +220,7 @@ under the License.
                   <div id="billingFormServerError" class="errorMessage"></div>
                 </@alert>
                 
-                <#-- Cato: default is now Y if billToContactMechId was not set on page load. Only case we don't is if there was an initial billing contact mech different from ship contact mech.
+                <#-- Scipio: default is now Y if billToContactMechId was not set on page load. Only case we don't is if there was an initial billing contact mech different from ship contact mech.
                     old: checked=((useShippingAddressForBilling!"")=="Y") 
                     NOTE: The values will be loaded by Javascript, which we can get away with and need to do anyway because the user may have changed
                         the ship address since this page was loaded, so no point in doing statically 

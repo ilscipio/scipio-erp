@@ -18,14 +18,14 @@
     under the License.
 -->
 <entity-engine-xml>
-    <!-- Cato: Category and Product localization -->
+    <!-- Scipio: Category and Product localization -->
 
     <!-- NOTE: For these to take effect, the corresponding ProductCategory and Product fields must be omitted,
         otherwise they override the data here -->
 
     <!-- CATEGORIES (names) -->
 
-    <!-- Cato: TEMPLATE (variables surrounded by underscores _XXX_)
+    <!-- Scipio: TEMPLATE (variables surrounded by underscores _XXX_)
     <DataResource dataResourceId="DR_ID_DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="DR_ID_DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 

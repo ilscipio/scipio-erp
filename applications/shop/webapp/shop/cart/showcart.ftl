@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- CATO: ToDo: Rewrite the following javascript -->
+<#-- SCIPIO: ToDo: Rewrite the following javascript -->
 <@script>
 function addToList() {
     var cform = document.cartform;
@@ -209,7 +209,7 @@ function setAlternateGwp(field) {
                         <@td>
                             <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                                 <#if fixedAssetExist == true && cartLine.getReservStart()??>
-                                  <#-- Cato: NOTE: stock bugfixes applied here -->
+                                  <#-- Scipio: NOTE: stock bugfixes applied here -->
                                   <@modal id="${cartLine.productId}_q" label="${cartLine.getQuantity()?string.number}">   
                                     <@fields type="default-compact"> 
                                       <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
@@ -223,7 +223,7 @@ function setAlternateGwp(field) {
                                 </#if>
                             <#else><#-- Is Promo or Shoppinglist -->
                                 <#if fixedAssetExist == true>
-                                    <#-- Cato:FIXME?: can't put in modal easily because inputs end up outside form -->
+                                    <#-- Scipio:FIXME?: can't put in modal easily because inputs end up outside form -->
                                     <#if cartLine.getReservStart()??>
                                       <@fields type="default-compact"> 
                                         <@field type="datetime" dateType="date" name="reservStart_${cartLineIndex}" maxlength=10 label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) 
@@ -255,7 +255,7 @@ function setAlternateGwp(field) {
                         <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value="${cartLineIndex}" onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
                     </@tr>
                 </#list>
-            <#--Cato: styling issues: 
+            <#--Scipio: styling issues: 
             </@tbody>
             <@tfoot>-->
                     <@tr>
@@ -313,7 +313,7 @@ function setAlternateGwp(field) {
                     <@td>&nbsp;</@td>
                 </@tr>
 
-            <#--Cato: styling issues: 
+            <#--Scipio: styling issues: 
             </@tfoot>-->
             </@tbody>
         </@table>
@@ -346,7 +346,7 @@ function setAlternateGwp(field) {
 </@section>
 
 
-<@section> <#-- Cato: look strange: title=uiLabelMap.ProductPromotions -->
+<@section> <#-- Scipio: look strange: title=uiLabelMap.ProductPromotions -->
     <@row>
         <@cell columns=6>
             <@section title=uiLabelMap.ProductPromoCodes>
@@ -401,7 +401,7 @@ function setAlternateGwp(field) {
   </@section>
 </#if>
 
-<#-- CATO: Uncomment for a quick-add form; allows users to add products to the cart on the fly -->
+<#-- SCIPIO: Uncomment for a quick-add form; allows users to add products to the cart on the fly -->
 <#--
 <@section title=uiLabelMap.CommonQuickAdd>
     <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">

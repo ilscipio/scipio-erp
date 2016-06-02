@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutpayment.ftl -->
+<#-- Scipio: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutpayment.ftl -->
 
 <#-- TODO: PAYPAL, IDEAL, WORLDPAY -->
 <#-- TODO: SHOW GIFT CARD BALANCE -->
@@ -25,7 +25,7 @@ under the License.
 
 <#include "ordercommon.ftl">
 
-<#-- Cato: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
+<#-- Scipio: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
 <#-- TODO : Need formatting -->
 <@script>
 function submitForm(form, mode, value) {
@@ -33,21 +33,21 @@ function submitForm(form, mode, value) {
         // done action; checkout
         form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
         
-        <#-- Cato: must process some checkboxes -->
+        <#-- Scipio: must process some checkboxes -->
         if (jQuery('#newCreditCard_saveToAccount').is(":checked")) {
             jQuery('#singleUsePayment__NEW_CREDIT_CARD_').val("N");
         } else {
             jQuery('#singleUsePayment__NEW_CREDIT_CARD_').val("Y");
         }
         
-        <#-- Cato: must process some checkboxes -->
+        <#-- Scipio: must process some checkboxes -->
         if (jQuery('#newEftAccount_saveToAccount').is(":checked")) {
             jQuery('#singleUsePayment__NEW_EFT_ACCOUNT_').val("N");
         } else {
             jQuery('#singleUsePayment__NEW_EFT_ACCOUNT_').val("Y");
         }
         
-        <#-- Cato: must process some checkboxes -->
+        <#-- Scipio: must process some checkboxes -->
         if (jQuery('#newGiftCard_saveToAccount').is(":checked")) {
             jQuery('#singleUseGiftCard').val("N");
         } else {
@@ -83,14 +83,14 @@ function submitForm(form, mode, value) {
         // edit gift card
         form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
-    } else if (mode == "EA") { <#-- CATO: new -->
+    } else if (mode == "EA") { <#-- SCIPIO: new -->
         // edit address
         form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutpayment&contactMechId="+value+"</@ofbizUrl>";
         form.submit();
     }
 }
 
-<#-- Cato: now covered by script further below 
+<#-- Scipio: now covered by script further below 
 jQuery(document).ready(function(){
     var issuerId = "";
     if ($('#checkOutPaymentId_IDEAL').attr('checked') == true) {
@@ -123,12 +123,12 @@ jQuery(document).ready(function(){
  
 <#assign cart = shoppingCart! />
 
-<#-- Cato: We need to show total because this influence user's decision and amounts he will enter -->
+<#-- Scipio: We need to show total because this influence user's decision and amounts he will enter -->
 <p><strong>${uiLabelMap.OrderOrderTotal}:</strong> <@ofbizCurrency amount=((cart.getDisplayGrandTotal())!0) isoCode=cart.getCurrency()/></p>
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-<#-- Cato: all deprecated
+<#-- Scipio: all deprecated
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
     <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NC', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingCreditCard}" />
   </#if>
@@ -141,8 +141,8 @@ jQuery(document).ready(function(){
 -->
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent menuLayoutGeneral="bottom"><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
-  <#-- Cato: allow remember form filled via parameters first, over stored -->
+<@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent menuLayoutGeneral="bottom"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+  <#-- Scipio: allow remember form filled via parameters first, over stored -->
   <#-- NOTE: parameters.checkOutPaymentId may already be a list -->
   <#-- FIXME?: There is no real verification of correctness of exclusivity of the payment methods here... -->
   <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentIdList!"">
@@ -162,7 +162,7 @@ jQuery(document).ready(function(){
     <input type="hidden" name="BACK_PAGE" value="checkoutoptions" />
     <input type="hidden" name="issuerId" id="issuerId" value="" />
 
-    <#-- Cato: Cato: Used to build a radio/checkbox to content div mapping for JS -->
+    <#-- Scipio: Scipio: Used to build a radio/checkbox to content div mapping for JS -->
     <#function registerFieldContent fieldContentArgs>
       <#assign fieldContentIdMapList = (fieldContentIdMapList![]) + ([fieldContentArgs])>
       <#return "">
@@ -177,7 +177,7 @@ jQuery(document).ready(function(){
 
 
     <#macro payMethInfoPanel title updateAction="">
-      <#-- Cato: Every non-new may meth option gets a panel, for consistency
+      <#-- Scipio: Every non-new may meth option gets a panel, for consistency
           because the "new" pay meths show their fields below the title, currently
           doing the same for panel, though not sure about look
       <@row>
@@ -229,14 +229,14 @@ jQuery(document).ready(function(){
           <#if params[name]??>
             <#assign fieldValue = params[name]>
           <#else>
-            <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
+            <#-- Scipio: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
                 and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
             <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(payMethId)!0) > 0)>${cart.getPaymentOrigAmount(payMethId)?string("##0.00")}</#if></#assign>
             <#-- Also get the real current amount, but we'll only show it in tooltip (if use this amount as value, sometimes resubmission issues when going back pages) -->
             <#if ((cart.getPaymentAmount(payMethId)!0) > 0)>
               <#assign realCurPayAmount = cart.getPaymentAmount(payMethId)>
             </#if>
-            <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
+            <#-- Scipio: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
                 Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
                 FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
                     offers no way to distinguish between user-entered and validation-determined amounts. -->
@@ -258,13 +258,13 @@ jQuery(document).ready(function(){
           </@cell>
         </@row>
       </#assign>
-      <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
+      <#-- Scipio: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
           Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
       <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="${id}" name="${name}" value=fieldValue 
         tooltip=realCurPayAmountFullStr postfix=true collapsePostfix=false postfixColumns=9 postfixContent=postfixContent />  
     </#macro>
 
-    <#-- Cato: Payment method content and markup.
+    <#-- Scipio: Payment method content and markup.
         This pattern allows to avoid duplicating the control/loop/ordering logic and keeps the definitions for each pay method together so easier to follow alongside the original.
         The macro is invoked in steps with a different type each time. 
         WARN: Freemarker language limits use of this because can't define nested macros. Only for this page. -->
@@ -293,7 +293,7 @@ jQuery(document).ready(function(){
           <#if showDetails>
             <@section containerId="content_OFFLINE" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=methodLabel -->
               <@payMethInfoPanel title=methodLabel>
-                <#-- Cato: TODO?: These descriptions could probably be integrated into the entity values using get("xxx", locale)... -->
+                <#-- Scipio: TODO?: These descriptions could probably be integrated into the entity values using get("xxx", locale)... -->
                 <p>${uiLabelMap.OrderPaymentDescOffline}</p>
               </@payMethInfoPanel>
               <@payMethAmountField payMethId="EXT_OFFLINE"/>
@@ -316,7 +316,7 @@ jQuery(document).ready(function(){
             </@section>
           </#if>
         </#if>
-    <#-- Cato: TODO?: Uncomment if Paypal implemented -->
+    <#-- Scipio: TODO?: Uncomment if Paypal implemented -->
     <#if false>
         <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
           <#if showSelect>
@@ -333,7 +333,7 @@ jQuery(document).ready(function(){
           </#if>
         </#if>
     </#if>
-    <#-- Cato: TODO?: Uncomment if Worldpay implemented -->
+    <#-- Scipio: TODO?: Uncomment if Worldpay implemented -->
     <#if false>
         <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
           <#if showSelect>
@@ -350,7 +350,7 @@ jQuery(document).ready(function(){
           </#if>
         </#if>
     </#if>
-    <#-- Cato: TODO?: Uncomment if iDEAL implemented -->
+    <#-- Scipio: TODO?: Uncomment if iDEAL implemented -->
     <#if false>
         <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
           <#if showSelect>
@@ -379,12 +379,12 @@ jQuery(document).ready(function(){
           <#-- User's credit cards -->
           <#if (paymentMethodListsByType.CREDIT_CARD)?has_content>
             <#list paymentMethodListsByType.CREDIT_CARD as paymentMethodLocal>
-              <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
+              <#assign paymentMethod = paymentMethodLocal><#-- Scipio: workaround for access from macros -->
               <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false) />
               <#assign methodShortInfo><@formattedCreditCardShort creditCard=creditCard paymentMethod=paymentMethod verbose=true /></#assign>
               <#if showSelect>
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"content_${paymentMethod.paymentMethodId}"})>
-               <#-- Cato: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
+               <#-- Scipio: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
                     cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
                 <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
                   class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
@@ -401,7 +401,7 @@ jQuery(document).ready(function(){
             </#list>
           </#if>
         
-          <#-- Cato: JS-based new credit card option -->
+          <#-- Scipio: JS-based new credit card option -->
           <#assign methodShortInfo><em>${uiLabelMap.CommonNew}</em></#assign>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"newCreditCard", "contentId":"content__NEW_CREDIT_CARD"})>
@@ -413,7 +413,7 @@ jQuery(document).ready(function(){
             <@section containerId="content__NEW_CREDIT_CARD" containerClass="+new-item-selection-content pay-meth-content" 
                 containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard><#-- let JS do the following (there is no point; even if do it, still need JS for page refresh): <#if (!selectedCheckOutPaymentIdList?seq_contains("_NEW_CREDIT_CARD_"))> style="display:none;"</#if> -->
               
-              <#-- Cato: FIELDS BASED ON editcreditcard.ftl -->
+              <#-- Scipio: FIELDS BASED ON editcreditcard.ftl -->
               <#assign titleOnCard = "">
               <#assign firstNameOnCard = "">
               <#assign middleNameOnCard = "">
@@ -462,7 +462,7 @@ jQuery(document).ready(function(){
               </@field>
 
               <#if userHasAccount>
-                <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
+                <#-- Scipio: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
                 <@field type="checkbox" checkboxType="simple-standard" id="newCreditCard_saveToAccount" name="saveToAccount__NEW_CREDIT_CARD_" value="Y" 
                     checked=((newCreditCardParams.singleUsePayment__NEW_CREDIT_CARD_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_CREDIT_CARD_" name="singleUsePayment__NEW_CREDIT_CARD_" value="" />
@@ -476,7 +476,7 @@ jQuery(document).ready(function(){
           <#-- User's EFT accounts -->
           <#if (paymentMethodListsByType.EFT_ACCOUNT)?has_content>
             <#list paymentMethodListsByType.EFT_ACCOUNT as paymentMethodLocal>
-              <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
+              <#assign paymentMethod = paymentMethodLocal><#-- Scipio: workaround for access from macros -->
               <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false) />
               <#assign methodShortInfo><@formattedEftAccountShort eftAccount=eftAccount paymentMethod=paymentMethod /></#assign>
               <#if showSelect>
@@ -490,14 +490,14 @@ jQuery(document).ready(function(){
                     <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
                     <#if paymentMethod.get("description", locale)?has_content><br/>(${paymentMethod.get("description", locale)})</#if>
                   </@payMethInfoPanel>
-                  <#-- Cato: NOTE: This field was added by us, was missing for EFT accounts -->
+                  <#-- Scipio: NOTE: This field was added by us, was missing for EFT accounts -->
                   <@payMethAmountField payMethId=paymentMethod.paymentMethodId/>
                 </@section>
               </#if>
             </#list>
           </#if>
 
-          <#-- Cato: JS-based new eft account option -->
+          <#-- Scipio: JS-based new eft account option -->
           <#assign methodShortInfo><em>${uiLabelMap.CommonNew}</em></#assign>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"newEftAccount", "contentId":"content__NEW_EFT_ACCOUNT_"})>
@@ -508,7 +508,7 @@ jQuery(document).ready(function(){
             <@section containerId="content__NEW_EFT_ACCOUNT_" containerClass="+new-item-selection-content pay-meth-content" 
                 containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount><#-- let JS do it: <#if (!selectedCheckOutPaymentIdList?seq_contains("_NEW_EFT_ACCOUNT_"))> style="display:none;"</#if> -->
               
-              <#-- Cato: FIELDS BASED ON editeftaccount.ftl -->
+              <#-- Scipio: FIELDS BASED ON editeftaccount.ftl -->
               <#assign nameOnAccount = "">
               <#if person?has_content>
                 <#-- TODO: Unhardcode -->
@@ -547,7 +547,7 @@ jQuery(document).ready(function(){
               </@field>
 
               <#if userHasAccount>
-                <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
+                <#-- Scipio: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
                 <@field type="checkbox" checkboxType="simple-standard" id="newEftAccount_saveToAccount" name="saveToAccount__NEW_EFT_ACCOUNT_" 
                     value="Y" checked=((newEftAccountParams.singleUsePayment__NEW_EFT_ACCOUNT_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_EFT_ACCOUNT_" name="singleUsePayment__NEW_EFT_ACCOUNT_" value="" />
@@ -557,7 +557,7 @@ jQuery(document).ready(function(){
           </#if>
         </#if>
 
-        <#-- Cato: "Additional Payment Options" radio, which leads further below -->
+        <#-- Scipio: "Additional Payment Options" radio, which leads further below -->
         <#if showSelect>
           <#if (productStorePaymentMethodTypeIdMap.EXT_BILLACT?? && billingAccountList?has_content) || productStorePaymentMethodTypeIdMap.GIFT_CARD??>
             <#assign methodLabel>${uiLabelMap.AccountingAdditionalPaymentMethods} (<#rt>
@@ -576,7 +576,7 @@ jQuery(document).ready(function(){
 
       </#if><#-- /showPrimary -->
 
-        <#-- Cato: The following fields are supplemental and difficult to manage, so will not try to
+        <#-- Scipio: The following fields are supplemental and difficult to manage, so will not try to
             combine into the above (the pre-selection logic becomes too complicated and ambiguous when we have entries
             for them in both primary and supplemental, and the javascript becomes too heavy). 
             Instead, we have a "other/additional" radio button in the primary to fulfill the HTML requirements. -->
@@ -615,7 +615,7 @@ jQuery(document).ready(function(){
           <#-- User's gift cards -->
           <#if (paymentMethodListsByType.GIFT_CARD)?has_content>
             <#list paymentMethodListsByType.GIFT_CARD as paymentMethodLocal>
-              <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
+              <#assign paymentMethod = paymentMethodLocal><#-- Scipio: workaround for access from macros -->
               <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false) />
               <#assign methodShortInfo><@formattedGiftCardShort giftCard=giftCard paymentMethod=paymentMethod /></#assign>
               <#if showSupplemental>
@@ -639,7 +639,7 @@ jQuery(document).ready(function(){
           </#if>
 
           <#-- Gift card not on file -->
-          <#-- Cato: NOTE: This was initially implemented in stock code and is not 1-for-1 equivalent to our new inline
+          <#-- Scipio: NOTE: This was initially implemented in stock code and is not 1-for-1 equivalent to our new inline
               forms for CC && EFT above... 
               TODO?: Reimplement using _NEW_GIFT_CARD_ hook --> 
           <#if showSupplemental>
@@ -659,10 +659,10 @@ jQuery(document).ready(function(){
                 <@field type="input" size="10" id="giftCardPin${primSupplSuffix}" name="giftCardPin" value=((newGiftCardParams.giftCardPin)!) label=uiLabelMap.AccountingPIN/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               </#if>
 
-              <#-- Cato: Unhardcode the single-use flag so it follows our new inlines above
+              <#-- Scipio: Unhardcode the single-use flag so it follows our new inlines above
               <input type="hidden" name="singleUseGiftCard" value="Y" /> -->
               <#if userHasAccount>
-                <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
+                <#-- Scipio: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
                 <@field type="checkbox" checkboxType="simple-standard" id="newGiftCard_saveToAccount" name="saveToAccount__NEW_GIFT_CARD_" 
                     value="Y" checked=((singleUseGiftCard!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUseGiftCard" name="singleUseGiftCard" value="N" />
@@ -677,7 +677,7 @@ jQuery(document).ready(function(){
     </#macro>
 
 
-  <#-- Cato: Main structure
+  <#-- Scipio: Main structure
       NOTE: Some pay methods (EXT_BILLACT, GIFT_CARD) work as both main payments and as supplemental, so they reappear twice and have to be managed differently.
           Because we using radios, at least one must be selected by user otherwise breaks html expectations (stock code allowed selecting none; was sketchy) -->
 
@@ -709,17 +709,17 @@ jQuery(document).ready(function(){
     
   </form>
 
-  <#-- Cato: Pay method visibility scripts (must be at end of file) -->
+  <#-- Scipio: Pay method visibility scripts (must be at end of file) -->
 
   <@script>
  
-    <#-- Cato: Enable JS-based content reveal for pay methods -->
+    <#-- Scipio: Enable JS-based content reveal for pay methods -->
     <@initItemSelectionWithContentFormScript itemFieldClass="pay-select-field" 
         contentItems=fieldContentIdMapList updateCallbackPostVisibJs=updateCallbackPostVisibJs />
 
     jQuery(document).ready(function() {
-        var allPrimaryItems = getCatoFieldCheckElemsByClass('pay-select-radio');
-        var allSupplItems = getCatoFieldCheckElemsByClass('pay-select-checkbox');
+        var allPrimaryItems = getScipioFieldCheckElemsByClass('pay-select-radio');
+        var allSupplItems = getScipioFieldCheckElemsByClass('pay-select-checkbox');
     
         <#-- Special case: if any of the supplemental payment method checkboxes are checked and no other radios
             are selected, then select the "additional payment methods" radio so the HTML makes sense -->  
@@ -746,6 +746,6 @@ jQuery(document).ready(function(){
 
 </@section>
 
-<#-- Cato: Not this label, as there may be intermediate payment screens: uiLabelMap.OrderContinueToFinalOrderReview -->
+<#-- Scipio: Not this label, as there may be intermediate payment screens: uiLabelMap.OrderContinueToFinalOrderReview -->
 <@checkoutActionsMenu directLinks=false formName="checkoutInfoForm" text=uiLabelMap.CommonContinue />
 

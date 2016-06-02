@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- CATO: Duplicated from component://order/webapp/ordermgr/entry/catalog/inlineProductDetail.ftl -->
+<#-- SCIPIO: Duplicated from component://order/webapp/ordermgr/entry/catalog/inlineProductDetail.ftl -->
 
-<#-- CATO: FIXME: Lots of data labels can't localize (some from groovy) -->
+<#-- SCIPIO: FIXME: Lots of data labels can't localize (some from groovy) -->
 
-<#-- Cato: TODO: rewrite virtual JS -->
+<#-- Scipio: TODO: rewrite virtual JS -->
 ${virtualJavaScript!}
 <#assign addedJavaScript = requestAttributes.addedJavaScript!"N"/>
 <#if ("N" == addedJavaScript)>
@@ -276,7 +276,7 @@ ${virtualJavaScript!}
 <#macro amountField>
     <#local fieldStyle = "">
     <#if (product.requireAmount!"N") != "Y">
-        <#-- Cato: Issues with css
+        <#-- Scipio: Issues with css
         <#assign hiddenStyle = styles.hidden!/>-->
         <#local fieldStyle = "display: none;">
     </#if>
@@ -290,7 +290,7 @@ ${virtualJavaScript!}
         <#if (product.isVirtual!?upper_case) == "Y">
           <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
             <#list featureLists as featureList>
-                <#-- CATO: this part was rewritten... -->
+                <#-- SCIPIO: this part was rewritten... -->
                 <#assign feature = featureList?first>
                 <@field type="select" id="FT${inlineCounter}${feature.productFeatureTypeId}" name="FT${inlineCounter}${feature.productFeatureTypeId}" onChange="javascript:checkRadioButtoninline${inlineCounter}('${inlineCounter}', '${product.productId}');" label=(feature.description!)>
                   <#list featureList as feature>
@@ -314,10 +314,10 @@ ${virtualJavaScript!}
             </#list>
             <input type="hidden" name="product_id${inlineCounter}" value="${product.productId}"/>
             <input type="hidden" name="add_product_id${inlineCounter}" value="NULL"/>
-            <#-- CATO: Parent can specify another place to put this -->
+            <#-- SCIPIO: Parent can specify another place to put this -->
           <#if (requestAttributes.ipdIncludePriceDisplay!true) == true>
             <@field type="display">
-              <#-- CATO: don't show the ID... just weird
+              <#-- SCIPIO: don't show the ID... just weird
               <span id="product_id_display${inlineCounter}"> </span>-->
               <div id="variant_price_display${inlineCounter}"> </div>
             </@field>
@@ -345,7 +345,7 @@ ${virtualJavaScript!}
         </#if>
     </@cell>
     <@cell small=3>
-      <#-- CATO: Moved this to after the field stuff, because looks weird when no image -->
+      <#-- SCIPIO: Moved this to after the field stuff, because looks weird when no image -->
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")!>
       <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage>
@@ -375,7 +375,7 @@ ${virtualJavaScript!}
 
   <@row>
     <@cell>
-      <#-- CATO: TODO: replace virtual jS -->
+      <#-- SCIPIO: TODO: replace virtual jS -->
       <#if variantTree?? && (0 < variantTree.size())>
         <@script>eval("list"+ "${inlineCounter}" + "${featureOrderFirst}" + "()");</@script>
       </#if>

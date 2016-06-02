@@ -1,5 +1,5 @@
 
-<#-- Cato: common shop catalog definitions and macros -->
+<#-- Scipio: common shop catalog definitions and macros -->
 
 <#include "../common/common.ftl">
 
@@ -28,7 +28,7 @@
     </#if>
     <@img src=largeImage width="100%" height="300px" type="contain" class="product-image"/>
     
-    <#-- CATO: We are using the clearing mechanism in foundation here. This may be migrated to the grid macro at a later stage. -->
+    <#-- SCIPIO: We are using the clearing mechanism in foundation here. This may be migrated to the grid macro at a later stage. -->
     <#if productAdditionalImage1?has_content>
       <div class="product-image-thumbs">
         <ul class="clearing-thumbs" data-clearing>
@@ -120,7 +120,7 @@
         </#list>
     </#if>
 
-    <#-- Cato: Debugging info
+    <#-- Scipio: Debugging info
     <@heading relLevel=+1>Debugging Info</@heading>
     <p style="font-size:0.7em;">Product ID: ${product.productId}</p>
     <p style="font-size:0.7em;">Product info map: ${product?string}</p>

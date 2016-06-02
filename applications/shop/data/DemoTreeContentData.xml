@@ -30,7 +30,7 @@
 
     <ContentAssoc contentId="PICTURE" contentIdTo="MP3-1000-01" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
-    <!-- Cato: TODO?: Associate new categories content to this tree? -->
+    <!-- Scipio: TODO?: Associate new categories content to this tree? -->
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
  
@@ -48,9 +48,9 @@
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644NAMEEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644NAMEDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
-    <ContentAssoc contentId="GENERAL" contentIdTo="CATO-FACT-02" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="GENERAL" contentIdTo="CATO-FACT-03" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="GENERAL" contentIdTo="CATO-FACT-04" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="GENERAL" contentIdTo="SCIPIO-FACT-02" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="GENERAL" contentIdTo="SCIPIO-FACT-03" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="GENERAL" contentIdTo="SCIPIO-FACT-04" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
     <ContentAssoc contentId="STORE_POLICIES" contentIdTo="STORE_POLICIES2" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 

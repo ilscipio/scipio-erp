@@ -31,9 +31,9 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import javolution.util.FastMap;
 import javolution.util.FastList;
 
-// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+// Scipio: NOTE: This script is responsible for checking whether solr is applicable.
 
-// Cato: this allows to use the script for local scopes without affecting request
+// Scipio: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;
 if (localVarsOnly == null) {
     localVarsOnly = false;
@@ -101,7 +101,7 @@ try{
 	if (result.viewSize > 0) {
 	    context.listIndex = Math.ceil(result.listSize/result.viewSize);
 	}
-    // Cato: this may not make sense anymore since SOLR patches
+    // Scipio: this may not make sense anymore since SOLR patches
 	//if (!viewSize.equals(String.valueOf(result.viewSize))) {
 	//    pageViewSize = Integer.parseInt(viewSize).intValue();
 	//    context.listIndex = Math.ceil(result.listSize/pageViewSize);
@@ -123,7 +123,7 @@ try{
 	contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 	context.put("contentPathPrefix", contentPathPrefix);
     
-    /* Cato: do NOT do this for now (or ever?)
+    /* Scipio: do NOT do this for now (or ever?)
     parameters.VIEW_SIZE = viewSize;
     parameters.VIEW_INDEX = viewIndex;
     parameters.CURR_INDEX = CURR_INDEX;

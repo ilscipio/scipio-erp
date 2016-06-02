@@ -18,8 +18,8 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Cato: TODO?: Fields for business account (with party group) -->
-<#-- Cato: TODO?: Some of this is redundant with customerbasicfields.ftl - investigate -->
+<#-- Scipio: TODO?: Fields for business account (with party group) -->
+<#-- Scipio: TODO?: Some of this is redundant with customerbasicfields.ftl - investigate -->
 
 <@script>
 
@@ -50,10 +50,10 @@ under the License.
          if (document.getElementById('UNUSEEMAIL').checked) {
              document.getElementById('USERNAME').value = jQuery('#CUSTOMER_EMAIL').val();
              <#-- don't disable, make the browser not submit the field: document.getElementById('USERNAME').disabled=true; -->
-             <#-- Cato: ... but DO set disabled class so user sees as if was disabled -->
+             <#-- Scipio: ... but DO set disabled class so user sees as if was disabled -->
              jQuery('#USERNAME').slideUp('slow');
          } else {
-             if (noreset !== true) { <#-- Cato: extra check -->
+             if (noreset !== true) { <#-- Scipio: extra check -->
                 document.getElementById('USERNAME').value='';
              }
              <#-- document.getElementById('USERNAME').disabled=false; -->
@@ -61,7 +61,7 @@ under the License.
          }
      }
      function hideShowUsaStates() {
-       <#-- Cato: Don't do this here. if we ever do it it should be everywhere or nowhere. 
+       <#-- Scipio: Don't do this here. if we ever do it it should be everywhere or nowhere. 
          var customerStateElement = document.getElementById('newuserform_stateProvinceGeoId');
          var customerCountryElement = document.getElementById('newuserform_countryGeoId');
          if (customerCountryElement.value == "USA" || customerCountryElement.value == "UMI") {
@@ -77,7 +77,7 @@ under the License.
     jQuery(document).ready(function() {
         hideShowUsaStates();
         
-        <#-- Cato: do this also on page load -->
+        <#-- Scipio: do this also on page load -->
         setEmailUsername(true);
     });
 
@@ -96,7 +96,7 @@ under the License.
   </@commonMsg>
 
 
-<#-- Cato: NOTE: fieldErrors should be kept in the time there is no javascript validation.
+<#-- Scipio: NOTE: fieldErrors should be kept in the time there is no javascript validation.
     To remove these, simply toggle this bool. 
     NOTE: these do work fairly decently however. -->
 <#assign useServerFieldErrors = useServerFieldErrors!true>
@@ -235,7 +235,7 @@ under the License.
 <@row>
   <@cell columns=6>
   <fieldset>
-    <#-- Cato: NOTE: This is used both as GENERAL_LOCATION and SHIPPING_LOCATION
+    <#-- Scipio: NOTE: This is used both as GENERAL_LOCATION and SHIPPING_LOCATION
     <legend>${uiLabelMap.PartyShippingAddress}</legend>
     <legend>${getLabel("ContactMechType.description.POSTAL_ADDRESS", "PartyEntityLabels")}</legend>-->
     

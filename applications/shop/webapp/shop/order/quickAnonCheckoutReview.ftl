@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Cato: DEPRECATED TEMPLATE -->
+<#-- Scipio: DEPRECATED TEMPLATE -->
 
 <@script>
     var clicked = 0;
@@ -55,7 +55,7 @@ under the License.
   <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
     <@row>
       <@cell class="+${styles.text_right!}">
-        <#if (parameters.checkoutpage)?has_content><#-- Cato: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
+        <#if (parameters.checkoutpage)?has_content><#-- Scipio: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
           <input type="hidden" name="checkoutpage" value="${parameters.checkoutpage}" /><#-- ${requestParameters.checkoutpage} -->
         </#if>
         <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />

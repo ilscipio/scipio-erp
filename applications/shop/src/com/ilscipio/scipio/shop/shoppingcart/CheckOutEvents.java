@@ -1,10 +1,10 @@
-package com.ilscipio.cato.shop.shoppingcart;
+package com.ilscipio.scipio.shop.shoppingcart;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Cato: Shop-specific checkout events.
+ * SCIPIO: Shop-specific checkout events.
  */
 public abstract class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckOutEvents {
 

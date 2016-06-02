@@ -22,7 +22,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 
-partyId = userLogin?.partyId; // Cato: prevent crash on missing userLogin
+partyId = userLogin?.partyId; // Scipio: prevent crash on missing userLogin
 paramMap = UtilHttp.getParameterMap(request);
 
 productStoreSurveyId = parameters.productStoreSurveyId;

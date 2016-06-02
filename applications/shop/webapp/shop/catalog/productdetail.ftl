@@ -18,7 +18,7 @@
 
     <#if variantTree?has_content>
     
-        <#-- CATO: Function to select a product variant  -->
+        <#-- SCIPIO: Function to select a product variant  -->
         var variantTree = <@objectAsScript lang="js" object=variantTree />;
         var currentNode = [];
         variantProductInfoMap = <@objectAsScript lang="js" object=(variantProductInfoMap!{}) />;
@@ -76,13 +76,13 @@
                     $('#FT_'+nextFeatureId).prop( "disabled", false ); // activate next option
   
                     <#-- set the variant price
-                        Cato: TODO?: Currently can't do this here, at least not by productId...
+                        Scipio: TODO?: Currently can't do this here, at least not by productId...
                             so if we changed any box, just reset the price to the original virtual for now...
                     setVariantPrice(productId); -->
                     setVariantPriceSpec(baseCurrentPrice);
 
                     <#-- check for amount box
-                    <#-- Cato: For now we'll only set this at the last step, because don't have a tangible product ID until then
+                    <#-- Scipio: For now we'll only set this at the last step, because don't have a tangible product ID until then
                     toggleAmt(checkAmtReq(productId)); -->
                     toggleAmt('N');
                 }
@@ -102,7 +102,7 @@
     }
     
     function setVariantPriceSpec(price) {
-        <#-- Cato: TODO -->
+        <#-- Scipio: TODO -->
     }    
   
     function checkAmtReq(productId) {
@@ -120,10 +120,10 @@
                 }
             }
         }
-        return 'N'; <#-- Cato: hide it by default -->
+        return 'N'; <#-- Scipio: hide it by default -->
     }
     
-    <#-- Cato: Handles final addItem submit -->
+    <#-- Scipio: Handles final addItem submit -->
     function addItem() {
         var productId = jQuery('#add_product_id').val();
         <#-- Ensure we have a product -->
@@ -163,7 +163,7 @@
             }
         }
 
-        <#-- Cato: TODO?: This appears to be a sanity check to prevent trying to add a virtual product, which would be good,
+        <#-- Scipio: TODO?: This appears to be a sanity check to prevent trying to add a virtual product, which would be good,
              except it's not friendly to have this check in additem submit... isVirtual method is gone...
              server _should_ do this check anyway...
         if (isVirtual(addProductId)) {
@@ -233,13 +233,13 @@
                     - if price < defaultPrice and defaultPrice < listPrice, show default
                     - if isSale show price with salePrice style and print "On Sale!"
                 -->
-                <#-- CATO: These are alternative prices that are not really commonly used 
+                <#-- SCIPIO: These are alternative prices that are not really commonly used 
                 <#if price.competitivePrice?? && price.price?? && (price.price < price.competitivePrice)>
                     ${uiLabelMap.ProductCompareAtPrice}: <span class="product-price"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed /></span>
                 </#if>
                 -->
                 <#-- Asset Usage price calculation -->
-                <#-- Cato: TODO?: styling for this detail info -->
+                <#-- Scipio: TODO?: styling for this detail info -->
                 <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
                     <#if product.reserv2ndPPPerc?? && product.reserv2ndPPPerc != 0><br />${uiLabelMap.ProductReserv2ndPPPerc}<#if !product.reservNthPPPerc?? || product.reservNthPPPerc == 0> ${uiLabelMap.CommonUntil} ${product.reservMaxPersons!}</#if><#rt/>
                         <#lt/> <span class="product-price"><@ofbizCurrency amount=(product.reserv2ndPPPerc*price.price/100) isoCode=price.currencyUsed /></span></#if>
@@ -266,7 +266,7 @@
                     <#assign currentPrice = oldPrice/>
                 </#if>
 
-                <#-- CATO: Uncomment to mark a product that is on sale
+                <#-- SCIPIO: Uncomment to mark a product that is on sale
                 <#if price.isSale?? && price.isSale>
                     <p>${uiLabelMap.OrderOnSale}!</p>
                 </#if>-->
@@ -285,7 +285,7 @@
                     </@script>
                 </p>
                 
-                <#-- CATO: Uncomment to display how much a user is saving by buying this product
+                <#-- SCIPIO: Uncomment to display how much a user is saving by buying this product
                 <#if price.listPrice?? && price.price?? && (price.price < price.listPrice)>
                     <span id="product-saved"><sup>
                         <#assign priceSaved = oldPrice - currentPrice />
@@ -313,19 +313,19 @@
                     <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"html") />                    
                     <#assign inStock = true />
                     
-                    <#-- Cato: TODO: We currently have no client-side check for incompatible (FEATURE_IACTN_INCOMP) and dependent features.
+                    <#-- Scipio: TODO: We currently have no client-side check for incompatible (FEATURE_IACTN_INCOMP) and dependent features.
                         See org.ofbiz.product.product.ProductWorker.getVariantFromFeatureTree(String, List<String>, Delegator).
                         The check only happens server-side currently. -->
                     
-                    <#-- Cato: TODO: There is another case not currently handled properly: ALTERNATIVE_PACKAGE - see CDR-1111-BX2 -->
+                    <#-- Scipio: TODO: There is another case not currently handled properly: ALTERNATIVE_PACKAGE - see CDR-1111-BX2 -->
                     
-                    <#-- Cato: This field should generally not be present! It is only for product that support/require an amount
+                    <#-- Scipio: This field should generally not be present! It is only for product that support/require an amount
                         in ADDITION to the quantity field. You also cannot know this for sure beforehand because for virtuals it is set on the
                         specific variant, so it has to be updated through JS lookups (the initial is only for the virtual product, but each variant can be different).  -->
                     <#macro amountField>
                         <#local fieldStyle = "">
                         <#if (product.requireAmount!"N") != "Y">
-                            <#-- Cato: Issues with css
+                            <#-- Scipio: Issues with css
                             <#assign hiddenStyle = styles.hidden!/>-->
                             <#local fieldStyle = "display: none;">
                         </#if>
@@ -350,7 +350,7 @@
                                 featureCount = ${featureLists?size};
                                 featureIdList = [<#list featureLists as featureList>"${featureList.productFeatureTypeId?js_string}"<#if featureList_has_next>,</#if></#list>];
                                 jQuery(document).ready(function() {
-                                  <#-- Cato: FIXME?: This forces the select to return to their empty values upon page refresh.
+                                  <#-- Scipio: FIXME?: This forces the select to return to their empty values upon page refresh.
                                       We don't really want this, but otherwise values after browser refresh are currently too inconsistent -->
                                   <#list featureLists as featureList>
                                     jQuery('#FT_${featureList.productFeatureTypeId}').val('');
@@ -359,7 +359,7 @@
                             </@script>
                         </#if>
                         
-                        <#-- CATO: It is possible to have a limited amount of variant combination. 
+                        <#-- SCIPIO: It is possible to have a limited amount of variant combination. 
                                    Therefore the available options are only displayed for the first variant and updated for the next based on the selected type. -->
                         <#if !product.virtualVariantMethodEnum?? || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
                             <#if variantTree?? && (variantTree.size() > 0)>
@@ -381,7 +381,7 @@
                                     featureIdList = <@objectAsScript lang="js" object=featureSet />;
                                     
                                     jQuery(document).ready(function() {
-                                      <#-- Cato: FIXME?: This forces the select to return to their empty values upon page refresh.
+                                      <#-- Scipio: FIXME?: This forces the select to return to their empty values upon page refresh.
                                           We don't really want this, but otherwise values after browser refresh are currently too inconsistent -->
                                       <#list featureSet as currentType>
                                         jQuery('#FT_${currentType}').val('');
@@ -394,7 +394,7 @@
                             </#if>
                         </#if>
                     <#else>
-                        <#-- Cato: This is a sanity check, leave here for debugging, will do no harm -->
+                        <#-- Scipio: This is a sanity check, leave here for debugging, will do no harm -->
                         <#if selFeatureTypes?has_content>
                           <p>
                             <strong>WARN: </strong> Product has selectable features 
@@ -419,15 +419,15 @@
                     <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
                         <#if inStock>
                             <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
-                                <#-- Cato: NOTE: here the actual dateType sent to server is yyyy-MM-dd -->
+                                <#-- Scipio: NOTE: here the actual dateType sent to server is yyyy-MM-dd -->
                                 <@field type="datetime" dateType="date" name="reservStart" maxlength=10 value=(parameters.reservStart!(earliestReservStartDate?string?substring(0, 10))) label=uiLabelMap.EcommerceStartdate />
 
-                                <#-- Cato: TODO?: Consolidate these two inputs?... I think reservLength is more important... reservEnd is not included on cart
+                                <#-- Scipio: TODO?: Consolidate these two inputs?... I think reservLength is more important... reservEnd is not included on cart
                                 <@field type="datetime" dateType="date" name="reservEnd" maxlength=10 value=(parameters.reservEnd!) label=uiLabelMap.CommonEndDate /> -->
                                 <@field type="input" size="4" name="reservLength" value=(parameters.reservLength!) label=uiLabelMap.CommonDays />
 
                                 <@field type="input" size="4" name="reservPersons" value=(parameters.reservPersons!"1") label=uiLabelMap.CommonPersons/>
-                                <#-- Cato: "Rooms" is too specific without checking product config: label=uiLabelMap.ProductRooms -->
+                                <#-- Scipio: "Rooms" is too specific without checking product config: label=uiLabelMap.ProductRooms -->
                                 <@field type="input" size="4" name="quantity" id="quantity" value=(parameters.quantity!"1") maxLength="4" label=uiLabelMap.CommonQuantity/>
                             <#else> 
                                 <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value=(parameters.quantity!"1") size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
@@ -448,12 +448,12 @@
                             </#if>
                         </#if>
                     <#elseif (product.virtualVariantMethodEnum!) == "VV_FEATURETREE">
-                        <#-- Cato: NOTE: All stuff for VV_FEATURETREE should already be included above (except button) -->
+                        <#-- Scipio: NOTE: All stuff for VV_FEATURETREE should already be included above (except button) -->
                         <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12} ${styles.link_run_session!} ${styles.action_add!}"/> 
                     </#if>                 
 
               </form>
-                <#-- CATO: Review 
+                <#-- SCIPIO: Review 
                     <#if variantPriceList??>
                             <#list variantPriceList as vpricing>
                                 <#assign variantName = vpricing.get("variantName")!>
@@ -469,7 +469,7 @@
                 -->
             </div>
             </@panel>
-            <#-- CATO: Shopping list functionality - disabled for now
+            <#-- SCIPIO: Shopping list functionality - disabled for now
             <div id="product-shopping-list">
                 <#if userHasAccount>
                     <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
@@ -510,7 +510,7 @@
     </@row>
 </@section>        
 
-<#-- CATO: show tell a friend details only in shop application     
+<#-- SCIPIO: show tell a friend details only in shop application     
 <div id="product-tell-a-friend">
     <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
 </div>
@@ -576,7 +576,7 @@
 
 </@section>
 
-<#-- CATO: uncomment to use unavailableVariants
+<#-- SCIPIO: uncomment to use unavailableVariants
 <#macro showUnavailableVarients>
   <#if unavailableVariants??>
     <ul>

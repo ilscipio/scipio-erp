@@ -18,9 +18,9 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Cato: TODO?: Review if can merge with order/genericaddress.ftl -->
+<#-- Scipio: TODO?: Review if can merge with order/genericaddress.ftl -->
 
-<#-- Cato: migrated from editcontactmech.ftl -->
+<#-- Scipio: migrated from editcontactmech.ftl -->
 
 <#if !pafParams??>
   <#assign pafParams = parameters>
@@ -45,7 +45,7 @@ jQuery(document).ready(function() {
 
     <#assign fieldIdPrefixJs = escapePart(fieldIdPrefix, 'js')>
 
-    <#-- Cato: NOTE: the container IDs can be omitted because the js doesn't make proper use of them anyhow -->
+    <#-- Scipio: NOTE: the container IDs can be omitted because the js doesn't make proper use of them anyhow -->
     <#-- TODO?: getAssociatedStateList may be out of date compared to getDependentDropdownValues?  -->
     var errorMsgContainerId = null;
     var containerId = null;
@@ -78,7 +78,7 @@ jQuery(document).ready(function() {
         <#assign currentCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">-->
         <#assign currentCountryGeoId = "">
       </#if>
-    <#-- Cato: there's no reason for this; allow countries ftl to select the right one
+    <#-- Scipio: there's no reason for this; allow countries ftl to select the right one
       <option selected="selected" value="${currentCountryGeoId}">
       <#assign countryGeo = delegator.findOne("Geo",{"geoId":currentCountryGeoId}, false)>
         ${countryGeo.get("geoName",locale)}
@@ -88,7 +88,7 @@ jQuery(document).ready(function() {
       <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":currentCountryGeoId}/>   
   </@field>
   <@field type="select" label="${uiLabelMap.PartyState}" name="${fieldNamePrefix}stateProvinceGeoId" id="${fieldIdPrefix}stateProvinceGeoId">
-    <#-- Cato: NOTE: This was empty in stock; supposed to load via JS; for now, put the current if this is empty -->
+    <#-- Scipio: NOTE: This was empty in stock; supposed to load via JS; for now, put the current if this is empty -->
     <#if defaultStateProvinceGeoId?has_content>
       <option value="${defaultStateProvinceGeoId}">${defaultStateProvinceGeoId}</option>
     </#if>

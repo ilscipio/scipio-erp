@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Cato: TODO: SHOW GIFT CARD BALANCE -->
+<#-- Scipio: TODO: SHOW GIFT CARD BALANCE -->
 
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
@@ -27,11 +27,11 @@ under the License.
   </@menu>
 <#else>
 
-<#-- Cato: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
-<#-- Cato: FIXME -->
+<#-- Scipio: FIXME -->
 <@commonMsg type="warning">${uiLabelMap.CommonWarning}: This form currently bypasses gift card product store settings and validation (for testing purposes).</@commonMsg>
 
 <#macro menuContent menuArgs={}>
@@ -44,7 +44,7 @@ under the License.
   <#if !giftCard??>
     ${uiLabelMap.AccountingAddNewGiftCard}
   <#else>
-    <#-- Cato: duplicate: ${uiLabelMap.AccountingEditGiftCard} -->
+    <#-- Scipio: duplicate: ${uiLabelMap.AccountingEditGiftCard} -->
   </#if>
 </#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">

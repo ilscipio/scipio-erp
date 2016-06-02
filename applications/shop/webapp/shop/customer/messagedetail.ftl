@@ -65,7 +65,7 @@ under the License.
       <@tr><@td>&nbsp;</@td></@tr>
       <@tr>
         <@td>&nbsp;</@td>
-        <#-- Cato: FIXME: This must be reviewed for escaping issues, real security risk here -->
+        <#-- Scipio: FIXME: This must be reviewed for escaping issues, real security risk here -->
         <@td>${htmlContentString(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}
         </@td>
       </@tr>

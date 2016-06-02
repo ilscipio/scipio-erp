@@ -18,10 +18,10 @@ under the License.
 -->
 <#include "catalogcommon.ftl">
 
-<#-- CATO: TODO: reorganize the code sharing with productdetail, very similar -->
-<#-- CATO: TODO: does not currently support virtual config products (none in demo data) (only supports virtual options) -->
-<#-- CATO: TODO: Rewrite virtual product support/JS and add fields-->
-<#-- CATO: NOTE: This template is tied into inlineProductDetail.ftl -->
+<#-- SCIPIO: TODO: reorganize the code sharing with productdetail, very similar -->
+<#-- SCIPIO: TODO: does not currently support virtual config products (none in demo data) (only supports virtual options) -->
+<#-- SCIPIO: TODO: Rewrite virtual product support/JS and add fields-->
+<#-- SCIPIO: NOTE: This template is tied into inlineProductDetail.ftl -->
 
 <#-- variable setup -->
 <#assign productContentWrapper = productContentWrapper!>
@@ -29,7 +29,7 @@ under the License.
 <#-- end variable setup -->
 
 <#-- virtual product javascript -->
-<#-- CATO: TODO: rewrite virtual JS
+<#-- SCIPIO: TODO: rewrite virtual JS
     NOTE: there is no virtual config product in demo data, but options can be virtual and 
     do they interact with this?? -->
 ${virtualJavaScript!}
@@ -45,7 +45,7 @@ ${virtualJavaScript!}
      }
      function isVirtual(product) {
         var isVirtual = false;
-        <#-- CATO: TODO: Support for virtual products 
+        <#-- SCIPIO: TODO: Support for virtual products 
             Leave here until has replacement -->
         <#if virtualJavaScript??>
         for (i = 0; i < VIR.length; i++) {
@@ -136,19 +136,19 @@ ${virtualJavaScript!}
                 var totalPrice = data.totalPrice;
                 var configId = data.configId;
                 document.getElementById('totalPrice').innerHTML = totalPrice;
-                <#-- CATO: not yet support
+                <#-- SCIPIO: not yet support
                 document.addToShoppingList.configId.value = configId;
                 -->
-                <#-- CATO: this is invalid
+                <#-- SCIPIO: this is invalid
                 event.stop();-->
-                <#-- CATO: put it here too -->
+                <#-- SCIPIO: put it here too -->
                 baseCurrentPrice = totalPrice;
                 event.preventDefault();
             },
             error: function(data) {
                 <#-- FIXME: better message -->
                 alert("${uiLabelMap.CommonError?js_string}");
-                <#-- CATO: prevent connection fail causing weirdness -->
+                <#-- SCIPIO: prevent connection fail causing weirdness -->
                 event.preventDefault();
             }
         });
@@ -160,7 +160,7 @@ ${virtualJavaScript!}
 
 <#macro productConfigurator>
   <#-- Product Configurator -->
-  <#-- CATO: FIXME: view switching bad -->
+  <#-- SCIPIO: FIXME: view switching bad -->
   <div class="product-configurator">
   <form name="configform" id="configFormId" method="post" action="<@ofbizUrl>product<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
     <input type="hidden" name="add_product_id" value="${product.productId}" />
@@ -169,7 +169,7 @@ ${virtualJavaScript!}
 
     <input type="hidden" name="product_id" value="${product.productId}" />
 
-      <#-- CATO: TODO: Preselection using parameters map -->
+      <#-- SCIPIO: TODO: Preselection using parameters map -->
 
       <#assign counter = 0>
       <#assign questions = configwrapper.questions>
@@ -183,7 +183,7 @@ ${virtualJavaScript!}
                 <div>${question.description!}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!?string>
                 <#if instructions?has_content>
-                  <#-- CATO: dont understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
+                  <#-- SCIPIO: dont understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
                   <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a> -->
                   <@modal label=uiLabelMap.OrderInstructions><p>${instructions}</p></@modal>
                 </#if>
@@ -192,7 +192,7 @@ ${virtualJavaScript!}
                   <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
                 </#if>
               <#else>
-                <#-- CATO: FIXME?: this does nothing in ecommerce
+                <#-- SCIPIO: FIXME?: this does nothing in ecommerce
                 <div><a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav_inline!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></div>
                 -->
               </#if>
@@ -338,7 +338,7 @@ ${virtualJavaScript!}
         <#assign counter = counter + 1>
       </#list>
 
-    <#-- CATO: I don't think need this button... probably on a shop you want this to check automatically or on additem
+    <#-- SCIPIO: I don't think need this button... probably on a shop you want this to check automatically or on additem
       <@menu type="button">
         <@menuitem type="link" href="javascript:verifyConfig();" class="+${styles.action_run_sys!} ${styles.action_verify!}" text=uiLabelMap.OrderVerifyConfiguration />
       </@menu>
@@ -366,7 +366,7 @@ ${virtualJavaScript!}
               <#if hasDesc></p></#if>
 
               <#-- example of showing a certain type of feature with the product -->
-              <#-- Cato: not now
+              <#-- Scipio: not now
               <#if sizeProductFeatureAndAppls?has_content>
                 <div>
                   <#if (sizeProductFeatureAndAppls?size == 1)>
@@ -389,7 +389,7 @@ ${virtualJavaScript!}
                       - if price < defaultPrice and defaultPrice < listPrice, show default
                       - if isSale show price with salePrice style and print "On Sale!"
               -->
-              <#-- CATO: make sure to use totalPrice first for config products, ignore defaultPrice -->
+              <#-- SCIPIO: make sure to use totalPrice first for config products, ignore defaultPrice -->
                 
                 <#if price.listPrice?has_content>
                     <#assign oldPrice = price.listPrice/>
@@ -405,7 +405,7 @@ ${virtualJavaScript!}
                     <#assign currentPrice = oldPrice/>
                 </#if>
 
-                <#-- CATO: Uncomment to mark a product that is on sale
+                <#-- SCIPIO: Uncomment to mark a product that is on sale
                 <#if price.isSale?? && price.isSale>
                     <p>${uiLabelMap.OrderOnSale}!</p>
                 </#if>-->
@@ -424,7 +424,7 @@ ${virtualJavaScript!}
                     </@script>
                 </p>
                 
-                <#-- CATO: Uncomment to display how much a user is saving by buying this product
+                <#-- SCIPIO: Uncomment to display how much a user is saving by buying this product
                 <#if price.listPrice?? && price.price?? && (price.price < price.listPrice)>
                     <span id="product-saved"><sup>
                         <#assign priceSaved = oldPrice - currentPrice />
@@ -445,7 +445,7 @@ ${virtualJavaScript!}
                 </#if>
 
               <#-- show tell a friend details only in shop application -->
-              <#-- CATO: not yet supported
+              <#-- SCIPIO: not yet supported
               <div>&nbsp;</div>
               <div>
                 <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="${styles.link_nav!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>
@@ -457,19 +457,19 @@ ${virtualJavaScript!}
             <#macro amountField>
                 <#local fieldStyle = "">
                 <#if (product.requireAmount!"N") != "Y">
-                    <#-- Cato: Issues with css
+                    <#-- Scipio: Issues with css
                     <#assign hiddenStyle = styles.hidden!/>-->
                     <#local fieldStyle = "display: none;">
                 </#if>
                 <@field type="input" size="5" name="add_amount" id="add_amount" containerStyle=fieldStyle value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
             </#macro>
 
-              <#-- CATO: don't need ugly view-switch: <#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if> -->
+              <#-- SCIPIO: don't need ugly view-switch: <#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if> -->
               <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform">
                 <#assign inStock = true>
                 <#-- Variant Selection -->
                 <#if (product.isVirtual!?upper_case) == "Y">
-                  <#-- Cato: TODO: support for virtual products -->
+                  <#-- Scipio: TODO: support for virtual products -->
                   <#if variantTree?? && (0 < variantTree.size())>
                     <#list featureSet as currentType>
                       <@field type="select" name="FT${currentType}" onChange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
@@ -526,14 +526,14 @@ ${virtualJavaScript!}
                       <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12} ${styles.link_run_session!} ${styles.action_add!}"/>
                     </#if>
                   </#if>
-                  <#-- CATO: FIXME?: I think this parameter does more harm than good, but leave until sure can remove -->
+                  <#-- SCIPIO: FIXME?: I think this parameter does more harm than good, but leave until sure can remove -->
                   <#if requestParameters.category_id??>
                     <input type="hidden" name="category_id" value="${requestParameters.category_id}" />
                   </#if>
                 </#if>
               </form>
               
-              <#-- CATO: Shopping list not supported yet
+              <#-- SCIPIO: Shopping list not supported yet
               <div>
                   <#if userHasAccount>
                     <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
@@ -554,7 +554,7 @@ ${virtualJavaScript!}
                       <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
                     </form>
                   <#else>
-                    <#- CATO: why ever show this?
+                    <#- SCIPIO: why ever show this?
                     <@commonMsg type="info">${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
                     ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.</@commonMsg>->
                   </#if>
@@ -565,14 +565,14 @@ ${virtualJavaScript!}
               
               
               <#-- Prefill first select box (virtual products only) -->
-              <#-- CATO: TODO: virtual products 
+              <#-- SCIPIO: TODO: virtual products 
               <#if variantTree?? && 0 < variantTree.size()>
                 <@script>eval("list" + "${featureOrderFirst}" + "()");</@script>
               </#if>
               -->
         
               <#-- Swatches (virtual products only) -->
-              <#-- CATO: no swatches for now
+              <#-- SCIPIO: no swatches for now
               <#if variantSample?? && (0 < variantSample.size())>
                 <#assign imageKeys = variantSample.keySet()>
                 <#assign imageMap = variantSample>
@@ -648,7 +648,7 @@ ${virtualJavaScript!}
 
 </@section>
 
-  <#-- Cato: Not for now
+  <#-- Scipio: Not for now
   <#- Product Reviews ->
   <@tr>
     <@td colspan="2">

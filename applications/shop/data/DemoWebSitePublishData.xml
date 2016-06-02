@@ -23,13 +23,13 @@ under the License.
 
     <!-- NOTE DEJ20060610 This is just a skeleton for the most part and does not have complete content -->
     <Content contentId="WebStoreCONTENT" contentTypeId="WEB_SITE_PUB_PT" contentName="WebStore Content Root" description="Shop Content Categories"/>
-    <WebSiteContent webSiteId="CatoWebStore" contentId="WebStoreCONTENT" webSiteContentTypeId="PUBLISH_POINT" fromDate="2001-01-01 00:00:00"/>
+    <WebSiteContent webSiteId="ScipioWebStore" contentId="WebStoreCONTENT" webSiteContentTypeId="PUBLISH_POINT" fromDate="2001-01-01 00:00:00"/>
 
     <Content contentId="CNTELTRN" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Electronics" description="Electronics" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTELTRN" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="CNTELTRN" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
 
-    <!-- Cato: Unneeded - but keep as structure reference
+    <!-- Scipio: Unneeded - but keep as structure reference
     <Content contentId="CNTGIZMOS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Gizmos" description="Gizmos" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="CNTGIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
@@ -111,35 +111,35 @@ under the License.
         
     <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
         
-    <DataResource dataResourceId="CATO-FACT-02" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
-    <ElectronicText dataResourceId="CATO-FACT-02" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+    <DataResource dataResourceId="SCIPIO-FACT-02" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="SCIPIO-FACT-02" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
         <textData><![CDATA[
 Downloadable music outsells hard-copy music CDs 2:1.
         ]]></textData>
     </ElectronicText>
-    <Content contentId="CATO-FACT-02" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="CATO-FACT-02" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Downloadable music outsells hard-copy music" description="Downloadable music outsells hard-copy music CDs 2:1." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
-    <ContentAssoc contentId="CATO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+    <Content contentId="SCIPIO-FACT-02" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="SCIPIO-FACT-02" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Downloadable music outsells hard-copy music" description="Downloadable music outsells hard-copy music CDs 2:1." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="SCIPIO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
 
-    <DataResource dataResourceId="CATO-FACT-03" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
-    <ElectronicText dataResourceId="CATO-FACT-03" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+    <DataResource dataResourceId="SCIPIO-FACT-03" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="SCIPIO-FACT-03" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
         <textData><![CDATA[
 Phones are our most popular item.
         ]]></textData>
     </ElectronicText>
-    <Content contentId="CATO-FACT-03" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="CATO-FACT-03" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones most popular" description="Phones are our most popular item." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
-    <ContentAssoc contentId="CATO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+    <Content contentId="SCIPIO-FACT-03" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="SCIPIO-FACT-03" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones most popular" description="Phones are our most popular item." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="SCIPIO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
 
-    <DataResource dataResourceId="CATO-FACT-04" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
-    <ElectronicText dataResourceId="CATO-FACT-04" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+    <DataResource dataResourceId="SCIPIO-FACT-04" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="SCIPIO-FACT-04" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
         <textData><![CDATA[
 The resale value of our phones after five years is 46% higher than that of competitors.
         ]]></textData>
     </ElectronicText>
-    <Content contentId="CATO-FACT-04" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="CATO-FACT-04" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones hold value" description="Phones hold value." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
-    <ContentAssoc contentId="CATO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+    <Content contentId="SCIPIO-FACT-04" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="SCIPIO-FACT-04" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones hold value" description="Phones hold value." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="SCIPIO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
 
-    <ContentAssoc contentId="CATO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
-    <ContentAssoc contentId="CATO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
-    <ContentAssoc contentId="CATO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="SCIPIO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="SCIPIO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="SCIPIO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
     
 </entity-engine-xml>

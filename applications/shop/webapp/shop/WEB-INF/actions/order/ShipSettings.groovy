@@ -43,16 +43,16 @@ if (partyId && !partyId.equals("_NA_")) {
 if (cart?.getShippingContactMechId()) {
     shippingContactMechId = cart.getShippingContactMechId();
     shippingPartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechId", shippingContactMechId).filterByDate().queryFirst();
-    // Cato: NOTE: Null checks added to all below
+    // Scipio: NOTE: Null checks added to all below
     if (!shippingPartyContactDetail) {
-        Debug.logError("Cato: Missing shipping party contact detail for partyId '" + partyId + "' and contactMechId '" + shippingContactMechId + "'", module);
+        Debug.logError("Scipio: Missing shipping party contact detail for partyId '" + partyId + "' and contactMechId '" + shippingContactMechId + "'", module);
     }
     
     parameters.shippingContactMechId = shippingPartyContactDetail?.contactMechId;
     context.callSubmitForm = true;
 
     fullAddressBuf = new StringBuffer();
-    if (shippingPartyContactDetail) { // Cato: null check
+    if (shippingPartyContactDetail) { // Scipio: null check
         fullAddressBuf.append(shippingPartyContactDetail.address1);
         if (shippingPartyContactDetail.address2) {
             fullAddressBuf.append(", ");

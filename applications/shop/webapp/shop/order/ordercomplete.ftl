@@ -20,7 +20,7 @@ under the License.
 
 <#if orderHeader?has_content>
 
-<#-- Cato: Moved to page title: <@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>-->
+<#-- Scipio: Moved to page title: <@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>-->
 <p>${uiLabelMap.ShopThankYouForOrder}</p>
 <#assign printable = printable!false>
 <#if !isDemoStore?? || isDemoStore>

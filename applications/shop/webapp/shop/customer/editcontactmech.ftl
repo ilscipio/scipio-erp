@@ -36,7 +36,7 @@ under the License.
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </@field>
-          <#-- Cato: make it part of menu further below, otherwise looks strange
+          <#-- Scipio: make it part of menu further below, otherwise looks strange
             <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
           -->
         </form>
@@ -45,7 +45,7 @@ under the License.
     </#if>
   </#if>
 
-<#-- Cato: If we are editing an address currently selected for shipping in cart, show this warning.
+<#-- Scipio: If we are editing an address currently selected for shipping in cart, show this warning.
     This is mostly needed for checkout payment, but we'll just show for all cases to be safe. -->
 <#if contactMech??>
   <#if !cart?? && sessionAttributes.shoppingCart??>
@@ -56,7 +56,7 @@ under the License.
   </#if>
 </#if>
 
-<#-- Cato: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
@@ -68,7 +68,7 @@ under the License.
     <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else><#-- Cato: duplicate: ${uiLabelMap.PartyEditContactInfo}--></#if></#assign>
+<#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else><#-- Scipio: duplicate: ${uiLabelMap.PartyEditContactInfo}--></#if></#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
     
     <#if contactMech??>
@@ -121,7 +121,7 @@ under the License.
         </@field>
     </#if>
     
-  <#-- Cato: NOTE: The target depends on whether creating or updating. When creating, want to return, whereas updating want to get redirected to donepage. -->  
+  <#-- Scipio: NOTE: The target depends on whether creating or updating. When creating, want to return, whereas updating want to get redirected to donepage. -->  
   <#if contactMech??>
     <#assign targetParamStr>&amp;targetPageResponse=redirect-done</#assign>
   <#else>
@@ -143,7 +143,7 @@ under the License.
     </#if>
 
     <#if contactMechTypeId == "POSTAL_ADDRESS">
-      <#-- Cato: Delegated -->
+      <#-- Scipio: Delegated -->
         <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
             ctxVars={
               "pafFieldNamePrefix":"",
@@ -153,7 +153,7 @@ under the License.
     <#elseif contactMechTypeId == "TELECOM_NUMBER">
       <@telecomNumberField label=uiLabelMap.PartyPhoneNumber countryCode=((telecomNumberData.countryCode)!) areaCode=((telecomNumberData.areaCode)!) 
         contactNumber=((telecomNumberData.contactNumber)!) extension=((partyContactMechData.extension)!) />
-      <#-- Cato: use tooltips
+      <#-- Scipio: use tooltips
       <@field type="display">
           [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
       </@field>

@@ -40,14 +40,14 @@ under the License.
     <SurveyQuestionCategory surveyQuestionCategoryId="2001" description="Mini Cart section questions "/>
     <SurveyQuestionCategory surveyQuestionCategoryId="2101" description="Show Cart functionality questions "/>
     
-    <ProductStoreSurveyAppl productStoreSurveyId="1401" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1401" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1501" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1501" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1601" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1601" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1701" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1701" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1801" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1801" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1901" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1901" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="2001" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="2001" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="2101" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="2101" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1401" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1401" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1501" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1501" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1601" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1601" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1701" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1701" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1801" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1801" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1901" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1901" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="2001" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="2001" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="2101" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="2101" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
     
     <!--CHECKOUT PAGE-->
     <SurveyQuestion surveyQuestionId="1401" surveyQuestionCategoryId="1401" surveyQuestionTypeId="BOOLEAN" description="" question="Does clicking on the checkout link in minicart if the user is anonymous then page is displayed https://localhost:8443/shop/control/checkoutoptions"/>

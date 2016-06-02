@@ -58,8 +58,8 @@ List fillTree(rootCat ,CatLvl, parentCategoryId) {
                 def rootMap = FastMap.newInstance();
                 category = from("ProductCategory").where("productCategoryId", root.productCategoryId).queryOne();
                 categoryContentWrapper = new CategoryContentWrapper(category, request);
-                // Cato: don't want page title overridden/forced by groovy
-                // Cato: Do NOT HTML-escape this here
+                // Scipio: don't want page title overridden/forced by groovy
+                // Scipio: Do NOT HTML-escape this here
                 //context.title = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
                 context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
                 categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();

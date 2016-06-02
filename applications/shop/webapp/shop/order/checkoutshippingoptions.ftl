@@ -57,18 +57,18 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<@section title="${uiLabelMap.OrderHowShallWeShipIt}?"><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
+<@section title="${uiLabelMap.OrderHowShallWeShipIt}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
     <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
         <#--<fieldset>-->
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>
 
-            <#-- Cato: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
+            <#-- Scipio: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
             <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
             <@field type="generic" label="<strong>${uiLabelMap.OrderShippingMethod}</strong>" required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
-                <#-- Cato: For shop, will not show ship methods whose shipping estimates returned an error.
+                <#-- Scipio: For shop, will not show ship methods whose shipping estimates returned an error.
                     Selecting them here causes the next events to fail (offline calc for these was not supported in ecommerce). 
                     Some stores may want to let customers place
                     orders with offline calculation, but we know the failure is very likely to be misconfiguration

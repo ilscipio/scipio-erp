@@ -163,7 +163,7 @@ under the License.
                     <decorator-section name="body">
                          <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                <include-screen name="CatoEditProduct"/>
+                                <include-screen name="ScipioEditProduct"/>
                             </container>
                         </container>
                         <!-- 
@@ -218,18 +218,18 @@ under the License.
                     <decorator-section name="body">
                          <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="CatoProductInfo"/>
-                                <include-screen name="CatoProductCategory"/>
-                                <include-screen name="CatoProductDates"/>
-                                <include-screen name="CatoProductRates"/>
-                                <include-screen name="CatoProductShoppingCart"/>
-                                <include-screen name="CatoProductMisc"/>
+                                <include-screen name="ScipioProductInfo"/>
+                                <include-screen name="ScipioProductCategory"/>
+                                <include-screen name="ScipioProductDates"/>
+                                <include-screen name="ScipioProductRates"/>
+                                <include-screen name="ScipioProductShoppingCart"/>
+                                <include-screen name="ScipioProductMisc"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="CatoProductInventory"/>
-                                <include-screen name="CatoProductAmount"/>
-                                <include-screen name="CatoProductMeasures"/>
-                                <include-screen name="CatoProductShipping"/>
+                                <include-screen name="ScipioProductInventory"/>
+                                <include-screen name="ScipioProductAmount"/>
+                                <include-screen name="ScipioProductMeasures"/>
+                                <include-screen name="ScipioProductShipping"/>
                             </container>
                         </container>
                     </decorator-section>
@@ -332,11 +332,11 @@ under the License.
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <include-screen name="CatoAddProductCategoryMember"/>
+                            <include-screen name="ScipioAddProductCategoryMember"/>
                             <!-- <include-form name="AddProductCategoryMember" location="component://product/widget/catalog/ProductForms.xml"/> -->
                         </screenlet>
                         <screenlet>                            
-                            <include-screen name="CatoProductCategoryMemberList"/>
+                            <include-screen name="ScipioProductCategoryMemberList"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -344,19 +344,19 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#AddProductCategoryMember -->
-    <screen name="CatoAddProductCategoryMember">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#AddProductCategoryMember -->
+    <screen name="ScipioAddProductCategoryMember">
         <section>
              <widgets>
                  <screenlet>
-                    <platform-specific><html><html-template location="component://product/webapp/catalog/product/CatoAddProductCategoryMember.ftl"/></html></platform-specific>
+                    <platform-specific><html><html-template location="component://product/webapp/catalog/product/ScipioAddProductCategoryMember.ftl"/></html></platform-specific>
                  </screenlet>
              </widgets>
         </section>
     </screen>
     
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#UpdateProductCategoryMember -->
-    <screen name="CatoProductCategoryMemberList"> 
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#UpdateProductCategoryMember -->
+    <screen name="ScipioProductCategoryMemberList"> 
         <section>  
              <actions>
                  <entity-condition entity-name="ProductCategoryMember" list="productCategoryMemberList">
@@ -372,7 +372,7 @@ under the License.
 		            </condition>
 	                <widgets>
                         <screenlet title="${uiLabelMap.ProductCategories}">
-	                       <platform-specific><html><html-template location="component://product/webapp/catalog/product/CatoProductCategoryMemberList.ftl"/></html></platform-specific>
+	                       <platform-specific><html><html-template location="component://product/webapp/catalog/product/ScipioProductCategoryMemberList.ftl"/></html></platform-specific>
 	                    </screenlet>
 	                </widgets>
                 </section>
@@ -994,7 +994,7 @@ under the License.
                 <set field="activeSubMenuItem" value="EditProductContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
-                <!-- Cato: Now points to shop -->
+                <!-- Scipio: Now points to shop -->
                 <set field="layoutSettings.javaScripts[]" value="/shop/images/productAdditionalView.js" global="true"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -1580,11 +1580,11 @@ under the License.
         </section>
     </screen>
 
-    <!-- CATO: EditProductTag removed -->
+    <!-- SCIPIO: EditProductTag removed -->
     
-    <!-- CATO: Widget implementation -->
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoEditProduct">
+    <!-- SCIPIO: Widget implementation -->
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioEditProduct">
         <section>
             <actions>
            </actions>
@@ -1593,7 +1593,7 @@ under the License.
                      <widgets>
                        <screenlet>
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoEditProduct.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioEditProduct.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1602,8 +1602,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductInfo">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductInfo">
         <section>
             <actions>
            </actions>
@@ -1622,7 +1622,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonOverview}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductInfo.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductInfo.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1631,8 +1631,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductCategory">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductCategory">
         <section>
             <actions>
            </actions>
@@ -1646,7 +1646,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.ProductPrimaryCategory}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductCategory.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductCategory.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1655,8 +1655,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductDates">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductDates">
         <section>
             <actions>
            </actions>
@@ -1673,7 +1673,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonDates}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductDates.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductDates.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1682,8 +1682,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductInventory">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductInventory">
         <section>
             <actions>
            </actions>
@@ -1700,7 +1700,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonInventory}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductInventory.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductInventory.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1709,8 +1709,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductRates">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductRates">
         <section>
             <actions>
            </actions>
@@ -1724,7 +1724,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonRate}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductRates.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductRates.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1733,8 +1733,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductAmount">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductAmount">
         <section>
             <actions>
            </actions>
@@ -1749,7 +1749,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonAmount}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductAmount.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductAmount.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1758,8 +1758,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductMeasures">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductMeasures">
         <section>
             <actions>
            </actions>
@@ -1777,7 +1777,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonMeasures}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductMeasures.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductMeasures.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1786,8 +1786,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductShipping">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductShipping">
         <section>
             <actions>
            </actions>
@@ -1805,7 +1805,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonShipping}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductShipping.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductShipping.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1814,8 +1814,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductShoppingCart">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductShoppingCart">
         <section>
             <actions>
            </actions>
@@ -1829,7 +1829,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonShoppingCart}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductShoppingCart.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductShoppingCart.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>
@@ -1838,8 +1838,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
-    <screen name="CatoProductMisc">
+    <!-- SCIPIO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="ScipioProductMisc">
         <section>
             <actions>
            </actions>
@@ -1855,7 +1855,7 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.CommonMiscellaneous}">
                             <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/CatoProductMisc.ftl"/></html>
+                                <html><html-template location="component://product/webapp/catalog/product/ScipioProductMisc.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>

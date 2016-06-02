@@ -27,7 +27,7 @@ under the License.
                 <parameter param-name="noConditionFind" value="Y"/>
             </link>
         </menu-item>
-        <!-- Cato: Commmented out for now. Seems to not be used at the moment -->
+        <!-- Scipio: Commmented out for now. Seems to not be used at the moment -->
         <!-- <menu-item name="facilityGroup" title="${uiLabelMap.ProductFacilityGroups}"><link target="FindFacilityGroup"/></menu-item> -->        
         <menu-item name="ShipmentGatewayConfig" title="${uiLabelMap.FacilityShipmentGatewayConfig}">
             <condition>
@@ -67,20 +67,20 @@ under the License.
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <!-- Cato: To be removed -->
+        <!-- Scipio: To be removed -->
        <!--  <menu-item name="FacilityChildren" title="${uiLabelMap.CommonEntityChildren}">
             <link target="FacilityChildren">
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item> -->
-        <!-- Cato: ViewContactMechs moved to FacilitySettingsTabBar -->
-        <!-- Cato: To be removed -->
+        <!-- Scipio: ViewContactMechs moved to FacilitySettingsTabBar -->
+        <!-- Scipio: To be removed -->
         <!-- <menu-item name="EditFacilityGroups" title="${uiLabelMap.ProductGroups}">
             <link target="EditFacilityGroups">
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item> -->
-        <!-- Cato: To be removed -->
+        <!-- Scipio: To be removed -->
         <!--    <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}">
             <link target="EditFacilityParties">
                 <parameter param-name="facilityId"/>
@@ -91,7 +91,7 @@ under the License.
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <!-- Cato: I don't think this makes much sense because it is available in the root facility menu -->
+        <!-- Scipio: I don't think this makes much sense because it is available in the root facility menu -->
        <!--  <menu-item name="FindShipmentIn" title="${uiLabelMap.ProductIncomingShipments}">
             <link target="FindShipment">
                 <parameter param-name="destinationFacilityId" from-field="facilityId"/>
@@ -104,14 +104,14 @@ under the License.
                 <parameter param-name="lookupFlag" value="Y"/>
             </link>
         </menu-item> -->
-        <!-- Cato: to be removed -->
+        <!-- Scipio: to be removed -->
        <!--  <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
             <link target="EditFacilityContent">
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item> -->
-        <!-- Cato: EditFacilityGeoPoint moved to settings -->      
-        <!-- Cato: Hide for now -->
+        <!-- Scipio: EditFacilityGeoPoint moved to settings -->      
+        <!-- Scipio: Hide for now -->
         <!-- <menu-item name="EditFacilityAgreements" title="${uiLabelMap.PageTitleViewFacilityAgreements}">
             <link target="EditFacilityAgreements">
                 <parameter param-name="facilityId"/>
@@ -391,7 +391,7 @@ under the License.
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <!-- Cato: Commented out, it is very similar to EditFacilityInventoryItems but showing more data. 
+        <!-- Scipio: Commented out, it is very similar to EditFacilityInventoryItems but showing more data. 
         Quite cumbersome, inventory item detail must be presented to the user in a more friendly way -->
        <!--  <menu-item name="ViewFacilityInventoryItemsDetails" title="${uiLabelMap.ProductInventoryItemsDetails}">
             <link target="ViewFacilityInventoryItemsDetails">
@@ -413,7 +413,7 @@ under the License.
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <!-- Cato: Merged with ReceiveInventory -->
+        <!-- Scipio: Merged with ReceiveInventory -->
         <!-- <menu-item name="ReceiveReturn" title="${uiLabelMap.ProductReceiveReturn}">
             <link target="ReceiveReturn">
                 <parameter param-name="facilityId"/>

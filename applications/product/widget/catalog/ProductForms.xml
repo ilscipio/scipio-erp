@@ -70,7 +70,7 @@
         </field>
     </form>
 
-    <!-- CATO: #EditProduct replaced by component://product/widget/catalog/ProductScreens.xml#CatoEditProduct -->
+    <!-- SCIPIO: #EditProduct replaced by component://product/widget/catalog/ProductScreens.xml#ScipioEditProduct -->
 
     <form name="EditProductDup" type="single" target="DuplicateProduct" title="" default-map-name="product" header-row-style="header-row"
        > <!-- orig: default-table-style=-style="basic-table" -->
@@ -3063,5 +3063,5 @@
 
 
     
-    <!-- CATO: ListProductTag removed -->
+    <!-- SCIPIO: ListProductTag removed -->
 </forms>

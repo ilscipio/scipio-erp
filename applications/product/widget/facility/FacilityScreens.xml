@@ -154,7 +154,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: To be removed -->
+    <!-- Scipio: To be removed -->
     <!-- <screen name="FacilityChildren">
         <section>
             <actions>
@@ -197,14 +197,14 @@ under the License.
                         <platform-specific>
                            <html><html-template location="component://product/webapp/facility/facility/FindFacilityTransfers.ftl"/></html>
                         </platform-specific>
-                       <include-screen name="CatoFacilityTransferList"/>
+                       <include-screen name="ScipioFacilityTransferList"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
     
-    <screen name="CatoFacilityTransferList">
+    <screen name="ScipioFacilityTransferList">
         <section>
             <actions>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacilityTransfers.groovy"/>
@@ -504,7 +504,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: Commented out, it is very similar to EditFacilityInventoryItems but showing more data. 
+    <!-- Scipio: Commented out, it is very similar to EditFacilityInventoryItems but showing more data. 
         Quite cumbersome, inventory item detail must be presented to the user in a more friendly way -->
     <!-- <screen name="ViewFacilityInventoryItemsDetails">
         <section>
@@ -674,7 +674,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: Hide for now -->
+    <!-- Scipio: Hide for now -->
     <!-- <screen name="EditFacilityGroups">
         <section>
             <actions>
@@ -707,7 +707,7 @@ under the License.
     </screen> -->
 
 
-    <!-- Cato: To be removed -->
+    <!-- Scipio: To be removed -->
     <!-- <screen name="EditFacilityParties">
         <section>
             <actions>
@@ -876,9 +876,9 @@ under the License.
                                 <not><if-empty field="inventoryItem"/></not>
                             </condition>
                             <widgets>
-                                <!-- Cato: This makes no sense -->
+                                <!-- Scipio: This makes no sense -->
                                 <!-- <include-menu name="InventoryItemTabBar" location="component://product/widget/facility/FacilityMenus.xml"/> -->
-                                <!-- Cato: FIXME: Move this to a proper menu -->                                
+                                <!-- Scipio: FIXME: Move this to a proper menu -->                                
                                 <!-- <container style="widget-container">
                                     <link target="EditInventoryItem" text="${uiLabelMap.ProductNewInventoryItem}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="facilityId" from-field="facilityId"/>
@@ -1012,14 +1012,14 @@ under the License.
                         <!-- <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
                             <include-form name="ListPhysicalInventory" location="component://product/widget/facility/FacilityForms.xml"/>
                         </screenlet> -->
-                        <include-screen name="CatoFacilityPhysicalInventoryList"/>
+                        <include-screen name="ScipioFacilityPhysicalInventoryList"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
     
-    <screen name="CatoFacilityPhysicalInventoryList">
+    <screen name="ScipioFacilityPhysicalInventoryList">
         <section>
             <widgets>
                 <platform-specific>
@@ -1046,13 +1046,13 @@ under the License.
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <platform-specific><html><html-template location="component://product/webapp/facility/inventory/ReceiveInventory.ftl"/></html></platform-specific>
-                                <include-screen name="CatoReceiveInventoryDetail"/>
+                                <include-screen name="ScipioReceiveInventoryDetail"/>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                <platform-specific><html><html-template location="component://product/webapp/facility/returns/ReceiveReturn.ftl"/></html></platform-specific>
-                                <include-screen name="CatoReceiveReturnDetail"/>
+                                <include-screen name="ScipioReceiveReturnDetail"/>
                             </container>
                         </container>
                     </decorator-section>
@@ -1061,7 +1061,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CatoReceiveInventoryDetail">
+    <screen name="ScipioReceiveInventoryDetail">
 	    <section>
 		    <condition>
 		        <if-empty field="parameters.returnId"/>
@@ -1074,7 +1074,7 @@ under the License.
 		    </widgets>
 	    </section>
     </screen>
-    <screen name="CatoReceiveReturnDetail">
+    <screen name="ScipioReceiveReturnDetail">
         <section>
 	        <condition>
 	            <and>
@@ -1486,7 +1486,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: Hide for now -->
+    <!-- Scipio: Hide for now -->
     <!-- <screen name="EditFacilityAgreements">
         <section>
             <actions>

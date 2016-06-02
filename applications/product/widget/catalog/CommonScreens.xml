@@ -286,7 +286,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Cato: delegator to main-decorator -->
+                    <!-- Scipio: delegator to main-decorator -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="PromoSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                     </decorator-section>                   
@@ -403,7 +403,7 @@ under the License.
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="ProductStoreGroupTree"/>
                     </decorator-section>
-                    <!-- Cato: what is this?
+                    <!-- Scipio: what is this?
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ProductStoreGroupButtonBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                     </decorator-section>-->
@@ -467,7 +467,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Cato: New, transferred from Content app -->
+    <!-- Scipio: New, transferred from Content app -->
     <screen name="CommonWebSiteDecorator">
         <section>
             <widgets>
@@ -476,7 +476,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: New, transferred from Content app -->
+    <!-- Scipio: New, transferred from Content app -->
     <screen name="CommonContentDecorator">
         <section>
             <widgets>
@@ -634,11 +634,11 @@ under the License.
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <section>
                                    <actions>
-                                       <!-- Cato: FIXME: Unhardcode this -->
-                                       <set field="productStoreId" value="CatoShop" global="true"/>
+                                       <!-- Scipio: FIXME: Unhardcode this -->
+                                       <set field="productStoreId" value="ScipioShop" global="true"/>
                                    </actions>
                                    <widgets>
-                                       <include-screen name="CatoStoreCatalogTree"/>   
+                                       <include-screen name="ScipioStoreCatalogTree"/>   
                                    </widgets>
                                </section>
                             </container>
@@ -648,14 +648,14 @@ under the License.
                                        <set field="productStoreId" value="RentalStore" global="true"/>
                                    </actions>
                                    <widgets>
-                                       <include-screen name="CatoStoreCatalogTree"/>   
+                                       <include-screen name="ScipioStoreCatalogTree"/>   
                                    </widgets>
                                </section>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="CatoRecentProductsAdded"/>
+                                <include-screen name="ScipioRecentProductsAdded"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
 
@@ -745,8 +745,8 @@ under the License.
     </screen>
     
     
-    <!-- CATO: Widget implementation -->
-    <screen name="CatoStoreCatalogTree">
+    <!-- SCIPIO: Widget implementation -->
+    <screen name="ScipioStoreCatalogTree">
         <section>
             <actions>
                <entity-one value-field="productStore" entity-name="ProductStore"/>
@@ -769,7 +769,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CatoRecentProductsAdded">
+    <screen name="ScipioRecentProductsAdded">
         <section>
             <actions>
                 <script location="component://product/script/com/ilscipio/product/dashboard/NewProducts.groovy"/>
@@ -791,7 +791,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CatoPromotionsList">
+    <screen name="ScipioPromotionsList">
         <section>
             <actions>
                 <set field="userEntered" from-field="parameters.userEntered"/>

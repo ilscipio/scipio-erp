@@ -133,7 +133,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Cato: Deprecated in favor to EditShipment -->
+    <!-- Scipio: Deprecated in favor to EditShipment -->
    <!--  <screen name="ViewShipment">
         <section>
             <actions>

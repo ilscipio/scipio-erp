@@ -188,9 +188,9 @@ under the License.
                         </screenlet> -->
                         <screenlet title="${uiLabelMap.ProductCategoryContentList}">
                             <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                            <include-screen name="CatoCategoryContentList"/>
+                            <include-screen name="ScipioCategoryContentList"/>
                         </screenlet>
-                        <!-- CATO: To be removed -->
+                        <!-- SCIPIO: To be removed -->
                         <!-- <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
                         </platform-specific> -->
@@ -200,8 +200,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategoryContentAssoc -->
-    <screen name="CatoCategoryContentList"> 
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategoryContentAssoc -->
+    <screen name="ScipioCategoryContentList"> 
         <section>
             <widgets>
                 <screenlet>
@@ -226,12 +226,12 @@ under the License.
             <widgets>
 
                  <screenlet>
-                     <!-- CATO: Category content forms widgets have been replaced by a single ftl -->
+                     <!-- SCIPIO: Category content forms widgets have been replaced by a single ftl -->
                      <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                     <!-- <include-screen name="CatoEditCategoryContent"/> -->
+                     <!-- <include-screen name="ScipioEditCategoryContent"/> -->
                      <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
                  </screenlet>
-                 <!-- CATO: To be removed -->
+                 <!-- SCIPIO: To be removed -->
                  <!--    <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos}">
                      <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
                  </screenlet>
@@ -261,7 +261,7 @@ under the License.
                                             <set field="productCategoryAssociationMode" value="parent" />
                                         </actions>
                                         <widgets>
-                                            <include-screen name="CatoAddCategoryAssociation"/>
+                                            <include-screen name="ScipioAddCategoryAssociation"/>
                                         </widgets>
                                     </section>
                                 </screenlet>
@@ -273,7 +273,7 @@ under the License.
                                             <set field="productCategoryAssociationMode" value="child" />
                                         </actions>
                                         <widgets>
-                                            <include-screen name="CatoAddCategoryAssociation"/>
+                                            <include-screen name="ScipioAddCategoryAssociation"/>
                                         </widgets>
                                     </section>
                                 </screenlet>
@@ -287,7 +287,7 @@ under the License.
                                         <set field="productCategoryAssociationMode" value="parent" />
                                     </actions>
                                     <widgets>
-                                        <include-screen name="CatoCategoryAssociationList"/>
+                                        <include-screen name="ScipioCategoryAssociationList"/>
                                     </widgets>
                                 </section>
                             </container>
@@ -297,7 +297,7 @@ under the License.
                                         <set field="productCategoryAssociationMode" value="child" />
                                     </actions>
                                     <widgets>
-                                        <include-screen name="CatoCategoryAssociationList"/>
+                                        <include-screen name="ScipioCategoryAssociationList"/>
                                     </widgets>
                                 </section>
                             </container>
@@ -308,8 +308,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#AddCategory* -->
-    <screen name="CatoAddCategoryAssociation">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#AddCategory* -->
+    <screen name="ScipioAddCategoryAssociation">
         <section>
             <widgets>
                 <screenlet>
@@ -319,8 +319,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategory* -->
-    <screen name="CatoCategoryAssociationList">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategory* -->
+    <screen name="ScipioCategoryAssociationList">
         <section>
             <widgets>
 	            <section>
@@ -432,7 +432,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <screen name="EditCategoryProdCatalogs">
         <section>
             <actions>
@@ -467,7 +467,7 @@ under the License.
         </section>
     </screen> -->
     
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <screen name="EditCategoryFeatureCats">
         <section>
             <actions>
@@ -510,7 +510,7 @@ under the License.
         </section>
     </screen> -->
     
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <screen name="EditCategoryParties">
         <section>
             <actions>
@@ -543,7 +543,7 @@ under the License.
         </section>
     </screen> -->
     
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <screen name="EditCategoryAttributes">
         <section>
             <actions>
@@ -617,7 +617,7 @@ under the License.
     </screen>
 
     <!-- ProductCategoryLinks Screen -->
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!--  <screen name="EditProductCategoryLinks">
         <section>
             <actions>

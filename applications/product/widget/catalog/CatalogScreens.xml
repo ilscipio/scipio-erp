@@ -63,7 +63,7 @@ under the License.
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <include-screen name="CatoEditProdCatalog"/>
+                            <include-screen name="ScipioEditProdCatalog"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -71,8 +71,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#EditProdCatalog -->
-    <screen name="CatoEditProdCatalog">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#EditProdCatalog -->
+    <screen name="ScipioEditProdCatalog">
         <section>
             <widgets>
                 <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/EditProdCatalog.ftl"/></html></platform-specific>
@@ -117,20 +117,20 @@ under the License.
                     <decorator-section name="body">
                         <!-- <screenlet title="${uiLabelMap.ProductAddCatalogProdCat}"> -->
                         <screenlet>
-                            <include-screen name="CatoAddProductCategoryToProdCatalog" />
+                            <include-screen name="ScipioAddProductCategoryToProdCatalog" />
                            <!--  <include-form name="addProductCategoryToProdCatalog" location="component://product/widget/catalog/CatalogForms.xml"/> -->
                         </screenlet>
                         <screenlet title="${uiLabelMap.ProductCatalogCategoryList}">
                            <!--  <include-form name="EditProdCatalogCategories" location="component://product/widget/catalog/CatalogForms.xml"/> -->
-                            <include-screen name="CatoProdCatalogCategoryList" />
+                            <include-screen name="ScipioProdCatalogCategoryList" />
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
-    <screen name="CatoAddProductCategoryToProdCatalog">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
+    <screen name="ScipioAddProductCategoryToProdCatalog">
         <section>
             <actions>
                 <entity-condition entity-name="ProdCatalogCategoryType" list="prodCatalogCategoryTypes"/>
@@ -140,8 +140,8 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
-     <screen name="CatoProdCatalogCategoryList">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
+     <screen name="ScipioProdCatalogCategoryList">
         <section>
             <actions>
                  <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategories">
@@ -170,19 +170,19 @@ under the License.
                     <decorator-section name="body">
                         <screenlet>
                             <!-- <include-form name="AddProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
-                            <include-screen name="CatoAddProdCatalogToParty"/>
+                            <include-screen name="ScipioAddProdCatalogToParty"/>
                         </screenlet>
                         <screenlet>
                            <!--  <include-form name="UpdateProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
-                            <include-screen name="CatoProdCatalogPartyList"/>
+                            <include-screen name="ScipioProdCatalogPartyList"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#AddProdCatalogToParty -->
-    <screen name="CatoAddProdCatalogToParty">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#AddProdCatalogToParty -->
+    <screen name="ScipioAddProdCatalogToParty">
         <section>
             <actions>
                 <entity-condition entity-name="RoleType" list="roleTypes">
@@ -195,8 +195,8 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProdCatalogToParty -->
-    <screen name="CatoProdCatalogPartyList">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProdCatalogToParty -->
+    <screen name="ScipioProdCatalogPartyList">
         <section>
             <actions>
                 <entity-and entity-name="ProdCatalogRole" list="prodCatalogRoleList">
@@ -218,7 +218,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- CATO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
+    <!-- SCIPIO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
     <!-- <screen name="EditProdCatalogStores">
         <section>
             <actions>
@@ -231,10 +231,10 @@ under the License.
                  <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <include-screen name="CatoAddProdCatalogToStore"/>
+                            <include-screen name="ScipioAddProdCatalogToStore"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.ProductCatalogStoreList}">
-                            <include-screen name="CatoProdCatalogStoreList"/>
+                            <include-screen name="ScipioProdCatalogStoreList"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -242,8 +242,8 @@ under the License.
         </section>
     </screen> -->
     
-     <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#CreateProductStoreCatalog -->
-    <screen name="CatoAddProdCatalogToStore">
+     <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#CreateProductStoreCatalog -->
+    <screen name="ScipioAddProdCatalogToStore">
         <section>
             <actions>
                 <entity-condition entity-name="ProductStore" list="productStoreList">
@@ -255,8 +255,8 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProductStoreCatalog -->
-    <screen name="CatoProdCatalogStoreList">
+    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProductStoreCatalog -->
+    <screen name="ScipioProdCatalogStoreList">
         <section>
             <actions>
                 <entity-and entity-name="ProductStoreCatalog" list="productStoreCatalogList">

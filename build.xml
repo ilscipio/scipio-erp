@@ -588,7 +588,9 @@ under the License.
             <equals arg1="${fs.rdbms.result}" arg2="presentWithNoData" />
             <then>       
             	<echo message="No demo data found. Compiling and loading demo data. Please wait, this may take a few minutes..."/>
+            	<property name="currentTarget" value="start" />
                 <antcall target="load-demo" />
+            	<property name="currentTarget" value="load" />
             	<antcall target="start">
                   <param name="cato.start.spawn" value="true" />
                 </antcall>

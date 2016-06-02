@@ -14,7 +14,7 @@
 * * Functions in Freemarker only support positional arguments, but some Cato functions support
 *   an "args" argument as a map, which emulates named arguments.
 * * Default markup-producing macros are found in >>>standard/htmlTemplate.ftl<<<.
-*   Utilities found in utilities.ftl should not contain their logic in general.
+*   In general, utilities found in utilities.ftl should not contain their logic.
 * * Except where otherwise required (placeholder/abstract), it is generally not intended for the 
 *   declarations in this file to be overridden. Although possible to do from theme markup overrides, it is unsupported.
 *  

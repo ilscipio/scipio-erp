@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <@section title=uiLabelMap.AccountingPaymentInformation>
   <@table type="fields">
         <@thead>

@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <@section title=uiLabelMap.CommonOverview>
   <#assign invoiceType = invoice.getRelatedOne("InvoiceType", false)/>
   <#assign currentStatus = invoice.getRelatedOne("StatusItem", false)/>

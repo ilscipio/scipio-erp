@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <#if paymentList?has_content> <#-- FIXME: Ugly workaround, because variables set by entity-condition do not validate correctly on screen condition -->
 <@section title=uiLabelMap.AccountingAppliedPayments>
     <@table type="data-complex" role="grid">

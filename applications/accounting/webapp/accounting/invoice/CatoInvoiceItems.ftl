@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <@section title=uiLabelMap.AccountingInvoiceItems>
     <@table type="data-complex" role="grid">
         <@thead>

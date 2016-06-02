@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <@section title=uiLabelMap.AccountingAgreementItemTerms>
     <@table type="fields">
         <@thead>

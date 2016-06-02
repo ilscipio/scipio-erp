@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <#if invoices?has_content>
 <@table type="fields">
     <@thead>

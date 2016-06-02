@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Cato: NOTE: do NOT wrap in @fields, so that caller may specify his own -->
+<#-- Scipio: NOTE: do NOT wrap in @fields, so that caller may specify his own -->
 
-<#-- Cato: Do this on individual field-by-field basis instead
+<#-- Scipio: Do this on individual field-by-field basis instead
 <#if !creditCard?has_content>
     <#assign creditCard = requestParameters>
 </#if>
@@ -29,7 +29,7 @@ under the License.
 </#if>
 -->
 
-<#-- Cato: include fieldset in parent if desired
+<#-- Scipio: include fieldset in parent if desired
 <@fieldset>
 -->
     <@field type="input" size="30" maxlength="60" name="${fieldNamePrefix}companyNameOnCard" value=(parameters["${fieldNamePrefix}companyNameOnCard"]!(creditCard.companyNameOnCard)!(ccfFallbacks.companyNameOnCard)!) label=uiLabelMap.AccountingCompanyNameCard/>     
@@ -91,7 +91,7 @@ under the License.
         <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber) label=uiLabelMap.AccountingCardNumber required=true/>
     </#if>
     
-  <#-- Cato: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->
+  <#-- Scipio: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->
   <#if showSecurityCodeField>
     <@field type="input" size="5" maxlength="10" name="${fieldNamePrefix}cardSecurityCode" value="" label=uiLabelMap.AccountingCardSecurityCode />
   </#if>

@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <@section title=uiLabelMap.CommonOverview>
   <#assign paymentType = payment.getRelatedOne("PaymentType", false)/>
   <#assign currentStatus = payment.getRelatedOne("StatusItem", false)/>

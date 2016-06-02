@@ -1,4 +1,4 @@
-<#-- CATO -->
+<#-- SCIPIO -->
 <#if finAccountTrans?has_content> <#-- FIXME: Ugly workaround, because variables set by entity-condition do not validate correctly on screen condition -->
 <@section title=uiLabelMap.AccountingFinAccountTransaction>
     <@table type="fields" >

@@ -24,7 +24,7 @@ Recommended Development Tools
  * Freemarker IDE editor (select from JBools tools plugin)
 
 Prerequisits
-In order to install CATO, the following prerequisites must be installed properly:
+In order to install SCIPIO, the following prerequisites must be installed properly:
 * Java 1.7 (or greater) SDK
  * Download and Install
  * Set JAVA_HOME Path
@@ -48,10 +48,10 @@ OFBiz Dashboard: http://localhost:8080/webtools
 
 4. To access the OFBiz Applications from the Dashboard use:
 Username: admin
-Password: cato
+Password: scipio
 
 
-                            Congratulations, you have installed CATO!
+                            Congratulations, you have installed SCIPIO!
 
 
 Optional Configuration
@@ -63,18 +63,18 @@ Optional Configuration
 *****************
 * S U P P O R T *
 *****************
-For detailed changes to the CATO Commerce suite, visit the github wiki at:
+For detailed changes to the SCIPIO Commerce suite, visit the github wiki at:
 
-https://github.com/catocommerce/cato/wiki
+https://github.com/scipiocommerce/scipio/wiki
 
 You can get in touch with the community over at:
 
-http://forum.cato-commerce.com/
+http://forum.scipio-commerce.com/
 
 *************
 * O F B I Z *
 *************
-Cato is a fork of the Apache OFBiz project. 
+Scipio is a fork of the Apache OFBiz project. 
 
 For more details about OFBiz please visit the OFBiz Documentation page:
 
@@ -94,8 +94,8 @@ http://ofbiz.apache.org/community.html
 ***********************
 * D I S C L A I M E R *
 ***********************
-CATO Commerce and the CATO logo are trademarks of Ilscipio GmbH. 
-© Copyright CATO components 2014 Ilscipio GmbH.
+SCIPIO Commerce and the SCIPIO logo are trademarks of Ilscipio GmbH. 
+© Copyright SCIPIO components 2014 Ilscipio GmbH.
 Apache OFBiz, Apache, the Apache feather logo are trademarks
  of The Apache Software Foundation.
 

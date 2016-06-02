@@ -3,6 +3,6 @@
 # set OFBIZ's relevant paths
 OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"
 
-echo "Cato-Commerce: Stopping framework..."        
+echo "Scipio-Commerce: Stopping framework..."        
 sh ant stop &
-echo "Cato-Commerce: Framework successfully stopped."
+echo "Scipio-Commerce: Framework successfully stopped."

@@ -36,7 +36,7 @@ check_arguments () {
 
     # If more than 2 arguments have been passed, show error and display the help message 
     if [ "$#" -gt 2 ]; then    
-        echo "Cato-Commerce: Error: Invalid number of arguments: $#"
+        echo "Scipio-Commerce: Error: Invalid number of arguments: $#"
         sh start.sh -h
         exit 1
     # If no argument found, proceed with the default behavior.  
@@ -50,11 +50,11 @@ check_arguments () {
         else
             check_task $ANT_TARGET
             if [ $? -eq 0 ]; then
-                echo "Cato-Commerce: Specific build task found: [$1]. Launching..."
+                echo "Scipio-Commerce: Specific build task found: [$1]. Launching..."
                 ANT_TARGET=$1
                 return 2
             else
-                echo "Cato-Commerce: Specific build task not found: [$1]. Aborting..."
+                echo "Scipio-Commerce: Specific build task not found: [$1]. Aborting..."
                 exit 1
             fi
         fi
@@ -65,7 +65,7 @@ check_arguments () {
             ANT_TARGET=$2
             return 2
         else
-            echo "Cato-Commerce: Error: Passed arguments are invalid."
+            echo "Scipio-Commerce: Error: Passed arguments are invalid."
             sh start.sh -h
             exit 1
         fi
@@ -78,14 +78,14 @@ START_ACTION=$?
 
 if [ $START_ACTION -eq 1 ]
 then    
-    sh ant cato-help -logger com.ilscipio.cato.util.ant.logger.CatoLogger -lib ./framework/base/lib/ant
+    sh ant scipio-help -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
 elif [ $START_ACTION -eq 2 ]; then    
-    #echo "Cato-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
+    #echo "Scipio-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
     if [ $ANT_VERBOSE -eq 1 ]; then
-        sh ant $ANT_TARGET -logger com.ilscipio.cato.util.ant.logger.CatoLogger -lib ./framework/base/lib/ant
+        sh ant $ANT_TARGET -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
     else
         sh ant $ANT_TARGET > /dev/null 2>&1
     fi   
 elif [ $START_ACTION -eq 3 ]; then
-    sh ant cato-default-start -logger com.ilscipio.cato.util.ant.logger.CatoLogger -lib ./framework/base/lib/ant
+    sh ant scipio-default-start -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
 fi

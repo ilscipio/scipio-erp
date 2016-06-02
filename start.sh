@@ -12,10 +12,12 @@ ANT_TARGET=
 
 #----- BEGIN CUSTOM FUNCTIONS -----#
 check_task () { 
-    BUILD_TASKS="$(sh ant -p | grep -oe '^[[:space:]][a-zA-Z-]+' | echo build)"    
-    echo "build tasks $BUILD_TASKS"
+    BUILD_TASKS="$(echo build | sh ant -p | grep -Eo '^[[:space:]][a-zA-Z-]+')"    
+    #echo "build tasks ==============> $BUILD_TASKS"
     for e in "$BUILD_TASKS"; do 
-        if [ "$e" = "$2" ]; then
+        task = echo -e "${e}" | tr -d '[[:space:]]'
+        $(echo -e ${task} \r)
+        if [ "$task" = "$2" ]; then
             return 0;
         fi
     done
@@ -78,9 +80,9 @@ if [ $START_ACTION -eq 1 ]
 then    
     sh ant cato-help -logger com.ilscipio.cato.util.ant.logger.CatoLogger -lib ./framework/base/lib/ant
 elif [ $START_ACTION -eq 2 ]; then    
-    echo "Cato-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
+    #echo "Cato-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
     if [ $ANT_VERBOSE -eq 1 ]; then
-        sh ant $ANT_TARGET
+        sh ant $ANT_TARGET -logger com.ilscipio.cato.util.ant.logger.CatoLogger -lib ./framework/base/lib/ant
     else
         sh ant $ANT_TARGET > /dev/null 2>&1
     fi   

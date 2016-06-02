@@ -583,12 +583,12 @@ under the License.
 	<target name="cato-default-start" depends="cato-check-default-rdbms">
 		<echo message="Cato-Commerce: Welcome to Cato-Commerce" />		
 		<echo message="Cato-Commerce: Default RDBMS has been detected [${fs.rdbms.name}]"/>
+		
         <if>
             <equals arg1="${fs.rdbms.result}" arg2="presentWithNoData" />
             <then>       
             	<echo message="No demo data found. Compiling and loading demo data. Please wait, this may take a few minutes..."/>
-                <antcall target="load-demo"/>            	
-            	<echo message="Starting framework..." />
+                <antcall target="load-demo" />
             	<antcall target="start">
                   <param name="cato.start.spawn" value="true" />
                 </antcall>
@@ -613,8 +613,8 @@ under the License.
 		<echo message="Usage ./start.sh [OPTIONS] [TARGET]" />
 		<echo message="If no arguments are passed, 'load-demo' and afterwards 'start' targets will be automatically executed. The former only if the configured datasource in $OFBIZ_ENTITY_ENGINE_PATH is $OFBIZ_DEFAULT_FS_RDBMS and no data under $OFBIZ_ENTITY_ENGINE_PATH is present." />
 		<echo message="OPTIONS:" />
-		<echo message=" -v        Verbose. Display more info while executing targets." level="error"/>
-		<echo message=" -h --help Display this help." level="error"/>
+		<echo message=" -v        Verbose. Display more info while executing targets."/>
+		<echo message=" -h --help Display this help."/>
 		<echo message="TARGETS:" /> 
 		<java classname="org.apache.tools.ant.Main" outputproperty="project.help.output" fork="true">	    	    	
 		    <arg value="-projecthelp" />
@@ -706,6 +706,7 @@ under the License.
     <target name="start"
             description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
     	<!-- Cato: -->
+    	<property name="currentTarget" value="start"/>
     	<condition property="spawn" else="false" >
     	     <isset property="cato.start.spawn"/>
     	</condition>
@@ -856,6 +857,7 @@ under the License.
 
     <target name="load-demo" depends="build"
             description="Load all data; meant for generic OFBiz development, testing, demonstration, etc purposes">
+    	<property name="currentTarget" value="load"/>
         <java jar="ofbiz.jar" fork="true">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>

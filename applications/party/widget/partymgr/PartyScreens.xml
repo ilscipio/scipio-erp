@@ -57,7 +57,7 @@ under the License.
     </screen>
 
     <!-- Party Profile Screens -->
-    <!-- CATO: Changelist
+    <!-- SCIPIO: Changelist
                * Removed portal page reference
                * Removed "showOld buttons
      -->
@@ -557,7 +557,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Remove - This is a duplicate of component://common/widget/SecurityScreens.xml#EditUserLogin -->
+    <!-- SCIPIO: Remove - This is a duplicate of component://common/widget/SecurityScreens.xml#EditUserLogin -->
     <screen name="EditUserLogin">
         <section>
             <actions>

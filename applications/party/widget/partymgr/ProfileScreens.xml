@@ -51,7 +51,7 @@
                     <widgets>
                         <section>
                             <widgets>
-                                <include-screen name="CatoPartyInfo"/>
+                                <include-screen name="ScipioPartyInfo"/>
                             </widgets>
                         </section>
                     </widgets>
@@ -69,7 +69,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
                                </condition>
                             <widgets>
-                                <include-screen name="CatoPartyInfo"/>
+                                <include-screen name="ScipioPartyInfo"/>
                             </widgets>
                         </section>
                     </widgets>
@@ -617,15 +617,15 @@
         </section>
     </screen>
     
-    <!-- CATO: Form migration -->
-    <!-- CATO: Form widget replacement: component://party/widget/partymgr/PartyForms.xml#ViewPartyPerson 
+    <!-- SCIPIO: Form migration -->
+    <!-- SCIPIO: Form widget replacement: component://party/widget/partymgr/PartyForms.xml#ViewPartyPerson 
                                         component://party/widget/partymgr/PartyForms.xml#ViewPartyGroup
                                         component://party/widget/partymgr/PartyForms.xml#ViewPartyPersonHistory
                                         component://party/widget/partymgr/PartyForms.xml#ViewPartyGroupHistory
          
                Replaces: component://party/widget/partymgr/ProfileScreens.xml#AvsSettings
     -->    
-    <screen name="CatoPartyInfo">
+    <screen name="ScipioPartyInfo">
         <section>
             <actions>
                 <entity-one entity-name="PartyIcsAvsOverride" value-field="avsOverride">
@@ -639,7 +639,7 @@
             </condition>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://party/webapp/partymgr/party/profileblocks/CatoPartyInfo.ftl"/></html>
+                    <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ScipioPartyInfo.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>

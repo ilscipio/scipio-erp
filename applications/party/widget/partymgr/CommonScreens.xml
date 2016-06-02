@@ -160,7 +160,7 @@ under the License.
 			                                 <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
 			                            </container>
 			                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                            <include-screen name="CatoNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                            <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
                                         </container>
 			                        </container>
 		                        </screenlet>
@@ -168,10 +168,10 @@ under the License.
                         </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">                               
-                                <include-screen name="CatoLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>                                
+                                <include-screen name="ScipioLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>                                
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="CatoSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                <include-screen name="ScipioSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                         </container>
                     </decorator-section>
@@ -180,8 +180,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Dashboard widget implementation -->
-    <screen name="CatoNewRegistrations">
+    <!-- SCIPIO: Dashboard widget implementation -->
+    <screen name="ScipioNewRegistrations">
         <section>
             <actions>
                 <set field="chartType" value="bar"/>                                    
@@ -213,7 +213,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="CatoSecurityAlerts">
+    <screen name="ScipioSecurityAlerts">
         <section>
             <actions>
                 <set field="intervalScope" value="month"/>
@@ -238,7 +238,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CatoLastCommunication">
+    <screen name="ScipioLastCommunication">
         <section>
             <actions>
                 <set field="intervalScope" value="month"/>

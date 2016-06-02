@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <!-- CATO Remove
+    <!-- SCIPIO Remove
     <form name="EditAvsOverride" type="single" target="updateAvsOverride" default-map-name="avsOverride"
         header-row-style="header-row">
         <field name="partyId"><hidden/></field>

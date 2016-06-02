@@ -295,7 +295,7 @@
             </link>
         </menu-item>
         
-        <!-- CATO: Remove - Already covered by Quotes & Orders menu
+        <!-- SCIPIO: Remove - Already covered by Quotes & Orders menu
         <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_CREATE"/>

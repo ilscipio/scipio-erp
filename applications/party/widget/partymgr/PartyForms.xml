@@ -829,7 +829,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="securityGroupId" title="${uiLabelMap.CommonSecurityGroupId}">
             <drop-down allow-empty="true" text-size="60">
-                <entity-options entity-name="SecurityGroup" key-field-name="groupId"> <!-- Cato: FIXME: needs description="" -->
+                <entity-options entity-name="SecurityGroup" key-field-name="groupId"> <!-- Scipio: FIXME: needs description="" -->
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>

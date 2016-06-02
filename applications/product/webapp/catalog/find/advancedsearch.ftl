@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title=uiLabelMap.ProductAdvancedSearchInCategory>
     <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
-      <#-- Cato: don't hardcode these
+      <#-- Scipio: don't hardcode these
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <input type="hidden" name="PAGING" value="Y"/>-->
       <input type="hidden" name="noConditionFind" value="Y"/>

@@ -18,7 +18,7 @@ under the License.
 -->
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
-<#-- Cato: this breaks everything (?)
+<#-- Scipio: this breaks everything (?)
 jQuery.noConflict();-->
 jQuery(document).ready(function(){
     jQuery('input:radio').click(function(){
@@ -73,7 +73,7 @@ jQuery(document).ready(function(){
           </@row>
         </#list>
         <#if userMap.checkUser == "REJECTED">
-            <#-- Cato: too confusing:
+            <#-- Scipio: too confusing:
             <a href="javascript:void(0)" class="${styles.link_run_sys!} ${styles.action_find!} ${styles.disabled!}">Rejected</a>-->
         <#else>
             <a href="<@ofbizUrl>ListPeopleRejected</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">Rejected</a>

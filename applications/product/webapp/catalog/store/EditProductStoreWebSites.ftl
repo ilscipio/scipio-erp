@@ -18,7 +18,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <#-- Cato: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite -->
+    <#-- Scipio: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite -->
     <@menuitem type="link" href=makeOfbizUrl("EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}") text=uiLabelMap.ProductCreateNewProductStoreWebSite class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
@@ -36,7 +36,7 @@ under the License.
            <@tbody>
               <#list storeWebSites as webSite>
                 <@tr valign="middle">
-                  <#-- Cato: This is now accessible internally from product app: <@ofbizInterWebappUrl>/content/control/EditWebSite -->
+                  <#-- Scipio: This is now accessible internally from product app: <@ofbizInterWebappUrl>/content/control/EditWebSite -->
                   <@td><a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
                   <@td>${webSite.httpHost?default('&nbsp;')}</@td>
                   <@td>${webSite.httpPort?default('&nbsp;')}</@td>

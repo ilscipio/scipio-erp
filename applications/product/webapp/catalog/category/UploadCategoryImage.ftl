@@ -23,7 +23,7 @@
                 
                 "submitHook" : "validate"
             }>
-            <#-- CATO: the Link Images for categories are not supported any longer and are going to be dropped soon. For now we display a warning to the user. -->
+            <#-- SCIPIO: the Link Images for categories are not supported any longer and are going to be dropped soon. For now we display a warning to the user. -->
             <div style="display:none;" id="deprecatedWarning">
                 <@row>
                     <@cell columns=2>
@@ -34,7 +34,7 @@
                 </@row>
             </div>
             <@field type="file" name="uploadedFile" label="${uiLabelMap.ProductCategoryImage}" required=true class="+error" />            
-            <#-- CATO: category link images are deprecated -->
+            <#-- SCIPIO: category link images are deprecated -->
             <@field type="select" label=uiLabelMap.ProductCategoryImageType name="upload_file_type" onChange="deprecatedValidation(this);">
                 <option value="category" selected=selected>${uiLabelMap.ProductCategoryImageUrl}</option>
                 <option value="linkOne" >${uiLabelMap.ProductLinkOneImageUrl}</option>

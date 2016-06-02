@@ -53,7 +53,7 @@ function removeSelectable(typeString, productFeatureTypeId, productId) {
 }
 
 function doPublish() {
-    <#-- Cato: Now points to shop -->
+    <#-- Scipio: Now points to shop -->
     window.open('<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId!}</@ofbizInterWebappUrl>');
     document.publish.submit();
 }

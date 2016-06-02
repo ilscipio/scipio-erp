@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@script>
-    <#-- Cato: this breaks everything (?)
+    <#-- Scipio: this breaks everything (?)
     jQuery.noConflict();-->
 
     var host = document.location.host;

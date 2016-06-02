@@ -169,7 +169,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Cato: delegator to main-decorator -->
+                    <!-- Scipio: delegator to main-decorator -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                        <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
                     </decorator-section>                   

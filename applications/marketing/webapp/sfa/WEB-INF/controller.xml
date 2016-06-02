@@ -21,11 +21,11 @@ under the License.
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
-    <!-- CATO: Disabled for now -->  
+    <!-- SCIPIO: Disabled for now -->  
     <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/> -->
     <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>
     <!--  <include location="component://workeffort/webapp/workeffort/WEB-INF/controller.xml"/> -->
-    <!-- CATO: including marketing webapp controller entries and overriding the desired view-maps in here is much better than duplicating them -->
+    <!-- SCIPIO: including marketing webapp controller entries and overriding the desired view-maps in here is much better than duplicating them -->
     <include location="component://marketing/webapp/marketing/WEB-INF/controller.xml"/>
     <description>CRM Module Site Configuration File</description>
     
@@ -261,7 +261,7 @@ under the License.
         <response name="success" type="view" value="EditEvent" save-home-view="true"/>
     </request-map>
 
-    <!-- CATO: New root entries -->
+    <!-- SCIPIO: New root entries -->
     <request-map uri="MyCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="MyCommunicationEvents"/></request-map>
     <request-map uri="FindAccounts"><security https="true" auth="true"/><response name="success" type="view" value="FindAccounts"/></request-map>
     <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>    
@@ -269,12 +269,12 @@ under the License.
     <request-map uri="Calendar"><security https="true" auth="true"/><response name="success" type="view" value="Calendar"/></request-map>    
     <request-map uri="DataSources"><security https="true" auth="true"/><response name="success" type="view" value="FindDataSource"/></request-map>
     
-    <!-- CATO: Services entries -->
+    <!-- SCIPIO: Services entries -->
     <request-map uri="Communication"><security https="true" auth="true"/><response name="success" type="view" value="Communication"/></request-map>
    
     <!-- <request-map uri="Request"><security https="true" auth="true"/><response name="success" type="view" value="Request"/></request-map> -->
     
-    <!-- CATO: Analytics entries -->
+    <!-- SCIPIO: Analytics entries -->
     <request-map uri="AnalyticsSales"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsSales"/></request-map>
     <!-- <request-map uri="AnalyticsLeads"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsLeads"/></request-map>
     <request-map uri="AnalyticsSegments"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsSegments"/></request-map> -->
@@ -286,7 +286,7 @@ under the License.
     </request-map>
     <!-- <request-map uri="AnalyticsForecast"><security https="true" auth="true"/><response name="success" type="view" value="AnalyticsForecast"/></request-map> -->
     
-    <!-- CATO: Request entries: duplicated from component://order/webapp/ordermgr/WEB-INF/controller.xml -->
+    <!-- SCIPIO: Request entries: duplicated from component://order/webapp/ordermgr/WEB-INF/controller.xml -->
     <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>
     <request-map uri="ViewRequest"><security https="true" auth="true"/><response name="success" type="view" value="ViewRequest"/></request-map>
     <request-map uri="EditRequest"><security https="true" auth="true"/><response name="success" type="view" value="EditRequest"/></request-map>
@@ -353,10 +353,10 @@ under the License.
     
     <view-map name="MyCommunicationEvents" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#PartyCommunicationEvents"/>
     
-    <!-- CATO: The following exist in component://marketing/webapp/marketing/WEB-INF/controller.xml but point to different screens -->
+    <!-- SCIPIO: The following exist in component://marketing/webapp/marketing/WEB-INF/controller.xml but point to different screens -->
     <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#FindMarketingCampaign"/>
     
-    <!-- CATO: The following exist in component://marketing/webapp/marketing/WEB-INF/controller.xml but point to different screens -->
+    <!-- SCIPIO: The following exist in component://marketing/webapp/marketing/WEB-INF/controller.xml but point to different screens -->
     <view-map name="FindProductPromo" type="screen" page="component://marketing/widget/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://marketing/widget/PromoScreens.xml#EditProductPromo"/>
     <view-map name="EditProductPromoRules" type="screen" page="component://marketing/widget/PromoScreens.xml#EditProductPromoRules"/>
@@ -367,7 +367,7 @@ under the License.
     
     <view-map name="Calendar" type="screen" page="component://marketing/widget/sfa/CalendarScreens.xml#CalendarWithDecorator"/>
     
-    <!-- CATO: The following exist in component://order/webapp/ordermgr/WEB-INF/controller.xml -->
+    <!-- SCIPIO: The following exist in component://order/webapp/ordermgr/WEB-INF/controller.xml -->
     <view-map name="FindRequest" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#FindRequest"/>
     <view-map name="ViewRequest" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#ViewRequest"/>
     <view-map name="EditRequest" type="screen" page="component://marketing/widget/sfa/ServicesScreens.xml#EditRequest"/>

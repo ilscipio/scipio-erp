@@ -129,12 +129,12 @@ under the License.
                                 <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="CatoNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="CatoMarketingCampaigns"/>
+                                <include-screen name="ScipioMarketingCampaigns"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="BestSellingProducts" location="component://product/widget/catalog/ProductScreens.xml"/>
@@ -146,8 +146,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Widget implementation -->
-    <screen name="CatoMarketingCampaigns">
+    <!-- SCIPIO: Widget implementation -->
+    <screen name="ScipioMarketingCampaigns">
         <section>
             <actions>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />

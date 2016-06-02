@@ -20,8 +20,8 @@ under the License.
 -->
 
 <web-app version="3.0">
-    <display-name>CATO - CRM Dummy for Redirect</display-name>
-    <description>Common Application Components of the CATO Project</description>
+    <display-name>SCIPIO - CRM Dummy for Redirect</display-name>
+    <description>Common Application Components of the SCIPIO Project</description>
 
     <filter>
         <display-name>SimpleRedirectFilter</display-name>

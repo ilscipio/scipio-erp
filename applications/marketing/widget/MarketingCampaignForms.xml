@@ -65,7 +65,7 @@ under the License.
         <!-- <field name="cancelAction" widget-style="${styles.link_nav_cancel}" title=" "><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
-    <!-- CATO: ListMarketingCampaign moved to component://marketing/widget/MarketingCampaignScreens.xml#MarketingCampaignSearchResults -->
+    <!-- SCIPIO: ListMarketingCampaign moved to component://marketing/widget/MarketingCampaignScreens.xml#MarketingCampaignSearchResults -->
    <!-- <form name="ListMarketingCampaign" type="list" paginate-target="listMarketingCampaign"
         odd-row-style="alternate-row" header-row-style="header-row-2"> orig: default-table-style=-style="basic-table hover-bar"
         <actions>
@@ -88,7 +88,7 @@ under the License.
         <field name="parentCampaignId" title="${uiLabelMap.MarketingParentCampaignId}"><display/></field>
     </form> -->
 
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
    <!-- <form name="ListMarketingCampaignRoles" type="list" paginate-target="listMarketingCampaignGeo"
         odd-row-style="alternate-row" header-row-style="header-row-2"> orig: default-table-style=-style="basic-table hover-bar"
         <actions>

@@ -405,8 +405,8 @@ under the License.
     </request-map>
     
     
-    <!-- CATO: Request mappings -->
-    <!-- CATO: TODO - migrate  
+    <!-- SCIPIO: Request mappings -->
+    <!-- SCIPIO: TODO - migrate  
             The following was duplicated from component://product/webapp/catalog/WEB-INF/controller.xml 
             Thematically the promotion makes more sense within the marketing app, but code wise it is closely
             linked to the product entities & functions. 
@@ -735,8 +735,8 @@ under the License.
     <view-map name="EmailStatusReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#EmailStatusReport"/>
     <view-map name="PartyStatusReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#PartyStatusReport"/>
 
-    <!-- CATO: Request mappings -->
-    <!-- CATO: The following from duplicated in component://product/webapp/catalog/WEB-INF/controller.xml -->
+    <!-- SCIPIO: Request mappings -->
+    <!-- SCIPIO: The following from duplicated in component://product/webapp/catalog/WEB-INF/controller.xml -->
     <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromo"/>
     <view-map name="EditProductPromoRules" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromoRules"/>

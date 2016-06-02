@@ -31,12 +31,12 @@ under the License.
     <load-component component-location="order"/>
     <load-component component-location="marketing"/>
     
-    <!-- CATO components -->
+    <!-- SCIPIO components -->
     <load-component component-location="shop"/>
     
     <!-- common component used by most other components last because it uses info from most components-->
     <load-component component-location="commonext"/>
     
-    <!-- CATO common components -->
+    <!-- SCIPIO common components -->
     <load-component component-location="solr"/>
 </component-loader>

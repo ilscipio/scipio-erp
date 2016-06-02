@@ -17,7 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- Cato: don't include this; invalid: default="build" -->
+<!-- Scipio: don't include this; invalid: default="build" -->
 <project name="OFBiz Applications Build" basedir=".">
     <filelist id="application-builds" dir="applications"
         files="content/build.xml,party/build.xml,

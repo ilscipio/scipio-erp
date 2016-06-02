@@ -381,7 +381,7 @@ under the License.
                                     </container>
                                </container>
                             
-                                <!--  CATO: Remove once fully migrated  
+                                <!--  SCIPIO: Remove once fully migrated  
                                 The following is more of an overview type of ongoing transactions - To be ignored for this screen                                                     
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
@@ -404,7 +404,7 @@ under the License.
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     </container>
                                </container>
-                                <!-- CATO: Delete once fully migrated  
+                                <!-- SCIPIO: Delete once fully migrated  
                                 The following is more of an overview type of ongoing transactions - To be ignored for this screen                  
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
@@ -543,8 +543,8 @@ under the License.
     </screen>
     
     
-    <!-- CATO: Form migration -->
-    <!-- CATO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentHeader -->
+    <!-- SCIPIO: Form migration -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentHeader -->
     <screen name="CatoPaymentInfo">
         <section>
             <actions>
@@ -574,7 +574,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentApplication -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentApplication -->
     <screen name="CatoPaymentAppliedPayment">
         <section>
             <actions>
@@ -606,7 +606,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://accounting/widget/PaymentForms.xml#FinAccountTransAssociatedWithPayment -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/PaymentForms.xml#FinAccountTransAssociatedWithPayment -->
     <screen name="CatoPaymentFinancialTrans">
         <section>
             <actions>

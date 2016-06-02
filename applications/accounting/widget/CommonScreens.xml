@@ -43,7 +43,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
-                    <!-- Cato: NOTE: On most of the main-decorators including this one, override-by-auto-include is left disabled and is instead implemented manually with decorator-section-include.
+                    <!-- Scipio: NOTE: On most of the main-decorators including this one, override-by-auto-include is left disabled and is instead implemented manually with decorator-section-include.
                         The manual inclusion is more flexible whereas the override-by-auto-include flag is easier to use. In some cases, override-by-auto-include="true" makes the decorator a lot easier to implement.
                         Both are valid. -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
@@ -225,7 +225,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <!-- TODO: Cato - I don't think this is needed -->
+                                <!-- TODO: Scipio - I don't think this is needed -->
                                 <!-- <section>
                                     <condition>
                                         <not><if-empty field="paymentId"/></not>
@@ -283,7 +283,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <!-- TODO: Cato - I don't think this is needed -->
+                                <!-- TODO: Scipio - I don't think this is needed -->
                                 <!-- <section>
                                     <condition>
                                         <not><if-empty field="paymentGroupId"/></not>
@@ -481,7 +481,7 @@ under the License.
             <actions>
                 <set field="fieldNamePrefix" from-field="ccfFieldNamePrefix" default-value="${''}" />
                 <set field="showSecurityCodeField" from-field="ccfShowSecurityCodeField" type="Boolean" default-value="false" />
-                <!-- Cato: Parametrized, to reuse actions here (once needed) -->
+                <!-- Scipio: Parametrized, to reuse actions here (once needed) -->
                 <set field="ccfTemplateLocation" from-field="ccfTemplateLocation" default-value="component://accounting/webapp/accounting/common/creditcardfields.ftl" />
             </actions>
             <widgets>
@@ -517,7 +517,7 @@ under the License.
     </screen>
     
     
-    <!-- CATO: Widget implementation -->
+    <!-- SCIPIO: Widget implementation -->
     <screen name="CatoIncomesExpenses">
         <section>
             <actions>

@@ -66,7 +66,7 @@ under the License.
                                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
                             </actions>
                             <widgets>
-                                <!-- CATO: Removed portal page
+                                <!-- SCIPIO: Removed portal page
                                     <include-portal-page id="ApPortalPage"/>
                                  -->
                                  <include-screen name="ApInvoicesDueSoon" location="component://accounting/widget/ap/CommonScreens.xml"/>
@@ -256,7 +256,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form migration -->
+    <!-- SCIPIO: Form migration -->
     <screen name="ApPastDueInvoices">
         <section>
            <actions>

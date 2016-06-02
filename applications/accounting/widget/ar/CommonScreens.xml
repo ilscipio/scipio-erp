@@ -185,7 +185,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form migration -->
+    <!-- SCIPIO: Form migration -->
     <screen name="ArPastDueInvoices">
         <section>
            <actions>

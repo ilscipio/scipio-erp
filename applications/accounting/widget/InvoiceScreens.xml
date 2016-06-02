@@ -162,7 +162,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- CATO: ToDo Cleanup screen -->
+    <!-- SCIPIO: ToDo Cleanup screen -->
     <screen name="invoiceOverview">
         <section>
             <actions>
@@ -484,7 +484,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- CATO: TODO: REVIEW IF NEEDED (came from upstream)
+    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
     <screen name="InvoiceTerms">
         <section>
             <actions>
@@ -592,8 +592,8 @@ under the License.
     </screen>
     
     
-    <!-- CATO: Form migration -->
-    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceHeader 
+    <!-- SCIPIO: Form migration -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceHeader 
                                         component://accounting/widget/InvoiceForms.xml#ListInvoiceStatus
     -->
     <screen name="CatoInvoiceInfo">
@@ -630,7 +630,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceApplications -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceApplications -->
     <screen name="CatoInvoiceAppliedPayment">
         <section>
             <condition>
@@ -650,7 +650,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceItems -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceItems -->
     <screen name="CatoInvoiceItems">
         <section>
             <condition>
@@ -670,7 +670,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://accounting/widget/ap/InvoiceForms.xml#ListReports
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/ap/InvoiceForms.xml#ListReports
                                         component://accounting/widget/ar/InvoiceForms.xml#ListReports
     -->
     <screen name="CatoInvoices">
@@ -690,7 +690,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceTerms -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceTerms -->
     <screen name="CatoInvoiceTerms">
         <section>
             <condition>
@@ -710,7 +710,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoicePaymentInfo -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoicePaymentInfo -->
     <screen name="CatoInvoicePaymentInfo">
         <section>
             <actions>

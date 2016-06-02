@@ -145,7 +145,7 @@ under the License.
     <@td colspan="${6 - (indexMod7)}">&nbsp;</@td>
     </#if>
   <#if indexMod7 == 6 || !period_has_next>
-  <#-- Cato: FIXME: don't want open/close -->
+  <#-- Scipio: FIXME: don't want open/close -->
   <@tr close=true open=false />
   </#if>
   </#list>

@@ -214,7 +214,7 @@ public class WorkEffortServices {
     }
 
     /**
-    * Cato:
+    * Scipio:
     * 
     * @param ctx
     * @param context
@@ -278,7 +278,7 @@ public class WorkEffortServices {
     }
 
     /**
-    * Cato:
+    * Scipio:
     * 
     * @param ctx
     * @param context
@@ -334,7 +334,7 @@ public class WorkEffortServices {
             try {
                 List<EntityExpr> constraints = FastList.newInstance();
 
-                // Cato: I think this was wrong the statusId and currentStatusId
+                // Scipio: I think this was wrong the statusId and currentStatusId
                 // should be in the other way round
                 constraints.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 constraints.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
@@ -351,7 +351,7 @@ public class WorkEffortServices {
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
                     ));                    
                 }
-                // Cato: I don't think those are really used anywhere..
+                // Scipio: I don't think those are really used anywhere..
                 // commenting them out
                 // constraints.add(EntityCondition.makeCondition("statusId",
                 // EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
@@ -386,7 +386,7 @@ public class WorkEffortServices {
             try {
                 List<EntityExpr> constraints = FastList.newInstance();
 
-                // Cato: I think this was wrong the statusId and currentStatusId
+                // Scipio: I think this was wrong the statusId and currentStatusId
                 // should be in the other way round
                 constraints.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 constraints.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
@@ -403,7 +403,7 @@ public class WorkEffortServices {
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
                     ));                    
                 }
-                // Cato: I don't think those are really used anywhere..
+                // Scipio: I don't think those are really used anywhere..
                 // commenting them out
                 // constraints.add(EntityCondition.makeCondition("statusId",
                 // EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
@@ -439,7 +439,7 @@ public class WorkEffortServices {
             try {
                 List<EntityExpr> constraints = FastList.newInstance();
 
-                // Cato: I think this was wrong the statusId and currentStatusId
+                // Scipio: I think this was wrong the statusId and currentStatusId
                 // should be in the other way round
                 constraints.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 constraints.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
@@ -456,7 +456,7 @@ public class WorkEffortServices {
                             EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
                     ));                    
                 }
-                // Cato: I don't think those are really used anywhere..
+                // Scipio: I don't think those are really used anywhere..
                 // commenting them out
                 // constraints.add(EntityCondition.makeCondition("statusId",
                 // EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
@@ -683,7 +683,7 @@ public class WorkEffortServices {
         * "Confirm" link (top part of the sccreen)
         * 
         * Now you have a confirmed production run (starting tomorrow) happening
-        * in facility "CatoShopWarehouse", with a task happening in fixed asset
+        * in facility "ScipioShopWarehouse", with a task happening in fixed asset
         * "WORKCENTER_COST"
         * 
         * In the calendars screen, selecting the proper facility you should see

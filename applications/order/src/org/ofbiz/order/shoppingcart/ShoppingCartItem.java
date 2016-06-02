@@ -435,7 +435,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             if (product.get("reservMaxPersons") != null) {
                 BigDecimal reservMaxPersons = product.getBigDecimal("reservMaxPersons");
                  if (reservMaxPersons.compareTo(reservPersons) < 0)    {
-                     // Cato: This prints nonsensical value: product.getString("reservMaxPersons")
+                     // Scipio: This prints nonsensical value: product.getString("reservMaxPersons")
                      Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("reservMaxPersons", product.getBigDecimal("reservMaxPersons"), "reservPersons", reservPersons);
                      String excMsg = UtilProperties.getMessage(resource_error, "item.maximum_number_of_person_renting", messageMap, cart.getLocale());
 
@@ -491,7 +491,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps, true, triggerPriceRules, skipInventoryChecks.booleanValue());
         } catch (CartItemModifyException e) {
             Debug.logWarning(e.getMessage(), module);
-            // Cato: patched to pass triggerExternalOps
+            // Scipio: patched to pass triggerExternalOps
             cart.removeCartItem(cart.getItemIndex(newItem), triggerExternalOps, dispatcher);
             cart.clearItemShipInfo(newItem);
             cart.removeEmptyCartItems();
@@ -719,13 +719,13 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem(GenericValue product, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, Locale locale, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup) {
         this(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, locale, itemType, itemGroup, null);
          if (product != null) {
-            // CATO: Do NOT HTML-escape this here
+            // SCIPIO: Do NOT HTML-escape this here
             String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", this.locale, null, "raw");
             // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
             if (UtilValidate.isEmpty(productName)) {
                 GenericValue parentProduct = this.getParentProduct();
                 if (parentProduct != null) {
-                    // CATO: Do NOT HTML-escape this here
+                    // SCIPIO: Do NOT HTML-escape this here
                     productName = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", this.locale, null, "raw");
                 }
             }
@@ -1760,13 +1760,13 @@ public class ShoppingCartItem implements java.io.Serializable {
        } else {
         GenericValue product = getProduct();
         if (product != null) {
-            // CATO: Do NOT HTML-escape this here
+            // SCIPIO: Do NOT HTML-escape this here
             String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", this.locale, null, "raw");
             // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
             if (UtilValidate.isEmpty(productName)) {
                 GenericValue parentProduct = this.getParentProduct();
                 if (parentProduct != null) {
-                    // CATO: Do NOT HTML-escape this here
+                    // SCIPIO: Do NOT HTML-escape this here
                     productName = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", this.locale, null, "raw");
                 }
             }
@@ -1786,14 +1786,14 @@ public class ShoppingCartItem implements java.io.Serializable {
         GenericValue product = getProduct();
 
         if (product != null) {
-            // CATO: Do NOT HTML-escape this here
+            // SCIPIO: Do NOT HTML-escape this here
             String description = ProductContentWrapper.getProductContentAsText(product, "DESCRIPTION", this.locale, null, "raw");
 
             // if the description is null or empty, see if there is an associated virtual product and get the description of that product
             if (UtilValidate.isEmpty(description)) {
                 GenericValue parentProduct = this.getParentProduct();
                 if (parentProduct != null) {
-                    // CATO: Do NOT HTML-escape this here
+                    // SCIPIO: Do NOT HTML-escape this here
                     description = ProductContentWrapper.getProductContentAsText(parentProduct, "DESCRIPTION", this.locale, null, "raw");
                 }
             }
@@ -2598,7 +2598,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         if (UtilValidate.isEmpty(itemDescription)) {
-            // CATO: Do NOT HTML-escape this here
+            // SCIPIO: Do NOT HTML-escape this here
             itemDescription = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", locale, null, "raw");
         }
 

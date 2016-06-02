@@ -78,7 +78,7 @@ public class ShoppingCartEvents {
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
-    public static final String product_resource_error = "ProductErrorUiLabels"; // Cato: new
+    public static final String product_resource_error = "ProductErrorUiLabels"; // Scipio: new
     
     private static final String NO_ERROR = "noerror";
     private static final String NON_CRITICAL_ERROR = "noncritical";
@@ -265,7 +265,7 @@ public class ShoppingCartEvents {
                 if (pId != null) {
                     productId = pId;
                 } else {
-                    // Cato: New error check: I currently don't see any case where we should continue if productId is set but not a valid product
+                    // Scipio: New error check: I currently don't see any case where we should continue if productId is set but not a valid product
                     // in the system. If itemType is specified (see above), you probably still shouldn't pass a productId
                     // that does not exist...
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(product_resource_error, "productservices.invalid_productId_passed", locale));
@@ -939,7 +939,7 @@ public class ShoppingCartEvents {
             // to allow the display of the order confirmation page put the userLogin in the request, but leave it out of the session
             request.setAttribute("temporaryAnonymousUserLogin", userLogin);
 
-            // CATO: Changing this behavior to PRESERVE the previous anon user login (especially the temporary userLogin.partyId).
+            // SCIPIO: Changing this behavior to PRESERVE the previous anon user login (especially the temporary userLogin.partyId).
             // This is to allow the anon user to view additional order documents after the next immediate request. 
             // If we don't do this, the anon user only gets to see one page and any refresh
             // causes him to lose access to all information not mailed to him.
@@ -951,14 +951,14 @@ public class ShoppingCartEvents {
             // patched to prevent this for the anonymous user.
             //Debug.logInfo("Doing clearCart for anonymous user, so logging out but put anonymous userLogin in temporaryAnonymousUserLogin request attribute", module);
             session.setAttribute("userLogin", userLogin);
-            Debug.logInfo("Cato: Doing clearCart for anonymous user, but leaving anonymous user login in session (partyId: '" + userLogin.getString("partyId") + "'", module);
+            Debug.logInfo("Scipio: Doing clearCart for anonymous user, but leaving anonymous user login in session (partyId: '" + userLogin.getString("partyId") + "'", module);
         }
 
         return "success";
     }
     
     /**
-     * Cato: Clears the cart, and if it gets destroyed in the process, make sure another is created.
+     * Scipio: Clears the cart, and if it gets destroyed in the process, make sure another is created.
      * <p>
      * Helps with template compatibility.
      */
@@ -978,7 +978,7 @@ public class ShoppingCartEvents {
     }
     
     /**
-     * Cato: Checks if cart empty and valid. If missing or empty, returns cartEmpty. If broken some other way,
+     * Scipio: Checks if cart empty and valid. If missing or empty, returns cartEmpty. If broken some other way,
      * returns "error". Otherwise, returns "success".
      * <p>
      * Helps with template compatibility.

@@ -19,9 +19,9 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <!-- Cato: The default product store is now CatoShop -->
-    <ShoppingList shoppingListId="DemoWishList" listName="Demo Wish List" partyId="DemoCustomer" shoppingListTypeId="SLT_WISH_LIST" productStoreId="CatoShop" isActive="Y" currencyUom="USD" isPublic="N"/>
-    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00001" productId="CAM-2644" quantity="5" productStoreId="CatoShop"/>
-    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00002" productId="CDR-1111" quantity="2" productStoreId="CatoShop"/>
-    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00003" productId="KB-5569" quantity="10" productStoreId="CatoShop"/>
+    <!-- Scipio: The default product store is now ScipioShop -->
+    <ShoppingList shoppingListId="DemoWishList" listName="Demo Wish List" partyId="DemoCustomer" shoppingListTypeId="SLT_WISH_LIST" productStoreId="ScipioShop" isActive="Y" currencyUom="USD" isPublic="N"/>
+    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00001" productId="CAM-2644" quantity="5" productStoreId="ScipioShop"/>
+    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00002" productId="CDR-1111" quantity="2" productStoreId="ScipioShop"/>
+    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00003" productId="KB-5569" quantity="10" productStoreId="ScipioShop"/>
 </entity-engine-xml>

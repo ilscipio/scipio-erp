@@ -54,7 +54,7 @@ public class PurchaseOrderTest extends OFBizTestCase {
         ctx.put("partyId", "Company");
         ctx.put("orderTypeId", "PURCHASE_ORDER");
         ctx.put("currencyUom", "USD");
-        ctx.put("productStoreId","CatoShop"); // Cato: new default store
+        ctx.put("productStoreId","ScipioShop"); // Scipio: new default store
 
         GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00001", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "PH-1000", "quantity", new BigDecimal("2"), "isPromo", "N"));
         orderItem.set("unitPrice", new BigDecimal("1399.5"));

@@ -4455,22 +4455,22 @@
         <value xml:lang="zh_TW">通訊與</value>
     </property>
     <property key="PartyCompanyName">
-        <value xml:lang="de">CATO - Nutzer Manager</value>
-        <value xml:lang="en">CATO - User Manager</value>
-        <value xml:lang="es">CATO - Gestión de participantes</value>
-        <value xml:lang="fr">CATO - : Gestionnaire d'acteur</value>
-        <value xml:lang="hi_IN">CATO - पार्टी प्रबंधक</value>
-        <value xml:lang="it">CATO - Gestione soggetti</value>
-        <value xml:lang="ja">CATO - 取引先管理</value>
-        <value xml:lang="nl">CATO - Relatie Manager</value>
-        <value xml:lang="pt_BR">CATO - Gestão de participantes</value>
-        <value xml:lang="pt_PT">CATO -Grupo de Gestão</value>
-        <value xml:lang="ro">CATO - Gestiune Subiecti</value>
-        <value xml:lang="ru">CATO - Управление участниками</value>
-        <value xml:lang="th">CATO - การจัดการกลุ่มผู้ใช้</value>
+        <value xml:lang="de">SCIPIO - Nutzer Manager</value>
+        <value xml:lang="en">SCIPIO - User Manager</value>
+        <value xml:lang="es">SCIPIO - Gestión de participantes</value>
+        <value xml:lang="fr">SCIPIO - : Gestionnaire d'acteur</value>
+        <value xml:lang="hi_IN">SCIPIO - पार्टी प्रबंधक</value>
+        <value xml:lang="it">SCIPIO - Gestione soggetti</value>
+        <value xml:lang="ja">SCIPIO - 取引先管理</value>
+        <value xml:lang="nl">SCIPIO - Relatie Manager</value>
+        <value xml:lang="pt_BR">SCIPIO - Gestão de participantes</value>
+        <value xml:lang="pt_PT">SCIPIO -Grupo de Gestão</value>
+        <value xml:lang="ro">SCIPIO - Gestiune Subiecti</value>
+        <value xml:lang="ru">SCIPIO - Управление участниками</value>
+        <value xml:lang="th">SCIPIO - การจัดการกลุ่มผู้ใช้</value>
         <value xml:lang="vi">vCloudBusines: Quản lý Tác nhân (Cá nhân/Tổ chức)</value>
-        <value xml:lang="zh">CATO - 会员管理程序</value>
-        <value xml:lang="zh_TW">CATO - 團體管理</value>
+        <value xml:lang="zh">SCIPIO - 会员管理程序</value>
+        <value xml:lang="zh_TW">SCIPIO - 團體管理</value>
     </property>
     <property key="PartyCompanyNameMissingError">
         <value xml:lang="cs">Chybí jmého firmy</value>
@@ -4494,30 +4494,30 @@
     <property key="PartyCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="hi-IN">Open Source Software के CATO परिवार का हिस्सा</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
-    <!--value xml:lang="nl">Onderdeel van de CATO'-suite</value-->
-        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="hi-IN">Open Source Software के SCIPIO परिवार का हिस्सा</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família SCIPIO - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
-    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din CATO Family of Open Source Software</value-->
+        <value xml:lang="pt_PT">Parte da família SCIPIO - de software de fonte aberta</value>
+    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din SCIPIO Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО CATO</valuevalue xml:lang="ru">Часть семейства "CATO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства CATO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件CATO -的组成部分</valuevalue xml:lang="zh">开源软件CATO -的组成部分</value-->
-        <value xml:lang="vi">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
-        <value xml:lang="zh_CN">CATO -的一部分</value>
-        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
+    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
+        <value xml:lang="vi">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
+        <value xml:lang="zh_CN">SCIPIO -的一部分</value>
+        <value xml:lang="zh_TW">開源軟體SCIPIO -家族的一部分</value>
     </property>
     <property key="PartyContactAllowAddressSolicitation">
         <value xml:lang="de">Verwendung der Adresse für Werbezwecke erlauben</value>
@@ -5084,7 +5084,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: addWebSiteRole चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire addWebSiteRole tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: Webサイトロールの追加には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -servie 'addWebSiteRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -servie 'addWebSiteRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar addWebSiteRole você dever ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">Eroare de Siguranta : pentru a folosi  addWebSiteRole trebbie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска addWebSiteRole у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5101,7 +5101,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createPartyAttribute चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPartyAttribute tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先属性の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createPartyAttribute' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyAttribute' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para acessar esta função você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">Eroare De Siguranta : pentru a folosi createPartyAttribute trebbie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyAttribute у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5118,7 +5118,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createCommunicationEvent चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createCommunicationEvent tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 通信イベントの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createCommunicationEvent' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createCommunicationEvent' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar PARTYMGR_CREATE ou PARTYMGR_ADMIN você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="pt_PT">Erro de Segurança: para criar Comunicação de Acontecimento necessita permissão para PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi createCommunicationEvent trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
@@ -5136,7 +5136,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createCommunicationEventPurpose चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createCommunicationEventPurpose tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 通信イベント目的の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createCommunicationEventPurpose' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createCommunicationEventPurpose' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar createCommunicationEventPurpose você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="pt_PT">Erro de Segurança: para criar Objectivo de Comunicação de Acontecimento necessita permissão para PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi createCommunicationEventPurpose trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
@@ -5154,7 +5154,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createCommunicationEventRole चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createCommunicationEventRole tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 通信イベントロールの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createCommunicationEventRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createCommunicationEventRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar createCommunicationEventRole você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="pt_PT">Erro de Segurança: para criar Função de Comunicação de Acontecimento necessita permissão para PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi  createCommunicationEventRole trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
@@ -5173,7 +5173,7 @@
         <value xml:lang="zh">缺少上传文件...</value>
         <value xml:lang="zh_TW">缺少上傳檔...</value>
     </property>
-    <!-- Cato: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
+    <!-- Scipio: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
     <property key="PartyCreateNewBillingAddress">
         <value xml:lang="cs">Zložte novou fakturační adresu</value>
         <value xml:lang="de">Legen Sie eine neue Rechnungsadresse</value>
@@ -5484,7 +5484,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createPartyClassificationGroup चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPartyClassificationGroup tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先分類グループの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createPartyClassificationGroup' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyClassificationGroup' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar createPartyClassificationGroup você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi createPartyClassificationGroup trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyClassificationGroup у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5501,7 +5501,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createPartyClassification चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPartyClassification tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先分類の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createPartyClassification' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyClassification' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar createPartyClassification você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa createPartyClassification trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyClassification у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5517,7 +5517,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createPartyRole चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore sicurezza: per eseguire il servizio createPartyRole tu devi avere il permesso PARTYMGR_ROLE_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先ロールの作成には、PARTYMGR_ROLE_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createPartyRole' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyRole' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar createPartyRole você deve ter permissão PARTYMGR_ROLE_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyRole у вас должны быть права PARTYMGR_ROLE_CREATE или PARTYMGR_ADMIN</value>
         <value xml:lang="th">Security Error: ผิดพลาด ! ในการสร้างสถานะกลุ่มผู้ใช้ คุณต้องได้รับความยินยอมจาก PARTYMGR_CREATE หรือ PARTYMGR_ADMIN ก่อน</value>
@@ -5533,7 +5533,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createPostalAddressBoundary चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPostalAddressBoundary tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 郵便番号地域の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createPostalAddressBoundary' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPostalAddressBoundary' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar createPostalAddressBoundary você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru  eseguire createPostalAddressBoundary trebuie sa ai permisulPARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPostalAddressBoundary у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5564,7 +5564,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: createVendor चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createVendor tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ベンダの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'createVendor' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createVendor' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar createVendor você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa createVendor trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createVendor у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5717,7 +5717,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: deletePartyRole चलाने के लिए आप को PARTYMGR_DELETE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore sicurezza: per eseguire il servizio deletePartyRole tu devi avere il permesso PARTYMGR_DELETE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先ロールの削除には、PARTYMGR_DELETE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'deletePartyRole' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'deletePartyRole' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar deletePartyRole você deve ter permissão PARTYMGR_DELETE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска deletePartyRole у вас должны быть права PARTYMGR_DELETE или PARTYMGR_ADMIN</value>
         <value xml:lang="th">Security Error: ผิดพลาด ! ในการลบสถานะกลุ่มผู้ใช้ คุณต้องได้รับความยินยอมจาก PARTYMGR_DELETE หรือ PARTYMGR_ADMIN ก่อน</value>
@@ -5733,7 +5733,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: deleteVendor चलाने के लिए आप को PARTYMGR_DELETE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire deleteVendor tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ベンダの削除には、PARTYMGR_DELETE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service 'deleteVendor' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'deleteVendor' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar deleteVendor você deve ter permissão PARTYMGR_DELETE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa deleteVendor trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска deleteVendor у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -10091,7 +10091,7 @@
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: ${methodShortDescription} चलाने के लिए आप को PARTYMGR${securityAction} या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire ${methodShortDescription} tu devi avere i permessi PARTYMGR${securityAction} o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ${methodShortDescription} の実行には、PARTYMGR${securityAction} または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om CATO -service '${methodShortDescription}' te draaien heb je 'PARTYMGR${securityAction}'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om SCIPIO -service '${methodShortDescription}' te draaien heb je 'PARTYMGR${securityAction}'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt_BR">Erro de segurança: para executar ${methodShortDescription} você deve ter a permissão PARTYMGR${securityAction} ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa ${methodShortDescription} trbuie sa ai permisul PARTYMGR${securityAction} sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска ${methodShortDescription} у вас должны быть права PARTYMGR${securityAction} или PARTYMGR_ADMIN</value>
@@ -11574,7 +11574,7 @@
         <value xml:lang="hi_IN">ContactMechs प्रकार POSTAL_ADDRESS के लिए यह सेवा (createContactMech) उपयोग नहीं होना चाहिए, createPostalAddress सेवा का उपयोग करें</value>
         <value xml:lang="it">Questo servizio (createContactMech) non dovrebbe essere usaato per POSTAL_ADDRESS tipo ContactMechs, usare il servizio createPostalAddress</value>
         <value xml:lang="ja">このサービス (createContactMech) は種類 POSTAL_ADDRESS の連絡方法では使用できません、createPostalAddress サービスを使用してください</value>
-        <value xml:lang="nl">Fout: Deze CATO -service (createContactMech) should not be used for POSTAL_ADDRESS type ContactMechs, use the createPostalAddress service</value>
+        <value xml:lang="nl">Fout: Deze SCIPIO -service (createContactMech) should not be used for POSTAL_ADDRESS type ContactMechs, use the createPostalAddress service</value>
         <value xml:lang="pt_BR">Este serviço (createContactMech) não deveria ser usado para mecanismos de contato do tipo POSTAL_ADDRESS, use o serviço createPostalAddress</value>
         <value xml:lang="pt_PT">Este serviço (criar mecanismo de contacto)não deverá ser usado nos Tipos de Mecanismos de Contacto, utilize o serviço de "Criar Endereço Postal"</value>
         <value xml:lang="ro">Acest serviciu (createContactMech) nu ar trebbi sa fie utilizat pentru POSTAL_ADDRESS tip ContactMechs, utilizati serviciul createPostalAddress</value>
@@ -11592,7 +11592,7 @@
         <value xml:lang="hi_IN">ContactMechs प्रकार TELECOM_NUMBER के लिए यह सेवा (createContactMech) उपयोग नहीं होना चाहिए, createTelecomNumber सेवा का उपयोग करें</value>
         <value xml:lang="it">Questo servizio (createContactMech) non dovrebbe essere usaato per TELECOM_NUMBER tipo ContactMechs, usare il servizio createTelecomNumber</value>
         <value xml:lang="ja">このサービス (createContactMech) は種類 TELECOM_NUMBER の連絡方法では使用できません、createTelecomNumber サービスを使用してください</value>
-        <value xml:lang="nl">Fout: Deze CATO -service (createContactMech) should not be used for TELECOM_NUMBER type ContactMechs, use the createTelecomNumber service</value>
+        <value xml:lang="nl">Fout: Deze SCIPIO -service (createContactMech) should not be used for TELECOM_NUMBER type ContactMechs, use the createTelecomNumber service</value>
         <value xml:lang="pt_BR">Este serviço (createContactMech) não deveria ser usado para mecanismos de contato do tipo TELECOM_NUMBER, use o serviço createTelecomNumber</value>
         <value xml:lang="pt_PT">Este serviço (criar Mecanismo de Contacto) não deverá ser utilizado nos tipos de mecanismos de contacto telefónico, utilize o serviço "Criar Número de Telefone"</value>
         <value xml:lang="ro">Acest serviciu (createContactMech) nu ar trebbi sa fie utilizat pentru TELECOM_NUMBER tip ContactMechs, utilizati serviciul createTelecomNumber</value>

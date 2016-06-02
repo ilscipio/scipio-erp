@@ -17,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<!-- Cato: don't include this; invalid: default="build" -->
+<!-- Scipio: don't include this; invalid: default="build" -->
 <project name="OFBiz Special Purpose Applications Build" basedir=".">
     <filelist id="specialpurpose-builds" dir="specialpurpose"
         files="

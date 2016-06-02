@@ -86,41 +86,41 @@
         <value xml:lang="zh_TW">日曆資料項目(僅用於測試)</value>
     </property>
     <property key="ExampleCompanyName">
-        <value xml:lang="en">CATO - Example</value>
-        <value xml:lang="fr">CATO - : Exemple</value>
-        <value xml:lang="it">CATO - Esempi</value>
-        <value xml:lang="ja">CATO - サンプル</value>
-        <value xml:lang="ro">CATO - Exemple</value>
-        <value xml:lang="ru">CATO - Пример</value>
-        <value xml:lang="th">CATO - ตัวอย่าง</value>
-        <value xml:lang="zh">CATO - 样例</value>
-        <value xml:lang="zh_TW">CATO - 範例</value>
+        <value xml:lang="en">SCIPIO - Example</value>
+        <value xml:lang="fr">SCIPIO - : Exemple</value>
+        <value xml:lang="it">SCIPIO - Esempi</value>
+        <value xml:lang="ja">SCIPIO - サンプル</value>
+        <value xml:lang="ro">SCIPIO - Exemple</value>
+        <value xml:lang="ru">SCIPIO - Пример</value>
+        <value xml:lang="th">SCIPIO - ตัวอย่าง</value>
+        <value xml:lang="zh">SCIPIO - 样例</value>
+        <value xml:lang="zh_TW">SCIPIO - 範例</value>
     </property>
     <property key="ExampleCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
-    <!--value xml:lang="nl">Onderdeel van de CATO'-suite</value-->
-        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família SCIPIO - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="pt_PT">Parte da família SCIPIO - de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО CATO</valuevalue xml:lang="ru">Часть семейства "CATO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства CATO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件CATO -的组成部分</valuevalue xml:lang="zh">开源软件CATO -的组成部分</value-->
-        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
-        <value xml:lang="zh_CN">CATO -的一部分</value>
-        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
+    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
+        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
+        <value xml:lang="zh_CN">SCIPIO -的一部分</value>
+        <value xml:lang="zh_TW">開源軟體SCIPIO -家族的一部分</value>
     </property>
     <property key="ExampleDashboard">
         <value xml:lang="en">Dashboard</value>
@@ -588,12 +588,12 @@
         <value xml:lang="zh_TW">資料項目</value>
     </property>
     <property key="ExampleFopFonts">
-        <value xml:lang="en">This will print a simple PDF file which will show the FOP fonts avalaible in CATO -</value>
-        <value xml:lang="fr">Impression d'un simple fichier PDF qui montre les polices FOP disponibles dans CATO -</value>
-        <value xml:lang="it">Questo stampa un file PDF semplice che mostrerà i font FOP disponibili in CATO -</value>
-        <value xml:lang="ja">CATO -で可能なFOPフォントを表示する、シンプルなPDFファイルを印刷します</value>
-        <value xml:lang="zh">这将打印一个简单的PDF文件，这个文件会显示CATO -中可用的FOP字体</value>
-        <value xml:lang="zh_TW">這將列印一個簡單的PDF檔,這個檔會顯示CATO -中可用的FOP字體</value>
+        <value xml:lang="en">This will print a simple PDF file which will show the FOP fonts avalaible in SCIPIO -</value>
+        <value xml:lang="fr">Impression d'un simple fichier PDF qui montre les polices FOP disponibles dans SCIPIO -</value>
+        <value xml:lang="it">Questo stampa un file PDF semplice che mostrerà i font FOP disponibili in SCIPIO -</value>
+        <value xml:lang="ja">SCIPIO -で可能なFOPフォントを表示する、シンプルなPDFファイルを印刷します</value>
+        <value xml:lang="zh">这将打印一个简单的PDF文件，这个文件会显示SCIPIO -中可用的FOP字体</value>
+        <value xml:lang="zh_TW">這將列印一個簡單的PDF檔,這個檔會顯示SCIPIO -中可用的FOP字體</value>
     </property>
     <property key="ExampleFormWidgetExamples">
         <value xml:lang="en">Form Widget Examples</value>
@@ -684,15 +684,15 @@
         <value xml:lang="zh_TW">範例首頁</value>
     </property>
     <property key="ExampleMessage">
-        <value xml:lang="en">For something interesting make sure you are logged in, try username:admin, password:CATO -.</value>
-        <value xml:lang="fr">Pour voir les exemples, vérifiez que vous être connecté, essayez l'utilisateur admin et le mot de passe CATO -</value>
-        <value xml:lang="it">Per qualsiasi interesse devi essere sicuro di essere entrato, provare nome utente:admin, password:CATO -.</value>
-        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password CATO - でログインしてください</value>
-        <value xml:lang="ro">Pentru a fi sigur ca te-ai logat, incearca username:admin, password:CATO -.</value>
-        <value xml:lang="ru">Для того чтобы иметь возможность сделать что-нибудь интересное убедитесь что вы зарегистрировались в системе, попробуйте имя:admin, пароль:CATO -.</value>
-        <value xml:lang="th">สำหรับท่านที่สนใจสามารถเข้าสู่ระบบได้, โดยใช้ ชื่อผู้ใช้:admin, รหัสผ่าน:CATO -</value>
-        <value xml:lang="zh">如果对某部分感兴趣，请先确信你已登录，可以尝试用 用户名:admin、密码:CATO -登录。</value>
-        <value xml:lang="zh_TW">如果對某部分感興趣,請先確信你已登入,可以嘗試用 使用者名:admin、密碼:CATO -登入.</value>
+        <value xml:lang="en">For something interesting make sure you are logged in, try username:admin, password:SCIPIO -.</value>
+        <value xml:lang="fr">Pour voir les exemples, vérifiez que vous être connecté, essayez l'utilisateur admin et le mot de passe SCIPIO -</value>
+        <value xml:lang="it">Per qualsiasi interesse devi essere sicuro di essere entrato, provare nome utente:admin, password:SCIPIO -.</value>
+        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password SCIPIO - でログインしてください</value>
+        <value xml:lang="ro">Pentru a fi sigur ca te-ai logat, incearca username:admin, password:SCIPIO -.</value>
+        <value xml:lang="ru">Для того чтобы иметь возможность сделать что-нибудь интересное убедитесь что вы зарегистрировались в системе, попробуйте имя:admin, пароль:SCIPIO -.</value>
+        <value xml:lang="th">สำหรับท่านที่สนใจสามารถเข้าสู่ระบบได้, โดยใช้ ชื่อผู้ใช้:admin, รหัสผ่าน:SCIPIO -</value>
+        <value xml:lang="zh">如果对某部分感兴趣，请先确信你已登录，可以尝试用 用户名:admin、密码:SCIPIO -登录。</value>
+        <value xml:lang="zh_TW">如果對某部分感興趣,請先確信你已登入,可以嘗試用 使用者名:admin、密碼:SCIPIO -登入.</value>
     </property>
     <property key="ExampleMultipleDropDownTooltip">
         <value xml:lang="en">Needs some fields to be set, see in FormWidgetExampleScreens.xml (begins with multipleSelect)</value>

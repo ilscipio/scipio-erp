@@ -1,4 +1,4 @@
-package com.ilscipio.cato.ce.demoSuite.dataGenerator;
+package com.ilscipio.scipio.ce.demoSuite.dataGenerator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import org.ofbiz.base.util.UtilProperties;
 
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 
 public abstract class ThirdPartyDataGenerator<T extends DemoDataObject> {
 

@@ -1,4 +1,4 @@
-package com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject;
+package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject;
 
 public class DemoDataPerson implements DemoDataObject {
 

@@ -1,4 +1,4 @@
-package com.ilscipio.cato.ce.demoSuite.dataGenerator;
+package com.ilscipio.scipio.ce.demoSuite.dataGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,9 +13,9 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
 
 import javolution.util.FastMap;
 

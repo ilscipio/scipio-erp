@@ -12,10 +12,10 @@ import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.service.ServiceUtil
 
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.DemoSuiteDataWorker
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.MockarooDataGenerator
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DemoSuiteDataWorker
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.MockarooDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin
 
 public Map createDemoParty() {
     final String resource_error = "DemoSuiteUiLabels";

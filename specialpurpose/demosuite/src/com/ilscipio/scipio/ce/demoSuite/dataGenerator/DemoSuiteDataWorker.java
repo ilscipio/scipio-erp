@@ -1,15 +1,15 @@
-package com.ilscipio.cato.ce.demoSuite.dataGenerator;
+package com.ilscipio.scipio.ce.demoSuite.dataGenerator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.ofbiz.base.util.Debug;
 
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin;
 
 public class DemoSuiteDataWorker {
 

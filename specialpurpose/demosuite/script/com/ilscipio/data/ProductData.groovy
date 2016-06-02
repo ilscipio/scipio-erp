@@ -9,9 +9,9 @@ import org.ofbiz.entity.util.*
 import org.ofbiz.product.category.CategoryWorker
 import org.ofbiz.service.ServiceUtil
 
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.DemoSuiteDataWorker
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.MockarooDataGenerator
-import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DemoSuiteDataWorker
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.MockarooDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct
 
 
 
@@ -49,7 +49,7 @@ public Map createDemoProduct(DispatcherContext ) {
     ]
 
     List<String> productStoreIds = [
-        "CatoShop",
+        "ScipioShop",
         "RentalStore"
     ]
 
@@ -133,7 +133,7 @@ public Map createDemoProduct(DispatcherContext ) {
             }
         }
     } else {
-        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "ProductErrorProductStoreNotFound", locale) + ". Please load the specific Cato demo data.");
+        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "ProductErrorProductStoreNotFound", locale) + ". Please load the specific Scipio demo data.");
     }
 
     return result;

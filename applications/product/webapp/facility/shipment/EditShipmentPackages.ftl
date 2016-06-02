@@ -119,7 +119,7 @@ under the License.
         <@modal id="shipmentPackageContent_${shipmentPackageData_index}">
             <#assign sectionTitle="${uiLabelMap.ProductPackage} ${uiLabelMap.ContentContents}"/>
             <@section title=sectionTitle>
-                <#-- Cato FIXME: Does makes sense to show this if all items have been packed already? -->
+                <#-- Scipio FIXME: Does makes sense to show this if all items have been packed already? -->
                 <@section>
                     <form name="createShipmentPackageContentForm${shipmentPackageData_index}" method="post" action="<@ofbizUrl>createShipmentPackageContent</@ofbizUrl>">
                         <input type="hidden" name="shipmentId" value="${shipmentId}"/>

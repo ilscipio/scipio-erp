@@ -86,7 +86,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
      * Scipio: One-shot macro helper class. Controls whether render macros piecemeal or
      * in one invocation upon close.
      */
-    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "cato.templating.widget.oneshotmacros", false), 
+    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", false), 
             "renderMenuFull", renderEntryMacroNameMap);
     
     public MacroMenuRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {

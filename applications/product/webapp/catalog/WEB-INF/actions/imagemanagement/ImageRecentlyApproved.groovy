@@ -32,7 +32,7 @@ def sdf2 = new SimpleDateFormat("EEEE dd/MM/yyyy")
 def sdfTime = new SimpleDateFormat("HH:mm")
 def today = new Date()
 
-// Cato: these used to be approved_0, approved_1, ... use proper array instead (entries initialized to null)
+// Scipio: these used to be approved_0, approved_1, ... use proper array instead (entries initialized to null)
 productContentEntries = new Map<String, Object>[limit+1];
 
 for(i in 0..limit){
@@ -52,7 +52,7 @@ for(i in 0..limit){
     def productContentAndInfoList = select("productId").from("ProductContentAndInfo").where(exprs).distinct().queryList();
     
     // finding time
-    /* Cato: rewrite this below; too contrived, doesn't get all the info out
+    /* Scipio: rewrite this below; too contrived, doesn't get all the info out
     def timeList = from("ProductContentAndInfo").where(exprs).orderBy("productId").queryList();
     def groupByTimeList = timeList.groupBy{it.productId}
     def tempTimeList = []
@@ -67,11 +67,11 @@ for(i in 0..limit){
         }
     }
     */
-    // Cato: get one entry per product, most recent purchaseFromDate (seems to be the approval date...?)
+    // Scipio: get one entry per product, most recent purchaseFromDate (seems to be the approval date...?)
     def timeList = from("ProductContentAndInfo").where(exprs).orderBy("productId", "purchaseFromDate").queryList();
     def sampleProductContentAndInfoList = []
     def time = []
-    // Cato: iterate timeList and only get the last entry for each product (most recent)
+    // Scipio: iterate timeList and only get the last entry for each product (most recent)
     def lastProductInfo = ["productId":""]
     // add a dummy final entry so the real last entry will get processed in the loop
     timeList.add(["productId":""])
@@ -87,7 +87,7 @@ for(i in 0..limit){
         
     def showDate = sdf2.format(today-i)
     
-    // Cato: include one image per product
+    // Scipio: include one image per product
     def sampleImageList = []
     sampleProductContentAndInfoList.each { productContentAndInfoImageManament ->
         def imageMap = null;
@@ -108,16 +108,16 @@ for(i in 0..limit){
     }
     
     productContentEntries[i] = [
-      // Cato: pass full list instead
+      // Scipio: pass full list instead
       "approved" : productContentAndInfoList,
       "time" : time,
       "date" : showDate,
       "timeStampDate1" : timeStampDate1,
       "timeStampDate2" : timeStampDate2,
-      "sampleImageList" : sampleImageList // Cato: pass images
+      "sampleImageList" : sampleImageList // Scipio: pass images
     ];
     
-    /* Cato: No.
+    /* Scipio: No.
     switch (i) {
         case 0: context.approved_0 = productContentAndInfoList; context.time_0 = time; context.date0 = showDate;
             context.timeStampDate1_0 = timeStampDate1; context.timeStampDate2_0 = timeStampDate2; break;

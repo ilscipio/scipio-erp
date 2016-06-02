@@ -69,7 +69,7 @@ orderHeaderList.each { orderHeader ->
             orderItemDetail.productId = orderItem.productId;
             product = from("Product").where("productId", orderItem.productId).queryOne()
             contentWrapper = new ProductContentWrapper(product, request);
-            // Cato: Do NOT HTML-escape this here
+            // Scipo: Do NOT HTML-escape this here
             orderItemDetail.productName = contentWrapper.get("PRODUCT_NAME", "raw").toString();
             orderItemDetail.amount = amount;
             orderItemDetail.qtyOrdered = qtyOrdered;

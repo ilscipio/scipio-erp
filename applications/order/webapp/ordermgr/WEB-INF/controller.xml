@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
-    <!-- Cato: FIXME?: The content controller may need to be split up so as not to have to
+    <!-- Scipio: FIXME?: The content controller may need to be split up so as not to have to
         include its full main controller here (redefinitions, breakage/security risks) -
         content has both its own public interface and a common interface for other apps, 
         which are not (should not be assumed) equal. NOTE: This was a stock include. -->
@@ -794,7 +794,7 @@ under the License.
     </request-map>
 
     <!--
-        Quick Finalize Order reuses the [Cato: shop] checkoutoptions widget and template. We need to
+        Quick Finalize Order reuses the [Scipio: shop] checkoutoptions widget and template. We need to
         translate the controller requests here for use by ordermgr.  Note that the main entry point on submit is "checkout".
     -->
     <request-map uri="quickcheckout">
@@ -1799,7 +1799,7 @@ under the License.
     <request-map uri="LookupOrderHeader"><security https="true" auth="true"/><response name="success" type="view" value="LookupOrderHeader"/></request-map>
 
     <request-map uri="LookupWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="LookupWorkEffort"/></request-map>
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <request-map uri="LookupBulkAddProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupBulkAddProducts"/></request-map>
     <request-map uri="LookupBulkAddSupplierProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupBulkAddSupplierProducts"/></request-map> -->
     <request-map uri="LookupAssociatedProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupAssociatedProducts"/></request-map>
@@ -2078,7 +2078,7 @@ under the License.
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
 
     <view-map name="LookupWorkEffort" type="screen" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort"/>
-    <!-- CATO: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <view-map name="LookupBulkAddProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#LookupBulkAddProducts"/>
     <view-map name="LookupBulkAddSupplierProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#LookupBulkAddSupplierProducts"/> -->
     <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>

@@ -39,10 +39,10 @@ under the License.
     <Party partyId="DemoApprover" partyTypeId="PERSON"/>
     <Person partyId="DemoApprover" firstName="Demo" lastName="Approver"/>
     
-    <UserLogin userLoginId="demoapprover" currentPassword="{SHA}273a08e1cdf0eb5d698acd40a95ce6098a2420fa" requirePasswordChange="N" partyId="DemoApprover"/>
+    <UserLogin userLoginId="demoapprover" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" requirePasswordChange="N" partyId="DemoApprover"/>
     <UserLoginSecurityGroup groupId="HUMANRES_APPROVER" userLoginId="demoapprover" fromDate="2001-01-01 12:00:00.0"/>
 
-    <UserLogin userLoginId="demoemployee" currentPassword="{SHA}273a08e1cdf0eb5d698acd40a95ce6098a2420fa" requirePasswordChange="N" partyId="DemoEmployee"/>
+    <UserLogin userLoginId="demoemployee" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" requirePasswordChange="N" partyId="DemoEmployee"/>
     <SecurityPermission description="Employee can check the status of his requests and trainings assigned to him with this permission." permissionId="EMPLOYEE_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="EMPLOYEE_VIEW"/>
     <UserLoginSecurityGroup groupId="HUMANRES_EMPLOYEE" userLoginId="demoemployee" fromDate="2001-01-01 12:00:00.0"/>

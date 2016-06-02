@@ -21,6 +21,6 @@ under the License.
 <entity-engine-xml>
     <UserLogin userLoginId="system" enabled="N" isSystem="Y"/>
     <UserLogin userLoginId="anonymous" enabled="N"/>
-    <UserLogin userLoginId="admin" currentPassword="{SHA}273a08e1cdf0eb5d698acd40a95ce6098a2420fa"/>
+    <UserLogin userLoginId="admin" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266"/>
 </entity-engine-xml>
 

@@ -203,7 +203,7 @@ under the License.
 
     <!-- Business unit divisions -->
 
-    <!-- Cato: New business divisions -->
+    <!-- SCIPIO: New business divisions -->
     <Party partyId="eltrn_div" partyTypeId="PARTY_GROUP"/>
     <PartyGroup partyId="eltrn_div" groupName="Electronics Business Unit"/>
     <PartyRole partyId="eltrn_div" roleTypeId="INTERNAL_ORGANIZATIO"/>

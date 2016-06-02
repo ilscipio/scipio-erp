@@ -17,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<!-- CATO: Pending removal of portal pages -->
+<!-- SCIPIO: Pending removal of portal pages -->
 <entity-engine-xml>
 
     <PortletCategory portletCategoryId="ACCOUNTING" description="Accounting related data"/>

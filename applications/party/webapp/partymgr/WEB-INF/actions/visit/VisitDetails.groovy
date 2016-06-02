@@ -36,7 +36,7 @@ try {
     viewIndex = 0;
 }
 
-// Cato: unhardcode
+// Scipio: unhardcode
 //viewSize = 20;
 defaultViewSize = org.ofbiz.base.util.UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
 viewSize = defaultViewSize;

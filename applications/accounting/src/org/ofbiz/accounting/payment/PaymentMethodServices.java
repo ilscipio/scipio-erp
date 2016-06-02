@@ -51,7 +51,7 @@ public class PaymentMethodServices {
 
     public final static String module = PaymentMethodServices.class.getName();
     public final static String resource = "AccountingUiLabels";
-    // Cato: Fix wrong error resource!
+    // Scipio: Fix wrong error resource!
     //public static final String resourceError = "AccountingUiLabels";
     public static final String resourceError = "AccountingErrorUiLabels";
 
@@ -717,7 +717,7 @@ public class PaymentMethodServices {
         newEa.set("accountNumber", context.get("accountNumber"));
         newEa.set("nameOnAccount", context.get("nameOnAccount"));
         newEa.set("companyNameOnAccount", context.get("companyNameOnAccount"));
-        // Cato: Only set this below if not _NEW_
+        // Scipio: Only set this below if not _NEW_
         //newEa.set("contactMechId", context.get("contactMechId"));
 
         newPm.set("paymentMethodId", newPmId);
@@ -727,10 +727,10 @@ public class PaymentMethodServices {
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
 
-        // Cato: Ignore if _NEW_
+        // Scipio: Ignore if _NEW_
         //if (UtilValidate.isNotEmpty(contactMechId)) {
         if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
-            // Cato: Only set this if not _NEW_
+            // Scipio: Only set this if not _NEW_
             newEa.set("contactMechId", context.get("contactMechId"));
             
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary

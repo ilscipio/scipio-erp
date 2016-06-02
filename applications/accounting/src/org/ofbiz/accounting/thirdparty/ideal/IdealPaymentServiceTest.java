@@ -55,7 +55,7 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
         orderId = "testOrder1000";
         issuerId = "0151";
         orderDiscription = "Test Order Description";
-        // Cato: default now points to shop
+        // Scipio: default now points to shop
         merchantReturnURL = "http://localhost:8080/shop";
     }
     

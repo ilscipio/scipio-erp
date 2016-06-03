@@ -1,95 +1,57 @@
 #!/bin/sh
+#####################################################################
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#####################################################################
 
-# set OFBIZ's relevant paths
-OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"
-OFBIZ_ENTITY_ENGINE_PATH="$OFBIZ_HOME/framework/entity/config/entityengine.xml"
-OFBIZ_DEFAULT_FS_RDBMS_PATH="$OFBIZ_HOME/runtime/data/derby"
-# other OFBIZ's variables
-OFBIZ_DEFAULT_FS_RDBMS="localderby"
-# set argument values to proper variables
-ANT_VERBOSE=0
-ANT_TARGET=
+# set the parent directory as OFBiz Home
+OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"/..
 
-#----- BEGIN CUSTOM FUNCTIONS -----#
-check_task () { 
-    BUILD_TASKS="$(echo build | sh ant -p | grep -Eo '^[[:space:]][a-zA-Z-]+')"    
-    #echo "build tasks ==============> $BUILD_TASKS"
-    for e in "$BUILD_TASKS"; do 
-        task = echo -e "${e}" | tr -d '[[:space:]]'
-        $(echo -e ${task} \r)
-        if [ "$task" = "$2" ]; then
-            return 0;
-        fi
-    done
-    return 1
-}
+# console log file
+OFBIZ_LOG=runtime/logs/console.log
 
-check_arguments () {
-    # If '-h' or 'help' is found either in $1 or $2, display the help message, don't care what the other argument is.
-    if [ "$#" -lt 3 ]; then
-        if [ -n $1 ] || [ -n $2 ]; then
-            if [ "$1" = "-help" -o "$1" = "-h" ] || [ "$2" = "-help" -o "$2" = "-h" ]; then        
-                return 1
-            fi
-        fi
-    fi
+# delete the last log
+rm -f $OFBIZ_LOG
 
-    # If more than 2 arguments have been passed, show error and display the help message 
-    if [ "$#" -gt 2 ]; then    
-        echo "Scipio-Commerce: Error: Invalid number of arguments: $#"
-        sh start.sh -h
-        exit 1
-    # If no argument found, proceed with the default behavior.  
-    elif [ "$#" -eq 0 ]; then
-        return 3
-    # If 1 argument has been passed, check if a target has been passed or just the verbose flag, otherwise send and error.
-    elif [ "$#" -eq 1 ]; then
-        if [ $1 = "-v" ]; then
-            ANT_VERBOSE=1
-            return 3
-        else
-            check_task $ANT_TARGET
-            if [ $? -eq 0 ]; then
-                echo "Scipio-Commerce: Specific build task found: [$1]. Launching..."
-                ANT_TARGET=$1
-                return 2
-            else
-                echo "Scipio-Commerce: Specific build task not found: [$1]. Aborting..."
-                exit 1
-            fi
-        fi
-    # If 2 arguments have been passed, expect the verbose flag to be in the first place, otherwise display error. Also if it isn't found
-    elif [ "$#" -eq 2 ]; then
-        if [ $1 = "-v" ]; then
-            ANT_VERBOSE=1
-            ANT_TARGET=$2
-            return 2
-        else
-            echo "Scipio-Commerce: Error: Passed arguments are invalid."
-            sh start.sh -h
-            exit 1
-        fi
-    fi
-}
-#----- END CUSTOM FUNCTIONS -----#
+# VM args
+#DEBUG="-Dsun.rmi.server.exceptionTrace=true"
+#DEBUG="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091"
+#automatic IP address for linux
+#IPADDR=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+#RMIIF="-Djava.rmi.server.hostname=$IPADDR"
+MEMIF="-Xms128M -Xmx512M -XX:MaxPermSize=512m"
+#JMX="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=33333 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+#MISC="-Duser.language=en"
+MISC="-Dsolr.solr.home=applications/solr/"
+VMARGS="$MEMIF $MISC $JMX $DEBUG $RMIIF"
 
-check_arguments $@
-START_ACTION=$?
+# Worldpay Config
+#VMARGS="-Xbootclasspath/p:applications/accounting/lib/cryptix.jar $VMARGS"
 
-if [ $START_ACTION -eq 1 ]
-then    
-    sh ant scipio-help -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
-elif [ $START_ACTION -eq 2 ]; then    
-    #echo "Scipio-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
-    if [ $ANT_VERBOSE -eq 1 ]; then
-        sh ant $ANT_TARGET
-    else
-        sh ant $ANT_TARGET -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
-    fi   
-elif [ $START_ACTION -eq 3 ]; then
-    if [ $ANT_VERBOSE -eq 1 ]; then
-        sh ant scipio-default-start
-    else
-        sh ant scipio-default-start -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
-    fi
+# location of java executable
+if [ -f "$JAVA_HOME/bin/java" ]; then
+  JAVA="$JAVA_HOME/bin/java"
+else
+  JAVA=java
 fi
+
+# Allows to run from Jenkins. See http://wiki.jenkins-ci.org/display/JENKINS/ProcessTreeKiller. Cons: the calling Jenkins job does not terminate if the log is not enabled, pros: this allows to monitor the log in Jenkins
+#BUILD_ID=dontKillMe
+
+# start ofbiz
+#$JAVA $VMARGS -jar ofbiz.jar $* >>$OFBIZ_LOG 2>>$OFBIZ_LOG&
+(cd "$OFBIZ_HOME" && exec "$JAVA" $VMARGS -jar ofbiz.jar "$@")

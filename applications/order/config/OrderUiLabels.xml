@@ -5555,12 +5555,12 @@
     </property>
     <property key="OrderManagerApplication">
         <value xml:lang="de">Auftragsverwaltung</value>
-        <value xml:lang="en">Order Manager Application</value>
+        <value xml:lang="en">Order Manager</value>
         <value xml:lang="es">Gestión de pedidos</value>
         <value xml:lang="fr">Gestion de Commandes</value>
         <value xml:lang="it">Applicazione gestione ordini</value>
         <value xml:lang="ja">注文管理業務</value>
-        <value xml:lang="nl">SCIPIO ERP - Bestelling Manager</value>
+        <value xml:lang="nl">Bestelling Manager</value>
         <value xml:lang="pt_BR">Aplicativo de gestão de pedidos</value>
         <value xml:lang="ro">Aplicatie Gestiune Comenzi</value>
         <value xml:lang="ru">Управление заказами</value>

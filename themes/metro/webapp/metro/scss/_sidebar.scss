@@ -72,7 +72,7 @@ $sidebar-width: 200px;
   padding: $side-nav-padding;
   
   h1{
-    color: $white; font-size: 12px;text-transform: uppercase;
+    color: $white; font-size: 12px;
   }
   ul {margin: 0;}
 
@@ -149,7 +149,6 @@ $sidebar-width: 200px;
 
 
 .inner-wrap {
-    background-color: $side-bar-bg;
 }
 
 .fixed {margin-left:$sidebar-width;}
@@ -171,8 +170,6 @@ $sidebar-width: 200px;
 }
 
 #content-main-section {
-    //background-color: $white-smoke;
-    background-color: $body-bg;
     padding-top:50px;  
 }
 

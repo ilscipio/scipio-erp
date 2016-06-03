@@ -265,7 +265,8 @@ under the License.
 
 <div class="off-canvas-wrap" data-offcanvas id="body-content">
 <div class="inner-wrap">
-                    <#-- Sidebar -->    
+                    <#-- Sidebar -->
+                    
                     <nav class="side-bar  hide-for-small-only">
                         <!-- Profile -->
                         <div class="title-area">
@@ -276,10 +277,15 @@ under the License.
                         <!-- End of Profile -->
 
                         <!-- Menu sidebar begin-->
+                          
                         <ul class="side-nav" id="menu_2">
-                            <@sideBarMenu/>                       
+                            <#if userLogin??>  
+                                <@sideBarMenu/> 
+                            </#if>                 
                         </ul>
+                        
                     </nav>
+                    
                     
                     <#-- Topbar -->
                     <nav class="top-bar hide-for-small-only" data-topbar role="navigation" data-options="is_hover: false">
@@ -293,6 +299,7 @@ under the License.
 
                         <section class="top-bar-section ">
                             <!-- Right Nav Section -->
+                            
                             <ul class="left">
                                 <li class="has-dropdown">
                                     <a class="" href="#"><i class="fi-home text-blue"></i> ${uiLabelMap["CommonPrimaryApps"]}</a>
@@ -307,6 +314,7 @@ under the License.
                                     </ul>
                                 </li>
                             </ul>
+
                             <#-- Left Nav Section
                             <ul class="left">
 

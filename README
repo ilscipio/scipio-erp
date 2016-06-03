@@ -44,14 +44,14 @@ Installation
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
- a. Linux ./install.sh
- b. OS X: ./install.sh
- c. Windows: install.bat
+a. Linux ./ant load-demo 
+b. OS X: ./ant load-demo
+c. Windows: ant.bat load-demo
 
 2. From the same command line run:
- a. Linux ./start.sh
- b. OS X: bash /start.sh
- c. Windows: /start.bat
+a. Linux ./start.sh
+b. OS X: bash ./start.sh
+c. Windows: start.bat
 
 3. To access the application visit the SCIPIO ERP Dashboard:
   https://localhost:8443/admin

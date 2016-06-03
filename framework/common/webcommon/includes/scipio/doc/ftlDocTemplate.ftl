@@ -447,7 +447,7 @@ pre {
       <div>
         <hr />
         <small>
-          Copyright (c) 2014-${.now?string("yyyy")} <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+          Copyright (c) 2014-${.now?string("yyyy")} <a href="https://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="https://www.scipio-erp.com" target="_blank">SCIPIO ERP</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
         </small>
       </div>
     </footer>

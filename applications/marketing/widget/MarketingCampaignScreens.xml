@@ -26,7 +26,7 @@ under the License.
     <screen name="EditMarketingCampaign">
         <section>
             <actions>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" />
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
                 <set field="title" value="${uiLabelMap.MarketingCampaign} ${marketingCampaignId}" />
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign" />

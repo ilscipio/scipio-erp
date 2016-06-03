@@ -40,7 +40,7 @@ under the License.
           </li>
         <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
         <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
-        <li><a href="http://www.scipio-commerce.com/products/faq">FAQ's</a></li>
+        <li><a href="https://www.scipio-erp.com/products/faq">FAQ's</a></li>
       </ul>
     </@cell>
     <@cell columns=3>      
@@ -69,7 +69,7 @@ under the License.
     <@row>
         <@cell columns=12>
          <small>
-         ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.scipio-commerce.com" target="_blank">Scipio Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+         ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="https://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="https://www.scipio-erp.com" target="_blank">SCIPIO ERP</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
          View <a href="<@ofbizUrl>license</@ofbizUrl>">LICENSE</a>.
          <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />
          </small>

@@ -21,7 +21,9 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-   <screen name="CommonMarketingCampaignDecorator">
+   
+   <!-- SCIPIO: To be removed -->
+   <!-- <screen name="CommonMarketingCampaignDecorator">
         <section>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
@@ -33,11 +35,11 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
+                            do check for MARKETING, _VIEW permission
                             <condition>
                                 <and>
                                     <if-has-permission permission="MARKETING" action="_VIEW"/>
-                                    <!-- <not><if-empty field="marketingCampaignId"/></not> -->
+                                    <not><if-empty field="marketingCampaignId"/></not>
                                 </and>
                             </condition>
                             <widgets>
@@ -45,13 +47,13 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <include-menu location="component://marketing/widget/sfa/SfaMenus.xml" name="SfaAppSideBar"/>
-                                <!-- <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/> -->
+                                <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
+                            do check for MARKETING, _VIEW permission
                             <condition>
                                 <if-has-permission permission="MARKETING" action="_VIEW"/>
                             </condition>
@@ -71,7 +73,7 @@ under the License.
     <screen name="EditMarketingCampaign">
         <section>
             <actions>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" />
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
                 <set field="title" value="${uiLabelMap.MarketingCampaign} ${marketingCampaignId}" />
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign" />
@@ -141,7 +143,7 @@ under the License.
                 <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/MarketingCampaingList.ftl"/></html></platform-specific>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
 
     <!-- SCIPIO: To be removed -->
     <!-- <screen name="EditMarketingCampaignRoles">

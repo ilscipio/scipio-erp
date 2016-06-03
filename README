@@ -1,8 +1,9 @@
-   _________  __________ 
-  / ____/   |/_  __/ __ \
- / /   / /| | / / / / / /
-/ /___/ ___ |/ / / /_/ / 
-\____/_/  |_/_/  \____/  
+   _____    _____   _   _____    _    ____  
+  / ____|  / ____| | | |  __ \  | |  / __ \ 
+ | (___   | |      | | | |__) | | | | |  | |
+  \___ \  | |      | | |  ___/  | | | |  | |
+  ____) | | |____  | | | |      | | | |__| |
+ |_____/   \_____| |_| |_|      |_|  \____/
 
 ***************************
 * I N S T A L L A T I O N *
@@ -39,14 +40,14 @@ b. OS X: ./install.sh
 c. Windows: install.bat
 
 2. From the same command line run:
-a. Linux ./tools/start.sh
-b. OS X: bash /tools/start.sh
-c. Windows: /tools/start.bat
+a. Linux ./start.sh
+b. OS X: bash /start.sh
+c. Windows: /start.bat
 
-3. To access the application visit the OFBiz Dashboard:
-OFBiz Dashboard: http://localhost:8080/webtools
+3. To access the application visit the SCIPIO ERP Dashboard:
+OFBiz Dashboard: http://localhost:8080/admin
 
-4. To access the OFBiz Applications from the Dashboard use:
+4. To access the SCIPIO Applications from the Dashboard use:
 Username: admin
 Password: scipio
 
@@ -65,11 +66,11 @@ Optional Configuration
 *****************
 For detailed changes to the SCIPIO Commerce suite, visit the github wiki at:
 
-https://github.com/scipiocommerce/scipio/wiki
+https://www.scipioerp.com
 
 You can get in touch with the community over at:
 
-http://forum.scipio-commerce.com/
+https://forum.scipioerp.com
 
 *************
 * O F B I Z *
@@ -94,7 +95,7 @@ http://ofbiz.apache.org/community.html
 ***********************
 * D I S C L A I M E R *
 ***********************
-SCIPIO Commerce and the SCIPIO logo are trademarks of Ilscipio GmbH. 
+SCIPIO ERP and the SCIPIO logo are trademarks of Ilscipio GmbH. 
 © Copyright SCIPIO components 2014 Ilscipio GmbH.
 Apache OFBiz, Apache, the Apache feather logo are trademarks
  of The Apache Software Foundation.

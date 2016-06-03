@@ -82,10 +82,14 @@ then
 elif [ $START_ACTION -eq 2 ]; then    
     #echo "Scipio-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
     if [ $ANT_VERBOSE -eq 1 ]; then
-        sh ant $ANT_TARGET -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
+        sh ant $ANT_TARGET
     else
-        sh ant $ANT_TARGET > /dev/null 2>&1
+        sh ant $ANT_TARGET -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
     fi   
 elif [ $START_ACTION -eq 3 ]; then
-    sh ant scipio-default-start -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
+    if [ $ANT_VERBOSE -eq 1 ]; then
+        sh ant scipio-default-start
+    else
+        sh ant scipio-default-start -logger com.ilscipio.scipio.util.ant.logger.ScipioLogger -lib ./framework/base/lib/ant
+    fi
 fi

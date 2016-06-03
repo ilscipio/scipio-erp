@@ -267,7 +267,7 @@ under the License.
 <div class="inner-wrap">
                     <#-- Sidebar -->
                     
-                    <nav class="side-bar  hide-for-small-only">
+                    <nav class="side-bar show-for-large-up">
                         <!-- Profile -->
                         <div class="title-area">
                             <div class="name">
@@ -288,7 +288,7 @@ under the License.
                     
                     
                     <#-- Topbar -->
-                    <nav class="top-bar hide-for-small-only" data-topbar role="navigation" data-options="is_hover: false">
+                    <nav class="top-bar show-for-large-up" data-topbar role="navigation" data-options="is_hover: false">
                         <ul class="title-area left">
 
                             
@@ -351,12 +351,15 @@ under the License.
                     
                     <aside class="left-off-canvas-menu">
                       <ul class="off-canvas-list">
+                          <#if userLogin??>  
+                                <@sideBarMenu/> 
+                            </#if>
                           <@primaryAppsMenu/>
                           <@secondaryAppsMenu/>
                        </ul>
                     </aside>
                 
-                    <nav class="tab-bar show-for-small">
+                    <nav class="tab-bar hide-for-large-up">
                         <section class="left-small">
                             <a class="left-off-canvas-toggle menu-icon"><span></span></a>
                         </section>

@@ -176,7 +176,7 @@ $sidebar-width: 200px;
     padding-left:10px;
 }
 
-@media #{$medium-up} {
+@media #{$large-up} {
   .side-bar {
     @include side-nav-nested;
     

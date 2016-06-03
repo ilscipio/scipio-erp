@@ -11026,7 +11026,7 @@ Sidebar Menu
   padding-left: 10px;
 }
 
-@media only screen and (min-width: 40.0625em) {
+@media only screen and (min-width: 64.0625em) {
   /* line 180, ../scss/_sidebar.scss */
   .side-bar {
     margin: 0;

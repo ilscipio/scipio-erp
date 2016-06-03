@@ -581,8 +581,8 @@ under the License.
     </target>
 	
 	<target name="scipio-default-start" depends="scipio-check-default-rdbms">
-		<echo message="Scipio-Commerce: Welcome to Scipio-Commerce" />		
-		<echo message="Scipio-Commerce: Default RDBMS has been detected [${fs.rdbms.name}]"/>
+		<echo message="Welcome to Scipio-Commerce" />		
+		<echo message="Default RDBMS has been detected [${fs.rdbms.name}]"/>
 		
         <if>
             <equals arg1="${fs.rdbms.result}" arg2="presentWithNoData" />
@@ -600,7 +600,7 @@ under the License.
                <then>
                    <!--echo message="Starting framework..." /-->
                    <antcall target="start">
-                      <!--param name="scipio.start.spawn" value="true" /-->
+                      <param name="scipio.start.spawn" value="true" />
                    </antcall>
                </then>
             </elseif>

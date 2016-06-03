@@ -83,7 +83,7 @@
 		if (this.isRTL){
 			this.picker.addClass('datepicker-rtl');
 			this.picker.find('.prev i, .next i')
-						.toggleClass('fa fa-chevron-left fa-chevron-right').toggleClass('fa-chevron-left fa-chevron-right');
+						.toggleClass('fa fa-chevron-left fa-chevron-right fi-arrow-left fi-arrow-right').toggleClass('fa-chevron-left fa-chevron-right fi-arrow-left fi-arrow-right');
 		}
 		$(document).on('mousedown', function (e) {
 			// Clicked outside the datepicker, hide it
@@ -1058,9 +1058,9 @@
 		},
 		headTemplate: '<thead>'+
 							'<tr>'+
-								'<th class="prev"><i class="fa fa-chevron-left fa-arrow-left"/></th>'+
+								'<th class="prev"><i class="fa fa-chevron-left fa-arrow-left fi-arrow-left"/></th>'+
 								'<th colspan="5" class="date-switch"></th>'+
-								'<th class="next"><i class="fa fa-chevron-right fa-arrow-right"/></th>'+
+								'<th class="next"><i class="fa fa-chevron-right fa-arrow-right fi-arrow-right"/></th>'+
 							'</tr>'+
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',

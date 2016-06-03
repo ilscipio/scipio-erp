@@ -11192,3 +11192,13 @@ Sidebar Menu
 th a {
   color: #fff;
 }
+
+/* line 28, ../scss/metro.scss */
+.datepicker td, .datepicker th {
+  background: none !important;
+  color: #222222;
+}
+/* line 32, ../scss/metro.scss */
+.datepicker .date-switch, .datepicker .next, .datepicker .prev {
+  color: #eeeeee;
+}

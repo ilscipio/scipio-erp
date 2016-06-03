@@ -23,3 +23,13 @@
 
 /*Theme specific fixes*/
 th a { color: #fff;}
+
+.datepicker {
+    td, th {
+        background:none!important;
+        color:$jet;
+        }
+    .date-switch, .next,.prev {
+        color:$smoke;
+    }
+}

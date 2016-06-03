@@ -87,11 +87,12 @@
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <menu-item name="FacilityChildren" title="${uiLabelMap.CommonEntityChildren}">
+        <!-- Scipio: To be removed -->
+        <!-- <menu-item name="FacilityChildren" title="${uiLabelMap.CommonEntityChildren}">
             <link target="FacilityChildren">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="ViewContactMechs" title="${uiLabelMap.PartyContactMechs}">
             <link target="ViewContactMechs">
                 <parameter param-name="facilityId"/>

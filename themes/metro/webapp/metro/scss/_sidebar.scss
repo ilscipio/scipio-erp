@@ -172,7 +172,8 @@ $sidebar-width: 200px;
 }
 
 #content-main-section {
-    padding-top:50px;  
+    padding-top:50px;
+    padding-left:10px;
 }
 
 @media #{$medium-up} {

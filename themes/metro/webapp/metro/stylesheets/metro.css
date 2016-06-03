@@ -11023,10 +11023,11 @@ Sidebar Menu
 /* line 174, ../scss/_sidebar.scss */
 #content-main-section {
   padding-top: 50px;
+  padding-left: 10px;
 }
 
 @media only screen and (min-width: 40.0625em) {
-  /* line 179, ../scss/_sidebar.scss */
+  /* line 180, ../scss/_sidebar.scss */
   .side-bar {
     margin: 0;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
@@ -11117,17 +11118,17 @@ Sidebar Menu
     border: none;
     background: none;
   }
-  /* line 191, ../scss/_sidebar.scss */
+  /* line 192, ../scss/_sidebar.scss */
   .side-bar .name a {
     color: white;
   }
-  /* line 192, ../scss/_sidebar.scss */
+  /* line 193, ../scss/_sidebar.scss */
   .side-bar .name .logo-text {
     display: inline-block;
     width: 120px;
     word-break: break-all;
   }
-  /* line 193, ../scss/_sidebar.scss */
+  /* line 194, ../scss/_sidebar.scss */
   .side-bar .name img {
     width: 55px;
     height: 55px;
@@ -11140,14 +11141,14 @@ Sidebar Menu
   }
 
   /*Top-Bar*/
-  /* line 207, ../scss/_sidebar.scss */
+  /* line 208, ../scss/_sidebar.scss */
   .top-bar {
     background: white;
     border-bottom: 1px solid #D9DEE4;
     margin-left: 200px;
     padding-left: 10px;
   }
-  /* line 213, ../scss/_sidebar.scss */
+  /* line 214, ../scss/_sidebar.scss */
   .top-bar img {
     width: 55px;
     height: 55px;
@@ -11159,21 +11160,21 @@ Sidebar Menu
     padding: 7px;
   }
 
-  /* line 227, ../scss/_sidebar.scss */
+  /* line 228, ../scss/_sidebar.scss */
   .top-bar-section ul li {
     background: none;
   }
-  /* line 231, ../scss/_sidebar.scss */
+  /* line 232, ../scss/_sidebar.scss */
   .top-bar-section li:not(.has-form) a:not(.button) {
     color: #333333;
   }
-  /* line 235, ../scss/_sidebar.scss */
+  /* line 236, ../scss/_sidebar.scss */
   .top-bar-section .dropdown {
     box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
   }
 
-  /* line 243, ../scss/_sidebar.scss */
+  /* line 244, ../scss/_sidebar.scss */
   #content-main-section {
     width: auto;
     margin-left: 200px;

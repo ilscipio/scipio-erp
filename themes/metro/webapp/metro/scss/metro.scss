@@ -35,3 +35,14 @@ th a { color: #fff;}
 }
 
 .breadcrumbs {background:$white;}
+
+footer{
+    font-size:1.2em;
+    a {
+        color: $aluminum;
+        
+        &:hover,&:focus{
+            color: $white;
+        }
+    }
+}

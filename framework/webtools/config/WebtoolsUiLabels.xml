@@ -427,18 +427,11 @@
         <value xml:lang="zh_TW">XML檔案名</value>
     </property>
     <property key="FrameworkWebTools">
-        <value xml:lang="de">Web Tools Framework</value>
-        <value xml:lang="en">Framework Admin</value>
-        <value xml:lang="es">Framework Herramientas Web</value>
-        <value xml:lang="fr">Outils web du Framework</value>
-        <value xml:lang="it">Strumenti del Framework</value>
-        <value xml:lang="ja">Webツール</value>
-        <value xml:lang="pt">Framework Web Tools</value>
-        <value xml:lang="ro">Aplicatie Instrumente Web</value>
-        <value xml:lang="th">โครงสร้างของเครื่องมือเว็บ</value>
-        <value xml:lang="vi">Giao diện quản trị hệ thống</value>
-        <value xml:lang="zh">Web工具</value>
-        <value xml:lang="zh_TW">Web工具</value>
+        <value xml:lang="de">Admin</value>
+        <value xml:lang="en">Admin</value>
+        <value xml:lang="es">Admin</value>
+        <value xml:lang="fr">Admin</value>
+        <value xml:lang="it">Admin</value>
     </property>
     <property key="PageTitleDemoDataGenerator">
         <value xml:lang="en">Demo Data Generator</value>

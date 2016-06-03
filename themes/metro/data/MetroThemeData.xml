@@ -19,7 +19,7 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <VisualTheme visualThemeId="METRO" visualThemeSetId="BACKOFFICE" description="Metro - Foundation CSS Theme in the style of the Windows Metro design"/>
+    <VisualTheme visualThemeId="METRO" visualThemeSetId="BACKOFFICE" description="Metro - Modern Foundation CSS Theme"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://metro-theme/data/MetroThemeData.xml" sequenceId="01"/>
     
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAME" resourceValue="METRO" sequenceId="01"/>

@@ -71,7 +71,9 @@ $sidebar-width: 200px;
   
   padding: $side-nav-padding;
   
-  h1{color: $link-color; font-size: 18px;}
+  h1{
+    color: $white; font-size: 12px;text-transform: uppercase;
+  }
   ul {margin: 0;}
 
   li {
@@ -152,6 +154,12 @@ $sidebar-width: 200px;
 
 .fixed {margin-left:$sidebar-width;}
 
+.tab-bar {
+    h1 {
+         img{margin-right:10px;}
+            a {color: $white}
+        }
+  }
 
 // Box styling
 .box,canvas {
@@ -180,7 +188,30 @@ $sidebar-width: 200px;
     width: $sidebar-width;
     overflow-x: hidden;
     
-    .name img{
+    .name{
+         a {color: $white}
+        .logo-text {display:inline-block; width:120px;word-break: break-all;}
+        img{
+            width: 55px;
+            height: 55px;
+            opacity: 0.9;
+            margin-left:10px;
+            margin-right:10px;
+            background: $white;
+            border-radius: 50%;
+            padding: 7px;
+        }
+    }
+  }
+  
+  /*Top-Bar*/
+  .top-bar {
+      background:$topbar-bg-color;
+      border-bottom: 1px solid #D9DEE4;
+      margin-left: $sidebar-width;
+      padding-left:10px;
+      
+      img{
         width: 55px;
         height: 55px;
         opacity: 0.9;
@@ -189,18 +220,26 @@ $sidebar-width: 200px;
         background: $white;
         border-radius: 50%;
         padding: 7px;
-    }
-  }
-  .top-bar {
-      background:$topbar-bg-color;
-      border-bottom: 1px solid #D9DEE4;
-      margin-left: $sidebar-width;
-      padding-left:10px;
+        }
   }
   
-  .top-bar-section ul li {
-    background: none;
+  .top-bar-section {
+  
+    ul li {
+        background: none;
+    }
+    
+    li:not(.has-form) a:not(.button) {
+        color: $topbar-link-color;
+    }
+    
+    .dropdown {
+        box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+        -webkit-box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+    }
+  
   }
+ 
   
   #content-main-section {
     width:auto;

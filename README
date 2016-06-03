@@ -1,8 +1,9 @@
-   _________  __________ 
-  / ____/   |/_  __/ __ \
- / /   / /| | / / / / / /
-/ /___/ ___ |/ / / /_/ / 
-\____/_/  |_/_/  \____/  
+   _____    _____   _   _____    _    ____  
+  / ____|  / ____| | | |  __ \  | |  / __ \ 
+ | (___   | |      | | | |__) | | | | |  | |
+  \___ \  | |      | | |  ___/  | | | |  | |
+  ____) | | |____  | | | |      | | | |__| |
+ |_____/   \_____| |_| |_|      |_|  \____/
 
 ***************************
 * I N S T A L L A T I O N *
@@ -39,14 +40,14 @@ b. OS X: ./install.sh
 c. Windows: install.bat
 
 2. From the same command line run:
-a. Linux ./tools/start.sh
-b. OS X: bash /tools/start.sh
-c. Windows: /tools/start.bat
+a. Linux ./start.sh
+b. OS X: bash /start.sh
+c. Windows: /start.bat
 
-3. To access the application visit the OFBiz Dashboard:
-OFBiz Dashboard: http://localhost:8080/webtools
+3. To access the application visit the SCIPIO ERP Dashboard:
+OFBiz Dashboard: http://localhost:8080/admin
 
-4. To access the OFBiz Applications from the Dashboard use:
+4. To access the SCIPIO Applications from the Dashboard use:
 Username: admin
 Password: scipio
 

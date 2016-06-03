@@ -155,11 +155,11 @@ under the License.
     </#if>
     <#if headerImageUrl??>
         <#if organizationLogoLinkURL?has_content>
-            <#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(organizationLogoLinkURL)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
-            <#else><#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(headerImageUrl)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
+            <#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(organizationLogoLinkURL)}</@ofbizContentUrl>"/><span class="logo-text">${applicationTitle!}</span><#if hasLink></a></#if>
+            <#else><#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(headerImageUrl)}</@ofbizContentUrl>"/><span class="logo-text">${applicationTitle!}</span><#if hasLink></a></#if>
         </#if>
         <#else>
-        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@ofbizContentUrl>"/></a>
+        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@ofbizContentUrl>"/><span class="logo-text">${applicationTitle!}</span></a>
     </#if>
 </#macro>
 
@@ -265,24 +265,30 @@ under the License.
 
 <div class="off-canvas-wrap" data-offcanvas id="body-content">
 <div class="inner-wrap">
-                    <#-- Sidebar -->    
-                    <nav class="side-bar  hide-for-small-only">
+                    <#-- Sidebar -->
+                    
+                    <nav class="side-bar show-for-large-up">
                         <!-- Profile -->
                         <div class="title-area">
                             <div class="name">
-                                <h1><@logoMenu isSmall=true/> <#if activeApp?has_content>${activeApp}</#if></h1>   
+                                <h1><@logoMenu isSmall=true/></h1>
                               </div>
                           </div>
                         <!-- End of Profile -->
 
                         <!-- Menu sidebar begin-->
+                          
                         <ul class="side-nav" id="menu_2">
-                            <@sideBarMenu/>                       
+                            <#if userLogin??>  
+                                <@sideBarMenu/> 
+                            </#if>                 
                         </ul>
+                        
                     </nav>
                     
+                    
                     <#-- Topbar -->
-                    <nav class="top-bar" data-topbar role="navigation" data-options="is_hover: false">
+                    <nav class="top-bar show-for-large-up" data-topbar role="navigation" data-options="is_hover: false">
                         <ul class="title-area left">
 
                             
@@ -293,6 +299,7 @@ under the License.
 
                         <section class="top-bar-section ">
                             <!-- Right Nav Section -->
+                            
                             <ul class="left">
                                 <li class="has-dropdown">
                                     <a class="" href="#"><i class="fi-home text-blue"></i> ${uiLabelMap["CommonPrimaryApps"]}</a>
@@ -307,6 +314,7 @@ under the License.
                                     </ul>
                                 </li>
                             </ul>
+
                             <#-- Left Nav Section
                             <ul class="left">
 
@@ -343,12 +351,15 @@ under the License.
                     
                     <aside class="left-off-canvas-menu">
                       <ul class="off-canvas-list">
+                          <#if userLogin??>  
+                                <@sideBarMenu/> 
+                            </#if>
                           <@primaryAppsMenu/>
                           <@secondaryAppsMenu/>
                        </ul>
                     </aside>
                 
-                    <nav class="tab-bar show-for-small">
+                    <nav class="tab-bar hide-for-large-up">
                         <section class="left-small">
                             <a class="left-off-canvas-toggle menu-icon"><span></span></a>
                         </section>

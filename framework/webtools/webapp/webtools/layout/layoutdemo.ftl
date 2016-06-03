@@ -189,7 +189,7 @@
     </@nav>
 </@section>
 
-
+<#if debugMode>
 <p>Nested sub-menus (markup test only!)</p>
 <@menu type="button" class="+my-button-menu-class" id="my-button-menu">
   <@menuitem type="link" text="Menu Button 1" />
@@ -210,7 +210,7 @@
     </@menu>
   </@menuitem>
 </@menu>
-
+</#if>
 </@section>                                     
 
 <@section>
@@ -353,7 +353,8 @@
       <@table type="generic" attribs={"extra-table-attrib":"some-value"}>
         <@commonTestTableContent />
       </@table>
-    </@section>  
+    </@section>
+    <#if debugMode>  
     <@section title="data-list table">
       <@table type="data-list" extraTableAttrib="some-value">
         <@commonTestTableContent />
@@ -379,9 +380,11 @@
       <@table type="summary">
         <@commonTestTableContent numRows=1 />
       </@table>
-    </@section>       
+    </@section>
+    </#if>     
   </@section>    
 
+  <#if debugMode>
   <@section title="Complex tables">
     <@section title="data-complex table (scrollable only)">
       <@table type="data-complex" scrollable=true>
@@ -405,7 +408,8 @@
         <@commonTestTableContent />
       </@table>
     </@section>      
-
+    
+    <#if debugMode>
     <@section title="data-complex table (nested tables and alt rows)">
       <@table type="data-complex" autoAltRows=true>
         <@thead>
@@ -475,7 +479,9 @@
         </@tfoot>
       </@table>
     </@section>
+    </#if>
   </@section>
+  </#if>
 </@section>
 
 <@section title="Menus">
@@ -487,6 +493,7 @@
     </@menuitem>
   </@menu>
 
+  <#if debugMode>
   <#assign menuItems = [
     {"type":"link", "text":"Menu Tab 2", "disabled":true},
     {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
@@ -527,11 +534,12 @@
   <@section title="Section with string/html menu def (old)" menuContent=menuContent>
    [section content]
   </@section>
-
+  </#if>
 </@section>
 
 <#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,
      usually don't need in @section macro. See outputted markup for results. -->
+<#if debugMode>
 <@section title="Macro Test">
     <@section title="Nested section title" titleClass="heading+2:+test-additional-section-title-class">
     </@section>
@@ -560,8 +568,10 @@
       In a sub-section (manual title level to h6)
     </@section>
 </@section>
+</#if>
 
 <#-- javascript test; entitymaint should only appear once in output... -->
+<#if debugMode>
 <@script>
 <@requireScriptOfbizUrl "entitymaint" />
 <@requireScriptOfbizUrl "entitymaint" />
@@ -569,11 +579,10 @@
 <@requireScriptOfbizUrl "entitymaint" />
 <@requireScriptOfbizUrl "ServiceList" />
 </@script>
-
+</#if>
 
 <@section title="Fields">
   <#-- TODO: submitarea -> submit (but not to remove submitarea; still important) -->
-
   <@section title="Default form fields (with label area) (@fields type=\"default\")">
     <@form name="form1">
     <@fields type="default"> <#-- see styles.fields_default_xxx. note: @fields currently optional for type="default"-->
@@ -641,6 +650,7 @@
       <@field type="generic" label="Radios in generic field">
         <@fields inlineItems=false>
         <@field type="radio" name="radio22" label="Radio 22" value="TEST1" />
+        <#if debugMode>
         <@field type="radio" name="radio22" label="Radio 23" value="TEST2" />
         <#assign veryLongLabel>
             This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
@@ -658,12 +668,14 @@
         </#assign>
         <@field type="radio" name="radio22" label=veryLongLabel value="TEST3" />
         <@field type="radio" name="radio22" label="Radio 24" value="TEST4" />
+        </#if>
         </@fields>
       </@field>
   
       <@field type="generic" label="Checkboxes (default markup, one per line) in generic field">
         <@fields inlineItems=false>
         <@field type="checkbox" name="checkbox22" label="Checkbox 22" value="TEST1" />
+        <#if debugMode>
         <@field type="checkbox" name="checkbox23" label="Checkbox 23" value="TEST2" />
         <#assign veryLongLabel>
             This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
@@ -681,12 +693,14 @@
         </#assign>
         <@field type="checkbox" name="checkbox24" label=veryLongLabel value="TEST3" />
         <@field type="checkbox" name="checkbox24" label="Checkbox 24" value="TEST4" />
+        </#if>
         </@fields>
       </@field>
       
       <@field type="generic" label="Checkboxes (simple-standard - forced, one per line) in generic field">
         <@fields inlineItems=false checkboxType="simple-standard">
         <@field type="checkbox" name="checkbox32" label="Checkbox 32" value="TEST1" />
+        <#if debugMode>
         <@field type="checkbox" name="checkbox33" label="Checkbox 33" value="TEST2" />
         <#assign veryLongLabel>
             This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
@@ -704,12 +718,14 @@
         </#assign>
         <@field type="checkbox" name="checkbox34" label=veryLongLabel value="TEST3" />
         <@field type="checkbox" name="checkbox34" label="Checkbox 34" value="TEST4" />
+        </#if>
         </@fields>
       </@field>
 
       <@field type="generic" label="Checkboxes (simple - forced, one per line) in generic field">
         <@fields inlineItems=false checkboxType="simple">
         <@field type="checkbox" name="checkbox52" label="Checkbox 52" value="TEST1" />
+        <#if debugMode>
         <@field type="checkbox" name="checkbox53" label="Checkbox 53" value="TEST2" />
         <#assign veryLongLabel>
             This is a very long label. This is a very long label. This is a very long label. This is a very long label. 
@@ -727,6 +743,7 @@
         </#assign>
         <@field type="checkbox" name="checkbox54" label=veryLongLabel value="TEST3" />
         <@field type="checkbox" name="checkbox54" label="Checkbox 54" value="TEST4" />
+        </#if>
         </@fields>
       </@field>
 
@@ -788,6 +805,7 @@
     </@form>
   </@section>
 
+  <#if debugMode>
   <@section title="Default form fields (without label area) (@fields type=\"default-nolabelarea\")">
     <@form name="form2">
     <@fields type="default-nolabelarea"> <#-- see styles.fields_default_nolabelarea_xxx -->
@@ -823,7 +841,9 @@
     </@fields>
     </@form>
   </@section>
+  </#if>
 
+  <#if debugMode>
   <@section title="Default form fields (with label area) with parent/child fields (@fields type=\"default\")">
     <@form name="form3"> <#-- see styles.fields_default_xxx -->
       <@field type="generic" label="Multi-fields">
@@ -856,7 +876,9 @@
       </@field>
     </@form>
   </@section>
+  </#if>
 
+  <#if debugMode>
   <@section title="Default compact form fields (label area at top, for cramped forms) (@fields type=\"default-compact\")">
     <@row>
       <@cell small=4 last=true>
@@ -878,7 +900,9 @@
       </@cell>
     </@row>
   </@section>
+  </#if>
 
+  <#if debugMode>
   <@section title="Custom arranged form fields (@fields type=\"default-manual\")">
     <#-- NOTE: To get labels on custom (@fields group type "generic") fields, 
         must enable label area manually using labelArea=true. presence of label argument is not enough
@@ -951,7 +975,8 @@
     </@fields>
     </@form>
   </@section>
-
+  </#if>
+  <#if debugMode>
   <@section title="Widget-only custom form fields, no containers (@fields type=\"default-manual-widgetonly\")">
     <@form name="form6">
     <@fields type="default-manual-widgetonly">
@@ -990,7 +1015,8 @@
       </@row>
     </@form>
   </@section>
-
+  </#if>
+  <#if debugMode>
   <@section title="Variable-size fields">
     <@form name="form7">
     <@fields type="default">
@@ -1022,7 +1048,8 @@
     </@fields>
     </@form>
   </@section>
-
+  </#if>
+  <#if debugMode>
   <@section title="@fields container inheritance test (NOTE: default is inherit-all)">
     <@form name="form8">
       <@fields>
@@ -1051,9 +1078,10 @@
       </@fields>
     </@form>
   </@section>
-
+  </#if>
 </@section>
 
+<#if debugMode>
 <@section title="Class arguments test">
   <#macro myClassTest class="">
     <#local origClass = class>
@@ -1075,7 +1103,9 @@
     <@myClassTest class="=caller-override-class" /> 
   </ul>
 </@section>
+</#if>
 
+<#if debugMode>
 <@section title="More grid tests">
   <@row class="+${styles.grid_display!}">
     <@cell offset=6 columns=6>
@@ -1100,9 +1130,10 @@
       default
     </@cell>
   </@row>
-
 </@section>
+</#if>
 
+<#if debugMode>
 <@section title="FTL request-scope stacks">
   <@section title="Basic stack">
     <#macro printTestStack>
@@ -1157,9 +1188,9 @@
     </@row>
   </@section>
 </@section>
+</#if>
 
-
-
+<#if debugMode>
 <@section title="FTL macro flexible args demo">
   <#macro argsTestInner args={} inlineArgs...>
     <#local args = mergeArgMaps(args, inlineArgs, {"innerArg1":"some-value-macro-default", "innerArg2":"some-value-macro-default", "innerArg3":"some-value-macro-default"}, {"innerArg4", "some-value-macro-override"})>
@@ -1275,4 +1306,4 @@
   </@section>
 
 </@section>
-
+</#if>

@@ -1,9 +1,18 @@
-   _____    _____   _   _____    _    ____  
-  / ____|  / ____| | | |  __ \  | |  / __ \ 
- | (___   | |      | | | |__) | | | | |  | |
-  \___ \  | |      | | |  ___/  | | | |  | |
-  ____) | | |____  | | | |      | | | |__| |
- |_____/   \_____| |_| |_|      |_|  \____/
+
+**************************************************************************
+
+   _____    _____   _   _____    _    ____      _____   _____    _____
+  / ____|  / ____| | | |  __ \  | |  / __ \    |  ___| |  __ \  |  __ \
+ | (___   | |      | | | |__) | | | | |  | |   | |___  | |__) | | |__) |
+  \___ \  | |      | | |  ___/  | | | |  | |   |  ___| |  _  /  |  ___/
+  ____) | | |____  | | | |      | | | |__| |   | |___  | | \ \  | |
+ |_____/   \_____| |_| |_|      |_|  \____/    |_____| |_|  \_\ |_|
+
+					https://www.scipio-erp.com
+
+**************************************************************************
+
+SCIPIO ERP - Community Edition
 
 ***************************
 * I N S T A L L A T I O N *
@@ -25,7 +34,7 @@ Recommended Development Tools
  * Freemarker IDE editor (select from JBools tools plugin)
 
 Prerequisits
-In order to install SCIPIO, the following prerequisites must be installed properly:
+In order to install SCIPIO ERP, the following prerequisites must be installed properly:
 * Java 1.7 (or greater) SDK
  * Download and Install
  * Set JAVA_HOME Path
@@ -35,25 +44,23 @@ Installation
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
-a. Linux ./install.sh
-b. OS X: ./install.sh
-c. Windows: install.bat
+ a. Linux ./install.sh
+ b. OS X: ./install.sh
+ c. Windows: install.bat
 
 2. From the same command line run:
-a. Linux ./start.sh
-b. OS X: bash /start.sh
-c. Windows: /start.bat
+ a. Linux ./start.sh
+ b. OS X: bash /start.sh
+ c. Windows: /start.bat
 
 3. To access the application visit the SCIPIO ERP Dashboard:
-OFBiz Dashboard: http://localhost:8080/admin
+  https://localhost:8443/admin
 
-4. To access the SCIPIO Applications from the Dashboard use:
-Username: admin
-Password: scipio
+4. To access the SCIPIO ERP applications from the Dashboard use:
+  Username: admin
+  Password: scipio
 
-
-                            Congratulations, you have installed SCIPIO!
-
+					Congratulations, you have installed SCIPIO ERP!
 
 Optional Configuration
 * OFBiz-related Configuration
@@ -64,41 +71,43 @@ Optional Configuration
 *****************
 * S U P P O R T *
 *****************
-For detailed changes to the SCIPIO Commerce suite, visit the github wiki at:
+For detailed changes to the SCIPIO ERP suite, visit the github wiki at:
 
-https://www.scipioerp.com
+  https://www.scipio-erp.com
 
 You can get in touch with the community over at:
 
-https://forum.scipioerp.com
+  https://forum.scipioerp.com
 
 *************
 * O F B I Z *
 *************
-Scipio is a fork of the Apache OFBiz project. 
+Scipio ERP is a fork of the Apache OFBiz project. 
 
 For more details about OFBiz please visit the OFBiz Documentation page:
 
-http://ofbiz.apache.org/documentation.html
+  http://ofbiz.apache.org/documentation.html
 
 In this page you will find links to useful guides such as:
 * "Demo and Test Setup Guide"
 * "Basic Production Setup Guide"
 * "A Beginners Development Guide"
 
-
 If you would like to get in touch with the OFBiz community of users and
 developers, the following page will help to get started:
 
-http://ofbiz.apache.org/community.html
+  http://ofbiz.apache.org/community.html
 
 ***********************
 * D I S C L A I M E R *
 ***********************
+This software is provided as is and free of charge. There is no warranty
+or support implied under the terms of the license included.
+
 SCIPIO ERP and the SCIPIO logo are trademarks of Ilscipio GmbH. 
-© Copyright SCIPIO components 2014 Ilscipio GmbH.
-Apache OFBiz, Apache, the Apache feather logo are trademarks
- of The Apache Software Foundation.
+© Copyright SCIPIO components 2016 Ilscipio GmbH.
+Apache OFBiz, Apache, the Apache feather logo are trademarks 
+of The Apache Software Foundation.
 
 ***********************************
 * BIS Crypto TSU exception notice *

@@ -10994,36 +10994,40 @@ Sidebar Menu
 *   IMPLEMENTATION  *
 *********************/
 /* Scipio: duplicated from "side-nav" mixin and modified */
-/* line 149, ../scss/_sidebar.scss */
-.inner-wrap {
-  background-color: #2f323a;
-}
-
-/* line 153, ../scss/_sidebar.scss */
+/* line 156, ../scss/_sidebar.scss */
 .fixed {
   margin-left: 200px;
 }
 
-/* line 157, ../scss/_sidebar.scss */
+/* line 160, ../scss/_sidebar.scss */
+.tab-bar h1 img {
+  margin-right: 10px;
+}
+/* line 161, ../scss/_sidebar.scss */
+.tab-bar h1 a {
+  color: white;
+}
+
+/* line 166, ../scss/_sidebar.scss */
 .box, canvas {
   background: white;
   padding: 7px 10px;
   border: 1px solid #E6E9ED;
 }
-/* line 162, ../scss/_sidebar.scss */
+/* line 171, ../scss/_sidebar.scss */
 .box canvas, canvas canvas {
   border: none;
   padding: 0px;
 }
 
-/* line 165, ../scss/_sidebar.scss */
+/* line 174, ../scss/_sidebar.scss */
 #content-main-section {
-  background-color: whitesmoke;
   padding-top: 50px;
+  padding-left: 10px;
 }
 
-@media only screen and (min-width: 40.0625em) {
-  /* line 172, ../scss/_sidebar.scss */
+@media only screen and (min-width: 64.0625em) {
+  /* line 180, ../scss/_sidebar.scss */
   .side-bar {
     margin: 0;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
@@ -11040,21 +11044,21 @@ Sidebar Menu
   }
   /* line 74, ../scss/_sidebar.scss */
   .side-bar h1 {
-    color: #eeeeee;
-    font-size: 18px;
+    color: white;
+    font-size: 12px;
   }
-  /* line 75, ../scss/_sidebar.scss */
+  /* line 77, ../scss/_sidebar.scss */
   .side-bar ul {
     margin: 0;
   }
-  /* line 77, ../scss/_sidebar.scss */
+  /* line 79, ../scss/_sidebar.scss */
   .side-bar li {
     font-size: 0.875rem;
     font-weight: normal;
     margin: 0 0 0 0;
     list-style: none;
   }
-  /* line 84, ../scss/_sidebar.scss */
+  /* line 86, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button) {
     color: #eeeeee;
     display: block;
@@ -11062,17 +11066,17 @@ Sidebar Menu
     padding: 0.4375rem 0.875rem;
     border-left: 5px solid #222222;
   }
-  /* line 91, ../scss/_sidebar.scss */
+  /* line 93, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):hover, .side-bar li > a:not(.button):focus {
     background: #777777;
     color: #f1f1f1;
     border-left: 5px solid #b61525;
   }
-  /* line 97, ../scss/_sidebar.scss */
+  /* line 99, ../scss/_sidebar.scss */
   .side-bar li > a:not(.button):active {
     color: #f3f3f3;
   }
-  /* line 102, ../scss/_sidebar.scss */
+  /* line 104, ../scss/_sidebar.scss */
   .side-bar li.active > a:first-child:not(.button) {
     background: #777777;
     color: #f3f3f3;
@@ -11080,7 +11084,7 @@ Sidebar Menu
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     font-weight: normal;
   }
-  /* line 110, ../scss/_sidebar.scss */
+  /* line 112, ../scss/_sidebar.scss */
   .side-bar li.divider {
     border-top: 1px solid;
     height: 0;
@@ -11088,32 +11092,64 @@ Sidebar Menu
     padding: 0;
     border-top-color: #e6e6e6;
   }
-  /* line 118, ../scss/_sidebar.scss */
+  /* line 120, ../scss/_sidebar.scss */
   .side-bar li.heading {
     color: #b61525;
     font-size: 0.875rem;
     font-weight: bold;
     text-transform: uppercase;
   }
-  /* line 128, ../scss/_sidebar.scss */
+  /* line 130, ../scss/_sidebar.scss */
   .side-bar li.dashboard a {
     background-color: #222222;
     border-left: 5px solid #222222;
     color: white;
   }
-  /* line 135, ../scss/_sidebar.scss */
+  /* line 137, ../scss/_sidebar.scss */
   .side-bar li.disabled {
     padding: 0.4375rem 0.875rem;
     color: #999999;
     cursor: default;
   }
-  /* line 140, ../scss/_sidebar.scss */
+  /* line 142, ../scss/_sidebar.scss */
   .side-bar li.disabled > a, .side-bar li.disabled > a:hover, .side-bar li.disabled > a:visited, .side-bar li.disabled > a:active, .side-bar li.disabled > a:focus {
     color: #999999;
     cursor: default;
+    border: none;
+    background: none;
   }
-  /* line 183, ../scss/_sidebar.scss */
+  /* line 192, ../scss/_sidebar.scss */
+  .side-bar .name a {
+    color: white;
+  }
+  /* line 193, ../scss/_sidebar.scss */
+  .side-bar .name .logo-text {
+    display: inline-block;
+    width: 120px;
+    word-break: break-all;
+  }
+  /* line 194, ../scss/_sidebar.scss */
   .side-bar .name img {
+    width: 55px;
+    height: 55px;
+    opacity: 0.9;
+    margin-left: 10px;
+    margin-right: 10px;
+    background: white;
+    border-radius: 50%;
+    padding: 7px;
+  }
+
+  /*Top-Bar*/
+  /* line 208, ../scss/_sidebar.scss */
+  .top-bar {
+    background: white;
+    border-bottom: 1px solid #D9DEE4;
+    margin-left: 200px;
+    padding-left: 10px;
+  }
+  /* line 214, ../scss/_sidebar.scss */
+  .top-bar img {
     width: 55px;
     height: 55px;
     opacity: 0.9;
@@ -11124,20 +11160,21 @@ Sidebar Menu
     padding: 7px;
   }
 
-  /* line 194, ../scss/_sidebar.scss */
-  .top-bar {
-    background: white;
-    border-bottom: 1px solid #D9DEE4;
-    margin-left: 200px;
-    padding-left: 10px;
-  }
-
-  /* line 201, ../scss/_sidebar.scss */
+  /* line 228, ../scss/_sidebar.scss */
   .top-bar-section ul li {
     background: none;
   }
+  /* line 232, ../scss/_sidebar.scss */
+  .top-bar-section li:not(.has-form) a:not(.button) {
+    color: #333333;
+  }
+  /* line 236, ../scss/_sidebar.scss */
+  .top-bar-section .dropdown {
+    box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
+  }
 
-  /* line 205, ../scss/_sidebar.scss */
+  /* line 244, ../scss/_sidebar.scss */
   #content-main-section {
     width: auto;
     margin-left: 200px;
@@ -11146,3 +11183,36 @@ Sidebar Menu
 /* 
 Sidebar Menu
 */
+/*Theme specific fixes*/
+/* line 25, ../scss/metro.scss */
+th a {
+  color: #fff;
+}
+
+/* line 28, ../scss/metro.scss */
+.datepicker td, .datepicker th {
+  background: none !important;
+  color: #222222;
+}
+/* line 32, ../scss/metro.scss */
+.datepicker .date-switch, .datepicker .next, .datepicker .prev {
+  color: #eeeeee;
+}
+
+/* line 37, ../scss/metro.scss */
+.breadcrumbs {
+  background: white;
+}
+
+/* line 39, ../scss/metro.scss */
+footer {
+  font-size: 1.2em;
+}
+/* line 41, ../scss/metro.scss */
+footer a {
+  color: #999999;
+}
+/* line 44, ../scss/metro.scss */
+footer a:hover, footer a:focus {
+  color: white;
+}

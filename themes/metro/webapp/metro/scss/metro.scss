@@ -19,3 +19,30 @@
 //@import "theme";
 @import "sidebar";
 @import "topbar";
+
+
+/*Theme specific fixes*/
+th a { color: #fff;}
+
+.datepicker {
+    td, th {
+        background:none!important;
+        color:$jet;
+        }
+    .date-switch, .next,.prev {
+        color:$smoke;
+    }
+}
+
+.breadcrumbs {background:$white;}
+
+footer{
+    font-size:1.2em;
+    a {
+        color: $aluminum;
+        
+        &:hover,&:focus{
+            color: $white;
+        }
+    }
+}

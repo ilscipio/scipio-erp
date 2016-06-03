@@ -10994,39 +10994,39 @@ Sidebar Menu
 *   IMPLEMENTATION  *
 *********************/
 /* Scipio: duplicated from "side-nav" mixin and modified */
-/* line 154, ../scss/_sidebar.scss */
+/* line 156, ../scss/_sidebar.scss */
 .fixed {
   margin-left: 200px;
 }
 
-/* line 158, ../scss/_sidebar.scss */
+/* line 160, ../scss/_sidebar.scss */
 .tab-bar h1 img {
   margin-right: 10px;
 }
-/* line 159, ../scss/_sidebar.scss */
+/* line 161, ../scss/_sidebar.scss */
 .tab-bar h1 a {
   color: white;
 }
 
-/* line 164, ../scss/_sidebar.scss */
+/* line 166, ../scss/_sidebar.scss */
 .box, canvas {
   background: white;
   padding: 7px 10px;
   border: 1px solid #E6E9ED;
 }
-/* line 169, ../scss/_sidebar.scss */
+/* line 171, ../scss/_sidebar.scss */
 .box canvas, canvas canvas {
   border: none;
   padding: 0px;
 }
 
-/* line 172, ../scss/_sidebar.scss */
+/* line 174, ../scss/_sidebar.scss */
 #content-main-section {
   padding-top: 50px;
 }
 
 @media only screen and (min-width: 40.0625em) {
-  /* line 177, ../scss/_sidebar.scss */
+  /* line 179, ../scss/_sidebar.scss */
   .side-bar {
     margin: 0;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
@@ -11114,18 +11114,20 @@ Sidebar Menu
   .side-bar li.disabled > a, .side-bar li.disabled > a:hover, .side-bar li.disabled > a:visited, .side-bar li.disabled > a:active, .side-bar li.disabled > a:focus {
     color: #999999;
     cursor: default;
+    border: none;
+    background: none;
   }
-  /* line 189, ../scss/_sidebar.scss */
+  /* line 191, ../scss/_sidebar.scss */
   .side-bar .name a {
     color: white;
   }
-  /* line 190, ../scss/_sidebar.scss */
+  /* line 192, ../scss/_sidebar.scss */
   .side-bar .name .logo-text {
     display: inline-block;
     width: 120px;
     word-break: break-all;
   }
-  /* line 191, ../scss/_sidebar.scss */
+  /* line 193, ../scss/_sidebar.scss */
   .side-bar .name img {
     width: 55px;
     height: 55px;
@@ -11138,14 +11140,14 @@ Sidebar Menu
   }
 
   /*Top-Bar*/
-  /* line 205, ../scss/_sidebar.scss */
+  /* line 207, ../scss/_sidebar.scss */
   .top-bar {
     background: white;
     border-bottom: 1px solid #D9DEE4;
     margin-left: 200px;
     padding-left: 10px;
   }
-  /* line 211, ../scss/_sidebar.scss */
+  /* line 213, ../scss/_sidebar.scss */
   .top-bar img {
     width: 55px;
     height: 55px;
@@ -11157,21 +11159,21 @@ Sidebar Menu
     padding: 7px;
   }
 
-  /* line 225, ../scss/_sidebar.scss */
+  /* line 227, ../scss/_sidebar.scss */
   .top-bar-section ul li {
     background: none;
   }
-  /* line 229, ../scss/_sidebar.scss */
+  /* line 231, ../scss/_sidebar.scss */
   .top-bar-section li:not(.has-form) a:not(.button) {
     color: #333333;
   }
-  /* line 233, ../scss/_sidebar.scss */
+  /* line 235, ../scss/_sidebar.scss */
   .top-bar-section .dropdown {
     box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
   }
 
-  /* line 241, ../scss/_sidebar.scss */
+  /* line 243, ../scss/_sidebar.scss */
   #content-main-section {
     width: auto;
     margin-left: 200px;
@@ -11194,4 +11196,9 @@ th a {
 /* line 32, ../scss/metro.scss */
 .datepicker .date-switch, .datepicker .next, .datepicker .prev {
   color: #eeeeee;
+}
+
+/* line 37, ../scss/metro.scss */
+.breadcrumbs {
+  background: white;
 }

@@ -142,6 +142,8 @@ $sidebar-width: 200px;
             > a, > a:hover, > a:visited, > a:active, > a:focus {
                 color: $aluminum;
                 cursor: $input-disabled-cursor;
+                border:none;
+                background:none;
             }
         }
   }

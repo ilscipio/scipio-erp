@@ -44,9 +44,9 @@ Installation
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
-a. Linux ./ant load-demo 
-b. OS X: ./ant load-demo
-c. Windows: ant.bat load-demo
+a. Linux ./install.sh
+b. OS X: ./install.sh
+c. Windows: install.bat
 
 2. From the same command line run:
 a. Linux ./start.sh

@@ -57,13 +57,14 @@ under the License.
                 <set field="chartType" value="line"/>
                 <set field="chartDatasets" value="1"/> 
                 <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="month"/> <!-- day|week|month|year -->
                 <set field="title" value="${uiLabelMap.OrderOrders}"/>
                 <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
                 <set field="label1" value="${uiLabelMap.ProductProductsSold}"/>
                 <set field="label2" value="${uiLabelMap.OrderOrders}"/>
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <!-- <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/> -->
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsSalesChart.ftl"/></html></platform-specific>

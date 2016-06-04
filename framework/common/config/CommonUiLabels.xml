@@ -16224,4 +16224,7 @@
         <value xml:lang="en">Leave empty to auto-generate a value</value>
         <value xml:lang="fr">Laisser vide pour générer automatiquement une valeur</value>
     </property>
+    <property key="CommonServiceSuccessMessage">
+        <value xml:lang="en">Operation has been executed successfully</value>
+    </property>
 </resource>

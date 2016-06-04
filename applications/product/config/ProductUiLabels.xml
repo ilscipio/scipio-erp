@@ -16970,7 +16970,7 @@
         <value xml:lang="zh_TW">場所清單</value>
     </property>
     <property key="ProductFacility">
-        <value xml:lang="de">Einrichtung</value>
+        <value xml:lang="de">Lager</value>
         <value xml:lang="en">Warehouse</value>
         <value xml:lang="es">Almacén</value>
         <value xml:lang="fr">Lieu de stockage</value>

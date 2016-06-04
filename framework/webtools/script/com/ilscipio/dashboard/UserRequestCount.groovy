@@ -25,14 +25,12 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
     
     Map<Date, Long> totalRequests = [:];
-    for (int i = 0; i <= iCount; i++) {      
-        
+    for (int i = 0; i <= iCount; i++) {
         List serverHitDateAndExprs = FastList.newInstance(mainAndExprs);
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]));
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, dateIntervals["dateEnd"]));
        
         serverRequestHits = from("ServerHit").where(serverHitDateAndExprs).queryCount();
-        Debug.log("serverRequestHits ===========> " + serverRequestHits);
         totalRequests.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), serverRequestHits);
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateEnd"], context.locale, context.timeZone);
     }

@@ -1339,7 +1339,7 @@ public class UtilDateTime {
             calendar.set(Calendar.MONTH, semester);
             monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()));            
             result.put("dateBegin", monthStart);
-            result.put("dateEnd", UtilDateTime.getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 5), timezone, locale));
+            result.put("dateEnd", UtilDateTime.getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 4), timezone, locale));
             break;
         case "year":
             result.put("dateBegin", UtilDateTime.getYearStart(date, 0, timeShift));
@@ -1384,7 +1384,7 @@ public class UtilDateTime {
             result.put("dateFormatter", new SimpleDateFormat("yyyy-MM"));
             break;
         case "quarter":
-            int month = UtilDateTime.getMonth((Timestamp) result.get("beginDate"), timezone, locale);
+            int month = UtilDateTime.getMonth((Timestamp) result.get("dateBegin"), timezone, locale);
             int quarter = 1;
             if (month >= 3 && month < 6)
                 quarter = 2;
@@ -1395,7 +1395,7 @@ public class UtilDateTime {
             result.put("dateFormatter", new SimpleDateFormat("yyyy-'" + quarter + "T'"));
             break;
         case "semester":
-            month = UtilDateTime.getMonth((Timestamp) result.get("beginDate"), timezone, locale);
+            month = UtilDateTime.getMonth((Timestamp) result.get("dateBegin"), timezone, locale);
             int semester = 1;
             if (month >= 5)
                 semester = 2;          

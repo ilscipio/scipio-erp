@@ -36,7 +36,7 @@ echo " -------------------------------------";
 echo " 3.  Recompile [compile]"
 echo " 4.  List ant compiler information "
 echo ""
-echo " ==========PRESS 'Q' TO QUIT=========="
+echo " ==========PRESS '5' TO QUIT=========="
 echo ""
 
 PS3='Please select a number: '

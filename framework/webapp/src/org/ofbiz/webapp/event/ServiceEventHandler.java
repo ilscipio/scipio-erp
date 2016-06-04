@@ -58,8 +58,6 @@ import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 
-import com.sun.xml.internal.ws.resources.UtilMessages;
-
 /**
  * ServiceEventHandler - Service Event Handler
  */

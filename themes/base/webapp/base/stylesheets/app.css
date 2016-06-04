@@ -11039,17 +11039,18 @@ ul[data-pie-id] {
 
 /* line 44, ../scss/shared/_chartsjs.scss */
 .chart-data {
-  width: 100% !important;
+  /*width: 100% !important;
   max-width: 800px;
-  height: auto !important;
+  height: auto !important;*/
+  display: none;
 }
-/* line 49, ../scss/shared/_chartsjs.scss */
+/* line 50, ../scss/shared/_chartsjs.scss */
 .chart-data:before {
   content: '{"primaryFillColor":"rgba(0, 140, 186, 0.7)","primaryStrokeColor":"rgba(0, 140, 186, 0.9)","primaryPointStrokeColor":"rgba(0, 140, 186, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.7)","secondaryStrokeColor":"rgba(231, 231, 231, 0.9)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pieFillColor1":"#008cba","pieFillColor2":"#e7e7e7","pieFillColor3":"#f04124","pieFillColor4":"#43ac6a","pieFillColor5":"#f08a24","pieFillColor6":"#a0d3e8","pieHighlightColor1":"rgba(0, 140, 186, 0.6)","pieHighlightColor2":"rgba(231, 231, 231, 0.6)","pieHighlightColor3":"rgba(240, 65, 36, 0.6)","pieHighlightColor4":"rgba(67, 172, 106, 0.6)","pieHighlightColor5":"rgba(240, 138, 36, 0.6)","pieHighlightColor6":"rgba(160, 211, 232, 0.6)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleType":"linear","scaleDisplay":true,"scaleGridLineColor":"rgba(0,0,0,.1)","scaleLabelFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"scaleLabelFontSize":14,"scaleLabelFontColor":"#222222","scaleLabelDisplay":false,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
   display: none;
 }
 
-/* line 55, ../scss/shared/_chartsjs.scss */
+/* line 56, ../scss/shared/_chartsjs.scss */
 canvas {
   margin: 0.5em 0;
 }

@@ -42,9 +42,10 @@ $chartMap: (
 );
 
 .chart-data{
-        width: 100% !important;
+        /*width: 100% !important;
         max-width: 800px;
-        height: auto !important;
+        height: auto !important;*/
+        display:none;
   
   &:before{
     content: sassToJs($chartMap);

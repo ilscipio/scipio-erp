@@ -36,16 +36,17 @@ under the License.
             <widgets>
         	    <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">               
 			        <decorator-section name="body">
-			             <section>
-			                 <widgets>                     
-			                    <screenlet>
+                        <container style="${styles.grid_row}">
+                                                        <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                     <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/FindAnalyticsSales.ftl"/></html></platform-specific>
-                                </screenlet>
-                                <screenlet>
-                                    <include-screen name="AnalyticsSalesStats"/>
-                                </screenlet>
-			                 </widgets>
-			             </section>
+                            </container>
+                            <container style="${styles.grid_large}8 ${styles.grid_cell}">
+                                <include-screen name="AnalyticsSalesStats"/>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+
+                        </container>
 			        </decorator-section>
 			    </decorator-screen>
             </widgets>

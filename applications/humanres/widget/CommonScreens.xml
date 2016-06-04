@@ -31,7 +31,7 @@ under the License.
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="applicationMenuName" value="HumanResAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://humanres/widget/HumanresMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.HumanResManagerApplication}" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.HumanResManager}" global="true"/>
                 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.HumanResCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.HumanResCompanySubtitle" global="true"/>

@@ -71,7 +71,7 @@ ant build load-demo
 
 :Selection2
 
-ant build load-seed
+ant build load-extseed
 
 :Selection3
 

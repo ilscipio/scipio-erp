@@ -48,7 +48,7 @@ do
             eval "ant build load-demo"
             ;;
         "Install for production")
-            eval "ant build load-seed"
+            eval "ant build load-extseed"
             ;;
         "Recompile")
             eval "ant build"

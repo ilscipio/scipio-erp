@@ -137,9 +137,10 @@ under the License.
         <menu-item name="NewContact" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewContact"/>
         </menu-item>
-        <menu-item name="NewContactFromVCard" title="${uiLabelMap.SfaCreateContactFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <!-- SCIPIO: Commneted out for now -->
+       <!--  <menu-item name="NewContactFromVCard" title="${uiLabelMap.SfaCreateContactFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewContactFromVCard"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="ViewSfaCommEvent" title="${uiLabelMap.PartyCommunications}">
             <condition>
                 <not><if-empty field="partyId"/></not>
@@ -230,9 +231,10 @@ under the License.
         <menu-item name="NewLead" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewLead"/>
         </menu-item>
-        <menu-item name="NewLeadFromVCard" title="${uiLabelMap.PageTitleCreateLeadFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <!-- SCIPIO: Commneted out for now -->
+       <!--  <menu-item name="NewLeadFromVCard" title="${uiLabelMap.PageTitleCreateLeadFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewLeadFromVCard"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="ViewSfaCommEvent" title="${uiLabelMap.PartyCommunications}">
             <condition>
                 <not><if-empty field="partyId"/></not>

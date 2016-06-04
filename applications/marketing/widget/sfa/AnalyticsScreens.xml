@@ -63,8 +63,7 @@ under the License.
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
                 <set field="label1" value="${uiLabelMap.ProductProductsSold}"/>
                 <set field="label2" value="${uiLabelMap.OrderOrders}"/>
-                <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>
-                <!-- <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/> -->
+                <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>                
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsSalesChart.ftl"/></html></platform-specific>

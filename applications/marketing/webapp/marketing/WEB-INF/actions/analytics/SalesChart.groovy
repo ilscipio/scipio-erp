@@ -7,6 +7,8 @@ import org.ofbiz.base.util.UtilMisc
 
 
 Map processResult() {
+    salesChannels = (parameters.salesChannel) ? [parameters.salesChannel] : [];
+    
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : -1;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
     
@@ -28,11 +30,10 @@ Map processResult() {
         fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);        
     }
     if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
-    if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
-    
+    if (iScope.equals("semester")) iCount = Math.round(iCount / 6);    
    
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);    
+//    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);    
     if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
         dateIntervals["dateEnd"] = thruDateTimestamp;
 
@@ -41,7 +42,7 @@ Map processResult() {
         
     Map resultMap = new TreeMap<String, Object>();
     for (int i = 0; i <= iCount; i++) {
-        Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("minDate", fromDateText, "maxDate", thruDateText,"userLogin",userLogin));
+        Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("salesChannelEnumId", salesChannels, "minDate", fromDateText, "maxDate", thruDateText,"userLogin",userLogin));
 //        Debug.log("findOrderMap =====================> " + findOrderMap);
         List orderList = findOrderMap.orderList;
         orderList.each { header ->        
@@ -69,7 +70,7 @@ Map processResult() {
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateBegin"], context.locale, context.timeZone);
         if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
             dateIntervals["dateEnd"] = thruDateTimestamp
-        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
+//        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
         fromDateText = UtilDateTime.timeStampToString(dateIntervals["dateBegin"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
         thruDateText = UtilDateTime.timeStampToString(dateIntervals["dateEnd"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
     }
@@ -77,5 +78,4 @@ Map processResult() {
 }
 
 sales = processResult();
-Debug.log("sales ===========> " + sales);
 context.sales = sales;

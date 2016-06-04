@@ -98,22 +98,20 @@ public Map createDemoTrackingCodeOrder() {
     if (!maxDate) {
         maxDate = UtilDateTime.nowTimestamp();
     }
+    
     conditionList = EntityCondition.makeCondition(
         EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, minDate),      
             EntityJoinOperator.AND,
             EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, maxDate));
     
-    orderHeaderList = from("OrderHeader").where(conditionList).queryList();    
+    orderHeaderList = from("OrderHeader").where(conditionList).queryList();
     if (orderHeaderList) {
         for (int i = 0; i < num; i++) {
-//            fromDate = UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context);
-//            Debug.log("fromDate ============> " + fromDate);
             trackingCodeTypeList = delegator.findAll("TrackingCodeType",  true);
             if (trackingCodeTypeList)
                 trackingCodeType =  trackingCodeTypeList.get(UtilRandom.random(trackingCodeTypeList));
         
             orderHeader = orderHeaderList.get(UtilRandom.random(orderHeaderList));
-            
             trackingCodeList = delegator.findByAnd("TrackingCode", null, null, false);
             trackingCode = trackingCodeList.get(UtilRandom.random(trackingCodeList));
           

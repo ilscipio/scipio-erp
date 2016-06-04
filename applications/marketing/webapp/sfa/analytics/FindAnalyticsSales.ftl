@@ -9,14 +9,13 @@
                 <option value="${interval}" <#if parameters.intervalScope?has_content && parameters.intervalScope == interval>selected="selected"</#if>>${interval?capitalize}</option>
             </#list>
        </@field>
-       <#-- Scipio: Commenting out this for now, I'm not sure we can filter by this -->
-       <#--
-        <@field type="select" name="salesChannel" label="${uiLabelMap.OrderSalesChannel}">
+       <@field type="select" name="salesChannel" label="${uiLabelMap.OrderSalesChannel}">
+            <option value=""></option>
             <#list salesChannelList as salesChannel>
                 <option value="${salesChannel.enumId}" <#if parameters.salesChannel?has_content && parameters.salesChannel == salesChannel.enumId>selected="selected"</#if>>${salesChannel.description}</option>
             </#list>
        </@field>
-       -->
+       
        <@field name="run" type="submit" value="" text=uiLabelMap.CommonSubmit />
     </form>
 </@section>

@@ -10577,6 +10577,11 @@ li.name img {
   height: 22px;
 }
 
+/* line 139, ../scss/shared/_sidebar.scss */
+.tab-bar h1 img {
+  height: 30px;
+}
+
 /* line 1, ../scss/shared/_login.scss */
 .login-box {
   margin: 200px 0;

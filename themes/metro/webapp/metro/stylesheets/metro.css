@@ -11190,6 +11190,11 @@ Sidebar Menu
 /* 
 Sidebar Menu
 */
+/* line 5, ../scss/_topbar.scss */
+.tab-bar h1 img {
+  height: 30px;
+}
+
 /*Theme specific fixes*/
 /* line 25, ../scss/metro.scss */
 th a {

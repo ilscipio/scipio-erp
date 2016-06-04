@@ -10870,17 +10870,18 @@ ul[data-pie-id] {
 
 /* line 44, ../../../../base/webapp/base/scss/shared/_chartsjs.scss */
 .chart-data {
-  width: 100% !important;
+  /*width: 100% !important;
   max-width: 800px;
-  height: auto !important;
+  height: auto !important;*/
+  display: none;
 }
-/* line 49, ../../../../base/webapp/base/scss/shared/_chartsjs.scss */
+/* line 50, ../../../../base/webapp/base/scss/shared/_chartsjs.scss */
 .chart-data:before {
   content: '{"primaryFillColor":"rgba(182, 21, 37, 0.7)","primaryStrokeColor":"rgba(182, 21, 37, 0.9)","primaryPointStrokeColor":"rgba(182, 21, 37, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.7)","secondaryStrokeColor":"rgba(231, 231, 231, 0.9)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pieFillColor1":"#b61525","pieFillColor2":"#e7e7e7","pieFillColor3":"#f04124","pieFillColor4":"#43ac6a","pieFillColor5":"#f08a24","pieFillColor6":"#a0d3e8","pieHighlightColor1":"rgba(182, 21, 37, 0.6)","pieHighlightColor2":"rgba(231, 231, 231, 0.6)","pieHighlightColor3":"rgba(240, 65, 36, 0.6)","pieHighlightColor4":"rgba(67, 172, 106, 0.6)","pieHighlightColor5":"rgba(240, 138, 36, 0.6)","pieHighlightColor6":"rgba(160, 211, 232, 0.6)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleType":"linear","scaleDisplay":true,"scaleGridLineColor":"rgba(0,0,0,.1)","scaleLabelFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"scaleLabelFontSize":14,"scaleLabelFontColor":"#333333","scaleLabelDisplay":false,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
   display: none;
 }
 
-/* line 55, ../../../../base/webapp/base/scss/shared/_chartsjs.scss */
+/* line 56, ../../../../base/webapp/base/scss/shared/_chartsjs.scss */
 canvas {
   margin: 0.5em 0;
 }
@@ -11012,6 +11013,7 @@ Sidebar Menu
 .box, canvas {
   background: white;
   padding: 7px 10px;
+  width: 100%;
   border: 1px solid #E6E9ED;
 }
 /* line 171, ../scss/_sidebar.scss */
@@ -11023,11 +11025,16 @@ Sidebar Menu
 /* line 174, ../scss/_sidebar.scss */
 #content-main-section {
   padding-top: 50px;
-  padding-left: 10px;
+}
+
+/* line 178, ../scss/_sidebar.scss */
+#content-main-body {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 @media only screen and (min-width: 64.0625em) {
-  /* line 180, ../scss/_sidebar.scss */
+  /* line 184, ../scss/_sidebar.scss */
   .side-bar {
     margin: 0;
     font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
@@ -11118,17 +11125,17 @@ Sidebar Menu
     border: none;
     background: none;
   }
-  /* line 192, ../scss/_sidebar.scss */
+  /* line 196, ../scss/_sidebar.scss */
   .side-bar .name a {
     color: white;
   }
-  /* line 193, ../scss/_sidebar.scss */
+  /* line 197, ../scss/_sidebar.scss */
   .side-bar .name .logo-text {
     display: inline-block;
     width: 120px;
     word-break: break-all;
   }
-  /* line 194, ../scss/_sidebar.scss */
+  /* line 198, ../scss/_sidebar.scss */
   .side-bar .name img {
     width: 55px;
     height: 55px;
@@ -11141,14 +11148,14 @@ Sidebar Menu
   }
 
   /*Top-Bar*/
-  /* line 208, ../scss/_sidebar.scss */
+  /* line 212, ../scss/_sidebar.scss */
   .top-bar {
     background: white;
     border-bottom: 1px solid #D9DEE4;
     margin-left: 200px;
     padding-left: 10px;
   }
-  /* line 214, ../scss/_sidebar.scss */
+  /* line 218, ../scss/_sidebar.scss */
   .top-bar img {
     width: 55px;
     height: 55px;
@@ -11160,21 +11167,21 @@ Sidebar Menu
     padding: 7px;
   }
 
-  /* line 228, ../scss/_sidebar.scss */
+  /* line 232, ../scss/_sidebar.scss */
   .top-bar-section ul li {
     background: none;
   }
-  /* line 232, ../scss/_sidebar.scss */
+  /* line 236, ../scss/_sidebar.scss */
   .top-bar-section li:not(.has-form) a:not(.button) {
     color: #333333;
   }
-  /* line 236, ../scss/_sidebar.scss */
+  /* line 240, ../scss/_sidebar.scss */
   .top-bar-section .dropdown {
     box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.3);
   }
 
-  /* line 244, ../scss/_sidebar.scss */
+  /* line 248, ../scss/_sidebar.scss */
   #content-main-section {
     width: auto;
     margin-left: 200px;
@@ -11183,36 +11190,41 @@ Sidebar Menu
 /* 
 Sidebar Menu
 */
+/* line 5, ../scss/_topbar.scss */
+.tab-bar h1 img {
+  height: 30px;
+}
+
 /*Theme specific fixes*/
 /* line 25, ../scss/metro.scss */
 th a {
   color: #fff;
 }
 
-/* line 28, ../scss/metro.scss */
+/* line 29, ../scss/metro.scss */
 .datepicker td, .datepicker th {
   background: none !important;
   color: #222222;
 }
-/* line 32, ../scss/metro.scss */
+/* line 33, ../scss/metro.scss */
 .datepicker .date-switch, .datepicker .next, .datepicker .prev {
   color: #eeeeee;
 }
 
-/* line 37, ../scss/metro.scss */
+/* line 38, ../scss/metro.scss */
 .breadcrumbs {
   background: white;
 }
 
-/* line 39, ../scss/metro.scss */
+/* line 40, ../scss/metro.scss */
 footer {
   font-size: 1.2em;
 }
-/* line 41, ../scss/metro.scss */
+/* line 42, ../scss/metro.scss */
 footer a {
   color: #999999;
 }
-/* line 44, ../scss/metro.scss */
+/* line 45, ../scss/metro.scss */
 footer a:hover, footer a:focus {
   color: white;
 }

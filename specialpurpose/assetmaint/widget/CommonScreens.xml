@@ -38,7 +38,7 @@ under the License.
                 <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.gif" global="true"/>-->
                 <set field="applicationMenuName" value="AssetMaintAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://assetmaint/widget/AssetmaintMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.AssetMaintApplication}"/>
+                <set field="applicationTitle" value="${uiLabelMap.AssetMaintManager}"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">

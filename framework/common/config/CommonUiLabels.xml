@@ -8340,7 +8340,7 @@
         <value xml:lang="zh_TW">上層</value>
     </property>
     <property key="CommonParty">
-        <value xml:lang="en">Party</value>
+        <value xml:lang="en">User</value>
     </property>
     <property key="CommonParties">
         <value xml:lang="en">Parties</value>
@@ -13434,7 +13434,7 @@
         <value xml:lang="ar">مرفق</value>
         <value xml:lang="cs">Zařízení/Sklady</value>
         <value xml:lang="de">Lager</value>
-        <value xml:lang="en">Facility</value>
+        <value xml:lang="en">Warehouse</value>
         <value xml:lang="es">Almacén</value>
         <value xml:lang="fr">Entreposage</value>
         <value xml:lang="hi_IN">स्थान</value>
@@ -15001,7 +15001,7 @@
         <value xml:lang="ar">طرف</value>
         <value xml:lang="cs">Partneři</value>
         <value xml:lang="de">Nutzer</value>
-        <value xml:lang="en">Party</value>
+        <value xml:lang="en">User</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteurs</value>
         <value xml:lang="hi_IN">पार्टी</value>
@@ -16223,5 +16223,8 @@
         <value xml:lang="de">Leer lassen, um einen Wert automatisch zu generieren</value>
         <value xml:lang="en">Leave empty to auto-generate a value</value>
         <value xml:lang="fr">Laisser vide pour générer automatiquement une valeur</value>
+    </property>
+    <property key="CommonServiceSuccessMessage">
+        <value xml:lang="en">Operation has been executed successfully</value>
     </property>
 </resource>

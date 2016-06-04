@@ -20,43 +20,37 @@ cacheId = "marketingTracking_" + currentYearBeginText + "-" + currentYearEndText
 
 Map processResults() {
     Map resultMap = [:];
-    
-//    if (!parameters.trackingCodeId && !parameters.marketingCampaignId) 
-//        return visits;
-    
+        
     trackingCodeId = parameters.trackingCodeId;
     marketingCampaignId = parameters.marketingCampaignId;
     
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : -1;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
     
-    // Check and sanitize fromDate/thruDate params 
+    // Check and sanitize fromDate/thruDate params
     fromDate = parameters.fromDate;
     thruDate = parameters.thruDate;
     Timestamp fromDateTimestamp = null;
     Timestamp thruDateTimestamp = null;
-    
     if (fromDate)
-        fromDateTimestamp = UtilDateTime.toTimestamp(fromDate);
+        fromDateTimestamp = UtilDateTime.stringToTimeStamp(fromDate, "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);    
     if (thruDate)
-        thruDateTimestamp = UtilDateTime.toTimestamp(thruDate);   
-    
-    if (fromDateTimestamp && fromDateTimestamp < thruDateTimeStamp) {
+        thruDateTimestamp = UtilDateTime.stringToTimeStamp(thruDate, "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);           
+    if (fromDateTimestamp && fromDateTimestamp < thruDateTimestamp) {
         fromDate = null;
         thruDate = null;
-    }
-    
+    }  
     if (!fromDateTimestamp) {
         iCount = UtilDateTime.getIntervalDefaultCount(iScope);        
-        fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
-        if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
-        if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
+        fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);        
     }
+    if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
+    if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
+   
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-//    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]); 
-    
+    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);    
     if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-        dateIntervals["dateEnd"] = thruDate;
+        dateIntervals["dateEnd"] = thruDateTimestamp;
         
     exprList = [];
     if (marketingCampaignId && !trackingCodeId) {
@@ -88,7 +82,6 @@ Map processResults() {
                     EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, dateIntervals["dateEnd"])], EntityJoinOperator.AND));
             orderList = select("orderId").from("TrackingCodeAndOrderHeader").where(conditionList).queryList();
             for (o in orderList) {
-                Debug.log("order ============> " + o);
                 totalOrders += o.orderId;
             }
             
@@ -101,7 +94,7 @@ Map processResults() {
             dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateEnd"], context.locale, context.timeZone);
     //        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
             if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-                dateIntervals["dateEnd"] = thruDateTimestamp;
+                dateIntervals["dateEnd"] = thruDateTimestamp
         }
     }
     return resultMap;

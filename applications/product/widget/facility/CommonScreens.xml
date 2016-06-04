@@ -43,7 +43,7 @@ under the License.
                 <set field="activeApp" value="facilitymgr" global="true"/>
                 <set field="applicationMenuName" value="FacilityAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://product/widget/facility/FacilityMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.ProductFacilityManagerApplication}" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.ProductFacility}" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">

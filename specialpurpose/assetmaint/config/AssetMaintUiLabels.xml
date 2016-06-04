@@ -20,7 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <property key="AssetMaintApplication">
-        <value xml:lang="de">Instandhaltungsanwendung</value>
+        <value xml:lang="de">Instandhaltung</value>
         <value xml:lang="en">Asset Maintenance Application</value>
         <value xml:lang="fr">Application de maintenance des biens</value>
         <value xml:lang="it">Applicazione manutenzione cespiti</value>
@@ -82,7 +82,7 @@
         <value xml:lang="zh_TW">"${productId}的有效的庫存級別是${quantity}"</value>
     </property>
     <property key="AssetMaintManager">
-        <value xml:lang="de">Instandhaltungsanwendung</value>
+        <value xml:lang="de">Instandhaltung</value>
         <value xml:lang="en">Asset Maintenance</value>
         <value xml:lang="fr">Application de maintenance des biens</value>
         <value xml:lang="it">Manutenzione cespiti</value>

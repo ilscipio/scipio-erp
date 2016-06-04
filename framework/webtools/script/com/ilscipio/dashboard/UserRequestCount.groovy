@@ -19,36 +19,20 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "hour"; //day|week|month|year
     
-    Calendar calendar = Calendar.getInstance();
-    if (iScope.equals("hour")) {
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - 12);
-    } else if (iScope.equals("day")) {
-        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 30);
-    } else if (iScope.equals("week")) {
-        calendar.set(Calendar.DAY_OF_WEEK, 1);
-        calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - 12);
-    } else if (iScope.equals("month")) {
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 6);
-    } else if (iScope.equals("year")) {
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 5);
-    }
-    fromDate = UtilDateTime.toTimestamp(calendar.getTime());
+    iCount = UtilDateTime.getIntervalDefaultCount(iScope);
+    fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
     
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDate, context.locale, context.timeZone);
-   
+    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
     
     Map<Date, Long> totalRequests = [:];
-    for (int i = 0; i <= iCount; i++) {      
+    for (int i = 0; i <= iCount; i++) {
         List serverHitDateAndExprs = FastList.newInstance(mainAndExprs);
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]));
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, dateIntervals["dateEnd"]));
        
         serverRequestHits = from("ServerHit").where(serverHitDateAndExprs).queryCount();
-        totalRequests.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]) + "h", serverRequestHits);
-        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, dateIntervals["dateEnd"], context.locale, context.timeZone);
+        totalRequests.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), serverRequestHits);
+        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateEnd"], context.locale, context.timeZone);
     }
     return totalRequests;
 }

@@ -127,16 +127,17 @@ under the License.
         <response name="success" type="request" value="viewprofile"/>
         <response name="error" type="view" value="MergeLeads"/>
     </request-map>
-    <request-map uri="NewLeadFromVCard">
+    <!-- SCIPIO: Commneted out for now -->
+    <!-- <request-map uri="NewLeadFromVCard">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewLeadFromVCard"/>
     </request-map>
     <request-map uri="createLeadFromVCard">
         <security https="true" auth="true"/>
         <event type="service" invoke="importVCard"/>
-        <response name="success" type="request" value="viewprofile"/><!-- What would be the view in case a vCard has more than one contact -->
+        <response name="success" type="request" value="viewprofile"/>What would be the view in case a vCard has more than one contact
         <response name="error" type="view" value="NewLeadFromVCard"/>
-    </request-map>
+    </request-map> -->
     <request-map uri="quickAddLead">
         <security https="true" auth="true"/>
         <event type="service" invoke="createLead"/>
@@ -176,22 +177,23 @@ under the License.
         <response name="success" type="request" value="viewprofile"/>
         <response name="error" type="view" value="MergeContacts"/>
     </request-map>
-    <request-map uri="NewContactFromVCard">
+    <!-- SCIPIO: Commneted out for now -->
+<!--     <request-map uri="NewContactFromVCard">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewContactFromVCard"/>
     </request-map>
     <request-map uri="createContactFromVCard">
         <security https="true" auth="true"/>
         <event type="service" invoke="importVCard"/>
-        <response name="success" type="request" value="viewprofile"/><!-- What would be the view in case a vCard contains more than one contact -->
+        <response name="success" type="request" value="viewprofile"/>What would be the view in case a vCard contains more than one contact
         <response name="error" type="view" value="NewContactFromVCard"/>
     </request-map>
     <request-map uri="createVCardFromContact">
         <security https="true" auth="true"/>
         <event type="service" invoke="exportVCard"/>
-        <response name="success" type="view" value="FindContacts"/><!-- This need to be fixed -->
+        <response name="success" type="view" value="FindContacts"/>This need to be fixed
         <response name="error" type="view" value="FindContacts"/>
-    </request-map>
+    </request-map> -->
     <request-map uri="quickAddContact">
         <security https="true" auth="true"/>
         <event type="service" invoke="createContact"/>
@@ -326,13 +328,15 @@ under the License.
     <view-map name="CloneLead" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#CloneLead"/>
     <view-map name="ConvertLead" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#ConvertLead"/>
     <view-map name="MergeLeads" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#MergeLeads"/>
-    <view-map name="NewLeadFromVCard" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#NewLeadFromVCard"/>
+    <!-- SCIPIO: Commneted out for now -->
+    <!-- <view-map name="NewLeadFromVCard" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#NewLeadFromVCard"/> -->
     <view-map name="AddRelatedCompany" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#AddRelatedCompany"/>
 
     <view-map name="FindContacts" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#FindContacts"/>
     <view-map name="NewContact" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#NewContact"/>
     <view-map name="MergeContacts" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#MergeContacts"/>
-    <view-map name="NewContactFromVCard" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#NewContactFromVCard"/>
+    <!-- SCIPIO: Commneted out for now -->
+    <!-- <view-map name="NewContactFromVCard" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#NewContactFromVCard"/> -->
 
     <view-map name="FindSalesForecast" type="screen" page="component://marketing/widget/sfa/ForecastScreens.xml#FindSalesForecast"/>
     <view-map name="EditSalesForecast" type="screen" page="component://marketing/widget/sfa/ForecastScreens.xml#EditSalesForecast"/>

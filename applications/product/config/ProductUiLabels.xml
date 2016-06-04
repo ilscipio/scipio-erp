@@ -10372,7 +10372,7 @@
         <value xml:lang="zh_TW">尋找分類</value>
     </property>
     <property key="PageTitleFindCatalog">
-    	<value xml:lang="en">Katalogsuche</value>
+    	<value xml:lang="de">Katalogsuche</value>
         <value xml:lang="en">Find Catalog</value>
         <value xml:lang="ja">カタログを検索</value>
         <value xml:lang="vi">Tìm Phân loại Trình diễn</value>
@@ -16970,7 +16970,7 @@
         <value xml:lang="zh_TW">場所清單</value>
     </property>
     <property key="ProductFacility">
-        <value xml:lang="de">Einrichtung</value>
+        <value xml:lang="de">Lager</value>
         <value xml:lang="en">Warehouse</value>
         <value xml:lang="es">Almacén</value>
         <value xml:lang="fr">Lieu de stockage</value>

@@ -43,7 +43,7 @@ $side-nav-link-bg-hover: $monsoon;
 // $side-nav-divider-style: solid;
 // $side-nav-divider-color: scale-color($white, $lightness: 10%);
 
-// Non foundation specific vars
+// Non foundation specific vars 
 $side-bar-bg: #2f323a;
 $dot-sidebar:rgba(255, 255, 255, 0.1);
 $boder-notf-color:rgba(255, 255, 255, 0.1);
@@ -166,14 +166,18 @@ $sidebar-width: 200px;
 .box,canvas {
     background: $white;
     padding: 7px 10px;
+    width:100%;
     border: 1px solid #E6E9ED;
-    
     canvas {border:none; padding:0px;}
 }
 
 #content-main-section {
     padding-top:50px;
-    padding-left:10px;
+}
+
+#content-main-body{
+    padding-left:20px;
+    padding-right:20px;
 }
 
 @media #{$large-up} {

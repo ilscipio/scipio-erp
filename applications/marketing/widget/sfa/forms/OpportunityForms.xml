@@ -151,10 +151,10 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="accountPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupAccount" default-value="${accountPartyId}"/></field>
-        <field name="accountPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupAccount" default-value="${accountPartyId}"/></field>
-        <field name="leadPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaLead}"><lookup target-form-name="LookupLead" default-value="${leadPartyId}"/></field>
-        <field name="leadPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaLead}"><lookup target-form-name="LookupLead" default-value="${communicationEvent.partyIdFrom}"/></field>
+        <field name="accountPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupAccounts" default-value="${accountPartyId}"/></field>
+        <field name="accountPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupAccounts" default-value="${accountPartyId}"/></field>
+        <field name="leadPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaLead}"><lookup target-form-name="LookupLeads" default-value="${leadPartyId}"/></field>
+        <field name="leadPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaLead}"><lookup target-form-name="LookupLeads" default-value="${communicationEvent.partyIdFrom}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="salesOpportunity==null"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="salesOpportunity!=null"><submit button-type="button"/></field>
     </form>

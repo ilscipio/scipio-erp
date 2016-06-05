@@ -11186,6 +11186,15 @@ Sidebar Menu
     width: auto;
     margin-left: 200px;
   }
+
+  /* line 255, ../scss/_sidebar.scss */
+  .page-noauth .side-bar {
+    display: none !important;
+  }
+  /* line 258, ../scss/_sidebar.scss */
+  .page-noauth .top-bar, .page-noauth #content-main-section {
+    margin-left: 0px;
+  }
 }
 /* 
 Sidebar Menu

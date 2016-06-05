@@ -249,4 +249,12 @@ $sidebar-width: 200px;
     width:auto;
     margin-left: $sidebar-width;
   }
+  
+  .page-noauth {
+  
+    .side-bar{
+        display:none !important;
+     }
+    .top-bar, #content-main-section {margin-left:0px ;}
+    } 
 }

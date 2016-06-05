@@ -557,8 +557,8 @@
         <value xml:lang="zh_TW">進階搜尋</value>
     </property>
     <property key="CommonAdvancedSearchFields">
-        <value xml:lang="de">Erweiterte Suche Felder</value>
-        <value xml:lang="en">Advanced Search Fields</value>
+        <value xml:lang="de">Erweiterte Suche</value>
+        <value xml:lang="en">Advanced Search</value>
     </property>
     <property key="CommonAll">
         <value xml:lang="ar">الكل</value>

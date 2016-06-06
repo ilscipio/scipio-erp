@@ -24,14 +24,21 @@ import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.product.product.ProductContentWrapper
 
-Map<String, Timestamp> intervalDates = UtilDateTime.getPeriodInterval(context.intervalPeriod, context.fromDate, context.locale, context.timeZone);
-context.dateBeginText = UtilDateTime.toDateString(intervalDates.get("dateBegin"));
-context.dateEndText = UtilDateTime.toDateString(intervalDates.get("dateEnd"));
+//Map<String, Timestamp> intervalDates = UtilDateTime.getPeriodInterval(context.intervalPeriod, context.fromDate, context.locale, context.timeZone);
+//context.dateBeginText = UtilDateTime.toDateString(intervalDates.get("dateBegin"));
+//context.dateEndText = UtilDateTime.toDateString(intervalDates.get("dateEnd"));
+
+int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
+String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
+
+iCount = UtilDateTime.getIntervalDefaultCount(iScope);
+fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
+dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
 
 bestSellingProducts = [];
 exprList = [];
-exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, intervalDates.get("dateBegin")));
-exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, intervalDates.get("dateEnd")));
+exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
+exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dateIntervals.getDateEnd()));
 exprList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
 exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 

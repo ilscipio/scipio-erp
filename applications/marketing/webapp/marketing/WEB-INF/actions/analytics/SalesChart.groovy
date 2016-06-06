@@ -33,12 +33,12 @@ Map processResult() {
     if (iScope.equals("semester")) iCount = Math.round(iCount / 6);    
    
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-//    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);    
-    if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-        dateIntervals["dateEnd"] = thruDateTimestamp;
+    dateEnd = dateIntervals.getDateEnd();
+    if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
+        dateEnd = thruDateTimestamp;
 
-    fromDateText = UtilDateTime.timeStampToString(dateIntervals["dateBegin"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
-    thruDateText = UtilDateTime.timeStampToString(dateIntervals["dateEnd"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+    fromDateText = UtilDateTime.timeStampToString(dateIntervals.getDateBegin(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+    thruDateText = UtilDateTime.timeStampToString(dateIntervals.getDateEnd(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
         
     Map resultMap = new TreeMap<String, Object>();
     for (int i = 0; i <= iCount; i++) {
@@ -46,7 +46,7 @@ Map processResult() {
 //        Debug.log("findOrderMap =====================> " + findOrderMap);
         List orderList = findOrderMap.orderList;
         orderList.each { header ->        
-            String date = dateIntervals["dateFormatter"].format(header.orderDate);
+            String date = dateIntervals.getdateFormatter().format(header.orderDate);
             if (resultMap.get(date) != null) {
                 Map newMap = resultMap.get(date);
                 BigDecimal total = newMap.get("total");
@@ -67,12 +67,14 @@ Map processResult() {
             }
         }
         
-        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateBegin"], context.locale, context.timeZone);
-        if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-            dateIntervals["dateEnd"] = thruDateTimestamp
+        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateBegin(), context.locale, context.timeZone);
+        dateEnd = dateIntervals.getDateEnd();
+        if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
+            dateEnd = thruDateTimestamp;
+        
 //        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
-        fromDateText = UtilDateTime.timeStampToString(dateIntervals["dateBegin"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
-        thruDateText = UtilDateTime.timeStampToString(dateIntervals["dateEnd"], "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+        fromDateText = UtilDateTime.timeStampToString(dateIntervals.getDateBegin(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+        thruDateText = UtilDateTime.timeStampToString(dateEnd, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
     }
     return resultMap;
 }

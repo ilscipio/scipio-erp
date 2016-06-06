@@ -1,15 +1,10 @@
-import java.text.SimpleDateFormat
-
 import javolution.util.FastList
 
-import org.apache.xmlrpc.util.HttpUtil
-import org.ofbiz.accounting.util.UtilAccounting
 import org.ofbiz.base.util.*
-import org.ofbiz.base.util.cache.UtilCache
+import org.ofbiz.base.util.UtilDateTime.TimeInterval
 import org.ofbiz.entity.*
 import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
-import org.ofbiz.party.party.PartyWorker
 
 
 Map<Date, Map<String, BigDecimal>> processResults() {
@@ -22,17 +17,17 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     iCount = UtilDateTime.getIntervalDefaultCount(iScope);
     fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
     
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
+    TimeInterval dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
     
     Map<Date, Long> totalRequests = [:];
     for (int i = 0; i <= iCount; i++) {
         List serverHitDateAndExprs = FastList.newInstance(mainAndExprs);
-        serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]));
-        serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, dateIntervals["dateEnd"]));
+        serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
+        serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
        
         serverRequestHits = from("ServerHit").where(serverHitDateAndExprs).queryCount();
-        totalRequests.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), serverRequestHits);
-        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateEnd"], context.locale, context.timeZone);
+        totalRequests.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), serverRequestHits);
+        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);
     }
     return totalRequests;
 }

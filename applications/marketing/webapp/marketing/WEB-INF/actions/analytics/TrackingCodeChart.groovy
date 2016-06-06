@@ -47,8 +47,7 @@ Map processResults() {
     if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
     if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
    
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-    Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);    
+    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);        
     if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
         dateIntervals["dateEnd"] = thruDateTimestamp;
         
@@ -67,6 +66,7 @@ Map processResults() {
     if ((marketingCampaignId || trackingCodeId) && exprList) {
         
         for (int i = 0; i <= iCount; i++) {
+//            Debug.log("dateBegin ===========> " + dateIntervals.getDateBegin() + "  dateEnd =================> " + dateIntervals.getDateEnd());
             int totalVisits = 0;
             int totalOrders = 0;
             conditionList = [];
@@ -85,16 +85,16 @@ Map processResults() {
                 totalOrders += o.orderId;
             }
             
-            dateBeginFormatted = dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]);           
+            dateBeginFormatted = dateIntervals.getDteFormatter().format(dateIntervals.getDateBegin());           
             Map newMap = [:];
             newMap.put("totalOrders", totalOrders);                
             newMap.put("totalVisits", totalVisits);
             resultMap.put(dateBeginFormatted, newMap);
-           
-            dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals["dateEnd"], context.locale, context.timeZone);
-    //        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
+            
+            dateEnd = dateIntervals.getDateEnd();
             if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-                dateIntervals["dateEnd"] = thruDateTimestamp
+                dateEnd = thruDateTimestamp
+            dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateEnd, context.locale, context.timeZone);
         }
     }
     return resultMap;

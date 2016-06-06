@@ -169,23 +169,10 @@ public final class WebSiteProperties {
     private final boolean enableHttps;
 
     private WebSiteProperties(Delegator delegator) {
-        // SCIPIO: support for extra non-forced settings (meaningful in other methods)
         this.httpPort = EntityUtilProperties.getPropertyValue("url.properties", "port.http", delegator);
-        //this.httpHost = EntityUtilProperties.getPropertyValue("url.properties", "force.http.host", delegator);
-        String httpHost = EntityUtilProperties.getPropertyValue("url.properties", "force.http.host", delegator);
+        this.httpHost = EntityUtilProperties.getPropertyValue("url.properties", "force.http.host", delegator);
         this.httpsPort = EntityUtilProperties.getPropertyValue("url.properties", "port.https", delegator);
-        //this.httpsHost = EntityUtilProperties.getPropertyValue("url.properties", "force.https.host", delegator);
-        String httpsHost = EntityUtilProperties.getPropertyValue("url.properties", "force.https.host", delegator);
-
-        if (httpHost.isEmpty()) {
-            httpHost = EntityUtilProperties.getPropertyValue("url.properties", "http.host", delegator);
-        }
-        if (httpsHost.isEmpty()) {
-            httpsHost = EntityUtilProperties.getPropertyValue("url.properties", "https.host", delegator);
-        }
-        this.httpHost = httpHost;
-        this.httpsHost = httpsHost;
-        
+        this.httpsHost = EntityUtilProperties.getPropertyValue("url.properties", "force.https.host", delegator);
         this.enableHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y", delegator);
     }
 

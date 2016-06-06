@@ -1207,15 +1207,6 @@ public class RequestHandler {
         String httpsServer = EntityUtilProperties.getPropertyValue("url.properties", "force.https.host", delegator);
         String httpPort = EntityUtilProperties.getPropertyValue("url.properties", "port.http", "80", delegator);
         String httpServer = EntityUtilProperties.getPropertyValue("url.properties", "force.http.host", delegator);
-        
-        // SCIPIO: support for extra non-forced settings (meaningful in other methods)
-        if (httpsServer.isEmpty()) {
-            httpsServer = EntityUtilProperties.getPropertyValue("url.properties", "https.host", delegator);
-        }
-        if (httpServer.isEmpty()) {
-            httpServer = EntityUtilProperties.getPropertyValue("url.properties", "http.host", delegator);
-        }
-        
         boolean useHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y", delegator);
 
         if (Start.getInstance().getConfig().portOffset != 0) {

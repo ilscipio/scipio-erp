@@ -87,13 +87,13 @@ public final class WebSiteProperties {
                     }
                 }
             }
-            if (httpPort.isEmpty() && !request.isSecure()) {
+            if (httpPort.isEmpty()) { // SCIPIO: this is a bad test: && !request.isSecure()
                 httpPort = String.valueOf(request.getServerPort());
             }
             if (httpHost.isEmpty()) {
                 httpHost = request.getServerName();
             }
-            if (httpsPort.isEmpty() && request.isSecure()) {
+            if (httpsPort.isEmpty()) { // SCIPIO: this is a bad test: && request.isSecure()
                 httpsPort = String.valueOf(request.getServerPort());
             }
             if (httpsHost.isEmpty()) {

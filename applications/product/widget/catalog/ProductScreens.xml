@@ -1413,8 +1413,13 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/>
-                <set field="intervalPeriod" type="String" value="month"/>
+                <!-- <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/>
+                <set field="intervalPeriod" type="String" value="month"/> -->
+                <set field="chartDatasets" value="2"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.ProductOne}"/> <!-- 1st dataset label -->
+                <set field="label2" value="${uiLabelMap.ProductTwo}"/> <!-- 2nd dataset label -->  
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/BestProducts.groovy"/>
             </actions>
             <widgets>
@@ -1426,7 +1431,8 @@ under the License.
                             </not>
                         </condition>
                         <widgets>
-                            <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/>
+                            <!-- <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/> -->
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/product/ScipioBestProductChart.ftl" /></html></platform-specific>
                         </widgets>
                         <fail-widgets>
                             <label style="common-msg-result-norecord" text="${uiLabelMap.ProductNoProductFound}."></label>

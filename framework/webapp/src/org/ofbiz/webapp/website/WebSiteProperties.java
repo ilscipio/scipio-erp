@@ -57,64 +57,147 @@ public final class WebSiteProperties {
         Assert.notNull("request", request);
         WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_WEBSITE_PROPS_");
         if (webSiteProps == null) {
-            Delegator delegator = (Delegator) request.getAttribute("delegator");
-            WebSiteProperties defaults = new WebSiteProperties(delegator);
-            String httpPort = defaults.getHttpPort();
-            String httpHost = defaults.getHttpHost();
-            String httpsPort = defaults.getHttpsPort();
-            String httpsHost = defaults.getHttpsHost();
-            boolean enableHttps = defaults.getEnableHttps();
-            if (delegator != null) {
-                String webSiteId = WebSiteWorker.getWebSiteId(request);
-                if (webSiteId != null) {
-                    GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
-                    if (webSiteValue != null) {
-                        if (webSiteValue.get("httpPort") != null) {
-                            httpPort = webSiteValue.getString("httpPort");
-                        }
-                        if (webSiteValue.get("httpHost") != null) {
-                            httpHost = webSiteValue.getString("httpHost");
-                        }
-                        if (webSiteValue.get("httpsPort") != null) {
-                            httpsPort = webSiteValue.getString("httpsPort");
-                        }
-                        if (webSiteValue.get("httpsHost") != null) {
-                            httpsHost = webSiteValue.getString("httpsHost");
-                        }
-                        if (webSiteValue.get("enableHttps") != null) {
-                            enableHttps = webSiteValue.getBoolean("enableHttps");
-                        }
-                    }
-                }
-            }
-            if (httpPort.isEmpty()) { // SCIPIO: this is a bad test: && !request.isSecure()
-                httpPort = String.valueOf(request.getServerPort());
-            }
-            if (httpHost.isEmpty()) {
-                httpHost = request.getServerName();
-            }
-            if (httpsPort.isEmpty()) { // SCIPIO: this is a bad test: && request.isSecure()
-                httpsPort = String.valueOf(request.getServerPort());
-            }
-            if (httpsHost.isEmpty()) {
-                httpsHost = request.getServerName();
-            }
+
+            // SCIPIO: now delegates
+            webSiteProps = newFrom(request, WebSiteWorker.getWebSiteId(request));
             
-            if (Start.getInstance().getConfig().portOffset != 0) {
-                Integer httpPortValue = Integer.valueOf(httpPort);
-                httpPortValue += Start.getInstance().getConfig().portOffset;
-                httpPort = httpPortValue.toString();
-                Integer httpsPortValue = Integer.valueOf(httpsPort);
-                httpsPortValue += Start.getInstance().getConfig().portOffset;
-                httpsPort = httpsPortValue.toString();
-            }                
-            
-            webSiteProps = new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
             request.setAttribute("_WEBSITE_PROPS_", webSiteProps);
         }
         return webSiteProps;
     }
+    
+    private static WebSiteProperties newFrom(HttpServletRequest request, String webSiteId) throws GenericEntityException {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        
+        // SCIPIO: This code section is restructured for optional request overrides and other fixes.
+        
+        boolean overrideRequestHostPort = "Y".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("url.properties", "override.request.host.port", delegator));
+        boolean requestOverridesStatic = !overrideRequestHostPort;
+        boolean requestOverridesStaticHttpPort = requestOverridesStatic;
+        boolean requestOverridesStaticHttpHost = requestOverridesStatic;
+        boolean requestOverridesStaticHttpsPort = requestOverridesStatic;
+        boolean requestOverridesStaticHttpsHost = requestOverridesStatic;
+        
+        WebSiteProperties defaults = new WebSiteProperties(delegator);
+        
+        String httpPort = defaults.getHttpPort();
+        String httpHost = defaults.getHttpHost();
+        String httpsPort = defaults.getHttpsPort();
+        String httpsHost = defaults.getHttpsHost();
+        boolean enableHttps = defaults.getEnableHttps();
+        
+        if (delegator != null) {
+            if (webSiteId != null) {
+                GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
+                if (webSiteValue != null) {
+                    if (webSiteValue.get("httpPort") != null) {
+                        httpPort = webSiteValue.getString("httpPort");
+                        requestOverridesStaticHttpPort = false;
+                    }
+                    if (webSiteValue.get("httpHost") != null) {
+                        httpHost = webSiteValue.getString("httpHost");
+                        requestOverridesStaticHttpHost = false;
+                    }
+                    if (webSiteValue.get("httpsPort") != null) {
+                        httpsPort = webSiteValue.getString("httpsPort");
+                        requestOverridesStaticHttpsPort = false;
+                    }
+                    if (webSiteValue.get("httpsHost") != null) {
+                        httpsHost = webSiteValue.getString("httpsHost");
+                        requestOverridesStaticHttpsHost = false;
+                    }
+                    if (webSiteValue.get("enableHttps") != null) {
+                        enableHttps = webSiteValue.getBoolean("enableHttps");
+                    }
+                }
+            }
+        }
+        
+        // SCIPIO: NOTE: this has been factored and moved to before the request value lookups.
+        httpPort = adjustPort(delegator, httpPort);
+        httpsPort = adjustPort(delegator, httpsPort);      
+        
+        // SCIPIO: this may override the url.properties settings, though not the WebSite settings
+        if ((requestOverridesStaticHttpPort || httpPort.isEmpty()) && !request.isSecure()) {
+            httpPort = String.valueOf(request.getServerPort());
+        }
+        if (requestOverridesStaticHttpHost || httpHost.isEmpty()) {
+            httpHost = request.getServerName();
+        }
+        if ((requestOverridesStaticHttpsPort || httpsPort.isEmpty()) && request.isSecure()) {
+            httpsPort = String.valueOf(request.getServerPort());
+        }
+        if (requestOverridesStaticHttpsHost || httpsHost.isEmpty()) {
+            httpsHost = request.getServerName();
+        }
 
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
+    }
+    
+    /**
+     * SCIPIO: Returns web site properties for the given web site; any host or port fields
+     * not specified are taken from request instead, as would be returned by {@link #from(HttpServletRequest)}.
+     * 
+     * @param webSiteValue
+     */
+    public static WebSiteProperties from(HttpServletRequest request, GenericValue webSiteValue) throws GenericEntityException {
+        Assert.notNull("webSiteValue", webSiteValue);
+        if (!"WebSite".equals(webSiteValue.getEntityName())) {
+            throw new IllegalArgumentException("webSiteValue is not a WebSite entity value");
+        }
+        
+        WebSiteProperties defaults = from(request);
+                
+        String httpPort;
+        boolean adjustHttpPort;
+        if (webSiteValue.get("httpPort") != null) {
+            httpPort = webSiteValue.getString("httpPort");
+            adjustHttpPort = true;
+        } else {
+            httpPort = defaults.getHttpPort();
+            adjustHttpPort = false;
+        }
+        String httpHost = (webSiteValue.get("httpHost") != null) ? webSiteValue.getString("httpHost") : defaults.getHttpHost();
+        String httpsPort;
+        boolean adjustHttpsPort;
+        if (webSiteValue.get("httpsPort") != null) {
+            httpsPort = webSiteValue.getString("httpsPort");
+            adjustHttpsPort = true;
+        } else {
+            httpsPort = defaults.getHttpsPort();
+            adjustHttpsPort = false;
+        }
+        String httpsHost = (webSiteValue.get("httpsHost") != null) ? webSiteValue.getString("httpsHost") : defaults.getHttpsHost();
+        boolean enableHttps = (webSiteValue.get("enableHttps") != null) ? webSiteValue.getBoolean("enableHttps") : defaults.getEnableHttps();
+
+        if (adjustHttpPort) {
+            httpPort = adjustPort(webSiteValue.getDelegator(), httpPort);
+        }
+        if (adjustHttpsPort) {
+            httpsPort = adjustPort(webSiteValue.getDelegator(), httpsPort);
+        }
+        
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
+    }
+    
+    /**
+     * SCIPIO: Returns web site properties for the given webSiteId, or for any fields missing,
+     * the values for the current request (or system defaults).
+     * 
+     * @param webSiteValue
+     */
+    public static WebSiteProperties from(HttpServletRequest request, String webSiteId) throws GenericEntityException {
+        Assert.notNull("webSiteId", webSiteId);
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
+        if (webSiteValue != null) {
+            return from(request, webSiteValue);
+        } else {
+            throw new GenericEntityException("Scipio: Could not find WebSite for webSiteId '" + webSiteId + "'");
+        }
+    }
+    
+    
     /**
      * Returns a <code>WebSiteProperties</code> instance initialized to the settings found
      * in the WebSite entity value.
@@ -133,14 +216,9 @@ public final class WebSiteProperties {
         String httpsHost = (webSiteValue.get("httpsHost") != null) ? webSiteValue.getString("httpsHost") : defaults.getHttpsHost();
         boolean enableHttps = (webSiteValue.get("enableHttps") != null) ? webSiteValue.getBoolean("enableHttps") : defaults.getEnableHttps();
 
-        if (Start.getInstance().getConfig().portOffset != 0) {
-            Integer httpPortValue = Integer.valueOf(httpPort);
-            httpPortValue += Start.getInstance().getConfig().portOffset;
-            httpPort = httpPortValue.toString();
-            Integer httpsPortValue = Integer.valueOf(httpsPort);
-            httpsPortValue += Start.getInstance().getConfig().portOffset;
-            httpsPort = httpsPortValue.toString();
-        }                
+        // SCIPIO: factored out
+        httpPort = adjustPort(webSiteValue.getDelegator(), httpPort);
+        httpsPort = adjustPort(webSiteValue.getDelegator(), httpsPort);            
         
         return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
     }
@@ -302,5 +380,29 @@ public final class WebSiteProperties {
             second = defaultVal;
         }
         return first.equals(second);
-    }    
+    }
+    
+    /**
+     * SCIPIO: Adjusts the given port value (as string) by the port offset configuration value, if applicable.
+     */
+    public static String adjustPort(Delegator delegator, String port) {
+        if (port != null && !port.isEmpty() && Start.getInstance().getConfig().portOffset != 0) {
+            Integer portValue = Integer.valueOf(port);
+            portValue += Start.getInstance().getConfig().portOffset;
+            return portValue.toString();
+        } else {
+            return port;
+        }
+    }
+    
+    /**
+     * SCIPIO: Adjusts the given port value by the port offset configuration value, if applicable.
+     */
+    public static Integer adjustPort(Delegator delegator, Integer port) {
+        if (port != null && Start.getInstance().getConfig().portOffset != 0) {
+            return port + Start.getInstance().getConfig().portOffset;
+        } else {
+            return port;
+        }
+    }
 }

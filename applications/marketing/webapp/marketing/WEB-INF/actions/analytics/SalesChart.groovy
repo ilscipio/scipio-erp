@@ -46,7 +46,7 @@ Map processResult() {
 //        Debug.log("findOrderMap =====================> " + findOrderMap);
         List orderList = findOrderMap.orderList;
         orderList.each { header ->        
-            String date = dateIntervals.getdateFormatter().format(header.orderDate);
+            String date = dateIntervals.getDateFormatter().format(header.orderDate);
             if (resultMap.get(date) != null) {
                 Map newMap = resultMap.get(date);
                 BigDecimal total = newMap.get("total");

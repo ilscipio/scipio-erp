@@ -40,30 +40,17 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
     
-    Calendar calendar = Calendar.getInstance();
-    if (iScope.equals("day")) {
-        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 30);       
-    } else if (iScope.equals("week")) {
-        calendar.set(Calendar.DAY_OF_WEEK, 1);
-        calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - 12);
-    } else if (iScope.equals("month")) {
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 6);
-    } else if (iScope.equals("year")) {
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 5);
-    }
-    fromDate = UtilDateTime.toTimestamp(calendar.getTime());
-    
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDate, context.locale, context.timeZone);
+    iCount = UtilDateTime.getIntervalDefaultCount(iScope);
+    fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);    
+    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
     
     Map<Date, Map<String, BigDecimal>> totalMap = [:];
     for (int i = 0; i <= iCount; i++) {
+        Debug.log("dateBegin ===========> " + dateIntervals.getDateBegin() + "  dateEnd =================> " + dateIntervals.getDateEnd());
         Map<String, BigDecimal> auxMap = [:];
         List transactionDateAndExprs = FastList.newInstance();
-        transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]));
-        transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN, dateIntervals["dateEnd"]));
+        transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
+        transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
         
         List balanceTotalList = [];
         // EXPENSE
@@ -102,8 +89,8 @@ Map<Date, Map<String, BigDecimal>> processResults() {
         }
         auxMap.put("income", balanceTotalCredit);
 
-        totalMap.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), auxMap);
-        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, dateIntervals["dateEnd"] + 1, context.locale, context.timeZone);
+        totalMap.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), auxMap);        
+        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);
     }
     return totalMap;
 }

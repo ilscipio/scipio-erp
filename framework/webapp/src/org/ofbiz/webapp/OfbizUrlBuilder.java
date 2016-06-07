@@ -209,7 +209,10 @@ public final class OfbizUrlBuilder {
             buffer.append("https://");
             buffer.append(server);
             if (!webSiteProps.getHttpsPort().isEmpty()) {
-                buffer.append(":").append(webSiteProps.getHttpsPort());
+                // SCIPIO: only append port if it's not default, otherwise not required and ugly
+                if (!"443".equals(webSiteProps.getHttpsPort())) {
+                    buffer.append(":").append(webSiteProps.getHttpsPort());
+                }
             }
         } else {
             String server = webSiteProps.getHttpHost();
@@ -219,7 +222,10 @@ public final class OfbizUrlBuilder {
             buffer.append("http://");
             buffer.append(server);
             if (!webSiteProps.getHttpPort().isEmpty()) {
-                buffer.append(":").append(webSiteProps.getHttpPort());
+                // SCIPIO: only append port if it's not default, otherwise not required and ugly
+                if (!"80".equals(webSiteProps.getHttpsPort())) {
+                    buffer.append(":").append(webSiteProps.getHttpPort());
+                }
             }
         }
         return makeSecure;

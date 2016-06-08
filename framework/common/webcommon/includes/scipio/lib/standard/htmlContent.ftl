@@ -1168,7 +1168,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }
                     },
                     title: {
-                        display: false,
+                        <#if title?has_content>
+                            display: true,
+                            text: '${title}',
+                        <#else>
+                            display: false,
+                        </#if>
                         fontColor: chartData.scaleLabelFontColor,
                         fontFamily: chartData.scaleLabelFontFamily,
                         fontSize: chartData.scaleLabelFontSize

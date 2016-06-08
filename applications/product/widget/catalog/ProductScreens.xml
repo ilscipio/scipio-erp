@@ -1413,9 +1413,9 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <!-- <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/>
-                <set field="intervalPeriod" type="String" value="month"/> -->
-                <set field="chartDatasets" value="2"/>
+                <!-- <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/> -->
+                <set field="chartIntervalCount" type="Integer" value="2"/>
+                <set field="chartDatasets" value="1"/>
                 <set field="xlabel" value=""/> <!-- x-axis label -->
                 <set field="ylabel" value=""/> <!-- y-axis label -->
                 <set field="label1" value="${uiLabelMap.ProductOne}"/> <!-- 1st dataset label -->
@@ -1423,7 +1423,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/BestProducts.groovy"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.ProductBestSellingProductsFrom} ${dateBeginText} to ${dateEndText}">
+                <screenlet>
                     <section>
                         <condition>
                             <not>

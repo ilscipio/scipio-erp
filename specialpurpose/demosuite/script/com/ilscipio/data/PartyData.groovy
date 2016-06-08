@@ -123,7 +123,9 @@ public Map createDemoParty() {
     
     List<GenericValue> toBeStored = new ArrayList<GenericValue>();
     List<GenericValue> partyEntrys = new ArrayList<GenericValue>();
-    int num = context.num;
+    Integer num = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
+    if (context.num && context.num < num)
+        num = context.num;
     
     List<DemoDataPerson> generatedPersons = DemoSuiteDataWorker.generatePerson(num, MockarooDataGenerator.class);
     List<DemoDataUserLogin> generatedUserLogins = DemoSuiteDataWorker.generateUserLogin(num, MockarooDataGenerator.class);

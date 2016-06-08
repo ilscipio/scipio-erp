@@ -5938,4 +5938,10 @@
         <value xml:lang="de">Dienstprogramm und Datengenerierung </value>  
         <value xml:lang="en">Utility and Data Generation</value>                
     </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsInfo">        
+        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>                
+    </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
+        <value xml:lang="en">Currently set to ${maxRecords}</value>
+    </property>
 </resource>

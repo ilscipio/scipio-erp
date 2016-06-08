@@ -52,7 +52,9 @@ public Map createDemoOrder() {
     
     List<GenericValue> toBeStored = new ArrayList<GenericValue>();
     List<GenericValue> orderItems = new ArrayList<GenericValue>();
-    int num = context.num;
+    Integer num = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
+    if (context.num && context.num < num)
+        num = context.num;
     
     for(int i = 0; i <num; i++){
         // Create OrderHeader

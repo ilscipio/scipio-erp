@@ -1,5 +1,5 @@
-  <@alert type="info">
-        The default max number of records to be generated can be set in general.properties#data.generator.max.records. Currently set to ${maxRecords!0}
+  <@alert type="info">        
+        ${uiLabelMap.WebtoolsDataGeneratorMaxRecordsInfo} ${uiLabelMap.WebtoolsDataGeneratorMaxRecordsCurrentValue}
   </@alert>    
 
 <form name="demoDataGeneratorForm" method="post" action="<@ofbizUrl>DemoDataGeneratorResult?_RUN_SYNC_=Y</@ofbizUrl>">

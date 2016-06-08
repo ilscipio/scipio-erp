@@ -1,3 +1,7 @@
+  <@alert type="info">
+        The default max number of records to be generated can be set in general.properties#data.generator.max.records. Currently set to ${maxRecords!0}
+  </@alert>    
+
 <form name="demoDataGeneratorForm" method="post" action="<@ofbizUrl>DemoDataGeneratorResult?_RUN_SYNC_=Y</@ofbizUrl>">
       <#assign serviceParameterNames = [] />
 
@@ -14,7 +18,9 @@
             <@field type="datetime" label=fieldLabel name="${serviceParameter.name}" value=(serviceParameter.value!) required=(serviceParameter.optional == "N") />
           <#else>
             <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if serviceParameter.defaultValue?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${serviceParameter.defaultValue?string}</em>)</#if></#assign>
+
             <@field type="input" label=fieldLabel size="20" name="${serviceParameter.name}" value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
+            
           </#if>
           <#assign serviceParameterNames = serviceParameterNames + [serviceParameter.name] />
         </#list>

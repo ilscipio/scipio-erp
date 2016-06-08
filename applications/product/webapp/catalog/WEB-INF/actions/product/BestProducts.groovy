@@ -17,16 +17,13 @@
  * under the License.
  */
 
-import java.sql.Timestamp
+import javolution.util.FastList
 
+import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.product.product.ProductContentWrapper
-
-//Map<String, Timestamp> intervalDates = UtilDateTime.getPeriodInterval(context.intervalPeriod, context.fromDate, context.locale, context.timeZone);
-//context.dateBeginText = UtilDateTime.toDateString(intervalDates.get("dateBegin"));
-//context.dateEndText = UtilDateTime.toDateString(intervalDates.get("dateEnd"));
 
 int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
 String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
@@ -34,85 +31,84 @@ String iScope = context.chartIntervalScope != null ? context.chartIntervalScope 
 iCount = UtilDateTime.getIntervalDefaultCount(iScope);
 fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
 dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
+context.dateBeginText = UtilDateTime.toDateString(dateIntervals.getDateBegin());
 
-bestSellingProducts = [];
 exprList = [];
-exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
-exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dateIntervals.getDateEnd()));
 exprList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
-exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+exprList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+exprList.add(EntityCondition.makeCondition("orderItemTypeId", "PRODUCT_ORDER_ITEM"));
+exprList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+//    exprList.add(EntityCondition.makeCondition("isPromo", "N"));
 
-orderHeaderList = from("OrderHeader").where(exprList).queryList();
+bestSellingProductsByDate = [:];
+for (int i = 0; i <= iCount; i++) {
+    bestSellingProducts = [:];
+    orderDateExprList = [];
+    orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
+    orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dateIntervals.getDateEnd()));
+//    Debug.log("date from ======> " +  dateIntervals.getDateBegin() + "  date to ======> " + dateIntervals.getDateEnd());
 
-orderHeaderList.each { orderHeader ->
-    exprList.clear();
-    exprList.add(EntityCondition.makeCondition("orderId", orderHeader.orderId));
-    exprList.add(EntityCondition.makeCondition("orderItemTypeId", "PRODUCT_ORDER_ITEM"));
-    exprList.add(EntityCondition.makeCondition("isPromo", "N"));
-    exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
-
-    orderItemList = from("OrderItem").where(exprList).queryList();
-
-    orderItemList.each { orderItem ->
-        orderItemDetail = [:];
+    orderHeaderItemExpr = FastList.newInstance(exprList);
+    orderHeaderItemExpr.addAll(orderDateExprList);    
+    orderHeaderItemList = from("OrderHeaderAndItems").where(orderHeaderItemExpr).queryList();
+   
+    orderHeaderItemList.each { orderHeaderItem ->
         qtyOrdered = BigDecimal.ZERO;
-        qtyOrdered += orderItem.quantity;
-        if (orderItem.cancelQuantity) {
-            qtyOrdered -= orderItem.cancelQuantity;
+        qtyOrdered += orderHeaderItem.quantity;
+        if (orderHeaderItem.cancelQuantity) {
+            qtyOrdered -= orderHeaderItem.cancelQuantity;
         }
         amount = BigDecimal.ZERO;;
-        amount = qtyOrdered * orderItem.unitPrice;
-        inListFlag = false
-        
-        bestSellingProducts.each { bestSellingProduct ->
-            if ((bestSellingProduct.productId).equals(orderItem.productId) && (bestSellingProduct.currencyUom).equals(orderHeader.currencyUom)) {
-                inListFlag = true;
-                bestSellingProduct.amount += amount;
-                bestSellingProduct.qtyOrdered += qtyOrdered;
-            }
-        }
-        
-        if (inListFlag == false) {
-            orderItemDetail.productId = orderItem.productId;
-            product = from("Product").where("productId", orderItem.productId).queryOne()
+        amount = qtyOrdered * orderHeaderItem.unitPrice;
+        orderItemDetail = bestSellingProducts[orderHeaderItem.productId];
+        if ((orderItemDetail != null) && (orderItemDetail.currencyUom).equals(orderHeaderItem.currencyUom)) {
+            orderItemDetail.amount += amount;
+            orderItemDetail.qtyOrdered += qtyOrdered;
+        } else {
+            orderItemDetail = [:];
+            orderItemDetail.productId = orderHeaderItem.productId;
+            product = from("Product").where("productId", orderHeaderItem.productId).queryOne()
             contentWrapper = new ProductContentWrapper(product, request);
             // Scipo: Do NOT HTML-escape this here
             orderItemDetail.productName = contentWrapper.get("PRODUCT_NAME", "raw").toString();
             orderItemDetail.amount = amount;
             orderItemDetail.qtyOrdered = qtyOrdered;
-            orderItemDetail.currencyUom = orderHeader.currencyUom;
-            bestSellingProducts.add(orderItemDetail);
+            orderItemDetail.currencyUom = orderHeaderItem.currencyUom;
+            bestSellingProducts.put(product.productId, orderItemDetail);
         }
-    }
+    }    
+    bestSellingProductsByDate.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), bestSellingProducts);
+    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);
 }
+context.dateEndText = UtilDateTime.toDateString(dateIntervals.getDateEnd());
 
 // Sorting List
-topSellingProducts = [];
-itr = 1;
-while (itr <= 5) {
-    orderItemDetail = [:];
-    bestSellingProducts.each { bestSellingProduct ->
-        if (!(orderItemDetail.isEmpty())) {
-            if (bestSellingProduct.qtyOrdered > orderItemDetail.qtyOrdered) {
-                orderItemDetail = bestSellingProduct;
-            }
-            if (bestSellingProduct.qtyOrdered == orderItemDetail.qtyOrdered && bestSellingProduct.amount > orderItemDetail.amount) {
-                orderItemDetail = bestSellingProduct;
+topSellingProductsByDate = [:];
+
+for (key in bestSellingProductsByDate.keySet()) {
+//    Debug.log("date ======> " + key + "   number of products ======> " + bestSellingProductsByDate[key].size());    
+    topSellingProducts = [];
+    bestSellingProductsByDate[key].each { bestSellingProducts ->
+        productId =  bestSellingProducts.getKey();
+        bestSellingProduct =  bestSellingProducts.getValue();
+//        Debug.log("productId ========> " + productId + "     bestSellingProduct ======> " + bestSellingProduct);
+        
+        if (topSellingProducts && topSellingProducts.size() == 2) {
+            for (int idx = 0; idx < topSellingProducts.size(); idx++) {
+                if ((bestSellingProduct.qtyOrdered > topSellingProducts[idx].qtyOrdered) || 
+                    (bestSellingProduct.qtyOrdered == topSellingProducts[idx].qtyOrdered && bestSellingProduct.amount > topSellingProducts[idx].amount)) {
+                    topSellingProducts[idx] = bestSellingProduct; 
+                    break;
+                }
+//                Debug.log("topSellingProduct productId ===> " + topSellingProducts[idx].productId);
             }
         } else {
-            orderItemDetail = bestSellingProduct;
+            topSellingProducts.add(bestSellingProduct);
         }
     }
-    if (!orderItemDetail.isEmpty()) {
-        if (orderItemDetail.amount) {
-            orderItemDetail.amount = orderItemDetail.amount.setScale(2, BigDecimal.ROUND_HALF_UP);
-        }
-        topSellingProducts.add(orderItemDetail);
-        bestSellingProducts.remove(orderItemDetail);
-    }
-    itr++;
+    topSellingProductsByDate.put(key, topSellingProducts);
 }
 
-context.bestSellingProducts = topSellingProducts;
 
+context.bestSellingProducts = topSellingProductsByDate;
 context.now = UtilDateTime.toDateString(UtilDateTime.nowDate());

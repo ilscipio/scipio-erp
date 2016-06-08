@@ -17,19 +17,15 @@
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp
 
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilRandom;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.util.*;
-import java.text.SimpleDateFormat;
-import java.sql.Timestamp;
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilProperties
+import org.ofbiz.base.util.UtilRandom
+import org.ofbiz.entity.*
+import org.ofbiz.entity.util.*
+import org.ofbiz.service.ServiceUtil
 
 public Map createDemoOrder() {
     List<String> orderTypes = [
@@ -46,9 +42,13 @@ public Map createDemoOrder() {
             ["productId":"CDR-1111","itemDescription":"CD-R Writable Discs","unitPrice":59.99,"unitListPrice":60.0]
         ];
     
+    
+    totalProductCount = from("Product").queryCount();
+    totalProductCountInt = (totalProductCount < Integer.MAX_VALUE) ? (int) totalProductCount : Integer.MAX_VALUE - 1;
+    Debug.log("totalProductCount ====> " + totalProductCountInt);
+    
     Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - ORDER DATA-=-=-=-", "");
     Map result = ServiceUtil.returnSuccess();
-    
     
     List<GenericValue> toBeStored = new ArrayList<GenericValue>();
     List<GenericValue> orderItems = new ArrayList<GenericValue>();
@@ -62,27 +62,44 @@ public Map createDemoOrder() {
         BigDecimal remainingSubTotal = new BigDecimal(0.00);
         BigDecimal grandTotal = new BigDecimal(0.00);
         
-        for(int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++){
-            Map product = products[UtilRandom.getRandomInt(0,products.size()-1)];
+        for (int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++) {
+//            Map product = products[UtilRandom.getRandomInt(0,products.size()-1)];
+            EntityFindOptions efo = new EntityFindOptions();
+            efo.setMaxRows(1);
+            efo.setOffset(UtilRandom.getRandomInt(0, totalProductCountInt));
+            products = from("Product").query(efo);
+            if (products) {
+                product = products.get(0);
+                Debug.log("Product ============> " + product);
+                productPrices = product.getRelated("ProductPrice", null, null, false);
+                defaultPrice = 0;
+                listPrice = 0;
+                for (productPrice in productPrices) {
+                    if (productPrice.productPriceTypeId.equals("DEFAULT_PRICE"))
+                        defaultPrice = productPrice.price;
+                    else (productPrice.productPriceTypeId.equals("LIST_PRICE")) 
+                        listPrice = productPrice.price;
+                }
+                
+                String productId = product.productId;
+                String prodCatalogId= "DemoCatalog";
+                BigDecimal quantity = new BigDecimal(UtilRandom.getRandomInt(0,10));
+                BigDecimal unitPrice= new BigDecimal(defaultPrice);
+                BigDecimal unitListPrice= new BigDecimal(listPrice);
+                BigDecimal selectedAmount = new BigDecimal(0.0);
+                BigDecimal itemCost = BigDecimal.ZERO;
+                itemCost = unitPrice.multiply(new BigDecimal(quantity));
+                remainingSubTotal =  remainingSubTotal.add(itemCost);
+                grandTotal = grandTotal.add(itemCost);
+                
+                fields = UtilMisc.toMap("orderId", orderId,"orderItemSeqId","0000"+orderItemSeqId,"orderItemTypeId","PRODUCT_ORDER_ITEM","productId",
+                                        productId,"prodCatalogId",prodCatalogId,"isPromo","N","quantity",quantity,"selectedAmount",selectedAmount,
+                                        "unitPrice",unitPrice,"unitListPrice",unitListPrice,"isModifiedPrice","N","itemDescription","Round Gizmo",
+                                        "correspondingPoId","","statusId","ITEM_APPROVED");
             
-            String productId = product.productId;
-            String prodCatalogId="DemoCatalog";
-            BigDecimal quantity = new BigDecimal(UtilRandom.getRandomInt(0,10));
-            BigDecimal unitPrice= new BigDecimal(product.unitPrice);
-            BigDecimal unitListPrice= new BigDecimal(product.unitListPrice);
-            BigDecimal selectedAmount = new BigDecimal(0.0);
-            BigDecimal itemCost = BigDecimal.ZERO;
-            itemCost = unitPrice.multiply(new BigDecimal(quantity));
-            remainingSubTotal =  remainingSubTotal.add(itemCost);
-            grandTotal = grandTotal.add(itemCost);
-            
-            fields = UtilMisc.toMap("orderId", orderId,"orderItemSeqId","0000"+orderItemSeqId,"orderItemTypeId","PRODUCT_ORDER_ITEM","productId",
-                                    productId,"prodCatalogId",prodCatalogId,"isPromo","N","quantity",quantity,"selectedAmount",selectedAmount,
-                                    "unitPrice",unitPrice,"unitListPrice",unitListPrice,"isModifiedPrice","N","itemDescription","Round Gizmo",
-                                    "correspondingPoId","","statusId","ITEM_APPROVED");
-        
-            GenericValue orderItem = delegator.makeValue("OrderItem", fields);
-            orderItems.add(orderItem);
+                GenericValue orderItem = delegator.makeValue("OrderItem", fields);
+                orderItems.add(orderItem);
+            }
         }
         
         String orderTypeId = orderTypes.get(UtilRandom.random(orderTypes));

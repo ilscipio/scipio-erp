@@ -43,46 +43,81 @@ public Map createDemoParty() {
     
     // RoleTypeIds (only the parent ones though it would be great to have a list of roles identified by a main one to bring coherence)
      List<String> roleTypeIds = [
-        "_NA_",
-        "ACCOUNT_LEAD",
-        "ACCOUNTANT",
-        "ADMIN",
-        "AGENT",
-        "APPROVER",
-        "AUTOMATED_AGENT_ROLE",
-        "CALENDAR_ROLE",
-        "CLIENT",
-        "COMMENTATOR",
-        "COMMEVENT_ROLE",
-        "CONSUMER",
-        "CONTENT",
-        "CONTRACTOR",
-        "CUSTOMER",
-        "DISTRIBUTION_CHANNEL",
-        "EBAY_ACCOUNT",
-        "FAM_ASSIGNEE",
-        "HOSTING_SERVER",
-        "IMAGEAPPROVER",
-        "ISP",
-        "LOGGEDIN",
-        "MAIN_ROLE",
-        "MANUFACTURER",
-        "OWNER",
-        "PERSON_ROLE",
-        "PROJECT_TEAM",
-        "PROSPECT",
-        "REFERRER",
-        "REQUEST_ROLE",
-        "REVIEWER",
-        "SCRUM_MEMBER",
-        "SHAREHOLDER",
-        "SUBSCRIBER",
-        "VENDOR",
-        "VISITOR",
-        "WEB_MASTER",
-        "WORKFLOW_ROLE"
+        "ORGANIZATION_ROLE",
+        "REQ_MANAGER",
+        "REQ_REQUESTER",
+        "REQ_TAKER",
+        "REQ_RESPOND",
+        "SFA_ROLE",
+        "ACCOUNT",
+        "ADDRESSEE",
+        "ASSOCIATION",
+        "BILL_FROM_VENDOR",
+        "BILL_TO_CUSTOMER",
+        "BCC",
+        "BULK_CUSTOMER",
+        "CAL_ATTENDEE",
+        "CAL_DELEGATE",
+        "CAL_HOST",
+        "CAL_ORGANIZER",
+        "CAL_OWNER",
+        "CARRIER",
+        "COMPETITOR",
+        "CONTACT",
+        "CC",
+        "ORIGINATOR",
+        "DISTRIBUTOR",
+        "EMPLOYEE",
+        "END_USER_CUSTOMER",
+        "HOUSEHOLD",
+        "INTERNAL_ORGANIZATIO",
+        "LEAD",
+        "LTD_ADMIN",
+        "ORGANIZATION_UNIT",
+        "PARTNER",
+        "PLACING_CUSTOMER",
+        "REGULATORY_AGENCY",
+        "SALES_REP",
+        "SHIP_FROM_VENDOR",
+        "SHIP_TO_CUSTOMER",
+        "SPONSOR",
+        "SPOUSE",
+        "SUPPLIER_AGENT",
+        "SUPPLIER",
+        "TAX_AUTHORITY",
+        "UNION",
+        "WF_OWNER",
+        "AFFILIATE",
+        "BUYER",
+        "CASHIER",
+        "DEPARTMENT",
+        "DIVISION",
+        "FAMILY_MEMBER",
+        "MANAGER",
+        "ORDER_CLERK",
+        "OTHER_INTERNAL_ORGAN",
+        "OTHER_ORGANIZATION_U",
+        "PARENT_ORGANIZATION",
+        "PACKER",
+        "PICKER",
+        "RECEIVER",
+        "SHIPMENT_CLERK",
+        "STOCKER",
+        "SUBSIDIARY",
+        "WORKER",
+        "EMAIL_ADMIN",
+        "CONTENT_ADMIN",
+        "CONTENT_PUBLISHER",
+        "CONTENT_EDITOR",
+        "CONTENT_AUTHOR",
+        "CONTENT_USER",
+        "CONTENT_GUEST",
+        "ICAL_MEMBER",
+        "FAM_SUPPLIER",
+        "FAM_MANAGER",
+        "FAM_WORKER"
     ]
-
+     
     Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PARTY DATA-=-=-=-", "");
     Map result = ServiceUtil.returnSuccess();
     
@@ -95,7 +130,7 @@ public Map createDemoParty() {
      
     if ( (UtilValidate.isNotEmpty(generatedPersons) && generatedPersons.size() == num) 
         && (UtilValidate.isNotEmpty(generatedUserLogins) && generatedUserLogins.size() == num)) {
-        for(int i = 0; i <num; i++) {
+        for (int i = 0; i <num; i++) {
             String partyId = "GEN_" + delegator.getNextSeqId("demo-partyId");
             String partyTypeId = partyTypeIds.get(UtilRandom.random(partyTypeIds));        
             String partyStatusId = partyStatus.get(UtilRandom.random(partyStatus)); 
@@ -103,7 +138,7 @@ public Map createDemoParty() {
             if (context.minDate != null)
                 minDate = new Date(context.minDate.getTime());
             Timestamp createdDate = Timestamp.valueOf(UtilRandom.generateRandomDate(minDate, context));
-            Debug.log("partyId ====> " + partyId + " partyTypeId ======> " + partyTypeId + " partyStatusId ==========> " + partyStatusId);        
+//            Debug.log("partyId ====> " + partyId + " partyTypeId ======> " + partyTypeId + " partyStatusId ==========> " + partyStatusId);        
             Map fields = UtilMisc.toMap("partyId", partyId, "partyTypeId", partyTypeId, "statusId", partyStatusId, "description", partyId + " description", "createdDate", createdDate);    
             GenericValue party = delegator.makeValue("Party", fields);
             toBeStored.add(party);
@@ -123,7 +158,7 @@ public Map createDemoParty() {
             if (gender.toUpperCase().startsWith("F"))
                 g = "F";
             fields = UtilMisc.toMap("partyId", partyId, "salutation", salutation, "firstName", firstName, "lastName", lastName, "gender", g);
-            Debug.log("partyId ========> " + partyId + "  salutation ==========> " + salutation + "    firstName ===============> " + firstName + "          lastName ===============> " + lastName + "   gender ===========> " + g);
+//            Debug.log("partyId ========> " + partyId + "  salutation ==========> " + salutation + "    firstName ===============> " + firstName + "          lastName ===============> " + lastName + "   gender ===========> " + g);
             GenericValue person = delegator.makeValue("Person", fields);
             toBeStored.add(person);
             
@@ -140,7 +175,7 @@ public Map createDemoParty() {
                 userLoginEnabled = "N";
             
             fields = UtilMisc.toMap("partyId", partyId, "userLoginId", userLoginId, "currentPassword", currentPassword, "enabled", userLoginEnabled);
-            Debug.log("partyId ========> " + partyId + "  userLoginId ==========> " + userLoginId);
+//            Debug.log("partyId ========> " + partyId + "  userLoginId ==========> " + userLoginId);
             GenericValue userLogin = delegator.makeValue("UserLogin", fields);
             toBeStored.add(userLogin);
         }

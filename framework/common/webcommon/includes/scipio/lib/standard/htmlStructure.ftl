@@ -1020,7 +1020,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
         
             <#if !menuContent?has_content || menuItemsInlined>
               <#-- WARN: we have to assume the menu type here (especially for pre/postMenuItems); inherently limited -->
-              <@menu type=defaultMenuType inlineItems=false id=menuIdArg class=menuClassArg preMenuItems=preMenuItems postMenuItems=postMenuItems>
+              <@menu type=defaultMenuType inlineItems=false id=menuIdArg class=menuClassArg preItems=preMenuItems postItems=postMenuItems>
                 ${menuItemsMarkup}
               </@menu>
             <#else>

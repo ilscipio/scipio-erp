@@ -173,7 +173,7 @@ Creates a basic wrapper for code blocks.
 
 <#-- @code main markup - theme override -->
 <#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
-  <pre <@compiledClassAttribStr class=class />><code data-language="${type!}"><#rt>
+  <pre<@compiledClassAttribStr class=class />><code data-language="${type!}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>

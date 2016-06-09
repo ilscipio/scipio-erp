@@ -16,6 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include 'calendarcommon.ftl'>
+
+<#-- SCIPIO: FTL now includes the title -->
+<@section title="${uiLabelMap.WorkEffortUpComingEvents}"><#--title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}"-->
 
 <#-- SCIPIO: have to pre-check if any content using this -->
   <#assign hasEvents = false>
@@ -55,3 +59,4 @@ under the License.
   <#else>
     <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortNoEventsFound}.</@commonMsg>
   </#if>
+</@section>

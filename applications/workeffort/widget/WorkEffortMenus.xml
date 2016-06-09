@@ -151,6 +151,7 @@ under the License.
     </menu>
     
     <menu name="Day" extends="Calendar">
+        <!-- SCIPIO: replaced with day picker in widget template
         <menu-item name="next" widget-style="+${styles.float_right}">
             <link target="${parameters._LAST_VIEW_NAME_}" text="${uiLabelMap.WorkEffortNextDay}">
                 <parameter param-name="period" value="day"/>
@@ -186,8 +187,10 @@ under the License.
                 <parameter param-name="hideEvents" from-field="parameters.hideEvents"/>
             </link>
         </menu-item>
+        -->
     </menu>
     <menu name="Week" extends="Calendar">
+        <!-- SCIPIO: replaced with day picker in widget template
         <menu-item name="next" widget-style="+${styles.float_right}">
             <link target="${parameters._LAST_VIEW_NAME_}" text="${uiLabelMap.WorkEffortNextWeek}">
                 <parameter param-name="period" value="week"/>
@@ -223,8 +226,10 @@ under the License.
                 <parameter param-name="hideEvents" from-field="parameters.hideEvents"/>
             </link>
         </menu-item>
+        -->
     </menu>
     <menu name="Month" extends="Calendar">
+        <!-- SCIPIO: replaced with day picker in widget template
         <menu-item name="next" widget-style="+${styles.float_right}">
             <link target="${parameters._LAST_VIEW_NAME_}" text="${uiLabelMap.WorkEffortNextMonth}">
                 <parameter param-name="period" value="month"/>
@@ -260,14 +265,19 @@ under the License.
                 <parameter param-name="hideEvents" from-field="parameters.hideEvents"/>
             </link>
         </menu-item>
+        -->
     </menu>
     <menu name="Upcoming" extends="Calendar">
     </menu>
-    <menu name="Calendar">
+    <!-- SCIPIO: NOTE: The original Calendar had no menu type (extends) and was included with navigation-menu-name= which gave it its style,
+        but this construct is too hard to reuse, so made this a sep button menu instead -->
+    <menu name="Calendar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="activeSubMenuItem">
         <menu-item name="upcoming">
             <condition>
                 <and>
-                    <if-compare field="parameters.period" operator="not-equals" value="upcoming"/>
+                    <!-- SCIPIO: don't hide this
+                    <if-compare field="parameters.period" operator="not-equals" value="upcoming"/> -->
                     <if-empty field="parameters.fixedAssetId"/>
                 </and>
             </condition>
@@ -282,13 +292,15 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="month">
+            <!-- SCIPIO: this is the new default -->
+            <!-- SCIPIO: don't hide this
             <condition>
-                <!-- SCIPIO: this is the new default -->
                 <and>
                     <if-compare field="parameters.period" operator="not-equals" value="month"/>
                     <not><if-empty field="parameters.period"/></not>
                 </and>
             </condition>
+            -->
             <link target="${parameters._LAST_VIEW_NAME_}" text="${uiLabelMap.WorkEffortMonthView}">
                 <parameter param-name="period" value="month"/>
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
@@ -300,13 +312,15 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="week">
+            <!-- SCIPIO: don't hide this
             <condition>
                 <and>
                     <if-compare field="parameters.period" operator="not-equals" value="week"/>
-                    <!-- SCIPIO: month is the new default:
-                    <not><if-empty field="parameters.period"/></not>-->
+                    <!- SCIPIO: month is the new default:
+                    <not><if-empty field="parameters.period"/></not>->
                 </and>
             </condition>
+            -->
             <link target="${parameters._LAST_VIEW_NAME_}" text="${uiLabelMap.WorkEffortWeekView}">
                 <parameter param-name="period" value="week"/>
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
@@ -318,9 +332,11 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="day">
+            <!-- SCIPIO: don't hide this
             <condition>
                 <if-compare field="parameters.period" operator="not-equals" value="day"/>
             </condition>
+            -->
             <link target="${parameters._LAST_VIEW_NAME_}" text="${uiLabelMap.WorkEffortDayView}">
                 <parameter param-name="period" value="day"/>
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
@@ -331,7 +347,7 @@ under the License.
                 <parameter param-name="hideEvents" from-field="parameters.hideEvents"/>
             </link>
         </menu-item>
-        <!-- SCIPIO: use float instead
+        <!-- SCIPIO: use float instead if wanted this
         <menu-item name="dummy" title="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;">
             <condition>
                 <if-compare field="parameters.period" operator="not-equals" value="upcoming"/>

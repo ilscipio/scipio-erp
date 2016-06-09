@@ -45,19 +45,11 @@ under the License.
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarDay"/>
                         <set field="activeSubMenuItem" value="day"/>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy"/>
                     </actions>
                     <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
                       <include-screen name="eventDetail"/>
-                      <container>
-                        <screenlet title="${uiLabelMap.WorkEffortDayView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" navigation-menu-name="Day" padded="false">
-                            <include-menu name="Day" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <platform-specific>
-                                <!-- <html><html-template location="component://marketing/webapp/sfa/calendar/calendar.ftl"/></html> -->
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/day.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                      </container>
+                      <include-screen name="dayCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
@@ -69,18 +61,12 @@ under the License.
                         </or>
                     </condition>
                     <actions>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Week.groovy"/>
+                        <set field="activeSubMenuItem" value="week"/>
                     </actions>
                     <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
                       <include-screen name="eventDetail"/>
-                      <container>
-                        <screenlet title="${uiLabelMap.WorkEffortWeekView}: ${uiLabelMap.CommonWeek} ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;w&quot;, timeZone, locale)}" navigation-menu-name="Week" padded="false">
-                            <include-menu name="Week" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/week.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                      </container>
+                      <include-screen name="weekCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
@@ -92,37 +78,25 @@ under the License.
                         </or>
                     </condition>
                     <actions>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Month.groovy"/>
+                        <set field="activeSubMenuItem" value="month"/>
                     </actions>
                     <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
                       <include-screen name="eventDetail"/>
-                      <container>
-                        <screenlet title="${uiLabelMap.WorkEffortMonthView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;MMMM yyyy&quot;, timeZone, locale)}" navigation-menu-name="Month" padded="false">
-                            <include-menu name="Month" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/month.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                      </container>
+                      <include-screen name="monthCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
                     <condition>
                         <if-compare field="parameters.period" operator="equals" value="upcoming"/>
                     </condition>
-                    <actions>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Upcoming.groovy"/>
+                    <actions> 
+                        <set field="activeSubMenuItem" value="upcoming"/>
                     </actions>
                     <widgets>
+                      <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
                       <include-screen name="eventDetail"/>
-                      <container>
-                        <screenlet title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}" navigation-menu-name="Upcoming">
-                            <include-menu name="Upcoming" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/upcoming.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                      </container>
+                      <include-screen name="upcomingCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
             </widgets>

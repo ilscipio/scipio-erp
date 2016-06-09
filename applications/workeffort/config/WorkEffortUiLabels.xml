@@ -2206,6 +2206,14 @@
         <value xml:lang="zh">浏览日历即将到来的事件</value>
         <value xml:lang="zh_TW">檢視日曆即將到來的事件</value>
     </property>
+    <!-- SCIPIO: TOOD: localize -->
+    <property key="WorkEffortUpComingEvents">
+        <value xml:lang="de">Kommende Veranstaltungen</value>
+        <value xml:lang="en">Up-Coming Events</value>
+        <value xml:lang="es">Eventos próximos</value>
+        <value xml:lang="fr">Évènements à venir</value>
+        <value xml:lang="nl">Up-Coming Events</value>
+    </property>
     <property key="WorkEffortCalendarWeekView">
         <value xml:lang="de">Kalender Wochenansicht</value>
         <value xml:lang="en">Calendar Week View</value>

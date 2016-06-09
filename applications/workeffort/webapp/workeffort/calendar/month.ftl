@@ -16,7 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-    
+<#include 'calendarcommon.ftl'>
+
 <#-- SCIPIO:
 <#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
@@ -37,7 +38,23 @@ under the License.
 .calendar .month-entry:last-child {
     border-width: 1px 0 0 0; 
 }
+
+.calendar th:first-child {
+    width: auto;
+}
+
+.calendar th {
+    <#--width: 13%;-->
+    width:8em;
+}
 </style>
+
+<#-- SCIPIO: FTL now includes the title -->
+<#macro menuContent menuArgs={}>
+    <@calendarDateSwitcher period="month"/>
+</#macro>
+<@section title="${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)}"
+    menuContent=menuContent menuLayoutTitle="inline-title"> <#--${uiLabelMap.WorkEffortMonthView}: -->
 
 <#if periods?has_content>
   <#-- Allow containing screens to specify the URL for creating a new event -->
@@ -47,9 +64,9 @@ under the License.
 <@table type="data-complex" autoAltRows=true class="+calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
-    <@th width="8%">&nbsp;</@th>
+    <@th>&nbsp;</@th>
     <#list periods as day>
-      <@th width="13%" class="+${styles.text_center!}">${day.start?date?string("EEEE")?cap_first}</@th>
+      <@th class="+${styles.text_center!}">${day.start?date?string("EEEE")?cap_first}</@th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </@tr>
@@ -174,3 +191,5 @@ under the License.
 <#else>
   <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>
 </#if>
+
+</@section>

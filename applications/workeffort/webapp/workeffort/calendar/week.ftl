@@ -16,6 +16,24 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include 'calendarcommon.ftl'>
+
+<#-- SCIPIO: FTL now includes the title -->
+<div class="${styles.float_clearfix!}">
+  <div class="${styles.float_left!}">
+    <#--<@render type="menu" name="Week" resource="component://workeffort/widget/WorkEffortMenus.xml" />-->
+  </div>
+  <div class="${styles.float_right!}">
+    
+  </div>
+</div>
+
+<#macro menuContent menuArgs={}>
+    <@calendarDateSwitcher period="week"/>
+</#macro>
+<@section title="${uiLabelMap.CommonWeek} ${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'w', timeZone, locale)}"
+    menuContent=menuContent menuLayoutTitle="inline-title"><#--${uiLabelMap.WorkEffortWeekView}: -->
+
 <#if periods?has_content>
   <#-- Allow containing screens to specify the URL for creating a new event -->
   <#if !newCalEventUrl??>
@@ -29,7 +47,7 @@ under the License.
 <@table type="data-complex" autoAltRows=true class="+calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
  <@thead>
   <@tr class="header-row">
-    <@th width="15%">${uiLabelMap.CommonTime}</@th>
+    <@th width="15%">${uiLabelMap.CommonDay}</@th>
     <@th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</@th>
   </@tr>
   </@thead>
@@ -39,7 +57,9 @@ under the License.
   <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
   <@tr class=class>
     <@td width="15%">
-      <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("EEEE")?cap_first}&nbsp;${period.start?date?string.short}</a><br />
+      <#-- SCIPIO: FIXME: hardcoded to yyyy-MM-dd to be consistent with datepicker for now: period.start?date?string.short 
+        however datepicker itself should not be hardcoded either -->
+      <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("yyyy-MM-dd")}</a><br />
       <a href="<@ofbizUrl>${newCalEventUrl}?period=week&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}${urlParam!}</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_add!}">[+]</a><#--${uiLabelMap.CommonAddNew}-->
     </@td>
     <#list period.calendarEntries as calEntry>
@@ -99,3 +119,6 @@ under the License.
 <#else>
   <@commonMsg type="error">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>
 </#if>
+
+</@section>
+

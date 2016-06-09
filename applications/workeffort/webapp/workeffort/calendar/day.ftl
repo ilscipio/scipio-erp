@@ -16,6 +16,16 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+<#include 'calendarcommon.ftl'>
+
+<#-- SCIPIO: FTL now includes the title -->
+<#macro menuContent menuArgs={}>
+    <@calendarDateSwitcher period="day"/>
+</#macro>
+<@section title="${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'EEEE MMMM d, yyyy', timeZone, locale)}"
+    menuContent=menuContent menuLayoutTitle="inline-title"><#--${uiLabelMap.WorkEffortDayView}: -->
+
 <#if periods?has_content>
   <#-- Allow containing screens to specify the URL for creating a new event -->
   <#if !newCalEventUrl??>
@@ -97,3 +107,5 @@ under the License.
 <#else>
   <@commonMsg type="error">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>
 </#if>
+
+</@section>

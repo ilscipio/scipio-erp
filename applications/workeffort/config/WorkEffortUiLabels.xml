@@ -3234,6 +3234,12 @@
         <value xml:lang="zh">最大事件编号</value>
         <value xml:lang="zh_TW">最大事件編號</value>
     </property>
+    <!-- SCIPIO: TODO: Localize -->
+    <property key="WorkEffortMaxEvents">
+        <value xml:lang="de">Max Veranstaltungen</value>
+        <value xml:lang="en">Max Events</value>
+        <value xml:lang="it">Max eventi</value>
+    </property>
     <property key="WorkEffortMaxNumberOfPersons">
         <value xml:lang="en">Max # of Persons</value>
         <value xml:lang="it">Max numero di persone</value>
@@ -3241,6 +3247,12 @@
         <value xml:lang="vi">Số tối đa của nhân sự</value>
         <value xml:lang="zh">最大人数</value>
         <value xml:lang="zh_TW">最大人數</value>
+    </property>
+    <!-- SCIPIO: TODO: Localize -->
+    <property key="WorkEffortMaxPersons">
+        <value xml:lang="de">Max Personen</value>
+        <value xml:lang="en">Max Persons</value>
+        <value xml:lang="it">Max persone</value>
     </property>
     <property key="WorkEffortMonthView">
         <value xml:lang="de">Monatsansicht</value>

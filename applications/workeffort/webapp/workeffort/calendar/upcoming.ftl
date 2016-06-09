@@ -17,8 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <#if days?has_content>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+<#-- SCIPIO: have to pre-check if any content using this -->
+  <#assign hasEvents = false>
+  <#list days as day>
+    <#assign workEfforts = day.calendarEntries>
+    <#if workEfforts?has_content>
+      <#assign hasEvents = true>
+    </#if>
+  </#list>
+
+  <#if hasEvents>
+    <@table type="data-complex" autoAltRows="" responsive=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonStartDateTime}</@th>

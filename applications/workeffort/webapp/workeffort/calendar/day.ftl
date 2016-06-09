@@ -22,14 +22,14 @@ under the License.
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
   <#if (maxConcurrentEntries < 2)>
-    <#assign entryWidth = 100>
+    <#assign entryWidth = 85>
   <#else>
-    <#assign entryWidth = (100 / (maxConcurrentEntries))>
+    <#assign entryWidth = (85 / (maxConcurrentEntries))>
   </#if>
-<@table type="data-list" class="+calendar"> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-complex" class="+calendar" autoAltRows=true responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
  <@thead>
   <@tr class="header-row">
-    <@th>${uiLabelMap.CommonTime}</@th>
+    <@th width="15%">${uiLabelMap.CommonTime}</@th>
     <@th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</@th>
   </@tr>
   </@thead>
@@ -38,9 +38,9 @@ under the License.
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
   <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
   <@tr class=class>
-    <@td>
+    <@td width="15%">
       ${period.start?time?string.short}<br />
-      <a href="<@ofbizUrl>${newCalEventUrl}?period=day&amp;form=edit&amp;parentTypeId=${parentTypeId!}&amp;start=${parameters.start!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAddNew}</a>
+      <a href="<@ofbizUrl>${newCalEventUrl}?period=day&amp;form=edit&amp;parentTypeId=${parentTypeId!}&amp;start=${parameters.start!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_add!}">[+]</a><#--${uiLabelMap.CommonAddNew}-->
     </@td>
       <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>

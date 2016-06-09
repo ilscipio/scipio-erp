@@ -16,20 +16,40 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+    
+<#-- SCIPIO:
+<#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
-<#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">
+<style type="text/css">
+.calendar {
+    border: 1px solid black;
+}
+
+.calendar .month-entry {
+    height: 8em; 
+    vertical-align: top; 
+    padding: 0.5em; 
+    border-color: black; 
+    border-width: 1px 1px 0 0; 
+    border-style: solid;
+}
+
+.calendar .month-entry:last-child {
+    border-width: 1px 0 0 0; 
+}
+</style>
 
 <#if periods?has_content>
   <#-- Allow containing screens to specify the URL for creating a new event -->
   <#if !newCalEventUrl??>
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
-<@table type="data-list" class="+calendar"> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-complex" autoAltRows=true class="+calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
-    <@th width="1%">&nbsp;</@th>
+    <@th width="8%">&nbsp;</@th>
     <#list periods as day>
-      <@th>${day.start?date?string("EEEE")?cap_first}</@th>
+      <@th width="13%" class="+${styles.text_center!}">${day.start?date?string("EEEE")?cap_first}</@th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </@tr>
@@ -41,14 +61,14 @@ under the License.
     <#if indexMod7 == 0>
       <#-- FIXME: rearrange without open/close -->
       <@tr open=true close=false />
-        <@td style=styleTdVal>
+        <@td class="+month-entry">
           <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
         </@td>
     </#if>
     <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
-    <@td style=styleTdVal class=class>
+    <@td class=(class+" month-entry")>
       <span class="h1"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}</a></span>
-      <a class="add-new" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a>
+      <a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}-->
       <br class="clear"/>
 
       <#assign maxNumberOfPersons = 0/>
@@ -58,7 +78,7 @@ under the License.
           <#assign eventsInRange = period.calendarEntriesByDateRange.get(range)/>
           <#assign numberOfPersons = 0/>
           <#list eventsInRange as eventInRange>
-              <#assign numberOfPersons = numberOfPersons + eventInRange.workEffort.reservPersons?default(0)/>
+              <#assign numberOfPersons = numberOfPersons + eventInRange.workEffort.reservPersons!0/>
           </#list>
           <#if (numberOfPersons > maxNumberOfPersons)>
               <#assign maxNumberOfPersons = numberOfPersons/>
@@ -68,12 +88,12 @@ under the License.
           </#if>
       </#list>
       <#if (maxNumberOfEvents > 0)>
-          ${uiLabelMap.WorkEffortMaxNumberOfEvents}: ${maxNumberOfEvents}<br/>
+          ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
       </#if>
       <#if (maxNumberOfPersons > 0)>
-          ${uiLabelMap.WorkEffortMaxNumberOfPersons}: ${maxNumberOfPersons}<br/>
+          ${uiLabelMap.WorkEffortMaxPersons}: ${maxNumberOfPersons}<br/>
       </#if>
-      <#if parameters.hideEvents?default("") != "Y">
+      <#if (parameters.hideEvents!"") != "Y">
       <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>
             <#assign startDate = calEntry.workEffort.actualStartDate>

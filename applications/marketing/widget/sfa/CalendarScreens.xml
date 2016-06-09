@@ -49,7 +49,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="eventDetail"/>
-                      <container style="bothclear">
+                      <container>
                         <screenlet title="${uiLabelMap.WorkEffortDayView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" navigation-menu-name="Day" padded="false">
                             <include-menu name="Day" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             <platform-specific>
@@ -73,7 +73,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="eventDetail"/>
-                      <container style="bothclear">
+                      <container>
                         <screenlet title="${uiLabelMap.WorkEffortWeekView}: ${uiLabelMap.CommonWeek} ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;w&quot;, timeZone, locale)}" navigation-menu-name="Week" padded="false">
                             <include-menu name="Week" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             <platform-specific>
@@ -96,7 +96,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="eventDetail"/>
-                      <container style="bothclear">
+                      <container>
                         <screenlet title="${uiLabelMap.WorkEffortMonthView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;MMMM yyyy&quot;, timeZone, locale)}" navigation-menu-name="Month" padded="false">
                             <include-menu name="Month" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             <platform-specific>
@@ -115,7 +115,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="eventDetail"/>
-                      <container style="bothclear">
+                      <container>
                         <screenlet title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}" navigation-menu-name="Upcoming">
                             <include-menu name="Upcoming" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             <platform-specific>

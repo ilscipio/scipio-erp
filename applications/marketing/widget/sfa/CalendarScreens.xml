@@ -64,7 +64,8 @@ under the License.
                     <condition>
                         <or>
                             <if-compare field="parameters.period" operator="equals" value="week"/>
-                            <if-empty field="parameters.period"/>
+                            <!-- SCIPIO: month view should be default
+                            <if-empty field="parameters.period"/> -->
                         </or>
                     </condition>
                     <actions>
@@ -84,7 +85,11 @@ under the License.
                 </section>
                 <section>
                     <condition>
-                        <if-compare field="parameters.period" operator="equals" value="month"/>
+                        <or>
+                            <if-compare field="parameters.period" operator="equals" value="month"/>
+                            <!-- SCIPIO: month view should be default -->
+                            <if-empty field="parameters.period"/>
+                        </or>
                     </condition>
                     <actions>
                         <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Month.groovy"/>

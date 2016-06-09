@@ -46,7 +46,12 @@ if (!startParam) {
 
 Timestamp start = null;
 if (UtilValidate.isNotEmpty(startParam)) {
-    start = new Timestamp(Long.parseLong(startParam));
+    // SCIPIO: catch invalid dates
+    try {
+        start = new Timestamp(Long.parseLong(startParam));
+    } catch (NumberFormatException e) {
+        Debug.logError("Invalid long time (will use now time instead): " + startParam, module);
+    }
 }
 if (start == null) {
     start = UtilDateTime.getWeekStart(nowTimestamp, timeZone, locale);

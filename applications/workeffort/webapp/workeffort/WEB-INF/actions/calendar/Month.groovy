@@ -33,6 +33,10 @@ if (!startParam) {
 if (!startParam) {
     String startDate = parameters.startDate;
     if (startDate) {
+        // accept both yyyy-MM and yyyy-MM-dd
+        if (startDate.length() == 7) {
+            startDate += "-01";
+        }
         DateFormat df = UtilDateTime.toDateFormat(UtilDateTime.DATE_FORMAT, timeZone, locale);
         try {
             java.util.Date parsedDate = df.parse(startDate);

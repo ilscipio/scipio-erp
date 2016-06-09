@@ -22,6 +22,10 @@ import java.sql.Timestamp;
 import org.ofbiz.base.util.*;
 
 String startParam = parameters.startTime;
+// SCIPIO: some screens pass start instead of startTime
+if (!startParam) {
+    startParam = parameters.start;
+} 
 Timestamp start = null;
 if (UtilValidate.isNotEmpty(startParam)) {
     start = new Timestamp(Long.parseLong(startParam));

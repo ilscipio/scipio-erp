@@ -20,12 +20,30 @@
 import java.sql.*;
 import java.util.*;
 import org.ofbiz.base.util.*;
+import java.text.*;
+
+final module = "Month.groovy";
 
 String startParam = parameters.startTime;
 // SCIPIO: some screens pass start instead of startTime
 if (!startParam) {
     startParam = parameters.start;
 }
+// SCIPIO: we must now also accept a startDate in yyyy-MM-dd format
+if (!startParam) {
+    String startDate = parameters.startDate;
+    if (startDate) {
+        DateFormat df = UtilDateTime.toDateFormat(UtilDateTime.DATE_FORMAT, timeZone, locale);
+        try {
+            java.util.Date parsedDate = df.parse(startDate);
+            // return it back to a long time as string to it'll fit in the code below
+            startParam = String.valueOf(parsedDate.getTime());
+        } catch(ParseException e) {
+            Debug.logError("Invalid date (will use now time instead): " + startDate, module);
+        }
+    }
+}
+
 Timestamp start = null;
 if (UtilValidate.isNotEmpty(startParam)) {
     start = new Timestamp(Long.parseLong(startParam));

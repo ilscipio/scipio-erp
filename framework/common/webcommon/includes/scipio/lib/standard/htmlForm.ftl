@@ -1078,6 +1078,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               This means the user will be presented with a short date only, but the data sent to the server
                               will be a full timestamp.
     datePostfix             = ((boolean), default: true) Override for date-widget-specific postfix
+    datePostfixColumns      = ((int), default: 1) Size of date-widget-specific postfix
+    manualInput             = ((boolean), default: true) Whether to allow manual input; if false, selection only through date picker
     title                   = Title
                               If empty, markup/theme decides what to show.
                               Can also be a special value in format {{{"#PROP:resource#propname"}}} (if no {{{resource}}}, taken from CommonUiLabels).
@@ -1254,7 +1256,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
   "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{}, "style":"",
   "widgetAreaClass":"", "labelAreaClass":"", "postfixAreaClass":"", "widgetPostfixAreaClass":"",
-  "inverted":false, "invertedClass":"", "standardClass":"", "datePostfix":"",
+  "inverted":false, "invertedClass":"", "standardClass":"", "datePostfix":"", "datePostfixColumns":"",
+  "manualInput":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1671,6 +1674,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               alert=alert 
                               title=title 
                               value=value 
+                              events=events
                               size=size 
                               maxlength=maxlength 
                               id=id 
@@ -1679,7 +1683,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               formName=formName
                               tooltip=tooltip
                               origLabel=origLabel
+                              manualInput=manualInput
                               postfix=datePostfix
+                              postfixColumns=datePostfixColumns
                               inlineLabel=effInlineLabel
                               passArgs=passArgs/>                
         <#break>

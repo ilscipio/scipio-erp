@@ -51,7 +51,7 @@ for (int i = 0; i < iCount; i++) {
     orderDateExprList = [];
     orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
     orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dateIntervals.getDateEnd()));
-    Debug.log("date from ======> " +  dateIntervals.getDateBegin() + "  date to ======> " + dateIntervals.getDateEnd());
+//    Debug.log("date from ======> " +  dateIntervals.getDateBegin() + "  date to ======> " + dateIntervals.getDateEnd());
 
     orderHeaderItemExpr = FastList.newInstance(exprList);
     orderHeaderItemExpr.addAll(orderDateExprList);    

@@ -1,22 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 import java.sql.Timestamp
 
 import org.ofbiz.base.util.Debug
@@ -36,16 +17,10 @@ public Map createDemoOrder() {
         "ORDER_CREATED",
         "ORDER_COMPLETED"
     ];
-    
-    List<String> products = [
-            ["productId":"CAM-2644","itemDescription":"Nikon Analog Camera","unitPrice":38.4,"unitListPrice":48.0],
-            ["productId":"CDR-1111","itemDescription":"CD-R Writable Discs","unitPrice":59.99,"unitListPrice":60.0]
-        ];
-    
-    
+       
     totalProductCount = from("Product").queryCount();
     totalProductCountInt = (totalProductCount < Integer.MAX_VALUE) ? (int) totalProductCount : Integer.MAX_VALUE - 1;
-    Debug.log("totalProductCount ====> " + totalProductCountInt);
+//    Debug.log("totalProductCount ====> " + totalProductCountInt);
     
     Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - ORDER DATA-=-=-=-", "");
     Map result = ServiceUtil.returnSuccess();
@@ -72,7 +47,7 @@ public Map createDemoOrder() {
             products = from("Product").query(efo);
             if (products) {
                 product = products.get(0);
-                Debug.log("Product ============> " + product);
+//                Debug.log("Product ============> " + product);
                 productPrices = product.getRelated("ProductPrice", null, null, false);
                 defaultPrice = 0;
                 listPrice = 0;
@@ -106,11 +81,14 @@ public Map createDemoOrder() {
         
         String orderTypeId = orderTypes.get(UtilRandom.random(orderTypes));
         String orderName="Demo Order";
-        String salesChannelEnumId = "UNKNWN_SALES_CHANNEL";
+
+        orderSalesChannelList = from("Enumeration").where(["enumTypeId" : "ORDER_SALES_CHANNEL"]).queryList();
+        orderSalesChannel = orderSalesChannelList.get(UtilRandom.random(orderSalesChannelList));
+        
         Timestamp orderDate = Timestamp.valueOf(UtilRandom.generateRandomDate(context));
         String statusId = orderStatusTypes.get(UtilRandom.random(orderStatusTypes));
         Map fields = UtilMisc.toMap("orderId", orderId,"orderTypeId",orderTypeId,"orderName",orderName,"salesChannelEnumId",
-                                    salesChannelEnumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,
+                                    orderSalesChannel.enumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,
                                     "currencyUom","USD","webSiteId","OrderEntry","remainingSubTotal",remainingSubTotal,"grandTotal",grandTotal);
     
         GenericValue orderHeader = delegator.makeValue("OrderHeader", fields);
@@ -164,8 +142,5 @@ public Map createDemoOrder() {
             "OrderErrorCannotStoreStatusChanges", locale) + e.getMessage());
         }
     }
-    
-   
-    
     return result;
 }

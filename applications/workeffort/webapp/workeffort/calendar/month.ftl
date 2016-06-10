@@ -63,9 +63,6 @@ under the License.
 .month-calendar-full td.month-entry-day:hover {
     background-color: white;
 }
-.month-calendar-full td.month-entry-day:hover .month-entry-wrapper {
-    overflow: visible;
-}
 .month-calendar-full td.month-entry-day .month-entry-abs {
     position: absolute;
     top: 0; bottom: 0; left: 0; right: 0;

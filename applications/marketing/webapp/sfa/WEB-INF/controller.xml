@@ -299,6 +299,74 @@ under the License.
         <response name="error" type="view" value="EditRequest"/>
     </request-map>
 
+    <!-- SCIPIO: workeffort entries for calendar: duplicated from component://workeffort/webapp/workeffort/WEB-INF/controller.xml -->
+    <request-map uri="createWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffort"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="createWorkEffortAndPartyAssign">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortAndPartyAssign"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="createWorkEffortAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortAssoc"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="updateWorkEffortAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffortAssoc"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="createWorkEffortAndAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortAndAssoc"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="updateWorkEffortAndAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffortAndAssoc"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="updateWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="deleteWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteWorkEffort"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="createWorkEffortPartyAssign">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="assignPartyToWorkEffort"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="updateWorkEffortPartyAssign">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyToWorkEffortAssignment"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+    <request-map uri="deleteWorkEffortPartyAssign">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyToWorkEffortAssignment"/>
+        <response name="success" type="view-last" />
+        <response name="error" type="view-last" />
+    </request-map>
+
     <!-- Lookup requests -->
     <request-map uri="LookupSalesForecast"><security https="true" auth="true"/><response name="success" type="view" value="LookupSalesForecast"/></request-map>
     <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>

@@ -1414,7 +1414,7 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <!-- <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/> -->
-                <set field="chartIntervalCount" type="Integer" value="2"/>
+                <set field="chartIntervalCount" type="Integer" value="1"/>
                 <set field="chartDatasets" value="1"/>
                 <set field="xlabel" value=""/> <!-- x-axis label -->
                 <set field="ylabel" value=""/> <!-- y-axis label -->

@@ -119,10 +119,10 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="estimatedStartDate"><date-time input-method="time-dropdown" /></field>
-        <field name="estimatedCompletionDate"><date-time input-method="time-dropdown" /></field>
-        <field name="actualStartDate" use-when="workEffort!=null"><date-time input-method="time-dropdown" /></field>
-        <field name="actualCompletionDate" use-when="workEffort!=null"><date-time input-method="time-dropdown" /></field>
+        <field name="estimatedStartDate"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
+        <field name="estimatedCompletionDate"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
+        <field name="actualStartDate" use-when="workEffort!=null"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
+        <field name="actualCompletionDate" use-when="workEffort!=null"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
         <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="workEffort==null"><submit /></field>
         <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="workEffort!=null"><submit /></field>
     </form>

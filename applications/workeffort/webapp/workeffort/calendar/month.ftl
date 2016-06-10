@@ -27,7 +27,7 @@ under the License.
 }
 
 .month-calendar-full .month-entry {
-    height: 8em; 
+    height: 7em; <#-- was: 8em -->
     vertical-align: top; 
     padding: 0.5em; 
     border-color: black; 
@@ -40,12 +40,12 @@ under the License.
 }
 
 .month-calendar-full th:first-child {
-    width: 4em;
+    width: 3em;
 }
 
 .month-calendar-full th {
     <#--width: 13%;-->
-    width: 8em;
+    width: 7em; <#-- was: 8em -->
 }
 </style>
 

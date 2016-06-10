@@ -95,12 +95,12 @@ TODO: Reimplement as transform.
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
       <#if name?has_content>
-        ${screens.render(resource, name, asString)}<#t>
+        ${StringUtil.wrapString(screens.render(resource, name, asString))}<#t>
       <#else>
-        ${screens.render(resource, asString)}<#t>
+        ${StringUtil.wrapString(screens.render(resource, asString))}<#t>
       </#if>
     <#elseif type == "section">
-        ${sections.render(name)}<#t>
+        ${StringUtil.wrapString(sections.render(name))}<#t>
     <#else>
       <#if !name?has_content>
         <#local parts = resource?split("#")>
@@ -111,11 +111,11 @@ TODO: Reimplement as transform.
       <#local dummy = setContextField("scipioWidgetWrapperResName", name)>
       <#local dummy = setContextField("scipioWidgetWrapperResLocation", resource)>
       <#if type == "menu">
-        ${screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString)}<#t>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">
-        ${screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString)}<#t>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString))}<#t>
       <#elseif type == "tree">
-        ${screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString)}<#t>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString))}<#t>
       </#if>
     </#if>
   </@varSection>

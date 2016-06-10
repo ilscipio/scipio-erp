@@ -22,11 +22,11 @@ under the License.
 <#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
 <style type="text/css">
-.calendar {
+.month-calendar-full {
     border: 1px solid black;
 }
 
-.calendar .month-entry {
+.month-calendar-full .month-entry {
     height: 8em; 
     vertical-align: top; 
     padding: 0.5em; 
@@ -35,17 +35,17 @@ under the License.
     border-style: solid;
 }
 
-.calendar .month-entry:last-child {
+.month-calendar-full .month-entry:last-child {
     border-width: 1px 0 0 0; 
 }
 
-.calendar th:first-child {
-    width: auto;
+.month-calendar-full th:first-child {
+    width: 4em;
 }
 
-.calendar th {
+.month-calendar-full th {
     <#--width: 13%;-->
-    width:8em;
+    width: 8em;
 }
 </style>
 
@@ -61,7 +61,7 @@ under the License.
   <#if !newCalEventUrl??>
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
-<@table type="data-complex" autoAltRows=true class="+calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-complex" autoAltRows=true class="+calendar month-calendar-full" responsive=true responsiveOptions={"ordering":false}> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
     <@th>&nbsp;</@th>

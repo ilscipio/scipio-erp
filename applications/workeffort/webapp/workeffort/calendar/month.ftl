@@ -27,7 +27,8 @@ under the License.
 }
 
 .month-calendar-full .month-entry {
-    height: 7em; <#-- was: 8em -->
+    <#-- will auto-calculate:
+    height: 7em;-->
     vertical-align: top; 
     padding: 0.5em; 
     border-color: black; 
@@ -35,17 +36,45 @@ under the License.
     border-style: solid;
 }
 
+.month-calendar-full .month-entry:first-child {
+    width: 3em;
+}
+
 .month-calendar-full .month-entry:last-child {
     border-width: 1px 0 0 0; 
+}
+
+.month-calendar-full th {
+    width: 12%;
 }
 
 .month-calendar-full th:first-child {
     width: 3em;
 }
 
-.month-calendar-full th {
-    <#--width: 13%;-->
-    width: 7em; <#-- was: 8em -->
+<#-- SCIPIO: CSS padding-bottom workaround to make heights follow widths when resize -->
+.month-calendar-full .month-entry-date .month-entry-wrapper {
+    width: 100%;
+    padding-bottom: 100%; <#-- this sets the ratio value vs width; we want 1:1 -->
+    position: relative;
+    overflow: hidden;
+}
+
+.month-calendar-full .month-entry-date .month-entry-wrapper:hover {
+    overflow: visible;
+}
+.month-calendar-full .month-entry-date .month-entry-wrapper:hover .month-entry-content {
+    background-color: white;
+}
+    
+.month-calendar-full .month-entry-date .month-entry-content {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
+
+<#-- SPECIAL, needed for small screens -->
+table.month-calendar-full th {
+    word-break: break-all;
 }
 </style>
 
@@ -63,7 +92,7 @@ under the License.
   </#if>
 <#-- not using scrollable=true, should have better resizing method-->
 <@table type="data-complex" autoAltRows=true class="+calendar month-calendar-full" 
-    responsive=true responsiveOptions={"ordering":false}> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+    responsive=false><#--responsiveOptions={"ordering":false}--><#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
     <@th>&nbsp;</@th>
@@ -80,12 +109,18 @@ under the License.
     <#if indexMod7 == 0>
       <#-- FIXME: rearrange without open/close -->
       <@tr open=true close=false />
-        <@td class="+month-entry">
+        <@td class="+month-entry month-entry-week">
+        <div class="month-entry-wrapper">
+        <div class="month-entry-content">
           <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
+        </div>
+        </div>
         </@td>
     </#if>
     <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
-    <@td class=(class+" month-entry")>
+    <@td class=(class+" month-entry month-entry-date")>
+    <div class="month-entry-wrapper">
+    <div class="month-entry-content">
       <span class="h1"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}</a></span>
       <a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}-->
       <br class="clear"/>
@@ -149,6 +184,8 @@ under the License.
         <br />
       </#list>
       </#if>
+    </div>
+    </div>
     </@td>
 
 <#--

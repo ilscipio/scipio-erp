@@ -1,32 +1,20 @@
-/*!
- * Chart.js
- * http://chartjs.org/
- * Version: {{ version }}
- *
- * Copyright 2015 Nick Downie
- * Released under the MIT license
- * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
- */
+"use strict";
 
+module.exports = function(Chart) {
 
-(function() {
-
-	"use strict";
-
-	var root = this,
-		Chart = root.Chart,
-		helpers = Chart.helpers;
+	var helpers = Chart.helpers;
+	var globalDefaults = Chart.defaults.global;
 
 	Chart.defaults.global.elements.line = {
 		tension: 0.4,
-		backgroundColor: Chart.defaults.global.defaultColor,
+		backgroundColor: globalDefaults.defaultColor,
 		borderWidth: 3,
-		borderColor: Chart.defaults.global.defaultColor,
+		borderColor: globalDefaults.defaultColor,
 		borderCapStyle: 'butt',
 		borderDash: [],
 		borderDashOffset: 0.0,
 		borderJoinStyle: 'miter',
-		fill: true, // do we fill in the area between the line and its base axis
+		fill: true // do we fill in the area between the line and its base axis
 	};
 
 	Chart.elements.Line = Chart.Element.extend({
@@ -34,15 +22,15 @@
 			var ctx = this._chart.ctx;
 
 			if (point._view.skip) {
-				skipHandler.call(this, previousPoint, point, nextPoint); 
+				skipHandler.call(this, previousPoint, point, nextPoint);
 			} else if (previousPoint._view.skip) {
 				previousSkipHandler.call(this, previousPoint, point, nextPoint);
-			} else if (point._view.tension === 0) { 
+			} else if (point._view.tension === 0) {
 				ctx.lineTo(point._view.x, point._view.y);
 			} else {
 				// Line between points
 				ctx.bezierCurveTo(
-					previousPoint._view.controlPointNextX, 
+					previousPoint._view.controlPointNextX,
 					previousPoint._view.controlPointNextY,
 					point._view.controlPointPreviousX,
 					point._view.controlPointPreviousY,
@@ -128,23 +116,24 @@
 					ctx.lineTo(this._children[0]._view.x, vm.scaleZero);
 				}
 
-				ctx.fillStyle = vm.backgroundColor || Chart.defaults.global.defaultColor;
+				ctx.fillStyle = vm.backgroundColor || globalDefaults.defaultColor;
 				ctx.closePath();
 				ctx.fill();
 			}
 
+			var globalOptionLineElements = globalDefaults.elements.line;
 			// Now draw the line between all the points with any borders
-			ctx.lineCap = vm.borderCapStyle || Chart.defaults.global.elements.line.borderCapStyle;
+			ctx.lineCap = vm.borderCapStyle || globalOptionLineElements.borderCapStyle;
 
 			// IE 9 and 10 do not support line dash
 			if (ctx.setLineDash) {
-				ctx.setLineDash(vm.borderDash || Chart.defaults.global.elements.line.borderDash);
+				ctx.setLineDash(vm.borderDash || globalOptionLineElements.borderDash);
 			}
 
-			ctx.lineDashOffset = vm.borderDashOffset || Chart.defaults.global.elements.line.borderDashOffset;
-			ctx.lineJoin = vm.borderJoinStyle || Chart.defaults.global.elements.line.borderJoinStyle;
-			ctx.lineWidth = vm.borderWidth || Chart.defaults.global.elements.line.borderWidth;
-			ctx.strokeStyle = vm.borderColor || Chart.defaults.global.defaultColor;
+			ctx.lineDashOffset = vm.borderDashOffset || globalOptionLineElements.borderDashOffset;
+			ctx.lineJoin = vm.borderJoinStyle || globalOptionLineElements.borderJoinStyle;
+			ctx.lineWidth = vm.borderWidth || globalOptionLineElements.borderWidth;
+			ctx.strokeStyle = vm.borderColor || globalDefaults.defaultColor;
 			ctx.beginPath();
 
 			helpers.each(this._children, function(point, index) {
@@ -169,7 +158,6 @@
 
 			ctx.stroke();
 			ctx.restore();
-		},
+		}
 	});
-
-}).call(this);
+};

@@ -312,8 +312,11 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
 </#macro>
 
-<#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" dateDisplayType="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
-  <#local dateDisplayFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+<#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" 
+    dateDisplayType="" dateDisplayFormatPicker="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
+  <#if !dateDisplayFormatPicker?has_content>
+    <#local dateDisplayFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+  </#if>
   <#local fdatepickerOptions>{format:"${dateDisplayFormatPicker}" <#rt/>
     <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
     , forceParse:false}</#local><#lt/><#--redundant, don't do this here: format:"yyyy-mm-dd", -->

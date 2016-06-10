@@ -61,9 +61,9 @@ under the License.
   <#if !newCalEventUrl??>
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
-<#-- FIXME: scrollable=true is only there until better resizing solution -->
+<#-- not using scrollable=true, should have better resizing method-->
 <@table type="data-complex" autoAltRows=true class="+calendar month-calendar-full" 
-    responsive=true responsiveOptions={"ordering":false} scrollable=true> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+    responsive=true responsiveOptions={"ordering":false}> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
     <@th>&nbsp;</@th>

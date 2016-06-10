@@ -89,9 +89,6 @@ under the License.
                                 <actions>
                                     <set field="infoMessage" value="&lt;strong&gt;Developer Info:&lt;/strong&gt; You can use the &lt;a href='ListDemoDataGeneratorServices'&gt;demo generator&lt;/a&gt;, to generate test-data" type="PlainString" />
                                 </actions>
-                                <widgets>
-                                    <include-screen name="EventMessages" location="component://common/widget/CommonScreens.xml"/>
-                                </widgets>
                            </section>
                         </container>
                         </container>

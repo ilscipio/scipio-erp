@@ -17,6 +17,8 @@
  * under the License.
  */
 
+import java.text.SimpleDateFormat
+
 import javolution.util.FastList
 
 import org.ofbiz.base.util.Debug
@@ -25,13 +27,14 @@ import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.product.product.ProductContentWrapper
 
-int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
+int iCount = context.chartIntervalCount != null ? context.chartIntervalCount : 0;
 String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
 
-iCount = UtilDateTime.getIntervalDefaultCount(iScope);
+if (iCount <= 0)
+    iCount = UtilDateTime.getIntervalDefaultCount(iScope);
 fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
 dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-context.dateBeginText = UtilDateTime.toDateString(dateIntervals.getDateBegin());
+//context.dateBeginText = UtilDateTime.toDateString(dateIntervals.getDateBegin());
 
 exprList = [];
 exprList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
@@ -41,7 +44,9 @@ exprList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.NOT_EQ
 //    exprList.add(EntityCondition.makeCondition("isPromo", "N"));
 
 bestSellingProductsByDate = [:];
-for (int i = 0; i <= iCount; i++) {
+for (int i = 0; i < iCount; i++) {
+    dateIntervals.setDateFormatter(new SimpleDateFormat("yyyy-MM-dd"));
+    
     bestSellingProducts = [:];
     orderDateExprList = [];
     orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
@@ -77,13 +82,14 @@ for (int i = 0; i <= iCount; i++) {
             bestSellingProducts.put(product.productId, orderItemDetail);
         }
     }    
-    bestSellingProductsByDate.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), bestSellingProducts);
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);
+    bestSellingProductsByDate.put(dateIntervals, bestSellingProducts);
+    if (i + 1 < iCount)
+        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);
 }
-context.dateEndText = UtilDateTime.toDateString(dateIntervals.getDateEnd());
+//context.dateEndText = UtilDateTime.toDateString(dateIntervals.getDateEnd());
 
 // Sorting List
-topSellingProductsByDate = [:];
+topSellingProductsMap = [:];
 
 for (key in bestSellingProductsByDate.keySet()) {
 //    Debug.log("date ======> " + key + "   number of products ======> " + bestSellingProductsByDate[key].size());    
@@ -91,9 +97,8 @@ for (key in bestSellingProductsByDate.keySet()) {
     bestSellingProductsByDate[key].each { bestSellingProducts ->
         productId =  bestSellingProducts.getKey();
         bestSellingProduct =  bestSellingProducts.getValue();
-//        Debug.log("productId ========> " + productId + "     bestSellingProduct ======> " + bestSellingProduct);
-        
-        if (topSellingProducts && topSellingProducts.size() == 2) {
+//        Debug.log("productId ========> " + productId + "     bestSellingProduct ======> " + bestSellingProduct);        
+        if (topSellingProducts && topSellingProducts.size() == 5) {
             for (int idx = 0; idx < topSellingProducts.size(); idx++) {
                 if ((bestSellingProduct.qtyOrdered > topSellingProducts[idx].qtyOrdered) || 
                     (bestSellingProduct.qtyOrdered == topSellingProducts[idx].qtyOrdered && bestSellingProduct.amount > topSellingProducts[idx].amount)) {
@@ -106,9 +111,9 @@ for (key in bestSellingProductsByDate.keySet()) {
             topSellingProducts.add(bestSellingProduct);
         }
     }
-    topSellingProductsByDate.put(key, topSellingProducts);
+    topSellingProductsMap.put(key, topSellingProducts);
 }
 
 
-context.bestSellingProducts = topSellingProductsByDate;
+context.bestSellingProducts = topSellingProductsMap;
 context.now = UtilDateTime.toDateString(UtilDateTime.nowDate());

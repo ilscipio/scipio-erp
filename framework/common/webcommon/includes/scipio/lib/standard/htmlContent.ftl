@@ -173,7 +173,7 @@ Creates a basic wrapper for code blocks.
 
 <#-- @code main markup - theme override -->
 <#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
-  <pre <@compiledClassAttribStr class=class />><code data-language="${type!}"><#rt>
+  <pre<@compiledClassAttribStr class=class />><code data-language="${type!}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>
@@ -1168,7 +1168,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }
                     },
                     title: {
-                        display: false,
+                        <#if title?has_content>
+                            display: true,
+                            text: '${title}',
+                        <#else>
+                            display: false,
+                        </#if>
                         fontColor: chartData.scaleLabelFontColor,
                         fontFamily: chartData.scaleLabelFontFamily,
                         fontSize: chartData.scaleLabelFontSize

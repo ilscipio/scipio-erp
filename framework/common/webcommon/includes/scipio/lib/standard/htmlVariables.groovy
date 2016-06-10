@@ -262,8 +262,15 @@ context.styles = [
     /* type-based styles */
     "section_generic_menulayouttitle" : "post-title",
     "section_generic_menulayoutgeneral" : "top",
+    "section_generic_inline_title_menutitlecontainerclass" : "clearfix",
+    "section_generic_inline_title_titlecontainerclass" : "left",
+    "section_generic_inline_title_menucontainerclass" : "right",
+    
     "section_default_menulayouttitle" : "post-title",
     "section_default_menulayoutgeneral" : "top",
+    "section_default_inline_title_menutitlecontainerclass" : "clearfix",
+    "section_default_inline_title_titlecontainerclass" : "left",
+    "section_default_inline_title_menucontainerclass" : "right",
     
   /* Data and Tables
     NOTES:

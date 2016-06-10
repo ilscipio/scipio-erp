@@ -16,20 +16,88 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include 'calendarcommon.ftl'>
 
-<#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">
+<#-- SCIPIO:
+<#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
+
+<style type="text/css">
+.month-calendar-full {
+    border: 1px solid black;
+}
+
+.month-calendar-full .month-entry {
+    <#-- will auto-calculate:
+    height: 7em;-->
+    vertical-align: top; 
+    padding: 0.5em; 
+    border-color: black; 
+    border-width: 1px 1px 0 0; 
+    border-style: solid;
+}
+
+.month-calendar-full .month-entry:first-child {
+    width: 3em;
+}
+
+.month-calendar-full .month-entry:last-child {
+    border-width: 1px 0 0 0; 
+}
+
+.month-calendar-full th {
+    width: 12%;
+}
+
+.month-calendar-full th:first-child {
+    width: 3em;
+}
+
+<#-- SCIPIO: CSS padding-bottom workaround to make heights follow widths when resize -->
+.month-calendar-full .month-entry-date .month-entry-wrapper {
+    width: 100%;
+    padding-bottom: 100%; <#-- this sets the ratio value vs width; we want 1:1 -->
+    position: relative;
+    overflow: hidden;
+}
+
+.month-calendar-full .month-entry-date .month-entry-wrapper:hover {
+    overflow: visible;
+}
+.month-calendar-full .month-entry-date .month-entry-wrapper:hover .month-entry-content {
+    background-color: white;
+}
+    
+.month-calendar-full .month-entry-date .month-entry-content {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
+
+<#-- SPECIAL, needed for small screens -->
+table.month-calendar-full th {
+    word-break: break-all;
+}
+</style>
+
+<#-- SCIPIO: FTL now includes the title -->
+<#macro menuContent menuArgs={}>
+    <@calendarDateSwitcher period="month"/>
+</#macro>
+<@section title="${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)}"
+    menuContent=menuContent menuLayoutTitle="inline-title"> <#--${uiLabelMap.WorkEffortMonthView}: -->
 
 <#if periods?has_content>
   <#-- Allow containing screens to specify the URL for creating a new event -->
   <#if !newCalEventUrl??>
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
-<@table type="data-list" class="+calendar"> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<#-- not using scrollable=true, should have better resizing method-->
+<@table type="data-complex" autoAltRows=true class="+calendar month-calendar-full" 
+    responsive=false><#--responsiveOptions={"ordering":false}--><#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
-    <@th width="1%">&nbsp;</@th>
+    <@th>&nbsp;</@th>
     <#list periods as day>
-      <@th>${day.start?date?string("EEEE")?cap_first}</@th>
+      <@th class="+${styles.text_center!}">${day.start?date?string("EEEE")?cap_first}</@th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </@tr>
@@ -41,14 +109,20 @@ under the License.
     <#if indexMod7 == 0>
       <#-- FIXME: rearrange without open/close -->
       <@tr open=true close=false />
-        <@td style=styleTdVal>
+        <@td class="+month-entry month-entry-week">
+        <div class="month-entry-wrapper">
+        <div class="month-entry-content">
           <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
+        </div>
+        </div>
         </@td>
     </#if>
     <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
-    <@td style=styleTdVal class=class>
+    <@td class=(class+" month-entry month-entry-date")>
+    <div class="month-entry-wrapper">
+    <div class="month-entry-content">
       <span class="h1"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}</a></span>
-      <a class="add-new" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a>
+      <a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}-->
       <br class="clear"/>
 
       <#assign maxNumberOfPersons = 0/>
@@ -58,7 +132,7 @@ under the License.
           <#assign eventsInRange = period.calendarEntriesByDateRange.get(range)/>
           <#assign numberOfPersons = 0/>
           <#list eventsInRange as eventInRange>
-              <#assign numberOfPersons = numberOfPersons + eventInRange.workEffort.reservPersons?default(0)/>
+              <#assign numberOfPersons = numberOfPersons + eventInRange.workEffort.reservPersons!0/>
           </#list>
           <#if (numberOfPersons > maxNumberOfPersons)>
               <#assign maxNumberOfPersons = numberOfPersons/>
@@ -68,12 +142,12 @@ under the License.
           </#if>
       </#list>
       <#if (maxNumberOfEvents > 0)>
-          ${uiLabelMap.WorkEffortMaxNumberOfEvents}: ${maxNumberOfEvents}<br/>
+          ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
       </#if>
       <#if (maxNumberOfPersons > 0)>
-          ${uiLabelMap.WorkEffortMaxNumberOfPersons}: ${maxNumberOfPersons}<br/>
+          ${uiLabelMap.WorkEffortMaxPersons}: ${maxNumberOfPersons}<br/>
       </#if>
-      <#if parameters.hideEvents?default("") != "Y">
+      <#if (parameters.hideEvents!"") != "Y">
       <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>
             <#assign startDate = calEntry.workEffort.actualStartDate>
@@ -110,6 +184,8 @@ under the License.
         <br />
       </#list>
       </#if>
+    </div>
+    </div>
     </@td>
 
 <#--
@@ -154,3 +230,5 @@ under the License.
 <#else>
   <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>
 </#if>
+
+</@section>

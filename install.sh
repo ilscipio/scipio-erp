@@ -34,30 +34,31 @@ echo " 1.  Install for development [compile, load seed & demo data]"
 echo " 2.  Install for production [compile, load seed]"
 echo " -------------------------------------";
 echo " 3.  Recompile [compile]"
-echo " 4.  List ant compiler information "
-echo ""
-echo " ==========PRESS '5' TO QUIT=========="
+echo " 4.  List ant compiler information"
+echo " 5.  Exit"
+echo ""  
+echo " ====================================="
 echo ""
 
 PS3='Please select a number: '
-options=("Install for Development" "Install for production" "Recompile" "List ant info" "Q")
+options=("Install for Development" "Install for Production" "Recompile" "List ant info" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
         "Install for Development")
-            eval "ant build load-demo"
+            eval "./ant build load-demo"
             ;;
         "Install for production")
-            eval "ant build load-extseed"
+            eval "./ant build load-extseed"
             ;;
         "Recompile")
-            eval "ant build"
+            eval "./ant build"
             ;;
-		"List ant info")
-            eval "ant -p"
+	"List ant info")
+            eval "./ant -p"
             ;;	
         "Quit")
-            break
+            exit 1;
             ;;
         *) echo '' invalid option;;
     esac

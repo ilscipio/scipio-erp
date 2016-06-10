@@ -1432,6 +1432,7 @@ public class UtilDateTime {
     }
     
     public static Timestamp getTimeStampFromIntervalScope(String iScope, int iCount) {
+        iCount--;
         if (iCount < 0)
             iCount = getIntervalDefaultCount(iScope);
         Calendar calendar = Calendar.getInstance();

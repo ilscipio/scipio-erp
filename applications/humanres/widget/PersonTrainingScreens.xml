@@ -33,53 +33,45 @@
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarDay"/>
                         <set field="activeSubMenuItem" value="day"/>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy"/>
                     </actions>
                     <widgets>
-                        <screenlet title="${uiLabelMap.WorkEffortDayView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" navigation-menu-name="Day">
-                            <include-menu name="Day" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <include-screen name="trainingCalendarDetail"/>
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/day.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <include-screen name="CalendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                        <include-screen name="trainingCalendarDetail"/>
+                        <include-screen name="dayCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
                     <condition>
                         <or>
                             <if-compare field="parameters.period" operator="equals" value="week"/>
-                            <if-empty field="parameters.period"/>
+                            <!-- SCIPIO: month view should be default
+                            <if-empty field="parameters.period"/> -->
                         </or>
                     </condition>
                     <actions>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Week.groovy"/>
+                        <set field="activeSubMenuItem" value="week"/>
                     </actions>
                     <widgets>
-                        <screenlet title="${uiLabelMap.WorkEffortWeekView}: ${uiLabelMap.CommonWeek} ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;w&quot;, timeZone, locale)}" navigation-menu-name="Week">
-                            <include-menu name="Week" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <include-screen name="trainingCalendarDetail"/>
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/week.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <include-screen name="CalendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                        <include-screen name="trainingCalendarDetail"/>
+                        <include-screen name="weekCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
                     <condition>
-                        <if-compare field="parameters.period" operator="equals" value="month"/>
+                        <or>
+                            <if-compare field="parameters.period" operator="equals" value="month"/>
+                            <!-- SCIPIO: month view should be default -->
+                            <if-empty field="parameters.period"/>
+                        </or>
                     </condition>
                     <actions>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Month.groovy"/>
+                        <set field="activeSubMenuItem" value="month"/>
                     </actions>
                     <widgets>
-                        <screenlet title="${uiLabelMap.WorkEffortMonthView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;MMMM yyyy&quot;, timeZone, locale)}" navigation-menu-name="Month">
-                            <include-menu name="Month" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <include-screen name="trainingCalendarDetail"/>
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/month.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <include-screen name="CalendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                        <include-screen name="trainingCalendarDetail"/>
+                        <include-screen name="monthCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
@@ -87,15 +79,11 @@
                         <if-compare field="parameters.period" operator="equals" value="upcoming"/>
                     </condition>
                     <actions>
-                        <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Upcoming.groovy"/>
+                        <set field="activeSubMenuItem" value="upcoming"/>
                     </actions>
                     <widgets>
-                        <screenlet title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}" navigation-menu-name="Upcoming">
-                            <include-menu name="Upcoming" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            <platform-specific>
-                                <html><html-template location="component://workeffort/webapp/workeffort/calendar/upcoming.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <include-screen name="CalendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
+                        <include-screen name="upcomingCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
             </widgets>

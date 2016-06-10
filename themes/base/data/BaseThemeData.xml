@@ -88,7 +88,7 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/freetile.min.js" sequenceId="04"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.with-extras.min.js" sequenceId="05"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/sass-to-js/js/dist/sass-to-js.min.js" sequenceId="06"/>
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Chart.js/Chart.min.js" sequenceId="07"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Chart.js/dist/Chart.min.js" sequenceId="07"/>
 
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" sequenceId="10"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation.min.js" sequenceId="11"/>

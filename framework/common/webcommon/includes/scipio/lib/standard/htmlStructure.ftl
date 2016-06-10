@@ -534,7 +534,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   </#if>
   
   <#-- find tile-type-based arg defaults -->
-  <#local styleName = type>
+  <#local styleName = type?replace("-","_")>
   <#local stylePrefix = "tile_" + styleName>
   <#local defaultStylePrefix = "tile_default">
   <#-- NOTE: _class is handled further below -->
@@ -739,7 +739,13 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
                                     assumed to be "section" or "section-inline".
     menuLayoutTitle         = (post-title|pre-title|inline-title, default: -from global styles-, fallback default: post-title) 
                               This is a low-level control; avoid where possible.   
-    menuLayoutGeneral       = (top|bottom|top-bottom, default: -from global styles-, fallback default: top)                                         
+    menuLayoutGeneral       = (top|bottom|top-bottom, default: -from global styles-, fallback default: top)  
+    titleContainerClass     = ((css-class), default: -from global styles-) (optional) CSS classes, for title container
+                              NOTE: if the argument results in no class specified, the container is omitted.
+    menuContainerClass      = ((css-class), default: -from global styles-) (optional) CSS classes, for menu container
+                              NOTE: if the argument results in no class specified, the container is omitted.
+    menuTitleContainerClass = ((css-class), default: -from global styles-) (optional) CSS classes, for menu and title (combined) container
+                              NOTE: if the argument results in no class specified, the container is omitted.                        
     menuRole                = (nav-menu|paginate-menu, default: nav-menu)
     menuClass               = ((css-class)) (optional) CSS classes, extra menu classes
                               Supports prefixes (see #compileClassArg for more info):
@@ -757,7 +763,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 -->
 <#assign section_defaultArgs = {
   "type":"", "id":"", "title":"", "style":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
-  "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayoutTitle":"", "menuLayoutGeneral":"", "menuRole":"", 
+  "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayoutTitle":"", "menuLayoutGeneral":"", 
+  "titleContainerClass":"", "menuContainerClass":"", "menuTitleContainerClass":"", "menuRole":"", 
   "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleClass":"", 
   "containerClass":"", "containerId":"", "containerStyle":"", 
   "open":true, "close":true, "passArgs":{}
@@ -784,7 +791,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#local menuId = "">    
   </#if>
   <@section_core id=id collapsibleAreaId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
-    fromScreenDef=false menuClass=menuClass menuId=menuId menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral menuRole=menuRole requireMenu=requireMenu 
+    fromScreenDef=false menuClass=menuClass menuId=menuId menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral 
+    titleContainerClass=titleContainerClass menuContainerClass=menuContainerClass menuTitleContainerClass=menuTitleContainerClass menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu menuItemsInlined=menuItemsInlined hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
     relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
     containerClass=containerClass containerId=containerId containerStyle=containerStyle
@@ -803,7 +811,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   "type":"", "id":"", "title":"", "class":"", "style":"", "collapsible":false, "saveCollapsed":true, "collapsibleAreaId":"", 
   "expandToolTip":true, "collapseToolTip":true, "fullUrlString":"", "padded":false, "menuContent":"", 
   "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
-  "menuLayoutTitle":"", "menuLayoutGeneral":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleStyle":"", 
+  "menuLayoutTitle":"", "menuLayoutGeneral":"", "titleContainerClass":"", "menuContainerClass":"", "menuTitleContainerClass":"",
+  "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleStyle":"", 
   "titleContainerStyle":"", "titleConsumeLevel":true, "autoHeadingLevel":true, "headingLevel":"", "relHeadingLevel":"", 
   "containerClass":"", "containerId":"", "containerStyle":"", 
   "defaultHeadingLevel":"", "open":true, "close":true, "passArgs":{}
@@ -817,6 +826,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#if !type?has_content>
       <#local type = "default">
     </#if>
+    <#local styleName = type?replace("-","_")>
 
     <#-- NOTE: This basically does nothing (containerId will not be used if id is present); for consistency only -->
     <#if !containerId?has_content && id?has_content>
@@ -853,7 +863,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"")!true>
     <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"")!"">
     <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"")!false>
-    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"")!"">
+    <#local titleHeadingContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"")!"">
   
   <#-- title-style parsing end -->
   
@@ -906,10 +916,18 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   
     <#if !menuLayoutTitle?has_content>
       <#local menuLayoutTitle = styles["section_" + type + "_menulayouttitle"]!styles["section_default_menulayouttitle"]!"post-title">
+      <#if !menuLayoutTitle?has_content>
+        <#local menuLayoutTitle = "post-title">
+      </#if>
     </#if>
     <#if !menuLayoutGeneral?has_content>
       <#local menuLayoutGeneral = styles["section_" + type + "_menulayoutgeneral"]!styles["section_default_menulayoutgeneral"]!"top">
     </#if>
+
+    <#local menuLayoutTitleStyleName = menuLayoutTitle?replace("-","_")>
+    <#local menuTitleContainerClass = addClassArgDefault(menuTitleContainerClass, styles["section_" + styleName + "_" + menuLayoutTitleStyleName + "_menutitlecontainerclass"]!styles["section_default_" + menuLayoutTitleStyleName + "_menutitlecontainerclass"]!)>
+    <#local titleContainerClass = addClassArgDefault(titleContainerClass, styles["section_" + styleName + "_" + menuLayoutTitleStyleName + "_titlecontainerclass"]!styles["section_default_" + menuLayoutTitleStyleName + "_titlecontainerclass"]!)>
+    <#local menuContainerClass = addClassArgDefault(menuContainerClass, styles["section_" + styleName + "_" + menuLayoutTitleStyleName + "_menucontainerclass"]!styles["section_default_" + menuLayoutTitleStyleName + "_menucontainerclass"]!)>
   
     <#-- Scipio: we support menuContent as string (html), macro or hash definitions.
         When string, menuContent is not wrapped in UL when it's received here from macro renderer... 
@@ -1020,7 +1038,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
         
             <#if !menuContent?has_content || menuItemsInlined>
               <#-- WARN: we have to assume the menu type here (especially for pre/postMenuItems); inherently limited -->
-              <@menu type=defaultMenuType inlineItems=false id=menuIdArg class=menuClassArg preMenuItems=preMenuItems postMenuItems=postMenuItems>
+              <@menu type=defaultMenuType inlineItems=false id=menuIdArg class=menuClassArg preItems=preMenuItems postItems=postMenuItems>
                 ${menuItemsMarkup}
               </@menu>
             <#else>
@@ -1035,7 +1053,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#if hasTitle>
         <#local titleMarkup>
           <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
-            containerClass=titleContainerClass passArgs=passArgs>${title}</@heading>
+            containerClass=titleHeadingContainerClass passArgs=passArgs>${title}</@heading>
         </#local>
       </#if> 
     </#if>
@@ -1047,7 +1065,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   <#if open>
     <#if showMore>
       <#-- FIXME: This call should not be captured, but run at the correct time... -->
-      <#local menuTitleMarkup><@section_markup_menutitle sectionType=type sectionLevel=sLevel headingLevel=hLevel menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral
+      <#local menuTitleMarkup><@section_markup_menutitle sectionType=type sectionStyleName=styleName sectionLevel=sLevel headingLevel=hLevel menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral
+        titleContainerClass=titleContainerClass menuContainerClass=menuContainerClass menuTitleContainerClass=menuTitleContainerClass
         menuRole=menuRole hasMenu=hasMenu menuContent=menuMarkup menuContentArgs={} hasTitle=hasTitle titleContent=titleMarkup titleContentArgs={}
         contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef position="top" origArgs=origArgs passArgs=passArgs/></#local>
     </#if>
@@ -1058,7 +1077,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#-- save stack of all the args passed to markup macros that have open/close 
         so they don't have to remember a stack themselves -->
     <#local dummy = pushRequestStack("scipioSectionMarkupStack", {
-      "type":type, "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
+      "type":type, "styleName":styleName, "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
       "id":id, "title":title, "style":style, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup, "menuMarkup":menuMarkup,
       "containerClass":containerClass, "containerId":containerId, "containerStyle":containerStyle, 
       
@@ -1066,6 +1085,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       "expandToolTip":expandToolTip, "collapseToolTip":collapseToolTip, "padded":padded, "showMore":showMore, "fullUrlString":fullUrlString,
       "javaScriptEnabled":javaScriptEnabled, "fromScreenDef":fromScreenDef, "hasContent":hasContent, 
       "menuLayoutTitle":menuLayoutTitle, "menuLayoutGeneral":menuLayoutGeneral, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu,
+      "titleContainerClass":titleContainerClass, "menuContainerClass":menuContainerClass, "menuTitleContainerClass":menuTitleContainerClass,
       
       "origArgs":origArgs, "passArgs":passArgs
     })>
@@ -1076,7 +1096,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   </#if>
 
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
-  <@section_markup_container type=type open=open close=close
+  <@section_markup_container type=type styleName=styleName open=open close=close
     sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuTitleContentArgs={} menuContent=menuMarkup menuContentArgs={} class=class innerClass=innerClass
     contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
@@ -1140,7 +1160,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 </#function>
 
 <#-- @section container markup - theme override -->
-<#macro section_markup_container type="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuTitleContentArgs={} menuContent="" menuContentArgs={} class="" 
+<#macro section_markup_container type="" styleName="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuTitleContentArgs={} menuContent="" menuContentArgs={} class="" 
     innerClass="" contentFlagClasses="" id="" title="" style="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString="" containerClass="" containerId="" containerStyle=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuLayoutGeneral="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
@@ -1183,40 +1203,53 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 </#macro>
 
 <#-- @section menu and title arrangement markup - theme override -->
-<#macro section_markup_menutitle sectionType="" sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" 
+<#macro section_markup_menutitle sectionType="" sectionStyleName="" sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" 
     hasMenu=false menuContent="" menuContentArgs={} hasTitle=false titleContent="" titleContentArgs={} 
-    contentFlagClasses="" fromScreenDef=false position="top" origArgs={} passArgs={} catchArgs...>
+    contentFlagClasses="" fromScreenDef=false position="top" 
+    menuTitleContainerClass="" titleContainerClass="" menuContainerClass="" origArgs={} passArgs={} catchArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->
   <#if position == "top" && menuLayoutGeneral == "bottom">
     <#local hasMenu = false>
   </#if>
   <#if menuLayoutTitle == "pre-title">
-    <#if hasMenu>
-      <@contentArgRender content=menuContent args=menuContentArgs />
-    </#if>
-    <#if hasTitle>
-      <@contentArgRender content=titleContent args=titleContentArgs />
-    </#if>
+    <#if menuTitleContainerClass?has_content><div<@compiledClassAttribStr class=menuTitleContainerClass />></#if>
+      <#if hasMenu>
+        <#if menuContainerClass?has_content><div<@compiledClassAttribStr class=menuContainerClass  />></#if>
+        <@contentArgRender content=menuContent args=menuContentArgs />
+        <#if menuContainerClass?has_content></div></#if>
+      </#if>
+      <#if hasTitle>
+        <#if titleContainerClass?has_content><div<@compiledClassAttribStr class=titleContainerClass />></#if>
+        <@contentArgRender content=titleContent args=titleContentArgs />
+        <#if titleContainerClass?has_content></div></#if>
+      </#if>
+    <#if menuTitleContainerClass?has_content></div></#if>
   <#elseif menuLayoutTitle == "inline-title">
-    <div class="${styles.float_clearfix!}">
-      <div class="${styles.float_left!}">
-        <#if hasTitle>
-          <@contentArgRender content=titleContent args=titleContentArgs />
-        </#if>
-      </div>
-      <div class="${styles.float_right!}">
-        <#if hasMenu>
-          <@contentArgRender content=menuContent args=menuContentArgs />
-        </#if>
-      </div>
-    </div>
+    <#if menuTitleContainerClass?has_content><div<@compiledClassAttribStr class=menuTitleContainerClass />></#if>
+      <#if hasTitle>
+        <#if titleContainerClass?has_content><div<@compiledClassAttribStr class=titleContainerClass />></#if>
+        <@contentArgRender content=titleContent args=titleContentArgs />
+        <#if titleContainerClass?has_content></div></#if>
+      </#if>
+      <#if hasMenu>
+        <#if menuContainerClass?has_content><div<@compiledClassAttribStr class=menuContainerClass />></#if>
+        <@contentArgRender content=menuContent args=menuContentArgs />
+        <#if menuContainerClass?has_content></div></#if>
+      </#if>
+    <#if menuTitleContainerClass?has_content></div></#if>
   <#else>
-    <#if hasTitle>
-      <@contentArgRender content=titleContent args=titleContentArgs />
-    </#if>
-    <#if hasMenu>
-      <@contentArgRender content=menuContent args=menuContentArgs />
-    </#if>
+    <#if menuTitleContainerClass?has_content><div<@compiledClassAttribStr class=menuTitleContainerClass />></#if>
+      <#if hasTitle>
+        <#if titleContainerClass?has_content><div<@compiledClassAttribStr class=titleContainerClass />></#if>
+        <@contentArgRender content=titleContent args=titleContentArgs />
+        <#if titleContainerClass?has_content></div></#if>
+      </#if>
+      <#if hasMenu>
+        <#if menuContainerClass?has_content><div<@compiledClassAttribStr class=menuContainerClass />></#if>
+        <@contentArgRender content=menuContent args=menuContentArgs />
+        <#if menuContainerClass?has_content></div></#if>
+      </#if>
+    <#if menuTitleContainerClass?has_content></div></#if>
   </#if>
 </#macro>

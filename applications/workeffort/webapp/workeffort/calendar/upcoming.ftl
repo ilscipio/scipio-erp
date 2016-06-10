@@ -16,9 +16,22 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include 'calendarcommon.ftl'>
 
-  <#if days?has_content>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+<#-- SCIPIO: FTL now includes the title -->
+<@section title="${uiLabelMap.WorkEffortUpComingEvents}"><#--title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}"-->
+
+<#-- SCIPIO: have to pre-check if any content using this -->
+  <#assign hasEvents = false>
+  <#list days as day>
+    <#assign workEfforts = day.calendarEntries>
+    <#if workEfforts?has_content>
+      <#assign hasEvents = true>
+    </#if>
+  </#list>
+
+  <#if hasEvents>
+    <@table type="data-complex" autoAltRows="" responsive=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonStartDateTime}</@th>
@@ -46,3 +59,4 @@ under the License.
   <#else>
     <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortNoEventsFound}.</@commonMsg>
   </#if>
+</@section>

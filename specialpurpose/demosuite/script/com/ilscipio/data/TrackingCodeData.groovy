@@ -25,13 +25,16 @@ public Map createDemoTrackingCodeVisit() {
     Map result = ServiceUtil.returnSuccess();
     
     List<GenericValue> toBeStored = new ArrayList<GenericValue>();    
-    int num = context.num;
+    Integer num = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
+    if (context.num && context.num < num)
+        num = context.num;
     Locale locale = context.locale;
     
     minDate = context.minDate;
 //    maxDate = context.maxDate;
     if (!minDate) {
-        calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp()).set(Calendar.MONTH, -6);
+        calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp(), context.timeZone, context.locale);
+        calendar.set(Calendar.MONTH, -6);
         minDate = UtilDateTime.getTimestamp(calendar.getTimeInMillis());
     }
 //    if (!thruDate) {
@@ -91,7 +94,8 @@ public Map createDemoTrackingCodeOrder() {
     
     minDate = context.minDate;
     if (!minDate) {
-        calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp()).set(Calendar.MONTH, -6);
+        calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp(), context.timeZone, context.locale);
+        calendar.set(Calendar.MONTH, -6);
         minDate = UtilDateTime.getTimestamp(calendar.getTimeInMillis());
     }
     maxDate = context.maxDate;

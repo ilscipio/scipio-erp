@@ -69,7 +69,9 @@ public Map createDemoWorkEffort() {
     
     List<GenericValue> toBeStored = new ArrayList<GenericValue>();
     List<GenericValue> workEffortEntrys = new ArrayList<GenericValue>();
-    int num = context.num;
+    Integer num = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
+    if (context.num && context.num < num)
+        num = context.num;
     
     String partyId = (context.userLogin) ? context.userLogin.partyId : "Company";
     

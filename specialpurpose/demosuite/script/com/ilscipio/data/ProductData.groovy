@@ -90,7 +90,9 @@ public Map createDemoProduct(DispatcherContext ) {
     if (productCategoryIds && productCategoryIds.size() > 0) {
         String productCategoryTypeId = (context.productCategoryTypeId) ? context.productCategoryTypeId : "CATALOG_CATEGORY";
         String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
-        int num = context.num;
+        Integer num = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
+        if (context.num && context.num < num)
+            num = context.num;
 
         // TODO: Let's distribute the products into categories evenly
 //        int factor = 0;

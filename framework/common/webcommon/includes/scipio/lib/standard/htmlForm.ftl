@@ -1071,21 +1071,23 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     text, value             = Text/value, alternative to nested content
     
     * datetime *
-    dateType                = (date-time|timestamp|date|time, default: date-time) Type of datetime
+    dateType                = (date-time|timestamp|date|time|month, default: date-time) Type of datetime
                               "date-time" and "timestamp" are synonymous.
     dateDisplayType         = (default|date|..., default: -same as dateType-). The visual display format of the date. Optional
                               If dateType is "date-time" (timestamp), it is possible to specify dateDisplayType="date" here.
                               This means the user will be presented with a short date only, but the data sent to the server
                               will be a full timestamp.
     datePostfix             = ((boolean), default: true) Override for date-widget-specific postfix
+    datePostfixColumns      = ((int), default: 1) Size of date-widget-specific postfix
+    manualInput             = ((boolean), default: true) Whether to allow manual input; if false, selection only through date picker
     title                   = Title
                               If empty, markup/theme decides what to show.
                               Can also be a special value in format {{{"#PROP:resource#propname"}}} (if no {{{resource}}}, taken from CommonUiLabels).
                               NOTE: tooltip has priority over title.
     
     * datefind *
-    dateType                = (-same as datetime-)
-    dateDisplayType         = (-same as datetime-)
+    dateType                = (-same as datetime, except does not support month-)
+    dateDisplayType         = (-same as datetime, except does not support month-)
     opValue                 = The selected operator (value)
     
     * textfind *
@@ -1133,6 +1135,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     * lookup *
     formName                = The name of the form that contains the lookup field
     fieldFormName           = Contains the lookup window form name
+    
     * checkbox (single mode) *
     value                   = Y/N
     currentValue            = Current value, used to check if should be checked
@@ -1254,7 +1257,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
   "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{}, "style":"",
   "widgetAreaClass":"", "labelAreaClass":"", "postfixAreaClass":"", "widgetPostfixAreaClass":"",
-  "inverted":false, "invertedClass":"", "standardClass":"", "datePostfix":"",
+  "inverted":false, "invertedClass":"", "standardClass":"", "datePostfix":"", "datePostfixColumns":"",
+  "manualInput":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1660,7 +1664,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               passArgs=passArgs>${text}${value}<#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
-        <#if dateType == "date" || dateType == "time">
+        <#if dateType == "date" || dateType == "time" || dateType == "month">
           <#-- leave as-is -->
         <#else> <#-- "date-time" -->
           <#local dateType = "timestamp">
@@ -1671,6 +1675,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               alert=alert 
                               title=title 
                               value=value 
+                              events=events
                               size=size 
                               maxlength=maxlength 
                               id=id 
@@ -1679,7 +1684,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               formName=formName
                               tooltip=tooltip
                               origLabel=origLabel
+                              manualInput=manualInput
                               postfix=datePostfix
+                              postfixColumns=datePostfixColumns
                               inlineLabel=effInlineLabel
                               passArgs=passArgs/>                
         <#break>

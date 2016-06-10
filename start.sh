@@ -19,7 +19,7 @@
 #####################################################################
 
 # set the parent directory as OFBiz Home
-OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"/..
+OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"
 
 # console log file
 OFBIZ_LOG=runtime/logs/console.log

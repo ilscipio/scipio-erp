@@ -194,7 +194,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datetime_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#if !["date", "time", "timestamp"]?seq_contains(dateType)>
+  <#if !["date", "time", "timestamp", "month"]?seq_contains(dateType)>
     <#local dateType = "timestamp">
   </#if>
   <#if !dateDisplayType?has_content || dateDisplayType == "default">
@@ -223,8 +223,11 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
-  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
-  <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#else>CommonFormatDateTime</#if></#local>
+  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#elseif dateDisplayType == "month">yyyy-MM<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local dateDisplayFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+  <#-- FIXME: since our format hardcoded, these will be all wrong:
+  <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#elseif dateDisplayType == "month">CommonFormatMonth<#else>CommonFormatDateTime</#if></#local>
+  -->
   <#local displayInputId = "">
   <#if !postfixColumns?is_number>
     <#local postfixColumns = 1>
@@ -244,7 +247,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !postfix?is_boolean>
     <#local postfix = true>
   </#if>
-  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
+  <div class="${styles.grid_row!} ${styles.collapse!} date">
     <div class="${styles.grid_small!}<#if postfix>${12-postfixColumns}<#else>12</#if> ${styles.grid_cell!}">
       <#if tooltip?has_content> 
         <#local class = addClassArg(class, styles.field_datetime_tooltip!styles.field_default_tooltip!"")>
@@ -263,7 +266,10 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         </#if>
         <#if title?has_content>
           <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
+          <#-- FIXME: as above
           <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
+          -->
+          <#local dateFormatString = "${uiLabelMap.CommonFormat}: ${dateDisplayFormat}">
           <#if title == "FORMAT">
             <#local title = dateFormatString>
           <#elseif title == "LABEL">
@@ -289,7 +295,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if size?has_content> size="${size}"</#if><#t/>
         <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
         <#if !manualInput> readonly="readonly"</#if><#t/>
-        <#if displayInputId?has_content> id="${displayInputId}"</#if> /><#t/>
+        <#if displayInputId?has_content> id="${displayInputId}"</#if><#t/>
+        <#--data-date=""--> data-date-format="${dateDisplayFormatPicker}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${inputName}"</#if><#if inputId?has_content> id="${inputId}"</#if><#if value?has_content> value="${value}"</#if> />
     </div>
   <#if postfix>
@@ -298,11 +305,12 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     </div>
   </#if>
   </div>
-  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
+  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName 
+    dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
 </#macro>
 
 <#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" dateDisplayType="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
-  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+  <#local fdatepickerOptions>{forceParse:false}</#local><#--redundant, don't do this here: format:"yyyy-mm-dd", -->
   <@script htmlwrap=htmlwrap>
     $(function() {
 
@@ -327,6 +335,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
             jQuery("#${inputId}").val(convertToDateNorm(dateI18nToNorm(this.value)));
           <#elseif dateType == "time">
             jQuery("#${inputId}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
+          <#elseif dateType == "month">
+            jQuery("#${inputId}").val(convertToMonthNorm(dateI18nToNorm(this.value)));
           </#if>
         });
         
@@ -345,6 +355,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
             jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
           <#elseif dateDisplayType == "date">
             jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
+          <#elseif dateDisplayType == "month">
+            jQuery("#${displayInputId}").val(dateNormToI18n(convertToMonthNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
           </#if>
         };
         

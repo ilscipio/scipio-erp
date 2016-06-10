@@ -9,6 +9,6 @@
     "moment": "~2.11.1",
     "jquery": "~2.1",
     "slick-carousel": "^1.5.9",
-	"foundation-datepicker": "/najlepsiwebdesigner/foundation-datepicker"
+	"foundation-datepicker": "~1.2"
   }
 }

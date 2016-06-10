@@ -21,14 +21,13 @@ under the License.
 <#-- SCIPIO:
 <#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
+<#-- TODO: Move these styles to shared stylesheet -->
 <style type="text/css">
 .month-calendar-full {
     border: 1px solid black;
 }
 
 .month-calendar-full .month-entry {
-    <#-- will auto-calculate:
-    height: 7em;-->
     vertical-align: top; 
     padding: 0.5em; 
     border-color: black; 
@@ -36,43 +35,42 @@ under the License.
     border-style: solid;
 }
 
-.month-calendar-full .month-entry:first-child {
-    width: 3em;
-}
-
-.month-calendar-full .month-entry:last-child {
+.month-calendar-full td.month-entry:last-child {
     border-width: 1px 0 0 0; 
 }
 
-.month-calendar-full th {
-    width: 12%;
+.month-calendar-full th.month-header-day, .month-calendar-full td.month-entry-day {
+    width: 13% !important;
 }
 
-.month-calendar-full th:first-child {
-    width: 3em;
+.month-calendar-full th.month-header-week, .month-calendar-full td.month-entry-week {
+    width: auto;
 }
+
+.month-calendar-full td.month-entry-day .day-event-time {
+    font-size: 0.8em;
+}
+
 
 <#-- SCIPIO: CSS padding-bottom workaround to make heights follow widths when resize -->
-.month-calendar-full .month-entry-date .month-entry-wrapper {
+.month-calendar-full td.month-entry-day .month-entry-wrapper {
     width: 100%;
-    padding-bottom: 100%; <#-- this sets the ratio value vs width; we want 1:1 -->
+    <#-- padding % is calculated from the WIDTH of the parent element -->
+    padding-bottom: 100%; <#-- sets the ratio value vs width; we want 1:1 ~ 100:100 -->
     position: relative;
     overflow: hidden;
 }
-
-.month-calendar-full .month-entry-date .month-entry-wrapper:hover {
-    overflow: visible;
-}
-.month-calendar-full .month-entry-date .month-entry-wrapper:hover .month-entry-content {
+.month-calendar-full td.month-entry-day:hover {
     background-color: white;
 }
-    
-.month-calendar-full .month-entry-date .month-entry-content {
+.month-calendar-full td.month-entry-day:hover .month-entry-wrapper {
+    overflow: visible;
+}
+.month-calendar-full td.month-entry-day .month-entry-abs {
     position: absolute;
     top: 0; bottom: 0; left: 0; right: 0;
 }
-
-<#-- SPECIAL, needed for small screens -->
+<#-- SPECIAL, essential for small screens, otherwise the workaround break on small screen -->
 table.month-calendar-full th {
     word-break: break-all;
 }
@@ -95,9 +93,9 @@ table.month-calendar-full th {
     responsive=false><#--responsiveOptions={"ordering":false}--><#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
-    <@th>&nbsp;</@th>
+    <@th class="+month-header-week">&nbsp;</@th>
     <#list periods as day>
-      <@th class="+${styles.text_center!}">${day.start?date?string("EEEE")?cap_first}</@th>
+      <@th class="+${styles.text_center!} month-header-day">${day.start?date?string("EEEE")?cap_first}</@th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </@tr>
@@ -111,17 +109,20 @@ table.month-calendar-full th {
       <@tr open=true close=false />
         <@td class="+month-entry month-entry-week">
         <div class="month-entry-wrapper">
+        <div class="month-entry-abs">
         <div class="month-entry-content">
           <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
+        </div>
         </div>
         </div>
         </@td>
     </#if>
     <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
-    <@td class=(class+" month-entry month-entry-date")>
+    <@td class=(class+" month-entry month-entry-day")>
     <div class="month-entry-wrapper">
+    <div class="month-entry-abs">
     <div class="month-entry-content">
-      <span class="h1"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}</a></span>
+      <span><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}</a></span>
       <a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}-->
       <br class="clear"/>
 
@@ -141,12 +142,6 @@ table.month-calendar-full th {
               <#assign maxNumberOfEvents = eventsInRange.size()/>
           </#if>
       </#list>
-      <#if (maxNumberOfEvents > 0)>
-          ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
-      </#if>
-      <#if (maxNumberOfPersons > 0)>
-          ${uiLabelMap.WorkEffortMaxPersons}: ${maxNumberOfPersons}<br/>
-      </#if>
       <#if (parameters.hideEvents!"") != "Y">
       <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>
@@ -166,8 +161,11 @@ table.month-calendar-full th {
         </#if>    
         <#if !completionDate?has_content && calEntry.workEffort.estimatedMilliSeconds?has_content>
             <#assign completionDate =  calEntry.workEffort.estimatedStartDate + calEntry.workEffort.estimatedMilliSeconds>
-        </#if>    
-        <hr />
+        </#if>
+        <#if (calEntry_index > 0)>  
+          <hr />
+        </#if>
+        <span class="day-event-time">
         <#if (startDate.compareTo(period.start) <= 0 && completionDate?has_content && completionDate.compareTo(period.end) >= 0)>
           ${uiLabelMap.CommonAllDay}
         <#elseif startDate.before(period.start) && completionDate?has_content>
@@ -179,11 +177,29 @@ table.month-calendar-full th {
         <#else>
           ${startDate?time?string.short}-${completionDate?time?string.short}
         </#if>
+        </span>
         <br />
         <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId}/>
         <br />
       </#list>
       </#if>
+
+      <#-- SCIPIO: moved this to bottom -->
+      <#if (maxNumberOfEvents > 0) || (maxNumberOfPersons > 0)>
+        <hr/>
+      </#if>
+      <#if (maxNumberOfEvents > 0)>
+          ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
+      </#if>
+      <#if (maxNumberOfPersons > 0)>
+          ${uiLabelMap.WorkEffortMaxPersons}: ${maxNumberOfPersons}<br/>
+      </#if>
+<#-- test
+TEST LINE<br/>
+<hr/>
+TEST LINE<br/>
+-->
+    </div>
     </div>
     </div>
     </@td>

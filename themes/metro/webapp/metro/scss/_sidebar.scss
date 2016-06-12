@@ -180,6 +180,10 @@ $sidebar-width: 200px;
     padding-right:20px;
 }
 
+.tab-bar-section h1 img{
+    height: 22px;
+}
+
 @media #{$large-up} {
   .side-bar {
     @include side-nav-nested;

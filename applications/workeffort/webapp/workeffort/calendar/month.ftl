@@ -45,14 +45,13 @@ under the License.
   <@tr class="header-row">
     <@th class="+month-header-week">&nbsp;</@th>
     <#list periods as day>
-      <@th class="+${styles.text_center!} month-header-day">${day.start?date?string("EEEE")?cap_first}</@th>
+      <@th class="+${styles.text_center} month-header-day">${day.start?date?string("EEEE")?cap_first}</@th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </@tr>
   </@thead>
 <#-- SCIPIO: this var is a workaround to collect the inner content and append at the end to avoid influence of table -->
-<#assign periodDetailContentAll = "">
-
+<#assign periodDetailContentAll = "">  
   <#list periods as period>
     <#assign periodUniqueId = + calendarIdNum + "_" + (period_index+1)>
     <#assign currentPeriod = false/>
@@ -72,7 +71,13 @@ under the License.
         </@td>
     </#if>
     <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
-    
+      <#if start?date?string("MM") == period.start?date?string("MM")>
+        <#assign class=addClassArg(class, 'current-month')/> 
+      <#else>
+        <#assign class=addClassArg(class, 'other-month')/>
+      </#if>
+      
+      <#if period=="month">${start?date?string("MM")}</#if>
       <#assign calEntryContentAll = "">
 
       <#assign maxNumberOfPersons = 0/>
@@ -107,8 +112,8 @@ under the License.
     <div class="month-entry-wrapper">
     <div class="month-entry-abs">
     <div class="month-entry-content">
-      <span><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}</a></span>
-      <a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}-->
+      <span class="month-entry-content-title"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first} ${period.start?date?string("EEE")?cap_first}</a></span>
+      <span class="month-entry-content-add"><a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}--></span>
       <br class="clear"/>
 
       <#if (parameters.hideEvents!"") != "Y">
@@ -134,10 +139,10 @@ under the License.
 
       <#-- SCIPIO: capture this to include a second copy in dropdown -->
       <#assign calEntryContent>
-        <#if (calEntry_index > 0)>  
+        <#--<#if (calEntry_index > 0)>  
           <hr />
-        </#if>
-
+        </#if>-->
+        <div class="month-entry-content-event">    
         <span class="day-event-time">
         <#if (startDate.compareTo(period.start) <= 0 && completionDate?has_content && completionDate.compareTo(period.end) >= 0)>
           ${uiLabelMap.CommonAllDay}
@@ -154,7 +159,7 @@ under the License.
 
         <br />
         <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId} asString=true/>
-        <br />
+        </div>
       </#assign>
         ${calEntryContent}
         <#assign calEntryContentAll = calEntryContentAll + calEntryContent>
@@ -162,9 +167,9 @@ under the License.
       </#list>
       </#if>
 
+    
     <#if (maxNumberOfEvents > 0) || (maxNumberOfPersons > 0)>
       <#assign numEventsContent>
-        <#-- SCIPIO: moved this to bottom -->
         <hr/>
         <#if (maxNumberOfEvents > 0)>
           ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
@@ -176,7 +181,8 @@ under the License.
     <#else>
       <#assign numEventsContent = "">
     </#if>
-      ${numEventsContent}
+     <#-- SCIPIO: Disabled for now  ${numEventsContent}
+      -->
     </div>
     </div>
     </div>

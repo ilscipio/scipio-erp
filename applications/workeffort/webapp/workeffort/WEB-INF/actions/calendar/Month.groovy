@@ -71,7 +71,7 @@ context.nextMillis = new Long(next.getTime()).toString();
 end = UtilDateTime.getMonthEnd(start, timeZone, locale);
 //Find out what date to get from
 getFrom = null;
-prevMonthDays =  tempCal.get(Calendar.DAY_OF_WEEK) - tempCal.getFirstDayOfWeek();
+prevMonthDays =  tempCal.get(Calendar.DAY_OF_WEEK) - tempCal.getFirstDayOfWeek()-1;
 if (prevMonthDays < 0) prevMonthDays += 7;
 tempCal.add(Calendar.DATE, -prevMonthDays);
 numDays += prevMonthDays;
@@ -83,7 +83,7 @@ lastWeekCal = UtilDateTime.toCalendar(end, timeZone, locale);
 monthEndDay = lastWeekCal.get(Calendar.DAY_OF_WEEK);
 getTo = UtilDateTime.getWeekEnd(end, timeZone, locale);
 lastWeekCal = UtilDateTime.toCalendar(getTo, timeZone, locale);
-followingMonthDays = lastWeekCal.get(Calendar.DAY_OF_WEEK) - monthEndDay;
+followingMonthDays = lastWeekCal.get(Calendar.DAY_OF_WEEK) - monthEndDay+1;
 if (followingMonthDays < 0) {
     followingMonthDays += 7;
 }

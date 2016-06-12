@@ -1127,7 +1127,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     responsive: true, 
                     responsiveAnimationDuration: 0, 
                     animation: {
-                        duration: 500
+                        duration: 1000
                     },
                     maintainAspectRatio: true,
                     tooltips: {

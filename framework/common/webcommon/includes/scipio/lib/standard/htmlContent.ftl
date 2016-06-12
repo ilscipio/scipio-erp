@@ -1127,7 +1127,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     responsive: true, 
                     responsiveAnimationDuration: 0, 
                     animation: {
-                        duration: 1000
+                        duration: 500
                     },
                     maintainAspectRatio: true,
                     tooltips: {
@@ -1179,6 +1179,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         fontSize: chartData.scaleLabelFontSize
                     }
                     <#if type=="line" || type=="bar">,
+                        <#if type=="line"> animation: {
+                        duration: 0
+                        },</#if>
                         scales: {
                             type: chartData.scaleType,
                             display: true,                        

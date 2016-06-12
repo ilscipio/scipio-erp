@@ -168,7 +168,7 @@ $sidebar-width: 200px;
     padding: 7px 10px;
     width:100%;
     border: 1px solid #E6E9ED;
-    canvas {border:none; padding:0px;}
+    canvas {border:none; padding:0px;max-width:100%;}
 }
 
 #content-main-section {

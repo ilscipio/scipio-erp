@@ -21,58 +21,6 @@ under the License.
 <#-- SCIPIO:
 <#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
-<#-- TODO: Move these styles to shared stylesheet -->
-<style type="text/css">
-.month-calendar-full {
-    border: 1px solid black;
-}
-
-.month-calendar-full .month-entry {
-    vertical-align: top; 
-    padding: 0.5em; 
-    border-color: black; 
-    border-width: 1px 1px 0 0; 
-    border-style: solid;
-}
-
-.month-calendar-full td.month-entry:last-child {
-    border-width: 1px 0 0 0; 
-}
-
-.month-calendar-full th.month-header-day, .month-calendar-full td.month-entry-day {
-    width: 13% !important;
-}
-
-.month-calendar-full th.month-header-week, .month-calendar-full td.month-entry-week {
-    width: auto;
-}
-
-.month-calendar-full td.month-entry-day .day-event-time {
-    font-size: 0.8em;
-}
-
-
-<#-- SCIPIO: CSS padding-bottom workaround to make heights follow widths when resize -->
-.month-calendar-full td.month-entry-day .month-entry-wrapper {
-    width: 100%;
-    <#-- padding % is calculated from the WIDTH of the parent element -->
-    padding-bottom: 100%; <#-- sets the ratio value vs width; we want 1:1 ~ 100:100 -->
-    position: relative;
-    overflow: hidden;
-}
-.month-calendar-full td.month-entry-day:hover {
-    background-color: white;
-}
-.month-calendar-full td.month-entry-day .month-entry-abs {
-    position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
-}
-<#-- SPECIAL, essential for small screens, otherwise the workaround break on small screen -->
-table.month-calendar-full th {
-    word-break: break-all;
-}
-</style>
-
 <#-- SCIPIO: FTL now includes the title -->
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="month"/>

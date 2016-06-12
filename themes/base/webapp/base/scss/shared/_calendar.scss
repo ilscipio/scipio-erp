@@ -1,0 +1,46 @@
+.calendar {
+    .month-entry {
+        vertical-align: top; 
+        padding: 0.5em; 
+        border-color: $table-border-color; 
+        border-width: $table-border-size; 
+        border-style: $table-border-style;
+    }
+    
+    td.month-entry:last-child {
+        border-width: 1px 0 0 0; 
+    }
+    
+    th.month-header-day, .month-calendar-full td.month-entry-day {
+        width: 13% !important;
+    }
+    
+    th.month-header-week, td.month-entry-week {
+        width: auto;
+    }
+    
+    td.month-entry-day .day-event-time {
+        font-size: 0.8em;
+    }
+    
+    td.month-entry-day .month-entry-wrapper {
+        width: 100%;
+        // padding % is calculated from the WIDTH of the parent element
+        padding-bottom: 100%; // sets the ratio value vs width; we want 1:1 ~ 100:100
+        position: relative;
+        overflow: hidden;
+    }
+    
+    td.month-entry-day .month-entry-abs {
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+    }
+    
+    td.month-entry-day:hover {
+        background-color: white;
+    }  
+    
+    th {
+        word-break: break-all; // SPECIAL, essential for small screens, otherwise the workaround break on small screen
+    }
+}

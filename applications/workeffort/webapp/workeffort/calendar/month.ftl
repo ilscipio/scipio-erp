@@ -72,7 +72,7 @@ under the License.
         </@td>
     </#if>
     <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
-
+    
       <#assign calEntryContentAll = "">
 
       <#assign maxNumberOfPersons = 0/>

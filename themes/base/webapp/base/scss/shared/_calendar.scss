@@ -2,9 +2,18 @@
     .month-entry {
         vertical-align: top; 
         padding: 0.5em; 
-        border-color: $table-border-color; 
-        border-width: $table-border-size; 
-        border-style: $table-border-style;
+        //border-color: $table-border-color; 
+        //border-width: $table-border-size; 
+        //border-style: $table-border-style;
+    }
+    
+    a {color: $oil;
+        &:hover {color: $primary-color;}
+    }
+    
+    th {
+        word-break: break-all; // SPECIAL, essential for small screens, otherwise the workaround break on small screen
+        background: $info-color;
     }
     
     td.month-entry:last-child {
@@ -36,11 +45,18 @@
         top: 0; bottom: 0; left: 0; right: 0;
     }
     
-    td.month-entry-day:hover {
-        background-color: white;
-    }  
+    td.month-entry-day{       
+       &:hover{ background: $smoke;}
+       &.other-period {
+        
+        }
     
-    th {
-        word-break: break-all; // SPECIAL, essential for small screens, otherwise the workaround break on small screen
-    }
+        &.current-period{
+            background: $info-color;
+        }
+    
+        &.current-period:hover {
+            background: scale-color($info-color, $lightness: -10%);
+        }
+    }  
 }

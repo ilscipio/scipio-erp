@@ -39,6 +39,9 @@ In order to install SCIPIO ERP, the following prerequisites must be installed pr
  * Download and Install
  * Set JAVA_HOME Path
  * Validate Settings
+* Install Apache Ant
+ * Download and Install
+ * Set ANT_HOME Path
 
 Installation
 In order to install, the following steps must be taken:

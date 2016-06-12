@@ -112,7 +112,7 @@ under the License.
     <div class="month-entry-wrapper">
     <div class="month-entry-abs">
     <div class="month-entry-content">
-      <span class="month-entry-content-title"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first} ${period.start?date?string("EEE")?cap_first}</a></span>
+      <span class="month-entry-content-title"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}<#if period.start?date?string("d") == "1"> ${period.start?date?string("MMMM")}</#if></a></span>
       <span class="month-entry-content-add"><a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}--></span>
       <br class="clear"/>
 

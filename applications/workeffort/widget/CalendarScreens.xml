@@ -37,6 +37,10 @@ under the License.
             
     <screen name="CalendarOnly">
         <section>
+            <actions>
+                <set field="eventEditWidgetName" from-field="eventEditWidgetName" default-value="eventDetail" />
+                <set field="eventEditWidgetLocation" from-field="eventEditWidgetLocation" default-value="component://workeffort/widget/CalendarScreens.xml" />
+            </actions>
             <widgets>
                 <section>
                     <condition>
@@ -48,8 +52,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
-                      <include-screen name="eventDetail"/>
-                      <include-screen name="dayCalendar"/>
+                      <include-screen name="dayCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
@@ -65,8 +68,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
-                      <include-screen name="eventDetail"/>
-                      <include-screen name="weekCalendar"/>
+                      <include-screen name="weekCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
@@ -82,8 +84,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
-                      <include-screen name="eventDetail"/>
-                      <include-screen name="monthCalendar"/>
+                      <include-screen name="monthCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
                 <section>
@@ -95,8 +96,7 @@ under the License.
                     </actions>
                     <widgets>
                       <include-screen name="calendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
-                      <include-screen name="eventDetail"/>
-                      <include-screen name="upcomingCalendar"/>
+                      <include-screen name="upcomingCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
             </widgets>
@@ -119,6 +119,14 @@ under the License.
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy"/>
             </actions>
             <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventEditWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventEditWidgetName}" location="${eventEditWidgetLocation}"/>
+                    </widgets>
+                </section>
                 <!--<screenlet padded="false">--><!-- navigation-menu-name="Day" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortDayView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;EEEE MMMM d, yyyy&quot;, timeZone, locale)}" -->                
                     <!--<include-menu name="Day" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
                 <platform-specific>
@@ -135,6 +143,14 @@ under the License.
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Week.groovy"/>
             </actions>
             <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventEditWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventEditWidgetName}" location="${eventEditWidgetLocation}"/>
+                    </widgets>
+                </section>
                 <!--<screenlet padded="false">--><!-- navigation-menu-name="Week" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortWeekView}: ${uiLabelMap.CommonWeek} ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;w&quot;, timeZone, locale)}" -->
                     <!--<include-menu name="Week" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
                 <platform-specific>
@@ -151,6 +167,14 @@ under the License.
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Month.groovy"/>
             </actions>
             <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventEditWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventEditWidgetName}" location="${eventEditWidgetLocation}"/>
+                    </widgets>
+                </section>
                 <!--<screenlet padded="false">--><!-- navigation-menu-name="Month"  --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortMonthView}: ${bsh:org.ofbiz.base.util.UtilDateTime.timeStampToString(start, &quot;MMMM yyyy&quot;, timeZone, locale)}" -->
                     <!--<include-menu name="Month" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
                 <platform-specific>
@@ -167,6 +191,14 @@ under the License.
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Upcoming.groovy"/>
             </actions>
             <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="eventEditWidgetName"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${eventEditWidgetName}" location="${eventEditWidgetLocation}"/>
+                    </widgets>
+                </section>
                 <!--<screenlet>--><!-- navigation-menu-name="Upcoming" --><!-- SCIPIO: in ftl: title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}" -->
                     <!--<include-menu name="Upcoming" location="component://workeffort/widget/WorkEffortMenus.xml"/>-->                 
                 <platform-specific>

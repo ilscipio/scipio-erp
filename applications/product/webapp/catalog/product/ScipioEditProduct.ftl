@@ -84,9 +84,9 @@ under the License.
         <@cell>
             <#-- Misc -->
             <@heading>${uiLabelMap.CommonMiscellaneous}</@heading>
-            <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable value="${product.returnable?default('N')}"/>
-            <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions value="${product.includeInPromotions?default('N')}"/>
-            <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable value="${product.taxable?default('N')}"/>
+            <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable value="${product.returnable?default('N')}" readonly=(product?has_content)/>
+            <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions value="${product.includeInPromotions?default('N')}" readonly=(product?has_content)/>
+            <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable value="${product.taxable?default('N')}" readonly=(product?has_content)/>
         </@cell>
     </@row>
     <@row>
@@ -126,7 +126,7 @@ under the License.
         <@cell>
             <#-- ShoppingCart -->
             <@heading>${uiLabelMap.CommonShoppingCart}</@heading>
-            <@field type="checkbox" name="orderDecimalQuantity" label=uiLabelMap.ProductShippingBox value="${product.orderDecimalQuantity?default('N')}"/>
+            <@field type="checkbox" name="orderDecimalQuantity" label=uiLabelMap.ProductShippingBox value="${product.orderDecimalQuantity?default('N')}" readonly=(product?has_content)/>
         </@cell>
     </@row>
     <@row>

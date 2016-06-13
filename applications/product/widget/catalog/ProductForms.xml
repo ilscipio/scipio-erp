@@ -144,92 +144,12 @@
         <field name="removeFeatureAppls" position="3" title="${uiLabelMap.ProductFeatureAppls}">
             <check all-checked="false" />
         </field>
-<<<<<<< .working
         <field name="removeInventoryItems" position="4" title="${uiLabelMap.ProductInventoryItems}">
             <check all-checked="false" />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonDuplicate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-=======
-        <sort-order>
-            <field-group>
-                <sort-field name="productId"/>
-                <sort-field name="productTypeId"/>
-            </field-group>
-            <field-group title="${uiLabelMap.ProductWordingAndComment}" collapsible="true">
-                <sort-field name="internalName"/>
-                <sort-field name="brandName"/>
-                <sort-field name="manufacturerPartyId"/>
-                <sort-field name="comments"/>
-            </field-group>
-            <field-group title="${uiLabelMap.ProductVirtualFieldGroup}" collapsible="true" initially-collapsed="true">
-                <sort-field name="isVirtual"/>
-                <sort-field name="isVariant"/>
-                <sort-field name="virtualVariantMethodEnum"/>
-            </field-group>
-            <field-group title="${uiLabelMap.ProductPrimaryCategory}" collapsible="true" initially-collapsed="true">
-                <sort-field name="primaryProductCategoryId"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonDates}" collapsible="true" initially-collapsed="true">
-                <sort-field name="introductionDate"/>
-                <sort-field name="releaseDate"/>
-                <sort-field name="salesDiscontinuationDate"/>
-                <sort-field name="supportDiscontinuationDate"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonInventory}" collapsible="true" initially-collapsed="true">
-                <sort-field name="salesDiscWhenNotAvail"/>
-                <sort-field name="requirementMethodEnumId"/>
-                <sort-field name="inventoryItemTypeId"/>
-                <sort-field name="requireInventory"/>
-                <sort-field name="inventoryMessage"/>
-                <sort-field name="lotIdFilledIn"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonRate}" collapsible="true" initially-collapsed="true">
-                <sort-field name="ratingTypeEnum"/>
-                <sort-field name="productRating"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonAmount}" collapsible="true" initially-collapsed="true">
-                <sort-field name="requireAmount"/>
-                <sort-field name="amountUomTypeId"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonMeasures}" collapsible="true" initially-collapsed="true">
-                <sort-field name="productHeight"/>
-                <sort-field name="heightUomId"/>
-                <sort-field name="shippingHeight"/>
-                <sort-field name="productWidth"/>
-                <sort-field name="widthUomId"/>
-                <sort-field name="shippingWidth"/>
-                <sort-field name="productDepth"/>
-                <sort-field name="depthUomId"/>
-                <sort-field name="shippingDepth"/>
-                <sort-field name="productDiameter"/>
-                <sort-field name="diameterUomId"/>
-                <sort-field name="productWeight"/>
-                <sort-field name="weightUomId"/>
-                <sort-field name="weight"/>
-                <sort-field name="quantityIncluded"/>
-                <sort-field name="quantityUomId"/>
-                <sort-field name="quantityIncluded"/>
-                <sort-field name="quantityUomId"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonShipping}" collapsible="true" initially-collapsed="true">
-                <sort-field name="piecesIncluded"/>
-                <sort-field name="inShippingBox"/>
-                <sort-field name="defaultShipmentBoxTypeId"/>
-                <sort-field name="chargeShipping"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonShoppingCart}" collapsible="true" initially-collapsed="true">
-                <sort-field name="orderDecimalQuantity"/>
-            </field-group>
-            <field-group title="${uiLabelMap.CommonMiscellaneous}" collapsible="true" initially-collapsed="true">
-                <sort-field name="returnable"/>
-                <sort-field name="includeInPromotions"/>
-                <sort-field name="taxable"/>
-                <sort-field name="autoCreateKeywords"/>
-            </field-group>
-        </sort-order>
->>>>>>> .merge-right.r1746539
     </form>
 
     <form name="UpdateProductVariants" type="single" target="UpdateProductVariants?productId=${productId}" title=""

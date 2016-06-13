@@ -25,8 +25,8 @@
             <actions>
                 <set field="parameters.period" from-field="parameters.period" default-value="${initialView}"/>
                 
-                <set field="eventEditWidgetName" from-field="eventEditWidgetName" default-value="trainingCalendarDetail" />
-                <set field="eventEditWidgetLocation" from-field="eventEditWidgetLocation" default-value="component://humanres/widget/PersonTrainingScreens.xml" />
+                <set field="eventDetailWidgetName" from-field="eventDetailWidgetName" default-value="trainingCalendarDetail" />
+                <set field="eventDetailWidgetLocation" from-field="eventDetailWidgetLocation" default-value="component://humanres/widget/PersonTrainingScreens.xml" />
             </actions>
             <widgets>
                 <section>

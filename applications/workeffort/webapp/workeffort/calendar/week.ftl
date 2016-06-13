@@ -18,16 +18,6 @@ under the License.
 -->
 <#include 'calendarcommon.ftl'>
 
-<#-- SCIPIO: FTL now includes the title -->
-<div class="${styles.float_clearfix!}">
-  <div class="${styles.float_left!}">
-    <#--<@render type="menu" name="Week" resource="component://workeffort/widget/WorkEffortMenus.xml" />-->
-  </div>
-  <div class="${styles.float_right!}">
-    
-  </div>
-</div>
-
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="week"/>
 </#macro>

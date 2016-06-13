@@ -267,47 +267,58 @@ under the License.
                     </condition>
                     <widgets>
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortAddCalendarEvent}">
                                     <section>
                                         <condition>
                                             <not><if-empty field="workEffort" /></not>
                                         </condition>
                                         <widgets>
+                                            <!-- SCIPIO: FIXME: this would seem better inlined with Update button, but doesn't work (sep form needed) -->
                                             <include-form name="cancelEvent" location="component://workeffort/widget/CalendarForms.xml" />
                                         </widgets>
                                     </section>
                                     <include-form name="editCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
                                 </screenlet>
                             </container>
-                            <container style="${styles.grid_large}6">
-                                <screenlet title="${uiLabelMap.WorkEffortParticipants}">
-                                    <include-form name="showCalEventRolesDel" location="component://workeffort/widget/CalendarForms.xml" />
-                                    <section>
-                                        <condition>
-                                            <and>
-                                                <not><if-empty field="workEffort" /></not>
-                                                <!-- Commenting this out because it doesn't make any sense.
-                                                <if-compare field="workEffortTypeId" operator="not-equals" value="WES_PUBLIC" />
-                                                -->
-                                            </and>
-                                        </condition>
-                                        <widgets>
-                                            <include-form name="addCalEventRole" location="component://workeffort/widget/CalendarForms.xml" />
-                                        </widgets>
-                                    </section>
-                                </screenlet>
-                            </container>
+                            <section>
+                                <condition>
+                                    <!-- SCIPIO: no point showing this for add event, because can only add roles once created -->
+                                    <not><if-empty field="workEffort" /></not>
+                                </condition>
+                                <widgets>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                         <screenlet title="${uiLabelMap.WorkEffortParticipants}">
+                                             <include-form name="showCalEventRolesDel" location="component://workeffort/widget/CalendarForms.xml" />
+                                             <section>
+                                                 <condition>
+                                                     <and>
+                                                         <not><if-empty field="workEffort" /></not>
+                                                         <!-- Commenting this out because it doesn't make any sense.
+                                                         <if-compare field="workEffortTypeId" operator="not-equals" value="WES_PUBLIC" />
+                                                         -->
+                                                     </and>
+                                                 </condition>
+                                                 <widgets>
+                                                     <screenlet>
+                                                        <include-form name="addCalEventRole" location="component://workeffort/widget/CalendarForms.xml" />
+                                                     </screenlet>
+                                                 </widgets>
+                                             </section>
+                                         </screenlet>
+                                     </container>
+                                </widgets>
+                            </section>
                         </container>
                     </widgets>
                     <fail-widgets>
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortSummary}">
                                     <include-form name="showCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
                                 </screenlet>
                             </container>
-                            <container style="${styles.grid_large}6">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortParticipants}">
                                     <include-form name="showCalEventRoles" location="component://workeffort/widget/CalendarForms.xml" />
                                 </screenlet>

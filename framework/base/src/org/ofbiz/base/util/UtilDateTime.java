@@ -1370,7 +1370,7 @@ public class UtilDateTime {
     }
     
     public static TimeInterval getPeriodIntervalAndFormatter(String period, int timeShift, Timestamp fromDate, Locale locale, TimeZone timezone) {
-        Map<String, Object> result = FastMap.newInstance();
+        
         if (!checkValidInterval(period))
             return null;
         TimeInterval timeInterval = getPeriodInterval(period, timeShift, fromDate, locale, timezone);
@@ -1388,7 +1388,7 @@ public class UtilDateTime {
             timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-MM"));
             break;
         case "quarter":
-            int month = UtilDateTime.getMonth((Timestamp) result.get("dateBegin"), timezone, locale);
+            int month = UtilDateTime.getMonth(timeInterval.getDateBegin(), timezone, locale);
             int quarter = 1;
             if (month >= 3 && month < 6)
                 quarter = 2;
@@ -1399,7 +1399,7 @@ public class UtilDateTime {
             timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-'" + quarter + "T'"));
             break;
         case "semester":
-            month = UtilDateTime.getMonth((Timestamp) result.get("dateBegin"), timezone, locale);
+            month = UtilDateTime.getMonth(timeInterval.getDateBegin(), timezone, locale);
             int semester = 1;
             if (month >= 5)
                 semester = 2;          
@@ -1467,7 +1467,7 @@ public class UtilDateTime {
         } else if (iScope.equals("quarter")) {
             iCount = 16;
         } else if (iScope.equals("semester")) { 
-            iCount = 18;
+            iCount = 24;
         } else if (iScope.equals("year")) {
             iCount = 5;
         }

@@ -83,7 +83,11 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("createEmptyShoppingList?productStoreId=${productStoreId}") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreateNew />
+    <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreateNew>
+      <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
+       <input type="hidden" name="productStoreId" value="${productStoreId!}" />
+      </form>
+    </@menuitem>
   </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceShoppingLists menuContent=menuContent>

@@ -5,8 +5,8 @@
 <#if result?has_content>
     <#if chartType == "line" || chartType == "bar">        
         <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"" label2=label2!"">
-            <#list result.keySet() as key>
-                <#assign currData = result[key] />
+            <#list result.keySet() as key>                
+                <#assign currData = result[key] />                
                 <#if currData?has_content> 
                     <#if datasets == 1>                         
                         <@chartdata value="${currData.totalVisits!0}" title="${key!}"/>

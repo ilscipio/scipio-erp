@@ -44,8 +44,10 @@ Map processResults() {
         iCount = UtilDateTime.getIntervalDefaultCount(iScope);        
         fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);        
     }
+    Debug.log("before iCount =====> " + iCount);
     if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
     if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
+    Debug.log("after iCount =====> " + iCount);
    
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);        
     if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
@@ -65,35 +67,37 @@ Map processResults() {
      
     if ((marketingCampaignId || trackingCodeId) && exprList) {
         
-        for (int i = 0; i <= iCount; i++) {
-//            Debug.log("dateBegin ===========> " + dateIntervals.getDateBegin() + "  dateEnd =================> " + dateIntervals.getDateEnd());
+        for (int i = 0; i < iCount; i++) {            
             int totalVisits = 0;
             int totalOrders = 0;
             conditionList = [];
             
             // Get visits
-            conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(exprList), EntityJoinOperator.AND, EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]),
-                EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, dateIntervals["dateEnd"])], EntityJoinOperator.AND));            
+            conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(exprList), EntityJoinOperator.AND, 
+                EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()),
+                EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd())], EntityJoinOperator.AND));            
             visitList = select("visitId").from("TrackingCodeAndVisit").where(conditionList).queryList();
             for (v in visitList)
                 totalVisits += v.visitId;                
             // Get orders
-            conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(exprList), EntityJoinOperator.AND, EntityCondition.makeCondition([EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]),
-                    EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, dateIntervals["dateEnd"])], EntityJoinOperator.AND));
+            conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(exprList), EntityJoinOperator.AND, 
+                    EntityCondition.makeCondition([EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()),
+                    EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd())], EntityJoinOperator.AND));
             orderList = select("orderId").from("TrackingCodeAndOrderHeader").where(conditionList).queryList();
             for (o in orderList) {
                 totalOrders += o.orderId;
             }
             
-            dateBeginFormatted = dateIntervals.getDteFormatter().format(dateIntervals.getDateBegin());           
+            dateBeginFormatted = dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin());           
             Map newMap = [:];
             newMap.put("totalOrders", totalOrders);                
             newMap.put("totalVisits", totalVisits);
             resultMap.put(dateBeginFormatted, newMap);
             
             dateEnd = dateIntervals.getDateEnd();
-            if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-                dateEnd = thruDateTimestamp
+            if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
+                dateEnd = thruDateTimestamp;
+//            Debug.log("dateBegin ===========> " + dateIntervals.getDateBegin() + "  dateEnd =================> " + dateIntervals.getDateEnd() + "  result map ====>  " + newMap);
             dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateEnd, context.locale, context.timeZone);
         }
     }
@@ -101,4 +105,5 @@ Map processResults() {
     
 }
 result = processResults();
+Debug.log("result =====> " + result);
 context.result = result;

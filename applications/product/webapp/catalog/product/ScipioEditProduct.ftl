@@ -158,6 +158,18 @@ under the License.
                 <@field type="option" value="Forbidden" selected=(product.lotIdFilledIn?has_content && product.lotIdFilledIn =="Forbidden")>${uiLabelMap.lotIdFilledInForbidden}</@field>
             </@field>
             <@field type="text" name="inventoryMessage" label=uiLabelMap.ProductInventoryMessage value="${product.inventoryMessage!}" maxlength="255"/>
+            <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH (TRANSLATE FIELDS)
+            <field name="inventoryItemTypeId" title="${uiLabelMap.ProductInventoryItemTypeId}" use-when="product==null">
+                <drop-down allow-empty="false" >
+                    <entity-options entity-name="InventoryItemType" key-field-name="inventoryItemTypeId">
+                        <entity-order-by field-name="description"/>
+                    </entity-options>
+                </drop-down>
+            </field>
+            <field name="inventoryItemTypeId" title="${uiLabelMap.ProductInventoryItemTypeId}" use-when="product!=null">
+                <display-entity entity-name="InventoryItemType"/>
+            </field>
+            -->
         </@cell>
     </@row>
     <@row>

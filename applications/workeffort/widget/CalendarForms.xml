@@ -146,7 +146,9 @@ under the License.
             <hyperlink target-type="plain" target="javascript:document.getElementById('${cancelEventFormId}').submit();" description="${uiLabelMap.CommonCancel}" />
         </field>
         <!-- SCIPIO: ensure we see the form again after change -->
-        <field name="form"><hidden value="edit"/></field>
+        <field name="form"><hidden value="${calEventFormAction}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${calEventFormPeriod}"/></field>   
     </form>
 
     <form name="cancelEvent" type="single" target="updateWorkEffort">
@@ -159,8 +161,10 @@ under the License.
     <form name="cancelEventHidden" extends="cancelEvent" id="${cancelEventFormId}">
         <field name="cancel"><ignored/></field>
         <!-- don't show form after cancel -->
-        <!--<field name="form"><hidden value="edit"/></field>-->
+        <!-- SCIPIO: ensure we see the form again after change -->
         <field name="form"><hidden value="${groovy:''}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${calEventFormPeriod}"/></field>   
     </form>
 
     <form name="showCalEvent" type="single" default-map-name="workEffort">
@@ -214,6 +218,9 @@ under the License.
             </drop-down>
         </field>
         <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
+        <!-- SCIPIO: ensure we see the form again after change -->
+        <field name="form"><hidden value="${calEventFormAction}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${calEventFormPeriod}"/></field>    
     </form>
-    
 </forms>

@@ -234,6 +234,7 @@ under the License.
             <actions>
                 <entity-one entity-name="WorkEffort" value-field="workEffort" />
                 <set field="calEventIdNum" from-field="calEventIdNum" default-value="0" />
+                <set field="calEventFormPeriod" from-field="parameters.period" />
             </actions>
             <widgets>
                 <section>
@@ -277,13 +278,23 @@ under the License.
                                         <condition>
                                             <not><if-empty field="workEffort" /></not>
                                         </condition>
+                                        <actions>
+                                            <set field="calEventFormAction" value="${groovy:''}" />
+                                        </actions>
                                         <widgets>
-                                             <!-- SCIPIO: now included in edit form
+                                            <!-- SCIPIO: now included in edit form
                                             <include-form name="cancelEvent" location="component://workeffort/widget/CalendarForms.xml" />-->
                                             <include-form name="cancelEventHidden" location="component://workeffort/widget/CalendarForms.xml" />
                                         </widgets>
                                     </section>
-                                    <include-form name="editCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
+                                    <section>
+                                        <actions>
+                                            <set field="calEventFormAction" value="edit" />
+                                        </actions>
+                                        <widgets>
+                                            <include-form name="editCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
+                                        </widgets>
+                                    </section>
                                 </screenlet>
                             </container>
                             <section>
@@ -304,6 +315,9 @@ under the License.
                                                          -->
                                                      </and>
                                                  </condition>
+                                                 <actions>
+                                                     <set field="calEventFormAction" value="edit" />
+                                                 </actions>
                                                  <widgets>
                                                      <screenlet>
                                                         <include-form name="addCalEventRole" location="component://workeffort/widget/CalendarForms.xml" />
@@ -320,12 +334,26 @@ under the License.
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortSummary}">
-                                    <include-form name="showCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
+                                    <section>
+                                        <actions>
+                                            <set field="calEventFormAction" value="edit" />
+                                        </actions>
+                                        <widgets>
+                                            <include-form name="showCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
+                                        </widgets>
+                                    </section>
                                 </screenlet>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WorkEffortParticipants}">
-                                    <include-form name="showCalEventRoles" location="component://workeffort/widget/CalendarForms.xml" />
+                                    <section>
+                                        <actions>
+                                            <set field="calEventFormAction" value="edit" />
+                                        </actions>
+                                        <widgets>
+                                            <include-form name="showCalEventRoles" location="component://workeffort/widget/CalendarForms.xml" />
+                                        </widgets>
+                                    </section>
                                 </screenlet>
                             </container>
                         </container>

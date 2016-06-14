@@ -233,6 +233,7 @@ under the License.
             </condition>
             <actions>
                 <entity-one entity-name="WorkEffort" value-field="workEffort" />
+                <set field="calEventIdNum" from-field="calEventIdNum" default-value="0" />
             </actions>
             <widgets>
                 <section>
@@ -265,6 +266,9 @@ under the License.
                     <condition>
                         <if-compare field="useEditForm" operator="equals" value="true" />
                     </condition>
+                    <actions>
+                        <set field="cancelEventFormId" value="cancelEvent_${calEventIdNum}" />
+                    </actions>
                     <widgets>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
@@ -274,8 +278,9 @@ under the License.
                                             <not><if-empty field="workEffort" /></not>
                                         </condition>
                                         <widgets>
-                                            <!-- SCIPIO: FIXME: this would seem better inlined with Update button, but doesn't work (sep form needed) -->
-                                            <include-form name="cancelEvent" location="component://workeffort/widget/CalendarForms.xml" />
+                                             <!-- SCIPIO: now included in edit form
+                                            <include-form name="cancelEvent" location="component://workeffort/widget/CalendarForms.xml" />-->
+                                            <include-form name="cancelEventHidden" location="component://workeffort/widget/CalendarForms.xml" />
                                         </widgets>
                                     </section>
                                     <include-form name="editCalEvent" location="component://workeffort/widget/CalendarForms.xml" />

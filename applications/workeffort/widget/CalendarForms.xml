@@ -87,6 +87,16 @@ under the License.
         <field name="roleTypeId" use-when="workEffort==null"><hidden value="CAL_OWNER" /></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED" /></field>
         <field name="workEffortName" title="${uiLabelMap.WorkEffortEventName}"><text /></field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort==null || !&quot;CAL_CANCELLED&quot;.equals(workEffort.get(&quot;currentStatusId&quot;))">
+            <drop-down no-current-selected-key="CAL_TENTATIVE">
+                <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="in" env-name="statusTypeIds"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort!=null &amp;&amp; &quot;CAL_CANCELLED&quot;.equals(workEffort.get(&quot;currentStatusId&quot;))">
+            <display description="${uiLabelMap.CommonCancelled}" also-hidden="true"/>
+        </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text /></field>
         <!-- This is wrong. A calendar item work effort type is an EVENT. "Meeting" is a work effort purpose. -->
         <field name="workEffortTypeId" use-when="parentTypeId!=void" title="${uiLabelMap.PartyEventType}">
@@ -104,13 +114,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
-            <drop-down no-current-selected-key="CAL_TENTATIVE">
-                <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" operator="in" env-name="statusTypeIds"/>
-                </entity-options>
-            </drop-down>
-        </field>
         <field name="scopeEnumId">
             <drop-down no-current-selected-key="WES_PRIVATE">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -125,12 +128,22 @@ under the License.
         <field name="actualCompletionDate" use-when="workEffort!=null"><date-time /></field><!-- SCIPIO: FIXME: has escaping issues: input-method="time-dropdown" -->
         <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="workEffort==null"><submit /></field>
         <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="workEffort!=null"><submit /></field>
+        <!-- SCIPIO: new -->
+        <field name="cancelAction" combine-previous="true" widget-style="${styles.link_run_sys} ${styles.action_terminate}" 
+            use-when="workEffort!=null &amp;&amp; cancelEventFormName!=null &amp;&amp; cancelEventFormName!=null &amp;&amp; !&quot;CAL_CANCELLED&quot;.equals(workEffort.get(&quot;currentStatusId&quot;))">
+            <hyperlink target-type="plain" target="javascript:document.getElementById('${cancelEventFormId}').submit();" description="${uiLabelMap.CommonCancel}" />
+        </field>
     </form>
 
     <form name="cancelEvent" type="single" target="updateWorkEffort">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="currentStatusId"><hidden value="CAL_CANCELLED"/></field>
         <field name="cancel" title="${uiLabelMap.WorkEffortCancelCalendarEvent}" widget-style="${styles.link_run_sys} ${styles.action_terminate}"><submit/></field>
+    </form>
+    
+    <!-- SCIPIO: new -->
+    <form name="cancelEventHidden" extends="cancelEvent" id="${cancelEventFormId}">
+        <field name="cancel"><ignored/></field>
     </form>
 
     <form name="showCalEvent" type="single" default-map-name="workEffort">

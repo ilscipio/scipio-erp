@@ -401,7 +401,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#function>
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={}>
-  <!-- extra form field attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
+  <#-- extra form field attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#-- Scipio: save common field info
       NOTE: because of the way these are organized, following macros may need to add extra info to this map. -->
   <#local htmlFormRenderFieldInfo = { "attribs":attribs }>

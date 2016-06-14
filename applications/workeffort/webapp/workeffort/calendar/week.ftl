@@ -34,7 +34,7 @@ under the License.
   <#else>
     <#assign entryWidth = (85 / (maxConcurrentEntries))>
   </#if>
-<@table type="data-complex" autoAltRows=true class="+calendar week-calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-complex" autoAltRows=true class="+calendar week-calendar-full" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonDay}</@th>
@@ -75,7 +75,7 @@ under the License.
     <#if calEntry.startOfPeriod>
     <#assign rowSpan><#if (calEntry.periodSpan > 1)>${calEntry.periodSpan}</#if></#assign>
     <#assign width>${entryWidth?string("#")}%</#assign>
-    <@td rowSpan=rowSpan width=width>
+    <@td rowspan=rowSpan width=width class="+week-entry-event">
     <#if (startDate.compareTo(period.start) <= 0 && completionDate?has_content && completionDate.compareTo(period.end) >= 0)>
       ${uiLabelMap.CommonAllWeek}
     <#elseif (startDate.compareTo(period.start) == 0 && completionDate?has_content && completionDate.compareTo(period.end) == 0)>

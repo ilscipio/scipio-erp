@@ -90,7 +90,9 @@ under the License.
       ${startDate?time?string.short}-${completionDate?time?string.short}
     </#if>
     <br />
-    <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"week", "workEffortId":calEntry.workEffort.workEffortId}/>
+    <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" 
+        reqAttribs={"periodType":"week", "workEffortId":calEntry.workEffort.workEffortId}
+        restoreValues=true asString=true/>
     </@td>  
     </#if>
     </#list>

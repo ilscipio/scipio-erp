@@ -23,6 +23,12 @@ under the License.
 <#if !workEffortLinkLabel?has_content>
   <#assign workEffortLinkLabel = workEffort.workEffortId!"">
 </#if>
+<#assign workEffortStatusLabel = "">
+<#if workEffort.currentStatusId?has_content>
+  <#assign workEffortStatusLabel = (workEffort.getRelatedOne("CurrentStatusItem").get("description", locale))!"">
+</#if>
+
+<#assign calEventVerbose = calEventVerbose!true>
     
 <#if workEffort.workEffortTypeId == "PROD_ORDER_HEADER">
   <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} event">
@@ -30,6 +36,8 @@ under the License.
     <#--${workEffort.workEffortId}-->
   </a>
   <#--&nbsp;${workEffort.workEffortName!"Undefined"}-->
+<#if calEventVerbose>
+  <#if workEffortStatusLabel?has_content> <span class="cal-entry-status">[${workEffortStatusLabel}]</span></#if>
   <#if workOrderItemFulfillments?has_content>
     <#list workOrderItemFulfillments as workOrderItemFulfillment>
       <br/>${uiLabelMap.OrderOrderId}: <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${workOrderItemFulfillment.orderId}</@ofbizInterWebappUrl>" class="event">${workOrderItemFulfillment.orderId} / ${workOrderItemFulfillment.orderItemSeqId}</a>
@@ -41,12 +49,16 @@ under the License.
       </#list>
     </#list>
   </#if>
+</#if>
 <#elseif workEffort.workEffortTypeId == "PROD_ORDER_TASK">
   <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortParentId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_desc!} event">
     ${workEffortLinkLabel}
     <#--${workEffort.workEffortParentId} / ${workEffort.workEffortId}-->
   </a>
-  <#--&nbsp;${workEffort.workEffortName!"Undefined"}--><#if workEffort.reservPersons??>&nbsp;Persons: ${workEffort.reservPersons}</#if>
+  <#--&nbsp;${workEffort.workEffortName!"Undefined"}-->
+<#if calEventVerbose>
+  <#if workEffortStatusLabel?has_content> <span class="cal-entry-status">[${workEffortStatusLabel}]</span></#if>
+  <#if workEffort.reservPersons??>&nbsp;Persons: ${workEffort.reservPersons}</#if>
   <#if parentWorkOrderItemFulfillments?has_content>
     <#list parentWorkOrderItemFulfillments as parentWorkOrderItemFulfillment>
       <br/>${uiLabelMap.OrderOrderId}: <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${parentWorkOrderItemFulfillment.orderId}</@ofbizInterWebappUrl>" class="event">${parentWorkOrderItemFulfillment.orderId} / ${parentWorkOrderItemFulfillment.orderItemSeqId}</a>
@@ -58,6 +70,7 @@ under the License.
       </#list>
     </#list>
   </#if>
+</#if>
 <#else>
   <#-- Allow containing screens to specify the URL for editing an event -->
   <#if !editCalEventUrl??>
@@ -68,4 +81,7 @@ under the License.
     <#--${workEffort.workEffortId}-->
   </a>
   <#--&nbsp;${workEffort.workEffortName!""}-->
+<#if calEventVerbose>
+  <#if workEffortStatusLabel?has_content> <span class="cal-entry-status">[${workEffortStatusLabel}]</span></#if>
+</#if>
 </#if>

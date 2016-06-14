@@ -114,7 +114,7 @@ under the License.
     <div class="month-entry-content">
       <span class="month-entry-content-title"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}<#if period.start?date?string("d") == "1"> ${period.start?date?string("MMMM")}</#if></a></span>
       <span class="month-entry-content-add"><a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}--></span>
-      <br class="clear"/>
+      <br/>
 
       <#if (parameters.hideEvents!"") != "Y">
       <#list period.calendarEntries as calEntry>
@@ -138,11 +138,11 @@ under the License.
         </#if>
 
       <#-- SCIPIO: capture this to include a second copy in dropdown -->
-      <#assign calEntryContent>
+      <#assign calEntryContentStart>
         <#--<#if (calEntry_index > 0)>  
           <hr />
         </#if>-->
-        <div class="month-entry-content-event">    
+          
         <span class="day-event-time">
         <#if (startDate.compareTo(period.start) <= 0 && completionDate?has_content && completionDate.compareTo(period.end) >= 0)>
           ${uiLabelMap.CommonAllDay}
@@ -156,12 +156,25 @@ under the License.
           ${startDate?time?string.short}-${completionDate?time?string.short}
         </#if>
         </span>
-
-        <br />
-        <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId} asString=true/>
+      </#assign>
+        <div class="month-entry-content-event">  
+          ${calEntryContentStart}
+          <br />
+          <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" 
+            reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId,
+                "calEventVerbose":false} 
+            restoreValues=true asString=true/>
+        </div>
+      <#assign calEntryContent>
+        <div class="month-entry-content-event">  
+          ${calEntryContentStart}
+          <br />
+          <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" 
+            reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId,
+                "calEventVerbose":true} 
+            restoreValues=true asString=true/>
         </div>
       </#assign>
-        ${calEntryContent}
         <#assign calEntryContentAll = calEntryContentAll + calEntryContent>
         
       </#list>

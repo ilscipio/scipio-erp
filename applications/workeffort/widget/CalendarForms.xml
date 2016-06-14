@@ -74,9 +74,17 @@ under the License.
         <actions>
             <set field="statusTypeIds[]" value="EVENT_STATUS"/>
             <set field="statusTypeIds[]" value="CALENDAR_STATUS"/>
+            <!-- SCIPIO: NOTE: stock code here excluded TASK_STATUS, which contains COMPLETED status; we add it because
+                we may not currently have any other way to mark events completed; intentions of stock code here are unclear
+                TODO: check if special requirements for setting complete and other statuses; may need ECA/service checks? -->
+            <set field="statusTypeIds[]" value="TASK_STATUS"/>
+            
             <!-- Allow containing screens to specify the create and update URLs -->
             <set field="createCalEventUrl" from-field="createCalEventUrl" default-value="createWorkEffortAndPartyAssign" />
             <set field="updateCalEventUrl" from-field="updateCalEventUrl" default-value="updateWorkEffort" />
+            
+            <!-- SCIPIO: new scripts, in part to filter statuses -->
+            <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/EditCalEventForm.groovy"/>
         </actions>
         <alt-target use-when="workEffort==null" target="${createCalEventUrl}" />
         <alt-target use-when="workEffort!=null" target="${updateCalEventUrl}" />
@@ -87,15 +95,20 @@ under the License.
         <field name="roleTypeId" use-when="workEffort==null"><hidden value="CAL_OWNER" /></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED" /></field>
         <field name="workEffortName" title="${uiLabelMap.WorkEffortEventName}"><text /></field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort==null || !&quot;CAL_CANCELLED&quot;.equals(workEffort.get(&quot;currentStatusId&quot;))">
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="statusItemList.size() &gt; 1">
+            <!-- SCIPIO: use our list
             <drop-down no-current-selected-key="CAL_TENTATIVE">
                 <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="in" env-name="statusTypeIds"/>
                 </entity-options>
             </drop-down>
+            -->
+            <drop-down no-current-selected-key="CAL_TENTATIVE">
+                <list-options key-name="statusId" list-name="statusItemList" description="${description}"/>
+            </drop-down>
         </field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort!=null &amp;&amp; &quot;CAL_CANCELLED&quot;.equals(workEffort.get(&quot;currentStatusId&quot;))">
-            <display description="${uiLabelMap.CommonCancelled}" also-hidden="true"/>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" use-when="statusItemList.size() &lt;= 1">
+            <display description="${currentStatusItem.description}" also-hidden="true"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text /></field>
         <!-- This is wrong. A calendar item work effort type is an EVENT. "Meeting" is a work effort purpose. -->
@@ -129,10 +142,11 @@ under the License.
         <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="workEffort==null"><submit /></field>
         <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="workEffort!=null"><submit /></field>
         <!-- SCIPIO: new -->
-        <field name="cancelAction" combine-previous="true" widget-style="${styles.link_run_sys} ${styles.action_terminate}" 
-            use-when="workEffort!=null &amp;&amp; cancelEventFormName!=null &amp;&amp; cancelEventFormName!=null &amp;&amp; !&quot;CAL_CANCELLED&quot;.equals(workEffort.get(&quot;currentStatusId&quot;))">
+        <field name="cancelAction" combine-previous="true" widget-style="${styles.link_run_sys} ${styles.action_terminate}" use-when="calEventMayCancel">
             <hyperlink target-type="plain" target="javascript:document.getElementById('${cancelEventFormId}').submit();" description="${uiLabelMap.CommonCancel}" />
         </field>
+        <!-- SCIPIO: ensure we see the form again after change -->
+        <field name="form"><hidden value="edit"/></field>
     </form>
 
     <form name="cancelEvent" type="single" target="updateWorkEffort">
@@ -144,6 +158,9 @@ under the License.
     <!-- SCIPIO: new -->
     <form name="cancelEventHidden" extends="cancelEvent" id="${cancelEventFormId}">
         <field name="cancel"><ignored/></field>
+        <!-- don't show form after cancel -->
+        <!--<field name="form"><hidden value="edit"/></field>-->
+        <field name="form"><hidden value="${groovy:''}"/></field>
     </form>
 
     <form name="showCalEvent" type="single" default-map-name="workEffort">

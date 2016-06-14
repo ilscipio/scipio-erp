@@ -99,3 +99,11 @@
        }
     }  
 }
+
+// TODO: better styling for this (omit border and use different color for each event? harder...)
+.day-calendar-full .day-entry-event {
+    border: 1px solid black;
+}
+.week-calendar-full .week-entry-event {
+    border: 1px solid black;
+}

@@ -111,6 +111,8 @@ under the License.
             <display description="${currentStatusItem.description}" also-hidden="true"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text /></field>
+        <!-- SCIPIO: NOTE: the following comment is from stock, but MEETING currently appears in work effort types, so
+            so it is more about the type date (probably?): -->
         <!-- This is wrong. A calendar item work effort type is an EVENT. "Meeting" is a work effort purpose. -->
         <field name="workEffortTypeId" use-when="parentTypeId!=void" title="${uiLabelMap.PartyEventType}">
             <drop-down no-current-selected-key="MEETING">

@@ -75,7 +75,7 @@ under the License.
     <#if calEntry.startOfPeriod>
     <#assign rowSpan><#if (calEntry.periodSpan > 1)>${calEntry.periodSpan}</#if></#assign>
     <#assign width>${entryWidth?string("#")}%</#assign>
-    <@td rowSpan=rowSpan width=width class="+day-entry-event">
+    <@td rowspan=rowSpan width=width class="+day-entry-event">
     <#if ((startDate.compareTo(start) <= 0) && completionDate?has_content && completionDate.compareTo(next) >= 0)>
       ${uiLabelMap.CommonAllDay}
     <#elseif startDate.before(start) && completionDate?has_content>

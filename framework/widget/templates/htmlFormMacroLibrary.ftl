@@ -647,7 +647,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   </table>
 </#macro>
 
-<#macro renderContainerField id className><div id="${id}" class="${className}"/></#macro>
+<#macro renderContainerField id className><div id="${id}" class="${className}"></div></#macro>
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
     <#-- delegate to scipio libs -->

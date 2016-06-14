@@ -39,7 +39,8 @@ under the License.
 <#assign dummy = setRequestVar("monthCalendarIdNum", calendarIdNum)!>
 
 <#-- not using scrollable=true, should have better resizing method-->
-<@table type="data-complex" autoAltRows=true class="+calendar month-calendar-full" 
+<div class="month-calendar-full">
+<@table type="data-complex" autoAltRows=true class="+calendar"
     responsive=false><#--responsiveOptions={"ordering":false}--><#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
@@ -183,13 +184,15 @@ under the License.
     
     <#if (maxNumberOfEvents > 0) || (maxNumberOfPersons > 0)>
       <#assign numEventsContent>
-        <#--<hr/>--><br/>
+        <#--<hr/>--><#--<br/>-->
+        <div class="day-entry-stats">
         <#if (maxNumberOfEvents > 0)>
           ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
         </#if>
         <#if (maxNumberOfPersons > 0)>
           ${uiLabelMap.WorkEffortMaxPersons}: ${maxNumberOfPersons}<br/>
         </#if>
+        </div>
       </#assign>
     <#else>
       <#assign numEventsContent = "">
@@ -255,7 +258,10 @@ under the License.
   </#list>
 </@table>
 
-${periodDetailContentAll}
+  <div class="cal-detail-content">
+    ${periodDetailContentAll}
+  </div>
+</div>
 
 <#else>
   <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>

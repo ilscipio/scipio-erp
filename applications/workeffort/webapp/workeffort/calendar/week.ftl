@@ -34,7 +34,8 @@ under the License.
   <#else>
     <#assign entryWidth = (85 / (maxConcurrentEntries))>
   </#if>
-<@table type="data-complex" autoAltRows=true class="+calendar week-calendar-full" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<div class="week-calendar-full">
+<@table type="data-complex" class="+calendar" autoAltRows=true responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonDay}</@th>
@@ -108,6 +109,7 @@ under the License.
   </@tr>
   </#list>
 </@table>
+</div>
 <#else>
   <@commonMsg type="error">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>
 </#if>

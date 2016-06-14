@@ -183,7 +183,7 @@ under the License.
     
     <#if (maxNumberOfEvents > 0) || (maxNumberOfPersons > 0)>
       <#assign numEventsContent>
-        <hr/>
+        <#--<hr/>--><br/>
         <#if (maxNumberOfEvents > 0)>
           ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
         </#if>

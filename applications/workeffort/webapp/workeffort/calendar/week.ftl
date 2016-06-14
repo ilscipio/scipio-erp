@@ -34,7 +34,7 @@ under the License.
   <#else>
     <#assign entryWidth = (85 / (maxConcurrentEntries))>
   </#if>
-<@table type="data-complex" autoAltRows=true class="+calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-complex" autoAltRows=true class="+calendar week-calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonDay}</@th>

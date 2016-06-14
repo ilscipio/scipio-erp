@@ -36,7 +36,7 @@ under the License.
   <#else>
     <#assign entryWidth = (85 / (maxConcurrentEntries))>
   </#if>
-<@table type="data-complex" class="+calendar" autoAltRows=true responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-complex" class="+calendar day-calendar-full" autoAltRows=true responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonTime}</@th>
@@ -75,8 +75,8 @@ under the License.
     <#if calEntry.startOfPeriod>
     <#assign rowSpan><#if (calEntry.periodSpan > 1)>${calEntry.periodSpan}</#if></#assign>
     <#assign width>${entryWidth?string("#")}%</#assign>
-    <@td rowSpan=rowSpan width=width>
-    <#if (startDate.compareTo(start)  <= 0 && completionDate?has_content && completionDate.compareTo(next) >= 0)>
+    <@td rowSpan=rowSpan width=width class="+day-entry-event">
+    <#if ((startDate.compareTo(start) <= 0) && completionDate?has_content && completionDate.compareTo(next) >= 0)>
       ${uiLabelMap.CommonAllDay}
     <#elseif startDate.before(start) && completionDate?has_content>
       ${uiLabelMap.CommonUntil} ${completionDate?time?string.short}
@@ -94,8 +94,8 @@ under the License.
     </#list>
     <#if (period.calendarEntries?size < maxConcurrentEntries)>
       <#assign emptySlots = (maxConcurrentEntries - period.calendarEntries?size)>
-        <#assign colspan><#if (emptySlots > 1)>${emptySlots}</#if></#assign>
-        <@td colspan=colspan>&nbsp;</@td>
+      <#assign colspan><#if (emptySlots > 1)>${emptySlots}</#if></#assign>
+      <@td colspan=colspan>&nbsp;</@td>
     </#if>
     <#if maxConcurrentEntries == 0>
       <#assign width>${entryWidth?string("#")}%</#assign>

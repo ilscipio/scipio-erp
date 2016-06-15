@@ -77,7 +77,7 @@ under the License.
             <@field type="text" name="productName" label=uiLabelMap.ProductProductName value=(productParamsOpen.productName!product.productName!) maxlength="255" required=true/>
             <@field type="text" name="internalName" label=uiLabelMap.ProductInternalName value=(productParamsOpen.internalName!product.internalName!) maxlength="255" required=true />
             <@field type="text" name="brandName" label=uiLabelMap.ProductBrandName value=(productParamsOpen.brandName!product.brandName!) maxlength="60"/>
-            <@field type="select" label=uiLabelMap.ProductProductType name="productTypeId">
+            <@field type="select" label=uiLabelMap.ProductProductType name="productTypeId" required=true>
               <#assign options = delegator.findByAnd("ProductType",{},["description ASC"], true)>
                 <#list options as option>
                     <@field type="option" value=(option.productTypeId!) selected=checkSelected("productTypeId", option.productTypeId, "FINISHED_GOOD")>${option.get("description", locale)}</@field>

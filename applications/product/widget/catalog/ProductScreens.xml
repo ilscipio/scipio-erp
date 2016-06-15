@@ -156,7 +156,7 @@ under the License.
                 <set field="activeSubMenuItem" value="EditProduct"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="parameters.bypassIfNoProduct" value="true"/>
-                <set field="title" value="${uiLabelMap.PageTitleEditProduct} ${parameters.productId}"/>
+                <set field="title" value="${groovy: parameters.productId ? (uiLabelMap.PageTitleEditProduct + ' ' + parameters.productId) : (uiLabelMap.ProductNewProduct) }"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">

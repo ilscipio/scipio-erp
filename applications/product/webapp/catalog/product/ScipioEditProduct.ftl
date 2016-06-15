@@ -28,8 +28,6 @@ under the License.
   </@section>
 <#else>
 
-<#-- FIXME: ALL CHECKBOX FIELDS BROKEN -->
-
 <@section>
 <form name="EditProduct" action="<@ofbizUrl><#if product?has_content>updateProduct<#else>createProduct</#if></@ofbizUrl>" method="post">
 
@@ -85,8 +83,8 @@ under the License.
             </@field>
             <@field type="text" name="manufacturerPartyId" label=uiLabelMap.ProductOemPartyId value=(productParamsOpen.manufacturerPartyId!product.manufacturerPartyId!) maxlength="20"/>
             <@field type="textarea" label=uiLabelMap.CommonComments id="comments" name="comments">${productParamsOpen.comments!product.comments!""}</@field>
-            <@field type="checkbox" name="isVirtual" label=uiLabelMap.ProductVirtualProduct value=(productParamsOpen.isVirtual!product.isVirtual!'N')/>
-            <@field type="checkbox" name="isVariant" label=uiLabelMap.ProductVariantProduct value=(productParamsOpen.isVariant!product.isVariant!'N')/>        
+            <@field type="checkbox" name="isVirtual" label=uiLabelMap.ProductVirtualProduct currentValue=(productParamsOpen.isVirtual!product.isVirtual!'N') value="Y" altValue="N"/>
+            <@field type="checkbox" name="isVariant" label=uiLabelMap.ProductVariantProduct currentValue=(productParamsOpen.isVariant!product.isVariant!'N') value="Y" altValue="N"/>        
         </@cell>
     </@row>
     <@row>
@@ -106,9 +104,9 @@ under the License.
         <@cell>
             <#-- Misc -->
             <@heading>${uiLabelMap.CommonMiscellaneous}</@heading>
-            <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable value=(productParamsRestr.returnable!product.returnable!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
-            <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions value=(productParamsRestr.includeInPromotions!product.includeInPromotions!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
-            <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable value=(productParamsRestr.taxable!product.taxable!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable currentValue=(productParamsRestr.returnable!product.returnable!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions currentValue=(productParamsRestr.includeInPromotions!product.includeInPromotions!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable currentValue=(productParamsRestr.taxable!product.taxable!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
         </@cell>
     </@row>
     <@row>
@@ -139,7 +137,7 @@ under the License.
         <@cell>
             <#-- ShoppingCart -->
             <@heading>${uiLabelMap.CommonShoppingCart}</@heading>
-            <@field type="checkbox" name="orderDecimalQuantity" label=uiLabelMap.ProductShippingBox value=(productParamsRestr.orderDecimalQuantity!product.orderDecimalQuantity!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="orderDecimalQuantity" label=uiLabelMap.ProductShippingBox currentValue=(productParamsRestr.orderDecimalQuantity!product.orderDecimalQuantity!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
         </@cell>
     </@row>
     <@row>
@@ -147,8 +145,8 @@ under the License.
                      
             <#-- Inventory -->
             <@heading>${uiLabelMap.CommonInventory}</@heading>
-            <@field type="checkbox" name="salesDiscWhenNotAvail" label=uiLabelMap.ProductSalesDiscontinuationNotAvailable value=(productParamsOpen.salesDiscWhenNotAvail!product.salesDiscWhenNotAvail!'N')/>
-            <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory value=(productParamsOpen.requireInventory!product.requireInventory!'N') tooltip="${uiLabelMap.ProductInventoryRequiredProduct}"/>
+            <@field type="checkbox" name="salesDiscWhenNotAvail" label=uiLabelMap.ProductSalesDiscontinuationNotAvailable currentValue=(productParamsOpen.salesDiscWhenNotAvail!product.salesDiscWhenNotAvail!'N') value="Y" altValue="N"/>
+            <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory currentValue=(productParamsOpen.requireInventory!product.requireInventory!'N') value="Y" altValue="N" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}"/>
             <@field type="select" label=uiLabelMap.ProductRequirementMethodEnumId name="requirementMethodEnumId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_REQ_METHOD"},["description ASC"], true)/>
@@ -190,7 +188,7 @@ under the License.
         <@cell>
             <#-- Amount -->
             <@heading>${uiLabelMap.CommonAmount}</@heading>
-            <@field type="checkbox" name="requireAmount" label=uiLabelMap.ProductRequireAmount value=(productParamsOpen.requireAmount!product.requireAmount!'N')/>
+            <@field type="checkbox" name="requireAmount" label=uiLabelMap.ProductRequireAmount currentValue=(productParamsOpen.requireAmount!product.requireAmount!'N') value="Y" altValue="N"/>
             <@field type="select" label=uiLabelMap.ProductAmountUomTypeId name="amountUomTypeId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("UomType",{},["description ASC"], true)/>
@@ -349,7 +347,7 @@ under the License.
                 </#list>
             </@field>
             <@field type="text" name="piecesIncluded" label=uiLabelMap.ProductPiecesIncluded value=(productParamsOpen.piecesIncluded!product.piecesIncluded!) maxlength="20"/>
-            <@field type="checkbox" name="inShippingBox" label=uiLabelMap.ProductShippingBox value=(productParamsOpen.inShippingBox!product.inShippingBox!'N')/>
+            <@field type="checkbox" name="inShippingBox" label=uiLabelMap.ProductShippingBox currentValue=(productParamsOpen.inShippingBox!product.inShippingBox!'N') value="Y" altValue="N"/>
             <@field type="select" label=uiLabelMap.ProductDefaultShipmentBoxTypeId name="defaultShipmentBoxTypeId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("ShipmentBoxType",{},["description ASC"], true)/>
@@ -357,7 +355,7 @@ under the License.
                     <@field type="option" value=(option.shipmentBoxTypeId!) selected=checkSelected("defaultShipmentBoxTypeId", option.shipmentBoxTypeId!)>${option.get("description", locale)}</@field>
                 </#list>
             </@field>
-            <@field type="checkbox" name="chargeShipping" label=uiLabelMap.ProductChargeShipping value=(productParamsOpen.chargeShipping!product.chargeShipping!'N')/>
+            <@field type="checkbox" name="chargeShipping" label=uiLabelMap.ProductChargeShipping currentValue=(productParamsOpen.chargeShipping!product.chargeShipping!'N') value="Y" altValue="N"/>
         </@cell>
     </@row>
     <@row>

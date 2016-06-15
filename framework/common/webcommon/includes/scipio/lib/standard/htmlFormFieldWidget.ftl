@@ -915,10 +915,6 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if item.readonly?? && item.readonly?is_boolean>
       <#local itemReadonly = item.readonly>
     </#if>
-    <#-- FIXME: need better way to implement readonly here -->
-    <#if itemReadonly>
-      <#local specEvents = specEvents + {"onclick": "return false"}>
-    </#if>
 
     <#local inputTitle = title>
     <#local inputClass = "">
@@ -930,6 +926,13 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       </#if>
       <#local inputAttribs = inputAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
     </#if>
+
+    <#-- FIXME: need better way to implement readonly here -->
+    <#if itemReadonly>
+      <#local specEvents = specEvents + {"onclick": "return false"}>
+      <#local inputClass = addClassArg(inputClass, styles.disabled!)>
+    </#if>
+
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>>
       <#local labelMarkup>
         <#if labelType == "extralabel">
@@ -1043,10 +1046,6 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if item.readonly?? && item.readonly?is_boolean>
       <#local itemReadonly = item.readonly>
     </#if>
-    <#-- FIXME: need better way to implement readonly here -->
-    <#if itemReadonly>
-      <#local specEvents = specEvents + {"onclick": "return false"}>
-    </#if>
     
     <#local inputClass = "">
     <#local inputAlert = false>
@@ -1059,6 +1058,13 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#local inputTitle = item.tooltip>
       </#if>
     </#if>
+
+    <#-- FIXME: need better way to implement readonly here -->
+    <#if itemReadonly>
+      <#local specEvents = specEvents + {"onclick": "return false"}>
+      <#local inputClass = addClassArg(inputClass, styles.disabled!)>
+    </#if>
+
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>><#rt/>
       <#local labelMarkup>
         <#if item.description?has_content>

@@ -75,7 +75,7 @@ under the License.
             <@field type="text" name="productId" label=uiLabelMap.ProductProductId value=(productParamsOpen.productId!) />
           </#if>
             <@field type="text" name="productName" label=uiLabelMap.ProductProductName value=(productParamsOpen.productName!product.productName!) maxlength="255" required=true/>
-            <@field type="text" name="internalName" label=uiLabelMap.ProductInternalName value=(productParamsOpen.internalName!product.internalName!) maxlength="255" />
+            <@field type="text" name="internalName" label=uiLabelMap.ProductInternalName value=(productParamsOpen.internalName!product.internalName!) maxlength="255" required=true />
             <@field type="text" name="brandName" label=uiLabelMap.ProductBrandName value=(productParamsOpen.brandName!product.brandName!) maxlength="60"/>
             <@field type="select" label=uiLabelMap.ProductProductType name="productTypeId">
               <#assign options = delegator.findByAnd("ProductType",{},["description ASC"], true)>

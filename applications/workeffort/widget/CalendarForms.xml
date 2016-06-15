@@ -74,12 +74,10 @@ under the License.
 
     <form name="editCalEvent" type="single" default-map-name="workEffort">
         <actions>
-            <!-- SCIPIO: WORKAROUND: was for name conflicts, not currently needed by pure luck,
+            <!-- SCIPIO: NOTE: this could be set to help deal with name clashes, but only workEffortTypeId currently
+                clashes and only for new records, and the prefill is actually sort of desirable in this case
             <set field="useRequestParameters" type="Boolean" value="false" />
             -->
-            <!-- SCIPIO: FIXME: workEffortTypeId may currently receive undesirable preselected values
-                (clash with workEffortTypeId used in cal browsing)
-                TODO: workaround needed in calling screen around include-form -->
         
             <set field="statusTypeIds[]" value="EVENT_STATUS"/>
             <set field="statusTypeIds[]" value="CALENDAR_STATUS"/>
@@ -120,7 +118,6 @@ under the License.
             <display description="${currentStatusItem.description}" also-hidden="true"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text /></field>
-        <!-- SCIPIO: FIXME: workEffortTypeId: see NOTE in actions -->
         <!-- SCIPIO: NOTE: the following comment is from stock, but MEETING currently appears in work effort types, so
             so it is more about the type date (probably?): -->
         <!-- This is wrong. A calendar item work effort type is an EVENT. "Meeting" is a work effort purpose. -->

@@ -103,7 +103,7 @@ under the License.
                                             </widgets>
                                         </section>
                                     </fail-widgets>
-                                </section>-->
+                                </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

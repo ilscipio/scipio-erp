@@ -449,15 +449,25 @@ under the License.
             <link target="FindProduct" />
         </menu-item>
         <menu-item name="EditProduct" title="${uiLabelMap.ProductProduct}">
+            <condition>
+                <if-has-permission permission="CATALOG" action="_UPDATE"/>
+            </condition>
             <link target="EditProduct">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- SCIPIO: only show this if has no update permission, because title is same as EditProduct -->
         <menu-item name="ViewProduct" title="${uiLabelMap.ProductProduct}">
             <condition>
-                <not>
-                    <if-empty field="parameters.productId"/>
-                </not>
+                <and>
+                    <not>
+                        <if-empty field="parameters.productId"/>
+                    </not>
+                    <not>
+                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                    </not>
+                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                </and>
             </condition>
             <link target="ViewProduct">
                 <parameter param-name="productId"/>

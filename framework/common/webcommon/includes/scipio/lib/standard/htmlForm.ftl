@@ -1139,6 +1139,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     * checkbox (single mode) *
     value                   = Y/N
     currentValue            = Current value, used to check if should be checked
+    useHidden               = ((boolean), default: false) If true, submits using a hidden field rather than checkbox itself
+                              WARN: This affects javascript lookups, field name and id.
+                              If this is true, the {{{name}}} of the checkbox itself receives the suffix {{{_visible}}},
+                              such that the hidden input receives the passed name. Any javascript must adapt appropriately.
+                              On the other hand, the {{{id}}} of the checkbox is unchanged, and the hidden field
+                              receives an id with a {{{_hidden}}} suffix.
+    altValue                = Value to submit when checkbox not selected
+                              WARN: This affects javascript lookups, field name and id; see {{{useHidden}}} parameter.
+                              If this is specified (non-boolean, non-false), it automatically turns on {{{useHidden}}}
+                              (without which implementation is impossible).
     checked                 = ((boolean)|, default: -empty-) Override checked state 
                               If set to boolean, overrides currentValue logic
     checkboxType            = (default|..., default: default)
@@ -1149,7 +1159,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * checkbox (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items checkbox field generated
-                              List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
+                              List of {"value": (value), "altValue": (value), "useHidden": (boolean), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
     inlineItems             = ((boolean), default: -from global styles-, fallback default: true) If true, radio items are many per line; if false, one per line
@@ -1239,7 +1249,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               May result in extra wrapping container.
 -->
 <#assign field_defaultArgs = {
-  "type":"", "fieldsType":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
+  "type":"", "fieldsType":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", 
+  "currentValue":"", "altValue":false, "useHidden":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
   "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
@@ -1838,7 +1849,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#if description?is_boolean>
             <#local description = "">
           </#if>
-          <#local items=[{"value":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
+          <#local items=[{"value":value, "altValue":altValue, "useHidden":useHidden, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType 
                 readonly=readonly passArgs=passArgs/>

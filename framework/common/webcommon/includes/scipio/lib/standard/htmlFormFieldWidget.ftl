@@ -867,7 +867,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 </#macro>
 
 <#-- field markup - theme override 
-     FIXME: the styling for these is strange, can't get it to work no matter what -->
+     FIXME: the styling for these is strange, can't get it to work no matter what 
+     FIXME: this markup macro is too overloaded with logic -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
     labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
@@ -900,6 +901,18 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#list items as item>
     <#local inputAttribs = {}>
     <#local itemValue = item.value!"">
+    <#local itemAltValue = item.altValue!false>
+    <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
+      <#local itemUseHidden = true>
+    <#else>
+      <#local itemUseHidden = item.useHidden!false>
+      <#if !itemUseHidden?is_boolean>
+        <#local itemUseHidden = false>
+      </#if>
+    </#if>
+    <#if itemAltValue?is_boolean>
+      <#local itemAltValue = "">
+    </#if>
     <#local itemClass = class>
     <#local itemAlert = alert>
     <#local itemStyle = style>
@@ -955,15 +968,30 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
+      <#local inputChecked = false>
+      <#if item.checked?has_content>
+        <#if item.checked> 
+            <#local inputChecked = true>
+        </#if>
+      <#elseif allChecked?has_content>
+        <#if allChecked> 
+          <#local inputChecked = true>
+        </#if>
+      <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> 
+        <#local inputChecked = true>
+      <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> 
+        <#local inputChecked = true>
+      </#if>
+      <#if itemUseHidden>
+        <input type="hidden" name="${name?html}" value="<#if inputChecked>${itemValue?html}<#else>${itemAltValue?html}</#if>"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
+      </#if>
       <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
         <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
         <#if currentId?has_content> id="${currentId}"</#if><#t/>
         <#if itemReadonly> readonly="readonly"</#if><#t/>
-        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if><#t/>
-        <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"<#t/>
-        <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if><#t/>
-        <#if name?has_content> name="${name?html}"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#lt/>
+        <#if inputChecked> checked="checked"</#if><#t/>
+        <#if name?has_content> name="${name?html}<#if itemUseHidden>_visible</#if>"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#lt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
       <#-- FIXME: Should really have a better way to do this -->
       <#-- NOTE: Currently, the br must be inside the span, as long as this is not fixed -->
@@ -971,6 +999,21 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local sepClass = addClassArg(sepClass, "checkbox-item-separator")>
       <#local sepClass = addClassArg(sepClass, inlineClass)>
       <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
+    <#if itemUseHidden>
+      <@script>
+        <#-- NOTE: it might be better somehow to do this on form submit, but this way there is no need to know the form name/id 
+            it should work as long as template doesn't try anything funny with JS -->
+        jQuery(document).ready(function() {
+            jQuery('#${currentId?js_string}').change(function() {
+                if (jQuery('#${currentId?js_string}').is(':checked')) {
+                    jQuery('#${currentId?js_string}_hidden').val("${itemValue?js_string}");
+                } else {
+                    jQuery('#${currentId?js_string}_hidden').val("${itemAltValue?js_string}");
+                }
+            });
+        });
+      </@script>
+    </#if>
     </span>
     <#if id?has_content>
       <#local currentId = id + "_" + (item_index + 2)?string>
@@ -1013,7 +1056,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
-<#-- field markup - theme override -->
+<#-- field markup - theme override 
+    FIXME: this markup macro is too overloaded with logic -->
 <#macro field_radio_markup_widget items="" id="" class="" style="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
     labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
@@ -1076,12 +1120,23 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
+      <#local inputChecked = false>
+      <#if item.checked?has_content>
+        <#if item.checked> 
+          <#local inputChecked = true>
+        </#if>
+      <#elseif currentValue?has_content>
+        <#if currentValue==itemValue> 
+          <#local inputChecked = true>
+        </#if>
+      <#elseif defaultValue?has_content && defaultValue == itemValue> 
+        <#local inputChecked = true>
+      </#if>
       <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
         <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
         <#if currentId?has_content> id="${currentId}"</#if><#t/>
-        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
-        <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if><#t/>
+        <#if inputChecked> checked="checked"</#if><#t/>
         name="${name?html}" value="${(itemValue!"")?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#rt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>

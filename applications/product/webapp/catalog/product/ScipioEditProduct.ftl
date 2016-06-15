@@ -22,7 +22,7 @@ under the License.
 
 
 <@section>
-<form name="EditProduct" target="<@ofbizUrl>updateProduct</@ofbizUrl>">
+<form name="EditProduct" target="<@ofbizUrl>updateProduct</@ofbizUrl>" method="post">
     <@row>
         <@cell>
             <#-- General info -->
@@ -132,7 +132,7 @@ under the License.
     <@row>
         <@cell>
                      
-             <#-- Inventory -->
+            <#-- Inventory -->
             <@heading>${uiLabelMap.CommonInventory}</@heading>
             <@field type="checkbox" name="salesDiscWhenNotAvail" label=uiLabelMap.ProductSalesDiscontinuationNotAvailable value="${product.salesDiscWhenNotAvail?default('N')}"/>
             <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory value="${product.requireInventory?default('N')}" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}"/>
@@ -143,7 +143,7 @@ under the License.
                     <#if product?has_content>
                         <#if product.requirementMethodEnumId?has_content && product.requirementMethodEnumId == option.enumId>
                             <#assign selected = true/>
-                         <#else>
+                        <#else>
                             <#assign selected = false/>
                         </#if>
                     <#else>
@@ -158,18 +158,19 @@ under the License.
                 <@field type="option" value="Forbidden" selected=(product.lotIdFilledIn?has_content && product.lotIdFilledIn =="Forbidden")>${uiLabelMap.lotIdFilledInForbidden}</@field>
             </@field>
             <@field type="text" name="inventoryMessage" label=uiLabelMap.ProductInventoryMessage value="${product.inventoryMessage!}" maxlength="255"/>
-            <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH (TRANSLATE FIELDS)
-            <field name="inventoryItemTypeId" title="${uiLabelMap.ProductInventoryItemTypeId}" use-when="product==null">
-                <drop-down allow-empty="false" >
-                    <entity-options entity-name="InventoryItemType" key-field-name="inventoryItemTypeId">
-                        <entity-order-by field-name="description"/>
-                    </entity-options>
-                </drop-down>
-            </field>
-            <field name="inventoryItemTypeId" title="${uiLabelMap.ProductInventoryItemTypeId}" use-when="product!=null">
-                <display-entity entity-name="InventoryItemType"/>
-            </field>
-            -->
+          <#-- SCIPIO: new from upstream since 2016-06-13 -->
+          <#if product?has_content>
+            <@field type="display" name="inventoryItemTypeId" label=uiLabelMap.ProductInventoryItemTypeId>
+                ${(product.getRelatedOne("InventoryItemType").get("description", locale))!}
+            </@field>
+          <#else>
+            <@field type="select" name="inventoryItemTypeId" label=uiLabelMap.ProductInventoryItemTypeId>
+                <#assign invItemTypes = delegator.findByAnd("InventoryItemType", {}, ["description"], true)![]>
+                <#list invItemTypes as invItemType>
+                    <@field type="option" value=invItemType.inventoryItemTypeId>${invItemType.get("description", locale)!invItemType.inventoryItemTypeId}</@field>
+                </#list>
+            </@field>
+          </#if> 
         </@cell>
     </@row>
     <@row>

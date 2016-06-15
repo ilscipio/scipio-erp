@@ -31788,4 +31788,8 @@
         <value xml:lang="de">Produkte verkauft</value>
         <value xml:lang="en">Products Sold</value>
     </property>    
+    <property key="ProductProductOverview">
+        <value xml:lang="de">Produktübersicht</value>
+        <value xml:lang="en">Product Overview</value>
+    </property>    
 </resource>

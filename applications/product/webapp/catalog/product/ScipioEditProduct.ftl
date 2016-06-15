@@ -30,14 +30,25 @@ under the License.
 
 <@section>
 <form name="EditProduct" target="<@ofbizUrl>updateProduct</@ofbizUrl>" method="post">
+
+  <#-- 2016-06-15: according to upstream patch, some of these fields are meant to be read-only
+    after creation...-->
+  <#assign readonlyAfterCreate = (product?has_content)>
+  <#assign tooltipReadonlyAfterCreate = uiLabelMap.ProductNotModificationRecreatingProduct>
+
     <@row>
         <@cell>
             <#-- General info -->
             <@heading>${uiLabelMap.CommonOverview}</@heading>
-            <@field type="text" name="productId" label=uiLabelMap.ProductProductId value="${product.productId!}"/>
-            <@field type="text" name="productName" label=uiLabelMap.ProductProductName value="${product.productName!}" maxlength="255"/>
-            <@field type="text" name="internalName" label=uiLabelMap.ProductInternalName value="${product.internalName!}" maxlength="255"/>
-            <@field type="text" name="brandName" label=uiLabelMap.ProductBrandName value="${product.brandName!}" maxlength="60"/>
+          <#if product.productId?has_content>
+            <@field type="display" name="productId" label=uiLabelMap.ProductProductId value=product.productId />
+            <input type="hidden" name="productId" value="${product.productId}"/>
+          <#else>
+            <@field type="text" name="productId" label=uiLabelMap.ProductProductId value="" />
+          </#if>
+            <@field type="text" name="productName" label=uiLabelMap.ProductProductName value=(product.productName!) maxlength="255"/>
+            <@field type="text" name="internalName" label=uiLabelMap.ProductInternalName value=(product.internalName!) maxlength="255"/>
+            <@field type="text" name="brandName" label=uiLabelMap.ProductBrandName value=(product.brandName!) maxlength="60"/>
             <@field type="select" label=uiLabelMap.ProductProductType name="productTypeId">
               <#assign options =  delegator.findByAnd("ProductType",{},["description ASC"], true)>
                 <#list options as option>
@@ -56,13 +67,13 @@ under the License.
                             <#assign selected = false/>
                         </#if>
                     </#if>
-                    <@field type="option" value="${option.productTypeId!}" selected=selected>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.productTypeId!) selected=selected>${option.get("description", locale)}</@field>
                 </#list>
             </@field>
-            <@field type="text" name="manufacturerPartyId" label=uiLabelMap.ProductOemPartyId value="${product.manufacturerPartyId!}" maxlength="20"/>
+            <@field type="text" name="manufacturerPartyId" label=uiLabelMap.ProductOemPartyId value=(product.manufacturerPartyId!) maxlength="20"/>
             <@field type="textarea" label=uiLabelMap.CommonComments id="comments" name="comments">${product.comments!""}</@field>
-            <@field type="checkbox" name="isVirtual" label=uiLabelMap.ProductVirtualProduct value="${product.isVirtual?default('N')}"/>
-            <@field type="checkbox" name="isVariant" label=uiLabelMap.ProductVariantProduct value="${product.isVariant?default('N')}"/>        
+            <@field type="checkbox" name="isVirtual" label=uiLabelMap.ProductVirtualProduct value=(product.isVirtual!'N')/>
+            <@field type="checkbox" name="isVariant" label=uiLabelMap.ProductVariantProduct value=(product.isVariant!'N')/>        
         </@cell>
     </@row>
     <@row>
@@ -82,7 +93,7 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.productCategoryId}" selected=selected>${option.categoryName!} [${option.productCategoryId!}]</@field>
+                    <@field type="option" value=(option.productCategoryId) selected=selected>${option.categoryName!} [${option.productCategoryId!}]</@field>
                 </#list>
             </@field>
         </@cell>
@@ -91,9 +102,9 @@ under the License.
         <@cell>
             <#-- Misc -->
             <@heading>${uiLabelMap.CommonMiscellaneous}</@heading>
-            <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable value="${product.returnable?default('N')}" readonly=(product?has_content)/>
-            <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions value="${product.includeInPromotions?default('N')}" readonly=(product?has_content)/>
-            <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable value="${product.taxable?default('N')}" readonly=(product?has_content)/>
+            <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable value=(product.returnable!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions value=(product.includeInPromotions!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable value=(product.taxable!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
         </@cell>
     </@row>
     <@row>
@@ -110,7 +121,7 @@ under the License.
         <@cell>
             <#-- Rates -->
             <@heading>${uiLabelMap.CommonRate}</@heading>
-            <@field type="text" name="productRating" label=uiLabelMap.ProductRating value="${product.productRating!}" maxlength="255"/>
+            <@field type="text" name="productRating" label=uiLabelMap.ProductRating value=(product.productRating!) maxlength="255"/>
             <@field type="select" label=uiLabelMap.ProductRatingTypeEnum name="ratingTypeEnum">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_RATING_TYPE"},["description ASC"], true)/>
@@ -124,7 +135,7 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.enumTypeId!}" selected=selected>${option.get("description", locale)} (${option.get("enumCode", locale)})</@field>
+                    <@field type="option" value=(option.enumTypeId!) selected=selected>${option.get("description", locale)} (${option.get("enumCode", locale)})</@field>
                 </#list>
             </@field>
         </@cell>
@@ -133,7 +144,7 @@ under the License.
         <@cell>
             <#-- ShoppingCart -->
             <@heading>${uiLabelMap.CommonShoppingCart}</@heading>
-            <@field type="checkbox" name="orderDecimalQuantity" label=uiLabelMap.ProductShippingBox value="${product.orderDecimalQuantity?default('N')}" readonly=(product?has_content)/>
+            <@field type="checkbox" name="orderDecimalQuantity" label=uiLabelMap.ProductShippingBox value=(product.orderDecimalQuantity!'N') readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
         </@cell>
     </@row>
     <@row>
@@ -141,8 +152,8 @@ under the License.
                      
             <#-- Inventory -->
             <@heading>${uiLabelMap.CommonInventory}</@heading>
-            <@field type="checkbox" name="salesDiscWhenNotAvail" label=uiLabelMap.ProductSalesDiscontinuationNotAvailable value="${product.salesDiscWhenNotAvail?default('N')}"/>
-            <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory value="${product.requireInventory?default('N')}" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}"/>
+            <@field type="checkbox" name="salesDiscWhenNotAvail" label=uiLabelMap.ProductSalesDiscontinuationNotAvailable value=(product.salesDiscWhenNotAvail!'N')/>
+            <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory value=(product.requireInventory!'N') tooltip="${uiLabelMap.ProductInventoryRequiredProduct}"/>
             <@field type="select" label=uiLabelMap.ProductRequirementMethodEnumId name="requirementMethodEnumId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_REQ_METHOD"},["description ASC"], true)/>
@@ -156,7 +167,7 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.enumId!}" selected=selected>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.enumId!) selected=selected>${option.get("description", locale)}</@field>
                 </#list>
             </@field>
             <@field type="select" label=uiLabelMap.ProductLotId name="lotIdFilledIn">
@@ -164,7 +175,7 @@ under the License.
                 <@field type="option" value="Mandatory" selected=(product.lotIdFilledIn?has_content && product.lotIdFilledIn =="Mandatory")>${uiLabelMap.lotIdFilledInMandatory}</@field>
                 <@field type="option" value="Forbidden" selected=(product.lotIdFilledIn?has_content && product.lotIdFilledIn =="Forbidden")>${uiLabelMap.lotIdFilledInForbidden}</@field>
             </@field>
-            <@field type="text" name="inventoryMessage" label=uiLabelMap.ProductInventoryMessage value="${product.inventoryMessage!}" maxlength="255"/>
+            <@field type="text" name="inventoryMessage" label=uiLabelMap.ProductInventoryMessage value=(product.inventoryMessage!) maxlength="255"/>
           <#-- SCIPIO: new from upstream since 2016-06-13 -->
           <#if product?has_content>
             <@field type="display" name="inventoryItemTypeId" label=uiLabelMap.ProductInventoryItemTypeId>
@@ -185,7 +196,7 @@ under the License.
         <@cell>
             <#-- Amount -->
             <@heading>${uiLabelMap.CommonAmount}</@heading>
-            <@field type="checkbox" name="requireAmount" label=uiLabelMap.ProductRequireAmount value="${product.requireAmount?default('N')}"/>
+            <@field type="checkbox" name="requireAmount" label=uiLabelMap.ProductRequireAmount value=(product.requireAmount!'N')/>
             <@field type="select" label=uiLabelMap.ProductAmountUomTypeId name="amountUomTypeId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("UomType",{},["description ASC"], true)/>
@@ -199,7 +210,7 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.uomTypeId!}" selected=selected>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.uomTypeId!) selected=selected>${option.get("description", locale)}</@field>
                 </#list>
             </@field>
         </@cell>
@@ -208,7 +219,7 @@ under the License.
         <@cell>
            <#-- Measures -->
             <@heading>${uiLabelMap.CommonMeasures}</@heading>
-            <@field type="text" name="productHeight" label=uiLabelMap.ProductProductHeight value="${product.productHeight!}" maxlength="255"/>
+            <@field type="text" name="productHeight" label=uiLabelMap.ProductProductHeight value=(product.productHeight!) maxlength="255"/>
             <@field type="select" label=uiLabelMap.ProductHeightUomId name="heightUomId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
@@ -222,11 +233,11 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.uomId!}" selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
                 </#list>
             </@field>
         
-            <@field type="text" name="productWidth" label=uiLabelMap.ProductProductWidth value="${product.productWidth!}" maxlength="255"/>
+            <@field type="text" name="productWidth" label=uiLabelMap.ProductProductWidth value=(product.productWidth!) maxlength="255"/>
             <@field type="select" label=uiLabelMap.ProductWidthUomId name="widthUomId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
@@ -240,10 +251,10 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.uomId!}" selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
                 </#list>
             </@field>
-            <@field type="text" name="productDepth" label=uiLabelMap.ProductProductDepth value="${product.productDepth!}" maxlength="255"/>
+            <@field type="text" name="productDepth" label=uiLabelMap.ProductProductDepth value=(product.productDepth!) maxlength="255"/>
             <@field type="select" label=uiLabelMap.ProductDepthUomId name="depthUomId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
@@ -257,11 +268,11 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.uomId!}" selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
                 </#list>
             </@field>
         
-            <@field type="text" name="productDiameter" label=uiLabelMap.ProductProductDiameter value="${product.productDiameter!}" maxlength="255"/>
+            <@field type="text" name="productDiameter" label=uiLabelMap.ProductProductDiameter value=(product.productDiameter!) maxlength="255"/>
             <@field type="select" label=uiLabelMap.ProductDiameterUomId name="diameterUomId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
@@ -275,11 +286,11 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.uomId!}" selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
                 </#list>
             </@field>
         
-            <@field type="text" name="productWeight" label=uiLabelMap.ProductProductWeight value="${product.productWeight!}" maxlength="255"/>
+            <@field type="text" name="productWeight" label=uiLabelMap.ProductProductWeight value=(product.productWeight!) maxlength="255"/>
             <@field type="select" label=uiLabelMap.ProductWeightUomId name="weightUomId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"WEIGHT_MEASURE"},["description ASC"], true)/>
@@ -293,7 +304,7 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.uomId!}" selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
                 </#list>
             </@field>
         
@@ -389,7 +400,7 @@ under the License.
         <@cell>
             <#-- Shipping -->
             <@heading>${uiLabelMap.CommonShipping}</@heading>
-            <@field type="text" name="quantityIncluded" label=uiLabelMap.ProductQuantityIncluded value="${product.quantityIncluded!}" maxlength="255"/>
+            <@field type="text" name="quantityIncluded" label=uiLabelMap.ProductQuantityIncluded value=(product.quantityIncluded!) maxlength="255"/>
             <@field type="select" label=uiLabelMap.ProductQuantityUomId name="quantityUomId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{},["description ASC"], true)/>
@@ -403,11 +414,11 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.uomId!}" selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=selected>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
                 </#list>
             </@field>
-            <@field type="text" name="piecesIncluded" label=uiLabelMap.ProductPiecesIncluded value="${product.piecesIncluded!}" maxlength="20"/>
-            <@field type="checkbox" name="inShippingBox" label=uiLabelMap.ProductShippingBox value="${product.inShippingBox?default('N')}"/>
+            <@field type="text" name="piecesIncluded" label=uiLabelMap.ProductPiecesIncluded value=(product.piecesIncluded!) maxlength="20"/>
+            <@field type="checkbox" name="inShippingBox" label=uiLabelMap.ProductShippingBox value=(product.inShippingBox!'N')/>
             <@field type="select" label=uiLabelMap.ProductDefaultShipmentBoxTypeId name="defaultShipmentBoxTypeId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("ShipmentBoxType",{},["description ASC"], true)/>
@@ -421,10 +432,10 @@ under the License.
                     <#else>
                          <#assign selected = false/>
                     </#if>
-                    <@field type="option" value="${option.shipmentBoxTypeId!}" selected=selected>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.shipmentBoxTypeId!) selected=selected>${option.get("description", locale)}</@field>
                 </#list>
             </@field>
-            <@field type="checkbox" name="chargeShipping" label=uiLabelMap.ProductChargeShipping value="${product.chargeShipping?default('N')}"/>
+            <@field type="checkbox" name="chargeShipping" label=uiLabelMap.ProductChargeShipping value=(product.chargeShipping!'N')/>
         </@cell>
     </@row>
     <@row>

@@ -56,6 +56,11 @@ under the License.
         </field>
         <field name="hideEvents"><check/></field>
         <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
+
+        <!-- SCIPIO: ensure we see the form again after change -->
+        <field name="form"><hidden value="${parameters.form}"/></field>
+        <!-- SCIPIO: need to pass period so we return to the correct period -->
+        <field name="period"><hidden value="${parameters.period}"/></field> 
     </form>
 
     <!-- Forms Specific to portlet -->

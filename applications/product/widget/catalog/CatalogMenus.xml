@@ -456,18 +456,11 @@ under the License.
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
-        <!-- SCIPIO: only show this if has no update permission, because title is same as EditProduct -->
-        <menu-item name="ViewProduct" title="${uiLabelMap.ProductProduct}">
+        <menu-item name="ViewProduct" title="${uiLabelMap.ProductProductOverview}">
             <condition>
-                <and>
-                    <not>
-                        <if-empty field="parameters.productId"/>
-                    </not>
-                    <not>
-                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                    </not>
-                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                </and>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
             </condition>
             <link target="ViewProduct">
                 <parameter param-name="productId"/>

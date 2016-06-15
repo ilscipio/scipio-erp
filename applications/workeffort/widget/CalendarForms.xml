@@ -21,8 +21,6 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <!-- SCIPIO: NOTE: we don't currently include this filtering and it would not work anyway
-        because we are currently forced to disable  -->
     <form name="FilterCalendarEvents" type="single" target="calendar">
         <field name="calendarType">
             <drop-down allow-empty="false">

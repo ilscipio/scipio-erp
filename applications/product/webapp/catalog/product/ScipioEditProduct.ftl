@@ -20,6 +20,13 @@ under the License.
     <#assign product = {}/>
 </#if>
 
+<#-- 2016-06-15: if a productId was specified but we got no product for it, then that
+    is an error and shouldn't allow anything -->
+<#if productId?has_content && !product?has_content>
+  <@section>
+    <@commonMsg type="error">${getLabel("OrderProductNotFound", "OrderErrorUiLabels")!} (${productId})</@commonMsg>
+  </@section>
+<#else>
 
 <@section>
 <form name="EditProduct" target="<@ofbizUrl>updateProduct</@ofbizUrl>" method="post">
@@ -166,8 +173,9 @@ under the License.
           <#else>
             <@field type="select" name="inventoryItemTypeId" label=uiLabelMap.ProductInventoryItemTypeId>
                 <#assign invItemTypes = delegator.findByAnd("InventoryItemType", {}, ["description"], true)![]>
+                <#-- SCIPIO: NOTE: unlike stock we will explicitly set NON_SERIAL_INV_ITEM as the default because it's the most common/sensible -->
                 <#list invItemTypes as invItemType>
-                    <@field type="option" value=invItemType.inventoryItemTypeId>${invItemType.get("description", locale)!invItemType.inventoryItemTypeId}</@field>
+                    <@field type="option" value=invItemType.inventoryItemTypeId selected=("NON_SERIAL_INV_ITEM" == invItemType.inventoryItemTypeId)>${invItemType.get("description", locale)!invItemType.inventoryItemTypeId}</@field>
                 </#list>
             </@field>
           </#if> 
@@ -431,3 +439,5 @@ under the License.
 </form>
 
 </@section>
+
+</#if>

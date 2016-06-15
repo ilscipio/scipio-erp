@@ -808,7 +808,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#-- migrated from @renderCheckField (a.k.a. @renderCheckBox) form widget macro -->
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
-  "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", "passArgs":{}
+  "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
+  "readonly":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_checkbox_widget_defaultArgs)>
@@ -851,6 +852,9 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if type == "default">
     <#local type = "">
   </#if>
+  <#if readonly?is_string && readonly == "readonly">
+    <#local readonly = true>
+  </#if>
   <#local stylesPrefix = "field_checkbox_" + type?replace("-", "_")>
   <#local defaultClass = styles[stylesPrefix]!styles["field_checkbox_default"]!"">
   <#local class = addClassArgDefault(class, defaultClass)>
@@ -859,14 +863,14 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <@field_checkbox_markup_widget items=items id=id class=class style=style alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
-    labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    labelType=labelType labelPosition=labelPosition readonly=readonly origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -892,6 +896,10 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local title = tooltip>
   </#if>
 
+  <#if !readonly?is_boolean>
+    <#local readonly = false>
+  </#if>
+
   <#-- Scipio: must have id on each elem or else the foundation switches break 
        The first item receives the exact id passed to macro because this is what original ofbiz macros expect
        (and is logical for single items at least). -->
@@ -902,7 +910,16 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local itemClass = class>
     <#local itemAlert = alert>
     <#local itemStyle = style>
-    
+    <#local specEvents = {}>
+    <#local itemReadonly = readonly>
+    <#if item.readonly?? && item.readonly?is_boolean>
+      <#local itemReadonly = item.readonly>
+    </#if>
+    <#-- FIXME: need better way to implement readonly here -->
+    <#if itemReadonly>
+      <#local specEvents = specEvents + {"onclick": "return false"}>
+    </#if>
+
     <#local inputTitle = title>
     <#local inputClass = "">
     <#local inputAlert = false>
@@ -930,10 +947,11 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
         <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
         <#if currentId?has_content> id="${currentId}"</#if><#t/>
+        <#if itemReadonly> readonly="readonly"</#if><#t/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if><#t/>
         <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"<#t/>
         <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if><#t/>
-        <#if name?has_content> name="${name?html}"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#lt/>
+        <#if name?has_content> name="${name?html}"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#lt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
       <#-- FIXME: Should really have a better way to do this -->
       <#-- NOTE: Currently, the br must be inside the span, as long as this is not fixed -->
@@ -954,7 +972,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
   "items":"", "id":"", "class":"", "style":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
-  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "passArgs":{}
+  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "readonly":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_radio_widget_defaultArgs)>
@@ -969,6 +987,9 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !type?has_content>
     <#local type = "default">
   </#if>
+  <#if readonly?is_string && readonly == "readonly">
+    <#local readonly = true>
+  </#if>
   <#local stylesPrefix = "field_radio_" + type?replace("-", "_")>
   <#local defaultClass = styles[stylesPrefix]!styles["field_radio_default"]!"">
   <#local class = addClassArgDefault(class, defaultClass)>
@@ -976,15 +997,20 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
   <@field_radio_markup_widget items=items id=id class=class style=style alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     events=events tooltip=tooltip title=title multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
-    type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
+    type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition readonly=readonly
+    origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_radio_markup_widget items="" id="" class="" style="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
-    labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
+  </#if>
+
+  <#if !readonly?is_boolean>
+    <#local readonly = false>
   </#if>
 
   <#if multiMode>
@@ -1012,6 +1038,15 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local itemClass = class>
     <#local itemAlert = alert>
     <#local itemStyle = style>
+    <#local itemReadonly = readonly>
+    <#local specEvents = {}>
+    <#if item.readonly?? && item.readonly?is_boolean>
+      <#local itemReadonly = item.readonly>
+    </#if>
+    <#-- FIXME: need better way to implement readonly here -->
+    <#if itemReadonly>
+      <#local specEvents = specEvents + {"onclick": "return false"}>
+    </#if>
     
     <#local inputClass = "">
     <#local inputAlert = false>
@@ -1037,7 +1072,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if currentId?has_content> id="${currentId}"</#if><#t/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
         <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if><#t/>
-        name="${name?html}" value="${(itemValue!"")?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
+        name="${name?html}" value="${(itemValue!"")?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#rt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">

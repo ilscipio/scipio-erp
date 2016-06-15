@@ -889,13 +889,6 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local class = addClassArg(class, "checkbox-item")>
   <#local class = addClassArg(class, inlineClass)>
 
-  <#if tooltip?has_content>
-    <#-- redundant...
-    <#local class = addClassArg(class, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
-    <#local attribs = attribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>-->
-    <#local title = tooltip>
-  </#if>
-
   <#if !readonly?is_boolean>
     <#local readonly = false>
   </#if>
@@ -916,15 +909,31 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local itemReadonly = item.readonly>
     </#if>
 
+    <#local labelClass = "">
+    <#local labelTitle = "">
+    <#local labelAttribs = {}>
+
     <#local inputTitle = title>
     <#local inputClass = "">
     <#local inputAlert = false>
     <#if item.tooltip?has_content || tooltip?has_content>
-      <#local inputClass = addClassArg(inputClass, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
-      <#if item.tooltip?has_content>
-        <#local inputTitle = item.tooltip>
+      <#-- SPECIAL CASE: if we have the special extralabel foundation labels, tooltip must go on
+        the extra label -->
+      <#if labelType == "extralabel">
+        <#local labelClass = addClassArg(labelClass, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
+        <#local labelAttribs = labelAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+        <#local labelTitle = tooltip>
+        <#if item.tooltip?has_content>
+          <#local labelTitle = item.tooltip>
+        </#if>
+      <#else>
+        <#local inputClass = addClassArg(inputClass, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
+        <#local inputAttribs = inputAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+        <#local inputTitle = tooltip>
+        <#if item.tooltip?has_content>
+          <#local inputTitle = item.tooltip>
+        </#if>
       </#if>
-      <#local inputAttribs = inputAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
     </#if>
 
     <#-- FIXME: need better way to implement readonly here -->
@@ -936,13 +945,13 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>>
       <#local labelMarkup>
         <#if labelType == "extralabel">
-          <label<#if currentId?has_content> for="${currentId}"</#if>></label>
+          <label<#if currentId?has_content> for="${currentId}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${labelTitle}"</#if><@fieldClassAttribStr class=labelClass/>></label>
           <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
           <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
         <#elseif labelType == "spanonly">
           <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
         <#else> <#-- labelType == "standard" -->
-          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label></#if>
+          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${currentId}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${labelTitle}"</#if><@fieldClassAttribStr class=labelClass/>>${item.description}</label></#if>
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
@@ -1028,12 +1037,6 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local attribs = {}>
   <#local class = addClassArg(class, "radio-item")>
   <#local class = addClassArg(class, inlineClass)>
-  <#if tooltip?has_content>
-    <#-- redundant...
-    <#local class = addClassArg(class, styles.field_radio_tooltip!styles.field_default_tooltip!"")>
-    <#local attribs = attribs + styles.field_radio_tooltip_attribs!styles.field_default_tooltip_attribs!{}>-->
-    <#local title = tooltip>
-  </#if>
   <#local currentId = id>
   <#list items as item>
     <#-- Scipio: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
@@ -1054,6 +1057,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if item.tooltip?has_content || tooltip?has_content>
       <#local inputClass = addClassArg(inputClass, styles.field_radio_tooltip!styles.field_default_tooltip!"")>
       <#local inputAttribs = inputAttribs + styles.field_radio_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+      <#local inputTitle = tooltip>
       <#if item.tooltip?has_content>
         <#local inputTitle = item.tooltip>
       </#if>

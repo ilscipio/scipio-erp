@@ -1262,6 +1262,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
+<#-- WARN: #compress must be used sparingly; using only around code parts -->
+<#compress>
   <#-- TODO: Group arguments above so easier to read... -->
 
   <#-- parent @fields group elem info (if any; may be omitted in templates) -->
@@ -1611,12 +1613,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         "norows":norows, "nocells":nocells, "container":container,
         "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
-      
+ 
   <#local defaultGridArgs = {"totalColumns":totalColumns, "labelColumns":labelColumns, 
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":useLabelArea, 
     "labelInRow":(effLabelType != "vertical"), "postfix":postfix, "postfixColumns":postfixColumns,
     "fieldsType":fieldsType, "labelSmallDiffColumns":labelSmallDiffColumns}>
-      
+</#compress>     
   <@field_markup_container type=type fieldsType=fieldsType defaultGridArgs=defaultGridArgs gridArgs=gridArgs postfix=postfix  
     postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent 
     collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass containerStyle=containerStyle

@@ -29,7 +29,7 @@ under the License.
 <#else>
 
 <@section>
-<form name="EditProduct" target="<@ofbizUrl>updateProduct</@ofbizUrl>" method="post">
+<form name="EditProduct" action="<@ofbizUrl>updateProduct</@ofbizUrl>" method="post">
 
   <#-- 2016-06-15: according to upstream patch, some of these fields are meant to be read-only
     after creation...-->

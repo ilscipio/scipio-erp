@@ -33,12 +33,24 @@ Recommended Development Tools
  * Groovy-eclipse
  * Freemarker IDE editor (select from JBools tools plugin)
 
-Prerequisits
-In order to install SCIPIO ERP, the following prerequisites must be installed properly:
+Prerequisites
+In order to install SCIPIO ERP, the following prerequisites must be installed:
 * Java 1.7 (or greater) SDK
  * Download and Install
  * Set JAVA_HOME Path
  * Validate Settings
+* Install Apache Ant
+ * Download and Install
+ * Set ANT_HOME Path
+
+Download
+The recommended way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, which
+provides you with the latest version of the 1.14.x line with latest important updates:
+
+1. Open your command line and run:
+a. git clone https://github.com/ilscipio/scipio-erp.git
+b. cd scipio-erp
+c. git checkout scipioce-1.14
 
 Installation
 In order to install, the following steps must be taken:
@@ -62,16 +74,24 @@ c. Windows: start.bat
 
 					Congratulations, you have installed SCIPIO ERP!
 
+Updates
+1. Retrieve latest code updates from git:
+a. git checkout scipioce-1.14
+b. git pull
+
+2. Reload visual themes:
+a. Restart SCIPIO server
+b. Visit entity utility services page:
+  https://localhost:8443/admin/control/EntityUtilityServices
+c. Click "Visual Theme Resources - Reload All, Now"
+
 Optional Configuration
-* OFBiz-related Configuration
-  https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide
-* Memory allocation
-  https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide#ApacheOFBizTechnicalProductionSetupGuide-MemorySettings
+  http://www.scipioerp.com/community/developer/installation-configuration/configuration/
 
 *****************
 * S U P P O R T *
 *****************
-For detailed changes to the SCIPIO ERP suite, visit the github wiki at:
+For detailed information and changes about the SCIPIO ERP suite, visit the official website at:
 
   https://www.scipioerp.com
 

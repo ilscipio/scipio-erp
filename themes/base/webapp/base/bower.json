@@ -7,7 +7,8 @@
     "Chart.js": "~2",
     "sass-to-js": "~1.1.0",
     "moment": "~2.11.1",
-    "jQuery": "~2.1",
-    "slick-carousel": "^1.5.9"
+    "jquery": "~2.1",
+    "slick-carousel": "^1.5.9",
+	"foundation-datepicker": "~1.2"
   }
 }

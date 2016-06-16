@@ -1115,7 +1115,7 @@ function convertToDateNorm(date, fillerDate) {
 	if (!date) {
 		return "";
 	}
-    var zeroPat = "0000-00-00";
+    var zeroPat = "0000-01-01";
     var result;
     if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d$/)) {
        if (date.length >= fillerDate.length) {
@@ -1180,5 +1180,40 @@ function convertToTimeNorm(time, fillerTime) {
     //if (result.length > zeroPat.length) {
     //	result = result.substring(0, zeroPat.length);
     //}   
+    return result;
+}
+
+/**
+ * Scipio: Transforms or truncates a date into normalize simple month format (yyyy-MM).
+ * TODO: more robust and user-friendly date handling
+ */
+function convertToMonthNorm(date, fillerDate) {
+	date = date.trim();
+	if (!date) {
+		return "";
+	}
+    var zeroPat = "0000-01";
+    var result;
+    if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d$/)) {
+       if (date.length >= fillerDate.length) {
+           result = date;
+       }
+       else {
+           result = date + fillerDate.substr(date.length);
+       }
+    }
+    else {
+       if (date.length >= zeroPat.length) {
+           result = date;
+       }
+       else {
+           // append zeroes
+           result = date + zeroPat.substr(date.length);
+       }
+    }
+    // TRUNCATE to ensure correctness
+    if (result.length > zeroPat.length) {
+    	result = result.substring(0, zeroPat.length);
+    }    
     return result;
 }

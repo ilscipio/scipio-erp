@@ -228,7 +228,7 @@ under the License.
                               </@td>
                               <@td valign="top" class="${styles.text_right!}">
                                   <#-- check for permission to modify price -->
-                                  <#if (allowPriceChange)>
+                                  <#if (allowPriceChange) && !(orderItem.statusId == "ITEM_CANCELLED" || orderItem.statusId == "ITEM_COMPLETED")>
                                       <input type="text" size="8" name="ipm_${orderItem.orderItemSeqId}" value="<@ofbizAmount amount=orderItem.unitPrice/>" class="${styles.text_right!}"/>
                                       <input type="hidden" name="opm_${orderItem.orderItemSeqId}" value="Y"/>
                                   <#else>
@@ -329,10 +329,12 @@ under the License.
                                     </@td>
                                     <@td></@td>
                                     <@td align="center">
+                                      <#if itemStatusOkay>
                                         <input type="text" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupQty?string.number}" class="${styles.text_right!}"/>
                                         <#if itemSelectable>
                                             <input type="hidden" name="selectedItem" value="${orderItem.orderItemSeqId}" />
                                         </#if>
+                                      </#if>
                                     </@td>
                                     <@td colspan="3"></@td>
                                     <@td>

@@ -56,6 +56,9 @@ under the License.
       <alias entity-alias="OH" name="grandTotal"/>
       <alias entity-alias="OH" name="productStoreId"/>
       <alias entity-alias="OH" name="orderTypeId"/>
+      <!-- Scipio: It's relevant to include this field in here -->
+      <alias entity-alias="OH" name="currencyUom"/>
+      <!--  -->
       <alias entity-alias="OI" name="orderItemSeqId"/>
       <alias entity-alias="OI" name="productId"/>
       <alias entity-alias="OI" name="quantity"/>

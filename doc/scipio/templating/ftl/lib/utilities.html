@@ -576,6 +576,25 @@ object found in the global <code>scipioNullObject</code> variable.          </di
                             <span class="lib-entry-param-desc-shortdesc"> If true, the original values are saved and restored after invocation</span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>asString</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, the render will render to a string like a regular FTL macro; otherwise goes straight to Ofbiz&#39;s writer</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+In stock Ofbiz, which is also current Scipio default behavior (for compabilitity and speed), render calls go directly to writer,
+which is faster but cannot be captured using freemarker <code>#assign</code> directive. If you need to capture
+output of <a href="#entry-render">@render</a>, pass true here.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+not supported for <code>type=&quot;section&quot;</code> as this time.          </div>
+</span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 

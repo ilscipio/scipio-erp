@@ -187,13 +187,14 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   "timeDropdownParamName":"", "defaultDateTimeString":"", "localizedIconTitle":"", "timeDropdown":"", "timeHourName":"", 
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":"", "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
-  "collapse":false, "fieldTitleBlank":false, "origLabel":"", "postfix":"", "inlineLabel":false, "passArgs":{}
+  "collapse":false, "fieldTitleBlank":false, "origLabel":"", "postfix":"", "postfixColumns":"", 
+  "manualInput":"", "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_datetime_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datetime_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#if !["date", "time", "timestamp"]?seq_contains(dateType)>
+  <#if !["date", "time", "timestamp", "month"]?seq_contains(dateType)>
     <#local dateType = "timestamp">
   </#if>
   <#if !dateDisplayType?has_content || dateDisplayType == "default">
@@ -204,23 +205,35 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !id?has_content>
     <#local id = getNextFieldId()>
   </#if>
+  <#if !manualInput?is_boolean>
+    <#local manualInput = true><#--TODO: unhardcode default-->
+  </#if>
   <@field_datetime_markup_widget name=name class=class style=style title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
-    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel postfix=postfix origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
+    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel postfix=postfix 
+    postfixColumns=postfixColumns manualInput=manualInput origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datetime_markup_widget name="" class="" style="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
-  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
-  <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#else>CommonFormatDateTime</#if></#local>
+  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#elseif dateDisplayType == "month">yyyy-MM<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#-- don't do this here, let script macro handle the picker-specific stuff
+  <#local dateFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+  -->
+  <#-- FIXME: since our format hardcoded, these will be all wrong:
+  <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#elseif dateDisplayType == "month">CommonFormatMonth<#else>CommonFormatDateTime</#if></#local>
+  -->
   <#local displayInputId = "">
+  <#if !postfixColumns?is_number>
+    <#local postfixColumns = 1>
+  </#if>
   <#local inputId = "">
   <#if id?has_content>
     <#local displayInputId = "${id}_i18n">
@@ -236,8 +249,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !postfix?is_boolean>
     <#local postfix = true>
   </#if>
-  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
-    <div class="${styles.grid_small!}<#if postfix>11<#else>12</#if> ${styles.grid_cell!}">
+  <div class="${styles.grid_row!} ${styles.collapse!} date">
+    <div class="${styles.grid_small!}<#if postfix>${12-postfixColumns}<#else>12</#if> ${styles.grid_cell!}">
       <#if tooltip?has_content> 
         <#local class = addClassArg(class, styles.field_datetime_tooltip!styles.field_default_tooltip!"")>
         <#-- tooltip supplants title -->
@@ -255,7 +268,10 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         </#if>
         <#if title?has_content>
           <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
+          <#-- FIXME: as above
           <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
+          -->
+          <#local dateFormatString = "${uiLabelMap.CommonFormat}: ${dateDisplayFormat}">
           <#if title == "FORMAT">
             <#local title = dateFormatString>
           <#elseif title == "LABEL">
@@ -274,25 +290,36 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
       <input type="text" name="${displayInputName}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
         <@fieldElemAttribStr attribs=attribs /><#t/>
+        <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
         <#if title?has_content> title="${title}"</#if><#t/>
         <#if value?has_content> value="${value}"</#if><#t/>
         <#if style?has_content> style="${style}"</#if><#t/>
         <#if size?has_content> size="${size}"</#if><#t/>
-        <#if maxlength?has_content> maxlength="${maxlength}"</#if>
-        <#if displayInputId?has_content> id="${displayInputId}"</#if> /><#t/>
+        <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
+        <#if !manualInput> readonly="readonly"</#if><#t/>
+        <#if displayInputId?has_content> id="${displayInputId}"</#if><#t/>
+        <#--don't set this stuff here anymore, because fdatepicker has bugs with this and also it's better to factor out the fdatepicker-specific stuff into the script macro:
+            data-date="" data-date-format="${dateFormatPicker}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${inputName}"</#if><#if inputId?has_content> id="${inputId}"</#if><#if value?has_content> value="${value}"</#if> />
     </div>
   <#if postfix>
-    <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+    <div class="${styles.grid_small!}${postfixColumns} ${styles.grid_cell!}">
       <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
     </div>
   </#if>
   </div>
-  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
+  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName 
+    dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
 </#macro>
 
-<#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" dateDisplayType="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
-  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+<#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" 
+    dateDisplayType="" dateFormatPicker="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
+  <#if !dateFormatPicker?has_content>
+    <#local dateFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+  </#if>
+  <#local fdatepickerOptions>{format:"${dateFormatPicker}" <#rt/>
+    <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
+    , forceParse:false}</#local><#lt/><#--redundant, don't do this here: format:"yyyy-mm-dd", -->
   <@script htmlwrap=htmlwrap>
     $(function() {
 
@@ -317,6 +344,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
             jQuery("#${inputId}").val(convertToDateNorm(dateI18nToNorm(this.value)));
           <#elseif dateType == "time">
             jQuery("#${inputId}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
+          <#elseif dateType == "month">
+            jQuery("#${inputId}").val(convertToMonthNorm(dateI18nToNorm(this.value)));
           </#if>
         });
         
@@ -335,6 +364,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
             jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
           <#elseif dateDisplayType == "date">
             jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
+          <#elseif dateDisplayType == "month">
+            jQuery("#${displayInputId}").val(dateNormToI18n(convertToMonthNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
           </#if>
         };
         
@@ -777,7 +808,9 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#-- migrated from @renderCheckField (a.k.a. @renderCheckBox) form widget macro -->
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
-  "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", "passArgs":{}
+  "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
+  "value":"", "altValue":"", "useHidden":"",
+  "readonly":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_checkbox_widget_defaultArgs)>
@@ -820,6 +853,9 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if type == "default">
     <#local type = "">
   </#if>
+  <#if readonly?is_string && readonly == "readonly">
+    <#local readonly = true>
+  </#if>
   <#local stylesPrefix = "field_checkbox_" + type?replace("-", "_")>
   <#local defaultClass = styles[stylesPrefix]!styles["field_checkbox_default"]!"">
   <#local class = addClassArgDefault(class, defaultClass)>
@@ -828,14 +864,17 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <@field_checkbox_markup_widget items=items id=id class=class style=style alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
-    labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    labelType=labelType labelPosition=labelPosition readonly=readonly 
+    value=value altValue=altValue origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
-     FIXME: the styling for these is strange, can't get it to work no matter what -->
+     FIXME: the styling for these is strange, can't get it to work no matter what 
+     FIXME: this markup macro is too overloaded with logic 
+     NOTE: "value", "altValue" and "useHidden" are only fallbacks/common/defaults; the ones in items maps have priority -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" value="" altValue="" useHidden="" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -854,11 +893,8 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local class = addClassArg(class, "checkbox-item")>
   <#local class = addClassArg(class, inlineClass)>
 
-  <#if tooltip?has_content>
-    <#-- redundant...
-    <#local class = addClassArg(class, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
-    <#local attribs = attribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>-->
-    <#local title = tooltip>
+  <#if !readonly?is_boolean>
+    <#local readonly = false>
   </#if>
 
   <#-- Scipio: must have id on each elem or else the foundation switches break 
@@ -867,42 +903,98 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local currentId = id>
   <#list items as item>
     <#local inputAttribs = {}>
-    <#local itemValue = item.value!"">
+    <#local itemValue = item.value!value!"">
+    <#local itemAltValue = item.altValue!altValue!false>
+    <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
+      <#local itemUseHidden = true>
+    <#else>
+      <#local itemUseHidden = item.useHidden!useHidden!false>
+      <#if !itemUseHidden?is_boolean>
+        <#local itemUseHidden = false>
+      </#if>
+    </#if>
+    <#if itemAltValue?is_boolean>
+      <#local itemAltValue = "">
+    </#if>
     <#local itemClass = class>
     <#local itemAlert = alert>
     <#local itemStyle = style>
-    
+    <#local specEvents = {}>
+    <#local itemReadonly = readonly>
+    <#if item.readonly?? && item.readonly?is_boolean>
+      <#local itemReadonly = item.readonly>
+    </#if>
+
+    <#local labelClass = "">
+    <#local labelTitle = "">
+    <#local labelAttribs = {}>
+
     <#local inputTitle = title>
     <#local inputClass = "">
     <#local inputAlert = false>
     <#if item.tooltip?has_content || tooltip?has_content>
-      <#local inputClass = addClassArg(inputClass, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
-      <#if item.tooltip?has_content>
-        <#local inputTitle = item.tooltip>
+      <#-- SPECIAL CASE: if we have the special extralabel foundation labels, tooltip must go on
+        the extra label -->
+      <#if labelType == "extralabel">
+        <#local labelClass = addClassArg(labelClass, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
+        <#local labelAttribs = labelAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+        <#local labelTitle = tooltip>
+        <#if item.tooltip?has_content>
+          <#local labelTitle = item.tooltip>
+        </#if>
+      <#else>
+        <#local inputClass = addClassArg(inputClass, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
+        <#local inputAttribs = inputAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+        <#local inputTitle = tooltip>
+        <#if item.tooltip?has_content>
+          <#local inputTitle = item.tooltip>
+        </#if>
       </#if>
-      <#local inputAttribs = inputAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
     </#if>
+
+    <#-- FIXME: need better way to implement readonly here -->
+    <#if itemReadonly>
+      <#local specEvents = specEvents + {"onclick": "return false"}>
+      <#local inputClass = addClassArg(inputClass, styles.disabled!)>
+    </#if>
+
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>>
       <#local labelMarkup>
         <#if labelType == "extralabel">
-          <label<#if currentId?has_content> for="${currentId}"</#if>></label>
+          <label<#if currentId?has_content> for="${currentId}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${labelTitle}"</#if><@fieldClassAttribStr class=labelClass/>></label>
           <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
           <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
         <#elseif labelType == "spanonly">
           <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
         <#else> <#-- labelType == "standard" -->
-          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label></#if>
+          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${currentId}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${labelTitle}"</#if><@fieldClassAttribStr class=labelClass/>>${item.description}</label></#if>
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
+      <#local inputChecked = false>
+      <#if item.checked?has_content>
+        <#if item.checked> 
+            <#local inputChecked = true>
+        </#if>
+      <#elseif allChecked?has_content>
+        <#if allChecked> 
+          <#local inputChecked = true>
+        </#if>
+      <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> 
+        <#local inputChecked = true>
+      <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> 
+        <#local inputChecked = true>
+      </#if>
+      <#if itemUseHidden>
+        <input type="hidden" name="${name?html}" value="<#if inputChecked>${itemValue?html}<#else>${itemAltValue?html}</#if>"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
+      </#if>
       <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
         <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
         <#if currentId?has_content> id="${currentId}"</#if><#t/>
-        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if><#t/>
-        <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"<#t/>
-        <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if><#t/>
-        <#if name?has_content> name="${name?html}"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#lt/>
+        <#if itemReadonly> readonly="readonly"</#if><#t/>
+        <#if inputChecked> checked="checked"</#if><#t/>
+        <#if name?has_content> name="${name?html}<#if itemUseHidden>_visible</#if>"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#lt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
       <#-- FIXME: Should really have a better way to do this -->
       <#-- NOTE: Currently, the br must be inside the span, as long as this is not fixed -->
@@ -910,6 +1002,21 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#local sepClass = addClassArg(sepClass, "checkbox-item-separator")>
       <#local sepClass = addClassArg(sepClass, inlineClass)>
       <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
+    <#if itemUseHidden>
+      <@script>
+        <#-- NOTE: it might be better somehow to do this on form submit, but this way there is no need to know the form name/id 
+            it should work as long as template doesn't try anything funny with JS -->
+        jQuery(document).ready(function() {
+            jQuery('#${currentId?js_string}').change(function() {
+                if (jQuery('#${currentId?js_string}').is(':checked')) {
+                    jQuery('#${currentId?js_string}_hidden').val("${itemValue?js_string}");
+                } else {
+                    jQuery('#${currentId?js_string}_hidden').val("${itemAltValue?js_string}");
+                }
+            });
+        });
+      </@script>
+    </#if>
     </span>
     <#if id?has_content>
       <#local currentId = id + "_" + (item_index + 2)?string>
@@ -923,7 +1030,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
   "items":"", "id":"", "class":"", "style":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
-  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "passArgs":{}
+  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "readonly":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_radio_widget_defaultArgs)>
@@ -938,6 +1045,9 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if !type?has_content>
     <#local type = "default">
   </#if>
+  <#if readonly?is_string && readonly == "readonly">
+    <#local readonly = true>
+  </#if>
   <#local stylesPrefix = "field_radio_" + type?replace("-", "_")>
   <#local defaultClass = styles[stylesPrefix]!styles["field_radio_default"]!"">
   <#local class = addClassArgDefault(class, defaultClass)>
@@ -945,15 +1055,21 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
   <@field_radio_markup_widget items=items id=id class=class style=style alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     events=events tooltip=tooltip title=title multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
-    type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
+    type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition readonly=readonly
+    origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
-<#-- field markup - theme override -->
+<#-- field markup - theme override 
+    FIXME: this markup macro is too overloaded with logic -->
 <#macro field_radio_markup_widget items="" id="" class="" style="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
-    labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
+  </#if>
+
+  <#if !readonly?is_boolean>
+    <#local readonly = false>
   </#if>
 
   <#if multiMode>
@@ -968,12 +1084,6 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local attribs = {}>
   <#local class = addClassArg(class, "radio-item")>
   <#local class = addClassArg(class, inlineClass)>
-  <#if tooltip?has_content>
-    <#-- redundant...
-    <#local class = addClassArg(class, styles.field_radio_tooltip!styles.field_default_tooltip!"")>
-    <#local attribs = attribs + styles.field_radio_tooltip_attribs!styles.field_default_tooltip_attribs!{}>-->
-    <#local title = tooltip>
-  </#if>
   <#local currentId = id>
   <#list items as item>
     <#-- Scipio: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
@@ -981,6 +1091,11 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local itemClass = class>
     <#local itemAlert = alert>
     <#local itemStyle = style>
+    <#local itemReadonly = readonly>
+    <#local specEvents = {}>
+    <#if item.readonly?? && item.readonly?is_boolean>
+      <#local itemReadonly = item.readonly>
+    </#if>
     
     <#local inputClass = "">
     <#local inputAlert = false>
@@ -989,10 +1104,18 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if item.tooltip?has_content || tooltip?has_content>
       <#local inputClass = addClassArg(inputClass, styles.field_radio_tooltip!styles.field_default_tooltip!"")>
       <#local inputAttribs = inputAttribs + styles.field_radio_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+      <#local inputTitle = tooltip>
       <#if item.tooltip?has_content>
         <#local inputTitle = item.tooltip>
       </#if>
     </#if>
+
+    <#-- FIXME: need better way to implement readonly here -->
+    <#if itemReadonly>
+      <#local specEvents = specEvents + {"onclick": "return false"}>
+      <#local inputClass = addClassArg(inputClass, styles.disabled!)>
+    </#if>
+
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>><#rt/>
       <#local labelMarkup>
         <#if item.description?has_content>
@@ -1000,13 +1123,24 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
+      <#local inputChecked = false>
+      <#if item.checked?has_content>
+        <#if item.checked> 
+          <#local inputChecked = true>
+        </#if>
+      <#elseif currentValue?has_content>
+        <#if currentValue==itemValue> 
+          <#local inputChecked = true>
+        </#if>
+      <#elseif defaultValue?has_content && defaultValue == itemValue> 
+        <#local inputChecked = true>
+      </#if>
       <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
         <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
         <#if currentId?has_content> id="${currentId}"</#if><#t/>
-        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
-        <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if><#t/>
-        name="${name?html}" value="${(itemValue!"")?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
+        <#if inputChecked> checked="checked"</#if><#t/>
+        name="${name?html}" value="${(itemValue!"")?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#rt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">

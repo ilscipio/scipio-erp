@@ -83,7 +83,11 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("createEmptyShoppingList?productStoreId=${productStoreId}") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreateNew />
+    <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreateNew>
+      <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
+       <input type="hidden" name="productStoreId" value="${productStoreId!}" />
+      </form>
+    </@menuitem>
   </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceShoppingLists menuContent=menuContent>
@@ -488,7 +492,13 @@ under the License.
                 </@td>
                 <@td align="right">
                     <a href="#" onclick="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                    <a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+                    <a href="javascript:document.removeFromShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+                    <form name="removeFromShoppingList" method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>">
+                      <fieldset>
+                        <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId!}">
+                        <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
+                      </fieldset>
+                    </form>
                   <#if isVirtual && productVariantAssocs?has_content>
                     <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_!>
                     <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_!>

@@ -1,31 +1,22 @@
-(function() {
+"use strict";
 
-	"use strict";
+module.exports = function(Chart) {
 
-	var root = this,
-		Chart = root.Chart,
-		helpers = Chart.helpers;
+	var helpers = Chart.helpers;
 
 	Chart.defaults.global.tooltips = {
 		enabled: true,
 		custom: null,
 		mode: 'single',
 		backgroundColor: "rgba(0,0,0,0.8)",
-		titleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-		titleFontSize: 12,
 		titleFontStyle: "bold",
 		titleSpacing: 2,
 		titleMarginBottom: 6,
 		titleColor: "#fff",
 		titleAlign: "left",
-		bodyFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-		bodyFontSize: 12,
-		bodyFontStyle: "normal",
 		bodySpacing: 2,
 		bodyColor: "#fff",
 		bodyAlign: "left",
-		footerFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-		footerFontSize: 12,
 		footerFontStyle: "bold",
 		footerSpacing: 2,
 		footerMarginTop: 6,
@@ -33,6 +24,8 @@
 		footerAlign: "left",
 		yPadding: 6,
 		xPadding: 6,
+		yAlign : 'center',
+		xAlign : 'center',
 		caretSize: 5,
 		cornerRadius: 6,
 		multiKeyBackground: '#fff',
@@ -72,8 +65,8 @@
 			// Args are: (tooltipItems, data)
 			beforeFooter: helpers.noop,
 			footer: helpers.noop,
-			afterFooter: helpers.noop,
-		},
+			afterFooter: helpers.noop
+		}
 	};
 
 	// Helper to push or concat based on if the 2nd parameter is an array or not
@@ -91,46 +84,51 @@
 
 	Chart.Tooltip = Chart.Element.extend({
 		initialize: function() {
+			var globalDefaults = Chart.defaults.global;
 			var options = this._options;
+			var tooltips = options.tooltips;
+
 			helpers.extend(this, {
 				_model: {
 					// Positioning
-					xPadding: options.tooltips.xPadding,
-					yPadding: options.tooltips.yPadding,
+					xPadding: tooltips.xPadding,
+					yPadding: tooltips.yPadding,
+					xAlign : tooltips.yAlign,
+					yAlign : tooltips.xAlign,
 
 					// Body
-					bodyColor: options.tooltips.bodyColor,
-					_bodyFontFamily: options.tooltips.bodyFontFamily,
-					_bodyFontStyle: options.tooltips.bodyFontStyle,
-					_bodyAlign: options.tooltips.bodyAlign,
-					bodyFontSize: options.tooltips.bodyFontSize,
-					bodySpacing: options.tooltips.bodySpacing,
+					bodyColor: tooltips.bodyColor,
+					_bodyFontFamily: helpers.getValueOrDefault(tooltips.bodyFontFamily, globalDefaults.defaultFontFamily),
+					_bodyFontStyle: helpers.getValueOrDefault(tooltips.bodyFontStyle, globalDefaults.defaultFontStyle),
+					_bodyAlign: tooltips.bodyAlign,
+					bodyFontSize: helpers.getValueOrDefault(tooltips.bodyFontSize, globalDefaults.defaultFontSize),
+					bodySpacing: tooltips.bodySpacing,
 
 					// Title
-					titleColor: options.tooltips.titleColor,
-					_titleFontFamily: options.tooltips.titleFontFamily,
-					_titleFontStyle: options.tooltips.titleFontStyle,
-					titleFontSize: options.tooltips.titleFontSize,
-					_titleAlign: options.tooltips.titleAlign,
-					titleSpacing: options.tooltips.titleSpacing,
-					titleMarginBottom: options.tooltips.titleMarginBottom,
+					titleColor: tooltips.titleColor,
+					_titleFontFamily: helpers.getValueOrDefault(tooltips.titleFontFamily, globalDefaults.defaultFontFamily),
+					_titleFontStyle: helpers.getValueOrDefault(tooltips.titleFontStyle, globalDefaults.defaultFontStyle),
+					titleFontSize: helpers.getValueOrDefault(tooltips.titleFontSize, globalDefaults.defaultFontSize),
+					_titleAlign: tooltips.titleAlign,
+					titleSpacing: tooltips.titleSpacing,
+					titleMarginBottom: tooltips.titleMarginBottom,
 
 					// Footer
-					footerColor: options.tooltips.footerColor,
-					_footerFontFamily: options.tooltips.footerFontFamily,
-					_footerFontStyle: options.tooltips.footerFontStyle,
-					footerFontSize: options.tooltips.footerFontSize,
-					_footerAlign: options.tooltips.footerAlign,
-					footerSpacing: options.tooltips.footerSpacing,
-					footerMarginTop: options.tooltips.footerMarginTop,
+					footerColor: tooltips.footerColor,
+					_footerFontFamily: helpers.getValueOrDefault(tooltips.footerFontFamily, globalDefaults.defaultFontFamily),
+					_footerFontStyle: helpers.getValueOrDefault(tooltips.footerFontStyle, globalDefaults.defaultFontStyle),
+					footerFontSize: helpers.getValueOrDefault(tooltips.footerFontSize, globalDefaults.defaultFontSize),
+					_footerAlign: tooltips.footerAlign,
+					footerSpacing: tooltips.footerSpacing,
+					footerMarginTop: tooltips.footerMarginTop,
 
 					// Appearance
-					caretSize: options.tooltips.caretSize,
-					cornerRadius: options.tooltips.cornerRadius,
-					backgroundColor: options.tooltips.backgroundColor,
+					caretSize: tooltips.caretSize,
+					cornerRadius: tooltips.cornerRadius,
+					backgroundColor: tooltips.backgroundColor,
 					opacity: 0,
-					legendColorBackground: options.tooltips.multiKeyBackground,
-				},
+					legendColorBackground: tooltips.multiKeyBackground
+				}
 			});
 		},
 
@@ -160,11 +158,9 @@
 			var lines = [];
 
 			helpers.each(tooltipItems, function(bodyItem) {
-				var beforeLabel = this._options.tooltips.callbacks.beforeLabel.call(this, bodyItem, data) || '';
-				var bodyLabel = this._options.tooltips.callbacks.label.call(this, bodyItem, data) || '';
-				var afterLabel = this._options.tooltips.callbacks.afterLabel.call(this, bodyItem, data) || '';
-
-				lines.push(beforeLabel + bodyLabel + afterLabel);
+				helpers.pushAllIfDefined(this._options.tooltips.callbacks.beforeLabel.call(this, bodyItem, data), lines);
+				helpers.pushAllIfDefined(this._options.tooltips.callbacks.label.call(this, bodyItem, data), lines);
+				helpers.pushAllIfDefined(this._options.tooltips.callbacks.afterLabel.call(this, bodyItem, data), lines);
 			}, this);
 
 			return lines;
@@ -191,24 +187,25 @@
 			return lines;
 		},
 
-		getAveragePosition: function(elements){
+		getAveragePosition: function(elements) {
 
-			if(!elements.length){
+			if (!elements.length) {
 				return false;
 			}
 
 			var xPositions = [];
 			var yPositions = [];
 
-			helpers.each(elements, function(el){
-				if(el) {
+			helpers.each(elements, function(el) {
+				if (el && el.hasValue()){
 					var pos = el.tooltipPosition();
 					xPositions.push(pos.x);
 					yPositions.push(pos.y);
 				}
 			});
 
-			var x = 0, y = 0;
+			var x = 0,
+				y = 0;
 			for (var i = 0; i < xPositions.length; i++) {
 				x += xPositions[i];
 				y += yPositions[i];
@@ -222,7 +219,7 @@
 		},
 
 		update: function(changed) {
-			if (this._active.length){
+			if (this._active.length) {
 				this._model.opacity = 1;
 
 				var element = this._active[0],
@@ -237,15 +234,17 @@
 						xLabel: element._xScale ? element._xScale.getLabelForIndex(element._index, element._datasetIndex) : '',
 						yLabel: yScale ? yScale.getLabelForIndex(element._index, element._datasetIndex) : '',
 						index: element._index,
-						datasetIndex: element._datasetIndex,
+						datasetIndex: element._datasetIndex
 					});
 					tooltipPosition = this.getAveragePosition(this._active);
 				} else {
 					helpers.each(this._data.datasets, function(dataset, datasetIndex) {
-						if (!helpers.isDatasetVisible(dataset)) {
+						if (!this._chartInstance.isDatasetVisible(datasetIndex)) {
 							return;
 						}
-						var currentElement = dataset.metaData[element._index];
+
+						var meta = this._chartInstance.getDatasetMeta(datasetIndex);
+						var currentElement = meta.data[element._index];
 						if (currentElement) {
 							var yScale = element._yScale || element._scale; // handle radar || polarArea charts
 
@@ -253,22 +252,21 @@
 								xLabel: currentElement._xScale ? currentElement._xScale.getLabelForIndex(currentElement._index, currentElement._datasetIndex) : '',
 								yLabel: yScale ? yScale.getLabelForIndex(currentElement._index, currentElement._datasetIndex) : '',
 								index: element._index,
-								datasetIndex: datasetIndex,
+								datasetIndex: datasetIndex
 							});
-						}
-					});
-
-					helpers.each(this._active, function(active) {
-						if (active) {
-						  labelColors.push({
-						  	borderColor: active._view.borderColor,
-						  	backgroundColor: active._view.backgroundColor
-						  });
 						}
 					}, this);
 
+					helpers.each(this._active, function(active) {
+						if (active) {
+							labelColors.push({
+								borderColor: active._view.borderColor,
+								backgroundColor: active._view.backgroundColor
+							});
+						}
+					}, null);
+
 					tooltipPosition = this.getAveragePosition(this._active);
-					tooltipPosition.y = this._active[0]._yScale.getPixelForDecimal(0.5);
 				}
 
 				// Build the Text Lines
@@ -277,23 +275,22 @@
 					beforeBody: this.getBeforeBody(tooltipItems, this._data),
 					body: this.getBody(tooltipItems, this._data),
 					afterBody: this.getAfterBody(tooltipItems, this._data),
-					footer: this.getFooter(tooltipItems, this._data),
+					footer: this.getFooter(tooltipItems, this._data)
 				});
 
 				helpers.extend(this._model, {
 					x: Math.round(tooltipPosition.x),
 					y: Math.round(tooltipPosition.y),
 					caretPadding: helpers.getValueOrDefault(tooltipPosition.padding, 2),
-					labelColors: labelColors,
+					labelColors: labelColors
 				});
 
-				// We need to determine alignment of 
+				// We need to determine alignment of
 				var tooltipSize = this.getTooltipSize(this._model);
 				this.determineAlignment(tooltipSize); // Smart Tooltip placement to stay on the canvas
 
 				helpers.extend(this._model, this.getBackgroundPoint(this._model, tooltipSize));
-			}
-			else{
+			} else {
 				this._model.opacity = 0;
 			}
 
@@ -330,7 +327,7 @@
 			ctx.font = helpers.fontString(vm.bodyFontSize, vm._bodyFontStyle, vm._bodyFontFamily);
 			helpers.each(vm.beforeBody.concat(vm.afterBody), function(line) {
 				size.width = Math.max(size.width, ctx.measureText(line).width);
-			}, this);
+			});
 			helpers.each(vm.body, function(line) {
 				size.width = Math.max(size.width, ctx.measureText(line).width + (this._options.tooltips.mode !== 'single' ? (vm.bodyFontSize + 2) : 0));
 			}, this);
@@ -344,30 +341,61 @@
 			return size;
 		},
 		determineAlignment: function determineAlignment(size) {
-			this._model.xAlign = this._model.yAlign = "center";
-
 			if (this._model.y < size.height) {
 				this._model.yAlign = 'top';
 			} else if (this._model.y > (this._chart.height - size.height)) {
 				this._model.yAlign = 'bottom';
 			}
 
-			var lf, rf;
+			var lf, rf; // functions to determine left, right alignment
+			var olf, orf; // functions to determine if left/right alignment causes tooltip to go outside chart
+			var yf; // function to get the y alignment if the tooltip goes outside of the left or right edges
 			var _this = this;
 			var midX = (this._chartInstance.chartArea.left + this._chartInstance.chartArea.right) / 2;
+			var midY = (this._chartInstance.chartArea.top + this._chartInstance.chartArea.bottom) / 2;
 
 			if (this._model.yAlign === 'center') {
-				lf = function(x) { return x <= midX; };
-				rf = function(x) { return x > midX; };
+				lf = function(x) {
+					return x <= midX;
+				};
+				rf = function(x) {
+					return x > midX;
+				};
 			} else {
-				lf = function(x) { return x <= (size.width / 2); };
-				rf = function(x) { return x >= (_this._chart.width - (size.width / 2)); };
+				lf = function(x) {
+					return x <= (size.width / 2);
+				};
+				rf = function(x) {
+					return x >= (_this._chart.width - (size.width / 2));
+				};
 			}
+
+			olf = function(x) {
+				return x + size.width > _this._chart.width;
+			};
+			orf = function(x) {
+				return x - size.width < 0;
+			};
+			yf = function(y) {
+				return y <= midY ? 'top' : 'bottom';
+			};
 
 			if (lf(this._model.x)) {
 				this._model.xAlign = 'left';
+
+				// Is tooltip too wide and goes over the right side of the chart.?
+				if (olf(this._model.x)) {
+					this._model.xAlign = 'center';
+					this._model.yAlign = yf(this._model.y);
+				}
 			} else if (rf(this._model.x)) {
 				this._model.xAlign = 'right';
+
+				// Is tooltip too wide and goes outside left edge of canvas?
+				if (orf(this._model.x)) {
+					this._model.xAlign = 'center';
+					this._model.yAlign = yf(this._model.y);
+				}
 			}
 		},
 		getBackgroundPoint: function getBackgroundPoint(vm, size) {
@@ -391,7 +419,7 @@
 				pt.y -= (size.height / 2);
 			}
 
-			if (vm.yAlign == 'center') {
+			if (vm.yAlign === 'center') {
 				if (vm.xAlign === 'left') {
 					pt.x += vm.caretPadding + vm.caretSize;
 				} else if (vm.xAlign === 'right') {
@@ -454,7 +482,8 @@
 				}
 			}
 
-			ctx.fillStyle = helpers.color(vm.backgroundColor).alpha(opacity).rgbString();
+			var bgColor = helpers.color(vm.backgroundColor);
+			ctx.fillStyle = bgColor.alpha(opacity * bgColor.alpha()).rgbString();
 			ctx.beginPath();
 			ctx.moveTo(x1, y1);
 			ctx.lineTo(x2, y2);
@@ -466,23 +495,27 @@
 			if (vm.title.length) {
 				ctx.textAlign = vm._titleAlign;
 				ctx.textBaseline = "top";
-				ctx.fillStyle = helpers.color(vm.titleColor).alpha(opacity).rgbString();
+
+				var titleColor = helpers.color(vm.titleColor);
+				ctx.fillStyle = titleColor.alpha(opacity * titleColor.alpha()).rgbString();
 				ctx.font = helpers.fontString(vm.titleFontSize, vm._titleFontStyle, vm._titleFontFamily);
 
 				helpers.each(vm.title, function(title, i) {
 					ctx.fillText(title, pt.x, pt.y);
 					pt.y += vm.titleFontSize + vm.titleSpacing; // Line Height and spacing
-					
+
 					if (i + 1 === vm.title.length) {
 						pt.y += vm.titleMarginBottom - vm.titleSpacing; // If Last, add margin, remove spacing
 					}
-				}, this);
+				});
 			}
 		},
 		drawBody: function drawBody(pt, vm, ctx, opacity) {
 			ctx.textAlign = vm._bodyAlign;
 			ctx.textBaseline = "top";
-			ctx.fillStyle = helpers.color(vm.bodyColor).alpha(opacity).rgbString();
+
+			var bodyColor = helpers.color(vm.bodyColor);
+			ctx.fillStyle = bodyColor.alpha(opacity * bodyColor.alpha()).rgbString();
 			ctx.font = helpers.fontString(vm.bodyFontSize, vm._bodyFontStyle, vm._bodyFontFamily);
 
 			// Before Body
@@ -529,13 +562,15 @@
 
 				ctx.textAlign = vm._footerAlign;
 				ctx.textBaseline = "top";
-				ctx.fillStyle = helpers.color(vm.footerColor).alpha(opacity).rgbString();
+
+				var footerColor = helpers.color(vm.footerColor);
+				ctx.fillStyle = footerColor.alpha(opacity * footerColor.alpha()).rgbString();
 				ctx.font = helpers.fontString(vm.footerFontSize, vm._footerFontStyle, vm._footerFontFamily);
 
 				helpers.each(vm.footer, function(footer) {
 					ctx.fillText(footer, pt.x, pt.y);
 					pt.y += vm.footerFontSize + vm.footerSpacing;
-				}, this);
+				});
 			}
 		},
 		draw: function draw() {
@@ -558,13 +593,14 @@
 
 			if (this._options.tooltips.enabled) {
 				// Draw Background
-				ctx.fillStyle = helpers.color(vm.backgroundColor).alpha(opacity).rgbString();
+				var bgColor = helpers.color(vm.backgroundColor);
+				ctx.fillStyle = bgColor.alpha(opacity * bgColor.alpha()).rgbString();
 				helpers.drawRoundedRectangle(ctx, pt.x, pt.y, tooltipSize.width, tooltipSize.height, vm.cornerRadius);
 				ctx.fill();
 
 				// Draw Caret
 				this.drawCaret(pt, tooltipSize, opacity, caretPadding);
-				
+
 				// Draw Title, Body, and Footer
 				pt.x += vm.xPadding;
 				pt.y += vm.yPadding;
@@ -580,5 +616,4 @@
 			}
 		}
 	});
-
-}).call(this);
+};

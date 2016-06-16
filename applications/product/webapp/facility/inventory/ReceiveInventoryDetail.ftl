@@ -81,6 +81,13 @@
                     ${product.description!}
                 </@field>
                 <@field type="input" label=uiLabelMap.ProductItemDescription name="itemDescription" size="30" maxlength="60"/>
+              <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH
+              <#if product.inventoryItemTypeId?has_content>
+                <input name="inventoryItemTypeId" type="hidden" value="${product.inventoryItemTypeId}" />
+                <#assign inventoryItemType = product.getRelatedOne("InventoryItemType", true)! />
+                ${inventoryItemType.description!}
+              <#else>
+              -->
                 <@field type="select" label=uiLabelMap.ProductInventoryItemType name="inventoryItemTypeId" size="1">
                     <#list inventoryItemTypes as nextInventoryItemType>
                         <option value="${nextInventoryItemType.inventoryItemTypeId}"<#rt>
@@ -88,6 +95,20 @@
                         ${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option><#lt>
                     </#list>
                 </@field>
+              <#--
+              </#if>
+              <#assign isSeriazed = Static["org.ofbiz.product.product.ProductWorker"].isSerialized(delegator, product.productId)!/>
+              <#if isSeriazed?has_content>
+                <tr>
+                  <td width="14%">&nbsp;</td>
+                  <td width="6%" align="right" nowrap="nowrap" class="label">${uiLabelMap.ProductSerialNumber}</td>
+                  <td width="6%">&nbsp;</td>
+                  <td width="74%">
+                      <input type="text" name="serialNumber" value="${parameters.serialNumber!}" />
+                  </td>
+                </tr>
+              </#if>
+              -->
                 <@field type="lookup" label=uiLabelMap.ProductFacilityOwner formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
                 <@field type="select" label=uiLabelMap.ProductSupplier name="partyId">
                     <option value=""></option>
@@ -295,7 +316,14 @@
                                         <#assign fieldValue><#if partialReceive??>0<#else>${defaultQuantity?string.number}</#if></#assign>
                                         <@field type="input" name="quantityAccepted_o_${orderItem_index}" size="6" value=fieldValue/>
                                     </@td>
-                                    <@td>       
+                                    <@td>      
+                                    <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH 
+                                    <#if product.inventoryItemTypeId?has_content>
+                                      <input name="inventoryItemTypeId_o_${rowCount}" type="hidden" value="${product.inventoryItemTypeId}" />
+                                      <#assign inventoryItemType = product.getRelatedOne("InventoryItemType", true)! />
+                                      ${inventoryItemType.description!}
+                                    <#else>
+                                    -->
                                         <@field type="select" name="inventoryItemTypeId_o_${orderItem_index}" size="1">
                                             <#list inventoryItemTypes as nextInventoryItemType>
                                                 <option value="${nextInventoryItemType.inventoryItemTypeId}"<#rt>
@@ -303,6 +331,9 @@
                                                 ${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option><#lt>
                                             </#list>
                                         </@field>
+                                    <#--
+                                    </#if>
+                                    -->
                                     </@td>
                                     <@td>         
                                         <@field type="select" name="rejectionId_o_${orderItem_index}" size="1">
@@ -315,6 +346,15 @@
                                     <@td>        
                                         <@field type="input" name="quantityRejected_o_${orderItem_index}" value="0" size="6"/>
                                     </@td>
+                                    <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH 
+                                    <td width="45%">
+                                      <#assign isSeriazed = Static["org.ofbiz.product.product.ProductWorker"].isSerialized(delegator, product.productId)!/>
+                                      <#if isSeriazed?has_content>
+                                        ${uiLabelMap.ProductSerialNumber} :&nbsp;
+                                        <input type="text" name="serialNumber_o_${rowCount}" value="" />
+                                      </#if>
+                                    </td>
+                                    -->
                                     <@td>               
                                         <#if !product.lotIdFilledIn?has_content || product.lotIdFilledIn != "Forbidden">
                                             <@field type="input" name="lotId_o_${orderItem_index}" size="20" />

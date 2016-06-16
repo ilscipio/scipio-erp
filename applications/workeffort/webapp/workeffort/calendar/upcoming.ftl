@@ -16,21 +16,33 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include 'calendarcommon.ftl'>
 
-  <#if days?has_content>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+<#-- SCIPIO: FTL now includes the title -->
+<@section title="${uiLabelMap.WorkEffortUpComingEvents}"><#--title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}"-->
+
+<#-- SCIPIO: have to pre-check if any content using this -->
+  <#assign hasEvents = false>
+  <#list days as day>
+    <#assign workEfforts = day.calendarEntries>
+    <#if workEfforts?has_content>
+      <#assign hasEvents = true>
+    </#if>
+  </#list>
+
+  <#if hasEvents>
+    <@table type="data-list" autoAltRows="" responsive=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
      <@thead>
       <@tr class="header-row">
-        <@th>${uiLabelMap.CommonStartDateTime}</@th>
-        <@th>${uiLabelMap.CommonEndDateTime}</@th>
-        <@th>${uiLabelMap.CommonType}</@th>
-        <@th>${uiLabelMap.WorkEffortName}</@th>
+        <@th width="20%">${uiLabelMap.CommonStartDateTime}</@th>
+        <@th width="20%">${uiLabelMap.CommonEndDateTime}</@th>
+        <@th width="15%">${uiLabelMap.CommonType}</@th>
+        <@th width="45%">${uiLabelMap.WorkEffortName}</@th>
       </@tr>
       </@thead>
       <#list days as day>
         <#assign workEfforts = day.calendarEntries>
         <#if workEfforts?has_content>
-          <@tr class="header-row"><@th colspan="4"><hr /></@th></@tr>
           <#list workEfforts as calendarEntry>
             <#assign workEffort = calendarEntry.workEffort>
             <@tr>
@@ -46,3 +58,4 @@ under the License.
   <#else>
     <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortNoEventsFound}.</@commonMsg>
   </#if>
+</@section>

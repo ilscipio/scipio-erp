@@ -449,11 +449,14 @@ under the License.
             <link target="FindProduct" />
         </menu-item>
         <menu-item name="EditProduct" title="${uiLabelMap.ProductProduct}">
+            <condition>
+                <if-has-permission permission="CATALOG" action="_UPDATE"/>
+            </condition>
             <link target="EditProduct">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
-        <menu-item name="ViewProduct" title="${uiLabelMap.ProductProduct}">
+        <menu-item name="ViewProduct" title="${uiLabelMap.ProductProductOverview}">
             <condition>
                 <not>
                     <if-empty field="parameters.productId"/>

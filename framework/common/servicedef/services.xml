@@ -821,10 +821,10 @@ under the License.
         Services must implement this interface in order to have the demo data generator using the common in/out attributes and also to be listed in the demoDataGenerator screen.
     -->
     <service name="demoDataGenerator" engine="interface">
-        <attribute name="num" type="Integer" mode="IN" optional="false"/>
+        <attribute name="num" type="Integer" mode="IN" optional="true" />
         <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="generatedData" type="java.util.ArrayList" mode="OUT"/>
+        <attribute name="generatedDataStats" type="java.util.Map" optional="true" mode="OUT"/>
     </service>
 
 </services>

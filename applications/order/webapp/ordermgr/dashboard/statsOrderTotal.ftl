@@ -24,8 +24,9 @@ under the License.
 <#assign ylabel=ylabel!""/>
 <#assign label1=label1!""/>
 <#assign label2=label2!""/>
-<#assign chartDataMap={"day":dailyStats,"week":weeklyStats,"month":monthlyStats}/>
-<#assign currData=chartDataMap[chartData]/>
+<#-- <#assign chartDataMap={"day":dailyStats,"week":weeklyStats,"month":monthlyStats}/>
+<#assign currData=chartDataMap[chartData]/> -->
+<#assign currData=orderStats/>
 <#assign fieldIdNum=fieldIdNum!0/>
 <#-- OrderOrdersTotals -->
 
@@ -34,7 +35,7 @@ under the License.
     <#if ((currData.isEmpty())!true) == false>
         <#list currData.keySet() as key>
           <#if chartType=="bar" || chartType=="line">
-            <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].pos)!0}" title="${key}"/>
+            <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].count)!0}" title="${key}"/>
           <#else>
             <@chartdata value="${(currData[key][chartValue])!0}" title="${key}"/>
           </#if>

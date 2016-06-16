@@ -1,10 +1,13 @@
 import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilProperties;
 
 //Debug.log("demo data generator service list");
 final DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME = "demoDataGenerator";
 
 curDispatchContext = dispatcher.getDispatchContext();
 serviceNames = curDispatchContext.getAllServiceNames();
+
+context.maxRecords = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
 
 servicesList = new ArrayList();
 
@@ -13,7 +16,7 @@ for (serviceName in serviceNames) {
     if (curServiceModel != null) {
         for (implService in curServiceModel.implServices) {
             if (implService.getService().equals(DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME)) {
-                Debug.log("curServiceModel ===========> " + curServiceModel.name);
+//                Debug.log("curServiceModel ===========> " + curServiceModel.name);
                 curServiceMap = [:];
                 engineName = curServiceModel.engineName ?: "NA";
                 defaultEntityName = curServiceModel.defaultEntityName ?: "NA";

@@ -14,7 +14,6 @@ Install via Bower
 -------------------
 bower install foundation-datepicker
 
-
 Manual Installation
 -------------------
 
@@ -32,4 +31,16 @@ http://foundation-datepicker.peterbeno.com/example.html
 
     &lt;link href=&quot;http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css&quot; rel=&quot;stylesheet&quot;&gt;
 	
-
+Language translations
+-------------------
+You can pass argument to constructor to choose language used:
+```
+$('.fdatepicker').fdatepicker({
+        language: 'de'
+    });
+```
+	
+Version without Font Awesome
+-------------------
+Can be found in separate branch:
+https://github.com/najlepsiwebdesigner/foundation-datepicker/tree/no-font-awesome

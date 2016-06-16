@@ -23,7 +23,7 @@ under the License.
             <#if product?has_content>
                 <@menuitem type="link" href=makeOfbizUrl("EditProduct") text=uiLabelMap.ProductNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />                        
                 <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?productId=${productId!}") text=uiLabelMap.ProductNewVirtualProduct class="+${styles.action_nav!} ${styles.action_add!}" />
-                <@menuitem type="link" href=makeOfbizUrl("ViewProduct?productId=${productId!}") text=uiLabelMap.ProductProduct class="+${styles.action_nav!} ${styles.action_view!}" />                        
+                <@menuitem type="link" href=makeOfbizUrl("ViewProduct?productId=${productId!}") text=uiLabelMap.ProductProductOverview class="+${styles.action_nav!} ${styles.action_view!}" />                        
             </#if>
         <#else>
             <@menuitem type="link" href=makeOfbizUrl("EditProduct") text=uiLabelMap.ProductNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />

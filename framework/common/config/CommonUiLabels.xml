@@ -16227,4 +16227,40 @@
     <property key="CommonServiceSuccessMessage">
         <value xml:lang="en">Operation has been executed successfully</value>
     </property>
+    <property key="CommonFormatMonth">
+        <value xml:lang="cs">Formát datumu: RRRR-MM</value>
+        <value xml:lang="de">Datumsformat: yyyy-MM</value>
+        <value xml:lang="en">Format: yyyy-MM</value>
+        <value xml:lang="en-GB">Format: MM/yyyy</value>
+        <value xml:lang="es">Formato: mm/aaaa</value>
+        <value xml:lang="fr">Format: MM/AAAA</value>
+        <value xml:lang="hi_IN">प्रारूप: yyyy-MM</value>
+        <value xml:lang="it">Formato: AAAA-MM</value>
+        <value xml:lang="ja">書式: yyyy-MM</value>
+        <value xml:lang="pt">Format: yyyy-MM</value>
+        <value xml:lang="pt_BR">Formato: AAAA-MM</value>
+        <value xml:lang="ru">Формат: гггг-ММ</value>
+        <value xml:lang="th">รูปแบบ : yyyy-MM</value>
+        <value xml:lang="vi">Định dạng ngày tháng: yyyy-MM</value>
+        <value xml:lang="zh">格式: yyyy-MM</value>
+        <value xml:lang="zh_TW">格式: yyyy-MM</value>
+    </property>
+    <property key="CommonFormat">
+        <value xml:lang="cs">Formát</value>
+        <value xml:lang="de">Format</value>
+        <value xml:lang="en">Format</value>
+        <value xml:lang="en-GB">Format</value>
+        <value xml:lang="es">Formato</value>
+        <value xml:lang="fr">Format</value>
+        <value xml:lang="hi_IN">प्रारूप</value>
+        <value xml:lang="it">Formato</value>
+        <value xml:lang="ja">書式</value>
+        <value xml:lang="pt">Format</value>
+        <value xml:lang="pt_BR">Formato</value>
+        <value xml:lang="ru">Формат</value>
+        <value xml:lang="th">รูปแบบ</value>
+        <value xml:lang="vi">Định dạng ngày tháng</value>
+        <value xml:lang="zh">格式</value>
+        <value xml:lang="zh_TW">格式</value>
+    </property>
 </resource>

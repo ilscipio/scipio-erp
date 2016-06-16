@@ -2555,7 +2555,7 @@ Does not support extended class +/= syntax.        </span>
                             <code>dateType</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(date-time|timestamp|date|time, default: date-time)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(date-time|timestamp|date|time|month, default: date-time)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">Type of datetime</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
@@ -2589,6 +2589,24 @@ will be a full timestamp.        </span>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>datePostfixColumns</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: 1)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Size of date-widget-specific postfix</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>manualInput</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Whether to allow manual input; if false, selection only through date picker</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>title</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -2614,7 +2632,7 @@ tooltip has priority over title.          </div>
                             <code>dateType</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(-same as datetime-)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(-same as datetime, except does not support month-)</code></span>
                         </td>
                       </tr>
                       <tr>
@@ -2622,7 +2640,7 @@ tooltip has priority over title.          </div>
                             <code>dateDisplayType</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(-same as datetime-)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(-same as datetime, except does not support month-)</code></span>
                         </td>
                       </tr>
                       <tr>
@@ -2932,6 +2950,41 @@ May also be specified as nested.        </span>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>useHidden</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, submits using a hidden field rather than checkbox itself</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+This affects javascript lookups, field name and id.          </div>
+        <span>
+If this is true, the <code>name</code> of the checkbox itself receives the suffix <code>_visible</code>,
+such that the hidden input receives the passed name. Any javascript must adapt appropriately.
+On the other hand, the <code>id</code> of the checkbox is unchanged, and the hidden field
+receives an id with a <code>_hidden</code> suffix.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>altValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Value to submit when checkbox not selected</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+This affects javascript lookups, field name and id; see <code>useHidden</code> parameter.          </div>
+        <span>
+If this is specified (non-boolean, non-false), it automatically turns on <code>useHidden</code>
+(without which implementation is impossible).        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>checked</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -2987,7 +3040,7 @@ Scipio standard theme:
                             <span class="lib-entry-param-desc-shortdesc">List of maps, if specified, multiple-items checkbox field generated</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-List of {&quot;value&quot;: (value), &quot;description&quot;: (label), &quot;tooltip&quot;: (tooltip), &quot;events&quot;: (js event map), &quot;checked&quot;: (true/false)} maps
+List of {&quot;value&quot;: (value), &quot;altValue&quot;: (value), &quot;useHidden&quot;: (boolean), &quot;description&quot;: (label), &quot;tooltip&quot;: (tooltip), &quot;events&quot;: (js event map), &quot;checked&quot;: (true/false)} maps
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>

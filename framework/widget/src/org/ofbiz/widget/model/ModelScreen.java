@@ -176,7 +176,13 @@ public class ModelScreen extends ModelWidget {
             // throw nested exception, don't need to log details here: Debug.logError(e, errMsg, module);
 
             // after rolling back, rethrow the exception
-            throw new ScreenRenderException(errMsg, e);
+            // SCIPIO: WORKAROUND: only wrap if it's not already a ScreenRenderException, to avoid huge log overload
+            // (even with this it is still heavy)
+            if (e instanceof ScreenRenderException) {
+                throw ((ScreenRenderException) e);
+            } else {
+                throw new ScreenRenderException(errMsg, e);
+            }
         }
     }
 

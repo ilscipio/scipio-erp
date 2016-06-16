@@ -1,5 +1,35 @@
 // Time scale tests
 describe('Time scale tests', function() {
+	var chartInstance;
+
+	beforeEach(function() {
+		window.addDefaultMatchers(jasmine);
+
+		// Need a time matcher for getValueFromPixel
+		jasmine.addMatchers({
+			toBeCloseToTime: function() {
+				return {
+					compare: function(actual, expected) {
+						var result = false;
+
+						var diff = actual.diff(expected.value, expected.unit, true);
+						result = Math.abs(diff) < (expected.threshold !== undefined ? expected.threshold : 0.5);
+
+						return {
+							pass: result
+						};
+					}
+				}
+			}
+		});
+	});
+
+	afterEach(function() {
+		if (chartInstance)
+		{
+			releaseChart(chartInstance);
+		}
+	});
 
 	it('Should load moment.js as a dependency', function() {
 		expect(window.moment).not.toBe(undefined);
@@ -17,45 +47,43 @@ describe('Time scale tests', function() {
 			display: true,
 			gridLines: {
 				color: "rgba(0, 0, 0, 0.1)",
+				drawBorder: true,
 				drawOnChartArea: true,
 				drawTicks: true,
+				tickMarkLength: 10,
 				lineWidth: 1,
 				offsetGridLines: false,
 				display: true,
 				zeroLineColor: "rgba(0,0,0,0.25)",
-				zeroLineWidth: 1,
+				zeroLineWidth: 1
 			},
 			position: "bottom",
 			scaleLabel: {
-				fontColor: '#666',
-				fontFamily: 'Helvetica Neue',
-				fontSize: 12,
-				fontStyle: 'normal',
 				labelString: '',
-				display: false,
+				display: false
 			},
 			ticks: {
 				beginAtZero: false,
-				fontColor: "#666",
-				fontFamily: "Helvetica Neue",
-				fontSize: 12,
-				fontStyle: "normal",
-				maxRotation: 90,
+				minRotation: 0,
+				maxRotation: 50,
 				mirror: false,
 				padding: 10,
 				reverse: false,
 				display: true,
 				callback: defaultConfig.ticks.callback, // make this nicer, then check explicitly below,
-				autoSkip: true,
-				autoSkipPadding: 20
+				autoSkip: false,
+				autoSkipPadding: 0,
+				labelOffset: 0
 			},
 			time: {
+				parser: false,
 				format: false,
 				unit: false,
 				round: false,
+				isoWeekday: false,
 				displayFormat: false,
 				displayFormats: {
-					'millisecond': 'SSS [ms]',
+					'millisecond': 'h:mm:ss.SSS a', // 11:20:01.123 AM
 					'second': 'h:mm:ss a', // 11:20:01 AM
 					'minute': 'h:mm:ss a', // 11:20:01 AM
 					'hour': 'MMM D, hA', // Sept 4, 5PM
@@ -63,8 +91,8 @@ describe('Time scale tests', function() {
 					'week': 'll', // Week 46, or maybe "[W]WW - YYYY" ?
 					'month': 'MMM YYYY', // Sept 2015
 					'quarter': '[Q]Q - YYYY', // Q3
-					'year': 'YYYY', // 2015
-				},
+					'year': 'YYYY' // 2015
+				}
 			}
 		});
 
@@ -94,7 +122,7 @@ describe('Time scale tests', function() {
 		scale.update(400, 50);
 
 		// Counts down because the lines are drawn top to bottom
-		expect(scale.ticks).toEqual(['Jan 1, 2015', 'Jan 3, 2015', 'Jan 5, 2015', 'Jan 7, 2015', 'Jan 9, 2015', 'Jan 11, 2015']);
+		expect(scale.ticks).toEqual([ 'Dec 28, 2014', 'Jan 4, 2015', 'Jan 11, 2015' ]);
 	});
 
 	it('should build ticks using date objects', function() {
@@ -122,7 +150,106 @@ describe('Time scale tests', function() {
 		scale.update(400, 50);
 
 		// Counts down because the lines are drawn top to bottom
-		expect(scale.ticks).toEqual(['Jan 1, 2015', 'Jan 3, 2015', 'Jan 5, 2015', 'Jan 7, 2015', 'Jan 9, 2015', 'Jan 11, 2015', 'Jan 13, 2015']);
+		expect(scale.ticks).toEqual([ 'Dec 28, 2014', 'Jan 4, 2015', 'Jan 11, 2015' ]);
+	});
+
+	it('should build ticks when the data is xy points', function() {
+		// Helper to build date objects
+		function newDateFromRef(days) {
+			return moment('01/01/2015 12:00', 'DD/MM/YYYY HH:mm').add(days, 'd').toDate();
+		}
+
+		chartInstance = window.acquireChart({
+			type: 'line',
+			data: {
+				datasets: [{
+					xAxisID: 'xScale0',
+					yAxisID: 'yScale0',
+					data: [{
+						x: newDateFromRef(0),
+						y: 1
+					}, {
+						x: newDateFromRef(1),
+						y: 10
+					}, {
+						x: newDateFromRef(2),
+						y: 0
+					}, {
+						x: newDateFromRef(4),
+						y: 5
+					}, {
+						x: newDateFromRef(6),
+						y: 77
+					}, {
+						x: newDateFromRef(7),
+						y: 9
+					}, {
+						x: newDateFromRef(9),
+						y: 5
+					}]
+				}],
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						id: 'xScale0',
+						type: 'time',
+						position: 'bottom'
+					}],
+					yAxes: [{
+						id: 'yScale0',
+						type: 'linear'
+					}]
+				}
+			}
+		});
+
+		// Counts down because the lines are drawn top to bottom
+		var xScale = chartInstance.scales.xScale0;
+		expect(xScale.ticks).toEqual([ 'Jan 1, 2015', 'Jan 3, 2015', 'Jan 5, 2015', 'Jan 7, 2015', 'Jan 9, 2015', 'Jan 11, 2015' ]);
+	});
+
+	it('should allow custom time parsers', function() {
+		chartInstance = window.acquireChart({
+			type: 'line',
+			data: {
+				datasets: [{
+					xAxisID: 'xScale0',
+					yAxisID: 'yScale0',
+					data: [{
+						x: 375068900,
+						y: 1
+					}]
+				}],
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						id: 'xScale0',
+						type: 'time',
+						position: 'bottom',
+						time: {
+							unit: 'day',
+							round: true,
+							parser: function customTimeParser(label) {
+								return moment.unix(label);
+							}
+						}
+					}],
+					yAxes: [{
+						id: 'yScale0',
+						type: 'linear'
+					}]
+				}
+			}
+		});
+
+		// Counts down because the lines are drawn top to bottom
+		var xScale = chartInstance.scales.xScale0;
+
+		// Counts down because the lines are drawn top to bottom
+		expect(xScale.ticks[0]).toEqualOneOf(['Nov 19, 1981', 'Nov 20, 1981', 'Nov 21, 1981']); // handle time zone changes
+		expect(xScale.ticks[1]).toEqualOneOf(['Nov 19, 1981', 'Nov 20, 1981', 'Nov 21, 1981']); // handle time zone changes
 	});
 
 	it('should build ticks using the config unit', function() {
@@ -133,7 +260,7 @@ describe('Time scale tests', function() {
 		};
 
 		var mockContext = window.createMockContext();
-		var config = Chart.scaleService.getScaleDefaults('time');
+		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('time'));
 		config.time.unit = 'hour';
 		var Constructor = Chart.scaleService.getScaleConstructor('time');
 		var scale = new Constructor({
@@ -158,7 +285,7 @@ describe('Time scale tests', function() {
 		};
 
 		var mockContext = window.createMockContext();
-		var config = Chart.scaleService.getScaleDefaults('time');
+		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('time'));
 		config.time.unit = 'week';
 		config.time.round = 'week';
 		var Constructor = Chart.scaleService.getScaleConstructor('time');
@@ -173,63 +300,139 @@ describe('Time scale tests', function() {
 
 		//scale.buildTicks();
 		scale.update(400, 50);
+
+		// last date is feb 15 because we round to start of week
 		expect(scale.ticks).toEqual(['Dec 28, 2014', 'Jan 4, 2015', 'Jan 11, 2015', 'Jan 18, 2015', 'Jan 25, 2015', 'Feb 1, 2015', 'Feb 8, 2015', 'Feb 15, 2015']);
 	});
 
-	it('should get the correct pixel for a value', function() {
+	it('Should use the min and max options', function() {
 		var scaleID = 'myScale';
 
 		var mockData = {
-			labels: ["2015-01-01T20:00:00", "2015-01-02T21:00:00", "2015-01-03T22:00:00", "2015-01-05T23:00:00", "2015-01-07T03:00", "2015-01-08T10:00", "2015-01-10T12:00"], // days
-			datasets: [{
-				data: [],
-			}]
+			labels: ["2015-01-01T20:00:00", "2015-01-02T20:00:00", "2015-01-03T20:00:00"], // days
 		};
 
 		var mockContext = window.createMockContext();
+		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('time'));
+		config.time.min = "2015-01-01T04:00:00";
+		config.time.max = "2015-01-05T06:00:00"
 		var Constructor = Chart.scaleService.getScaleConstructor('time');
 		var scale = new Constructor({
 			ctx: mockContext,
-			options: Chart.scaleService.getScaleDefaults('time'), // use default config for scale
+			options: config, // use default config for scale
 			chart: {
 				data: mockData
 			},
 			id: scaleID
 		});
 
-		//scale.buildTicks();
 		scale.update(400, 50);
+		expect(scale.ticks).toEqual([ 'Jan 1, 2015', 'Jan 5, 2015' ]);
+	});
 
-		expect(scale.width).toBe(400);
-		expect(scale.height).toBe(28);
-		scale.left = 0;
-		scale.right = 400;
-		scale.top = 10;
-		scale.bottom = 38;
+	it('Should use the isoWeekday option', function() {
+		var scaleID = 'myScale';
 
-		expect(scale.getPixelForValue('', 0, 0)).toBe(63);
-		expect(scale.getPixelForValue('', 6, 0)).toBe(342);
+		var mockData = {
+			labels: [
+				"2015-01-01T20:00:00", // Thursday
+				"2015-01-02T20:00:00", // Friday
+				"2015-01-03T20:00:00" // Saturday
+			]
+		};
 
-		var verticalScaleConfig = Chart.scaleService.getScaleDefaults('time');
-		verticalScaleConfig.position = "left";
-
-		var verticalScale = new Constructor({
+		var mockContext = window.createMockContext();
+		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('time'));
+		config.time.unit = 'week';
+		// Wednesday
+		config.time.isoWeekday = 3;
+		var Constructor = Chart.scaleService.getScaleConstructor('time');
+		var scale = new Constructor({
 			ctx: mockContext,
-			options: verticalScaleConfig,
+			options: config, // use default config for scale
 			chart: {
 				data: mockData
 			},
 			id: scaleID
 		});
-		verticalScale.update(50, 400);
-		expect(verticalScale.width).toBe(50);
-		expect(verticalScale.height).toBe(400);
-		verticalScale.top = 0;
-		verticalScale.left = 0;
-		verticalScale.right = 50;
-		verticalScale.bottom = 400;
 
-		expect(verticalScale.getPixelForValue('', 0, 0)).toBe(6);
-		expect(verticalScale.getPixelForValue('', 6, 0)).toBe(394);
+		scale.update(400, 50);
+		expect(scale.ticks).toEqual([ 'Dec 31, 2014', 'Jan 7, 2015' ]);
+	});
+
+	it('should get the correct pixel for a value', function() {
+		chartInstance = window.acquireChart({
+			type: 'line',
+			data: {
+				datasets: [{
+					xAxisID: 'xScale0',
+					yAxisID: 'yScale0',
+					data: []
+				}],
+				labels: ["2015-01-01T20:00:00", "2015-01-02T21:00:00", "2015-01-03T22:00:00", "2015-01-05T23:00:00", "2015-01-07T03:00", "2015-01-08T10:00", "2015-01-10T12:00"], // days
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						id: 'xScale0',
+						type: 'time',
+						position: 'bottom'
+					}],
+					yAxes: [{
+						id: 'yScale0',
+						type: 'linear',
+						position: 'left'
+					}]
+				}
+			}
+		});
+
+		var xScale = chartInstance.scales.xScale0;
+
+		expect(xScale.getPixelForValue('', 0, 0)).toBeCloseToPixel(78);
+		expect(xScale.getPixelForValue('', 6, 0)).toBeCloseToPixel(452);
+
+		expect(xScale.getValueForPixel(78)).toBeCloseToTime({
+			value: moment(chartInstance.data.labels[0]),
+			unit: 'hour',
+			threshold: 0.75
+		});
+		expect(xScale.getValueForPixel(452)).toBeCloseToTime({
+			value: moment(chartInstance.data.labels[6]),
+			unit: 'hour'
+		});
+	});
+
+	it('should get the correct label for a data value', function() {
+		chartInstance = window.acquireChart({
+			type: 'line',
+			data: {
+				datasets: [{
+					xAxisID: 'xScale0',
+					yAxisID: 'yScale0',
+					data: []
+				}],
+				labels: ["2015-01-01T20:00:00", "2015-01-02T21:00:00", "2015-01-03T22:00:00", "2015-01-05T23:00:00", "2015-01-07T03:00", "2015-01-08T10:00", "2015-01-10T12:00"], // days
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						id: 'xScale0',
+						type: 'time',
+						position: 'bottom'
+					}],
+					yAxes: [{
+						id: 'yScale0',
+						type: 'linear',
+						position: 'left'
+					}]
+				}
+			}
+		});
+
+		var xScale = chartInstance.scales.xScale0;
+		expect(xScale.getLabelForIndex(0, 0)).toBe('2015-01-01T20:00:00');
+		expect(xScale.getLabelForIndex(6, 0)).toBe('2015-01-10T12:00');
+
 	});
 });

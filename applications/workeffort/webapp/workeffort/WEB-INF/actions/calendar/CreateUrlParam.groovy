@@ -20,6 +20,26 @@
 import java.util.*;
 import org.ofbiz.base.util.*;
 
+// SCIPIO: due to name conflicts we must handle event edit submits specially
+if (parameters.calEventEdited == "Y") {
+    // save the previous values
+    parameters.calEventEdit_partyId = parameters.partyId;
+    parameters.calEventEdit_fixedAssetId = parameters.fixedAssetId;
+    parameters.calEventEdit_workEffortTypeId = parameters.workEffortTypeId;
+    parameters.calEventEdit_calendarType = parameters.calendarType;
+    parameters.calEventEdit_facilityId = parameters.facilityId;
+    parameters.calEventEdit_hideEvents = parameters.hideEvents;
+    
+    // restore the browsing values
+    parameters.partyId = parameters.calViewParams_partyId;
+    parameters.fixedAssetId = parameters.calViewParams_fixedAssetId;
+    parameters.workEffortTypeId = parameters.calViewParams_workEffortTypeId;
+    parameters.calendarType = parameters.calViewParams_calendarType;
+    parameters.facilityId = parameters.calViewParams_facilityId;
+    parameters.hideEvents = parameters.calViewParams_hideEvents;
+}
+
+
 // Allow containing screens to specify URL parameters to be included in calendar navigation links
 List urlParameterNames = context.urlParameterNames;
 if (urlParameterNames == null) {

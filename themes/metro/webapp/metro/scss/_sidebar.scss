@@ -168,7 +168,7 @@ $sidebar-width: 200px;
     padding: 7px 10px;
     width:100%;
     border: 1px solid #E6E9ED;
-    canvas {border:none; padding:0px;}
+    canvas {border:none; padding:0px;max-width:100%;}
 }
 
 #content-main-section {
@@ -178,6 +178,10 @@ $sidebar-width: 200px;
 #content-main-body{
     padding-left:20px;
     padding-right:20px;
+}
+
+.tab-bar-section h1 img{
+    height: 22px;
 }
 
 @media #{$large-up} {

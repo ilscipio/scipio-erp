@@ -1,33 +1,36 @@
-(function() {
-	"use strict";
+"use strict";
 
-	var root = this,
-		Chart = root.Chart,
-		//Cache a local reference to Chart.helpers
-		helpers = Chart.helpers;
+module.exports = function(Chart) {
 
+	var helpers = Chart.helpers;
 
 	Chart.defaults.polarArea = {
 
 		scale: {
 			type: "radialLinear",
-			lineArc: true, // so that lines are circular
+			lineArc: true // so that lines are circular
 		},
 
 		//Boolean - Whether to animate the rotation of the chart
-		animateRotate: true,
-		animateScale: true,
+		animation: {
+			animateRotate: true,
+			animateScale: true
+		},
 
 		aspectRatio: 1,
 		legendCallback: function(chart) {
 			var text = [];
 			text.push('<ul class="' + chart.id + '-legend">');
 
-			if (chart.data.datasets.length) {
-				for (var i = 0; i < chart.data.datasets[0].data.length; ++i) {
-					text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
-					if (chart.data.labels[i]) {
-						text.push(chart.data.labels[i]);
+			var data = chart.data;
+			var datasets = data.datasets;
+			var labels = data.labels;
+
+			if (datasets.length) {
+				for (var i = 0; i < datasets[0].data.length; ++i) {
+					text.push('<li><span style="background-color:' + datasets[0].backgroundColor[i] + '">');
+					if (labels[i]) {
+						text.push(labels[i]);
 					}
 					text.push('</span></li>');
 				}
@@ -38,40 +41,57 @@
 		},
 		legend: {
 			labels: {
-				generateLabels: function(data) {
-					return data.labels.map(function(label, i) {
-						return {
-							text: label,
-							fillStyle: data.datasets[0].backgroundColor[i],
-							hidden: isNaN(data.datasets[0].data[i]),
+				generateLabels: function(chart) {
+					var data = chart.data;
+					if (data.labels.length && data.datasets.length) {
+						return data.labels.map(function(label, i) {
+							var meta = chart.getDatasetMeta(0);
+							var ds = data.datasets[0];
+							var arc = meta.data[i];
+							var custom = arc.custom || {};
+							var getValueAtIndexOrDefault = helpers.getValueAtIndexOrDefault;
+							var arcOpts = chart.options.elements.arc;
+							var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+							var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+							var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
 
-							// Extra data used for toggling the correct item
-							index: i
-						};
-					});
+							return {
+								text: label,
+								fillStyle: fill,
+								strokeStyle: stroke,
+								lineWidth: bw,
+								hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+
+								// Extra data used for toggling the correct item
+								index: i
+							};
+						});
+					} else {
+						return [];
+					}
 				}
 			},
+
 			onClick: function(e, legendItem) {
-				helpers.each(this.chart.data.datasets, function(dataset) {
-					dataset.metaHiddenData = dataset.metaHiddenData || [];
-					var idx = legendItem.index;
+				var index = legendItem.index;
+				var chart = this.chart;
+				var i, ilen, meta;
 
-					if (!isNaN(dataset.data[idx])) {
-						dataset.metaHiddenData[idx] = dataset.data[idx];
-						dataset.data[idx] = NaN;
-					} else if (!isNaN(dataset.metaHiddenData[idx])) {
-						dataset.data[idx] = dataset.metaHiddenData[idx];
-					}
-				});
+				for (i = 0, ilen = (chart.data.datasets || []).length; i < ilen; ++i) {
+					meta = chart.getDatasetMeta(i);
+					meta.data[index].hidden = !meta.data[index].hidden;
+				}
 
-				this.chart.update();
+				chart.update();
 			}
 		},
 
 		// Need to override these to give a nice default
 		tooltips: {
 			callbacks: {
-				title: function() { return ''; },
+				title: function() {
+					return '';
+				},
 				label: function(tooltipItem, data) {
 					return data.labels[tooltipItem.index] + ': ' + tooltipItem.yLabel;
 				}
@@ -80,153 +100,130 @@
 	};
 
 	Chart.controllers.polarArea = Chart.DatasetController.extend({
-		linkScales: function() {
-			// no scales for doughnut
-		},
-		addElements: function() {
-			this.getDataset().metaData = this.getDataset().metaData || [];
-			helpers.each(this.getDataset().data, function(value, index) {
-				this.getDataset().metaData[index] = this.getDataset().metaData[index] || new Chart.elements.Arc({
-					_chart: this.chart.chart,
-					_datasetIndex: this.index,
-					_index: index,
-				});
-			}, this);
-		},
-		addElementAndReset: function(index) {
-			this.getDataset().metaData = this.getDataset().metaData || [];
-			var arc = new Chart.elements.Arc({
-				_chart: this.chart.chart,
-				_datasetIndex: this.index,
-				_index: index,
-			});
 
-			// Reset the point
-			this.updateElement(arc, index, true);
+		dataElementType: Chart.elements.Arc,
 
-			// Add to the points array
-			this.getDataset().metaData.splice(index, 0, arc);
-		},
-		getVisibleDatasetCount: function getVisibleDatasetCount() {
-			return helpers.where(this.chart.data.datasets, function(ds) { return helpers.isDatasetVisible(ds); }).length;
-		},
+		linkScales: helpers.noop,
 
 		update: function update(reset) {
-			var minSize = Math.min(this.chart.chartArea.right - this.chart.chartArea.left, this.chart.chartArea.bottom - this.chart.chartArea.top);
-			this.chart.outerRadius = Math.max((minSize - this.chart.options.elements.arc.borderWidth / 2) / 2, 0);
-			this.chart.innerRadius = Math.max(this.chart.options.cutoutPercentage ? (this.chart.outerRadius / 100) * (this.chart.options.cutoutPercentage) : 1, 0);
-			this.chart.radiusLength = (this.chart.outerRadius - this.chart.innerRadius) / this.getVisibleDatasetCount();
+			var _this = this;
+			var chart = _this.chart;
+			var chartArea = chart.chartArea;
+			var meta = this.getMeta();
+			var opts = chart.options;
+			var arcOpts = opts.elements.arc;
+			var minSize = Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+			chart.outerRadius = Math.max((minSize - arcOpts.borderWidth / 2) / 2, 0);
+			chart.innerRadius = Math.max(opts.cutoutPercentage ? (chart.outerRadius / 100) * (opts.cutoutPercentage) : 1, 0);
+			chart.radiusLength = (chart.outerRadius - chart.innerRadius) / chart.getVisibleDatasetCount();
 
-			this.getDataset().total = 0;
-			helpers.each(this.getDataset().data, function(value) {
-				this.getDataset().total += Math.abs(value);
-			}, this);
+			_this.outerRadius = chart.outerRadius - (chart.radiusLength * _this.index);
+			_this.innerRadius = _this.outerRadius - chart.radiusLength;
 
-			this.outerRadius = this.chart.outerRadius - (this.chart.radiusLength * this.index);
-			this.innerRadius = this.outerRadius - this.chart.radiusLength;
+			meta.count = _this.countVisibleElements();
 
-			helpers.each(this.getDataset().metaData, function(arc, index) {
-				this.updateElement(arc, index, reset);
-			}, this);
+			helpers.each(meta.data, function(arc, index) {
+				_this.updateElement(arc, index, reset);
+			});
 		},
 
 		updateElement: function(arc, index, reset) {
-			var circumference = this.calculateCircumference(this.getDataset().data[index]);
-			var centerX = (this.chart.chartArea.left + this.chart.chartArea.right) / 2;
-			var centerY = (this.chart.chartArea.top + this.chart.chartArea.bottom) / 2;
+			var _this = this;
+			var chart = _this.chart;
+			var chartArea = chart.chartArea;
+			var dataset = _this.getDataset();
+			var opts = chart.options;
+			var animationOpts = opts.animation;
+			var arcOpts = opts.elements.arc;
+			var custom = arc.custom || {};
+			var scale = chart.scale;
+			var getValueAtIndexOrDefault = helpers.getValueAtIndexOrDefault;
+			var labels = chart.data.labels;
 
-			// If there is NaN data before us, we need to calculate the starting angle correctly. 
+			var circumference = _this.calculateCircumference(dataset.data[index]);
+			var centerX = (chartArea.left + chartArea.right) / 2;
+			var centerY = (chartArea.top + chartArea.bottom) / 2;
+
+			// If there is NaN data before us, we need to calculate the starting angle correctly.
 			// We could be way more efficient here, but its unlikely that the polar area chart will have a lot of data
-			var notNullIndex = 0;
+			var visibleCount = 0;
+			var meta = _this.getMeta();
 			for (var i = 0; i < index; ++i) {
-				if (!isNaN(this.getDataset().data[i])) {
-					++notNullIndex;
+				if (!isNaN(dataset.data[i]) && !meta.data[i].hidden) {
+					++visibleCount;
 				}
 			}
 
-			var startAngle = (-0.5 * Math.PI) + (circumference * notNullIndex);
-			var endAngle = startAngle + circumference;
+			var distance = arc.hidden? 0 : scale.getDistanceFromCenterForValue(dataset.data[index]);
+			var startAngle = (-0.5 * Math.PI) + (circumference * visibleCount);
+			var endAngle = startAngle + (arc.hidden? 0 : circumference);
 
 			var resetModel = {
 				x: centerX,
 				y: centerY,
 				innerRadius: 0,
-				outerRadius: this.chart.options.animateScale ? 0 : this.chart.scale.getDistanceFromCenterForValue(this.getDataset().data[index]),
-				startAngle: this.chart.options.animateRotate ? Math.PI * -0.5 : startAngle,
-				endAngle: this.chart.options.animateRotate ? Math.PI * -0.5 : endAngle,
+				outerRadius: animationOpts.animateScale ? 0 : scale.getDistanceFromCenterForValue(dataset.data[index]),
+				startAngle: animationOpts.animateRotate ? Math.PI * -0.5 : startAngle,
+				endAngle: animationOpts.animateRotate ? Math.PI * -0.5 : endAngle,
 
-				backgroundColor: arc.custom && arc.custom.backgroundColor ? arc.custom.backgroundColor : helpers.getValueAtIndexOrDefault(this.getDataset().backgroundColor, index, this.chart.options.elements.arc.backgroundColor),
-				hoverBackgroundColor: arc.custom && arc.custom.hoverBackgroundColor ? arc.custom.hoverBackgroundColor : helpers.getValueAtIndexOrDefault(this.getDataset().hoverBackgroundColor, index, this.chart.options.elements.arc.hoverBackgroundColor),
-				borderWidth: arc.custom && arc.custom.borderWidth ? arc.custom.borderWidth : helpers.getValueAtIndexOrDefault(this.getDataset().borderWidth, index, this.chart.options.elements.arc.borderWidth),
-				borderColor: arc.custom && arc.custom.borderColor ? arc.custom.borderColor : helpers.getValueAtIndexOrDefault(this.getDataset().borderColor, index, this.chart.options.elements.arc.borderColor),
+				backgroundColor: custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(dataset.backgroundColor, index, arcOpts.backgroundColor),
+				borderWidth: custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(dataset.borderWidth, index, arcOpts.borderWidth),
+				borderColor: custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(dataset.borderColor, index, arcOpts.borderColor),
 
-				label: helpers.getValueAtIndexOrDefault(this.chart.data.labels, index, this.chart.data.labels[index])
+				label: getValueAtIndexOrDefault(labels, index, labels[index])
 			};
 
 			helpers.extend(arc, {
 				// Utility
-				_chart: this.chart.chart,
-				_datasetIndex: this.index,
+				_datasetIndex: _this.index,
 				_index: index,
-				_scale: this.chart.scale,
+				_scale: scale,
 
 				// Desired view properties
 				_model: reset ? resetModel : {
 					x: centerX,
 					y: centerY,
 					innerRadius: 0,
-					outerRadius: this.chart.scale.getDistanceFromCenterForValue(this.getDataset().data[index]),
+					outerRadius: distance,
 					startAngle: startAngle,
 					endAngle: endAngle,
 
-					backgroundColor: arc.custom && arc.custom.backgroundColor ? arc.custom.backgroundColor : helpers.getValueAtIndexOrDefault(this.getDataset().backgroundColor, index, this.chart.options.elements.arc.backgroundColor),
-					hoverBackgroundColor: arc.custom && arc.custom.hoverBackgroundColor ? arc.custom.hoverBackgroundColor : helpers.getValueAtIndexOrDefault(this.getDataset().hoverBackgroundColor, index, this.chart.options.elements.arc.hoverBackgroundColor),
-					borderWidth: arc.custom && arc.custom.borderWidth ? arc.custom.borderWidth : helpers.getValueAtIndexOrDefault(this.getDataset().borderWidth, index, this.chart.options.elements.arc.borderWidth),
-					borderColor: arc.custom && arc.custom.borderColor ? arc.custom.borderColor : helpers.getValueAtIndexOrDefault(this.getDataset().borderColor, index, this.chart.options.elements.arc.borderColor),
+					backgroundColor: custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(dataset.backgroundColor, index, arcOpts.backgroundColor),
+					borderWidth: custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(dataset.borderWidth, index, arcOpts.borderWidth),
+					borderColor: custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(dataset.borderColor, index, arcOpts.borderColor),
 
-					label: helpers.getValueAtIndexOrDefault(this.chart.data.labels, index, this.chart.data.labels[index])
-				},
+					label: getValueAtIndexOrDefault(labels, index, labels[index])
+				}
 			});
 
 			arc.pivot();
 		},
 
-		draw: function(ease) {
-			var easingDecimal = ease || 1;
-			helpers.each(this.getDataset().metaData, function(arc, index) {
-				arc.transition(easingDecimal).draw();
-			}, this);
-		},
-
-		setHoverStyle: function(arc) {
-			var dataset = this.chart.data.datasets[arc._datasetIndex];
-			var index = arc._index;
-
-			arc._model.backgroundColor = arc.custom && arc.custom.hoverBackgroundColor ? arc.custom.hoverBackgroundColor : helpers.getValueAtIndexOrDefault(dataset.hoverBackgroundColor, index, helpers.color(arc._model.backgroundColor).saturate(0.5).darken(0.1).rgbString());
-			arc._model.borderColor = arc.custom && arc.custom.hoverBorderColor ? arc.custom.hoverBorderColor : helpers.getValueAtIndexOrDefault(dataset.hoverBorderColor, index, helpers.color(arc._model.borderColor).saturate(0.5).darken(0.1).rgbString());
-			arc._model.borderWidth = arc.custom && arc.custom.hoverBorderWidth ? arc.custom.hoverBorderWidth : helpers.getValueAtIndexOrDefault(dataset.borderWidth, index, arc._model.borderWidth);
-		},
-
 		removeHoverStyle: function(arc) {
-			var dataset = this.chart.data.datasets[arc._datasetIndex];
-			var index = arc._index;
+			Chart.DatasetController.prototype.removeHoverStyle.call(this, arc, this.chart.options.elements.arc);
+		},
 
-			arc._model.backgroundColor = arc.custom && arc.custom.backgroundColor ? arc.custom.backgroundColor : helpers.getValueAtIndexOrDefault(this.getDataset().backgroundColor, index, this.chart.options.elements.arc.backgroundColor);
-			arc._model.borderColor = arc.custom && arc.custom.borderColor ? arc.custom.borderColor : helpers.getValueAtIndexOrDefault(this.getDataset().borderColor, index, this.chart.options.elements.arc.borderColor);
-			arc._model.borderWidth = arc.custom && arc.custom.borderWidth ? arc.custom.borderWidth : helpers.getValueAtIndexOrDefault(this.getDataset().borderWidth, index, this.chart.options.elements.arc.borderWidth);
+		countVisibleElements: function() {
+			var dataset = this.getDataset();
+			var meta = this.getMeta();
+			var count = 0;
+
+			helpers.each(meta.data, function(element, index) {
+				if (!isNaN(dataset.data[index]) && !element.hidden) {
+					count++;
+				}
+			});
+
+			return count;
 		},
 
 		calculateCircumference: function(value) {
-			if (isNaN(value)) {
-				return 0;
+			var count = this.getMeta().count;
+			if (count > 0 && !isNaN(value)) {
+				return (2 * Math.PI) / count;
 			} else {
-				// Count the number of NaN values 
-				var numNaN = helpers.where(this.getDataset().data, function(data) {
-					return isNaN(data);
-				}).length;
-
-				return (2 * Math.PI) / (this.getDataset().data.length - numNaN);
+				return 0;
 			}
 		}
 	});
-}).call(this);
+};

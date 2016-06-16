@@ -18,13 +18,41 @@
  */
 
 import java.util.*;
-import java.sql.Timestamp;
+import java.sql.Timestamp
+import java.text.*;
+
 import org.ofbiz.base.util.*;
 
+final module = "Days.groovy";
+
 String startParam = parameters.startTime;
+// SCIPIO: some screens pass start instead of startTime
+if (!startParam) {
+    startParam = parameters.start;
+}
+// SCIPIO: we must now also accept a startDate in yyyy-MM-dd format
+if (!startParam) {
+    String startDate = parameters.startDate;
+    if (startDate) {
+        DateFormat df = UtilDateTime.toDateFormat(UtilDateTime.DATE_FORMAT, timeZone, locale);
+        try {
+            java.util.Date parsedDate = df.parse(startDate);
+            // return it back to a long time as string to it'll fit in the code below
+            startParam = String.valueOf(parsedDate.getTime());
+        } catch(ParseException e) {
+            Debug.logError("Invalid date (will use now time instead): " + startDate, module);
+        }
+    }
+}
+
 Timestamp start = null;
 if (UtilValidate.isNotEmpty(startParam)) {
-    start = new Timestamp(Long.parseLong(startParam));
+    // SCIPIO: catch invalid dates
+    try {
+        start = new Timestamp(Long.parseLong(startParam));
+    } catch (NumberFormatException e) {
+        Debug.logError("Invalid long time (will use now time instead): " + startParam, module);
+    }
 }
 if (start == null) {
     start = UtilDateTime.getDayStart(nowTimestamp, timeZone, locale);
@@ -35,8 +63,13 @@ Timestamp prev = UtilDateTime.getDayStart(start, -1, timeZone, locale);
 context.prevMillis = new Long(prev.getTime()).toString();
 Timestamp next = UtilDateTime.getDayStart(start, 1, timeZone, locale);
 context.nextMillis = new Long(next.getTime()).toString();
-Map serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", parameters);
+// SCIPIO: bad types lead to crashes, so swap this around
+//Map serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", parameters);
+//serviceCtx.putAll(UtilMisc.toMap("userLogin", userLogin, "start", start, "numPeriods", 24, "periodType", Calendar.HOUR, "locale", locale, "timeZone", timeZone));
+Map serviceCtx = [:];
+serviceCtx.putAll(parameters);
 serviceCtx.putAll(UtilMisc.toMap("userLogin", userLogin, "start", start, "numPeriods", 24, "periodType", Calendar.HOUR, "locale", locale, "timeZone", timeZone));
+serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", serviceCtx);
 if (context.entityExprList) {
     serviceCtx.entityExprList = entityExprList;
 }

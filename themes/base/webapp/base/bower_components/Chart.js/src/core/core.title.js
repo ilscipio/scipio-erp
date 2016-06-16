@@ -1,25 +1,22 @@
-(function() {
-	"use strict";
+"use strict";
 
-	var root = this,
-		Chart = root.Chart,
-		helpers = Chart.helpers;
+module.exports = function(Chart) {
+
+	var helpers = Chart.helpers;
 
 	Chart.defaults.global.title = {
 		display: false,
 		position: 'top',
 		fullWidth: true, // marks that this box should take the full width of the canvas (pushing down other boxes)
 
-		fontColor: '#666',
-		fontFamily: 'Helvetica Neue',
-		fontSize: 12,
 		fontStyle: 'bold',
 		padding: 10,
 
 		// actual title
-		text: '',
+		text: ''
 	};
 
+	var noop = helpers.noop;
 	Chart.Title = Chart.Element.extend({
 
 		initialize: function(config) {
@@ -32,7 +29,7 @@
 
 		// These methods are ordered by lifecyle. Utilities then follow.
 
-		beforeUpdate: helpers.noop,
+		beforeUpdate: noop,
 		update: function(maxWidth, maxHeight, margins) {
 
 			// Update Lifecycle - Probably don't want to ever extend or overwrite this function ;)
@@ -62,11 +59,11 @@
 			return this.minSize;
 
 		},
-		afterUpdate: helpers.noop,
+		afterUpdate: noop,
 
 		//
 
-		beforeSetDimensions: helpers.noop,
+		beforeSetDimensions: noop,
 		setDimensions: function() {
 			// Set the unconstrained dimension before label rotation
 			if (this.isHorizontal()) {
@@ -91,105 +88,93 @@
 			// Reset minSize
 			this.minSize = {
 				width: 0,
-				height: 0,
+				height: 0
 			};
 		},
-		afterSetDimensions: helpers.noop,
+		afterSetDimensions: noop,
 
 		//
 
-		beforeBuildLabels: helpers.noop,
-		buildLabels: helpers.noop,
-		afterBuildLabels: helpers.noop,
+		beforeBuildLabels: noop,
+		buildLabels: noop,
+		afterBuildLabels: noop,
 
 		//
 
-		beforeFit: helpers.noop,
+		beforeFit: noop,
 		fit: function() {
 
-			var ctx = this.ctx;
-			var titleFont = helpers.fontString(this.options.fontSize, this.options.fontStyle, this.options.fontFamily);
+			var _this = this,
+				ctx = _this.ctx,
+				valueOrDefault = helpers.getValueOrDefault,
+				opts = _this.options,
+				globalDefaults = Chart.defaults.global,
+				display = opts.display,
+				fontSize = valueOrDefault(opts.fontSize, globalDefaults.defaultFontSize),
+				minSize = _this.minSize;
 
-			// Width
-			if (this.isHorizontal()) {
-				this.minSize.width = this.maxWidth; // fill all the width
+			if (_this.isHorizontal()) {
+				minSize.width = _this.maxWidth; // fill all the width
+				minSize.height = display ? fontSize + (opts.padding * 2) : 0;
 			} else {
-				this.minSize.width = 0;
+				minSize.width = display ? fontSize + (opts.padding * 2) : 0;
+				minSize.height = _this.maxHeight; // fill all the height
 			}
 
-			// height
-			if (this.isHorizontal()) {
-				this.minSize.height = 0;
-			} else {
-				this.minSize.height = this.maxHeight; // fill all the height
-			}
-
-			// Increase sizes here
-			if (this.isHorizontal()) {
-
-				// Title
-				if (this.options.display) {
-					this.minSize.height += this.options.fontSize + (this.options.padding * 2);
-				}
-			} else {
-				// TODO vertical
-			}
-
-			this.width = this.minSize.width;
-			this.height = this.minSize.height;
+			_this.width = minSize.width;
+			_this.height = minSize.height;
 
 		},
-		afterFit: helpers.noop,
+		afterFit: noop,
 
 		// Shared Methods
 		isHorizontal: function() {
-			return this.options.position == "top" || this.options.position == "bottom";
+			var pos = this.options.position;
+			return pos === "top" || pos === "bottom";
 		},
 
 		// Actualy draw the title block on the canvas
 		draw: function() {
-			if (this.options.display) {
-				var ctx = this.ctx;
-				var titleX, titleY;
+			var _this = this,
+				ctx = _this.ctx,
+				valueOrDefault = helpers.getValueOrDefault,
+				opts = _this.options,
+				globalDefaults = Chart.defaults.global;
+
+			if (opts.display) {
+				var fontSize = valueOrDefault(opts.fontSize, globalDefaults.defaultFontSize),
+					fontStyle = valueOrDefault(opts.fontStyle, globalDefaults.defaultFontStyle),
+					fontFamily = valueOrDefault(opts.fontFamily, globalDefaults.defaultFontFamily),
+					titleFont = helpers.fontString(fontSize, fontStyle, fontFamily),
+					rotation = 0,
+					titleX, 
+					titleY,
+					top = _this.top,
+					left = _this.left,
+					bottom = _this.bottom,
+					right = _this.right;
+
+				ctx.fillStyle = valueOrDefault(opts.fontColor, globalDefaults.defaultFontColor); // render in correct colour
+				ctx.font = titleFont;
 
 				// Horizontal
-				if (this.isHorizontal()) {
-					// Title
-					if (this.options.display) {
-
-						ctx.textAlign = "center";
-						ctx.textBaseline = 'middle';
-						ctx.fillStyle = this.options.fontColor; // render in correct colour
-						ctx.font = helpers.fontString(this.options.fontSize, this.options.fontStyle, this.options.fontFamily);
-
-						titleX = this.left + ((this.right - this.left) / 2); // midpoint of the width
-						titleY = this.top + ((this.bottom - this.top) / 2); // midpoint of the height
-
-						ctx.fillText(this.options.text, titleX, titleY);
-					}
+				if (_this.isHorizontal()) {
+					titleX = left + ((right - left) / 2); // midpoint of the width
+					titleY = top + ((bottom - top) / 2); // midpoint of the height
 				} else {
-
-					// Title
-					if (this.options.display) {
-						titleX = this.options.position == 'left' ? this.left + (this.options.fontSize / 2) : this.right - (this.options.fontSize / 2);
-						titleY = this.top + ((this.bottom - this.top) / 2);
-						var rotation = this.options.position == 'left' ? -0.5 * Math.PI : 0.5 * Math.PI;
-
-						ctx.save();
-						ctx.translate(titleX, titleY);
-						ctx.rotate(rotation);
-						ctx.textAlign = "center";
-						ctx.fillStyle = this.options.fontColor; // render in correct colour
-						ctx.font = helpers.fontString(this.options.fontSize, this.options.fontStyle, this.options.fontFamily);
-						ctx.textBaseline = 'middle';
-						ctx.fillText(this.options.text, 0, 0);
-						ctx.restore();
-
-					}
-
+					titleX = opts.position === 'left' ? left + (fontSize / 2) : right - (fontSize / 2);
+					titleY = top + ((bottom - top) / 2);
+					rotation = Math.PI * (opts.position === 'left' ? -0.5 : 0.5);
 				}
+
+				ctx.save();
+				ctx.translate(titleX, titleY);
+				ctx.rotate(rotation);
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				ctx.fillText(opts.text, 0, 0);
+				ctx.restore();
 			}
 		}
 	});
-
-}).call(this);
+};

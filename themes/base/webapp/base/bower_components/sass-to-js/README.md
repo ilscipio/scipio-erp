@@ -194,10 +194,11 @@ $(htmlEl)
 
 ### Codepen
 
-It's possible to use the library on Codepen when you use [sass-to-js Pen](http://codepen.io/malyw/pen/zGxodr)
-as [External Resource](http://blog.codepen.io/2013/05/28/new-feature-use-pens-as-external-resources/).
+It's possible to use the library on Codepen when you use [sass-to-js reusable Pen](http://codepen.io/malyw/pen/vOEygJ)
+as [External Resource](http://blog.codepen.io/2013/05/28/new-feature-use-pens-as-external-resources/):
 
-Example: [Sass-to-js demo](http://codepen.io/malyw/pen/zGxodr).
+* [Sass-to-js demo (Sass and jQuery)](http://codepen.io/malyw/pen/zGxodr)
+* [Sass-to-js demo (pure CSS and pure JavaScript)](http://codepen.io/malyw/pen/PqZOBd)
 
 ## Run the build, tests and watch
 

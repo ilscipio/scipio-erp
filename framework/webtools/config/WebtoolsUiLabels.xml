@@ -21,6 +21,7 @@
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <property key="ConnectionPoolStatus">
         <value xml:lang="en">Connection Pool Status</value>
+        <value xml:lang="fr">État du pool de connexions</value>
         <value xml:lang="ja">接続プールステータス</value>
         <value xml:lang="vi">Trạng thái chia sẻ kết nối cơ sở dữ liệu</value>
         <value xml:lang="zh">连接池状态</value>
@@ -2329,17 +2330,17 @@
         <value xml:lang="zh_TW">資料實體</value>
     </property>
     <property key="WebtoolsForSomethingInteresting">
-        <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: scipio -</value>
-        <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: scipio -</value>
-        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion : admin, et le mot de passe : scipio -</value>
-        <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:scipio -</value>
-        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password scipio - でログインしてください</value>
-        <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: scipio -</value>
-        <value xml:lang="ro">Daca esti interesat, trebuie sa ai autentificare, incearca cu cu Nume utilizator :admin, Pasword :scipio -</value>
-        <value xml:lang="th">เพื่อความแน่ใจคุณควรเข้าสู่ระบบโดยใช้ ชื่อผูใช้: admin, รหัสผ่าน: scipio -</value>
-        <value xml:lang="vi">Để khám phá hãy chắc chắn bạn đã đăng nhập, bạn có thể thử với tài khoản admin / scipio -</value>
-        <value xml:lang="zh">如果你对其中的某些功能感兴趣，请先登录，可以尝试使用用户名：admin、密码：scipio -登录</value>
-        <value xml:lang="zh_TW">如果你對其中的某些功能感興趣,請先登入,可以嘗試使用使用者名:admin、密碼:scipio -登入</value>
+        <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: scipio</value>
+        <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: scipio</value>
+        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion : admin, et le mot de passe : scipio</value>
+        <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:scipio</value>
+        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password scipio でログインしてください</value>
+        <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: scipio</value>
+        <value xml:lang="ro">Daca esti interesat, trebuie sa ai autentificare, incearca cu cu Nume utilizator :admin, Pasword :scipio</value>
+        <value xml:lang="th">เพื่อความแน่ใจคุณควรเข้าสู่ระบบโดยใช้ ชื่อผูใช้: admin, รหัสผ่าน: scipio </value>
+        <value xml:lang="vi">Để khám phá hãy chắc chắn bạn đã đăng nhập, bạn có thể thử với tài khoản admin / scipio</value>
+        <value xml:lang="zh">如果你对其中的某些功能感兴趣，请先登录，可以尝试使用用户名：admin、密码：scipio 登录</value>
+        <value xml:lang="zh_TW">如果你對其中的某些功能感興趣,請先登入,可以嘗試使用使用者名:admin、密碼:scipio 登入</value>
     </property>
     <property key="WebtoolsForUseWithFrequency">
         <value xml:lang="de">mit der Frequenz nutzen</value>
@@ -5937,5 +5938,11 @@
     <property key="WebtoolsUtilityAndDataGen">
         <value xml:lang="de">Dienstprogramm und Datengenerierung </value>  
         <value xml:lang="en">Utility and Data Generation</value>                
+    </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsInfo">        
+        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>                
+    </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
+        <value xml:lang="en">Currently set to ${maxRecords}</value>
     </property>
 </resource>

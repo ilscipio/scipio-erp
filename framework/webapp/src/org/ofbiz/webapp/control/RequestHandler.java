@@ -1210,12 +1210,17 @@ public class RequestHandler {
         boolean useHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y", delegator);
 
         if (Start.getInstance().getConfig().portOffset != 0) {
-            Integer httpPortValue = Integer.valueOf(httpPort);
-            httpPortValue += Start.getInstance().getConfig().portOffset;
-            httpPort = httpPortValue.toString();
-            Integer httpsPortValue = Integer.valueOf(httpsPort);
-            httpsPortValue += Start.getInstance().getConfig().portOffset;
-            httpsPort = httpsPortValue.toString();
+            // SCIPIO: ensure has value
+            if (!httpPort.isEmpty()) {
+                Integer httpPortValue = Integer.valueOf(httpPort);
+                httpPortValue += Start.getInstance().getConfig().portOffset;
+                httpPort = httpPortValue.toString();
+            }
+            if (!httpsPort.isEmpty()) {
+                Integer httpsPortValue = Integer.valueOf(httpsPort);
+                httpsPortValue += Start.getInstance().getConfig().portOffset;
+                httpsPort = httpsPortValue.toString();
+            }
         }
         
         StringBuilder newURL = new StringBuilder();
@@ -1460,14 +1465,14 @@ public class RequestHandler {
                 if (webappInfo != null) {
                     String webSiteId = WebAppUtil.getWebSiteId(webappInfo);
                     if (webSiteId != null && !webSiteId.isEmpty()) {
-                        webSiteProps = WebSiteProperties.from(delegator, webSiteId);
+                        webSiteProps = WebSiteProperties.from(request, webSiteId);
                     }
                     else {
-                        webSiteProps = WebSiteProperties.defaults(delegator);
+                        webSiteProps = WebSiteProperties.from(request);
                     }
                 }
                 else {
-                    webSiteProps = WebSiteProperties.defaults(delegator);
+                    webSiteProps = WebSiteProperties.from(request);
                 }
             } catch (Exception e) { // Scipio: just catch everything: GenericEntityException
                 // If the entity engine is throwing exceptions, then there is no point in continuing.
@@ -1480,8 +1485,8 @@ public class RequestHandler {
         }
         
         // Scipio: Special case: If we have inter-webapp, we need to check if the web site properties
-        // for this link different from the current webapp's. If so, we have to force full-path
-        // link. 
+        // for this link different from the current request's. If so, we have to force full-path
+        // link. Here we compare the effective values to ensure correctness. 
         // TODO? It is possible we could want to always force fullPath for all inter-webapp links.
         // Maybe make a url.properties option and allow force fullPath and force secure.
         if (interWebapp) {

@@ -16,8 +16,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<!-- Included CSS Files (Compressed) -->
 		<link rel="stylesheet" href="foundation/stylesheets/foundation.min.css">
-		<link rel="stylesheet" href="foundation/stylesheets/app.css">
-		<script src="foundation/javascripts/modernizr.foundation.js"></script>
+<!-- 		<link rel="stylesheet" href="foundation/stylesheets/app.css"> -->
+		<script src="foundation/javascripts/vendor/custom.modernizr.js"></script>
 		<!-- foundation end -->
 		<!-- foundation datepicker start -->
 		<script src="js/foundation-datepicker.js"></script>
@@ -174,7 +174,7 @@
 					<hr>
 					<h2>Using foundation-datepicker.js</h2>
 
-					<p>Call the datepicker via javascript:</p> <pre class="prettyprint linenums" style="padding-left:50px;">$('.datepicker').fdatepicker()</pre>
+					<p>Call the datepicker via javascript:</p> <pre class="prettyprint linenums" style="padding-left:50px;">$('.fdatepicker').fdatepicker()</pre>
 
 					 <h3>Options</h3>
 
@@ -192,7 +192,7 @@
 								<td>format</td>
 								<td>string</td>
 								<td>'mm/dd/yyyy'</td>
-								<td>the date format, combination of d, dd, m, mm, yy, yyy.</td>
+								<td>the date format, combination of d, dd, m, mm, yy, yyyy.</td>
 							</tr>
 							<tr>
 								<td>weekStart</td>
@@ -327,7 +327,7 @@ $(&#039;#dp5&#039;).fdatepicker()
 					if (ev.date.valueOf() > checkout.date.valueOf()) {
 						var newDate = new Date(ev.date)
 						newDate.setDate(newDate.getDate() + 1);
-						checkout.setValue(newDate);
+						checkout.update(newDate);
 					}
 					checkin.hide();
 					$('#dpd2')[0].focus();

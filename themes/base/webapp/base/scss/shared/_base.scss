@@ -492,3 +492,10 @@ input::-moz-focus-inner {
 input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox"] + label {
   display: inline;
 }
+
+/* Fix for the f-dropdown border */
+.f-dropdown {
+  outline: none;
+  box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+  -webkit-box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
+}

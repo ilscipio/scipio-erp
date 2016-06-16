@@ -303,8 +303,14 @@ function doPublish() {
                 <#list standardFeatureAppls as standardFeatureAppl>
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
                     <@tr valign="middle">
-                        <@td colspan="2"><a href="<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">x</a>
-                        ${productFeatureTypeLookup.get(featureId).description}: ${standardFeatureLookup.get(featureId).description}
+                        <@td colspan="2">
+                          <form name="quickAdminRemoveFeature_${standardFeatureAppl_index}" action="<@ofbizUrl>quickAdminRemoveFeatureFromProduct</@ofbizUrl>" method="post">
+                            <input type="hidden" name="productId" value="${standardFeatureAppl.productId!}" />
+                            <input type="hidden" name="productFeatureId" value="${featureId!}" />
+                            <input type="hidden" name="fromDate" value="${(standardFeatureAppl.fromDate)!}" />
+                            <a href="javascript:document.quickAdminRemoveFeature_${standardFeatureAppl_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">x</a>
+                            ${productFeatureTypeLookup.get(featureId).description}: ${standardFeatureLookup.get(featureId).description}
+                          </form>
                         </@td>
                     </@tr>
                 </#list>

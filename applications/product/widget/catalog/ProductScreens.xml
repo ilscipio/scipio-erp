@@ -103,7 +103,7 @@ under the License.
                                             </widgets>
                                         </section>
                                     </fail-widgets>
-                                </section>-->
+                                </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -156,7 +156,7 @@ under the License.
                 <set field="activeSubMenuItem" value="EditProduct"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="parameters.bypassIfNoProduct" value="true"/>
-                <set field="title" value="${uiLabelMap.PageTitleEditProduct} ${parameters.productId}"/>
+                <set field="title" value="${groovy: (parameters.productId &amp;&amp; parameters.isCreate != 'true') ? (uiLabelMap.PageTitleEditProduct + ' ' + parameters.productId) : (uiLabelMap.ProductNewProduct) }"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -1413,12 +1413,17 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/>
-                <set field="intervalPeriod" type="String" value="month"/>
+                <!-- <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/> -->
+                <set field="chartIntervalCount" type="Integer" value="1"/>
+                <set field="chartDatasets" value="1"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.ProductOne}"/> <!-- 1st dataset label -->
+                <set field="label2" value="${uiLabelMap.ProductTwo}"/> <!-- 2nd dataset label -->  
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/BestProducts.groovy"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.ProductBestSellingProductsFrom} ${dateBeginText} to ${dateEndText}">
+                <screenlet>
                     <section>
                         <condition>
                             <not>
@@ -1426,7 +1431,8 @@ under the License.
                             </not>
                         </condition>
                         <widgets>
-                            <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/>
+                            <!-- <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/> -->
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/product/ScipioBestProductChart.ftl" /></html></platform-specific>
                         </widgets>
                         <fail-widgets>
                             <label style="common-msg-result-norecord" text="${uiLabelMap.ProductNoProductFound}."></label>
@@ -1587,8 +1593,9 @@ under the License.
     <screen name="ScipioEditProduct">
         <section>
             <actions>
-           </actions>
-           <widgets>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/ScipioEditProduct.groovy"/>
+            </actions>
+            <widgets>
                 <section>
                      <widgets>
                        <screenlet>
@@ -1598,7 +1605,7 @@ under the License.
                        </screenlet>     
                    </widgets>
                 </section>
-           </widgets>
+            </widgets>
         </section>
     </screen>
     

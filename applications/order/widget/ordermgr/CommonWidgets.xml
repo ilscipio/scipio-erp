@@ -34,12 +34,11 @@ under the License.
   <screen name="DashboardStatsOrderTotalDay">
       <section>
             <actions> 
-                <set field="chartType" value="line"/>
-                <set field="chartValue" value="total"/>
-                <set field="chartData" value="day"/>
+                <set field="chartType" value="line"/>                
+                <set field="chartIntervalCount" value="1" type="Integer"/>
                 <set field="chartLibrary" value="chart"/>
-                <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
-                <set field="chartIntervalCount" value="1"/>     <!-- Look back x days/weeks/months/years -->
+                <set field="chartIntervalScope" value="day"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="6" type="Integer"/>     <!-- Look back x days/weeks/months/years -->
                 <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonDay}"/>
                 <set field="label1" value="${uiLabelMap.OrderTotal}"/>
@@ -59,10 +58,10 @@ under the License.
       <section>
             <actions> 
                 <set field="chartType" value="line"/>
-                <set field="chartValue" value="total"/>
-                <set field="chartData" value="week"/>
                 <set field="chartLibrary" value="chart"/>
-                <set field="title" value="${uiLabelMap.OrderNetSales} (${uiLabelMap.CommonPerWeek})"/>
+                <set field="chartIntervalScope" value="week"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="4" type="Integer"/>     <!-- Look back x days/weeks/months/years -->
+                <set field="title" value="${uiLabelMap.OrderGrossSales} (${uiLabelMap.CommonPerWeek})"/>
                 <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
                 <set field="label1" value="${uiLabelMap.OrderTotal}"/>
@@ -81,9 +80,9 @@ under the License.
       <section>
             <actions> 
                 <set field="chartType" value="bar"/>
-                <set field="chartValue" value="total"/>
-                <set field="chartData" value="month"/>
                 <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="3" type="Integer"/>     <!-- Look back x days/weeks/months/years -->
                 <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonMonth}"/>
                 <set field="label1" value="${uiLabelMap.OrderTotal}"/>
@@ -98,73 +97,6 @@ under the License.
             </widgets>
       </section>
   </screen>
-  
-   <screen name="DashboardStatsOrderCountDay">
-      <section>
-            <actions> 
-                <set field="chartType" value="line"/>
-                <set field="chartValue" value="count"/>
-                <set field="chartData" value="day"/>
-                <set field="chartLibrary" value="chart"/>
-                <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
-                <set field="chartIntervalCount" value="1"/>     <!-- Look back x days/weeks/months/years -->
-                <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
-                <set field="ylabel" value="${uiLabelMap.ProductProductsSold}"/>
-                <set field="label1" value="${uiLabelMap.OrderTotal}"/>
-                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
-                <set field="title" value="${uiLabelMap.OrderOrders} (${uiLabelMap.CommonPerDay})"/>
-            </actions>
-            <widgets>
-                <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
-                </platform-specific>
-            </widgets>
-      </section>
-  </screen>
-  
-  <screen name="DashboardStatsOrderCountWeek">
-      <section>
-            <actions> 
-                <set field="chartType" value="line"/>
-                <set field="chartValue" value="count"/>
-                <set field="chartData" value="week"/>
-                <set field="chartLibrary" value="chart"/>
-                <set field="title" value="${uiLabelMap.OrderOrders} (${uiLabelMap.CommonPerWeek})"/>
-                <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
-                <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
-                <set field="label1" value="${uiLabelMap.ProductProductsSold}"/>
-                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
-            </actions>
-            <widgets>
-                <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
-                </platform-specific>
-            </widgets>
-      </section>
-  </screen>      
-  
-  <screen name="DashboardStatsOrderCountMonth">
-      <section>
-            <actions> 
-                <set field="chartType" value="bar"/>
-                <set field="chartValue" value="count"/>
-                <set field="chartData" value="month"/>
-                <set field="chartLibrary" value="chart"/>
-                <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
-                <set field="ylabel" value="${uiLabelMap.CommonMonth}"/>
-                <set field="label1" value="${uiLabelMap.ProductProductsSold}"/>
-                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
-                <set field="title" value="${uiLabelMap.OrderOrders} (${uiLabelMap.CommonPerMonth})"/>
-            </actions>
-            <widgets>
-                <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
-                </platform-specific>
-            </widgets>
-      </section>
-  </screen> 
+   
 </screens>
 

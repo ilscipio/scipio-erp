@@ -129,15 +129,15 @@ under the License.
                                 <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                <include-screen name="BestSellingProducts" location="component://product/widget/catalog/ProductScreens.xml"/>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ScipioMarketingCampaigns"/>
+                                <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="BestSellingProducts" location="component://product/widget/catalog/ProductScreens.xml"/>
+                                <include-screen name="ScipioMarketingCampaigns"/>
                             </container>
                         </container>
                     </decorator-section>

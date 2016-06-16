@@ -124,7 +124,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonServiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-screen name="ViewCustRequest" location=""/>
+                        <include-screen name="ViewCustRequest" location="component://order/widget/ordermgr/CustRequestScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

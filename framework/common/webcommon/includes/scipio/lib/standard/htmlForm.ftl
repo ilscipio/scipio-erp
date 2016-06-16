@@ -1156,12 +1156,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               * {{{default}}}: default theme checkbox
                               Scipio standard theme:
                               * {{{simple}}}: guarantees a minimalistic checkbox
+    valueType               = (|indicator, default: -empty-) Special and predefined value types
+                              {{{indicator}}}: Same as passing {{{value="Y" altValue="N" useHidden=true}}}.
     
     * checkbox (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items checkbox field generated
-                              List of {"value": (value), "altValue": (value), "useHidden": (boolean), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
+                              List of {"value": (value), "altValue": (value), "useHidden": (boolean), 
+                              "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
+                              TODO: Currently the map does not support valueType
     inlineItems             = ((boolean), default: -from global styles-, fallback default: true) If true, radio items are many per line; if false, one per line
                               NOTE: this takes effect whether single-item or multiple-item radio.
                               the default can be overridden on a parent @field or @fields element.
@@ -1833,6 +1837,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip passArgs=passArgs/>
       <#break>
       <#case "checkbox">
+        <#if valueType?is_string && valueType == "indicator">
+          <#local value = "Y">
+          <#local altValue = "N">
+          <#local useHidden = true>
+        </#if>
         <#if !checkboxType?has_content>
           <#local checkboxType = fieldsInfo.checkboxType>
         </#if>

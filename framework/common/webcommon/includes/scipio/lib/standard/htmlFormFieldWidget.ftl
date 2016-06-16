@@ -809,6 +809,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
   "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
+  "value":"", "altValue":"", "useHidden":"",
   "readonly":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
@@ -863,15 +864,17 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <@field_checkbox_markup_widget items=items id=id class=class style=style alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
-    labelType=labelType labelPosition=labelPosition readonly=readonly origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    labelType=labelType labelPosition=labelPosition readonly=readonly 
+    value=value altValue=altValue origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what 
-     FIXME: this markup macro is too overloaded with logic -->
+     FIXME: this markup macro is too overloaded with logic 
+     NOTE: "value", "altValue" and "useHidden" are only fallbacks/common/defaults; the ones in items maps have priority -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" value="" altValue="" useHidden="" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -900,12 +903,12 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#local currentId = id>
   <#list items as item>
     <#local inputAttribs = {}>
-    <#local itemValue = item.value!"">
-    <#local itemAltValue = item.altValue!false>
+    <#local itemValue = item.value!value!"">
+    <#local itemAltValue = item.altValue!altValue!false>
     <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
       <#local itemUseHidden = true>
     <#else>
-      <#local itemUseHidden = item.useHidden!false>
+      <#local itemUseHidden = item.useHidden!useHidden!false>
       <#if !itemUseHidden?is_boolean>
         <#local itemUseHidden = false>
       </#if>

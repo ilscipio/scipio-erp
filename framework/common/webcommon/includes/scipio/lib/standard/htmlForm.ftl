@@ -1137,7 +1137,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     fieldFormName           = Contains the lookup window form name
     
     * checkbox (single mode) *
-    value                   = Y/N
+    value                   = Value to submit with form when checkbox is selected
     currentValue            = Current value, used to check if should be checked
     useHidden               = ((boolean), default: false) If true, submits using a hidden field rather than checkbox itself
                               WARN: This affects javascript lookups, field name and id.
@@ -1145,7 +1145,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               such that the hidden input receives the passed name. Any javascript must adapt appropriately.
                               On the other hand, the {{{id}}} of the checkbox is unchanged, and the hidden field
                               receives an id with a {{{_hidden}}} suffix.
-    altValue                = Value to submit when checkbox not selected
+    altValue                = Value to submit with form when checkbox is unselected
                               WARN: This affects javascript lookups, field name and id; see {{{useHidden}}} parameter.
                               If this is specified (non-boolean, non-false), it automatically turns on {{{useHidden}}}
                               (without which implementation is impossible).
@@ -1168,6 +1168,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     currentValue            = Current value, determines checked; this can be single-value string or sequence of value strings
     defaultValue            = Default value, determines checked (convenience parameter; used when currentValue empty; can also be sequence)
     allChecked              = ((boolean|), default: -empty-) Explicit false sets all to unchecked; leave empty "" for no setting (convenience parameter)
+    value                   = Default value for any items which do not specify their own
+    altValue                = Default alt (off) value for any items which do not specify their own
+    useHidden               = ((boolean), default: false) Default useHidden for any items which do not specify their own
     
     * radio (single mode) *
     value                   = Y/N, only used if single radio item mode (items not specified)
@@ -1856,7 +1859,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType 
-                readonly=readonly passArgs=passArgs/>
+            value=value altValue=altValue useHidden=useHidden
+            readonly=readonly passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">

@@ -68,10 +68,13 @@ under the License.
     <#assign productParamsRestr = parameters>
   </#if>
 
-  <#-- 2016-06-15: according to upstream patch, some of these fields are meant to be read-only
-    after creation...-->
-  <#assign readonlyAfterCreate = (product?has_content)>
-  <#assign tooltipReadonlyAfterCreate = uiLabelMap.ProductNotModificationRecreatingProduct>
+<#-- SCIPIO: 2016-06-15: according to upstream, some fields must be considered read-only after initial creation
+    pass this map to args= for affected fields 
+    NOTE: all those fields must also be changed to use productParamsRestr isntead of productParams! -->
+<#assign readOnlyAfterCreateArgs = {
+    "readonly":(product?has_content),
+    "tooltip":uiLabelMap.ProductNotModificationRecreatingProduct
+}>
 
     <#if !product?has_content>
       <input type="hidden" name="isCreate" value="true" />
@@ -134,9 +137,9 @@ under the License.
         <@cell>
             <#-- Misc -->
             <@heading>${uiLabelMap.CommonMiscellaneous}</@heading>
-            <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable currentValue=(productParamsRestr.returnable!product.returnable!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
-            <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions currentValue=(productParamsRestr.includeInPromotions!product.includeInPromotions!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
-            <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable currentValue=(productParamsRestr.taxable!product.taxable!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="returnable" args=readOnlyAfterCreateArgs label=uiLabelMap.ProductReturnable currentValue=(productParamsRestr.returnable!product.returnable!'N') value="Y" altValue="N" />
+            <@field type="checkbox" name="includeInPromotions" args=readOnlyAfterCreateArgs label=uiLabelMap.ProductIncludePromotions currentValue=(productParamsRestr.includeInPromotions!product.includeInPromotions!'N') value="Y" altValue="N" />
+            <@field type="checkbox" name="taxable" args=readOnlyAfterCreateArgs label=uiLabelMap.ProductTaxable currentValue=(productParamsRestr.taxable!product.taxable!'N') value="Y" altValue="N" />
         </@cell>
     </@row>
     <@row>
@@ -167,7 +170,7 @@ under the License.
         <@cell>
             <#-- ShoppingCart -->
             <@heading>${uiLabelMap.CommonShoppingCart}</@heading>
-            <@field type="checkbox" name="orderDecimalQuantity" label=uiLabelMap.ProductShippingBox currentValue=(productParamsRestr.orderDecimalQuantity!product.orderDecimalQuantity!'N') value="Y" altValue="N" readonly=readonlyAfterCreate tooltip=tooltipReadonlyAfterCreate/>
+            <@field type="checkbox" name="orderDecimalQuantity" args=readOnlyAfterCreateArgs label=uiLabelMap.ProductShippingBox currentValue=(productParamsRestr.orderDecimalQuantity!product.orderDecimalQuantity!'N') value="Y" altValue="N"/>
         </@cell>
     </@row>
     <@row>

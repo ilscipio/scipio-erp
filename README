@@ -34,7 +34,7 @@ Recommended Development Tools
  * Freemarker IDE editor (select from JBools tools plugin)
 
 Prerequisits
-In order to install SCIPIO ERP, the following prerequisites must be installed properly:
+In order to install SCIPIO ERP, the following prerequisites must be installed:
 * Java 1.7 (or greater) SDK
  * Download and Install
  * Set JAVA_HOME Path
@@ -66,10 +66,7 @@ c. Windows: start.bat
 					Congratulations, you have installed SCIPIO ERP!
 
 Optional Configuration
-* OFBiz-related Configuration
-  https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide
-* Memory allocation
-  https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide#ApacheOFBizTechnicalProductionSetupGuide-MemorySettings
+  http://www.scipioerp.com/community/developer/installation-configuration/configuration/
 
 *****************
 * S U P P O R T *

@@ -93,7 +93,28 @@ public class ScreenRenderer {
 
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
-     *
+     * <p>
+     * SCIPIO: modified for asString boolean which returns as string instead of going straight to writer.
+     * 
+     * @param combinedName A combination of the resource name/location for the screen XML file and the name of the screen within that file, separated by a pound sign ("#"). This is the same format that is used in the view-map elements on the controller.xml file.
+     * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    public String render(String combinedName, boolean asString) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
+        String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
+        // SCIPIO: return proper
+        return this.render(resourceName, screenName, asString);
+        //return "";
+    }
+    
+    /**
+     * Renders the named screen using the render environment configured when this ScreenRenderer was created.
+     * <p>
+     * SCIPIO: now delegating. Renders directly to writer.
+     * 
      * @param combinedName A combination of the resource name/location for the screen XML file and the name of the screen within that file, separated by a pound sign ("#"). This is the same format that is used in the view-map elements on the controller.xml file.
      * @throws IOException
      * @throws SAXException
@@ -102,20 +123,70 @@ public class ScreenRenderer {
     public String render(String combinedName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
         String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
-        this.render(resourceName, screenName);
-        return "";
+        // SCIPIO: return proper
+        return this.render(resourceName, screenName, false);
+        //return "";
+    }
+    
+    /**
+     * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
+     * and returns the result as a string (instead of directly to writer).
+     * 
+     * @param combinedName A combination of the resource name/location for the screen XML file and the name of the screen within that file, separated by a pound sign ("#"). This is the same format that is used in the view-map elements on the controller.xml file.
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    public String renderAsString(String combinedName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
+        String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
+        // SCIPIO: return proper
+        return this.render(resourceName, screenName, true);
+        //return "";
     }
 
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
+     * <p>
+     * SCIPIO: now delegating. Renders directly to writer.
      *
      * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
      * @param screenName The name of the screen within the XML file specified by the resourceName.
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
-     */
+     */    
     public String render(String resourceName, String screenName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return render(resourceName, screenName, false);
+    }
+    
+    /**
+     * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
+     * and returns the result as a string (instead of directly to writer).
+     *
+     * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
+     * @param screenName The name of the screen within the XML file specified by the resourceName.
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */    
+    public String renderAsString(String resourceName, String screenName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return render(resourceName, screenName, true);
+    }
+        
+    /**
+     * Renders the named screen using the render environment configured when this ScreenRenderer was created.
+     * <p>
+     * SCIPIO: modified for asString boolean which returns as string instead of going straight to writer.
+     *
+     * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
+     * @param screenName The name of the screen within the XML file specified by the resourceName.
+     * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    public String render(String resourceName, String screenName, boolean asString) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(resourceName, screenName);
         if (modelScreen.getUseCache()) {
             // if in the screen definition use-cache is set to true
@@ -134,13 +205,30 @@ public class ScreenRenderer {
                 modelScreen.renderScreenString(sw, context, screenStringRenderer);
                 gwo = new GenericWidgetOutput(sw.toString());
                 screenCache.put(screenCombinedName, wcck, gwo);
-                writer.append(gwo.toString());
+                // SCIPIO: may render to string
+                if (asString) {
+                    return gwo.toString();
+                } else {
+                    writer.append(gwo.toString());
+                }
             } else {
-                writer.append(gwo.toString());
+                // SCIPIO: may render to string
+                if (asString) {
+                    return gwo.toString();
+                } else {
+                    writer.append(gwo.toString());
+                }
             }
         } else {
             context.put("renderFormSeqNumber", String.valueOf(renderFormSeqNumber));
-            modelScreen.renderScreenString(writer, context, screenStringRenderer);
+            // SCIPIO: may render to string
+            if (asString) {
+                Writer sw = new StringWriter();
+                modelScreen.renderScreenString(sw, context, screenStringRenderer);
+                return sw.toString();
+            } else {
+                modelScreen.renderScreenString(writer, context, screenStringRenderer);
+            }
         }
         return "";
     }

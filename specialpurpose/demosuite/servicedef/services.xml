@@ -6,27 +6,27 @@
     <version>1.0</version>
 
     <service name="createOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/OrderData.groovy" 
-        invoke="createDemoOrder" transaction-timeout="7200" >
+        invoke="" transaction-timeout="7200" >
         <description>Creates a number of Order demo data</description>
         <implements service="demoDataGenerator"/>
     </service>
     
      <service name="createTransactionData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TransactionData.groovy" 
-        invoke="createDemoTransaction" transaction-timeout="7200">
+        invoke="" transaction-timeout="7200">
         <description>Creates a number of Acctg Transaction demo data</description>
         <implements service="demoDataGenerator"/>       
     </service>
     
     
     <service name="createWorkEffortData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/WorkEffortData.groovy" 
-        invoke="createDemoWorkEffort" transaction-timeout="7200">
+        invoke="" transaction-timeout="7200">
         <description>Creates a number of WorkEffort demo data</description>
         <implements service="demoDataGenerator"/>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="createProductData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/ProductData.groovy" 
-        invoke="createDemoProduct" transaction-timeout="7200" >
+        invoke="" transaction-timeout="7200" >
         <description>Creates a number of Product demo data</description>
         <implements service="demoDataGenerator"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
@@ -34,24 +34,25 @@
         <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
         <attribute name="productCategoryTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/>
+        <!-- Scipio: Let's comment this out for now -->
+        <!-- <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/> -->
     </service>
     
     <service name="createPartyData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/PartyData.groovy" 
-        invoke="createDemoParty" transaction-timeout="7200">
+        invoke="" transaction-timeout="7200">
         <description>Creates a number of Party demo data</description>
         <implements service="demoDataGenerator"/>
         <attribute name="generatePassword" type="Boolean" mode="IN" optional="false" default-value="true"/>        
     </service>
     
     
-    <service name="createTrackingCodeVisitData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeData.groovy" 
-        invoke="createDemoTrackingCodeVisit" transaction-timeout="7200">
+    <service name="createTrackingCodeVisitData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeVisitData.groovy" 
+        invoke="" transaction-timeout="7200">
         <description>Creates a number of TrackingCodeVisit demo data</description>
         <implements service="demoDataGenerator"/>
     </service>
-    <service name="createTrackingCodeOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeData.groovy" 
-        invoke="createDemoTrackingCodeOrder" transaction-timeout="7200">
+    <service name="createTrackingCodeOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeOrderData.groovy" 
+        invoke="" transaction-timeout="7200">
         <description>Creates a number of TrackingCodeOrder demo data</description>
         <implements service="demoDataGenerator"/>
     </service>

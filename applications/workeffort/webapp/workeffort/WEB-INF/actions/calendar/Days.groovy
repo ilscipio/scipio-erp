@@ -63,8 +63,13 @@ Timestamp prev = UtilDateTime.getDayStart(start, -1, timeZone, locale);
 context.prevMillis = new Long(prev.getTime()).toString();
 Timestamp next = UtilDateTime.getDayStart(start, 1, timeZone, locale);
 context.nextMillis = new Long(next.getTime()).toString();
-Map serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", parameters);
+// SCIPIO: bad types lead to crashes, so swap this around
+//Map serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", parameters);
+//serviceCtx.putAll(UtilMisc.toMap("userLogin", userLogin, "start", start, "numPeriods", 24, "periodType", Calendar.HOUR, "locale", locale, "timeZone", timeZone));
+Map serviceCtx = [:];
+serviceCtx.putAll(parameters);
 serviceCtx.putAll(UtilMisc.toMap("userLogin", userLogin, "start", start, "numPeriods", 24, "periodType", Calendar.HOUR, "locale", locale, "timeZone", timeZone));
+serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", serviceCtx);
 if (context.entityExprList) {
     serviceCtx.entityExprList = entityExprList;
 }

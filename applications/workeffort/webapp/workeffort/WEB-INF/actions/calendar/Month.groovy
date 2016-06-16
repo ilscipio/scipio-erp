@@ -88,8 +88,13 @@ if (followingMonthDays < 0) {
     followingMonthDays += 7;
 }
 numDays += followingMonthDays; 
-Map serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", parameters);
+// SCIPIO: bad types lead to crashes, so swap this around
+//Map serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", parameters);
+//serviceCtx.putAll(UtilMisc.toMap("userLogin", userLogin, "start", getFrom, "calendarType", "VOID", "numPeriods", numDays, "periodType", Calendar.DATE, "locale", locale, "timeZone", timeZone));
+Map serviceCtx = [:];
+serviceCtx.putAll(parameters);
 serviceCtx.putAll(UtilMisc.toMap("userLogin", userLogin, "start", getFrom, "calendarType", "VOID", "numPeriods", numDays, "periodType", Calendar.DATE, "locale", locale, "timeZone", timeZone));
+serviceCtx = dispatcher.getDispatchContext().makeValidContext("getWorkEffortEventsByPeriod", "IN", serviceCtx);
 if (context.entityExprList) {
     serviceCtx.entityExprList = entityExprList;
 }

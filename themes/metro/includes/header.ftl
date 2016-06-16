@@ -290,20 +290,17 @@ under the License.
                     <#-- Topbar -->
                     <nav class="top-bar show-for-large-up" data-topbar role="navigation" data-options="is_hover: false">
                         <ul class="title-area left">
-
-                            
                             <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                            <li class="toggle-topbar menu-icon"><a href="#"><span>#</span></a>
-                            </li>
+                            <li class="toggle-topbar menu-icon"><a href="#"><span>#</span></a></li>
                         </ul>
 
                         <section class="top-bar-section ">
                             <!-- Right Nav Section -->
-                            
+                            <#if userLogin??>
                             <ul class="left">
                                 <li class="has-dropdown">
                                     <a class="" href="#"><i class="fi-home text-blue"></i> ${uiLabelMap["CommonPrimaryApps"]}</a>
-                                    <ul class="dropdown">
+                                     <ul class="dropdown">
                                         <@primaryAppsMenu/>
                                     </ul>
                                 </li>
@@ -314,6 +311,7 @@ under the License.
                                     </ul>
                                 </li>
                             </ul>
+                            </#if>
 
                             <#-- Left Nav Section
                             <ul class="left">
@@ -349,20 +347,22 @@ under the License.
                         </ul>
                     </aside>
                     
+                    <#if userLogin??>  
                     <aside class="left-off-canvas-menu">
                       <ul class="off-canvas-list">
-                          <#if userLogin??>  
-                                <@sideBarMenu/> 
-                            </#if>
+                          <@sideBarMenu/> 
                           <@primaryAppsMenu/>
                           <@secondaryAppsMenu/>
                        </ul>
                     </aside>
+                    </#if>
                 
                     <nav class="tab-bar hide-for-large-up">
-                        <section class="left-small">
-                            <a class="left-off-canvas-toggle menu-icon"><span></span></a>
-                        </section>
+                        <#if userLogin??>
+                            <section class="left-small">
+                                <a class="left-off-canvas-toggle menu-icon"><span></span></a>
+                            </section>
+                        </#if>
                         <section class="middle tab-bar-section">
                             <h1><@logoMenu isSmall=true/></h1>
                         </section>

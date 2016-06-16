@@ -2231,8 +2231,8 @@
     </property>
     <property key="WorkEffortCancelCalendarEvent">
         <value xml:lang="de">Kalenderereignis annullieren</value>
-        <value xml:lang="en">Cancel a calendar event</value>
-        <value xml:lang="fr">Annuler un évènement</value>
+        <value xml:lang="en">Cancel calendar event</value>
+        <value xml:lang="fr">Annuler l'évènement</value>
         <value xml:lang="it">Annulla evento calendario</value>
         <value xml:lang="ja">カレンダイベントを取消</value>
         <value xml:lang="vi">Hủy bỏ sự kiện lịch</value>

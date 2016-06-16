@@ -41,7 +41,7 @@ Map processResult() {
     thruDateText = UtilDateTime.timeStampToString(dateIntervals.getDateEnd(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
         
     Map resultMap = new TreeMap<String, Object>();
-    for (int i = 0; i <= iCount; i++) {
+    for (int i = 0; i < iCount; i++) {
         Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("salesChannelEnumId", salesChannels, "minDate", fromDateText, "maxDate", thruDateText,"userLogin",userLogin));
 //        Debug.log("findOrderMap =====================> " + findOrderMap);
         List orderList = findOrderMap.orderList;

@@ -21,63 +21,6 @@ under the License.
 <#-- SCIPIO:
 <#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
-<style type="text/css">
-.month-calendar-full {
-    border: 1px solid black;
-}
-
-.month-calendar-full .month-entry {
-    <#-- will auto-calculate:
-    height: 7em;-->
-    vertical-align: top; 
-    padding: 0.5em; 
-    border-color: black; 
-    border-width: 1px 1px 0 0; 
-    border-style: solid;
-}
-
-.month-calendar-full .month-entry:first-child {
-    width: 3em;
-}
-
-.month-calendar-full .month-entry:last-child {
-    border-width: 1px 0 0 0; 
-}
-
-.month-calendar-full th {
-    width: 12%;
-}
-
-.month-calendar-full th:first-child {
-    width: 3em;
-}
-
-<#-- SCIPIO: CSS padding-bottom workaround to make heights follow widths when resize -->
-.month-calendar-full .month-entry-date .month-entry-wrapper {
-    width: 100%;
-    padding-bottom: 100%; <#-- this sets the ratio value vs width; we want 1:1 -->
-    position: relative;
-    overflow: hidden;
-}
-
-.month-calendar-full .month-entry-date .month-entry-wrapper:hover {
-    overflow: visible;
-}
-.month-calendar-full .month-entry-date .month-entry-wrapper:hover .month-entry-content {
-    background-color: white;
-}
-    
-.month-calendar-full .month-entry-date .month-entry-content {
-    position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
-}
-
-<#-- SPECIAL, needed for small screens -->
-table.month-calendar-full th {
-    word-break: break-all;
-}
-</style>
-
 <#-- SCIPIO: FTL now includes the title -->
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="month"/>
@@ -90,19 +33,28 @@ table.month-calendar-full th {
   <#if !newCalEventUrl??>
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
+
+<#assign calendarIdNum = getRequestVar("monthCalendarIdNum")!0>
+<#assign calendarIdNum = calendarIdNum + 1>
+<#assign dummy = setRequestVar("monthCalendarIdNum", calendarIdNum)!>
+
 <#-- not using scrollable=true, should have better resizing method-->
-<@table type="data-complex" autoAltRows=true class="+calendar month-calendar-full" 
+<div class="month-calendar-full">
+<@table type="data-complex" autoAltRows=true class="+calendar"
     responsive=false><#--responsiveOptions={"ordering":false}--><#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
   <@thead>
   <@tr class="header-row">
-    <@th>&nbsp;</@th>
+    <@th class="+month-header-week">&nbsp;</@th>
     <#list periods as day>
-      <@th class="+${styles.text_center!}">${day.start?date?string("EEEE")?cap_first}</@th>
+      <@th class="+${styles.text_center} month-header-day">${day.start?date?string("EEEE")?cap_first}</@th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </@tr>
   </@thead>
+<#-- SCIPIO: this var is a workaround to collect the inner content and append at the end to avoid influence of table -->
+<#assign periodDetailContentAll = "">  
   <#list periods as period>
+    <#assign periodUniqueId = + calendarIdNum + "_" + (period_index+1)>
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
     <#assign indexMod7 = period_index % 7>
@@ -111,19 +63,23 @@ table.month-calendar-full th {
       <@tr open=true close=false />
         <@td class="+month-entry month-entry-week">
         <div class="month-entry-wrapper">
+        <div class="month-entry-abs">
         <div class="month-entry-content">
           <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
+        </div>
         </div>
         </div>
         </@td>
     </#if>
     <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
-    <@td class=(class+" month-entry month-entry-date")>
-    <div class="month-entry-wrapper">
-    <div class="month-entry-content">
-      <span class="h1"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}</a></span>
-      <a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}-->
-      <br class="clear"/>
+      <#if start?date?string("MM") == period.start?date?string("MM")>
+        <#assign class=addClassArg(class, 'current-month')/> 
+      <#else>
+        <#assign class=addClassArg(class, 'other-month')/>
+      </#if>
+      
+      <#if period=="month">${start?date?string("MM")}</#if>
+      <#assign calEntryContentAll = "">
 
       <#assign maxNumberOfPersons = 0/>
       <#assign maxNumberOfEvents = 0/>
@@ -141,12 +97,26 @@ table.month-calendar-full th {
               <#assign maxNumberOfEvents = eventsInRange.size()/>
           </#if>
       </#list>
-      <#if (maxNumberOfEvents > 0)>
-          ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
-      </#if>
-      <#if (maxNumberOfPersons > 0)>
-          ${uiLabelMap.WorkEffortMaxPersons}: ${maxNumberOfPersons}<br/>
-      </#if>
+
+    <#assign dayHasContent = (maxNumberOfPersons > 0) || (maxNumberOfEvents > 0) ||
+        ((parameters.hideEvents!"") != "Y" && period.calendarEntries?has_content)>
+
+    <#if dayHasContent>
+      <#-- SCIPIO: dropdown tooltip-like functionality
+          FIXME: macro-ify this foundation-only dropdown code somehow 
+          NOTE: if you need to assign attribs to a div instead, use @commonElemAttribStr maybe or straight @elemAttribStr -->
+      <#assign periodDetailTriggerAttribs = {"data-dropdown":"perioddetail_${periodUniqueId}", "aria-controls":"perioddetail_${periodUniqueId}", "aria-expanded":"false", "data-options":"is_hover:true; hover_timeout:1000"}>
+    <#else>
+      <#assign periodDetailTriggerAttribs = {}>
+    </#if>
+    <@td class=(class+" month-entry month-entry-day") attribs=periodDetailTriggerAttribs>
+    <div class="month-entry-wrapper">
+    <div class="month-entry-abs">
+    <div class="month-entry-content">
+      <span class="month-entry-content-title"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}<#if period.start?date?string("d") == "1"> ${period.start?date?string("MMMM")}</#if></a></span>
+      <span class="month-entry-content-add"><a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}--></span>
+      <br/>
+
       <#if (parameters.hideEvents!"") != "Y">
       <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>
@@ -166,8 +136,15 @@ table.month-calendar-full th {
         </#if>    
         <#if !completionDate?has_content && calEntry.workEffort.estimatedMilliSeconds?has_content>
             <#assign completionDate =  calEntry.workEffort.estimatedStartDate + calEntry.workEffort.estimatedMilliSeconds>
-        </#if>    
-        <hr />
+        </#if>
+
+      <#-- SCIPIO: capture this to include a second copy in dropdown -->
+      <#assign calEntryContentStart>
+        <#--<#if (calEntry_index > 0)>  
+          <hr />
+        </#if>-->
+          
+        <span class="day-event-time">
         <#if (startDate.compareTo(period.start) <= 0 && completionDate?has_content && completionDate.compareTo(period.end) >= 0)>
           ${uiLabelMap.CommonAllDay}
         <#elseif startDate.before(period.start) && completionDate?has_content>
@@ -179,14 +156,68 @@ table.month-calendar-full th {
         <#else>
           ${startDate?time?string.short}-${completionDate?time?string.short}
         </#if>
-        <br />
-        <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId}/>
-        <br />
+        </span>
+      </#assign>
+        <div class="month-entry-content-event">  
+          ${calEntryContentStart}
+          <br />
+          <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" 
+            reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId,
+                "calEventVerbose":false} 
+            restoreValues=true asString=true/>
+        </div>
+      <#assign calEntryContent>
+        <div class="month-entry-content-event">  
+          ${calEntryContentStart}
+          <br />
+          <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" 
+            reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId,
+                "calEventVerbose":true} 
+            restoreValues=true asString=true/>
+        </div>
+      </#assign>
+        <#assign calEntryContentAll = calEntryContentAll + calEntryContent>
+        
       </#list>
       </#if>
+
+    
+    <#if (maxNumberOfEvents > 0) || (maxNumberOfPersons > 0)>
+      <#assign numEventsContent>
+        <#--<hr/>--><#--<br/>-->
+        <div class="day-entry-stats">
+        <#if (maxNumberOfEvents > 0)>
+          ${uiLabelMap.WorkEffortMaxEvents}: ${maxNumberOfEvents}<br/>
+        </#if>
+        <#if (maxNumberOfPersons > 0)>
+          ${uiLabelMap.WorkEffortMaxPersons}: ${maxNumberOfPersons}<br/>
+        </#if>
+        </div>
+      </#assign>
+    <#else>
+      <#assign numEventsContent = "">
+    </#if>
+     <#-- SCIPIO: Disabled for now  ${numEventsContent}
+      -->
+    </div>
     </div>
     </div>
     </@td>
+
+    <#-- SCIPIO: dropdown tooltip-like functionality
+        FIXME: macro-ify this foundation-only dropdown code somehow -->
+    <#if calEntryContentAll?has_content || numEventsContent?has_content>
+      <#assign periodDetailContent>
+        <div id="perioddetail_${periodUniqueId}" data-dropdown-content class="f-dropdown content small" aria-hidden="true" tabindex="-1">
+          ${calEntryContentAll}
+          ${numEventsContent}
+        </div>
+      </#assign>
+    <#else>
+      <#assign periodDetailContent = "">
+    </#if>
+    <#assign periodDetailContentAll = periodDetailContentAll + periodDetailContent>
+
 
 <#--
     <@td valign="top">
@@ -226,6 +257,11 @@ table.month-calendar-full th {
   </#if>
   </#list>
 </@table>
+
+  <div class="cal-detail-content">
+    ${periodDetailContentAll}
+  </div>
+</div>
 
 <#else>
   <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>

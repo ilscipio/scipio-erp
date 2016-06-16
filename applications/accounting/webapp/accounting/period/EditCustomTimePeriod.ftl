@@ -109,7 +109,7 @@ under the License.
                             <@td><@field type="input" size="10" name="periodName" value=(currentCustomTimePeriod.periodName!) /></@td>
                             <@td>
                                 <#assign hasntStarted = false>
-                                <#assign compareDate = currentCustomTimePeriod.getDate("fromDate")>
+                                <#assign compareDate = currentCustomTimePeriod.getTimestamp("fromDate")>
                                 <#if compareDate?has_content>
                                     <#if nowTimestamp.before(compareDate)><#assign hasntStarted = true></#if>
                                 </#if>
@@ -117,7 +117,7 @@ under the License.
                             </@td>
                             <@td>
                                 <#assign hasExpired = false>
-                                <#assign compareDate = currentCustomTimePeriod.getDate("thruDate")>
+                                <#assign compareDate = currentCustomTimePeriod.getTimestamp("thruDate")>
                                 <#if compareDate?has_content>
                                     <#if nowTimestamp.after(compareDate)><#assign hasExpired = true></#if>
                                 </#if>
@@ -127,6 +127,12 @@ under the License.
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                             <a href="<@ofbizUrl>deleteCustomTimePeriod?customTimePeriodId=${currentCustomTimePeriod.customTimePeriodId}</@ofbizUrl>">
                             ${uiLabelMap.CommonDelete}</a>
+                            <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH (REPLACE DELETE GET WITH POST, BUT JS NEEDED DUE TO NESTED FORMS
+                              <form method="post" action="<@ofbizUrl>deleteCustomTimePeriod</@ofbizUrl>" name="deleteCustomTimePeriodForm">
+                                <input type="hidden" name="customTimePeriodId" value="${currentCustomTimePeriod.customTimePeriodId!}" />
+                                <input type="submit" value="${uiLabelMap.CommonDelete}" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
+                              </form>
+                            -->
                             </@td>
                         </@tr>
                     </@table>
@@ -202,7 +208,7 @@ under the License.
                                 <@td><@field type="input" size="10" name="periodName" value=(customTimePeriod.periodName!) /></@td>
                                     <@td>
                                     <#assign hasntStarted = false>
-                                    <#assign compareDate = customTimePeriod.getDate("fromDate")>
+                                    <#assign compareDate = customTimePeriod.getTimestamp("fromDate")>
                                     <#if compareDate?has_content>
                                         <#if nowTimestamp.before(compareDate)><#assign hasntStarted = true></#if>
                                     </#if>
@@ -210,7 +216,7 @@ under the License.
                                 </@td>
                                 <@td>
                                     <#assign hasExpired = false>
-                                    <#assign compareDate = customTimePeriod.getDate("thruDate")>
+                                    <#assign compareDate = customTimePeriod.getTimestamp("thruDate")>
                                     <#if compareDate?has_content>
                                         <#if nowTimestamp.after(compareDate)><#assign hasExpired = true></#if>
                                     </#if>
@@ -220,6 +226,12 @@ under the License.
                                     <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                                     <a href="<@ofbizUrl>deleteCustomTimePeriod?customTimePeriodId=${customTimePeriod.customTimePeriodId!}&amp;currentCustomTimePeriodId=${currentCustomTimePeriodId!}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>">
                                     ${uiLabelMap.CommonDelete}</a>
+                                    <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH (REPLACE DELETE GET WITH POST, BUT JS NEEDED DUE TO NESTED FORMS
+                                    <form method="post" action='<@ofbizUrl>deleteCustomTimePeriod</@ofbizUrl>' name='lineForm${line}'>
+                                      <input type="hidden" name="customTimePeriodId" value="${customTimePeriod.customTimePeriodId!}" />
+                                      <input type="submit" value='${uiLabelMap.CommonDelete}'/>
+                                    </form>
+                                    -->
                                     <a href="<@ofbizUrl>EditCustomTimePeriod?currentCustomTimePeriodId=${customTimePeriod.customTimePeriodId!}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>">
                                     ${uiLabelMap.CommonSetAsCurrent}</a>
                                 </@td>

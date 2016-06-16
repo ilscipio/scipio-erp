@@ -632,6 +632,8 @@
       <@field type="radio" name="radio6" label="Radio 6" value="Y" defaultValue="Y" />
       <@field type="radio" name="radio7" label="Radio 7" value="Y" defaultValue="N" />
       <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
+      <@field type="checkbox" name="checkboxInd1b" label="Indicator checkbox (full Y/N value support)" value="Y" altValue="N" />
+      <@field type="checkbox" name="checkboxInd1c" label="Indicator checkbox 2 (full Y/N value support)" valueType="indicator" />
       <@field type="checkbox" name="checkbox2" label="Checkbox 2" value="Y" checked=true/>
       <#assign items = [
         {"value":"val1", "description":"Option 1"}

@@ -24,6 +24,9 @@
         <section>
             <actions>
                 <set field="parameters.period" from-field="parameters.period" default-value="${initialView}"/>
+                
+                <set field="eventDetailWidgetName" from-field="eventDetailWidgetName" default-value="trainingCalendarDetail" />
+                <set field="eventDetailWidgetLocation" from-field="eventDetailWidgetLocation" default-value="component://humanres/widget/PersonTrainingScreens.xml" />
             </actions>
             <widgets>
                 <section>
@@ -36,7 +39,6 @@
                     </actions>
                     <widgets>
                         <include-screen name="CalendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
-                        <include-screen name="trainingCalendarDetail"/>
                         <include-screen name="dayCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
@@ -53,7 +55,6 @@
                     </actions>
                     <widgets>
                         <include-screen name="CalendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
-                        <include-screen name="trainingCalendarDetail"/>
                         <include-screen name="weekCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
@@ -70,7 +71,6 @@
                     </actions>
                     <widgets>
                         <include-screen name="CalendarMenu" location="component://workeffort/widget/CalendarScreens.xml"/>
-                        <include-screen name="trainingCalendarDetail"/>
                         <include-screen name="monthCalendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </widgets>
                 </section>
@@ -96,7 +96,7 @@
                 <set field="titleProperty" value="PageTitleFindTrainingCalendar"/>
             </actions>
             <widgets>
-                    <decorator-screen name="CommonTrainingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonTrainingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="TrainingCalendar"/>
                     </decorator-section>

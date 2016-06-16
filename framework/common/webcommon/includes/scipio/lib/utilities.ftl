@@ -83,18 +83,24 @@ TODO: Reimplement as transform.
                                   object found in the global {{{scipioNullObject}}} variable.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
     restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
+    asString                = ((boolean), default: false) If true, the render will render to a string like a regular FTL macro; otherwise goes straight to Ofbiz's writer
+                              In stock Ofbiz, which is also current Scipio default behavior (for compabilitity and speed), render calls go directly to writer, 
+                              which is faster but cannot be captured using freemarker {{{#assign}}} directive. If you need to capture
+                              output of @render, pass true here.
+                              NOTE: not supported for {{{type="section"}}} as this time.
+                              TODO: implement for section
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false>
+<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false asString=false>
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
       <#if name?has_content>
-        ${screens.render(resource, name)}<#t>
+        ${StringUtil.wrapString(screens.render(resource, name, asString))}<#t>
       <#else>
-        ${screens.render(resource)}<#t>
+        ${StringUtil.wrapString(screens.render(resource, asString))}<#t>
       </#if>
     <#elseif type == "section">
-        ${sections.render(name)}<#t>
+        ${StringUtil.wrapString(sections.render(name))}<#t>
     <#else>
       <#if !name?has_content>
         <#local parts = resource?split("#")>
@@ -105,11 +111,11 @@ TODO: Reimplement as transform.
       <#local dummy = setContextField("scipioWidgetWrapperResName", name)>
       <#local dummy = setContextField("scipioWidgetWrapperResLocation", resource)>
       <#if type == "menu">
-        ${screens.render("component://common/widget/CommonScreens.xml#scipioMenuWidgetWrapper")}<#t>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">
-        ${screens.render("component://common/widget/CommonScreens.xml#scipioFormWidgetWrapper")}<#t>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString))}<#t>
       <#elseif type == "tree">
-        ${screens.render("component://common/widget/CommonScreens.xml#scipioTreeWidgetWrapper")}<#t>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString))}<#t>
       </#if>
     </#if>
   </@varSection>

@@ -200,9 +200,9 @@ under the License.
                                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy" />
                             </actions>
                             <widgets>
-                                <screenlet id="calendarOptions" name="calendarOptionsScreenlet" collapsible="true" title="${uiLabelMap.WorkEffortCalendarFindEntries}">
+                                <!-- <screenlet id="calendarOptions" name="calendarOptionsScreenlet" collapsible="true" title="${uiLabelMap.WorkEffortCalendarFindEntries}">
                                     <include-form name="FilterCalendarEvents" location="component://workeffort/widget/CalendarForms.xml" />
-                                </screenlet>
+                                </screenlet> -->
                                 <decorator-section-include name="body" />
                             </widgets>
                             <fail-widgets>

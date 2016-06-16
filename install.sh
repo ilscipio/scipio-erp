@@ -46,16 +46,20 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Install for Development")
-            eval "./ant build load-demo"
+            sh ant load-demo
+            exit 1
             ;;
-        "Install for production")
-            eval "./ant build load-extseed"
+        "Install for Production")
+            sh ant load-extseed
+            exit 1
             ;;
         "Recompile")
-            eval "./ant build"
+            sh ant build
+            exit 1
             ;;
-	"List ant info")
-            eval "./ant -p"
+	    "List ant info")
+            sh ant -p
+            exit 1
             ;;	
         "Quit")
             exit 1;
@@ -63,3 +67,4 @@ do
         *) echo '' invalid option;;
     esac
 done
+exit 1

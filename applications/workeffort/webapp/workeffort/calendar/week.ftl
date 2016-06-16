@@ -18,16 +18,6 @@ under the License.
 -->
 <#include 'calendarcommon.ftl'>
 
-<#-- SCIPIO: FTL now includes the title -->
-<div class="${styles.float_clearfix!}">
-  <div class="${styles.float_left!}">
-    <#--<@render type="menu" name="Week" resource="component://workeffort/widget/WorkEffortMenus.xml" />-->
-  </div>
-  <div class="${styles.float_right!}">
-    
-  </div>
-</div>
-
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="week"/>
 </#macro>
@@ -44,7 +34,8 @@ under the License.
   <#else>
     <#assign entryWidth = (85 / (maxConcurrentEntries))>
   </#if>
-<@table type="data-complex" autoAltRows=true class="+calendar" responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+<div class="week-calendar-full">
+<@table type="data-complex" class="+calendar" autoAltRows=true responsive=false> <#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonDay}</@th>
@@ -85,7 +76,7 @@ under the License.
     <#if calEntry.startOfPeriod>
     <#assign rowSpan><#if (calEntry.periodSpan > 1)>${calEntry.periodSpan}</#if></#assign>
     <#assign width>${entryWidth?string("#")}%</#assign>
-    <@td rowSpan=rowSpan width=width>
+    <@td rowspan=rowSpan width=width class="+week-entry-event">
     <#if (startDate.compareTo(period.start) <= 0 && completionDate?has_content && completionDate.compareTo(period.end) >= 0)>
       ${uiLabelMap.CommonAllWeek}
     <#elseif (startDate.compareTo(period.start) == 0 && completionDate?has_content && completionDate.compareTo(period.end) == 0)>
@@ -100,7 +91,9 @@ under the License.
       ${startDate?time?string.short}-${completionDate?time?string.short}
     </#if>
     <br />
-    <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"week", "workEffortId":calEntry.workEffort.workEffortId}/>
+    <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" 
+        reqAttribs={"periodType":"week", "workEffortId":calEntry.workEffort.workEffortId}
+        restoreValues=true asString=true/>
     </@td>  
     </#if>
     </#list>
@@ -116,6 +109,7 @@ under the License.
   </@tr>
   </#list>
 </@table>
+</div>
 <#else>
   <@commonMsg type="error">${uiLabelMap.WorkEffortFailedCalendarEntries}</@commonMsg>
 </#if>

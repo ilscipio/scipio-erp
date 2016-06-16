@@ -1137,8 +1137,18 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     fieldFormName           = Contains the lookup window form name
     
     * checkbox (single mode) *
-    value                   = Y/N
+    value                   = Value to submit with form when checkbox is selected
     currentValue            = Current value, used to check if should be checked
+    useHidden               = ((boolean), default: false) If true, submits using a hidden field rather than checkbox itself
+                              WARN: This affects javascript lookups, field name and id.
+                              If this is true, the {{{name}}} of the checkbox itself receives the suffix {{{_visible}}},
+                              such that the hidden input receives the passed name. Any javascript must adapt appropriately.
+                              On the other hand, the {{{id}}} of the checkbox is unchanged, and the hidden field
+                              receives an id with a {{{_hidden}}} suffix.
+    altValue                = Value to submit with form when checkbox is unselected
+                              WARN: This affects javascript lookups, field name and id; see {{{useHidden}}} parameter.
+                              If this is specified (non-boolean, non-false), it automatically turns on {{{useHidden}}}
+                              (without which implementation is impossible).
     checked                 = ((boolean)|, default: -empty-) Override checked state 
                               If set to boolean, overrides currentValue logic
     checkboxType            = (default|..., default: default)
@@ -1146,18 +1156,25 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               * {{{default}}}: default theme checkbox
                               Scipio standard theme:
                               * {{{simple}}}: guarantees a minimalistic checkbox
+    valueType               = (|indicator, default: -empty-) Special and predefined value types
+                              {{{indicator}}}: Same as passing {{{value="Y" altValue="N" useHidden=true}}}.
     
     * checkbox (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items checkbox field generated
-                              List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
+                              List of {"value": (value), "altValue": (value), "useHidden": (boolean), 
+                              "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
+                              TODO: Currently the map does not support valueType
     inlineItems             = ((boolean), default: -from global styles-, fallback default: true) If true, radio items are many per line; if false, one per line
                               NOTE: this takes effect whether single-item or multiple-item radio.
                               the default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked; this can be single-value string or sequence of value strings
     defaultValue            = Default value, determines checked (convenience parameter; used when currentValue empty; can also be sequence)
     allChecked              = ((boolean|), default: -empty-) Explicit false sets all to unchecked; leave empty "" for no setting (convenience parameter)
+    value                   = Default value for any items which do not specify their own
+    altValue                = Default alt (off) value for any items which do not specify their own
+    useHidden               = ((boolean), default: false) Default useHidden for any items which do not specify their own
     
     * radio (single mode) *
     value                   = Y/N, only used if single radio item mode (items not specified)
@@ -1239,7 +1256,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               May result in extra wrapping container.
 -->
 <#assign field_defaultArgs = {
-  "type":"", "fieldsType":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
+  "type":"", "fieldsType":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", 
+  "currentValue":"", "altValue":false, "useHidden":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
   "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
@@ -1262,6 +1280,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
+<#-- WARN: #compress must be used sparingly; using only around code parts -->
+<#compress>
   <#-- TODO: Group arguments above so easier to read... -->
 
   <#-- parent @fields group elem info (if any; may be omitted in templates) -->
@@ -1611,12 +1631,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         "norows":norows, "nocells":nocells, "container":container,
         "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
-      
+ 
   <#local defaultGridArgs = {"totalColumns":totalColumns, "labelColumns":labelColumns, 
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":useLabelArea, 
     "labelInRow":(effLabelType != "vertical"), "postfix":postfix, "postfixColumns":postfixColumns,
     "fieldsType":fieldsType, "labelSmallDiffColumns":labelSmallDiffColumns}>
-      
+</#compress>     
   <@field_markup_container type=type fieldsType=fieldsType defaultGridArgs=defaultGridArgs gridArgs=gridArgs postfix=postfix  
     postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent 
     collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass containerStyle=containerStyle
@@ -1817,6 +1837,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip passArgs=passArgs/>
       <#break>
       <#case "checkbox">
+        <#if valueType?is_string && valueType == "indicator">
+          <#local value = "Y">
+          <#local altValue = "N">
+          <#local useHidden = true>
+        </#if>
         <#if !checkboxType?has_content>
           <#local checkboxType = fieldsInfo.checkboxType>
         </#if>
@@ -1836,12 +1861,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#if description?is_boolean>
             <#local description = "">
           </#if>
-          <#local items=[{"value":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
+          <#local items=[{"value":value, "altValue":altValue, "useHidden":useHidden, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType 
+                readonly=readonly passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType 
+            value=value altValue=altValue useHidden=useHidden
+            readonly=readonly passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">
@@ -1865,13 +1893,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#if description?is_boolean>
             <#local description = "">
           </#if>
-          <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
+          <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel type=radioType passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel type=radioType 
+            readonly=readonly passArgs=passArgs/>
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=radioType passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=radioType 
+            readonly=readonly passArgs=passArgs/>
         </#if>
         <#break>
       <#case "file">

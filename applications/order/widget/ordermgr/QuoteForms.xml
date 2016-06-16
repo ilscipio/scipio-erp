@@ -122,6 +122,7 @@ under the License.
         <alt-target use-when="quote==null" target="createQuote"/>
         <!-- <auto-fields-entity entity-name="Quote" default-field-type="edit"/> -->
         <field name="quoteId" title="${uiLabelMap.CommonId}"><display/></field>
+        <field name="statusId" title="${uiLabelMap.FormFieldTitle_statusId}"><ignored/></field>
         <field name="quoteTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId">

@@ -824,7 +824,7 @@ under the License.
         <attribute name="num" type="Integer" mode="IN" optional="true" />
         <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="generatedData" type="java.util.ArrayList" mode="OUT"/>
+        <attribute name="generatedDataStats" type="java.util.Map" optional="true" mode="OUT"/>
     </service>
 
 </services>

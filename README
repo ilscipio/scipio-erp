@@ -74,7 +74,7 @@ c. Windows: start.bat
 
 					Congratulations, you have installed SCIPIO ERP!
 
-Updating
+Updates
 1. Retrieve latest code updates from git:
 a. git checkout scipioce-1.14
 b. git pull

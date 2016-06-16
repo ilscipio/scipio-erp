@@ -1593,8 +1593,9 @@ under the License.
     <screen name="ScipioEditProduct">
         <section>
             <actions>
-           </actions>
-           <widgets>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/ScipioEditProduct.groovy"/>
+            </actions>
+            <widgets>
                 <section>
                      <widgets>
                        <screenlet>
@@ -1604,7 +1605,7 @@ under the License.
                        </screenlet>     
                    </widgets>
                 </section>
-           </widgets>
+            </widgets>
         </section>
     </screen>
     

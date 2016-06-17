@@ -62,41 +62,41 @@ goodIdentificationTypes = from("GoodIdentificationType").orderBy("goodIdentifica
 context.goodIdentificationTypes = goodIdentificationTypes;
 
 // current role type
-currentRoleTypeId = request.getParameter("roleTypeId");
+currentRoleTypeId = parameters.roleTypeId;
 if (currentRoleTypeId) {
     currentRole = from("RoleType").where("roleTypeId", currentRoleTypeId).cache(true).queryOne();
     context.currentRole = currentRole;
 }
 
 // current selected type
-currentTypeId = request.getParameter("orderTypeId");
+currentTypeId = parameters.orderTypeId;
 if (currentTypeId) {
     currentType = from("OrderType").where("orderTypeId", currentTypeId).cache(true).queryOne();
     context.currentType = currentType;
 }
 // current selected status
-currentStatusId = request.getParameter("orderStatusId");
+currentStatusId = parameters.orderStatusId;
 if (currentStatusId) {
     currentStatus = from("StatusItem").where("statusId", currentStatusId).cache(true).queryOne();
     context.currentStatus = currentStatus;
 }
 
 // current website
-currentWebSiteId = request.getParameter("orderWebSiteId");
+currentWebSiteId = parameters.orderWebSiteId;
 if (currentWebSiteId) {
     currentWebSite = from("WebSite").where("webSiteId", currentWebSiteId).cache(true).queryOne();
     context.currentWebSite = currentWebSite;
 }
 
 // current store
-currentProductStoreId = request.getParameter("productStoreId");
+currentProductStoreId = parameters.productStoreId;
 if (currentProductStoreId) {
     currentProductStore = from("ProductStore").where("productStoreId", currentProductStoreId).cache(true).queryOne();
     context.currentProductStore = currentProductStore;
 }
 
 // current Shipping Method
-shipmentMethod = request.getParameter("shipmentMethod");
+shipmentMethod = parameters.shipmentMethod;
 if (shipmentMethod) {
     carrierPartyId = shipmentMethod.substring(0, shipmentMethod.indexOf("@"));
     shipmentMethodTypeId = shipmentMethod.substring(shipmentMethod.indexOf("@")+1);
@@ -107,14 +107,14 @@ if (shipmentMethod) {
 }
 
 // current channel
-currentSalesChannelId = request.getParameter("salesChannelEnumId");
+currentSalesChannelId = parameters.salesChannelEnumId;
 if (currentSalesChannelId) {
     currentSalesChannel = from("Enumeration").where("enumId", currentSalesChannelId).queryOne();
     context.currentSalesChannel = currentSalesChannel;
 }
 
 // current good identification type
-currentGoodIdentificationTypeId = request.getParameter("goodIdentificationTypeId");
+currentGoodIdentificationTypeId = parameters.goodIdentificationTypeId;
 if (currentGoodIdentificationTypeId) {
     currentGoodIdentificationType = from("GoodIdentificationType").where("goodIdentificationTypeId", currentGoodIdentificationTypeId).queryOne();
     context.currentGoodIdentificationType = currentGoodIdentificationType;
@@ -146,8 +146,8 @@ toStr = toTs.toString();
 context.thruDateStr = toStr;
 
 // set the page parameters
-if(request.getParameter("viewIndex")){
-    viewIndex = Integer.valueOf(request.getParameter("viewIndex"));
+if(parameters.viewIndex){
+    viewIndex = Integer.valueOf(parameters.viewIndex);
 }else if(parameters.VIEW_INDEX){
     viewIndex = Integer.valueOf(parameters.VIEW_INDEX);
 }else{
@@ -155,8 +155,8 @@ if(request.getParameter("viewIndex")){
 }
 context.viewIndex = viewIndex;
 
-if(request.getParameter("viewSize")){
-    viewSize = Integer.valueOf(request.getParameter("viewSize"));
+if(parameters.viewSize){
+    viewSize = Integer.valueOf(parameters.viewSize);
 }else if(parameters.VIEW_SIZE){
     viewSize = Integer.valueOf(parameters.VIEW_SIZE);
 }else{
@@ -165,7 +165,7 @@ if(request.getParameter("viewSize")){
 context.viewSize = viewSize;
 
 // get the lookup flag
-lookupFlag = request.getParameter("lookupFlag");
+lookupFlag = parameters.lookupFlag;
 
 // fields from the service call
 paramList = request.getAttribute("paramList") ?: "";
@@ -202,7 +202,7 @@ context.showAll = showAll;
 // add a default success message.
 if ("Y" == parameters.massOrderChangeSubmitted && !Boolean.TRUE.equals(context.isError)) {
     if (!context.eventMessageList) {
-        context.eventMessageList = [context.uiLabelMap?.CommonServiceSuccessMessage];
+        context.eventMessageList = [UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale)];
     }
 }
 

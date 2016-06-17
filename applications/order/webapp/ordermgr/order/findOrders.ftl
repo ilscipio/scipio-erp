@@ -64,9 +64,18 @@ function toggleOrderIdList() {
 }
 
 function submitFindForm(val){
-    document.massOrderChangeForm.action = val;
-    var form = document.massOrderChangeForm;
-    form.submit();
+    <#-- SCIPIO: only submit if at least one order checked -->
+    var hasChecked = false;
+    jQuery('form[name=massOrderChangeForm] input[name=orderIdList]').each(function(i, e) {
+        if (jQuery(e).is(":checked")) {
+            hasChecked = true;
+        }
+    });
+    if (hasChecked) {
+        document.massOrderChangeForm.action = val;
+        var form = document.massOrderChangeForm;
+        form.submit();
+    }
 }
 
 </@script>
@@ -308,6 +317,8 @@ document.lookuporder.orderId.focus();
    
     <form name="massOrderChangeForm" method="post" action="javascript:void(0);">
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>
+        <#-- SCIPIO: new flag -->
+        <input type="hidden" name="massOrderChangeSubmitted" value="Y" />
         
         <#--
         <select name="serviceName" onchange="javascript:setServiceName(this);">

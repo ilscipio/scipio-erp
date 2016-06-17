@@ -168,7 +168,7 @@ public class OrderLookupServices {
         if (webSiteList != null) {
             List<EntityExpr> orExprs = FastList.newInstance();
             for (String webSiteId : webSiteList) {
-                paramList.add("webSiteId=" + webSiteId);
+                paramList.add("orderWebSiteId=" + webSiteId);
                 orExprs.add(EntityCondition.makeCondition("webSiteId", EntityOperator.EQUALS, webSiteId));
             }
             conditions.add(EntityCondition.makeCondition(orExprs, EntityOperator.OR));
@@ -650,6 +650,8 @@ public class OrderLookupServices {
     
     /**
      * Copied over from findOrders for now. ToDo: Cleanup
+     * 
+     * SCIPIO: FIXME: eliminate duplication!
      * */
     public static Map<String, Object> findOrdersFull(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -756,7 +758,7 @@ public class OrderLookupServices {
         if (webSiteList != null) {
             List<EntityExpr> orExprs = FastList.newInstance();
             for (String webSiteId : webSiteList) {
-                paramList.add("webSiteId=" + webSiteId);
+                paramList.add("orderWebSiteId=" + webSiteId);
                 orExprs.add(EntityCondition.makeCondition("webSiteId", EntityOperator.EQUALS, webSiteId));
             }
             conditions.add(EntityCondition.makeCondition(orExprs, EntityOperator.OR));

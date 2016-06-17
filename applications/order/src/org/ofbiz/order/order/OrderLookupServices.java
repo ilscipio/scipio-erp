@@ -692,8 +692,12 @@ public class OrderLookupServices {
             doFilter = "N";
         }
 
-        if ("Y".equals(doFilter) && orderList.size() > 0) {
+        // SCIPIO: must add param to list even if no results!
+        if ("Y".equals(doFilter)) {
             paramList.add("filterInventoryProblems=Y");
+        }
+        if ("Y".equals(doFilter) && orderList.size() > 0) {
+            //paramList.add("filterInventoryProblems=Y");
             for (GenericValue orderHeader : orderList) {
                 OrderReadHelper orh = new OrderReadHelper(orderHeader);
                 BigDecimal backorderQty = orh.getOrderBackorderQuantity();

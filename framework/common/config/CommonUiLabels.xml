@@ -16224,7 +16224,9 @@
         <value xml:lang="en">Leave empty to auto-generate a value</value>
         <value xml:lang="fr">Laisser vide pour générer automatiquement une valeur</value>
     </property>
+    <!-- SCIPIO: TODO: Localize -->
     <property key="CommonServiceSuccessMessage">
+        <value xml:lang="de">Der Betrieb wurde erfolgreich ausgeführt</value>
         <value xml:lang="en">Operation has been executed successfully</value>
     </property>
     <property key="CommonFormatMonth">

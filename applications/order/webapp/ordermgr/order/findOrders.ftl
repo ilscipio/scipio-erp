@@ -326,19 +326,35 @@ document.lookuporder.orderId.focus();
         <#-- SCIPIO: new flag -->
         <input type="hidden" name="massOrderChangeSubmitted" value="Y" />
         
+      <#-- SCIPIO: WARN: here we make sure to pass the params through ?html and ?js_string
+          In order to do this we must UNDO the ofbiz manual and screen encoding and then reencode. -->
+      
+      <#-- FIXME: temporarily forcing hide fields to false; there is an issue where
+          the redirect after mass approve is unable to automatically retrigger the find;
+          therefore we have to rely on the user to click "find" again until some sort of 
+          workaround is found (controller limitation) -->
+      <#--
+      <#assign massParamList = "hideFields=" + rawString(findParams.hideFields!"N")>
+      -->
+      <#assign massParamList = "hideFields=" + "N">
+      <#if paramList?has_content>
+        <#assign massParamList = massParamList + "&" + rawString(paramList)?replace("&amp;","&")>
+      </#if>
+      <#assign massParamListJsHtml = massParamList?js_string?html>
+        
         <#--
         <select name="serviceName" onchange="javascript:setServiceName(this);">
            <option value="javascript:void(0);">&nbsp;</option>
-           <option value="<@ofbizUrl>massApproveOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderApproveOrder}</option>
-           <option value="<@ofbizUrl>massHoldOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderHold}</option>
-           <option value="<@ofbizUrl>massProcessOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderProcessOrder}</option>
-           <option value="<@ofbizUrl>massCancelOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderCancelOrder}</option>
-           <option value="<@ofbizUrl>massCancelRemainingPurchaseOrderItems?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderCancelRemainingPOItems}</option>
-           <option value="<@ofbizUrl>massRejectOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderRejectOrder}</option>
-           <option value="<@ofbizUrl>massPickOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderPickOrders}</option>
-           <option value="<@ofbizUrl>massQuickShipOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderQuickShipEntireOrder}</option>
-           <option value="<@ofbizUrl>massPrintOrders?hideFields=${findParams.hideFields!'N'}${paramList}</@ofbizUrl>">${uiLabelMap.CommonPrint}</option>
-           <option value="<@ofbizUrl>massCreateFileForOrders?hideFields=${findParams.hideFields!'N'}${paramList}</@ofbizUrl>">${uiLabelMap.ContentCreateFile}</option>
+           <option value="<@ofbizUrl>massApproveOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderApproveOrder}</option>
+           <option value="<@ofbizUrl>massHoldOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderHold}</option>
+           <option value="<@ofbizUrl>massProcessOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderProcessOrder}</option>
+           <option value="<@ofbizUrl>massCancelOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderCancelOrder}</option>
+           <option value="<@ofbizUrl>massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderCancelRemainingPOItems}</option>
+           <option value="<@ofbizUrl>massRejectOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderRejectOrder}</option>
+           <option value="<@ofbizUrl>massPickOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderPickOrders}</option>
+           <option value="<@ofbizUrl>massQuickShipOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderQuickShipEntireOrder}</option>
+           <option value="<@ofbizUrl>massPrintOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.CommonPrint}</option>
+           <option value="<@ofbizUrl>massCreateFileForOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.ContentCreateFile}</option>
         </select>-->
         <#--
         <select name="printerName">
@@ -354,16 +370,16 @@ document.lookuporder.orderId.focus();
             <@cell>
                 <button href="#" data-dropdown="drop1" aria-controls="drop_${id!"1"}" aria-expanded="false" class="${styles.button!} ${styles.small!} ${styles.button_color_secondary!} ${styles.dropdown!}">${uiLabelMap.OrderRunAction}</button><br>
                 <ul id="drop${id!"1"}" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massApproveOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderApproveOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massHoldOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderHold}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massProcessOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderProcessOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCancelOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderCancelOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCancelRemainingPurchaseOrderItems?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderCancelRemainingPOItems}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massRejectOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderRejectOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massPickOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderPickOrders}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massQuickShipOrders?hideFields=${findParams.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderQuickShipEntireOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massPrintOrders?hideFields=${findParams.hideFields!'N'}${paramList}</@ofbizUrl>')">${uiLabelMap.CommonPrint}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCreateFileForOrders?hideFields=${findParams.hideFields!'N'}${paramList}</@ofbizUrl>')">${uiLabelMap.ContentCreateFile}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massApproveOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderApproveOrder}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massHoldOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderHold}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massProcessOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderProcessOrder}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCancelOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderCancelOrder}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderCancelRemainingPOItems}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massRejectOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderRejectOrder}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massPickOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderPickOrders}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massQuickShipOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderQuickShipEntireOrder}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massPrintOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.CommonPrint}</a></li>
+                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCreateFileForOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.ContentCreateFile}</a></li>
                 </ul>
             </@cell>  
           </@row>

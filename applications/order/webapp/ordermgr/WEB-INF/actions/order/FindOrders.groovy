@@ -198,3 +198,11 @@ context.highIndex = highIndex;
 showAll = request.getAttribute("showAll");
 context.showAll = showAll;
 
+// SCIPIO: if mass change was submitted and there was no error but no success message,
+// add a default success message.
+if ("Y" == parameters.massOrderChangeSubmitted && !Boolean.TRUE.equals(context.isError)) {
+    if (!context.eventMessageList) {
+        context.eventMessageList = [context.uiLabelMap?.CommonServiceSuccessMessage];
+    }
+}
+

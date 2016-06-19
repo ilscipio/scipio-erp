@@ -86,12 +86,12 @@ viewSize = 0;
 viewSize = Integer.valueOf(parameters.VIEW_SIZE ?: EntityUtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "10", delegator));
 listSize = securityAlerts ? securityAlerts.size() : 0;
 
-lowIndex = ((viewIndex - 1) * viewSize) + 1;
-highIndex = viewIndex * viewSize;
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
 highIndex = highIndex > listSize ? listSize : highIndex;
 lowIndex = lowIndex > highIndex ? highIndex : lowIndex; 
 
-resultPartialList = securityAlerts.subList(lowIndex, highIndex+1);
+resultPartialList = securityAlerts.subList(lowIndex, highIndex);
 
 context.viewIndex = viewIndex;
 context.viewSize = viewSize;

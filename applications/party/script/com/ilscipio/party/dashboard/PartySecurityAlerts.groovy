@@ -8,6 +8,7 @@ import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.entity.model.DynamicViewEntity
 import org.ofbiz.entity.model.ModelKeyMap
 import org.ofbiz.entity.util.EntityUtilProperties
+import org.ofbiz.base.util.*;
 
 String iScope = context.intervalScope != null ? context.intervalScope : "month"; //day|week|month|year
 
@@ -53,7 +54,7 @@ userLoginAndHistoryList = from(dve).where(EntityCondition.makeCondition(
 
 securityAlerts = [];
 for (userLoginAndHistory in userLoginAndHistoryList) {
-    serverHits = userLoginAndHistory.getRelated("ServerHit", UtilMisc.toMap("hitTypeId", "REQUEST"), null, false);
+    serverHits = userLoginAndHistory.getRelated("ServerHit", UtilMisc.toMap("hitTypeId", "REQUEST"), null, true);
     for (serverHit in serverHits) {
         // FIXME: Unfortunately this is the only way I can match userLoginHistory with its corresponding serverHit and I feel it might be error prone since I'm skipping miliseconds
         hsDate = UtilDateTime.toCalendar(serverHit.hitStartDateTime);
@@ -65,11 +66,12 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
         fromDate = Calendar.getInstance();
         fromDate.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));  
         fromDate.set(Calendar.MILLISECOND, 0);
+		visit = serverHit.getRelatedOne("Visit", true);
         if (hitStartDate.getTimeInMillis() == fromDate.getTimeInMillis()) {
 //            Debug.log("Matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDate.getTimeInMillis());
             securityAlert = UtilMisc.toMap("userLoginId", userLoginAndHistory.userLoginId, "enabled", userLoginAndHistory.enabled, 
                 "successfulLogin", userLoginAndHistory.successfulLogin, "contentId", serverHit.contentId, "requestUrl", serverHit.requestUrl,
-                "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "fromDate", fromDate.getTime());
+                "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "clientIpAddress", visit.clientIpAddress,"fromDate", fromDate.getTime());
             securityAlerts.add(securityAlert);
             break;
         } else {
@@ -80,13 +82,16 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
 
 // pagination for the security alerts list
 viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 0);
+viewSize = 0;
 viewSize = Integer.valueOf(parameters.VIEW_SIZE ?: EntityUtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "10", delegator));
 listSize = securityAlerts ? securityAlerts.size() : 0;
 
-lowIndex = (viewIndex * viewSize) + 1;
-highIndex = (viewIndex + 1) * viewSize;
+lowIndex = ((viewIndex - 1) * viewSize) + 1;
+highIndex = viewIndex * viewSize;
 highIndex = highIndex > listSize ? listSize : highIndex;
-lowIndex = lowIndex > highIndex ? highIndex : lowIndex;
+lowIndex = lowIndex > highIndex ? highIndex : lowIndex; 
+
+resultPartialList = securityAlerts.subList(lowIndex, highIndex+1);
 
 context.viewIndex = viewIndex;
 context.viewSize = viewSize;
@@ -94,4 +99,4 @@ context.listSize = listSize;
 context.lowIndex = lowIndex;
 context.highIndex = highIndex;
 
-context.securityAlerts = securityAlerts;
+context.securityAlerts = resultPartialList;

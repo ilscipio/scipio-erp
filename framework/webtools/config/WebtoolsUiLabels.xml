@@ -5945,4 +5945,8 @@
     <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
         <value xml:lang="en">Currently set to ${maxRecords}</value>
     </property>
+    <property key="WebtoolsDemoDataGeneratorResults">
+        <value xml:lang="en">Generated data results</value>
+    </property>
+    
 </resource>

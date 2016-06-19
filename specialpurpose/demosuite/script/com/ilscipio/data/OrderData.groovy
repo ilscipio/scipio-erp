@@ -15,11 +15,11 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - ORDER DATA-=-=-=-", "");
     }
 
-    List orderTypes = [
+    final List orderTypes = [
         "PURCHASE_ORDER",
         "SALES_ORDER"
     ]
-    List orderStatusTypes = [
+    final List orderStatusTypes = [
         "ORDER_CREATED",
         "ORDER_COMPLETED"
     ];
@@ -30,7 +30,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         context.totalProductCount = totalProductCount;
     }
 
-    List prepareData() {
+    List prepareData(int index) {
         List toBeStored = new ArrayList();
         List orderItems = new ArrayList();
         // Create OrderHeader

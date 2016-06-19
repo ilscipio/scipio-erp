@@ -1,10 +1,9 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.service;
 
 public class DataGeneratorStat {
-
     private String entityName;
-    private int stored = 0;
-    private int failed = 0;
+    private int stored;
+    private int failed;
 
     DataGeneratorStat(String entityName) {
         this.entityName = entityName;
@@ -14,9 +13,6 @@ public class DataGeneratorStat {
         return entityName;
     }
 
-    // public void setEntityName(String entityName) {
-    // this.entityName = entityName;
-    // }
     public int getStored() {
         return stored;
     }

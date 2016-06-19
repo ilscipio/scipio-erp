@@ -83,7 +83,7 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
 
         @Override
         public List<Object> getFields() {
-            Debug.log("returnObjectClass ==========> " + returnObjectClass.getClass());
+//            Debug.log("returnObjectClass ==========> " + returnObjectClass.getClass());
             List<Object> fields = new ArrayList<Object>();
             if (returnObjectClass.equals(DemoDataAddress.class)) {
                 Map<String, Object> country = FastMap.newInstance();

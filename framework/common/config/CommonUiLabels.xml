@@ -16224,9 +16224,7 @@
         <value xml:lang="en">Leave empty to auto-generate a value</value>
         <value xml:lang="fr">Laisser vide pour générer automatiquement une valeur</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
     <property key="CommonServiceSuccessMessage">
-        <value xml:lang="de">Der Betrieb wurde erfolgreich ausgeführt</value>
         <value xml:lang="en">Operation has been executed successfully</value>
     </property>
     <property key="CommonFormatMonth">
@@ -16264,5 +16262,8 @@
         <value xml:lang="vi">Định dạng ngày tháng</value>
         <value xml:lang="zh">格式</value>
         <value xml:lang="zh_TW">格式</value>
+    </property>
+    <property key="CommonIteration">
+        <value xml:lang="en">Iteration</value>
     </property>
 </resource>

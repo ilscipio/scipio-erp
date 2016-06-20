@@ -19,55 +19,18 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroov
 
 
 public class ProductData extends DataGeneratorGroovyBaseScript {
-    
-    LinkedList prepareData() {    
-        List<String> prodCatalogCategoryTypes = [
-            "CCT_ADMIN_ALLW",
-            "PCCT_BROWSE_ROOT",
-            "PCCT_MOST_POPULAR",
-            "PCCT_OTHER_SEARCH",
-            "PCCT_PROMOTIONS",
-            "PCCT_PURCH_ALLW",
-            "PCCT_QUICK_ADD",
-            "PCCT_SEARCH",
-            "PCCT_VIEW_ALLW",
-            "PCCT_WHATS_NEW"
-        ]
-    
-        List<String> productTypes = [
-            //TODO: Gotta figure how to handle these two types
-            //        "AGGREGATED",
-            //        "AGGREGATED_CONF",
-            "ASSET_USAGE",
-            "DIGITAL_GOOD",
-            "FINDIG_GOOD",
-            "FINISHED_GOOD",
-            "GOOD",
-            "MARKETING_PKG_PICK",
-            "MARKETING_PKG_AUTO",
-            "RAW_MATERIAL",
-            "SERVICE",
-            "SUBASSEMBLY",
-            "WIP"
-        ]
-    
-        List<String> productStoreIds = [
-            "ScipioShop",
-            "RentalStore"
-        ]
-    
+
+    ProductData() {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PRODUCT DATA-=-=-=-", "");
-        Map result = ServiceUtil.returnSuccess();
-    
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
-        List<GenericValue> productItems = new ArrayList<GenericValue>();
-    
+    }
+
+    public void init() {
         // FIXME: I'm not sure about this, maybe a different service data generator for categories and even catalogs may be better
-//        boolean createNewCategories = (context.createNewCategories) ? context.createNewCategories: false;
+        //        boolean createNewCategories = (context.createNewCategories) ? context.createNewCategories: false;
         GenericValue productStore = checkProductStore(productStoreIds);
         GenericValue prodCatalog = checkProdCatalog();
         GenericValue productCategory = checkProductCategory();
-    
+
         List productCategoryIds = [];
         if (productCategory) {
             // An explicit productCategory has preference, skipping the rest
@@ -82,45 +45,83 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
             Debug.log("ProductStoreId ======> " + productStore.productStoreId);
             // Find Catalogs
             productStoreCatalogs = productStore.getRelated("ProductStoreCatalog", null, null, true);
-            //		productCatalogs = productStoreCatalog.getRelated("ProductCatalog", true);
+            //      productCatalogs = productStoreCatalog.getRelated("ProductCatalog", true);
             for (productStoreCatalog in productStoreCatalogs) {
                 prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", true);
-                Debug.log("prodCatalogId ===============> " + prodCatalog.prodCatalogId);
+                //                Debug.log("prodCatalogId ===============> " + prodCatalog.prodCatalogId);
                 productCategoryIds += getCatalogRelatedCategoryIds(prodCatalog);
             }
         }
-    
-        if (productCategoryIds && productCategoryIds.size() > 0) {
+//        Debug.log("productCategoryIds =======> " + productCategoryIds);
+        int numRecords = getNumRecordsToBeGenerated();
+        List<DemoDataProduct> generatedProducts = [];
+        if (productCategoryIds) {
             String productCategoryTypeId = (context.productCategoryTypeId) ? context.productCategoryTypeId : "CATALOG_CATEGORY";
             String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
- 
-            List<DemoDataProduct> generatedProducts = DemoSuiteDataWorker.generateProduct(numRecords, MockarooDataGenerator.class);
-    
-            if (UtilValidate.isNotEmpty(generatedProducts) && generatedProducts.size() == numRecords) {
-                for (int i = 0; i < numRecords; i++) {
-                    DemoDataProduct demoDataProduct = generatedProducts.get(i);
-                    // Create Product
-                    String productId = "GEN_" + delegator.getNextSeqId("demo-product");
-                    productCategoryId = productCategoryIds.get(UtilRandom.random(productCategoryIds));
-                    productTypeId = productTypes.get(UtilRandom.random(productTypes));
-                    introductionDate = UtilDateTime.getTimestamp(UtilRandom.getRandomTimeBetweenTwoDates(null, context));
-    
-                    fields = UtilMisc.toMap("productId", productId, "productTypeId", productTypeId, "productName", demoDataProduct.getName(), "description", demoDataProduct.getDescription(), 
-                        "longDescription", demoDataProduct.getLongDescription(), "introductionDate", introductionDate);
-                    GenericValue product = delegator.makeValue("Product", fields);
-                    toBeStored.add(product);
-                    Debug.log("selected category id =====> " + productCategoryId + "  type ==========> " + productTypeId + " product id =========> " + productId + " product name " + demoDataProduct.getName());
-                    
-                    fields = UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", introductionDate);
-                    GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", fields);
-                    toBeStored.add(productCategoryMember);
-                    
-                }
-            }
-        } 
-//        else {
-//            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "ProductErrorProductStoreNotFound", locale) + ". Please load the specific Scipio demo data.");
-//        }
+            generatedProducts = DemoSuiteDataWorker.generateProduct(numRecords, MockarooDataGenerator.class);
+        }
+//        Debug.log("generatedProducts =======> " + generatedProducts);
+        context.generatedProducts = generatedProducts;
+        context.productCategoryIds = productCategoryIds;
+    }
+
+    final List<String> prodCatalogCategoryTypes = [
+        "CCT_ADMIN_ALLW",
+        "PCCT_BROWSE_ROOT",
+        "PCCT_MOST_POPULAR",
+        "PCCT_OTHER_SEARCH",
+        "PCCT_PROMOTIONS",
+        "PCCT_PURCH_ALLW",
+        "PCCT_QUICK_ADD",
+        "PCCT_SEARCH",
+        "PCCT_VIEW_ALLW",
+        "PCCT_WHATS_NEW"
+    ]
+
+    final List<String> productTypes = [
+        //TODO: Gotta figure how to handle these two types
+        //        "AGGREGATED",
+        //        "AGGREGATED_CONF",
+        "ASSET_USAGE",
+        "DIGITAL_GOOD",
+        "FINDIG_GOOD",
+        "FINISHED_GOOD",
+        "GOOD",
+        "MARKETING_PKG_PICK",
+        "MARKETING_PKG_AUTO",
+        "RAW_MATERIAL",
+        "SERVICE",
+        "SUBASSEMBLY",
+        "WIP"
+    ]
+
+    final List<String> productStoreIds = [
+        "ScipioShop",
+        "RentalStore"
+    ]
+
+    List prepareData(int index) {
+        List<GenericValue> toBeStored = new ArrayList<GenericValue>();
+        List<GenericValue> productItems = new ArrayList<GenericValue>();
+        if (context.generatedProducts) {
+            DemoDataProduct demoDataProduct = context.generatedProducts.get(index);
+            Debug.log("demoDataProduct ======> " + demoDataProduct);
+            // Create Product
+            String productId = "GEN_" + delegator.getNextSeqId("demo-product");
+            productCategoryId = context.productCategoryIds.get(UtilRandom.random(context.productCategoryIds));
+            productTypeId = productTypes.get(UtilRandom.random(productTypes));
+            introductionDate = UtilDateTime.getTimestamp(UtilRandom.getRandomTimeBetweenTwoDates(null, context));
+
+            fields = UtilMisc.toMap("productId", productId, "productTypeId", productTypeId, "productName", demoDataProduct.getName(), "description", demoDataProduct.getDescription(),
+                    "longDescription", demoDataProduct.getLongDescription(), "introductionDate", introductionDate);
+            GenericValue product = delegator.makeValue("Product", fields);
+            toBeStored.add(product);
+            Debug.log("selected category id =====> " + productCategoryId + "  type ==========> " + productTypeId + " product id =========> " + productId + " product name " + demoDataProduct.getName());
+
+            fields = UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", introductionDate);
+            GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", fields);
+            toBeStored.add(productCategoryMember);
+        }
         return toBeStored;
     }
 
@@ -136,7 +137,7 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         }
         return prodCatalog;
     }
-    
+
     private GenericValue checkProductCategory(productStoreIds) {
         String productCategoryId = (context.productCategoryId) ? context.productCategoryId : null;
         if (!productCategoryId)
@@ -148,9 +149,9 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
             return null;
         }
         return productCategory;
-    
+
     }
-    
+
     private GenericValue checkProductStore(productStoreIds) {
         String productStoreId = (context.productStoreId) ? context.productStoreId : null;
         if (!productStoreId)
@@ -163,16 +164,16 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         }
         return productStore;
     }
-    
+
     private List<String> getCatalogRelatedCategoryIds(GenericValue prodCatalog) {
         productCategoryIds = [];
         prodCatalogCategories = prodCatalog.getRelated("ProdCatalogCategory", null, null, true);
         for (prodCatalogCategory in prodCatalogCategories) {
-            Debug.log("prodCatalogCategoryId ===============> " + prodCatalogCategory.productCategoryId);
-    
+//            Debug.log("prodCatalogCategoryId ===============> " + prodCatalogCategory.productCategoryId);
+
             List productCategories = CategoryWorker.getRelatedCategoriesRet(delegator, "categoryList", prodCatalogCategory.productCategoryId, false, false, true);
             for (productCategory in productCategories) {
-                Debug.log("productCategoryId ===============> " + productCategory.productCategoryId);
+//                Debug.log("productCategoryId ===============> " + productCategory.productCategoryId);
                 productCategoryIds += [
                     productCategory.productCategoryId
                 ];

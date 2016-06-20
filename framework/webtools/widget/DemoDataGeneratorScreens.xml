@@ -73,9 +73,9 @@ under the License.
 			     <decorator-screen name="CommonDemoDataGeneratorDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
 						<screenlet>
-						    <label>TODO</label>
+						    <!-- <label>TODO</label> -->
 							<platform-specific>
-								<!-- <html><html-template location="component://webtools/webapp/webtools/demoDataGenerator/DemoDataGeneratedResult.ftl" /></html> -->
+								<html><html-template location="component://webtools/webapp/webtools/demoDataGenerator/DemoDataGeneratedResult.ftl" /></html>
 							</platform-specific>
 						</screenlet>
 				    </decorator-section>

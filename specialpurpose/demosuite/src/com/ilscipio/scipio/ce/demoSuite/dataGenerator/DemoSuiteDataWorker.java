@@ -97,7 +97,7 @@ public class DemoSuiteDataWorker {
             ThirdPartyDataGenerator<?> generator = (ThirdPartyDataGenerator<?>) dataGeneratorClass.getConstructor(Class.class)
                     .newInstance(DemoDataUserLogin.class);
             List<?> data = (List<?>) generator.retrieveData(count);
-            Debug.log("retreived party ==============> " + data);
+//            Debug.log("retreived party ==============> " + data);
             return (List<DemoDataUserLogin>) data;
         } catch (IllegalAccessException e) {
             Debug.logError(e, e.getMessage(), "");

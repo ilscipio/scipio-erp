@@ -187,9 +187,11 @@ under the License.
         </delete>
     </target>
     
+    <!-- SCIPIO: Tests commented; currently meaningless
     <target name="tests" depends="ofbiz-init">
         <iterate target="tests" filelist="test-builds"/>
     </target>
+    -->
 
     <target name="clean">
         <hotdeployant target="clean"/>
@@ -1321,13 +1323,14 @@ under the License.
         <antcall target="load-admin-user-login"/>
     </target>
 
+    <!-- SCIPIO: Tests commented; currently meaningless
     <target name="run-tests"
         description="Run OFBiz default tests; you have to manually execute 'ant load-demo' before (and if needed even clear your data before) and see results in runtime/logs/test-results/html/all-tests.html. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!- Scipio: solr path ->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="test"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1348,10 +1351,13 @@ under the License.
             </condition>
         </fail>
     </target>
+    -->
 
-   <target name="run-tests-with-cobertura" depends="download-cobertura, run-tests"
+    <!-- SCIPIO: Tests commented; currently meaningless
+    <target name="run-tests-with-cobertura" depends="download-cobertura, run-tests"
         description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura"/>
-
+    -->
+    
     <target name="_check-separated-tests-already-setup">
         <available file="runtime/test-list-build.xml" property="_separated-tests-already-setup"/>
     </target>

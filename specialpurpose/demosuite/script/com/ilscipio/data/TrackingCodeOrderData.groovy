@@ -17,15 +17,14 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroov
 
 
 public class TrackingCodeOrderData extends DataGeneratorGroovyBaseScript {
-    LinkedList prepareData() {
-        final String DEFAULT_WEBAPP_NAME = "shop";
+    final String DEFAULT_WEBAPP_NAME = "shop";
 
+    TrackingCodeOrderData() {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING ORDER DATA-=-=-=-", "");
+    }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
-
+    public void init() {
         Locale locale = context.locale;
-
         minDate = context.minDate;
         if (!minDate) {
             calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp(), context.timeZone, context.locale);
@@ -37,26 +36,31 @@ public class TrackingCodeOrderData extends DataGeneratorGroovyBaseScript {
             maxDate = UtilDateTime.nowTimestamp();
         }
 
+        trackingCodeTypeList = delegator.findAll("TrackingCodeType",  true);
+
         conditionList = EntityCondition.makeCondition(
                 EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, minDate),
                 EntityJoinOperator.AND,
                 EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, maxDate));
 
         orderHeaderList = from("OrderHeader").where(conditionList).queryList();
-        if (orderHeaderList) {
-            for (int i = 0; i < numRecords; i++) {
-                trackingCodeTypeList = delegator.findAll("TrackingCodeType",  true);
-                if (trackingCodeTypeList)
-                    trackingCodeType =  trackingCodeTypeList.get(UtilRandom.random(trackingCodeTypeList));
 
-                orderHeader = orderHeaderList.get(UtilRandom.random(orderHeaderList));
-                trackingCodeList = delegator.findByAnd("TrackingCode", null, null, false);
-                trackingCode = trackingCodeList.get(UtilRandom.random(trackingCodeList));
+        context.orderHeaderList = orderHeaderList;
+        context.trackingCodeTypeList = trackingCodeTypeList;
+    }
 
-                GenericValue trackingCodeOrder = delegator.makeValue("TrackingCodeOrder",
-                        UtilMisc.toMap("trackingCodeId", trackingCode.trackingCodeId, "orderId", orderHeader.orderId, "trackingCodeTypeId", trackingCodeType.trackingCodeTypeId));
-                toBeStored.add(trackingCodeOrder);
-            }
+
+    List prepareData(int index) {
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        if (context.trackingCodeTypeList && context.orderHeaderList) {
+            trackingCodeType =  context.trackingCodeTypeList.get(UtilRandom.random(context.trackingCodeTypeList));
+            orderHeader = context.orderHeaderList.get(UtilRandom.random(orderHeaderList));
+            trackingCodeList = delegator.findByAnd("TrackingCode", null, null, false);
+            trackingCode = trackingCodeList.get(UtilRandom.random(trackingCodeList));
+
+            GenericValue trackingCodeOrder = delegator.makeValue("TrackingCodeOrder",
+                    UtilMisc.toMap("trackingCodeId", trackingCode.trackingCodeId, "orderId", orderHeader.orderId, "trackingCodeTypeId", trackingCodeType.trackingCodeTypeId));
+            toBeStored.add(trackingCodeOrder);
         }
         return toBeStored;
     }

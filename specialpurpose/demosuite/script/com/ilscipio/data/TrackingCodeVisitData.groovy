@@ -14,19 +14,15 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroov
 
 public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
 
-    LinkedList prepareData() {
-        final String DEFAULT_WEBAPP_NAME = "shop";
-        
+    private final static String DEFAULT_WEBAPP_NAME = "shop";
+
+    TrackingCodeVisitData() {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING VISIT DATA-=-=-=-", "");
+    }
 
+    public void init() {
         trackingCodeSourceList = delegator.findByAnd("Enumeration", ["enumTypeId" : "TRACKINGCODE_SRC"] , null, true);
-        if (trackingCodeSourceList)
-            trackingCodeSource =  trackingCodeSourceList.get(UtilRandom.random(trackingCodeSourceList));
-        
-        Map result = ServiceUtil.returnSuccess();
-
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
-        Locale locale = context.locale;
+        context.trackingCodeSourceList = trackingCodeSourceList;
 
         minDate = context.minDate;
         //    maxDate = context.maxDate;
@@ -35,26 +31,27 @@ public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
             calendar.set(Calendar.MONTH, -6);
             minDate = UtilDateTime.getTimestamp(calendar.getTimeInMillis());
         }
-        //    if (!thruDate) {
-        //        thruDate = UtilDateTime.nowTimestamp();
-        //    }
+        context.minDate = minDate;
+    }
 
-        for (int i = 0; i < numRecords; i++) {
-            fromDate = UtilRandom.generateRandomDate(UtilDateTime.toDate(minDate), context);
+    List prepareData(int index) {
+        List<GenericValue> toBeStored = new ArrayList<GenericValue>();
+
+        if (context.trackingCodeSourceList) {
+            trackingCodeSource =  context.trackingCodeSourceList.get(UtilRandom.random(context.trackingCodeSourceList));
+            fromDate = UtilRandom.generateRandomDate(UtilDateTime.toDate(context.minDate), context);
 
             String newSeqId = delegator.getNextSeqId("Visit");
             GenericValue visit = delegator.makeValue("Visit");
             visit.set("visitId", newSeqId);
             //        visit.set("sessionId", session.getId());
             visit.set("fromDate", UtilDateTime.nowTimestamp());
-            visit.set("initialLocale", locale.getDisplayName());
+            visit.set("initialLocale", context.locale.getDisplayName());
             visit.set("webappName", DEFAULT_WEBAPP_NAME);
             toBeStored.add(visit);
 
             trackingCodeList = delegator.findByAnd("TrackingCode", null, null, false);
             trackingCode = trackingCodeList.get(UtilRandom.random(trackingCodeList));
-            if (trackingCodeSourceList)
-                trackingCodeSource =  trackingCodeSourceList.get(UtilRandom.random(trackingCodeSourceList));
 
             GenericValue trackingCodeVisit = delegator.makeValue("TrackingCodeVisit",
                     UtilMisc.toMap("trackingCodeId", trackingCode.trackingCodeId, "visitId", visit.visitId,
@@ -64,5 +61,3 @@ public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
         return toBeStored;
     }
 }
-
-

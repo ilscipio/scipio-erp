@@ -3368,8 +3368,8 @@
         <value xml:lang="en">Logs</value>
     </property>    
     <property key="WebtoolsMainPage">
-        <value xml:lang="de">WebTools Startseite</value>
-        <value xml:lang="en">Admin Main Page</value>
+        <value xml:lang="de">Startseite</value>
+        <value xml:lang="en">Main Page</value>
         <value xml:lang="fr">Page principale des outils web</value>
         <value xml:lang="it">Pagina principale</value>
         <value xml:lang="ja">Webツールメインページ</value>
@@ -4061,7 +4061,7 @@
         <value xml:lang="zh_TW">性能測試</value>
     </property>
     <property key="WebtoolsPermissionError">
-        <value xml:lang="de">WebTools Autorisierungsfehler</value>
+        <value xml:lang="de">Autorisierungsfehler</value>
         <value xml:lang="en">Admin Permission Error</value>
         <value xml:lang="fr">Erreur d'autorisation sur les outils web</value>
         <value xml:lang="it">Errore di autorizzazione sugli strumenti del Framework</value>
@@ -5945,4 +5945,8 @@
     <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
         <value xml:lang="en">Currently set to ${maxRecords}</value>
     </property>
+    <property key="WebtoolsDemoDataGeneratorResults">
+        <value xml:lang="en">Generated data results</value>
+    </property>
+    
 </resource>

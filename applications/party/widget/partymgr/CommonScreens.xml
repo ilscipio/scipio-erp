@@ -147,7 +147,6 @@ under the License.
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="titleProperty" value="PartyUserManagement"/>
-                <set field="viewSize" value="10" type="Integer"/>
             </actions>
             <widgets>
                  <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -215,8 +214,9 @@ under the License.
 
     <screen name="ScipioSecurityAlerts">
         <section>
-            <actions>
+            <actions>            
                 <set field="intervalScope" value="month"/>
+                <set field="parameters.VIEW_SIZE" value="10" type="Integer" global="true"/>
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartySecurityAlerts.groovy"/>
            </actions>
            <widgets>
@@ -241,7 +241,7 @@ under the License.
     <screen name="ScipioLastCommunication">
         <section>
             <actions>
-                <set field="intervalScope" value="month"/>
+                <set field="intervalScope" value="month"/>                
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartyLastCommunications.groovy"/>
            </actions>
            <widgets>

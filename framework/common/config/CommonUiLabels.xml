@@ -16263,4 +16263,7 @@
         <value xml:lang="zh">格式</value>
         <value xml:lang="zh_TW">格式</value>
     </property>
+    <property key="CommonIteration">
+        <value xml:lang="en">Iteration</value>
+    </property>
 </resource>

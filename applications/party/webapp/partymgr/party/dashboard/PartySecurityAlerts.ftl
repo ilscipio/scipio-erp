@@ -27,7 +27,7 @@
                             
                             <@td>${securityAlert.userLoginId!}</@td>
                             <@td><a href="${securityAlert.requestUrl!}">${securityAlert.contentId?replace('.',' - ')!}</a></@td>
-                            <@td>${securityAlert.serverIpAddress!}</@td>
+                            <@td>${securityAlert.clientIpAddress!}</@td>
                         </@tr>
                     </#list>
                 </@tbody>
@@ -35,7 +35,6 @@
             <script>
                 $(document).ready(function() {        
                     var table = $('#securityAlerts').DataTable();
-                    //table.order( [[ 5, 'desc' ]] ).draw();
                 } );
             </script>
         </@paginate>

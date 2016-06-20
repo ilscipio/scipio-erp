@@ -332,7 +332,7 @@ under the License.
                                       <#if itemStatusOkay>
                                         <input type="text" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupQty?string.number}" class="${styles.text_right!}"/>
                                         <#if itemSelectable>
-                                            <input type="hidden" name="selectedItem" value="${orderItem.orderItemSeqId}" />
+                                            <input type="hidden" name="selectedItem" value="${orderItem.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" />
                                         </#if>
                                       </#if>
                                     </@td>

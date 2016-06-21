@@ -41,7 +41,6 @@ In order to install SCIPIO ERP, the following prerequisites must be installed:
  * Validate Settings
 * Install Apache Ant
  * Download and Install
- * Set ANT_HOME Path
 
 Download
 The recommended way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, which

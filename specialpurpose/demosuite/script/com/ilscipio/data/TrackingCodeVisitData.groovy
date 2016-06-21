@@ -23,29 +23,20 @@ public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
     public void init() {
         trackingCodeSourceList = delegator.findByAnd("Enumeration", ["enumTypeId" : "TRACKINGCODE_SRC"] , null, true);
         context.trackingCodeSourceList = trackingCodeSourceList;
-
-        minDate = context.minDate;
-        //    maxDate = context.maxDate;
-        if (!minDate) {
-            calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp(), context.timeZone, context.locale);
-            calendar.set(Calendar.MONTH, -6);
-            minDate = UtilDateTime.getTimestamp(calendar.getTimeInMillis());
-        }
-        context.minDate = minDate;
     }
 
-    List prepareData(int index) {
+    List prepareData(int index) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
 
         if (context.trackingCodeSourceList) {
             trackingCodeSource =  context.trackingCodeSourceList.get(UtilRandom.random(context.trackingCodeSourceList));
-            fromDate = UtilRandom.generateRandomDate(UtilDateTime.toDate(context.minDate), context);
+            fromDate = UtilDateTime.generateRandomTimestamp(context);
 
             String newSeqId = delegator.getNextSeqId("Visit");
             GenericValue visit = delegator.makeValue("Visit");
             visit.set("visitId", newSeqId);
             //        visit.set("sessionId", session.getId());
-            visit.set("fromDate", UtilDateTime.nowTimestamp());
+            visit.set("fromDate", fromDate);
             visit.set("initialLocale", context.locale.getDisplayName());
             visit.set("webappName", DEFAULT_WEBAPP_NAME);
             toBeStored.add(visit);
@@ -55,7 +46,7 @@ public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
 
             GenericValue trackingCodeVisit = delegator.makeValue("TrackingCodeVisit",
                     UtilMisc.toMap("trackingCodeId", trackingCode.trackingCodeId, "visitId", visit.visitId,
-                    "fromDate", Timestamp.valueOf(fromDate), "sourceEnumId", trackingCodeSource.enumId));
+                    "fromDate", fromDate, "sourceEnumId", trackingCodeSource.enumId));
             toBeStored.add(trackingCodeVisit);
         }
         return toBeStored;

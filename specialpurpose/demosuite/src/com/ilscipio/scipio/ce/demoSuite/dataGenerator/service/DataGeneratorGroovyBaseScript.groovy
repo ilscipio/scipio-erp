@@ -1,9 +1,12 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.service
 
+import java.sql.Timestamp
+
 import javolution.util.FastList
 import javolution.util.FastMap
 
 import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilValidate
 import org.ofbiz.entity.GenericValue
@@ -44,7 +47,8 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                     if (UtilValidate.isEmpty(createdValue))
                         throw new Exception("createdValue is null");
                     int stored = stat.getStored();                   
-                    stat.setStored(stored + 1);                             
+                    stat.setStored(stored + 1);
+                    stat.getGeneratedValues().add(createdValue);                            
                 } catch (Exception e) {
                     int failed = stat.getFailed();                    
                     stat.setFailed(failed + 1);                    
@@ -73,7 +77,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
      * It is meant to be called within a loop in run() n times, where n is determined by getNumRecordsToBeGenerated().
      * @return
      */
-    public abstract List<GenericValue> prepareData(int index);
+    public abstract List<GenericValue> prepareData(int index) throws Exception;
 
     /**
      * All the logic that will be used later on in the prepareData() must be initialized here. 
@@ -88,11 +92,13 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     def Map run() {
         Map result = ServiceUtil.returnSuccess();
         try {
+            sanitizeDates();
             init();
             int numRecords = getNumRecordsToBeGenerated();
             for (int i = 0; i < numRecords; i++) {
                 List toBeStored = prepareData(i);
-                storeData(toBeStored);
+                if (toBeStored)
+                    storeData(toBeStored);
             }
             result.put("generatedDataStats", dataGeneratorStats);
         } catch (Exception e) {
@@ -100,5 +106,47 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
             ServiceUtil.returnError(e.getMessage());
         }
         return result;
+    }
+    
+    /**
+     * Sanitizes minDate & maxDate context params. If any inconsistency is found, 
+     * they will be automatically updated with a span of time of 30 days between them. 
+     * It is recommended to use UtilRandom.generateRandomTimestamp(context) within prepareData()
+     * in order to get a random date between them.
+     */
+    private void sanitizeDates() {
+        Timestamp minDate = null;
+        Timestamp maxDate = null;        
+        if (context.minDate)
+            minDate = context.minDate;
+        if (context.maxDate)
+            maxDate = context.maxDate;
+        
+        if (minDate && maxDate) {            
+            int intervalDays = UtilDateTime.getIntervalInDays(minDate, maxDate);
+            Debug.log("minDate maxDate specified, days between them ======> " + intervalDays);
+            // If minDate is greater than maxDate, set maxDate to the current time and minDate 30 days before
+            if (intervalDays < 0) {
+                maxDate = UtilDateTime.nowTimestamp();
+                minDate = UtilDateTime.adjustTimestamp(maxDate, Calendar.DAY_OF_YEAR, -30);
+            }
+        } else if (!minDate && maxDate) {
+            //  If minDate is not present but maxDate is, set minDate 3 months before maxDate
+            minDate = UtilDateTime.adjustTimestamp(maxDate, Calendar.DAY_OF_YEAR, -30);
+        } else if (minDate && !maxDate) {
+            //  If maxDate is not present but minDate is, set maxDate to current time. 
+            // If that makes makes minDate greater than maxDate, set minDate 30 before current date.
+            maxDate = UtilDateTime.nowTimestamp();
+            int intervalDays = UtilDateTime.getIntervalInDays(minDate, maxDate);
+            if (intervalDays < 0) {                
+                minDate = UtilDateTime.adjustTimestamp(maxDate, Calendar.DAY_OF_YEAR, -30);
+            }
+        } else if (!minDate && !maxDate) {
+            maxDate = UtilDateTime.nowTimestamp();
+            minDate = UtilDateTime.adjustTimestamp(maxDate, Calendar.DAY_OF_YEAR, -30);
+        }    
+        context.minDate = minDate;
+        context.maxDate = maxDate;
+        Debug.log("minDate ==========> " + minDate + "  maxDate ==========> " + maxDate);
     }
 }

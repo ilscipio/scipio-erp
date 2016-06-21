@@ -5948,5 +5948,15 @@
     <property key="WebtoolsDemoDataGeneratorResults">
         <value xml:lang="en">Generated data results</value>
     </property>
+    <property key="WebtoolsDemoDataGeneratorNoRecordsGenerated">
+        <value xml:lang="en">No records could be generated</value>
+    </property>
+    <property key="WebtoolsGeneratedDataStored">
+        <value xml:lang="en">Stored</value>
+    </property>
+    <property key="WebtoolsGeneratedDataFailed">
+        <value xml:lang="en">Failed</value>
+    </property>
+    
     
 </resource>

@@ -289,7 +289,7 @@ public class TransactionData extends DataGeneratorGroovyBaseScript {
     void init() {
     }
     
-    List prepareData(int index) {
+    List prepareData(int index) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> acctgTransEntrys = new ArrayList<GenericValue>();
         // Create AcctgTrans
@@ -344,9 +344,9 @@ public class TransactionData extends DataGeneratorGroovyBaseScript {
         // FIXME: This may be inconsistent with the GlAccount selected, it may affect the accuracy of some reports
         String acctgTransTypeId = acctgTransTypeIds.get(UtilRandom.random(acctgTransTypeIds));
         String description = "Demo Transaction " + acctgTransId;
-        Timestamp transactionDate = Timestamp.valueOf(UtilRandom.generateRandomDate(context));
+        Timestamp transactionDate = UtilRandom.generateRandomTimestamp(context);
         isPosted = "Y";
-        postedDate =  Timestamp.valueOf(UtilRandom.generateRandomDate(transactionDate, context));
+        postedDate =  UtilRandom.generateRandomTimestamp(transactionDate, context);
         glFiscalTypeId = "ACTUAL";
 
         Map fields = UtilMisc.toMap("acctgTransId", acctgTransId, "acctgTransTypeId", acctgTransTypeId, "description", description, "transactionDate", transactionDate,

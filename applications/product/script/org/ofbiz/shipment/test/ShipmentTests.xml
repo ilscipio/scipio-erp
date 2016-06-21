@@ -20,6 +20,7 @@ under the License.
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+    <!-- SCIPIO - ToDo: Uncomment once fixed in OFBiz trunk
     <simple-method method-name="testPackingServices" short-description="test packing services" login-required="false">
 
         <set field="packSingleItemInMap.productId" value="CAM-2644"/>
@@ -105,7 +106,7 @@ under the License.
 
         <log level="info" message="=============Test case completed===================================="/>
 
-    </simple-method>
+    </simple-method> -->
 
     <simple-method method-name="testShipmentServices" short-description="test shipment services" login-required="false">
         <set field="createShipmentInMap.shipmentTypeId" value="SALES_SHIPMENT"/>

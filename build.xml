@@ -187,11 +187,9 @@ under the License.
         </delete>
     </target>
     
-    <!-- SCIPIO: Tests commented; currently meaningless
     <target name="tests" depends="ofbiz-init">
         <iterate target="tests" filelist="test-builds"/>
     </target>
-    -->
 
     <target name="clean">
         <hotdeployant target="clean"/>
@@ -1355,10 +1353,8 @@ under the License.
     </target>
     
 
-    <!-- SCIPIO: Tests commented; currently meaningless
     <target name="run-tests-with-cobertura" depends="download-cobertura, run-tests"
         description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura"/>
-    -->
     
     <target name="_check-separated-tests-already-setup">
         <available file="runtime/test-list-build.xml" property="_separated-tests-already-setup"/>

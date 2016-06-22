@@ -24,33 +24,17 @@ public class TrackingCodeOrderData extends DataGeneratorGroovyBaseScript {
     }
 
     public void init() {
-        Locale locale = context.locale;
-        minDate = context.minDate;
-        if (!minDate) {
-            calendar = UtilDateTime.toCalendar(UtilDateTime.nowTimestamp(), context.timeZone, context.locale);
-            calendar.set(Calendar.MONTH, -6);
-            minDate = UtilDateTime.getTimestamp(calendar.getTimeInMillis());
-        }
-        maxDate = context.maxDate;
-        if (!maxDate) {
-            maxDate = UtilDateTime.nowTimestamp();
-        }
-
         trackingCodeTypeList = delegator.findAll("TrackingCodeType",  true);
-
         conditionList = EntityCondition.makeCondition(
-                EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, minDate),
+                EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, context.minDate),
                 EntityJoinOperator.AND,
-                EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, maxDate));
-
+                EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, context.maxDate));
         orderHeaderList = from("OrderHeader").where(conditionList).queryList();
-
         context.orderHeaderList = orderHeaderList;
         context.trackingCodeTypeList = trackingCodeTypeList;
     }
 
-
-    List prepareData(int index) {
+    List prepareData(int index) throws Exception {
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         if (context.trackingCodeTypeList && context.orderHeaderList) {
             trackingCodeType =  context.trackingCodeTypeList.get(UtilRandom.random(context.trackingCodeTypeList));

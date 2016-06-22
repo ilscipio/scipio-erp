@@ -132,7 +132,7 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
         context.workEffortTypeIdsAndStatusKeys = workEffortTypeIdsAndStatusKeys;
     }
 
-    List prepareData(int index) {
+    List prepareData(int index) throws Exception {
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         List<GenericValue> workEffortEntrys = new ArrayList<GenericValue>();
 

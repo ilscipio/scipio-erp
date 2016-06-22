@@ -100,27 +100,29 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         "RentalStore"
     ]
 
-    List prepareData(int index) {
+    List prepareData(int index) throws Exception {
+        Debug.log("prepareData");
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> productItems = new ArrayList<GenericValue>();
         if (context.generatedProducts) {
             DemoDataProduct demoDataProduct = context.generatedProducts.get(index);
-            Debug.log("demoDataProduct ======> " + demoDataProduct);
+//            Debug.log("demoDataProduct ======> " + demoDataProduct);
             // Create Product
             String productId = "GEN_" + delegator.getNextSeqId("demo-product");
             productCategoryId = context.productCategoryIds.get(UtilRandom.random(context.productCategoryIds));
             productTypeId = productTypes.get(UtilRandom.random(productTypes));
-            introductionDate = UtilDateTime.getTimestamp(UtilRandom.getRandomTimeBetweenTwoDates(null, context));
+            introductionDate = UtilRandom.generateRandomTimestamp(context);
 
             fields = UtilMisc.toMap("productId", productId, "productTypeId", productTypeId, "productName", demoDataProduct.getName(), "description", demoDataProduct.getDescription(),
                     "longDescription", demoDataProduct.getLongDescription(), "introductionDate", introductionDate);
             GenericValue product = delegator.makeValue("Product", fields);
             toBeStored.add(product);
-            Debug.log("selected category id =====> " + productCategoryId + "  type ==========> " + productTypeId + " product id =========> " + productId + " product name " + demoDataProduct.getName());
+//            Debug.log("selected category id =====> " + productCategoryId + "  type ==========> " + productTypeId + " product id =========> " + productId + " product name " + demoDataProduct.getName());
 
             fields = UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", introductionDate);
             GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", fields);
             toBeStored.add(productCategoryMember);
+            Debug.log("product toBeStored =====> " + toBeStored);
         }
         return toBeStored;
     }

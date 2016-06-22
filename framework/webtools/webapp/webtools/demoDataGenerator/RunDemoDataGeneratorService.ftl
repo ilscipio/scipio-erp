@@ -1,7 +1,3 @@
-  <@alert type="info">        
-        ${uiLabelMap.WebtoolsDataGeneratorMaxRecordsInfo} ${uiLabelMap.WebtoolsDataGeneratorMaxRecordsCurrentValue}
-  </@alert>    
-
 <form name="demoDataGeneratorForm" method="post" action="<@ofbizUrl>DemoDataGeneratorResult?_RUN_SYNC_=Y</@ofbizUrl>">
       <#assign serviceParameterNames = [] />
 

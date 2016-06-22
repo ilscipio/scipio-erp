@@ -81,13 +81,12 @@ under the License.
     </div>
   </#if>
 
+    
   <#-- Scipio: only if it is gotten from context and needs to include explicit content only -->
   <#if infoMessage?has_content>
     <div id="main-info-box">
-        <@alert type="info">      
-          <#if infoMessage?has_content>
+        <@alert type="info">
             <#noescape>${rawString(infoMessage)}</#noescape>
-          </#if>
         </@alert>
     </div>
   </#if>

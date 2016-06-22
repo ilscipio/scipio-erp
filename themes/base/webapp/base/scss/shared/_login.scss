@@ -1,11 +1,12 @@
 .login-box {
   margin: 200px 0;
   padding:0px;
-  min-width: 500px;
   
   #login-box-title {
       
     h1 {
+        color:$white-smoke;
+        text-shadow: rgba(0, 0, 0, 0.7) 1px 1px 1px;
         img {height:22px; margin-right:10px;}
     }
   }

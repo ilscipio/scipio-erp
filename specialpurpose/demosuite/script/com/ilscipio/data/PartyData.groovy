@@ -42,31 +42,30 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
         int num = getNumRecordsToBeGenerated();
         List<DemoDataPerson> generatedPersons = DemoSuiteDataWorker.generatePerson(num, MockarooDataGenerator.class);
         List<DemoDataUserLogin> generatedUserLogins = DemoSuiteDataWorker.generateUserLogin(num, MockarooDataGenerator.class);
+        List<GenericValue> roleTypeIds = from("RoleType").cache(false).queryList();
         context.generatedPersons = generatedPersons;
         context.generatedUserLogins = generatedUserLogins;
+        context.roleTypeIds = roleTypeIds;
     }
     
-    List prepareData(int index) {
+    List prepareData(int index) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> partyEntrys = new ArrayList<GenericValue>();
-         
-        List<GenericValue> roleTypeIds = from("RoleType").cache(false).queryList();
+        
         if ( (context.generatedPersons && context.generatedPersons.get(index)) 
             && (context.generatedUserLogins && context.generatedUserLogins.get(index))) {            
             String partyId = "GEN_" + delegator.getNextSeqId("demo-partyId");
             String partyTypeId = partyTypeIds.get(UtilRandom.random(partyTypeIds));        
             String partyStatusId = partyStatus.get(UtilRandom.random(partyStatus)); 
-            minDate = UtilDateTime.nowDate();
-            if (context.minDate != null)
-                minDate = new Date(context.minDate.getTime());
-            Timestamp createdDate = Timestamp.valueOf(UtilRandom.generateRandomDate(minDate, context));
-            Debug.log("partyId ====> " + partyId + " partyTypeId ======> " + partyTypeId + " partyStatusId ==========> " + partyStatusId);        
+            
+            Timestamp createdDate = UtilRandom.generateRandomTimestamp(context);
+//            Debug.log("partyId ====> " + partyId + " partyTypeId ======> " + partyTypeId + " partyStatusId ==========> " + partyStatusId);        
             Map fields = UtilMisc.toMap("partyId", partyId, "partyTypeId", partyTypeId, "statusId", partyStatusId, "description", partyId + " description", "createdDate", createdDate);    
             GenericValue party = delegator.makeValue("Party", fields);
             toBeStored.add(party);
 
             
-            GenericValue roleType = roleTypeIds.get(UtilRandom.random(roleTypeIds));
+            GenericValue roleType = context.roleTypeIds.get(UtilRandom.random(context.roleTypeIds));
             fields = UtilMisc.toMap("roleTypeId", roleType.roleTypeId, "partyId", partyId);        
             GenericValue partyRole = delegator.makeValue("PartyRole", fields);        
             toBeStored.add(partyRole);
@@ -81,11 +80,11 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
             if (gender.toUpperCase().startsWith("F"))
                 g = "F";
             fields = UtilMisc.toMap("partyId", partyId, "salutation", salutation, "firstName", firstName, "lastName", lastName, "gender", g);
-            Debug.log("partyId ========> " + partyId + "  salutation ==========> " + salutation + "    firstName ===============> " + firstName + "          lastName ===============> " + lastName + "   gender ===========> " + g);
+//            Debug.log("partyId ========> " + partyId + "  salutation ==========> " + salutation + "    firstName ===============> " + firstName + "          lastName ===============> " + lastName + "   gender ===========> " + g);
             GenericValue person = delegator.makeValue("Person", fields);
             toBeStored.add(person);
             
-            DemoDataUserLogin demoDataUserLogin = context.generatedUserLogins.get(0);
+            DemoDataUserLogin demoDataUserLogin = context.generatedUserLogins.get(index);
             String userLoginId = demoDataUserLogin.getUserLoginId();
             String currentPassword = demoDataUserLogin.getCurrentPassword();
             if (!context.generatePassword)

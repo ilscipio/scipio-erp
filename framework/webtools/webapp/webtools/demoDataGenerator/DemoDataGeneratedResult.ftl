@@ -42,7 +42,7 @@
                             <@td>                                 
                                 <@modal id="displayRecords_${statKeys[i]}_${stat_index}" label="${uiLabelMap.WebtoolsGeneratedDataStored}: ${stat[statKeys[i]].stored}">
                                     <@heading level=1>${uiLabelMap.CommonIteration} #${stat_index + 1}</@heading>
-                                    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+                                    <@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
                                         <@thead>
                                             <@tr>
                                                 <@td>${statKeys[i]}</@td>

@@ -30,7 +30,7 @@ public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
 
         if (context.trackingCodeSourceList) {
             trackingCodeSource =  context.trackingCodeSourceList.get(UtilRandom.random(context.trackingCodeSourceList));
-            fromDate = UtilDateTime.generateRandomTimestamp(context);
+            fromDate = UtilRandom.generateRandomTimestamp(context);
 
             String newSeqId = delegator.getNextSeqId("Visit");
             GenericValue visit = delegator.makeValue("Visit");

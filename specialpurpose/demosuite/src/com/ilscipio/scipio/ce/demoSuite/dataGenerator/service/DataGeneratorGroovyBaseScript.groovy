@@ -10,6 +10,7 @@ import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilValidate
 import org.ofbiz.entity.GenericValue
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.ServiceUtil
 import org.ofbiz.service.engine.GroovyBaseScript
 
@@ -18,7 +19,8 @@ import org.ofbiz.service.engine.GroovyBaseScript
 abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
     private static final String resource_error = "DemoSuiteUiLabels";
-
+    public static final String module = DataGeneratorGroovyBaseScript.class.getName();
+    
     private List<Map<String, DataGeneratorStat>> dataGeneratorStats;
 
     DataGeneratorGroovyBaseScript() {
@@ -43,13 +45,16 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                     stat = new DataGeneratorStat(entityName);                    
                 }                
                 try {
+                    boolean beginTransaction = TransactionUtil.begin();                    
                     GenericValue createdValue = delegator.create(value);
+                    TransactionUtil.commit(beginTransaction)
                     if (UtilValidate.isEmpty(createdValue))
                         throw new Exception("createdValue is null");
                     int stored = stat.getStored();                   
                     stat.setStored(stored + 1);
                     stat.getGeneratedValues().add(createdValue);                            
                 } catch (Exception e) {
+                    TransactionUtil.rollback();                    
                     int failed = stat.getFailed();                    
                     stat.setFailed(failed + 1);                    
                 }                

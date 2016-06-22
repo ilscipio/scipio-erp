@@ -47,6 +47,8 @@ under the License.
                 <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>       
                 <property-to-field resource="general" property="data.generator.max.records" field="maxRecords" default="50" type="Integer" />                
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="infoMessage" value="${uiLabelMap.WebtoolsDataGeneratorMaxRecordsInfo} ${uiLabelMap.WebtoolsDataGeneratorMaxRecordsCurrentValue}" type="PlainString"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonDemoDataGeneratorDecorator" location="${parameters.mainDecoratorLocation}">

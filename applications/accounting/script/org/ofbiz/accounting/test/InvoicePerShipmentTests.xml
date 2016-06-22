@@ -122,13 +122,13 @@ under the License.
         <set field="packInput.nextPackageSeq" value="1" type="Integer"/>
         <set field="packInput.userLogin" from-field="userLogin"/>
         <!-- Items -->
-        <set field="packInput.selInfo._1" value="Y"/>
-        <set field="packInput.pkgInfo._1" value="1"/>
-        <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="PH-1000"/>
-        <set field="packInput.iteInfo._1" value="00001"/>
-        <set field="packInput.wgtInfo._1" value="0"/>
-        <set field="packInput.numPackagesInfo._1" value="1"/>
+        <!--<set field="packInput.selInfo" value="Y"/>-->
+        <set field="packInput.pkg" value="1"/>
+        <set field="packInput.qty" value="1"/>
+        <set field="packInput.prd" value="PH-1000"/>
+        <set field="packInput.ite" value="00001"/>
+        <set field="packInput.wgt" value="0"/>
+        <set field="packInput.numPackages" value="1"/>
         <call-service service-name="packBulkItems" in-map-name="packInput">
             <result-to-field result-name="responseMessage"/>
         </call-service>
@@ -248,13 +248,13 @@ under the License.
         <set field="packInput.nextPackageSeq" value="1" type="Integer"/>
         <set field="packInput.userLogin" from-field="userLogin"/>
         <!-- Items -->
-        <set field="packInput.selInfo._1" value="Y"/>
-        <set field="packInput.pkgInfo._1" value="1"/>
-        <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="PH-1000"/>
-        <set field="packInput.iteInfo._1" value="00001"/>
-        <set field="packInput.wgtInfo._1" value="0"/>
-        <set field="packInput.numPackagesInfo._1" value="1"/>
+        <!--<set field="packInput.selInfo" value="Y"/>-->
+        <set field="packInput.pkg" value="1"/>
+        <set field="packInput.qty" value="1"/>
+        <set field="packInput.prd" value="PH-1000"/>
+        <set field="packInput.ite" value="00001"/>
+        <set field="packInput.wgt" value="0"/>
+        <set field="packInput.numPackages" value="1"/>
         <call-service service-name="packBulkItems" in-map-name="packInput">
             <result-to-field result-name="responseMessage"/>
         </call-service>
@@ -373,13 +373,13 @@ under the License.
         <set field="packInput.nextPackageSeq" value="1" type="Integer"/>
         <set field="packInput.userLogin" from-field="userLogin"/>
         <!-- Items -->
-        <set field="packInput.selInfo._1" value="Y"/>
-        <set field="packInput.pkgInfo._1" value="1"/>
-        <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="CAM-2644"/>
-        <set field="packInput.iteInfo._1" value="00001"/>
-        <set field="packInput.wgtInfo._1" value="0"/>
-        <set field="packInput.numPackagesInfo._1" value="1"/>
+        <!--<set field="packInput.selInfo" value="Y"/>-->
+        <set field="packInput.pkg" value="1"/>
+        <set field="packInput.qty" value="1"/>
+        <set field="packInput.prd" value="CAM-2644"/>
+        <set field="packInput.ite" value="00001"/>
+        <set field="packInput.wgt" value="0"/>
+        <set field="packInput.numPackages" value="1"/>
         <call-service service-name="packBulkItems" in-map-name="packInput">
             <result-to-field result-name="responseMessage"/>
         </call-service>
@@ -498,13 +498,13 @@ under the License.
         <set field="packInput.nextPackageSeq" value="1" type="Integer"/>
         <set field="packInput.userLogin" from-field="userLogin"/>
         <!-- Items -->
-        <set field="packInput.selInfo._1" value="Y"/>
-        <set field="packInput.pkgInfo._1" value="1"/>
-        <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="CAM-2644"/>
-        <set field="packInput.iteInfo._1" value="00001"/>
-        <set field="packInput.wgtInfo._1" value="0"/>
-        <set field="packInput.numPackagesInfo._1" value="1"/>
+        <!--<set field="packInput.selInfo" value="Y"/>-->
+        <set field="packInput.pkg" value="1"/>
+        <set field="packInput.qty" value="1"/>
+        <set field="packInput.prd" value="CAM-2644"/>
+        <set field="packInput.ite" value="00001"/>
+        <set field="packInput.wgt" value="0"/>
+        <set field="packInput.numPackages" value="1"/>
         <call-service service-name="packBulkItems" in-map-name="packInput">
             <result-to-field result-name="responseMessage"/>
         </call-service>

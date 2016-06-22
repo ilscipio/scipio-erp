@@ -26,7 +26,7 @@
     </service>
     
     <service name="createProductData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/ProductData.groovy" 
-        invoke="" transaction-timeout="7200" >
+        invoke="" transaction-timeout="7200">
         <description>Creates a number of Product demo data</description>
         <implements service="demoDataGenerator"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>

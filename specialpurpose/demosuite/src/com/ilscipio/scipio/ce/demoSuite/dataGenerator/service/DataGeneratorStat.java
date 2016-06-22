@@ -1,12 +1,19 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.ofbiz.entity.GenericValue;
+
 public class DataGeneratorStat {
     private String entityName;
     private int stored;
     private int failed;
+    private List<GenericValue> generatedValues;
 
     DataGeneratorStat(String entityName) {
         this.entityName = entityName;
+        this.setGeneratedValues(new ArrayList<GenericValue>());
     }
 
     public String getEntityName() {
@@ -27,6 +34,14 @@ public class DataGeneratorStat {
 
     public void setFailed(int failed) {
         this.failed = failed;
+    }
+
+    public List<GenericValue> getGeneratedValues() {
+        return generatedValues;
+    }
+
+    public void setGeneratedValues(List<GenericValue> generatedValues) {
+        this.generatedValues = generatedValues;
     }
 
 }

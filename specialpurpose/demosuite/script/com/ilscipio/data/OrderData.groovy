@@ -30,7 +30,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         context.totalProductCount = totalProductCount;
     }
 
-    List prepareData(int index) {
+    List prepareData(int index) throws Exception {
         List toBeStored = new ArrayList();
         List orderItems = new ArrayList();
         // Create OrderHeader
@@ -84,7 +84,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         orderSalesChannelList = from("Enumeration").where(["enumTypeId" : "ORDER_SALES_CHANNEL"]).queryList();
         orderSalesChannel = orderSalesChannelList.get(UtilRandom.random(orderSalesChannelList));
 
-        Timestamp orderDate = Timestamp.valueOf(UtilRandom.generateRandomDate(context));
+        Timestamp orderDate = UtilRandom.generateRandomTimestamp(context);
         String statusId = orderStatusTypes.get(UtilRandom.random(orderStatusTypes));
         Map fields = UtilMisc.toMap("orderId", orderId,"orderTypeId",orderTypeId,"orderName",orderName,"salesChannelEnumId",
                 orderSalesChannel.enumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,

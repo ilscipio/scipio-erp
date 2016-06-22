@@ -79,19 +79,12 @@ under the License.
                 <set field="titleProperty" value="Webtools"/>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                
+                <set field="infoMessage" value="&lt;strong&gt;Developer Info:&lt;/strong&gt; You can use the &lt;a href='ListDemoDataGeneratorServices'&gt;demo generator&lt;/a&gt;, to generate test-data" type="PlainString" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                      <decorator-section name="body">
-                        <container style="${styles.grid_row}">
-                        <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                           <section>
-                                <actions>
-                                    <set field="infoMessage" value="&lt;strong&gt;Developer Info:&lt;/strong&gt; You can use the &lt;a href='ListDemoDataGeneratorServices'&gt;demo generator&lt;/a&gt;, to generate test-data" type="PlainString" />
-                                </actions>
-                           </section>
-                        </container>
-                        </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WebtoolsServer}">

@@ -10,23 +10,12 @@ import org.ofbiz.entity.model.ModelKeyMap
 import org.ofbiz.entity.util.EntityUtilProperties
 import org.ofbiz.base.util.*;
 
-String iScope = context.intervalScope != null ? context.intervalScope : "month"; //day|week|month|year
-
-Calendar calendar = Calendar.getInstance();
-if (iScope.equals("day")) {
-    calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 30);
-} else if (iScope.equals("week")) {
-    calendar.set(Calendar.DAY_OF_WEEK, 1);
-    calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - 12);
-} else if (iScope.equals("month")) {
-    calendar.set(Calendar.DAY_OF_MONTH, 1);
-    calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 6);
-} else if (iScope.equals("year")) {
-    calendar.set(Calendar.DAY_OF_YEAR, 1);
-    calendar.set(Calendar.MONTH, 1);
-    calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 5);
-}
-fromDate = UtilDateTime.toTimestamp(calendar.getTime());
+iCount = (context.chartIntervalCount != null) ? context.chartIntervalCount : 0;
+String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
+if (iCount <= 0)
+    iCount = UtilDateTime.getIntervalDefaultCount(iScope);
+fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
+dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
 
 List exprsList = FastList.newInstance();
 exprsList.add(EntityCondition.makeCondition("enabled", EntityOperator.EQUALS, "N"));
@@ -49,7 +38,7 @@ dve.addRelation("many", "", "ServerHit", [
 userLoginAndHistoryList = from(dve).where(EntityCondition.makeCondition(
         EntityCondition.makeCondition(exprsList, EntityJoinOperator.OR),
         EntityOperator.AND,
-        EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, fromDate)
+        EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, dateIntervals.getDateBegin())
         )).orderBy("lastUpdatedStamp DESC").queryList();
 
 securityAlerts = [];
@@ -63,19 +52,19 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
         hitStartDate.set(Calendar.MILLISECOND, 0);
 
         fDate = UtilDateTime.toCalendar(userLoginAndHistory.fromDate);
-        fromDate = Calendar.getInstance();
-        fromDate.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));  
-        fromDate.set(Calendar.MILLISECOND, 0);
+        fromDateUserLoginHistory = Calendar.getInstance();
+        fromDateUserLoginHistory.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));  
+        fromDateUserLoginHistory.set(Calendar.MILLISECOND, 0);
 		visit = serverHit.getRelatedOne("Visit", true);
-        if (hitStartDate.getTimeInMillis() == fromDate.getTimeInMillis()) {
-//            Debug.log("Matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDate.getTimeInMillis());
+        if (hitStartDate.getTimeInMillis() == fromDateUserLoginHistory.getTimeInMillis()) {
+//            Debug.log("Matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDateUserLoginHistory.getTimeInMillis());
             securityAlert = UtilMisc.toMap("userLoginId", userLoginAndHistory.userLoginId, "enabled", userLoginAndHistory.enabled, 
                 "successfulLogin", userLoginAndHistory.successfulLogin, "contentId", serverHit.contentId, "requestUrl", serverHit.requestUrl,
-                "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "clientIpAddress", visit.clientIpAddress,"fromDate", fromDate.getTime());
+                "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "clientIpAddress", visit.clientIpAddress,"fromDate", fromDateUserLoginHistory.getTime());
             securityAlerts.add(securityAlert);
             break;
         } else {
-//            Debug.log("Not matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDate.getTimeInMillis() + "    diff ====> " + (fromDate.getTimeInMillis() - hitStartDate.getTimeInMillis()));
+//            Debug.log("Not matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDateUserLoginHistory.getTimeInMillis() + "    diff ====> " + (fromDate.getTimeInMillis() - hitStartDate.getTimeInMillis()));
         }
     }
 }

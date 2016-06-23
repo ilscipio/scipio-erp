@@ -23,14 +23,14 @@ Map processResult() {
     Map resultMap = new TreeMap<String, Object>();
     GenericValue userLogin = context.get("userLogin");
     for (int i = 0; i < iCount; i++) {
-        Debug.log("date from ======> " +  dateIntervals.getDateBegin() + "  date to ======> " + dateIntervals.getDateEnd());
+//        Debug.log("date from ======> " +  dateIntervals.getDateBegin() + "  date to ======> " + dateIntervals.getDateEnd());
         beginText = UtilDateTime.timeStampToString(dateIntervals.getDateBegin(), "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);
         endText = UtilDateTime.timeStampToString(dateIntervals.getDateEnd(), "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);
         
         
         Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("minDate", beginText, "maxDate", endText, "userLogin", userLogin));
         orderList = findOrderMap.orderList;
-        Debug.log("order count ===========> " + findOrderMap.orderListSize);
+//        Debug.log("order count ===========> " + findOrderMap.orderListSize);
         Map newMap = [:];
         if (orderList) {
             orderList.each { header ->          

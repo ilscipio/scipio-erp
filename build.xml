@@ -29,6 +29,61 @@ under the License.
     </taskdef> 
 
     <import file="macros.xml"/>
+    
+    <!-- ================================================================== -->
+    <!-- SCIPIO: early-inclusion, new, original properties and tasks        -->
+    <!-- ================================================================== -->
+
+    <property name="framework.dir" value="framework" />
+    <property name="applications.dir" value="applications" />
+    <property name="specialpurpose.dir" value="specialpurpose" />
+    <property name="addons.dir" value="addons" />
+    <property name="hotdeploy.dir" value="hot-deploy" />
+    
+    <!-- Dynamic early root build.xml additions. Allows any component or addon to include
+        a file named "root-build-early.xml" in its folder, which will be imported into
+        the main build, supporting plugin-like additions to root build.xml.
+        NOTE: ant does not support overriding existing tasks this way, but new tasks may be added. -->
+    <fileset id="framework.earlyrootbuilds" dir="${framework.dir}">
+        <include name="*/root-build-early.xml" />
+    </fileset>
+    <fileset id="applications.earlyrootbuilds" dir="${applications.dir}">
+        <include name="*/root-build-early.xml" />
+    </fileset>
+    <fileset id="specialpurpose.earlyrootbuilds" dir="${specialpurpose.dir}">
+        <include name="*/root-build-early.xml" />
+    </fileset>
+    <fileset id="addons.earlyrootbuilds" dir="${addons.dir}">
+        <include name="*/root-build-early.xml" />
+    </fileset>
+    <fileset id="hotdeploy.earlyrootbuilds" dir="${hotdeploy.dir}">
+        <include name="*/root-build-early.xml" />
+    </fileset>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="framework.earlyrootbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="applications.earlyrootbuilds" />
+    </import> 
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="specialpurpose.earlyrootbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="addons.earlyrootbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="hotdeploy.earlyrootbuilds" />
+    </import>
+    
+    <!-- ================================================================== -->
+    <!-- SCIPIO: original (and modified) ofbiz properties                   -->
+    <!-- ================================================================== -->
+    
     <property name="site.dir" value="../site"/>
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx3512M"/>
@@ -1792,4 +1847,49 @@ under the License.
     <target name="run-install-file-in-delegator">
         <echo message="The 'run-install-file-in-delegator' command has been renamed 'load-file'; please use 'ant load-file' to load data from a given file."/>
     </target>
+    
+    <!-- ================================================================== -->
+    <!-- SCIPIO: late-inclusion, new, original properties and tasks         -->
+    <!-- ================================================================== -->
+
+    <!-- Dynamic root build.xml additions. Allows any component or addon to include
+        a file named "root-build.xml" in its folder, which will be imported into
+        the main build, supporting plugin-like additions to root build.xml.
+        NOTE: ant does not support overriding existing tasks this way, but new tasks may be added. -->
+    <fileset id="framework.rootbuilds" dir="${framework.dir}">
+        <include name="*/root-build.xml" />
+    </fileset>
+    <fileset id="applications.rootbuilds" dir="${applications.dir}">
+        <include name="*/root-build.xml" />
+    </fileset>
+    <fileset id="specialpurpose.rootbuilds" dir="${specialpurpose.dir}">
+        <include name="*/root-build.xml" />
+    </fileset>
+    <fileset id="addons.rootbuilds" dir="${addons.dir}">
+        <include name="*/root-build.xml" />
+    </fileset>
+    <fileset id="hotdeploy.rootbuilds" dir="${hotdeploy.dir}">
+        <include name="*/root-build.xml" />
+    </fileset>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="framework.rootbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="applications.rootbuilds" />
+    </import> 
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="specialpurpose.rootbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="addons.rootbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="tools/misc/dummy-ant-build.xml" /><!-- at least one import required -->
+        <fileset refid="hotdeploy.rootbuilds" />
+    </import>
+    
 </project>

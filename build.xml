@@ -2107,88 +2107,49 @@ under the License.
     <macrodef name="invokehook">
         <attribute name="target" default=""/>
         <sequential>
-          <echo message="[invokehook] @{target}: Invoking..." />
-          <if>
-            <available file="${framework.dir}/build-hooks.xml" property="useFrameworkBuildHooks"/>
-            <then>
-              <subant target="@{target}" inheritall="true">
-                <filelist dir="." files="${framework.dir}/build-hooks.xml"/>
-              </subant>
-            </then>
-            <else>
-              <subant target="@{target}" inheritall="true">
-                <fileset dir="${basedir}/${framework.dir}">
+            <!-- ant is already verbose enough
+            <echo message="[invokehook] @{target}: Invoking..." />
+            -->
+            <invokehookdir target="@{target}" dir="${framework.dir}" />
+            <invokehookdir target="@{target}" dir="${applications.dir}" />
+            <invokehookdir target="@{target}" dir="${specialpurpose.dir}" />
+            <invokehookdir target="@{target}" dir="${addons.dir}" />
+            <invokehookdir target="@{target}" dir="${hotdeploy.dir}" />
+            <!-- ant is already verbose enough
+            <echo message="[invokehook] @{target}: Done." />
+            -->
+        </sequential>
+    </macrodef>
+    
+    <macrodef name="invokehookdir">
+        <attribute name="target" default=""/>
+        <attribute name="dir" default=""/>
+        <sequential>
+            <if>
+              <available file="@{dir}/build-hooks.xml" property="useBuildHooks_@{dir}"/>
+              <then>
+                <subant target="@{target}" inheritall="true">
+                  <filelist dir="." files="@{dir}/build-hooks.xml"/>
+                </subant>
+              </then>
+              <else>
+                <fileset dir="${basedir}/@{dir}" id="hookfiles_@{dir}">
                   <exclude name="disabled/**"/>
                   <include name="*/build-hooks.xml"/>
                 </fileset>
-              </subant>
-            </else>
-          </if>
-          <if>
-            <available file="${applications.dir}/build-hooks.xml" property="useApplicationsBuildHooks"/>
-            <then>
-              <subant target="@{target}" inheritall="true">
-                <filelist dir="." files="${applications.dir}/build-hooks.xml"/>
-              </subant>
-            </then>
-            <else>
-              <subant target="@{target}" inheritall="true">
-                <fileset dir="${basedir}/${applications.dir}">
-                  <exclude name="disabled/**"/>
-                  <include name="*/build-hooks.xml"/>
-                </fileset>
-              </subant>
-            </else>
-          </if>
-          <if>
-            <available file="${specialpurpose.dir}/build-hooks.xml" property="useSpecialpurposeBuildHooks"/>
-            <then>
-              <subant target="@{target}" inheritall="true">
-                <filelist dir="." files="${specialpurpose.dir}/build-hooks.xml"/>
-              </subant>
-            </then>
-            <else>
-              <subant target="@{target}" inheritall="true">
-                <fileset dir="${basedir}/${specialpurpose.dir}">
-                  <exclude name="disabled/**"/>
-                  <include name="*/build-hooks.xml"/>
-                </fileset>
-              </subant>
-            </else>
-          </if>
-          <if>
-            <available file="${addons.dir}/build-hooks.xml" property="useAddonsBuildHooks"/>
-            <then>
-              <subant target="@{target}" inheritall="true">
-                <filelist dir="." files="${addons.dir}/build-hooks.xml"/>
-              </subant>
-            </then>
-            <else>
-              <subant target="@{target}" inheritall="true">
-                <fileset dir="${basedir}/${addons.dir}">
-                  <exclude name="disabled/**"/>
-                  <include name="*/build-hooks.xml"/>
-                </fileset>
-              </subant>
-            </else>
-          </if> 
-          <if>
-            <available file="${hotdeploy.dir}/build-hooks.xml" property="useHotDeployBuildHooks"/>
-            <then>
-              <subant target="@{target}" inheritall="true">
-                <filelist dir="." files="${hotdeploy.dir}/build-hooks.xml"/>
-              </subant>
-            </then>
-            <else>
-              <subant target="@{target}" inheritall="true">
-                <fileset dir="${basedir}/${hotdeploy.dir}">
-                  <exclude name="disabled/**"/>
-                  <include name="*/build-hooks.xml"/>
-                </fileset>
-              </subant>
-            </else>
-          </if>
-          <echo message="[invokehook] @{target}: Done." />
+                <if>
+                  <!-- Test prevents the "[subant] No sub-builds to iterate on" message. -->
+                  <resourcecount when="greater" count="0">
+                    <fileset refid="hookfiles_@{dir}" />
+                  </resourcecount>
+                  <then>
+                    <subant target="@{target}" inheritall="true">
+                      <fileset refid="hookfiles_@{dir}" />
+                    </subant>
+                  </then>
+                </if>
+              </else>
+            </if>
         </sequential>
     </macrodef>
     

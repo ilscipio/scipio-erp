@@ -45,18 +45,23 @@ under the License.
         the main build, supporting plugin-like additions to root build.xml.
         NOTE: ant does not support overriding existing tasks this way, but new tasks may be added. -->
     <fileset id="framework.earlymainbuilds" dir="${framework.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main-early.xml" />
     </fileset>
     <fileset id="applications.earlymainbuilds" dir="${applications.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main-early.xml" />
     </fileset>
     <fileset id="specialpurpose.earlymainbuilds" dir="${specialpurpose.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main-early.xml" />
     </fileset>
     <fileset id="addons.earlymainbuilds" dir="${addons.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main-early.xml" />
     </fileset>
     <fileset id="hotdeploy.earlymainbuilds" dir="${hotdeploy.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main-early.xml" />
     </fileset>
     <import optional="true">
@@ -143,6 +148,10 @@ under the License.
 
     <target name="clean-all"
           description="Clean all DB, Catalina and caches data, logs, and runtime subdirectories and all specific files like .rej, .orig">
+
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-all" />
+        
         <antcall target="clean-ivy"/>
         <antcall target="clean-data"/>
         <antcall target="clean-logs"/>
@@ -155,10 +164,18 @@ under the License.
         <antcall target="clean-downloads"/>
         <antcall target="clean-uploads"/>        
         <antcall target="clean"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-all" />
+        
     </target>
 
     <target name="clean-downloads"
           description="Clean all downloaded files">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-downloads" />
+        
         <delete verbose="true" deleteonexit="true">
             <fileset dir="framework/base/lib" includes="cobertura-*.jar"/>
             <fileset dir="framework/base/lib" includes="sonar-*.jar"/>
@@ -167,9 +184,17 @@ under the License.
             <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>
         </delete>
         <antcall target="clean-ivy"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-downloads" />
+        
     </target>
     <target name="clean-data"
           description="Clean all DB data (Derby) under runtime/data">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-data" />
+        
         <delete verbose="on" includeemptydirs="true">
             <fileset dir="runtime/data" includes="**/*">
                 <exclude name="README"/>
@@ -178,80 +203,164 @@ under the License.
         </delete>
         <delete file="runtime/data.zip"/>
         <delete file="runtime/test-list-build.xml"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-data" />
+        
     </target>
 
     <target name="clean-logs"
           description="Clean all logs in runtime/logs">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-logs" />
+        
         <delete verbose="on" includeemptydirs="true">
             <fileset dir="runtime/logs" includes="**/*">
                 <exclude name="README"/>
             </fileset>
         </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-logs" />
+        
     </target>
 
     <target name="clean-output"
           description="Clean runtime/output directory">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-output" />
+        
         <delete verbose="on" includeemptydirs="true">
             <fileset dir="runtime/output" includes="**/*">
                 <exclude name="README"/>
             </fileset>
         </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-output" />
+        
     </target>
 
     <target name="clean-xtra"
           description="Clean all other files like .rej, .orig, etc.">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-xtra" />
+        
         <delete verbose="on">
             <fileset dir="." includes="**/.nbattrs,**/*~,**/.#*,**/.DS_Store,**/*.rej,**/*.orig"/>
         </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-xtra" />
+        
     </target>
 
     <target name="clean-catalina"
           description="Clean Catalina data in runtime/catalina/work">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-catalina" />
+        
         <delete dir="runtime/catalina/work"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-catalina" />
+        
     </target>
 
-   <target name="clean-cache"
+    <target name="clean-cache"
            description="Clean the UtilCache file if errors found with old objects in the cache (Java runtime error something like 'local class incompatible')">
+
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-cache" />
+       
         <property file="framework/base/config/cache.properties"/>
         <echo message="NOTICE: deleting ${cache.file.store}.db"/>
         <delete file="${cache.file.store}.db" verbose="true"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-cache" />
+        
     </target>
 
     <target name="clean-tempfiles"
           description="Remove files located in runtime/tempfiles (captcha, etc...)">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-tempfiles" />
+        
         <delete includeemptydirs="true">
             <fileset dir="./runtime/tempfiles" includes="**/*">
                 <exclude name="README"/>
             </fileset>
         </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-tempfiles" />
+            
     </target>
 
     <target name="clean-search-indexes"
         description="Remove search indexes (e.g. Lucene indexes) created under runtime/indexes">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-search-indexes" />
+        
         <delete includeemptydirs="true">
             <fileset dir="./runtime/indexes" includes="**/*" erroronmissingdir="false" >
                 <exclude name="README"/>
             </fileset>
         </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-search-indexes" />
+        
     </target>
     
     <target name="clean-uploads"
         description="Remove uploaded files">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-uploads" />
+        
         <delete includeemptydirs="true">
             <fileset dir="./runtime/uploads" includes="**/*" erroronmissingdir="false" />
         </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-uploads" />
+        
     </target>
     
     <target name="tests" depends="ofbiz-init">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-tests" />
+        
         <iterate target="tests" filelist="test-builds"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-tests" />
+        
     </target>
 
     <target name="clean">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean" />
+        
         <hotdeployant target="clean"/>
         <antcall target="clean-specialpurpose"/>
         <antcall target="clean-applications"/>
         <antcall target="clean-framework"/>
         <delete file="ofbiz.jar"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean" />
+        
         <echo message="[clean] ========== Done Cleaning =========="/>
     </target>
 
@@ -268,6 +377,10 @@ under the License.
     <target name="svninfo"
         description="Update the Release-revision info in the footer. Note that you need a valid Internet connection and Subversion connected to the OFBiz repository for that ">
         <echo message="Creating svninfo..."/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-svninfo" />
+        
         <exec executable="svn" dir="." output="runtime/svninfo_tmp.xml">
             <arg value="info"/>
             <arg value="--xml"/>
@@ -280,18 +393,34 @@ under the License.
         </tstamp>
         <echo message=" - Release-revision : ${releasePath}-r${info.entry.commit(revision)},  ${uiLabelMap.CommonBuiltOn} ${dateTime}" file="runtime/svninfo.ftl"/>
         <delete file="runtime/svninfo_tmp.xml"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-svninfo" />
+        
         <echo message="Done!"/>
     </target>
 
     <target name="clean-svninfo">
         <echo message="Resetting svninfo..."/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-svninfo" />
+        
         <echo message=" " file="runtime/svninfo.ftl"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-svninfo" />
+        
         <echo message="Done!"/>
     </target>
     
     <target name="gitinfo"
         description="Update the Git Branch-revision info in the footer.">
         <echo message="Creating gitinfo..."/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-gitinfo" />
+        
         <exec executable="git" outputproperty="branch">
             <arg value="rev-parse"/>
             <arg value="--abbrev-ref"/>
@@ -306,12 +435,24 @@ under the License.
         </tstamp>        
         <echo message="Found Branch-revision: ${branch}-${revision}"/>
         <echo message=" - Branch-revision: ${branch}-${revision}, ${uiLabelMap.CommonBuiltOn} ${dateTime}" file="runtime/gitinfo.ftl"/>
+
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-gitinfo" />
+        
         <echo message="Done!"/>
     </target>
 
     <target name="clean-gitinfo">
         <echo message="Resetting gitinfo..."/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-gitinfo" />
+        
         <echo message=" " file="runtime/gitinfo.ftl"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-gitinfo" />
+        
         <echo message="Done!"/>
     </target>
 
@@ -321,6 +462,10 @@ under the License.
 
     <target name="build-dev"
       description="Patch sources in a dev environment if patch files are present in runtime/patches.">
+        
+      <!-- SCIPIO: hooks -->
+      <invokehook target="pre-build-dev" />
+        
       <!-- Ant patch task can't handle a fileset => create a global patch -->
       <concat destfile="${basedir}/runtime/patches/dev.patch" encoding="UTF-8" outputencoding="UTF-8">
         <fileset dir="${basedir}/runtime/patches" casesensitive="no">
@@ -338,6 +483,10 @@ under the License.
             <delete file="${basedir}/runtime/patches/dev.patch"/>
         </then>
       </if>
+        
+      <!-- SCIPIO: hooks -->
+      <invokehook target="post-build-dev" />
+        
     </target>
     
     <!-- Following allow to use "svn patch" and fallback on "patch" if necessary -->
@@ -395,6 +544,10 @@ under the License.
 
     <target name="revert-dev"
       description="Revert patch files present in runtime/patches applied by build-dev.">
+        
+      <!-- SCIPIO: hooks -->
+      <invokehook target="pre-revert-dev" />
+        
       <!-- Ant patch task can't handle a fileset => create a global patch -->
       <concat destfile="${basedir}/runtime/patches/dev.patch" encoding="UTF-8" outputencoding="UTF-8">
         <fileset dir="${basedir}/runtime/patches" casesensitive="no">
@@ -412,6 +565,10 @@ under the License.
             <delete file="${basedir}/runtime/patches/dev.patch"/>
         </then>
       </if>
+        
+      <!-- SCIPIO: hooks -->
+      <invokehook target="post-revert-dev" />
+        
     </target>
 
     <target name="revert-via-svn" depends="check-svn-patch-available" if="svn-version-ok">
@@ -435,6 +592,10 @@ under the License.
 
     <target name="build-test" 
         description="Patch and build all sources for use in a test environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
+
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-build-test" />
+        
         <subant inheritall="false" target="prepare-to-build-test" failonerror="true">
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
@@ -442,10 +603,18 @@ under the License.
             </fileset>
         </subant>
         <!--antcall target="build"/--><!-- you can chain if you don't use build-dev  see MVP-256-->
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-build-test" />
+        
     </target>
     
     <target name="build-qa" 
         description="Patch and build all sources for use in a qa environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
+
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-build-qa" />
+            
         <subant inheritall="false" target="prepare-to-build-qa" failonerror="true">
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
@@ -453,10 +622,18 @@ under the License.
             </fileset>
         </subant>
       <!--antcall target="build"/--><!-- you can chain if you don't use build-dev  see MVP-256-->
+
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-build-qa" />
+        
     </target>
 
     <target name="build-production" 
         description="Patch and build all sources for use in a live environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
+
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-build-production" />
+        
         <subant inheritall="false" target="prepare-to-build-production" failonerror="true">
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
@@ -464,6 +641,10 @@ under the License.
             </fileset>
         </subant>
       <!--antcall target="build"/--><!-- you can chain if you don't use build-dev  see MVP-256-->
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-build-production" />
+        
     </target>    
     
     <!-- ================================================================== -->
@@ -472,6 +653,10 @@ under the License.
     
     <target name="build" depends="ofbiz-init">
         <echo message="[build] ========== Start Building (Compile) =========="/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-build" />
+        
         <antcall target="build-dev"/>
 
         <antcall target="build-framework"/>
@@ -487,6 +672,9 @@ under the License.
         <antcall target="clean-svninfo"/>
         <antcall target="clean-gitinfo"/>
 
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-build" />
+        
         <echo message="[build] ========== Done Building (Compile) =========="/>
     </target>
 
@@ -534,10 +722,18 @@ under the License.
 
     <target name="docs" depends="ofbiz-init">
         <echo message="[docs] ========== Start Building (JavaDoc) =========="/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-docs" />
+        
         <antcall target="docs-framework"/>
         <antcall target="docs-applications"/>
         <antcall target="docs-specialpurpose"/>
         <hotdeployant target="docs"/>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-docs" />
+        
         <echo message="[docs] ========== Done Building (JavaDocs) =========="/>
     </target>
 
@@ -558,6 +754,9 @@ under the License.
 
         <echo message="[docs-all] ========== Start Building (JavaDoc) =========="/>
 
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-docs-all" />
+        
         <mkdir dir="${site.dir}/javadocs"/>
 
         <path id="local.class.path">
@@ -587,6 +786,9 @@ under the License.
 
         <default-javadoc/>
 
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-docs-all" />
+        
         <echo message="[docs-all] ========== Done Building (JavaDocs) =========="/>
     </target>
 
@@ -1857,18 +2059,23 @@ under the License.
         the main build, supporting plugin-like additions to root build.xml.
         NOTE: ant does not support overriding existing tasks this way, but new tasks may be added. -->
     <fileset id="framework.mainbuilds" dir="${framework.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main.xml" />
     </fileset>
     <fileset id="applications.mainbuilds" dir="${applications.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main.xml" />
     </fileset>
     <fileset id="specialpurpose.mainbuilds" dir="${specialpurpose.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main.xml" />
     </fileset>
     <fileset id="addons.mainbuilds" dir="${addons.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main.xml" />
     </fileset>
     <fileset id="hotdeploy.mainbuilds" dir="${hotdeploy.dir}">
+        <exclude name="disabled/**"/>
         <include name="*/build-main.xml" />
     </fileset>
     <import optional="true">
@@ -1891,5 +2098,98 @@ under the License.
         <fileset file="tools/misc/build-dummy.xml" /><!-- at least one import required -->
         <fileset refid="hotdeploy.mainbuilds" />
     </import>
+    
+    <!-- invokes build hooks in build-hooks.xml files.
+        NOTE: unlike regular builds, hooks in build-hooks.xml files are always invoked using
+            inheritall="true", to allow inspection of the main build. 
+        TODO: build-hooks-standalone.xml files to support inheritall="false"; but execution order is a big issue (must be consistent
+            even when unpredictable until runtime) -->
+    <macrodef name="invokehook">
+        <attribute name="target" default=""/>
+        <sequential>
+          <echo message="[invokehook] @{target}: Invoking..." />
+          <if>
+            <available file="${framework.dir}/build-hooks.xml" property="useFrameworkBuildHooks"/>
+            <then>
+              <subant target="@{target}" inheritall="true">
+                <filelist dir="." files="${framework.dir}/build-hooks.xml"/>
+              </subant>
+            </then>
+            <else>
+              <subant target="@{target}" inheritall="true">
+                <fileset dir="${basedir}/${framework.dir}">
+                  <exclude name="disabled/**"/>
+                  <include name="*/build-hooks.xml"/>
+                </fileset>
+              </subant>
+            </else>
+          </if>
+          <if>
+            <available file="${applications.dir}/build-hooks.xml" property="useApplicationsBuildHooks"/>
+            <then>
+              <subant target="@{target}" inheritall="true">
+                <filelist dir="." files="${applications.dir}/build-hooks.xml"/>
+              </subant>
+            </then>
+            <else>
+              <subant target="@{target}" inheritall="true">
+                <fileset dir="${basedir}/${applications.dir}">
+                  <exclude name="disabled/**"/>
+                  <include name="*/build-hooks.xml"/>
+                </fileset>
+              </subant>
+            </else>
+          </if>
+          <if>
+            <available file="${specialpurpose.dir}/build-hooks.xml" property="useSpecialpurposeBuildHooks"/>
+            <then>
+              <subant target="@{target}" inheritall="true">
+                <filelist dir="." files="${specialpurpose.dir}/build-hooks.xml"/>
+              </subant>
+            </then>
+            <else>
+              <subant target="@{target}" inheritall="true">
+                <fileset dir="${basedir}/${specialpurpose.dir}">
+                  <exclude name="disabled/**"/>
+                  <include name="*/build-hooks.xml"/>
+                </fileset>
+              </subant>
+            </else>
+          </if>
+          <if>
+            <available file="${addons.dir}/build-hooks.xml" property="useAddonsBuildHooks"/>
+            <then>
+              <subant target="@{target}" inheritall="true">
+                <filelist dir="." files="${addons.dir}/build-hooks.xml"/>
+              </subant>
+            </then>
+            <else>
+              <subant target="@{target}" inheritall="true">
+                <fileset dir="${basedir}/${addons.dir}">
+                  <exclude name="disabled/**"/>
+                  <include name="*/build-hooks.xml"/>
+                </fileset>
+              </subant>
+            </else>
+          </if> 
+          <if>
+            <available file="${hotdeploy.dir}/build-hooks.xml" property="useHotDeployBuildHooks"/>
+            <then>
+              <subant target="@{target}" inheritall="true">
+                <filelist dir="." files="${hotdeploy.dir}/build-hooks.xml"/>
+              </subant>
+            </then>
+            <else>
+              <subant target="@{target}" inheritall="true">
+                <fileset dir="${basedir}/${hotdeploy.dir}">
+                  <exclude name="disabled/**"/>
+                  <include name="*/build-hooks.xml"/>
+                </fileset>
+              </subant>
+            </else>
+          </if>
+          <echo message="[invokehook] @{target}: Done." />
+        </sequential>
+    </macrodef>
     
 </project>

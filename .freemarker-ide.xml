@@ -1,7 +1,0 @@
-<config>
-	<context-values>
-	</context-values>
-	<macro-library>
-		<entry namespace="CatoMacros" path="framework/common/webcommon/includes/cato/includes.ftl" project="ofbiz_foundation" type="file"/>
-	</macro-library>
-</config>

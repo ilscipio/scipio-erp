@@ -75,7 +75,7 @@ under the License.
                                             <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}" />
                                             <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}" />
                                             <#if hasExpired><#assign class="alert"></#if>
-                                            <@field type="datetime" name="thruDate" class=class!'' value=((productStorePromoAppl.thruDate)!) size="25" maxlength="30" id="thruDate1" />
+                                            <@field type="datetime" name="thruDate" class=class!'' value=((productStorePromoAppl.thruDate)!) size="25" maxlength="30" id="thruDate_${productStorePromoAppl_index}" />
                                         </@cell>
                                         <@cell columns=4>
                                             <input type="hidden" size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)!}" />

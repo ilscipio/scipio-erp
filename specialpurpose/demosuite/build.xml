@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="OFBiz - DemoSuite Component" default="jar" basedir=".">
+<project name="SCIPIO ERP - DemoSuite Component" default="jar" basedir=".">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -8,8 +8,8 @@
     <!-- ================================================================== -->
 
     <property environment="env"/>
-    <property name="desc" value="DemoSuite Component"/>
-    <property name="name" value="demosuite"/>
+    <property name="desc" value="SCIPIO ERP DemoSuite Component"/>
+    <property name="name" value="ofbiz-demosuite"/>
     <property name="component-name" value="demosuite"/>
     <property name="ofbiz.home.dir" value="../.."/>
     <property name="src.dir" value="src"/>

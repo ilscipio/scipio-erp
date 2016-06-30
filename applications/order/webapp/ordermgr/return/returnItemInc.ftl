@@ -78,7 +78,7 @@ under the License.
               <@td colspan="4">
                 <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
                 <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${orderItem.orderAdjustmentId}"/>
-                ${description!(uiLabelMap.CommonNA)}
+                ${htmlContentString(description)!(uiLabelMap.CommonNA)}
               </@td>
               <@td>
                 ${orderItem.amount?string("##0.00")}

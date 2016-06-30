@@ -31,12 +31,15 @@ under the License.
  <fail unless="javaatleast17" message="Please upgrade java to at least 1.7. Current Java version is ${ant.java.version}"/>
 
  <dirname property="ofbiz.home.dir" file="${ant.file.Ant - Macros}"/>
+ <!-- SCIPIO: NOTE: This macro is enhanced to supported nested implicit iterate-subant-args for the subant call -->
  <macrodef name="iterate">
   <attribute name="filelist" default="subdirs"/>
   <attribute name="target" default=""/>
   <attribute name="inheritall" default="false"/>
+  <element name="iterate-subant-args" optional="yes" implicit="yes"/>
   <sequential>
    <subant target="@{target}" inheritall="@{inheritall}">
+    <iterate-subant-args />
     <filelist refid="@{filelist}"/>
    </subant>
   </sequential>

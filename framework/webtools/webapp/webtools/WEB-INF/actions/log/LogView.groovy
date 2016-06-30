@@ -22,22 +22,23 @@ import org.ofbiz.base.util.FileUtil;
 List logLines = [];
 try {
     File logFile = FileUtil.getFile(logFileName);
-    type = '';
     logFile.eachLine { line ->
         // Scipio: All of these checks modified to be more strict and precise
-        if (line.startsWith("[INFO]")) {
+        // NOTE: updated 2016-06-28
+        type = '';
+        if (line.contains(" |I| ")) {
             type = 'INFO';
-        } else if (line.startsWith("[WARN]")) {
+        } else if (line.contains(" |W| ")) {
             type = 'WARN';
-        } else if (line.startsWith("[ERROR]")) {
+        } else if (line.contains(" |E| ")) {
             type = 'ERROR';
-        } else if (line.startsWith("[DEBUG]")) {
+        } else if (line.contains(" |D| ")) {
             type = 'DEBUG';
-        } else if (line.startsWith("[TRACE]")) {
+        } else if (line.contains(" |T| ")) {
             type = 'TRACE';
-        } else if (line.startsWith("[FATAL]")) {
-            type = 'TRACE';
-        } else if (line.startsWith("[ALL]")) {
+        } else if (line.contains(" |F| ")) {
+            type = 'FATAL';
+        } else if (line.contains(" |A| ")) {
             type = '';
         }
         logLines.add([type: type, line:line.trim()]);

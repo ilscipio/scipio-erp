@@ -219,5 +219,58 @@ under the License.
         </exec-->
     </target>
     
+    <!-- ================================================================== -->
+    <!-- SCIPIO: Common component build new, original properties and tasks  -->
+    <!-- ================================================================== -->
+
+    <property name="spicio.ofbiz.basedir" value="${Ant - Common.dir}" />
+    
+    <property name="framework.dir" value="framework" />
+    <property name="applications.dir" value="applications" />
+    <property name="specialpurpose.dir" value="specialpurpose" />
+    <property name="addons.dir" value="addons" />
+    <property name="hotdeploy.dir" value="hot-deploy" />
+        
+    <!-- Dynamic common.xml additions -->
+    <fileset id="framework.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${framework.dir}">
+        <exclude name="disabled/**"/>
+        <include name="*/build-component-common.xml" />
+    </fileset>
+    <fileset id="applications.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${applications.dir}">
+        <exclude name="disabled/**"/>
+        <include name="*/build-component-common.xml" />
+    </fileset>
+    <fileset id="specialpurpose.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${specialpurpose.dir}">
+        <exclude name="disabled/**"/>
+        <include name="*/build-component-common.xml" />
+    </fileset>
+    <fileset id="addons.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${addons.dir}">
+        <exclude name="disabled/**"/>
+        <include name="*/build-component-common.xml" />
+    </fileset>
+    <fileset id="hotdeploy.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${hotdeploy.dir}">
+        <exclude name="disabled/**"/>
+        <include name="*/build-component-common.xml" />
+    </fileset>
+    <import optional="true">
+        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset refid="framework.commoncomponentbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset refid="applications.commoncomponentbuilds" />
+    </import> 
+    <import optional="true">
+        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset refid="specialpurpose.commoncomponentbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset refid="addons.commoncomponentbuilds" />
+    </import>
+    <import optional="true">
+        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset refid="hotdeploy.commoncomponentbuilds" />
+    </import>
     
 </project>

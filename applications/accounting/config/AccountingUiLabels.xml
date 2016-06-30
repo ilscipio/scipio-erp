@@ -1164,12 +1164,12 @@
     </property>
     <property key="AccountingApManagerApplication">
         <value xml:lang="de">Kreditorenbuchhaltung</value>
-        <value xml:lang="en">Account Payable Manager Application</value>
+        <value xml:lang="en">Account Payable</value>
         <value xml:lang="fr">Application de gestion des comptes fourn.</value>
         <value xml:lang="hi_IN">देय खाता प्रबंधक अनुप्रयोग</value>
         <value xml:lang="it">Applicazione gestione conto debitori</value>
         <value xml:lang="ja">買掛管理業務</value>
-        <value xml:lang="nl">Credit Manager applicatie</value>
+        <value xml:lang="nl">Credit Manager</value>
         <value xml:lang="pt">Aplicativo de gestão de contas a pagar</value>
         <value xml:lang="vi">Ứng dụng quản trị Phải Trả (AP)</value>
         <value xml:lang="zh">应付账户管理应用程序</value>
@@ -1445,8 +1445,8 @@
         <value xml:lang="zh_TW">已核准的合計</value>
     </property>
     <property key="AccountingAr">
-        <value xml:lang="de">Hauptseite Debitorenbuchhaltung</value>
-        <value xml:lang="en">Main Page Account Receivable</value>
+        <value xml:lang="de">Debitorenbuchhaltung</value>
+        <value xml:lang="en">Account Receivable</value>
         <value xml:lang="fr">Page d'accueil de la comptabilité client</value>
         <value xml:lang="hi_IN">मुख्य पृष्ठ प्राप्य खाता</value>
         <value xml:lang="it">Pagina principale conto creditori</value>
@@ -1472,7 +1472,7 @@
     </property>
     <property key="AccountingArManager">
         <value xml:lang="de">Debitorenbuchhaltung</value>
-        <value xml:lang="en">Account Receivable Manager</value>
+        <value xml:lang="en">Account Receivable</value>
         <value xml:lang="fr">Application de gestion des comptes clients</value>
         <value xml:lang="hi_IN">प्राप्य खाता प्रबंधक अनुप्रयोग</value>
         <value xml:lang="it">Gestione conti creditori</value>

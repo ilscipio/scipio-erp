@@ -12604,6 +12604,10 @@
         <value xml:lang="zh_CN">值</value>
         <value xml:lang="zh_TW">數值</value>
     </property>
+    <property key="CommonValues">
+        <value xml:lang="de">Werte</value>
+        <value xml:lang="en">Values</value>
+    </property>
     <property key="CommonVerifyCaptchaCode">
         <value xml:lang="ar">التأكد من صحة رمز كلمة التحقق</value>
         <value xml:lang="cs">Ověření kódu Captcha</value>

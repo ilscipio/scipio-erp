@@ -899,19 +899,19 @@
     </property>
     <property key="ContentCompanyName">
         <value xml:lang="ar">أوفبيز: مسير المحتوى</value>
-        <value xml:lang="da">SCIPIO ERP - Indholdsadministration</value>
-        <value xml:lang="de">SCIPIO ERP - Inhaltsverwaltung</value>
-        <value xml:lang="en">SCIPIO ERP - Content Manager</value>
-        <value xml:lang="es">SCIPIO ERP - Administración de Contenidos</value>
-        <value xml:lang="fr">SCIPIO ERP - gestion de contenu</value>
-        <value xml:lang="it">SCIPIO ERP - Gestione contenuti</value>
-        <value xml:lang="ja">SCIPIO ERP - コンテンツ管理</value>
-        <value xml:lang="pt">SCIPIO ERP - Gerenciador de conteúdo</value>
-        <value xml:lang="ro">SCIPIO ERP - Gestiune Continut</value>
-        <value xml:lang="th">SCIPIO ERP -หัวข้อการจัดการ</value>
-        <value xml:lang="vi">SCIPIO ERP - Quản trị nội dung</value>
-        <value xml:lang="zh">SCIPIO ERP -：内容管理</value>
-        <value xml:lang="zh_TW">SCIPIO ERP -內容管理</value>
+        <value xml:lang="da">SCIPIO ERP - CMS</value>
+        <value xml:lang="de">SCIPIO ERP - CMS</value>
+        <value xml:lang="en">SCIPIO ERP - CMS</value>
+        <value xml:lang="es">SCIPIO ERP - CMS</value>
+        <value xml:lang="fr">SCIPIO ERP - CMS</value>
+        <value xml:lang="it">SCIPIO ERP - CMS</value>
+        <value xml:lang="ja">SCIPIO ERP - CMS</value>
+        <value xml:lang="pt">SCIPIO ERP - CMS</value>
+        <value xml:lang="ro">SCIPIO ERP - CMS</value>
+        <value xml:lang="th">SCIPIO ERP - CMS</value>
+        <value xml:lang="vi">SCIPIO ERP - CMS</value>
+        <value xml:lang="zh">SCIPIO ERP - CMS</value>
+        <value xml:lang="zh_TW">SCIPIO ERP - CMS</value>
     </property>
     <property key="ContentCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
@@ -971,21 +971,21 @@
         <value xml:lang="zh_TW">無權上傳圖片</value>
     </property>
     <property key="ContentContentManager">
-        <value xml:lang="ar">تطبيق تسيير المحتوى</value>
-        <value xml:lang="da">Indholdsadministrator</value>
-        <value xml:lang="de">Inhaltsverwaltung Anwendung</value>
-        <value xml:lang="en">Content Manager</value>
-        <value xml:lang="es">Aplicación de Administración de Contenidos</value>
-        <value xml:lang="fr">Application de gestion de contenu</value>
-        <value xml:lang="it">Gestione contenuti</value>
-        <value xml:lang="ja">コンテンツ管理</value>
-        <value xml:lang="nl">Content Manager</value>
-        <value xml:lang="pt">Gerenciador de conteúdo</value>
-        <value xml:lang="ro">Aplicatie Gestiune Continuturi</value>
-        <value xml:lang="th">หัวข้อการจัดการที่นำไปประยุกต์ใช้</value>
-        <value xml:lang="vi">Nhà quản trị nội dung</value>
-        <value xml:lang="zh">内容管理应用程序</value>
-        <value xml:lang="zh_TW">內容管理應用程式</value>
+        <value xml:lang="ar">CMS</value>
+        <value xml:lang="da">CMS</value>
+        <value xml:lang="de">CMS</value>
+        <value xml:lang="en">CMS</value>
+        <value xml:lang="es">CMS</value>
+        <value xml:lang="fr">CMS</value>
+        <value xml:lang="it">CMS</value>
+        <value xml:lang="ja">CMS</value>
+        <value xml:lang="nl">CMS</value>
+        <value xml:lang="pt">CMS</value>
+        <value xml:lang="ro">CMS</value>
+        <value xml:lang="th">CMS</value>
+        <value xml:lang="vi">CMS</value>
+        <value xml:lang="zh">CMS</value>
+        <value xml:lang="zh_TW">CMS</value>
     </property>
     <property key="ContentContentManagerApplication">
         <value xml:lang="ar">تطبيق تسيير المحتوى</value>
@@ -2021,22 +2021,6 @@
         <value xml:lang="vi">MS Word</value>
         <value xml:lang="zh">微软Word</value>
         <value xml:lang="zh_TW">微軟Word</value>
-    </property>
-    <property key="ContentMain">
-        <value xml:lang="ar">الرئيسية</value>
-        <value xml:lang="da">Primær</value>
-        <value xml:lang="de">Primärer</value>
-        <value xml:lang="en">Main</value>
-        <value xml:lang="es">Principal</value>
-        <value xml:lang="fr">Page d'accueil</value>
-        <value xml:lang="it">Pagina Principale</value>
-        <value xml:lang="ja">メイン</value>
-        <value xml:lang="pt">Pricipal</value>
-        <value xml:lang="ro">Pagina Principala</value>
-        <value xml:lang="th">หน้าหลัก</value>
-        <value xml:lang="vi">Trang chủ</value>
-        <value xml:lang="zh">首页</value>
-        <value xml:lang="zh_TW">首頁</value>
     </property>
     <property key="ContentMapKey">
         <value xml:lang="da">MapKey</value>

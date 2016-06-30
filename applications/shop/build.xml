@@ -25,7 +25,7 @@ under the License.
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <property name="desc" value="SCIPIO ERP Component (Shop)"/>
+    <property name="desc" value="SCIPIO ERP Shop Component"/>
     <property name="name" value="ofbiz-shop"/>
     <property name="ofbiz.home.dir" value="../.."/>
 

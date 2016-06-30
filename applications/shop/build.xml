@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="SCIPIO ERP - Component" default="jar" basedir=".">
+<project name="SCIPIO ERP - Shop Component" default="jar" basedir=".">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -26,7 +26,7 @@ under the License.
     <!-- ================================================================== -->
 
     <property name="desc" value="SCIPIO ERP Component (Shop)"/>
-    <property name="name" value="SCIPIO ERP"/>
+    <property name="name" value="ofbiz-shop"/>
     <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">

@@ -40,6 +40,8 @@ under the License.
     <property name="addons.dir" value="addons" />
     <property name="hotdeploy.dir" value="hot-deploy" />
     
+    <property file="${framework.dir}/base/config/scipiometainfo.properties" />
+    
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include
         a file named "build-main-early.xml" in its folder, which will be imported into
         the main build, supporting plugin-like additions to root build.xml.

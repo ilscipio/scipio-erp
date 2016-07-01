@@ -24,5 +24,9 @@ under the License.
     <load-components parent-directory="themes"/>
     <load-components parent-directory="applications"/>
     <load-components parent-directory="specialpurpose"/>
+    
+    <!-- SCIPIO: 2016-06-30: Also load from addons folder (supersedes specialpurpose but acts more or less like hot-deploy) -->
+    <load-components parent-directory="addons"/>
+    
     <load-components parent-directory="hot-deploy"/>
 </component-loader>

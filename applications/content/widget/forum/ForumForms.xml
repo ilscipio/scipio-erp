@@ -154,21 +154,9 @@ under the License.
         <field name="dataResourceId"><hidden value="${dataResourceId}"/></field>
         <field name="messageTitle" entry-name="description" parameter-name="description"><display/></field>
         <field name="createdBy" entry-name="createdByUserLogin"><display/></field>
-<<<<<<< .working
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" entry-name="caFromDate"><display description="${groovy:caFromDate!=null?caFromDate.toString().substring(0,10):&quot;&quot;}"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" entry-name="caThruDate"><display description="${groovy:caThruDate!=null?caThruDate.toString().substring(0,10):&quot;&quot;}"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><hyperlink target="updateForumMessage">
-                <parameter param-name="forumGroupId"/>
-                <parameter param-name="forumId"/>
-                <parameter param-name="contentIdTo"/>
-                <parameter param-name="contentId"/>
-                <parameter param-name="contentAssocTypeId"/>
-                <parameter param-name="fromDate"/>
-            </hyperlink></field>
-=======
-        <field name="fromDate" entry-name="caFromDate"><display description="${bsh:caFromDate!=null?caFromDate.toString().substring(0,10):&quot;&quot;}"/></field>
-        <field name="thruDate" entry-name="caThruDate"><display description="${bsh:caThruDate!=null?caThruDate.toString().substring(0,10):&quot;&quot;}"/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="updateForumMessage" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                 <parameter param-name="forumId" from-field="${parameters.forumId}"/>
@@ -179,7 +167,6 @@ under the License.
                 <parameter param-name="deactivateExisting" value="true"/>
             </hyperlink>
         </field>
->>>>>>> .merge-right.r1750653
         <field name="messageText" entry-name="contentData.resultData.electronicText.textData" parameter-name="textData"><textarea rows="8"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="responseAction" title="${uiLabelMap.FormFieldTitle_reponse}" widget-style="${styles.link_run_sys} ${styles.action_add}">

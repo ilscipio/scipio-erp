@@ -69,19 +69,6 @@ cacheId = "accounting_"+begin+"-"+end;
 
 Map findLastClosedDateOutMap = context.findLastClosedDateOutMap;
 Timestamp lastClosedDate = (Timestamp)findLastClosedDateOutMap.lastClosedDate;
-//
-Debug.log("findLastClosedDateOutMap ===========> " + findLastClosedDateOutMap);
-//Debug.log("lastClosedDate ===========> " + lastClosedDate);
-//
-//customTimePeriodExprs = FastList.newInstance();
-//customTimePeriodExprs.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_YEAR"));
-//List customTimePeriods = select("customTimePeriodId", "isClosed", "fromDate", "thruDate").where(customTimePeriodExprs).from("CustomTimePeriod").orderBy("thruDate DESC").queryList();
-//customTimePeriods.each { customTimePeriod ->
-//    Debug.log("customTimePeriod ==========> " + customTimePeriod);
-//}
-
-Debug.log("partyIds ===========> " + partyIds);
-Debug.log("fromDate ===========> " + fromDate + "  thruDate =============> " + thruDate);
 
 
 // POSTED AND UNPOSTED
@@ -97,7 +84,6 @@ List allTransactionDebit = [];
 List allTransactionCredit = [];
 if (allTransactionTotals) {    
     allTransactionTotals.each { allTransactionTotal ->
-//        Debug.log("allTransactionTotal ==========> " + allTransactionTotal);
         accountMap = FastMap.newInstance();
         accountMap.put("amount", allTransactionTotal.amount);
         acctgTransType = select("description").from("AcctgTransType").where(["acctgTransTypeId" : allTransactionTotal.acctgTransTypeId]).cache(true).queryOne();
@@ -113,8 +99,7 @@ if (allTransactionTotals) {
 
 Map    processResult(List transactionList) {
     Map resultMap = new TreeMap<String, Object>();
-    transactionList.each { header ->
-        Debug.log("header ==========> " + header);
+    transactionList.each { header ->        
             Map newMap = [:];
             BigDecimal total = BigDecimal.ZERO;
             total = total.plus(header.amount ?: BigDecimal.ZERO);
@@ -142,5 +127,3 @@ Map    processResult(List transactionList) {
 //}
 context.debitStats = debitStats;        
 context.creditStats = creditStats;
-Debug.log("debitStats ===========> " + debitStats);
-Debug.log("creditStats ===========> " + creditStats);

@@ -33,8 +33,7 @@ if (billingAccountId) {
             if (orderBillingAcc.paymentMethodTypeId.equals("EXT_BILLACT") && orderBillingAcc.paymentStatusId.equals("PAYMENT_NOT_RECEIVED")) {
                 orderBillingAccMap.putAll(orderBillingAcc);
                 orderId = orderBillingAcc.orderId;
-                orderBillingAccMap.orderId = orderId;
-                Debug.log("orderBillingAccMap ==============> " + orderBillingAccMap);
+                orderBillingAccMap.orderId = orderId;                
                 orderPaymentPreferencesList.add(orderBillingAccMap);
             }
             

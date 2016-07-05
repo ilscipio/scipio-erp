@@ -129,7 +129,6 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
         
         if (minDate && maxDate) {            
             int intervalDays = UtilDateTime.getIntervalInDays(minDate, maxDate);
-            Debug.log("minDate maxDate specified, days between them ======> " + intervalDays);
             // If minDate is greater than maxDate, set maxDate to the current time and minDate 30 days before
             if (intervalDays < 0) {
                 maxDate = UtilDateTime.nowTimestamp();
@@ -152,6 +151,5 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
         }    
         context.minDate = minDate;
         context.maxDate = maxDate;
-        Debug.log("minDate ==========> " + minDate + "  maxDate ==========> " + maxDate);
     }
 }

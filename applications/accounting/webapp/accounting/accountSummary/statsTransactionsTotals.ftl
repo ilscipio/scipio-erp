@@ -4,8 +4,7 @@
 <#assign chartDataMap={"C":creditStats, "D":debitStats}/>
 
 <@row>
-    <#list chartDataMap?keys as key>
-        ${Static["org.ofbiz.base.util.Debug"].log("key ==========> " + key + "   chartData ==========> " + chartDataMap[key])}
+    <#list chartDataMap?keys as key>        
         <#assign currData = chartDataMap[key] />
         <@cell columns=6>
             <@heading relLevel=1>

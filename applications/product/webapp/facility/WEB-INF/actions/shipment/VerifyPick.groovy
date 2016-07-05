@@ -92,7 +92,6 @@ context.picklistBinId = picklistBinId;
 context.isOrderStatusApproved = false;
 
 if (orderId) {
-    Debug.log("orderId =============> " + orderId);
     orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
     if (orderHeader) {
         OrderReadHelper orh = new OrderReadHelper(orderHeader);

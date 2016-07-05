@@ -6,7 +6,6 @@ import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.entity.util.EntityUtil
 
 service = context.workEffortService;
-Debug.log("workEffortService ============> " + service);
 List workEffortList = FastList.newInstance();
 if (service == "getWorkEffortAssignedTasks" || service == "getWorkEffortCompletedTasks") {     
     workEffortMap = dispatcher.runSync(service, UtilMisc.toMap("createdPeriod", context.createdPeriod, "userLogin", context.userLogin));    

@@ -43,7 +43,6 @@ Map processResult() {
     Map resultMap = new TreeMap<String, Object>();
     for (int i = 0; i < iCount; i++) {
         Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("salesChannelEnumId", salesChannels, "minDate", fromDateText, "maxDate", thruDateText,"userLogin",userLogin));
-//        Debug.log("findOrderMap =====================> " + findOrderMap);
         List orderList = findOrderMap.orderList;
         orderList.each { header ->        
             String date = dateIntervals.getDateFormatter().format(header.orderDate);
@@ -71,8 +70,6 @@ Map processResult() {
         dateEnd = dateIntervals.getDateEnd();
         if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
             dateEnd = thruDateTimestamp;
-        
-//        Debug.log("dateBegin ===========> " + dateIntervals["dateBegin"] + "  dateEnd =================> " + dateIntervals["dateEnd"]);
         fromDateText = UtilDateTime.timeStampToString(dateIntervals.getDateBegin(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
         thruDateText = UtilDateTime.timeStampToString(dateEnd, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
     }

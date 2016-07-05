@@ -42,17 +42,14 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
             productCategoryIds = getCatalogRelatedCategoryIds(prodCatalog);
         } else if (productStore) {
             // Ultimately check for productStore, if nothing has been passed for that too, a random one taken from productStoreIds will be used
-            Debug.log("ProductStoreId ======> " + productStore.productStoreId);
             // Find Catalogs
             productStoreCatalogs = productStore.getRelated("ProductStoreCatalog", null, null, true);
             //      productCatalogs = productStoreCatalog.getRelated("ProductCatalog", true);
             for (productStoreCatalog in productStoreCatalogs) {
                 prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", true);
-                //                Debug.log("prodCatalogId ===============> " + prodCatalog.prodCatalogId);
                 productCategoryIds += getCatalogRelatedCategoryIds(prodCatalog);
             }
         }
-//        Debug.log("productCategoryIds =======> " + productCategoryIds);
         int numRecords = getNumRecordsToBeGenerated();
         List<DemoDataProduct> generatedProducts = [];
         if (productCategoryIds) {
@@ -60,7 +57,6 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
             String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
             generatedProducts = DemoSuiteDataWorker.generateProduct(numRecords, MockarooDataGenerator.class);
         }
-//        Debug.log("generatedProducts =======> " + generatedProducts);
         context.generatedProducts = generatedProducts;
         context.productCategoryIds = productCategoryIds;
     }
@@ -106,7 +102,6 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         List<GenericValue> productItems = new ArrayList<GenericValue>();
         if (context.generatedProducts) {
             DemoDataProduct demoDataProduct = context.generatedProducts.get(index);
-//            Debug.log("demoDataProduct ======> " + demoDataProduct);
             // Create Product
             String productId = "GEN_" + delegator.getNextSeqId("demo-product");
             productCategoryId = context.productCategoryIds.get(UtilRandom.random(context.productCategoryIds));
@@ -117,12 +112,10 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
                     "longDescription", demoDataProduct.getLongDescription(), "introductionDate", introductionDate);
             GenericValue product = delegator.makeValue("Product", fields);
             toBeStored.add(product);
-//            Debug.log("selected category id =====> " + productCategoryId + "  type ==========> " + productTypeId + " product id =========> " + productId + " product name " + demoDataProduct.getName());
 
             fields = UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", introductionDate);
             GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", fields);
             toBeStored.add(productCategoryMember);
-            Debug.log("product toBeStored =====> " + toBeStored);
         }
         return toBeStored;
     }
@@ -171,11 +164,8 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         productCategoryIds = [];
         prodCatalogCategories = prodCatalog.getRelated("ProdCatalogCategory", null, null, true);
         for (prodCatalogCategory in prodCatalogCategories) {
-//            Debug.log("prodCatalogCategoryId ===============> " + prodCatalogCategory.productCategoryId);
-
             List productCategories = CategoryWorker.getRelatedCategoriesRet(delegator, "categoryList", prodCatalogCategory.productCategoryId, false, false, true);
             for (productCategory in productCategories) {
-//                Debug.log("productCategoryId ===============> " + productCategory.productCategoryId);
                 productCategoryIds += [
                     productCategory.productCategoryId
                 ];

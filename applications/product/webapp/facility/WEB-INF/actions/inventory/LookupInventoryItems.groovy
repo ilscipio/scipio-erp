@@ -28,8 +28,6 @@ inventoryItemId = parameters.inventoryItemId;
 if (parameters.searchValueFieldName && parameters.searchValueFieldName.equals("inventoryItemId"))
     inventoryItemId = parameters.term;
 
-Debug.log("parameters.inventoryItemId ========> " + inventoryItemId);
-
 if (orderId && productId) {
     shipmentReceiptAndItems = from("ShipmentReceiptAndItem").where("orderId", orderId, "productId", productId).queryList();
     context.inventoryItemsForPo = shipmentReceiptAndItems;
@@ -60,7 +58,6 @@ if (productId) {
 if (inventoryItemId) {
     inventoryItem = from("InventoryItem").where("inventoryItemId", inventoryItemId).queryOne();
     context.inventoryItem = inventoryItem;
-    Debug.log("inventoryItem ======> " + inventoryItem);
     if (inventoryItem) {
         product = inventoryItem.getRelatedOne("Product", false);
         context.internalName = product.internalName;

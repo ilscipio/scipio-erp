@@ -22,10 +22,6 @@ import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.marketing.report.ReportHelper
 
-//Debug.log("now timestamp ====> " + context.nowTimestamp);
-//
-//EntityCondition.makeCondition("fromDate", EntityOperator).filterByDate();
-
 // query for both number of visits and number of orders
 
 visitConditionList = [] as LinkedList;

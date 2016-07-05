@@ -306,9 +306,8 @@ under the License.
                                     </@tr>
                                 </@thead>
                                 <#list packageSeqIds as packageSeqId>
-                                    ${Static["org.ofbiz.base.util.Debug"].log("packageSeqId =============> " + packageSeqId)}
                                     <@tr>
-                                        <@td>                                            
+                                        <@td>
                                             <#assign packageWeightLabel>${uiLabelMap.ProductPackage} ${packageSeqId}</#assign>
                                             <@field type="input" size="7" name="packageWeight_${packageSeqId}" value=(packingSession.getPackageWeight(packageSeqId?int)!) label=packageWeightLabel/>
                                             <#if orderItemShipGroup?has_content>

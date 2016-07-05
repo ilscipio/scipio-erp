@@ -262,6 +262,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEvent" save-home-view="true"/>
     </request-map>
+    <request-map uri="createCommunicationEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommunicationEvent"/>
+        <response name="success" type="view-last"/>
+        <response name="error" type="view" value="EditCommunicationEvent"/>
+    </request-map>
 
     <!-- SCIPIO: New root entries -->
     <request-map uri="MyCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="MyCommunicationEvents"/></request-map>

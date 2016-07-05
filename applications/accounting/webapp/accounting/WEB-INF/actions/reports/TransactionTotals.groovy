@@ -52,11 +52,6 @@ if (lastClosedDate) {
     lastClosedTimePeriod = (GenericValue)lastClosedTimePeriodResult.lastClosedTimePeriod;
 }
 
-
-Debug.log("lastClosedTimePeriodResult =========> " + lastClosedTimePeriodResult);
-Debug.log("findLastClosedDateOutMap ===========> " + context.findLastClosedDateOutMap);
-
-
 // POSTED
 // Posted transactions totals and grand totals
 postedTotals = [];

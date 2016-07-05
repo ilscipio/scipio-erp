@@ -12,5 +12,4 @@ if (segmentGroupTypeId)
 if (productStoreId)    
     condition.put("productStoreId", productStoreId);
 listMarketingSegment=from("SegmentGroup").where(condition).queryList();
-Debug.log("listMarketingSegment ================> " + listMarketingSegment);
 context.listMarketingSegment=listMarketingSegment;

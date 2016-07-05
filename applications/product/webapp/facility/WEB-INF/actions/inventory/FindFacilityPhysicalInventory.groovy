@@ -27,7 +27,6 @@ facilityId = parameters.facilityId;
 productId = parameters.productId ? parameters.productId.trim() : null;
 internalName = parameters.internalName ? parameters.internalName.trim() : null;
 physicalInventoryId = parameters.physicalInventoryId ? parameters.physicalInventoryId : null;
-Debug.log("parameters physicalInventoryId ==================> " + parameters.physicalInventoryId); 
 
 // build conditions
 conditions = [EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId),

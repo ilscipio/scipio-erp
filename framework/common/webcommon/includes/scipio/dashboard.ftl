@@ -6,8 +6,6 @@
             <div class="columns large-${columnSize}">                
                 <#if s?has_content>                    
                     ${sections.render(s)}
-                <#else>
-                    ${Static["org.ofbiz.base.util.Debug"].log("grid index =======> " + grid_index + "   no section to be rendered")}
                 </#if>
             </div>
         </#list>

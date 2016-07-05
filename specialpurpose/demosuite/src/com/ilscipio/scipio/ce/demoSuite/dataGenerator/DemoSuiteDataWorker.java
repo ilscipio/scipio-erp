@@ -19,7 +19,6 @@ public class DemoSuiteDataWorker {
             ThirdPartyDataGenerator<?> generator = (ThirdPartyDataGenerator<?>) dataGeneratorClass.getConstructor(Class.class)
                     .newInstance(DemoDataAddress.class);
             List<?> data = (List<?>) generator.retrieveData(count);
-//            Debug.log("retreived addresses ==============> " + data);
             return (List<DemoDataAddress>) data;
         } catch (IllegalAccessException e) {
             Debug.logError(e, e.getMessage(), "");
@@ -45,7 +44,6 @@ public class DemoSuiteDataWorker {
             ThirdPartyDataGenerator<?> generator = (ThirdPartyDataGenerator<?>) dataGeneratorClass.getConstructor(Class.class)
                     .newInstance(DemoDataProduct.class);
             List<?> data = (List<?>) generator.retrieveData(count);
-//            Debug.log("retreived products ==============> " + data);
             return (List<DemoDataProduct>) data;
         } catch (IllegalAccessException e) {
             Debug.logError(e, e.getMessage(), "");
@@ -71,7 +69,6 @@ public class DemoSuiteDataWorker {
             ThirdPartyDataGenerator<?> generator = (ThirdPartyDataGenerator<?>) dataGeneratorClass.getConstructor(Class.class)
                     .newInstance(DemoDataPerson.class);
             List<?> data = (List<?>) generator.retrieveData(count);
-//            Debug.log("retreived party ==============> " + data);
             return (List<DemoDataPerson>) data;
         } catch (IllegalAccessException e) {
             Debug.logError(e, e.getMessage(), "");
@@ -97,7 +94,6 @@ public class DemoSuiteDataWorker {
             ThirdPartyDataGenerator<?> generator = (ThirdPartyDataGenerator<?>) dataGeneratorClass.getConstructor(Class.class)
                     .newInstance(DemoDataUserLogin.class);
             List<?> data = (List<?>) generator.retrieveData(count);
-//            Debug.log("retreived party ==============> " + data);
             return (List<DemoDataUserLogin>) data;
         } catch (IllegalAccessException e) {
             Debug.logError(e, e.getMessage(), "");

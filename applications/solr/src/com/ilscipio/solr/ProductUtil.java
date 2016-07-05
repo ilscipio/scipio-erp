@@ -73,7 +73,6 @@ public abstract class ProductUtil {
                     GenericValue cat = (GenericValue) catIterator.next();
                     String productCategoryId = (String) cat.get("productCategoryId");
                     List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
-                    //Debug.log("trailElements ======> " + trailElements.toString());
                     for (List<String> trailElement : trailElements) {
                         StringBuilder catMember = new StringBuilder();
                         int i = 0;
@@ -90,7 +89,6 @@ public abstract class ProductUtil {
                             if (!trails.contains(cm)) {
                                 //Debug.logInfo("cm : "+cm, module);
                                 trails.add(cm);
-                                // Debug.log("trail for product " + productId + " ====> " + catMember.toString());
                             }
                         }
                         

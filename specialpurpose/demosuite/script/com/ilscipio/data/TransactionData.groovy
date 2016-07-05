@@ -327,16 +327,13 @@ public class TransactionData extends DataGeneratorGroovyBaseScript {
                 dve.addAlias("GAO", "organizationPartyId");
                 dve.addViewLink("GA", "GAO", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("glAccountId", "glAccountId")));
                 glAccount = from(dve).where("glAccountId", glAccountId).queryOne();
-                Debug.log("credit acctg entry - glAccount ===> " + glAccount);
             }
             if (glAccount) {
                 currencyUomId = UtilProperties.getProperties("general.properties").getProperty("currency.uom.id.default", "USD");
-//                Debug.log("glAccountId ========> " + glAccount.glAccountId + " amount ========> " + amount);
                 fields = UtilMisc.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId", "0000" + acctgTransEntrySeqId, "acctgTransEntryTypeId", "_NA_", "description",
                         "Automatically generated transaction (for demo purposes)", "glAccountId", glAccount.glAccountId, "glAccountTypeId", glAccount.glAccountTypeId, "organizationPartyId", "Company",
                         "reconcileStatusId", "AES_NOT_RECONCILED", "amount", amount, "currencyUomId", currencyUomId, "debitCreditFlag", debitCreditFlag);
                 GenericValue acctgTransEntry = delegator.makeValue("AcctgTransEntry", fields);
-                Debug.log("acctgTransEntry =============> " + acctgTransEntry);
                 acctgTransEntrys.add(acctgTransEntry);
             }
         }

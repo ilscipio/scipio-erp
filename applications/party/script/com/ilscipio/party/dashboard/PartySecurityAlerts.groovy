@@ -57,14 +57,11 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
         fromDateUserLoginHistory.set(Calendar.MILLISECOND, 0);
 		visit = serverHit.getRelatedOne("Visit", true);
         if (hitStartDate.getTimeInMillis() == fromDateUserLoginHistory.getTimeInMillis()) {
-//            Debug.log("Matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDateUserLoginHistory.getTimeInMillis());
             securityAlert = UtilMisc.toMap("userLoginId", userLoginAndHistory.userLoginId, "enabled", userLoginAndHistory.enabled, 
                 "successfulLogin", userLoginAndHistory.successfulLogin, "contentId", serverHit.contentId, "requestUrl", serverHit.requestUrl,
                 "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "clientIpAddress", visit.clientIpAddress,"fromDate", fromDateUserLoginHistory.getTime());
             securityAlerts.add(securityAlert);
             break;
-        } else {
-//            Debug.log("Not matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDateUserLoginHistory.getTimeInMillis() + "    diff ====> " + (fromDate.getTimeInMillis() - hitStartDate.getTimeInMillis()));
         }
     }
 }

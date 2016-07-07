@@ -2379,11 +2379,13 @@ It is also possible to manually call #setAutoValueCfg to set them, which should 
   * Parameters *
     type                    = ((string)), default: -from globals-) The value scheme type override
                               See #setAutoValueCfg for possible values.
-    name                    = main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)
-    overrideName            = field name for overrides map
-    paramName               = field name for parameters map
-    recordName              = field name for record map
-    defaultName             = field name for defaults map
+    name                    = Main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)
+                              NOTE: As a convenience, name can be passed as single parameter instead of the {{{args}}} map.
+    overrideName            = Field name for overrides map
+    paramName               = Field name for parameters map
+    recordName              = Field name for record map
+    defaultName             = Field name for defaults map
+    defaultValue            = A default value, which takes priority over the values in the default map (if any)
     
   * Related *
     @fields
@@ -2399,18 +2401,50 @@ It is also possible to manually call #setAutoValueCfg to set them, which should 
   <#if !type?has_content>
     <#local type = "params-record">
   </#if>
+
+  <#local overrides = scpAutoValOverrides!{}>
   <#if scpAutoValParams?? && !scpAutoValParams?is_boolean>
     <#local params = scpAutoValParams>
   <#else>
     <#-- by default, use parameters map -->
-    <#local params = parameters>
+    <#local params = parameters!{}>
   </#if>
-  <#if type == "params" || !scpAutoValRecord?has_content>
-    <#return scpAutoValOverrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.defaultValue!scpAutoValDefaults[args.defaultName!args.name]!>
-  <#elseif type == "record" || ((isError!false) == true)><#-- FIXME? if there was error and is not a new record (caught in previous case), drop user input params and use record only -->
-    <#return scpAutoValOverrides[args.overrideName!args.name]!args.value!scpAutoValRecord[args.recordName!args.name]!args.defaultValue!scpAutoValDefaults[args.defaultName!args.name]!>
+  <#local record = scpAutoValRecord!{}>
+  <#local defaults = scpAutoValDefaults!{}>
+
+  <#-- 
+    DEV NOTE: We need the behavior of "params-record" to be similar to the code in:
+      org.ofbiz.widget.model.ModelFormField.getEntry(Map, String, boolean)
+    but can ignore "useRequestParameters" because our type substitutes for it.
+    
+    The stock behavior is that params are only considered if there was an error
+    in the last create/update operation. This usually is fairly sane, it means
+    that user input will be preserved on errors but discarded and reloaded from DB on success.
+    NOTE: the main limitation of this is that it's not possible to call screen with helper-like
+        pre-filled values. But this seems rare.
+        TODO?: we could maybe allow this by detecting if a controller event was run or not...
+            but that is making some assumptions that won't always hold.
+    
+    Below we do almost the same except that if we have a new/empty record, we always
+    consider params, to accomodate some possible special cases.
+    TODO: extra parameter to control this behavior (but caller can control in other ways)
+  -->
+
+  <#if type == "params" || (type == "params-record" && !record?has_content)>
+    <#-- condition (above): if params-record and we have a new record, make sure we always use params 
+        NOTE: stock form widgets don't have this case. it probably doesn't happen in normal circumstances
+            because if an update succeeded, usually we return with a populated record. but we might have
+            a multi-step form of some sort in which case we want to preserve params even if success. -->
+    <#return overrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.defaultValue!defaults[args.defaultName!args.name]!>
+  <#elseif type == "record" || (type == "params-record" && ((isError!false) == false))>
+    <#-- condition (above): if params-record and there was no error while creating/updating, then do NOT use parameters
+        NOTE: this is essentially what the stock form renderer does. it ensures that values are reloaded from DB upon
+            success.  -->
+    <#return overrides[args.overrideName!args.name]!args.value!record[args.recordName!args.name]!args.defaultValue!defaults[args.defaultName!args.name]!>
   <#else><#-- type == "params-record" -->
-    <#return scpAutoValOverrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.value!scpAutoValRecord[args.recordName!args.name]!args.defaultValue!scpAutoValDefaults[args.defaultName!args.name]!>
+    <#-- condition: if params-record and there was an error updating, we consider params so as to not lose user input even if it was wrong
+        (we have no way of knowing which field(s) were wrong). -->
+    <#return overrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.value!record[args.recordName!args.name]!args.defaultValue!defaults[args.defaultName!args.name]!>
   </#if>
 </#function>
 

@@ -2362,3 +2362,127 @@ TODO: This (and @field args) do not currently provide enough control over large 
   }>
 </#function>
 
+<#-- 
+*************
+* getAutoValue
+************
+Returns an appropriate field value (typically for use with @field) based on current values in request
+and context, following a certain scheme type specified directly or previously through globals.
+
+Typically the value is looked up in a set of global maps (parameters, a record or entity, defaults, etc.)
+following some predefined priority.
+
+The schema type may be specified directly, but in most cases it should have been specified for a group of 
+getAutoValue calls using @fields, where the specific maps to use when looking up the value may also be specified. 
+It is also possible to manually call #setAutoValueCfg to set them, which should rarely be needed.
+
+  * Parameters *
+    type                    = ((string)), default: -from globals-) The value scheme type override
+                              See #setAutoValueCfg for possible values.
+    name                    = main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)
+    overrideName            = field name for overrides map
+    paramName               = field name for parameters map
+    recordName              = field name for record map
+    defaultName             = field name for defaults map
+    
+  * Related *
+    @fields
+    #setAutoValueCfg
+-->
+<#assign getAutoValue_defaultArgs = {
+}>
+<#function getAutoValue args={}>
+  <#if isObjectType("string", args)><#-- shorthand -->
+    <#local args = {"name": args}>
+  </#if>
+  <#local type = args.type!scpAutoValType!"params-record">
+  <#if !type?has_content>
+    <#local type = "params-record">
+  </#if>
+  <#if scpAutoValParams?? && !scpAutoValParams?is_boolean>
+    <#local params = scpAutoValParams>
+  <#else>
+    <#-- by default, use parameters map -->
+    <#local params = parameters>
+  </#if>
+  <#if type == "params" || !scpAutoValRecord?has_content>
+    <#return scpAutoValOverrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.defaultValue!scpAutoValDefaults[args.defaultName!args.name]!>
+  <#elseif type == "record" || ((isError!false) == true)><#-- FIXME? if there was error and is not a new record (caught in previous case), drop user input params and use record only -->
+    <#return scpAutoValOverrides[args.overrideName!args.name]!args.value!scpAutoValRecord[args.recordName!args.name]!args.defaultValue!scpAutoValDefaults[args.defaultName!args.name]!>
+  <#else><#-- type == "params-record" -->
+    <#return scpAutoValOverrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.value!scpAutoValRecord[args.recordName!args.name]!args.defaultValue!scpAutoValDefaults[args.defaultName!args.name]!>
+  </#if>
+</#function>
+
+<#-- 
+*************
+* setAutoValueCfg
+************
+Sets the current global value configuration (maps and settings) used by #getAutoValue, and can also be used 
+to disable auto value lookups for @field.
+
+NOTE: Any parameters not specified leave the existing corresponding globals unchanged.
+
+NOTE: The globals specified by this function currently do not survive screen render boundaries; they
+    have page/template scope, not request scope.
+
+  * Parameters *
+    autoValue               = ((boolean)) Determines if auto value lookups are enabled for macros such as @field
+    type                    = (params|record|params-record, default: -from globals-, fallback default: params-record) The value scheme type
+                              * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
+                              * {{{record}}}: looks for value in overrides map, then record map, then defaults map
+                              * {{{params-record}}}: looks for value in overrides map, then parameters map, then record map, then defaults map
+    overrides               = ((map)) Map to use as overrides map for lookups
+    params                  = ((map)) Map to use as parameters map for lookups
+                              Normally, if this is not specified anywhere, the Ofbiz parameters map is used.
+    record                  = ((map)) Map to use as record map for lookups
+                              Usually this is something like an entity value.
+    defaults                = ((map)) Map to use as defaults map for lookups 
+    
+  * Related *
+    #getAutoValueCfg
+    #getAutoValue                       
+-->
+<#assign setAutoValueCfg_defaultArgs = {
+}>
+<#function setAutoValueCfg args={}>
+  <#if args.autoValue??>
+    <#global scpAutoVal = args.autoValue>
+  </#if>
+  <#if args.type??>
+    <#global scpAutoValType = args.type>
+  </#if>
+  <#if args.overrides??>
+    <#global scpAutoValOverrides = args.overrides>
+  </#if>
+  <#if args.params??>
+    <#global scpAutoValParams = args.params>
+  </#if>
+  <#if args.record??>
+    <#global scpAutoValRecord = args.record>
+  </#if>
+  <#if args.defaults??>
+    <#global scpAutoValDefaults = args.defaults>
+  </#if>
+</#function>
+
+<#--
+*************
+* getAutoValueCfg
+************
+Returns the current global auto value configuration (settings and maps).
+
+  * Related *
+    #setAutoValueCfg
+    #getAutoValue
+-->
+<#assign getAutoValueCfg_defaultArgs = {
+}>
+<#function getAutoValueCfg args={}>
+  <#return {"autoValue":scpAutoVal!"", "type":scpAutoValType!"", 
+    "overrides":scpAutoValOverrides!false, "params":scpAutoValParams!false, 
+    "record":scpAutoValRecord!false, "defaults":scpAutoValDefaults!false}>
+</#function>
+
+
+

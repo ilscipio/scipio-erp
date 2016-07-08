@@ -1095,6 +1095,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     autoValueArgs           = ((map)) Extra arguments that will be passed to #getAutoValue when auto values enabled.
                               Note that basics such as name, value, and type are already covered.
                               Some extras that may be specified are: overrideName, paramName, recordName, defaultName.
+                              NOTE: suffix is reserved for use and should never be specified.
                               See #getAutoValue for a comprehensive list.
         
     * input (alias: text) *
@@ -1697,47 +1698,51 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#if explArgs.value??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
-        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
       
         <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
         <#if explArgs.opValue??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opValue}>
         </#if>
-        <#local opValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local opValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
         
-        <#local autoValueArgsAll = {"name":name, "suffix":"_ic"}>
-        <#if explArgs.hideIgnoreCase??>
-          <#local autoValueArgsAll = autoValueArgsAll + {"value":hideIgnoreCase?string("Y","")}>
+        <#-- SPECIAL: checkbox needs to check presence of main value because is not 
+            submitted when not checked -->
+        <#local autoValueArgsAll = {"name":name, "suffix":"_ic",
+          "presParamName":autoValueArgs.paramName!name,
+          "presDefaultParamValue":"",
+          "defaultValue":"Y"
+        }>
+        <#if explArgs.ignoreCaseValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":ignoreCaseValue?string("Y","")}>
         </#if>
-        <#-- FIXME?: this checkbox needs special manual check to detect when params were sent
-        -->
-        <#local hideIgnoreCaseValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
-        <#local hideIgnoreCase = (hideIgnoreCaseValue == "Y")>
+        <#local ignoreCaseValueStr = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+        <#local ignoreCaseValue = (ignoreCaseValueStr == "Y")>
 
       <#elseif type == "rangefind">
         <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
         <#if explArgs.value??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
-        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
       
         <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_op"}>
         <#if explArgs.opFromValue??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opFromValue}>
         </#if>
-        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
         <#local autoValueArgsAll = {"name":name, "suffix":"_fld1_op"}>
         <#if explArgs.opThruValue??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opThruValue}>
         </#if>
-        <#local opThruValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local opThruValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
         
       <#elseif type == "datefind">
         <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
         <#if explArgs.value??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
-        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
       
         <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_op"}>
         <#-- NOTE: this must match logic further below -->
@@ -1746,7 +1751,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#elseif explArgs.opValue??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opValue}>
         </#if>
-        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
         <#local opValue = opFromValue>
         
       <#else>
@@ -1755,7 +1760,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#if explArgs.value??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
-        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
       </#if>
 
     </#if>
@@ -2505,11 +2510,20 @@ The schema type may be specified directly, but in most cases it should have been
 getAutoValue calls using @fields, where the specific maps to use when looking up the value may also be specified. 
 It is also possible to manually call #setAutoValueCfg to set them, which should rarely be needed.
 
+NOTE: This method conditionally acts on the {{{isError}}} boolean context field. Usually it is
+    set depending on the result of the last controller event. In non-standard cases you may have
+    to set it manually.
+
 TODO: We need more options (and/or types) to make tweakable the special handling in cases of error, new records, etc.
 
   * Parameters *
-    type                    = ((string)), default: -from globals-) The value scheme type override
-                              See #setAutoValueCfg for possible values.
+    type                    = (params|record|defaults|params-record, default: -from globals-, fallback default: params-record) The value scheme type
+                              * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
+                              * {{{record}}}: looks for value in overrides map, then record map, then defaults map
+                              * {{{defaults}}}: looks for value in overrides map, then defaults map
+                              * {{{params-record}}}: looks for value in overrides map, then EITHER parameters map OR record map, then defaults map
+                                At current time (2016-07-08), the selection of parameters or record map default behavior is based on whether an event
+                                error occurred ({{{isError}}} boolean context field).
     name                    = Main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)
                               NOTE: As a convenience, name can be passed as single parameter instead of the {{{args}}} map.
     overrideName            = Field name for overrides map
@@ -2522,6 +2536,14 @@ TODO: We need more options (and/or types) to make tweakable the special handling
     value                   = A value, which takes immediate priority over the record values
                               It is ignored in all cases where the record map is also ignored (such as {{{type="params"}}}).
     defaultValue            = A default value, which takes immediate priority over the default map values
+    presParamName           = Optional name of a parameter to check for presence and, if specified, cause this param to always have a param value
+                              This is a workaround for various form limitations. 
+                              It checks the parameter map for a value with this name, and if one is found,
+                              then the current auto value lookup will ensure that a param value is set for this lookup.
+                              If it indeed had no param value, the value of the {{{presDefaultParamValue}}} param is used.
+                              This can be used for surrogate presence checks for HTML checkboxes, for example.
+                              NOTE: this name does not receive a suffix.
+    presDefaultParamValue   = ((string), default: ""/[]/{}) Default param value to use if presParamName checks out
 
   * Related *
     @fields
@@ -2549,6 +2571,13 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   <#local recordName = (args.defaultName!args.name) + suffix>
   <#local defaultName = (args.defaultName!args.name) + suffix>
   
+  <#if args.presParamName?has_content && !params[paramName]??>
+    <#if params[args.presParamName]??>
+      <#-- this is awful, but best we can do here -->
+      <#local params = params + {paramName:args.presDefaultParamValue!}>
+    </#if>
+  </#if>
+  
   <#-- 
     DEV NOTE: We need the behavior of "params-record" to be similar to the code in:
       org.ofbiz.widget.model.ModelFormField.getEntry(Map, String, boolean)
@@ -2562,28 +2591,17 @@ TODO: We need more options (and/or types) to make tweakable the special handling
         TODO?: we could maybe allow this by detecting if a controller event was run or not...
             but that is making some assumptions that won't always hold.
     
-    Below we do almost the same except that if we have a new/empty record, we always
-    consider params, to accomodate some possible special cases.
-    TODO: extra parameter to control this behavior (but caller can control in other ways)
+    TODO: Currently the whole form/record must use either parameters or record.
+        We are limiting behavior to prevent problems with some fields such as checkboxes,
+        and because this is stock behavior currently.
   -->
 
-  <#if type == "params" || (type == "params-record" && !record?has_content)>
-    <#-- condition (above): if params-record and we have a new record, make sure we always use params 
-        NOTE: stock form widgets don't have this case. it probably doesn't happen in normal circumstances
-            because if an update succeeded, usually we return with a populated record. but we might have
-            a multi-step form of some sort in which case we want to preserve params even if success. -->
+  <#if type == "params" || (type == "params-record" && ((isError!false) == true))>
     <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.defaultValue!defaults[defaultName]!>
-  <#elseif type == "record" || (type == "params-record" && ((isError!false) == false))>
-    <#-- condition (above): if params-record and there was no error while creating/updating, then do NOT use parameters
-        NOTE: this is essentially what the stock form renderer does. it ensures that values are reloaded from DB upon
-            success.  -->
+  <#elseif type == "record" || (type == "params-record")>
     <#return args.overrideValue!overrides[overrideName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
   <#elseif type == "defaults">
     <#return args.overrideValue!overrides[overrideName]!args.defaultValue!defaults[defaultName]!>
-  <#else><#-- type == "params-record" -->
-    <#-- condition: if params-record and there was an error updating, we consider params so as to not lose user input even if it was wrong
-        (we have no way of knowing which field(s) were wrong). -->
-    <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
   </#if>
 </#function>
 
@@ -2604,11 +2622,8 @@ NOTE: The globals specified by this function currently do not survive screen ren
                               NOTE: Unlike some other macros and functions (such as @fields), for this function, if this
                                   parameter is omitted, the function will not turn on auto values. It is a manual
                                   call and requires explicit true.
-    type                    = (params|record|params-record, default: -from globals-, fallback default: params-record) The value scheme type
-                              * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
-                              * {{{record}}}: looks for value in overrides map, then record map, then defaults map
-                              * {{{defaults}}}: looks for value in overrides map, then defaults map
-                              * {{{params-record}}}: looks for value in overrides map, then parameters map, then record map, then defaults map
+    type                    = ((string)) The value scheme type
+                              See #getAutoValue for possible values.
     overrides               = ((map)) Map to use as overrides map for lookups
     params                  = ((map)|(boolean)) Map to use as parameters map for lookups
                               Normally, if this is not specified anywhere, the Ofbiz parameters map is used.

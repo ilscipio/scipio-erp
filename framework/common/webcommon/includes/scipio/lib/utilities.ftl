@@ -2107,6 +2107,30 @@ TODO?: may want helper booleans to control in/out allArgNames?
 
 <#-- 
 *************
+* mergeArgMapsEx
+************
+Variant of #mergeArgMaps that returns more than one map.
+
+  * Parameters *
+    (other)                 = See #mergeArgMaps
+    
+  * Return Value *
+    a map of arg maps: {{{allArgs}}} (full combined), {{{explArgs}}} (only explicitly passed args)
+-->
+<#function mergeArgMapsEx args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+  <#if !inlineArgs?has_content> <#-- necessary to prevent empty sequence -->
+    <#local inlineArgs = {}>
+  </#if>
+  <#local localArgNames = (defaultArgs?keys) + (overrideArgs?keys)>
+  <#local allArgNames = (args.allArgNames![]) + localArgNames>
+  <#local explArgs = toSimpleMap(args) + inlineArgs>
+  <#local allArgs = defaultArgs + explArgs + overrideArgs + 
+    { "localArgNames":localArgNames, "allArgNames":allArgNames }>
+  <#return {"allArgs":allArgs, "explArgs":explArgs}>
+</#function>
+
+<#-- 
+*************
 * mergeArgMapsBasic
 ************
 A version of mergeArgMaps that only merges maps, but doesn't perform any special implied

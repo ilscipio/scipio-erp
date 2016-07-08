@@ -16,6 +16,14 @@
   specific language governing permissions and limitations
   under the License.
   -->
+<@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
+<@script src=makeOfbizContentUrl("/images/jquery/plugins/elrte-1.3/js/elrte.min.js") />
+<#if language?has_content && language != "en">
+<@script src=makeOfbizContentUrl("/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!'en'}.js") /><#rt/>
+</#if>
+
+<link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
+
 <@script>
     jQuery(document).ready(loadTrees);
     jQuery(document).ready(createEditor);

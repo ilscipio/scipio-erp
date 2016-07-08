@@ -32,16 +32,12 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.ContentCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ContentCompanySubtitle" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/content/images/contentForum.css" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true"/>
                 <set field="activeApp" value="contentmgr" global="true"/>
                 <set field="applicationMenuName" value="ContentAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://content/widget/content/ContentMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.ContentContentManager}"/>
-                
-                <!-- ToDo: Move to themes? -->
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/> 
-                <set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>    
+                <set field="applicationTitle" value="${uiLabelMap.ContentContentManagerApplication}"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
@@ -107,10 +103,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="Content"/>
-                <!-- ToDo: Move to themes? -->
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/> 
-                <set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>    
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -421,33 +413,14 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                <set field="titleProperty" value="CommonDashboard"/>
+                <set field="titleProperty" value="ContentMain"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                       <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <section>
-                                   <actions>
-                                       <set field="websiteId" value="ScipioWebStore" global="true"/>
-                                   </actions>
-                                   <widgets>
-                                       <include-screen name="ScipioWebsiteContentTree"/>   
-                                   </widgets>
-                               </section>
-                            </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <section>
-                                   <actions>
-                                       <set field="websiteId" value="OpenTravelSystem" global="true"/>
-                                   </actions>
-                                   <widgets>
-                                       <include-screen name="ScipioWebsiteContentTree"/>   
-                                   </widgets>
-                               </section>
-                            </container>
-                        </container>
+                        <screenlet>
+                            <container><label text="${uiLabelMap.ContentWelcome}"/></container>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -543,30 +516,6 @@ under the License.
                     </decorator-section>
                 </decorator-screen>
             </widgets>
-        </section>
-    </screen>
-    
-    <!-- SCIPIO: Widget implementation -->
-    <screen name="ScipioWebsiteContentTree">
-        <section>
-            <actions>
-               <entity-one value-field="webSite" entity-name="WebSite"/>
-               <script location="component://content/script/com/ilscipio/cms/dashboard/WebsiteContentTree.groovy"/>
-           </actions>
-           <widgets>
-                <section>
-                    <condition>
-                        <not>
-                            <if-empty field="treeMenuData"/>
-                        </not>
-                    </condition>
-                     <widgets>
-                       <screenlet title="">
-                           <platform-specific><html><html-template location="component://content/webapp/cms/dashboard/websiteContentTree.ftl"/></html></platform-specific>
-                       </screenlet>     
-                   </widgets>
-                </section>
-           </widgets>
         </section>
     </screen>
     

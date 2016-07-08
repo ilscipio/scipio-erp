@@ -1682,12 +1682,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#-- do nothing -->
     <#elseif type == "select">
       <#-- TODO: handle defaultValue -->
-    <#elseif type == "textfind">
-      <#-- TODO: handle value and default ops -->
-    <#elseif type == "rangefind">
-      <#-- TODO: handle value and default ops -->
-    <#elseif type == "datefind">
-      <#-- TODO: handle value and default ops -->
     <#else>
       <#-- FIXME?: inefficient -->
       <#local autoValueArgsAll = {"name":name}>
@@ -1695,6 +1689,47 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.value!args.value}>
       </#if>
       <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+      
+      <#-- types with extra inputs -->
+      <#if type == "textfind">
+        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
+        <#if inlineArgs.opValue?? || args.opValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.opValue!args.opValue}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+      <#elseif type == "rangefind">
+        <#-- TODO
+        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
+        <#if inlineArgs.defaultOption?? || args.defaultOption??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
+        <#if inlineArgs.defaultOption?? || args.defaultOption??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        -->
+      <#elseif type == "datefind">
+        <#-- TODO
+        <#if opFromValue?has_content>
+          <#local datefindOpFromValue = opFromValue>
+        <#else>
+          <#local datefindOpFromValue = opValue>
+        </#if>
+        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
+        <#if inlineArgs.defaultOption?? || args.defaultOption??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
+        <#if inlineArgs.defaultOption?? || args.defaultOption??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        -->
+      </#if>
+
     </#if>
   </#if>
  
@@ -2453,6 +2488,7 @@ TODO: We need more options (and/or types) to make tweakable the special handling
     paramName               = Field name for parameters map
     recordName              = Field name for record map
     defaultName             = Field name for defaults map
+    suffix                  = Optional suffix added to each of the name parameters
     value                   = A value, which takes immediate priority over the record values
                               It is ignored in all cases where the record map is also ignored (such as {{{type="params"}}}).
     defaultValue            = A default value, which takes immediate priority over the default map values
@@ -2485,6 +2521,12 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   <#local record = scpAutoValRecord!{}>
   <#local defaults = scpAutoValDefaults!{}>
 
+  <#local suffix = args.suffix!"">
+  <#local overrideName = (args.overrideName!args.name) + suffix>
+  <#local paramName = (args.paramName!args.name) + suffix>
+  <#local recordName = (args.defaultName!args.name) + suffix>
+  <#local defaultName = (args.defaultName!args.name) + suffix>
+  
   <#-- 
     DEV NOTE: We need the behavior of "params-record" to be similar to the code in:
       org.ofbiz.widget.model.ModelFormField.getEntry(Map, String, boolean)
@@ -2508,16 +2550,16 @@ TODO: We need more options (and/or types) to make tweakable the special handling
         NOTE: stock form widgets don't have this case. it probably doesn't happen in normal circumstances
             because if an update succeeded, usually we return with a populated record. but we might have
             a multi-step form of some sort in which case we want to preserve params even if success. -->
-    <#return overrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.defaultValue!defaults[args.defaultName!args.name]!>
+    <#return overrides[overrideName]!params[paramName]!args.defaultValue!defaults[defaultName]!>
   <#elseif type == "record" || (type == "params-record" && ((isError!false) == false))>
     <#-- condition (above): if params-record and there was no error while creating/updating, then do NOT use parameters
         NOTE: this is essentially what the stock form renderer does. it ensures that values are reloaded from DB upon
             success.  -->
-    <#return overrides[args.overrideName!args.name]!args.value!record[args.recordName!args.name]!args.defaultValue!defaults[args.defaultName!args.name]!>
+    <#return overrides[overrideName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
   <#else><#-- type == "params-record" -->
     <#-- condition: if params-record and there was an error updating, we consider params so as to not lose user input even if it was wrong
         (we have no way of knowing which field(s) were wrong). -->
-    <#return overrides[args.overrideName!args.name]!params[args.paramName!args.name]!args.value!record[args.recordName!args.name]!args.defaultValue!defaults[args.defaultName!args.name]!>
+    <#return overrides[overrideName]!params[paramName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
   </#if>
 </#function>
 

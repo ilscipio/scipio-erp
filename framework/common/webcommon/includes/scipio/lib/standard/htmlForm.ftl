@@ -1690,51 +1690,71 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#elseif type == "select">
       <#-- TODO: handle defaultValue -->
     <#else>
-      <#-- FIXME?: inefficient -->
-      <#local autoValueArgsAll = {"name":name}>
-      <#if inlineArgs.value?? || args.value??>
-        <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.value!args.value}>
-      </#if>
-      <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
-      
       <#-- types with extra inputs -->
+
       <#if type == "textfind">
-        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
-        <#if inlineArgs.opValue?? || args.opValue??>
-          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.opValue!args.opValue}>
+        <#local autoValueArgsAll = {"name":name}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
         <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+      
+        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
+        <#if explArgs.opValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opValue}>
+        </#if>
+        <#local opValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        
+        <#-- FIXME: checkbox does not work right! -->
+        <#local autoValueArgsAll = {"name":name, "suffix":"_ic"}>
+        <#if explArgs.hideIgnoreCase??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":hideIgnoreCase?string("Y","")}>
+        </#if>
+        <#local hideIgnoreCaseValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local hideIgnoreCase = (hideIgnoreCaseValue == "Y")>
+
       <#elseif type == "rangefind">
-        <#-- TODO
-        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
-        <#if inlineArgs.defaultOption?? || args.defaultOption??>
-          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
         <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
-        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
-        <#if inlineArgs.defaultOption?? || args.defaultOption??>
-          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+      
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_op"}>
+        <#if explArgs.opFromValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opFromValue}>
         </#if>
-        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
-        -->
+        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld1_op"}>
+        <#if explArgs.opThruValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opThruValue}>
+        </#if>
+        <#local opThruValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        
       <#elseif type == "datefind">
-        <#-- TODO
-        <#if opFromValue?has_content>
-          <#local datefindOpFromValue = opFromValue>
-        <#else>
-          <#local datefindOpFromValue = opValue>
-        </#if>
-        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
-        <#if inlineArgs.defaultOption?? || args.defaultOption??>
-          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
         <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
-        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
-        <#if inlineArgs.defaultOption?? || args.defaultOption??>
-          <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.defaultOption!args.defaultOption}>
+      
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_op"}>
+        <#-- NOTE: this must match logic further below -->
+        <#if explArgs.opFromValue?has_content>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opFromValue}>
+        <#elseif explArgs.opValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opValue}>
+        </#if>
+        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
+        <#local opValue = opFromValue>
+        
+      <#else>
+        <#-- standard value input case -->
+        <#local autoValueArgsAll = {"name":name}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
         </#if>
         <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
-        -->
       </#if>
 
     </#if>

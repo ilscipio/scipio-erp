@@ -462,6 +462,10 @@ or even multiple per fieldset.
       <@field attr="" />
     </@field>
     
+    <@fields autoValue={"record": myEntity!{}, "defaults":{"field1": "some default value"}}>
+      <@field name="field1" />
+    </@fields>
+    
   * Parameters *
     type                        = (default|inherit|inherit-all|generic|..., default: inherit-all) The type of fields arrangement. 
                                   Affects layout and styling of contained fields.
@@ -540,11 +544,22 @@ or even multiple per fieldset.
                                   * If set to boolean false, will prevent all custom default field args and prevent using those set in styles hash. Probably never needed.
                                   e.g.
                                     <@fields type="default" fieldArgs={"labelArea":false}>
+    autoValue                   = ((map)|(boolean), default: -empty-) Auto value configuration to be set as globals for children @field and #getAutoValue calls
+                                  This enables children @field and #getAutoValue calls to use automatic value lookups using parameters, record and defaults maps, which
+                                  are set in globals using this parameter.
+                                  Possible values:
+                                  * as {{{map}}}: if set to a map, all contents are passed as arguments to the #setAutoValueCfg function ({{{setAutoValueCfg(autoValue)}}}), with the exception that if
+                                    the {{{autoValue.autoValue}}} boolean is omitted, @fields assumes and sets it to true (only explicit false will disable auto value; this case is rare). 
+                                    See #setAutoValueCfg for available configuration arguments.
+                                  * as {{{boolean}}}: if set to a boolean, it is equivalent to calling {{{setAutoValueCfg({"autoValue":true})}}}, where only defaults are used.
+                                  In all cases, the previous global auto value configuration is saved before setting these and is restored after @fields is closed.
+                                  NOTE: Unlike other @fields parameters, this parameter is always inherited unless specifically overridden.
+                                  NOTE: Unlike other @fields parameters, this parameter does not survive screen @render boundaries (only has page/template scope, not request scope).
 -->
 <#assign fields_defaultArgs = {
   "type":"", "open":true, "close":true, "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
   "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "ignoreParentField":"", 
-  "fieldArgs":true, "passArgs":{}
+  "fieldArgs":true, "autoValue":0, "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
   <#-- NOTE: this is non-standard args usage -->
@@ -552,7 +567,19 @@ or even multiple per fieldset.
   <#if (fieldsInfo.open!true) == true>
     <#local dummy = pushRequestStack("scipioFieldsInfoStack", fieldsInfo)>
   </#if>
+  <#local autoValue = inlineArgs.autoValue!args.autoValue!0>
+  <#if !autoValue?is_number>
+    <#local prevAutoValueCfg = getAutoValueCfg()>
+    <#if autoValue?is_boolean>
+      <#local dummy = setAutoValueCfg({"autoValue":autoValue})>
+    <#else>
+      <#local dummy = setAutoValueCfg({"autoValue":true} + autoValue)>
+    </#if>
+  </#if>
     <#nested>
+  <#if !autoValue?is_number>
+    <#local dummy = setAutoValueCfg(prevAutoValueCfg)>
+  </#if>
   <#if (fieldsInfo.close!true) == true>
     <#local dummy = popRequestStack("scipioFieldsInfoStack")>
   </#if>
@@ -2376,6 +2403,8 @@ The schema type may be specified directly, but in most cases it should have been
 getAutoValue calls using @fields, where the specific maps to use when looking up the value may also be specified. 
 It is also possible to manually call #setAutoValueCfg to set them, which should rarely be needed.
 
+TODO: We need more options (and/or types) to make tweakable the special handling in cases of error, new records, etc.
+
   * Parameters *
     type                    = ((string)), default: -from globals-) The value scheme type override
                               See #setAutoValueCfg for possible values.
@@ -2403,8 +2432,11 @@ It is also possible to manually call #setAutoValueCfg to set them, which should 
   </#if>
 
   <#local overrides = scpAutoValOverrides!{}>
-  <#if scpAutoValParams?? && !scpAutoValParams?is_boolean>
+  <#if scpAutoValParams?? && !(scpAutoValParams?is_boolean && scpAutoValParams == true)>
     <#local params = scpAutoValParams>
+    <#if params?is_boolean>
+      <#local params = {}>
+    </#if>
   <#else>
     <#-- by default, use parameters map -->
     <#local params = parameters!{}>
@@ -2462,13 +2494,17 @@ NOTE: The globals specified by this function currently do not survive screen ren
 
   * Parameters *
     autoValue               = ((boolean)) Determines if auto value lookups are enabled for macros such as @field
+                              NOTE: Unlike some other macros and functions (such as @fields), for this function, if this
+                                  parameter is omitted, the function will not turn on auto values. It is a manual
+                                  call and requires explicit true.
     type                    = (params|record|params-record, default: -from globals-, fallback default: params-record) The value scheme type
                               * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
                               * {{{record}}}: looks for value in overrides map, then record map, then defaults map
                               * {{{params-record}}}: looks for value in overrides map, then parameters map, then record map, then defaults map
     overrides               = ((map)) Map to use as overrides map for lookups
-    params                  = ((map)) Map to use as parameters map for lookups
+    params                  = ((map)|(boolean)) Map to use as parameters map for lookups
                               Normally, if this is not specified anywhere, the Ofbiz parameters map is used.
+                              If this is set to boolean false (special value), no parameters map will be used.
     record                  = ((map)) Map to use as record map for lookups
                               Usually this is something like an entity value.
     defaults                = ((map)) Map to use as defaults map for lookups 

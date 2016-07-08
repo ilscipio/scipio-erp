@@ -16,8 +16,6 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
-
 <@script>
 <#-- some labels are not unescaped in the JSON object so we have to do this manuely -->
 function unescapeHtmlText(text) {

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>CMS Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+    <service name="cmsGetPageTemplate" engine="java"
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplate" auth="true">
+        <description>Gets a page template</description>
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
+        
+        <attribute name="pageTemplate" type="Map" mode="OUT" optional="true"/>
+    </service>    
+    
+    <service name="cmsGetPageTemplateVersion" engine="java" use-transaction="true" 
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplateVersion" auth="true">
+        <description>Gets a page template version.</description>
+        <attribute name="versionId" type="String" mode="IN" optional="false" />
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
+        <attribute name="minimalInfoOnly" type="String" mode="IN" optional="true" default-value="N">
+          <description>If true, only gets basic info and template body of version (optimization hint)</description>
+        </attribute>
+        
+        <attribute name="version" type="Map" mode="OUT" optional="true">
+          <description>Map representing the template version. For available fields,
+            refer to com.ilscipio.scipio.cms.template.CmsPageTemplateVersion.putVersionFieldsIntoMap.</description>
+        </attribute>
+    </service>
+    
+    <service name="cmsGetPageTemplateVersions" engine="java" use-transaction="true" 
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplateVersions" auth="true">
+        <description>Gets all page template versions.</description>
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
+        <attribute name="minimalInfoOnly" type="String" mode="IN" optional="true" default-value="N">
+          <description>If true, only gets basic info and template body of version (optimization hint)</description>
+        </attribute>
+        
+        <attribute name="versions" type="List" mode="OUT" optional="true">
+          <description>A list of maps, one per page template version. For available fields,
+            refer to com.ilscipio.scipio.cms.template.CmsPageTemplateVersion.putVersionFieldsIntoMap.</description>
+        </attribute>
+    </service>
+    
+    <service name="cmsGetPageTemplateAndVersions" engine="java" use-transaction="true" 
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplateAndVersions" auth="true">
+        <description>Gets a structure containing the page template and all its versions.</description>
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
+        <attribute name="currentVersionId" type="String" mode="IN" optional="true">
+          <description>Optional ID of a version to mark as 'isCurrent' in the returned structured. The
+            the significance of 'current' is up to the caller.</description>
+        </attribute>
+        <attribute name="useMarkedAsCurrent" type="String" mode="IN" optional="true">
+          <description>If set and currentVersionId is not found or not specified, will mark as 'current' the
+            version that satisfies the mark specified in this parameter (one of isActive, isLast, isFirst, etc.)</description>
+        </attribute>
+        
+        <attribute name="pageTmpAndVersions" type="Map" mode="OUT" optional="true">
+          <description>A map representing the template, a field named 'pageTmpVersions' containing a map with versions current, 
+            active, last, first, and all (list - ordered last to first), and more</description>
+        </attribute>
+    </service>
+    
+    <service name="cmsAddPageTemplateVersion" engine="java" use-transaction="true" 
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="addPageTemplateVersion" auth="true">
+        <description>Creates a new page template version in the repository.</description>
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="versionComment" type="String" mode="IN" optional="true"/>
+        <attribute name="templateBody" type="String" mode="IN" optional="true" allow-html="safe"/>
+        
+        <attribute name="versionId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="cmsActivatePageTemplateVersion" engine="java" use-transaction="true" 
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="activatePageTemplateVersion" auth="true">
+        <description>Sets a page template version as live version.</description>
+        <attribute name="pageTemplateId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="versionId" type="String" mode="INOUT" optional="false"/>
+    </service>
+    
+    <service name="cmsUpdatePageTemplateInfo" engine="java" use-transaction="true" 
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="updatePageTemplateInfo" auth="true">
+        <description>Updates basic page template info (only that can be changed).</description>
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="templateName" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="cmsGetActiveAssetTemplateVersion" engine="java"
+                location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getActiveAssetTemplateVersion" auth="true">
+        <description>Gets the active/default asset template version of the given asset template.</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false" />
+        <attribute name="templateName" type="String" mode="IN" optional="false" />
+        
+        <attribute name="assetTemplate" type="java.util.Map" mode="OUT" optional="true"/>
+    </service> 
+    
+    <service name="cmsGetRelatedActiveAssetTemplateVersion" engine="java"
+                location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getRelatedActiveAssetTemplateVersion" auth="true">
+        <description>Gets the active/default asset template version related to the given asset template version.</description>
+        <attribute name="relatedAssetTemplateId" type="String" mode="IN" optional="false" />
+        
+        <attribute name="assetTemplate" type="java.util.Map" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="cmsActivateAssetTemplateVersion" engine="java" use-transaction="true" 
+                location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="activateAssetTemplateVersion" auth="true">
+        <description>Sets an asset template version as live version.</description>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="activeAssetTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="assetTemplateId" type="String" mode="IN" optional="false"/>
+    </service>
+
+     <service name="cmsDeletePageTemplateGroovy" default-entity-name="CmsPageTemplateGroovyAssoc" engine="entity-auto" invoke="delete">
+      <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="cmsUpdatePageTemplateGroovy" engine="java" auth="true"
+             location="com.ilcipio.scipio.cms.CmsServices" invoke="updatePageTemplateGroovy">
+        <attribute name="groovyAssocId" type="String" mode="IN" optional="true"/>
+        <attribute name="inputPosition" type="Long" mode="IN" optional="true"/>
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="templateName" type="String" mode="IN" optional="true"/>
+        <attribute name="groovyTemplateName" type="String" mode="IN" optional="true"/>                
+        <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
+        <attribute name="groovyTemplateBody" type="String" mode="IN" optional="true"/>        
+    </service>
+</services>

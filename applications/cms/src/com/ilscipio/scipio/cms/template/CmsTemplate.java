@@ -26,7 +26,6 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.groovy.control.CompilationFailedException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GroovyUtil;
@@ -565,9 +564,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             groovyContext.put("content",content);
             // This runs the groovy script at location xyz
             GroovyUtil.runScriptAtLocation(processorLocation,groovyContext);
-        } catch (CompilationFailedException e) {
-            throw new CmsException("Compilation of content processor failed. Location: " + processorLocation, e, module);
-        } catch (GeneralException e) {
+        }catch (GeneralException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

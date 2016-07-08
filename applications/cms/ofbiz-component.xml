@@ -29,6 +29,8 @@
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="cms"
         title="CMS"
+        app-bar-display="true"
+        menu-name="primary"
         server="default-server"
         location="webapp/cms"
         base-permission="OFBTOOLS,CMS"

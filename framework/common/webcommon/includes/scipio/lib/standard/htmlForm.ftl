@@ -1343,14 +1343,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local defaultArgs = scipioStdTmplLib.field_defaultArgs>
   <#if !fieldsInfo.fieldArgs?is_boolean>
     <#-- 2016-07-08: this is probably wrong because it makes fieldArgs keys part of localArgNames,
-      so instead combine it with args map
+      so instead combine it with args map, though it requires a manual toSimpleMap, not ideal
     <#local defaultArgs = defaultArgs + fieldsInfo.fieldArgs>
     -->
     <#local args = fieldsInfo.fieldArgs + toSimpleMap(args)>
   </#if>
 
   <#-- standard args -->
-  <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
+  <#local argsMaps = mergeArgMapsEx(args, inlineArgs, defaultArgs)>
+  <#local args = argsMaps.allArgs>
+  <#local explArgs = argsMaps.explArgs>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
         

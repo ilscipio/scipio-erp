@@ -563,11 +563,12 @@ or even multiple per fieldset.
 }>
 <#macro fields args={} inlineArgs...>
   <#-- NOTE: this is non-standard args usage -->
-  <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
+  <#local args = mergeArgMapsBasic(args, inlineArgs)>
+  <#local fieldsInfo = makeFieldsInfo(args)>
   <#if (fieldsInfo.open!true) == true>
     <#local dummy = pushRequestStack("scipioFieldsInfoStack", fieldsInfo)>
   </#if>
-  <#local autoValue = inlineArgs.autoValue!args.autoValue!0>
+  <#local autoValue = args.autoValue!0>
   <#if !autoValue?is_number>
     <#local prevAutoValueCfg = getAutoValueCfg()>
     <#if autoValue?is_boolean>

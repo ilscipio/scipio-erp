@@ -1705,11 +1705,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <#local opValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
         
-        <#-- FIXME: checkbox does not work right! -->
         <#local autoValueArgsAll = {"name":name, "suffix":"_ic"}>
         <#if explArgs.hideIgnoreCase??>
           <#local autoValueArgsAll = autoValueArgsAll + {"value":hideIgnoreCase?string("Y","")}>
         </#if>
+        <#-- FIXME?: this checkbox needs special manual check to detect when params were sent
+        -->
         <#local hideIgnoreCaseValue = getAutoValue(autoValueArgsAll + autoValueArgs)>
         <#local hideIgnoreCase = (hideIgnoreCaseValue == "Y")>
 
@@ -2538,15 +2539,7 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   </#if>
 
   <#local overrides = scpAutoValOverrides!{}>
-  <#if scpAutoValParams?? && !(scpAutoValParams?is_boolean && scpAutoValParams == true)>
-    <#local params = scpAutoValParams>
-    <#if params?is_boolean>
-      <#local params = {}>
-    </#if>
-  <#else>
-    <#-- by default, use parameters map -->
-    <#local params = parameters!{}>
-  </#if>
+  <#local params = getAutoValueEffParamsMap()>
   <#local record = scpAutoValRecord!{}>
   <#local defaults = scpAutoValDefaults!{}>
 
@@ -2669,5 +2662,16 @@ Returns the current global auto value configuration (settings and maps).
     "record":scpAutoValRecord!false, "defaults":scpAutoValDefaults!false}>
 </#function>
 
-
+<#function getAutoValueEffParamsMap>
+  <#if scpAutoValParams?? && !(scpAutoValParams?is_boolean && scpAutoValParams == true)>
+    <#local params = scpAutoValParams>
+    <#if params?is_boolean>
+      <#local params = {}>
+    </#if>
+  <#else>
+    <#-- by default, use parameters map -->
+    <#local params = parameters!{}>
+  </#if>
+  <#return params>
+</#function>
 

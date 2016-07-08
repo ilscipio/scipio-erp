@@ -2516,10 +2516,12 @@ TODO: We need more options (and/or types) to make tweakable the special handling
     recordName              = Field name for record map
     defaultName             = Field name for defaults map
     suffix                  = Optional suffix added to each of the name parameters
+    overrideValue           = An override values, which takes priority over all
+    paramValue              = A param value, which takes immediate priority over the params map
     value                   = A value, which takes immediate priority over the record values
                               It is ignored in all cases where the record map is also ignored (such as {{{type="params"}}}).
     defaultValue            = A default value, which takes immediate priority over the default map values
-    
+
   * Related *
     @fields
     #setAutoValueCfg
@@ -2577,16 +2579,18 @@ TODO: We need more options (and/or types) to make tweakable the special handling
         NOTE: stock form widgets don't have this case. it probably doesn't happen in normal circumstances
             because if an update succeeded, usually we return with a populated record. but we might have
             a multi-step form of some sort in which case we want to preserve params even if success. -->
-    <#return overrides[overrideName]!params[paramName]!args.defaultValue!defaults[defaultName]!>
+    <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.defaultValue!defaults[defaultName]!>
   <#elseif type == "record" || (type == "params-record" && ((isError!false) == false))>
     <#-- condition (above): if params-record and there was no error while creating/updating, then do NOT use parameters
         NOTE: this is essentially what the stock form renderer does. it ensures that values are reloaded from DB upon
             success.  -->
-    <#return overrides[overrideName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
+    <#return args.overrideValue!overrides[overrideName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
+  <#elseif type == "defaults">
+    <#return args.overrideValue!overrides[overrideName]!args.defaultValue!defaults[defaultName]!>
   <#else><#-- type == "params-record" -->
     <#-- condition: if params-record and there was an error updating, we consider params so as to not lose user input even if it was wrong
         (we have no way of knowing which field(s) were wrong). -->
-    <#return overrides[overrideName]!params[paramName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
+    <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
   </#if>
 </#function>
 
@@ -2610,6 +2614,7 @@ NOTE: The globals specified by this function currently do not survive screen ren
     type                    = (params|record|params-record, default: -from globals-, fallback default: params-record) The value scheme type
                               * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
                               * {{{record}}}: looks for value in overrides map, then record map, then defaults map
+                              * {{{defaults}}}: looks for value in overrides map, then defaults map
                               * {{{params-record}}}: looks for value in overrides map, then parameters map, then record map, then defaults map
     overrides               = ((map)) Map to use as overrides map for lookups
     params                  = ((map)|(boolean)) Map to use as parameters map for lookups

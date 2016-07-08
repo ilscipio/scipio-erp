@@ -1084,7 +1084,17 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               Added for non-inverted fields.
     invertedClass           = ((css-class)) CSS classes, default inverted class name, added to outer container
                               Does not support extended class +/= syntax.
-                                       
+    autoValue               = ((boolean)) Fine-grained control to turn auto value lookups on or off
+                              @field has the ability to automatically lookup values from parameter, record and defaults maps,
+                              through implicit calls to the #getAutoValue function.
+                              By default, this auto value enabling is determined by the current globals as set by @fields
+                              or #setAutoValueCfg. This boolean allows to disable per-field as a quick fix.
+                              NOTE: This does not support the extensive arguments supported by @fields. It only supports 
+                                  explicit boolean on/off to toggle for individual fields.
+    autoValueArgs           = ((map)) Extra arguments that will be passed to #getAutoValue when auto values enabled.
+                              Note that basics such as name, value, and type are already covered.
+                              Some extras that may be specified are: overrideName, paramName, recordName, defaultName.
+                              See #getAutoValue for a comprehensive list.
         
     * input (alias: text) *
     autoCompleteUrl         = If autocomplete function exists, specification of url will make it available
@@ -1304,7 +1314,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "widgetAreaClass":"", "labelAreaClass":"", "postfixAreaClass":"", "widgetPostfixAreaClass":"",
   "inverted":false, "invertedClass":"", "standardClass":"", "datePostfix":"", "datePostfixColumns":"",
   "manualInput":"",
-  "events":{}, "wrap":"", "passArgs":{} 
+  "events":{}, "wrap":"", 
+  "autoValue":0, "autoValueArgs":{}, 
+  "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
 <#-- WARN: #compress must be used sparingly; using only around code parts -->
@@ -1657,6 +1669,33 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         "fieldType":type, "fieldsType":fieldsType, "fieldId":id, "collapse":collapse, "required":required, "labelContentArgs":labelContentArgs, 
         "norows":norows, "nocells":nocells, "container":container,
         "origArgs":origArgs, "passArgs":passArgs}>
+  </#if>
+ 
+  <#-- auto value integration -->
+  <#if !autoValue?is_boolean>
+    <#local autoValue = scpAutoVal!false>
+  </#if>
+  <#if autoValue>
+    <#if type == "checkbox" || type == "radio">
+      <#-- TODO: handle currentValue and others IF applicable -->
+    <#elseif type == "option" || type == "submit" || type == "submitarea" || type == "reset">
+      <#-- do nothing -->
+    <#elseif type == "select">
+      <#-- TODO: handle defaultValue -->
+    <#elseif type == "textfind">
+      <#-- TODO: handle value and default ops -->
+    <#elseif type == "rangefind">
+      <#-- TODO: handle value and default ops -->
+    <#elseif type == "datefind">
+      <#-- TODO: handle value and default ops -->
+    <#else>
+      <#-- FIXME?: inefficient -->
+      <#local autoValueArgsAll = {"name":name}>
+      <#if inlineArgs.value?? || args.value??>
+        <#local autoValueArgsAll = autoValueArgsAll + {"value":inlineArgs.value!args.value}>
+      </#if>
+      <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)>
+    </#if>
   </#if>
  
   <#local defaultGridArgs = {"totalColumns":totalColumns, "labelColumns":labelColumns, 
@@ -2414,7 +2453,9 @@ TODO: We need more options (and/or types) to make tweakable the special handling
     paramName               = Field name for parameters map
     recordName              = Field name for record map
     defaultName             = Field name for defaults map
-    defaultValue            = A default value, which takes priority over the values in the default map (if any)
+    value                   = A value, which takes immediate priority over the record values
+                              It is ignored in all cases where the record map is also ignored (such as {{{type="params"}}}).
+    defaultValue            = A default value, which takes immediate priority over the default map values
     
   * Related *
     @fields

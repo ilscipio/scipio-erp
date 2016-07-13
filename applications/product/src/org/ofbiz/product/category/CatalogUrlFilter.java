@@ -840,10 +840,12 @@ public class CatalogUrlFilter extends ContextFilter {
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
      * <p>
-     * This version supports a webSiteId that, if specified, will turn the link-building into an
+     * This version supports a webSiteId and contextPath that, if specified, will turn the link-building into an
      * inter-webapp mode that avoids use of session information.
      * NOTE: it will do this even if the passed webSiteId is the same as the one of current request
      * (there is intentionally no check for this, so the parameter has a double function).
+     * If contextPath is omitted, it is determined automatically from webSiteId.
+     * It is preferable to use webSiteId where possible.
      */
     public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, String contextPath,
             String productCategoryId, String productId, String previousCategoryId, 

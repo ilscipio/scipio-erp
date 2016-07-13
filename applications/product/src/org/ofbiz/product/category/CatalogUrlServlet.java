@@ -231,6 +231,8 @@ public class CatalogUrlServlet extends HttpServlet {
      * inter-webapp mode that avoids use of session information.
      * NOTE: it will do this even if the passed webSiteId is the same as the one of current request
      * (there is intentionally no check for this, so the parameter has a double function).
+     * If contextPath is omitted, it is determined automatically from webSiteId.
+     * It is preferable to use webSiteId where possible.
      */
     public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, String contextPath,
             String productId, String currentCategoryId, String previousCategoryId, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {

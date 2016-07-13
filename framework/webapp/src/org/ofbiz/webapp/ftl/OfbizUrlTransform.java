@@ -96,6 +96,11 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         return defaultValue;
     }
 
+    // SCIPIO: new (wrapper)
+    public static String checkStringArg(Map args, String key, String defaultValue) {
+        return getStringArg(args, key, defaultValue);
+    }
+    
     private static String getStringArg(Map args, String key, String defaultValue) {
         Object o = args.get(key);
         if (o instanceof TemplateScalarModel) {

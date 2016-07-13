@@ -89,6 +89,9 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         String previousCategoryId = getStringArg(args, "previousCategoryId");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         
+                        // SCIPIO: webSiteId
+                        String webSiteId = getStringArg(args, "webSiteId");
+                        
                         // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();

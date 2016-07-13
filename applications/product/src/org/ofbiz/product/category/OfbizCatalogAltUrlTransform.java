@@ -111,6 +111,10 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     String viewIndex = getStringArg(args, "viewIndex");
                     String viewSort = getStringArg(args, "viewSort");
                     String searchString = getStringArg(args, "searchString");
+                    
+                    // SCIPIO: webSiteId
+                    String webSiteId = getStringArg(args, "webSiteId");
+                    
                     if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         //StringBuilder newURL = new StringBuilder();
@@ -127,9 +131,9 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
                         Locale locale = (Locale) args.get("locale");
                         
-                        // SCIPIO: now delegated to our new reusable method, and add "webSiteId" support because no way to know it
+                        // SCIPIO: now delegated to our new reusable method
+                        // NOTE: here webSiteId is usually required!
                         String prefixStr = ((StringModel) prefix).getAsString();
-                        String webSiteId = getStringArg(args, "webSiteId");
                         url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefixStr, productCategoryId, 
                                 productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
                         

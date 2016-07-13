@@ -58,7 +58,13 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
 
         if (req != null) {
             HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-            env.getOut().write(CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId));
+            
+            String url = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
+                    
+            // SCIPIO: no null
+            if (url != null) {
+                env.getOut().write(url);
+            }
         }
     }
 }

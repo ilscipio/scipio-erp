@@ -99,7 +99,10 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         String catalogUrl = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, 
                                 fullPath, secure, encode);
 
-                        out.write(catalogUrl);
+                        // SCIPIO: no null
+                        if (catalogUrl != null) {
+                            out.write(catalogUrl);
+                        }
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());

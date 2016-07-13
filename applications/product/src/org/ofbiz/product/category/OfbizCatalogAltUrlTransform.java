@@ -125,7 +125,10 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         url = CatalogUrlFilter.makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, 
                                 fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
 
-                        out.write(url);
+                        // SCIPIO: no null
+                        if (url != null) {
+                            out.write(url);
+                        }
                     } else if (prefix != null) {
                         Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
@@ -137,7 +140,10 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefixStr, productCategoryId, 
                                 productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
                         
-                        out.write(url);
+                        // SCIPIO: no null
+                        if (url != null) {
+                            out.write(url);
+                        }
                     } else {
                         out.write(buf.toString());
                     }

@@ -1,11 +1,11 @@
 =========================================================================
-The source code that makes up The Apache OFBiz Project and the majority
-of the libraries distributed with it are
-licensed under the Apache License Version 2.0.
+The source code that makes up The SCIPIO ERP Community Edition
+(hereinafter referred to as "SCIPIO ERP") and the majority of the
+libraries distributed with it are licensed under the Apache License v2.0.
 
-Other licenses used by libraries distributed with Apache OFBiz are listed
-below. This file includes a list of all libraries distributed with Apache
-OFBiz and the full text of the license used for each.
+Other licenses used by libraries distributed with SCIPIO ERP are listed
+below. This file includes a list of all libraries distributed with SCIPIO
+ERP and the full text of the license used for each.
 
 For additional details, see the NOTICE file.
 =========================================================================
@@ -327,7 +327,7 @@ specialpurpose/passport/lib/commons-httpclient-3.1.jar
     under the License.
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 Apache Software License:
 framework/base/lib/ant/ant-contrib-1.0b3.jar
 =========================================================================
@@ -384,7 +384,7 @@ written at the National Center for Supercomputing Applications, University of
 Illinois, Urbana-Champaign.
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 JDOM (Modified Apache)  License:
 framework/webapp/lib/jdom-1.1.jar
 =========================================================================
@@ -440,7 +440,7 @@ The JDOM License
  on the JDOM Project, please see <http://www.jdom.org/>
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 BSD License:
 applications/content/lib/dom4j-1.6.1.jar
 framework/base/lib/bsh-engine-modified.jar
@@ -508,7 +508,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 Mozilla Public License Version 1.1:
 framework/webapp/lib/iText-2.1.7.jar
 =========================================================================
@@ -983,7 +983,7 @@ EXHIBIT A -Mozilla Public License.
      Original Code Source Code for Your Modifications.]
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 Common Public License:
 framework/service/lib/wsdl4j-1.6.2.jar
 framework/base/lib/junit-dep-4.10.jar
@@ -1203,7 +1203,7 @@ after the cause of action arose. Each party waives its rights to a jury trial in
 any resulting litigation.
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 MIT/X License:
 framework/base/lib/icu4j-52_1.jar
 framework/base/lib/jcl-over-slf4j-1.6.4.jar
@@ -1234,7 +1234,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 Sun Public License:
 framework/base/lib/scripting/bsh-2.0b4.jar
 =========================================================================
@@ -1886,7 +1886,7 @@ framework/base/lib/jdbm-1.0-SNAPSHOT.jar
  * $Id: LICENSE.txt,v 1.1 2000/05/05 23:59:52 boisvert Exp $
  */
 =========================================================================
-The following library distributed with Apache OFBiz is licensed under the
+The following library distributed with SCIPIO ERP is licensed under the
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL):
 framework/base/lib/juel-2.1.1.jar (contains the javax.el package)
 framework/base/lib/mail-1.5.1.jar
@@ -2179,7 +2179,7 @@ Courts of the Northern District of California and the state courts of the State
 of California, with venue lying in Santa Clara County, California.
 
 =========================================================================
-The following libraries distributed with Apache OFBiz are licensed under the
+The following libraries distributed with SCIPIO ERP are licensed under the
 Eclipse Public License - v 1.0:
 framework/catalina/lib/ecj-4.5.jar
 =========================================================================
@@ -2405,7 +2405,7 @@ It was allowed by the author to use the docbook files within the
 Apache OFBiz system in an email to H.Bakker from N.Walsh dd
 Tue, 25 Aug 2009 07:27:51 -0400 (18:27 ICT)
 =========================================================================
-Apache Ofbiz includes images in the ofbiz/framework/images/webapp/images/icons
+SCIPIO ERP includes images in the ofbiz/framework/images/webapp/images/icons
 directory with the following licence: Creative Commons Attribution 2.5 License
 and condition :
 

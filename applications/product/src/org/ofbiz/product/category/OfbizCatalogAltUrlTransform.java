@@ -51,6 +51,32 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
 
+/**
+ * Catalog URL Alt Transform.
+ * <p>
+ * Accepts the following arguments (see CatalogUrlFilter for their definition):
+ * <ul>
+ * <li>productId</li>
+ * <li>currentCategoryId</li>
+ * <li>previousCategoryId</li>
+ * </ul>
+ * <p>
+ * SCIPIO: This transform is augmented to support the following parameters:
+ * <ul>
+ * <li>fullPath (boolean)</li>
+ * <li>secure (boolean)</li>
+ * <li>encode (boolean)</li>
+ * </ul>
+ * <p>
+ * In addition, it now supports inter-webapp links. If either of the parameters
+ * <ul>
+ * <li>webSiteId</li>
+ * <li>prefix</li>
+ * </ul>
+ * are specified, it enables inter-webapp mode, where no session information
+ * is used and a purely static link is built instead.
+ * For staticly-rendered templates such as emails, webSiteId or prefix is always required.
+ */
 public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizCatalogUrlTransform.class.getName();
 

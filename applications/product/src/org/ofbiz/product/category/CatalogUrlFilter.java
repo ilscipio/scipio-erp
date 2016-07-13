@@ -38,6 +38,7 @@ import javolution.util.FastList;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.StringUtil.StringWrapper;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.UrlServletHelper;
@@ -838,19 +839,52 @@ public class CatalogUrlFilter extends ContextFilter {
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
+     * <p>
+     * This version supports a webSiteId that, if specified, will turn the link-building into an
+     * inter-webapp mode that avoids use of session information.
+     * NOTE: it will do this even if the passed webSiteId is the same as the one of current request
+     * (there is intentionally no check for this, so the parameter has a double function).
+     */
+    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, 
+            String productCategoryId, String productId, String previousCategoryId, 
+            Boolean fullPath, Boolean secure, Boolean encode,
+            String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
+        if (UtilValidate.isEmpty(webSiteId)) {
+            webSiteId = null;
+        }
+        
+        if (webSiteId != null) {
+            // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
+            // and build as if we had no request
+            
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+            Locale locale = UtilHttp.getLocale(request);
+            
+            return makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, null, productCategoryId, productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+        } else {
+            String url;
+            
+            if (UtilValidate.isNotEmpty(productId)) {
+                url = CatalogUrlFilter.makeProductUrl(request, previousCategoryId, productCategoryId, productId);
+            } else {
+                url = CatalogUrlFilter.makeCategoryUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            }
+    
+            return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
+        }
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
+     * <p>
+     * This version assumes the current webapp is the target webapp and may use session information.
      */
     public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String productCategoryId, String productId, String previousCategoryId, 
             Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
-        String url;
-        
-        if (UtilValidate.isNotEmpty(productId)) {
-            url = CatalogUrlFilter.makeProductUrl(request, previousCategoryId, productCategoryId, productId);
-        } else {
-            url = CatalogUrlFilter.makeCategoryUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
-        }
-
-        return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
+        return makeCatalogAltLink(request, response, null, productCategoryId, productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
     }
     
     /**

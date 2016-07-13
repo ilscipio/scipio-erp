@@ -122,7 +122,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         // SCIPIO: now delegated to our new reusable method
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
-                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, 
+                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, webSiteId, productCategoryId, productId, previousCategoryId, 
                                 fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
 
                         // SCIPIO: no null

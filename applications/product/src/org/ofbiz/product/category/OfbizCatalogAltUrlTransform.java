@@ -106,7 +106,6 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     String productId = getStringArg(args, "productId");
                     String url = "";
                     
-                    Object prefix = env.getVariable("urlPrefix");
                     String viewSize = getStringArg(args, "viewSize");
                     String viewIndex = getStringArg(args, "viewIndex");
                     String viewSort = getStringArg(args, "viewSort");
@@ -115,6 +114,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     // SCIPIO: webSiteId
                     String webSiteId = getStringArg(args, "webSiteId");
                     
+                    String prefix = getStringArg(args, "prefix");
+                    
                     if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         //StringBuilder newURL = new StringBuilder();
@@ -122,23 +123,22 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         // SCIPIO: now delegated to our new reusable method
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
-                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, webSiteId, productCategoryId, productId, previousCategoryId, 
+                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, webSiteId, prefix, productCategoryId, productId, previousCategoryId, 
                                 fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
 
                         // SCIPIO: no null
                         if (url != null) {
                             out.write(url);
                         }
-                    } else if (prefix != null) {
+                    } else if (webSiteId != null || prefix != null) {
                         Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
                         Locale locale = (Locale) args.get("locale");
                         
                         // SCIPIO: now delegated to our new reusable method
                         // NOTE: here webSiteId is usually required!
-                        String prefixStr = ((StringModel) prefix).getAsString();
-                        url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefixStr, productCategoryId, 
-                                productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+                        url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefix, productCategoryId, 
+                                productId, previousCategoryId, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
                         
                         // SCIPIO: no null
                         if (url != null) {

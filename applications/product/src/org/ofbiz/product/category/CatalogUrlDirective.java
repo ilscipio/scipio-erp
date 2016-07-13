@@ -19,12 +19,16 @@
 package org.ofbiz.product.category;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
@@ -34,6 +38,7 @@ import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
+import freemarker.template.TemplateScalarModel;
 import freemarker.template.utility.DeepUnwrap;
 
 /**
@@ -66,6 +71,8 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
         // SCIPIO: webSiteId
         String webSiteId = checkStringArg(args, "webSiteId", null);
         
+        String prefix = checkStringArg(args, "prefix", null);
+        
         if (req != null) {
             HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
             
@@ -76,8 +83,26 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             //String url = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
             String url = null;
             try {
-                url = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, 
+                url = CatalogUrlServlet.makeCatalogLink(request, response, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
                         fullPath, secure, encode);
+            } catch (WebAppConfigurationException e) {
+                throw new IOException(e.getMessage());
+            }
+            
+            // SCIPIO: no null
+            if (url != null) {
+                env.getOut().write(url);
+            }
+        } else if (webSiteId != null || prefix != null) {
+            // SCIPIO: New: Handle non-request cases
+            Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
+            LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
+            Locale locale = (Locale) args.get("locale");
+            
+            String url;
+            try {
+                url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
+                        fullPath, secure);
             } catch (WebAppConfigurationException e) {
                 throw new IOException(e.getMessage());
             }

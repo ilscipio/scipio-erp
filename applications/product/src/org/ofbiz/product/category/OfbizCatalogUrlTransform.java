@@ -20,12 +20,15 @@ package org.ofbiz.product.category;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
@@ -34,6 +37,7 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
 
 public class OfbizCatalogUrlTransform implements TemplateTransformModel {
@@ -83,25 +87,42 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                 try {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     BeanModel req = (BeanModel) env.getVariable("request");
+                    
+                    String productId = getStringArg(args, "productId");
+                    String currentCategoryId = getStringArg(args, "currentCategoryId");
+                    String previousCategoryId = getStringArg(args, "previousCategoryId");
+                    
+                    // SCIPIO: webSiteId
+                    String webSiteId = getStringArg(args, "webSiteId");
+                    
+                    String prefix = getStringArg(args, "prefix");
+                    
                     if (req != null) {
-                        String productId = getStringArg(args, "productId");
-                        String currentCategoryId = getStringArg(args, "currentCategoryId");
-                        String previousCategoryId = getStringArg(args, "previousCategoryId");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-                        
-                        // SCIPIO: webSiteId
-                        String webSiteId = getStringArg(args, "webSiteId");
                         
                         // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
                         
-                        String catalogUrl = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, 
+                        String url = CatalogUrlServlet.makeCatalogLink(request, response, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
                                 fullPath, secure, encode);
 
                         // SCIPIO: no null
-                        if (catalogUrl != null) {
-                            out.write(catalogUrl);
+                        if (url != null) {
+                            out.write(url);
+                        }
+                    } else if (webSiteId != null || prefix != null) {
+                        // SCIPIO: New: Handle non-request cases
+                        Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
+                        LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
+                        Locale locale = (Locale) args.get("locale");
+                        
+                        String url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
+                                fullPath, secure);
+
+                        // SCIPIO: no null
+                        if (url != null) {
+                            out.write(url);
                         }
                     }
                 } catch (TemplateModelException e) {

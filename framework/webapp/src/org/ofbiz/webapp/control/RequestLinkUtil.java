@@ -183,12 +183,22 @@ public abstract class RequestLinkUtil {
     }
     
     public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
-            Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+            Boolean fullPath, Boolean secure, Boolean encode,
+            HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
+
+        boolean didFullStandard = false;
+        boolean didFullSecure = false;     
         StringBuilder newURL = new StringBuilder();
         
         // NOTE: this is always treated as inter-webapp, because we don't know our webapp
         Boolean secureFullPathFlag = checkFullSecureOrStandard(delegator, webSiteId, true, fullPath, secure);
         if (secureFullPathFlag != null) {
+            if (secureFullPathFlag) {
+                didFullSecure = true;
+            } else {
+                didFullStandard = true;
+            }
+            
             OfbizUrlBuilder builder;
             if (UtilValidate.isNotEmpty(webSiteId)) {
                 WebappInfo webAppInfo;
@@ -218,7 +228,31 @@ public abstract class RequestLinkUtil {
             builder.buildHostPart(newURL, url, Boolean.TRUE.equals(secureFullPathFlag));
         }
         newURL.append(url);
-        return newURL.toString();
+        
+        if (request != null && response != null) {
+            String res;
+            if (!Boolean.FALSE.equals(encode)) {
+                RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+                res = rh.doLinkURLEncode(request, response, newURL, false, didFullStandard, didFullSecure);
+            } else {
+                res = newURL.toString();
+            }
+            
+            return res;
+        } else {
+            return newURL.toString();
+        }
+    }
+    
+    public static String getWebSiteContextPath(Delegator delegator, String webSiteId) throws WebAppConfigurationException, IOException {
+        WebappInfo webAppInfo;
+        try {
+            webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+            
+            return webAppInfo.getContextRoot();
+        } catch (SAXException e) {
+            throw new IOException(e);
+        }
     }
     
     /**

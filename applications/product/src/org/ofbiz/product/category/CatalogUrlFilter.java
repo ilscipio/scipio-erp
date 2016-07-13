@@ -845,15 +845,18 @@ public class CatalogUrlFilter extends ContextFilter {
      * NOTE: it will do this even if the passed webSiteId is the same as the one of current request
      * (there is intentionally no check for this, so the parameter has a double function).
      */
-    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, 
+    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, String contextPath,
             String productCategoryId, String productId, String previousCategoryId, 
             Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
         if (UtilValidate.isEmpty(webSiteId)) {
             webSiteId = null;
         }
+        if (UtilValidate.isEmpty(contextPath)) {
+            contextPath = null;
+        }
         
-        if (webSiteId != null) {
+        if (webSiteId != null || contextPath != null) {
             // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
             // and build as if we had no request
             
@@ -861,7 +864,7 @@ public class CatalogUrlFilter extends ContextFilter {
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             Locale locale = UtilHttp.getLocale(request);
             
-            return makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, null, productCategoryId, productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+            return makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, contextPath, productCategoryId, productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
         } else {
             String url;
             
@@ -884,18 +887,45 @@ public class CatalogUrlFilter extends ContextFilter {
     public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String productCategoryId, String productId, String previousCategoryId, 
             Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
-        return makeCatalogAltLink(request, response, null, productCategoryId, productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+        return makeCatalogAltLink(request, response, null, null, productCategoryId, productId, previousCategoryId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
     }
     
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
      * <p>
-     * WARN/FIXME: fullPath and secure flags are currently ignored in this one
+     * This builds the link in a completely static, inter-webapp way, using no request information.
+     * <p>
+     * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
-    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String prefix, String productCategoryId, String productId, String previousCategoryId, 
-            Boolean fullPath, Boolean secure, Boolean encode,
+    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, String productCategoryId, String productId, String previousCategoryId, 
+            Boolean fullPath, Boolean secure,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
+        return makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, contextPath, productCategoryId, productId, previousCategoryId, fullPath, secure, null, 
+                viewSize, viewIndex, viewSort, searchString, null, null);
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
+     * <p>
+     * This builds the link in a completely static, inter-webapp way, using no request information, but may also optionally encode
+     * the resulting link.
+     * <p>
+     * NOTE: if contextPath is omitted (null), it will be determined automatically.
+     */
+    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, String productCategoryId, String productId, String previousCategoryId, 
+            Boolean fullPath, Boolean secure, Boolean encode,
+            String viewSize, String viewIndex, String viewSort, String searchString,
+            HttpServletRequest request, HttpServletResponse response) throws IOException, WebAppConfigurationException {
+        if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
+            throw new IOException("webSiteId and contextPath (prefix) are missing - at least one must be specified");
+        }
+        
+        if (UtilValidate.isEmpty(contextPath)) {
+            contextPath = RequestLinkUtil.getWebSiteContextPath(delegator, webSiteId);
+        }
+        
         String url;
         
         if (UtilValidate.isNotEmpty(productId)) {
@@ -906,7 +936,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 throw new IOException(e);
             }
             ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
-            url = CatalogUrlFilter.makeProductUrl(delegator, wrapper, null, prefix, previousCategoryId, productCategoryId, productId);
+            url = CatalogUrlFilter.makeProductUrl(delegator, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId);
         } else {
             GenericValue productCategory;
             try {
@@ -915,9 +945,9 @@ public class CatalogUrlFilter extends ContextFilter {
                 throw new IOException(e);
             }
             CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
-            url = CatalogUrlFilter.makeCategoryUrl(delegator, wrapper, null, prefix, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            url = CatalogUrlFilter.makeCategoryUrl(delegator, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
         
-        return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode);
+        return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode, request, response);
     }
 }

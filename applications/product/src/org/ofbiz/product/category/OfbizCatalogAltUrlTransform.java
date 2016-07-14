@@ -57,7 +57,7 @@ import freemarker.template.TemplateTransformModel;
  * Accepts the following arguments (see CatalogUrlFilter for their definition):
  * <ul>
  * <li>productId</li>
- * <li>currentCategoryId</li>
+ * <li>productCategoryId</li>
  * <li>previousCategoryId</li>
  * </ul>
  * <p>

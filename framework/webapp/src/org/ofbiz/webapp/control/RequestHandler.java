@@ -1367,8 +1367,8 @@ public class RequestHandler {
      * <strong>secure behavior change</strong>: In Scipio, if current browsing is secure, we NEVER downgrade to HTTPS unless 
      * explicitly requested by passing secure false, and secure false may still produce a secure link if
      * needed. Currently (2016-04-06), for security reasons, this 
-     * downgrading request request only applies to the case where the target link is marked as non-secure, such
-     * that in general, setting secure false does not may the link will be insecure in all cases.
+     * downgrading request request only applies to the case where the target link is marked as non-secure (or is missing/unknown, as of 2016-07-14), such
+     * that in general, setting secure false does not mean the link will be insecure in all cases.
      * In addition, in Scipio, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
      * secure to force a fullPath link. Links may still generate full-path secure links when needed even 
      * if not requested, however.
@@ -1681,7 +1681,8 @@ public class RequestHandler {
             || ((webSiteProps == null || webSiteProps.getEnableHttps()) && secure == null && Boolean.TRUE.equals(fullPath) && request != null && request.isSecure())) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
             return Boolean.TRUE;
         } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && request.isSecure()))) { // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()  
+                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && request.isSecure())) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed and the target requestMap is not HTTPS. Also, removed this check: webSiteProps.getEnableHttps()  
+                || (requestMap == null && (Boolean.FALSE.equals(secure) && request != null && request.isSecure()))) { // 2016-07-14: if there is no target requestMap or unknown, and secure=false was requested, we'll allow building a fullpath insecure link (this is acceptable only because of our widespread change making null the new default everywhere).
             return Boolean.FALSE;
         } else {
             return null;

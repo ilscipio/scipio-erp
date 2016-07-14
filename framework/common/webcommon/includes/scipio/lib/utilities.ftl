@@ -220,7 +220,7 @@ DEV NOTES:
                               WARN: MODIFIED IN SCIPIO: This does not guarantee a full URL will be built, only when needed.
                                   Pass fullPath {{{true}}} to always force a full path. In addition, this parameter now
                                   recognizes the value {{{false}}} to force downgrades to HTTP when the target controller request
-                                  is marked as non-secure.
+                                  is marked as non-secure (or if there there is no target request or unknown - since 2016-07-14).
                               (Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)
     encode                  = ((boolean), default: true) or string boolean repr
                               If true, pass through HttpServletResponse.encodeURL; otherwise, don't.

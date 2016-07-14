@@ -1658,7 +1658,7 @@ public class RequestHandler {
      * <p>
      * Returns null if no full required. Returns true if secure fullpath required. Returns false if standard fullpath required.
      */
-    protected Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
+    protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
         // Scipio: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
         // We will NEVER build insecure URLs to requests marked secure.
@@ -1674,12 +1674,14 @@ public class RequestHandler {
             interWebapp = Boolean.FALSE;
         }
         // 2016-07-14: NOTE: if for some reason webSiteProps was null, we assume enableHttps is true, for security reasons.
-        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
-            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && requestMap != null && requestMap.securityHttps && (!request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
-            || ((webSiteProps == null || webSiteProps.getEnableHttps())  && secure == null && Boolean.TRUE.equals(fullPath) && request.isSecure())) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
+        // 2016-07-14: NOTE: if there is no request object (static rendering context), for now
+        // we behave as if we had an insecure request, for better security.
+        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || request == null || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
+            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && requestMap != null && requestMap.securityHttps && (request == null || !request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
+            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && secure == null && Boolean.TRUE.equals(fullPath) && request != null && request.isSecure())) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
             return Boolean.TRUE;
         } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure()))) { // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()  
+                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && request.isSecure()))) { // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()  
             return Boolean.FALSE;
         } else {
             return null;

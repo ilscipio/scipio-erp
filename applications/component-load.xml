@@ -33,6 +33,7 @@ under the License.
     
     <!-- SCIPIO components -->
     <load-component component-location="shop"/>
+    <load-component component-location="cms"/>
     
     <!-- common component used by most other components last because it uses info from most components-->
     <load-component component-location="commonext"/>

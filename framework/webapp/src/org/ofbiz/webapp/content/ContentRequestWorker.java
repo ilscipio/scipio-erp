@@ -12,7 +12,7 @@ import org.ofbiz.webapp.taglib.ContentUrlTag;
  */
 public abstract class ContentRequestWorker {
 
-    public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize) {
+    public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId) {
         String requestUrl = uri;
 
         // If the URL starts with http(s) then there is nothing for us to do here
@@ -24,7 +24,7 @@ public abstract class ContentRequestWorker {
 
         // make the link
         StringBuilder newURL = new StringBuilder();
-        ContentUrlTag.appendContentPrefix(request, newURL);
+        ContentUrlTag.appendContentPrefix(request, newURL, webSiteId);
         if ((newURL.length() > 0 && newURL.charAt(newURL.length() - 1) != '/') 
                 && (requestUrl.length()> 0 && requestUrl.charAt(0) != '/')) {
             newURL.append('/');
@@ -45,4 +45,9 @@ public abstract class ContentRequestWorker {
         
         return newURL.toString();
     }
+    
+    public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize) {
+        return makeContentLink(request, response, uri, imgSize, null);
+    }
+
 }

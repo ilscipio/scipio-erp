@@ -26,6 +26,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.website.WebSiteWorker;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
 /**
@@ -35,6 +36,11 @@ public class ContentUrlTag {
 
     public static final String module = ContentUrlTag.class.getName();
 
+    /**
+     * Appends content prefix to buffer.
+     * <p>
+     * SCIPIO: NOTE: Orig Ofbiz method.
+     */
     public static void appendContentPrefix(HttpServletRequest request, StringBuilder urlBuffer) {
         try {
             appendContentPrefix(request, (Appendable) urlBuffer);
@@ -42,8 +48,26 @@ public class ContentUrlTag {
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
         }
     }
-
-    public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer) throws IOException {
+    
+    /**
+     * Appends content prefix to buffer.
+     * <p>
+     * SCIPIO: Version that supports optional explicit webSiteId.
+     */
+    public static void appendContentPrefix(HttpServletRequest request, StringBuilder urlBuffer, String webSiteId) {
+        try {
+            appendContentPrefix(request, (Appendable) urlBuffer, webSiteId);
+        } catch (IOException e) {
+            throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
+        }
+    }
+    
+    /**
+     * Appends content prefix to buffer.
+     * <p>
+     * SCIPIO: Modified to support an explicit webSiteId
+     */
+    public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer, String webSiteId) throws IOException {
         if (request == null) {
             Debug.logWarning("Request was null in appendContentPrefix; this probably means this was used where it shouldn't be, like using ofbizContentUrl in a screen rendered through a service; using best-bet behavior: standard prefix from url.properties (no WebSite or security setting known)", module);
             String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
@@ -52,12 +76,28 @@ public class ContentUrlTag {
             }
             return;
         }
-        GenericValue webSite = WebSiteWorker.getWebSite(request);
+        // SCIPIO: if webSiteId, get that specific one
+        //GenericValue webSite = WebSiteWorker.getWebSite(request);
+        GenericValue webSite;
+        if (webSiteId != null && webSiteId.length() > 0) {
+            webSite = WebSiteWorker.findWebSite((Delegator) request.getAttribute("delegator"), webSiteId);
+        } else {
+            webSite = WebSiteWorker.getWebSite(request);
+        }
         String forwardedProto = request.getHeader("X-Forwarded-Proto");
         boolean isForwardedSecure = UtilValidate.isNotEmpty(forwardedProto) && "HTTPS".equals(forwardedProto.toUpperCase());
         boolean isSecure = request.isSecure() || isForwardedSecure;
         appendContentPrefix(webSite, isSecure, urlBuffer);
     }
+    
+    /**
+     * Appends content prefix to buffer.
+     * <p>
+     * SCIPIO: NOTE: Orig Ofbiz signature.
+     */
+    public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer) throws IOException {
+        appendContentPrefix(request, urlBuffer, null);
+    }    
 
     // Scipio: Modified to support Boolean
     public static void appendContentPrefix(GenericValue webSite, Boolean secure, Appendable urlBuffer) throws IOException {

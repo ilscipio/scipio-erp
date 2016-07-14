@@ -233,7 +233,7 @@ public abstract class RequestLinkUtil {
             String res;
             if (!Boolean.FALSE.equals(encode)) {
                 RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-                res = rh.doLinkURLEncode(request, response, newURL, false, didFullStandard, didFullSecure);
+                res = rh.doLinkURLEncode(request, response, newURL, true, didFullStandard, didFullSecure);
             } else {
                 res = newURL.toString();
             }

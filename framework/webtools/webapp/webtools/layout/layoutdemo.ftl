@@ -1305,6 +1305,10 @@
     <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true/></li>
     <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true secure=true /></li>
     <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true /></li>
+    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false/></li>
+    <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" secure=false/></li>
+    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false /></li>
+    <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" secure=false /></li>
     
     <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" /></li>
     <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" /></li>
@@ -1318,6 +1322,10 @@
     <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
     <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
     <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
+    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+    <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
+    <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
   </ul>
   
   <ul>Misc tests:

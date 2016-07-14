@@ -234,8 +234,8 @@ public class CatalogUrlServlet extends HttpServlet {
      * If contextPath is omitted, it is determined automatically from webSiteId.
      * It is preferable to use webSiteId where possible.
      */
-    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, String contextPath,
-            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String productId, String currentCategoryId,
+            String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
         if (UtilValidate.isEmpty(webSiteId)) {
             webSiteId = null;
         }
@@ -251,7 +251,7 @@ public class CatalogUrlServlet extends HttpServlet {
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             Locale locale = UtilHttp.getLocale(request);
             
-            return makeCatalogLink(delegator, dispatcher, locale, webSiteId, contextPath, productId, currentCategoryId, previousCategoryId, params, fullPath, secure, encode, request, response);
+            return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
         } else {
             String url = CatalogUrlServlet.makeCatalogUrl(request, 
                     productId, currentCategoryId, previousCategoryId);
@@ -270,7 +270,7 @@ public class CatalogUrlServlet extends HttpServlet {
      */
     public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, 
             String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
-        return makeCatalogLink(request, response, null, null, productId, currentCategoryId, previousCategoryId, params, fullPath, secure, encode);
+        return makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, params, null, null, fullPath, secure, encode);
     }
     
     /**
@@ -281,9 +281,9 @@ public class CatalogUrlServlet extends HttpServlet {
      * <p>
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
-    public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath,  
-            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure) throws WebAppConfigurationException, IOException {
-        return makeCatalogLink(delegator, dispatcher, locale, webSiteId, contextPath, productId, currentCategoryId, previousCategoryId, params, fullPath, secure, null, null, null);
+    public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
+            String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure) throws WebAppConfigurationException, IOException {
+        return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, null, null, null);
     }
     
     /**
@@ -295,8 +295,8 @@ public class CatalogUrlServlet extends HttpServlet {
      * <p>
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
-    public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath,  
-            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure,
+    public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
+            String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure,
             Boolean encode, HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
         if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
             throw new IOException("webSiteId and contextPath (prefix) are missing - at least one must be specified");

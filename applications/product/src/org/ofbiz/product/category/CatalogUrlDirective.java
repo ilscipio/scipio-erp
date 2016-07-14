@@ -107,8 +107,8 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             //String url = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
             String url = null;
             try {
-                url = CatalogUrlServlet.makeCatalogLink(request, response, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                        urlParams, fullPath, secure, encode);
+                url = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
+                        prefix, fullPath, secure, encode);
             } catch (WebAppConfigurationException e) {
                 throw new IOException(e.getMessage());
             }
@@ -125,8 +125,8 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             
             String url;
             try {
-                url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                        urlParams, fullPath, secure);
+                url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
+                        prefix, fullPath, secure);
             } catch (WebAppConfigurationException e) {
                 throw new IOException(e.getMessage());
             }

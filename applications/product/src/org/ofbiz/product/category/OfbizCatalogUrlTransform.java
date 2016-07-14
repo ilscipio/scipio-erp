@@ -139,8 +139,8 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
                         
-                        String url = CatalogUrlServlet.makeCatalogLink(request, response, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                                urlParams, fullPath, secure, encode);
+                        String url = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
+                                prefix, fullPath, secure, encode);
 
                         // SCIPIO: no null
                         if (url != null) {
@@ -152,8 +152,8 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
                         Locale locale = (Locale) args.get("locale");
                         
-                        String url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                                urlParams, fullPath, secure);
+                        String url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
+                                prefix, fullPath, secure);
 
                         // SCIPIO: no null
                         if (url != null) {

@@ -847,9 +847,9 @@ public class CatalogUrlFilter extends ContextFilter {
      * If contextPath is omitted, it is determined automatically from webSiteId.
      * It is preferable to use webSiteId where possible.
      */
-    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, String contextPath,
-            String productCategoryId, String productId, String previousCategoryId, 
-            Object params, Boolean fullPath, Boolean secure, Boolean encode,
+    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String productCategoryId, String productId,
+            String previousCategoryId, Object params, String webSiteId, 
+            String contextPath, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
         if (UtilValidate.isEmpty(webSiteId)) {
             webSiteId = null;
@@ -866,7 +866,7 @@ public class CatalogUrlFilter extends ContextFilter {
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             Locale locale = UtilHttp.getLocale(request);
             
-            return makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, contextPath, productCategoryId, productId, previousCategoryId, params, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
+            return makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
         } else {
             String url;
             
@@ -891,7 +891,7 @@ public class CatalogUrlFilter extends ContextFilter {
     public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String productCategoryId, String productId, String previousCategoryId, 
             Object params, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
-        return makeCatalogAltLink(request, response, null, null, productCategoryId, productId, previousCategoryId, params, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+        return makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, params, null, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
     }
     
     /**
@@ -902,11 +902,11 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
-    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, 
-            String productCategoryId, String productId, String previousCategoryId, 
-            Object params, Boolean fullPath, Boolean secure,
+    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, 
+            String previousCategoryId, Object params, String webSiteId, 
+            String contextPath, Boolean fullPath, Boolean secure,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
-        return makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, contextPath, productCategoryId, productId, previousCategoryId, params, fullPath, secure, null, 
+        return makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, null, 
                 viewSize, viewIndex, viewSort, searchString, null, null);
     }
     
@@ -919,8 +919,8 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
-    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, String productCategoryId, String productId, String previousCategoryId, 
-            Object params, Boolean fullPath, Boolean secure, Boolean encode,
+    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, String previousCategoryId, Object params, String webSiteId, 
+            String contextPath, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString,
             HttpServletRequest request, HttpServletResponse response) throws IOException, WebAppConfigurationException {
         if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {

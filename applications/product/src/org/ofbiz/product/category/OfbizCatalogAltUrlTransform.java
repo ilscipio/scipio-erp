@@ -158,8 +158,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         // SCIPIO: now delegated to our new reusable method
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
-                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, webSiteId, prefix, productCategoryId, productId, previousCategoryId, 
-                                urlParams, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, urlParams, webSiteId, 
+                                prefix, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
 
                         // SCIPIO: no null
                         if (url != null) {
@@ -172,8 +172,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         
                         // SCIPIO: now delegated to our new reusable method
                         // NOTE: here webSiteId is usually required!
-                        url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefix, productCategoryId, 
-                                productId, previousCategoryId, urlParams, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
+                        url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, 
+                                urlParams, webSiteId, prefix, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
                         
                         // SCIPIO: no null
                         if (url != null) {

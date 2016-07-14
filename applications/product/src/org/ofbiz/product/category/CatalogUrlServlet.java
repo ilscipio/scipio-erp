@@ -235,7 +235,7 @@ public class CatalogUrlServlet extends HttpServlet {
      * It is preferable to use webSiteId where possible.
      */
     public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String webSiteId, String contextPath,
-            String productId, String currentCategoryId, String previousCategoryId, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
         if (UtilValidate.isEmpty(webSiteId)) {
             webSiteId = null;
         }
@@ -251,10 +251,12 @@ public class CatalogUrlServlet extends HttpServlet {
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             Locale locale = UtilHttp.getLocale(request);
             
-            return makeCatalogLink(delegator, dispatcher, locale, webSiteId, contextPath, productId, currentCategoryId, previousCategoryId, fullPath, secure, encode, request, response);
+            return makeCatalogLink(delegator, dispatcher, locale, webSiteId, contextPath, productId, currentCategoryId, previousCategoryId, params, fullPath, secure, encode, request, response);
         } else {
             String url = CatalogUrlServlet.makeCatalogUrl(request, 
                     productId, currentCategoryId, previousCategoryId);
+            
+            url = appendLinkParams(url, params);
             
             return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
         }
@@ -267,8 +269,8 @@ public class CatalogUrlServlet extends HttpServlet {
      * This version assumes the current webapp is the target webapp and may use session information.
      */
     public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, 
-            String productId, String currentCategoryId, String previousCategoryId, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
-        return makeCatalogLink(request, response, null, null, productId, currentCategoryId, previousCategoryId, fullPath, secure, encode);
+            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+        return makeCatalogLink(request, response, null, null, productId, currentCategoryId, previousCategoryId, params, fullPath, secure, encode);
     }
     
     /**
@@ -280,8 +282,8 @@ public class CatalogUrlServlet extends HttpServlet {
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
     public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath,  
-            String productId, String currentCategoryId, String previousCategoryId, Boolean fullPath, Boolean secure) throws WebAppConfigurationException, IOException {
-        return makeCatalogLink(delegator, dispatcher, locale, webSiteId, contextPath, productId, currentCategoryId, previousCategoryId, fullPath, secure, null, null, null);
+            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure) throws WebAppConfigurationException, IOException {
+        return makeCatalogLink(delegator, dispatcher, locale, webSiteId, contextPath, productId, currentCategoryId, previousCategoryId, params, fullPath, secure, null, null, null);
     }
     
     /**
@@ -294,7 +296,7 @@ public class CatalogUrlServlet extends HttpServlet {
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
     public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath,  
-            String productId, String currentCategoryId, String previousCategoryId, Boolean fullPath, Boolean secure,
+            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure,
             Boolean encode, HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
         if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
             throw new IOException("webSiteId and contextPath (prefix) are missing - at least one must be specified");
@@ -308,7 +310,29 @@ public class CatalogUrlServlet extends HttpServlet {
         
         url = makeCatalogUrl(contextPath, null, productId, currentCategoryId, previousCategoryId);
         
+        url = appendLinkParams(url, params);
+        
         return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode, request, response);
     }
     
+    /**
+     * Appends params for catalog URLs.
+     * <p>
+     * WARN: this currently assumes the url contains no params, could change in future
+     */
+    protected static String appendLinkParams(String url, Object paramsObj) throws IOException {
+        if (paramsObj == null) {
+            return url;
+        }
+        String params = paramsObj.toString();
+        if (params.isEmpty()) {
+            return url;
+        }
+        if (params.startsWith("?")) {
+            url += params;
+        } else {
+            url += "?" + params;
+        }
+        return url;
+    }
 }

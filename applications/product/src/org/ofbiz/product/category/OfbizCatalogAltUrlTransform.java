@@ -47,9 +47,11 @@ import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
+import freemarker.template.utility.DeepUnwrap;
 
 /**
  * Catalog URL Alt Transform.
@@ -76,6 +78,11 @@ import freemarker.template.TemplateTransformModel;
  * are specified, it enables inter-webapp mode, where no session information
  * is used and a purely static link is built instead.
  * For staticly-rendered templates such as emails, webSiteId or prefix is always required.
+ * <p>
+ * It is also now possible to specify a string of parameters (with or without starting "?") using:
+ * <ul>
+ * <li>params</li>
+ * </ul>
  */
 public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizCatalogUrlTransform.class.getName();
@@ -142,6 +149,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     
                     String prefix = getStringArg(args, "prefix");
                     
+                    Object urlParams = DeepUnwrap.unwrap((TemplateModel) args.get("params"));
+                    
                     if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         //StringBuilder newURL = new StringBuilder();
@@ -150,7 +159,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
                         url = CatalogUrlFilter.makeCatalogAltLink(request, response, webSiteId, prefix, productCategoryId, productId, previousCategoryId, 
-                                fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+                                urlParams, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
 
                         // SCIPIO: no null
                         if (url != null) {
@@ -164,7 +173,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         // SCIPIO: now delegated to our new reusable method
                         // NOTE: here webSiteId is usually required!
                         url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, webSiteId, prefix, productCategoryId, 
-                                productId, previousCategoryId, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
+                                productId, previousCategoryId, urlParams, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
                         
                         // SCIPIO: no null
                         if (url != null) {

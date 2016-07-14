@@ -66,6 +66,11 @@ import freemarker.template.utility.DeepUnwrap;
  * are specified, it enables inter-webapp mode, where no session information
  * is used and a purely static link is built instead.
  * For staticly-rendered templates such as emails, webSiteId or prefix is always required.
+ * <p>
+ * It is also now possible to specify a string of parameters (with or without starting "?") using:
+ * <ul>
+ * <li>params</li>
+ * </ul>
  */
 public class CatalogUrlDirective implements TemplateDirectiveModel {
 
@@ -90,6 +95,8 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
         
         String prefix = checkStringArg(args, "prefix", null);
         
+        Object urlParams = DeepUnwrap.unwrap(params.get("params"));
+        
         if (req != null) {
             HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
             
@@ -101,7 +108,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             String url = null;
             try {
                 url = CatalogUrlServlet.makeCatalogLink(request, response, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                        fullPath, secure, encode);
+                        urlParams, fullPath, secure, encode);
             } catch (WebAppConfigurationException e) {
                 throw new IOException(e.getMessage());
             }
@@ -119,7 +126,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             String url;
             try {
                 url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                        fullPath, secure);
+                        urlParams, fullPath, secure);
             } catch (WebAppConfigurationException e) {
                 throw new IOException(e.getMessage());
             }

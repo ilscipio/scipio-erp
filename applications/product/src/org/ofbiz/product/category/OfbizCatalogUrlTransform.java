@@ -36,9 +36,11 @@ import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
+import freemarker.template.utility.DeepUnwrap;
 
 /**
  * Catalog URL Transform.
@@ -65,6 +67,11 @@ import freemarker.template.TemplateTransformModel;
  * are specified, it enables inter-webapp mode, where no session information
  * is used and a purely static link is built instead.
  * For staticly-rendered templates such as emails, webSiteId or prefix is always required.
+ * <p>
+ * It is also now possible to specify a string of parameters (with or without starting "?") using:
+ * <ul>
+ * <li>params</li>
+ * </ul>
  */
 public class OfbizCatalogUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizCatalogUrlTransform.class.getName();
@@ -123,6 +130,8 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                     
                     String prefix = getStringArg(args, "prefix");
                     
+                    Object urlParams = DeepUnwrap.unwrap((TemplateModel) args.get("params"));
+                    
                     if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         
@@ -131,7 +140,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
                         
                         String url = CatalogUrlServlet.makeCatalogLink(request, response, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                                fullPath, secure, encode);
+                                urlParams, fullPath, secure, encode);
 
                         // SCIPIO: no null
                         if (url != null) {
@@ -144,7 +153,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         Locale locale = (Locale) args.get("locale");
                         
                         String url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, webSiteId, prefix, productId, currentCategoryId, previousCategoryId, 
-                                fullPath, secure);
+                                urlParams, fullPath, secure);
 
                         // SCIPIO: no null
                         if (url != null) {

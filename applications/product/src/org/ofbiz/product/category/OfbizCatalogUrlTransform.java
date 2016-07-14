@@ -43,6 +43,13 @@ import freemarker.template.TemplateTransformModel;
 /**
  * Catalog URL Transform.
  * <p>
+ * Accepts the following arguments (see CatalogUrlServlet for their definition):
+ * <ul>
+ * <li>productId</li>
+ * <li>currentCategoryId</li>
+ * <li>previousCategoryId</li>
+ * </ul>
+ * <p>
  * SCIPIO: This transform is augmented to support the following parameters:
  * <ul>
  * <li>fullPath (boolean)</li>

@@ -67,7 +67,6 @@ under the License.
     </@cell>
   </@row>
     <hr>
-    <@heading relLevel=1>${uiLabelMap.WebtoolsEntityNames}:</@heading>
      <@row>
         <@cell columns=6>
           <@displayButtonBar/>
@@ -83,6 +82,7 @@ under the License.
         </@cell>
     </@row>
 
+    <@heading relLevel=1>${uiLabelMap.WebtoolsEntityNames}:</@heading>
     <@grid>
           <#assign entCount = 0>
           <#assign checkAll = parameters.checkAll!"false">

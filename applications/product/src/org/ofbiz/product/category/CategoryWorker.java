@@ -620,8 +620,6 @@ public class CategoryWorker {
                 category = productCategory.getRelatedOne("ProductCategory", true);
             }
             if (UtilValidate.isNotEmpty(category)) {
-                // Debug.log("productCategoryId ============> " +
-                // category.getString("productCategoryId"));
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
                         .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(true).queryList();
                 if (UtilValidate.isNotEmpty(childProductCategoryRollups))
@@ -655,14 +653,6 @@ public class CategoryWorker {
                         categoryName = category.getString("productCategoryId");
                     }
                 }
-
-                // Debug.log("category name =========> " + categoryName);
-
-                // String categoryTrail =
-                // CategoryUtil.getCategoryNameWithTrail(category.getString("productCategoryId"),
-                // dispatcher.getDispatchContext());
-                // Debug.log("category trail =================> " +
-                // categoryTrail);
 
                 if (library.equals("jsTree")) {
                     JsTreeDataItem dataItem = null;

@@ -266,7 +266,6 @@ public class OrderListState implements Serializable {
      */
     public List<GenericValue> getOrders(String facilityId, Timestamp fromDate, String intervalPeriod, Map<String, Object> context)
             throws GenericEntityException {
-        Debug.log("fromDate ===========> " + fromDate + "   intervalPeriod ==========> " + intervalPeriod);
         Delegator delegator = (Delegator) context.get("delegator");
         TimeZone timeZone = (TimeZone) context.get("timeZone");
         Locale locale = (Locale) context.get("locale");

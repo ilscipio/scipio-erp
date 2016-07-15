@@ -16,7 +16,6 @@ for (serviceName in serviceNames) {
     if (curServiceModel != null) {
         for (implService in curServiceModel.implServices) {
             if (implService.getService().equals(DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME)) {
-//                Debug.log("curServiceModel ===========> " + curServiceModel.name);
                 curServiceMap = [:];
                 engineName = curServiceModel.engineName ?: "NA";
                 defaultEntityName = curServiceModel.defaultEntityName ?: "NA";

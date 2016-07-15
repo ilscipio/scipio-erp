@@ -44,10 +44,9 @@ Map processResults() {
         iCount = UtilDateTime.getIntervalDefaultCount(iScope);        
         fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);        
     }
-    Debug.log("before iCount =====> " + iCount);
+
     if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
     if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
-    Debug.log("after iCount =====> " + iCount);
    
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);        
     if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
@@ -97,7 +96,6 @@ Map processResults() {
             dateEnd = dateIntervals.getDateEnd();
             if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
                 dateEnd = thruDateTimestamp;
-//            Debug.log("dateBegin ===========> " + dateIntervals.getDateBegin() + "  dateEnd =================> " + dateIntervals.getDateEnd() + "  result map ====>  " + newMap);
             dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateEnd, context.locale, context.timeZone);
         }
     }
@@ -105,5 +103,4 @@ Map processResults() {
     
 }
 result = processResults();
-Debug.log("result =====> " + result);
 context.result = result;

@@ -987,6 +987,17 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       </#if>
       <#if itemUseHidden>
         <input type="hidden" name="${name?html}" value="<#if inputChecked>${itemValue?html}<#else>${itemAltValue?html}</#if>"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
+      <#else>
+        <#-- 2016-07-13: IMPORTANT ADDITION: 
+            Even if hidden input is technically disabled and not handled by a page,
+            we must always send a dummy hidden input with an unrelated name to help
+            the auto value param fetching code to detect form submits. This is the
+            only reliable way to do it for all checkbox fields.
+            
+            We cannot simply enable itemUseHidden for all checkboxes currently because some server-side code
+            and templates rely on the traditional HTML behavior.
+        -->
+        <input type="hidden" name="${name?html}_submitted" value="Y"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
       </#if>
       <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>

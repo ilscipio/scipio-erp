@@ -54,7 +54,6 @@ if (orderId && shipment) {
         orderItemShipGroup = null;
         if (shipGroupSeqId) {
             orderItemShipGroup = from("OrderItemShipGroup").where("orderId", orderId, "shipGroupSeqId", shipGroupSeqId).queryOne();
-            Debug.log("orderItemShipGroup ===========> " + orderItemShipGroup);
             context.orderItemShipGroup = orderItemShipGroup;
         }
 

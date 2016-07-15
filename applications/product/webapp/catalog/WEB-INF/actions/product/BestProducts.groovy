@@ -51,7 +51,6 @@ for (int i = 0; i < iCount; i++) {
     orderDateExprList = [];
     orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
     orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dateIntervals.getDateEnd()));
-//    Debug.log("date from ======> " +  dateIntervals.getDateBegin() + "  date to ======> " + dateIntervals.getDateEnd());
 
     orderHeaderItemExpr = FastList.newInstance(exprList);
     orderHeaderItemExpr.addAll(orderDateExprList);    
@@ -91,13 +90,11 @@ for (int i = 0; i < iCount; i++) {
 // Sorting List
 topSellingProductsMap = [:];
 
-for (key in bestSellingProductsByDate.keySet()) {
-//    Debug.log("date ======> " + key + "   number of products ======> " + bestSellingProductsByDate[key].size());    
+for (key in bestSellingProductsByDate.keySet()) {    
     topSellingProducts = [];
     bestSellingProductsByDate[key].each { bestSellingProducts ->
         productId =  bestSellingProducts.getKey();
-        bestSellingProduct =  bestSellingProducts.getValue();
-//        Debug.log("productId ========> " + productId + "     bestSellingProduct ======> " + bestSellingProduct);        
+        bestSellingProduct =  bestSellingProducts.getValue(); 
         if (topSellingProducts && topSellingProducts.size() == 5) {
             for (int idx = 0; idx < topSellingProducts.size(); idx++) {
                 if ((bestSellingProduct.qtyOrdered > topSellingProducts[idx].qtyOrdered) || 
@@ -105,7 +102,6 @@ for (key in bestSellingProductsByDate.keySet()) {
                     topSellingProducts[idx] = bestSellingProduct; 
                     break;
                 }
-//                Debug.log("topSellingProduct productId ===> " + topSellingProducts[idx].productId);
             }
         } else {
             topSellingProducts.add(bestSellingProduct);

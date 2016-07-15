@@ -48,8 +48,6 @@ try{
 	topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);
 	productCategoryId = curCategoryId;
 	
-	//Debug.log("curCategoryId ====> " + curCategoryId, module);
-	//Debug.log("curProductId ====> " + curProductId, module);
 	validBreadcrumb = topCategoryId + "/";
 	
 	dctx = dispatcher.getDispatchContext();
@@ -84,13 +82,12 @@ if (curCategoryId) {
 } else if (curProductId) {
     availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:null,productId:curProductId,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail]);
 }
-Debug.log("valid Breadcrubm  =========> " + validBreadcrumb);
+
 
 if (availableBreadcrumbsList) {
     breadcrumbsList = FastList.newInstance();
     for (availableBreadcrumbs in availableBreadcrumbsList.get("categories").keySet()) {
         breadcrumbs = availableBreadcrumbs.split("/");
-        //Debug.log("breadcrumbs ==================> " + breadcrumbs);
 		if (availableBreadcrumbs.contains(validBreadcrumb)) {
             for (breadcrumb in breadcrumbs) {
                 if (!breadcrumb.equals(topCategoryId) && !breadcrumbsList.contains(breadcrumb))

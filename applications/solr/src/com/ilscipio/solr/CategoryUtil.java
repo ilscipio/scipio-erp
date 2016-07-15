@@ -138,7 +138,6 @@ public abstract class CategoryUtil {
      */
     public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
     	List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
-        //Debug.log("trailElements ======> " + trailElements.toString());
         StringBuilder catMember = new StringBuilder();
         String cm = "";
         int i = 0;

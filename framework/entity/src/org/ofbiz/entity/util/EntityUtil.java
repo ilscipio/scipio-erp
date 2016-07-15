@@ -549,4 +549,34 @@ public class EntityUtil {
     public static boolean isMultiTenantEnabled() {
         return "Y".equalsIgnoreCase(UtilProperties.getPropertyValue("general.properties", "multitenant"));
     }
+    
+    
+    /**
+     * SCIPIO: Type conversion of Strings that resemble "Y" or "N" values to Boolean
+     * @param value
+     * @return
+     * */
+    public static Boolean toBoolean(String value) {
+        if ("Y".equalsIgnoreCase(value)) {
+            return true;
+        }
+        else if ("N".equalsIgnoreCase(value)) {
+            return false;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: Type conversion of Strings that resemble "Y" or "N" values to Boolean
+     * 
+     * @param value
+     * @param defaultVal Default value
+     * @return
+     */
+    public static boolean toBoolean(String indicator, boolean defaultVal) {
+        Boolean result = toBoolean(indicator);
+        return result != null ? result : defaultVal;
+    }
 }

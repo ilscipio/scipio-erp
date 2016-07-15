@@ -26,7 +26,6 @@ facilityId = parameters.facilityId;
 inventoryTransferId = parameters.inventoryTransferId;
 inventoryItemId = parameters.inventoryItemId;
 inventoryTransfer = null;
-Debug.log("inventoryTransferId ================> " + inventoryTransferId);
 if (inventoryTransferId) {
     
     inventoryTransfer = from("InventoryTransfer").where("inventoryTransferId", inventoryTransferId).queryOne();

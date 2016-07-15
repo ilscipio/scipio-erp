@@ -100,7 +100,8 @@
                                 <include-menu location="component://commonext/widget/ofbizsetup/Menus.xml" name="SetupSubSideBar"/>
                             </widgets>
                         </section>
-                        <section>
+                        <!-- Scipio: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
+                       <!--  <section>
                             <condition>
                                 <not><if-empty field="partyId"/></not>
                             </condition>
@@ -112,7 +113,7 @@
                                     </link>
                                 </container>
                             </widgets>
-                        </section>
+                        </section> -->
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

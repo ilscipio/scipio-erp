@@ -27,7 +27,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
                 <set field="activeMainMenuItem" value="MyCommunicationEvents"/>
-                <script location="component://marketing/webapp/sfa/WEB-INF/actions/services/FindMyCommunication.groovy"/>
+                <script location="component://marketing/webapp/sfa/WEB-INF/action/services/FindMyCommunication.groovy"/>
             </actions>
             <widgets>
                 <!-- <decorator-screen  name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -72,7 +72,7 @@ under the License.
                 <set field="internalNotesOnly" from-field="internalNotesOnly" default-value="false"/>
                 <set field="partyId" from-field="communicationPartyId" default-value="${userLogin.partyId}"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
-                <script location="component://marketing/webapp/sfa/WEB-INF/actions/services/MyCommunicationList.groovy"/>
+                <script location="component://marketing/webapp/sfa/WEB-INF/action/services/MyCommunicationList.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/MyCommunicationList.ftl"/></html></platform-specific>                

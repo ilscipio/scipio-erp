@@ -4,7 +4,6 @@ import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
 
-Debug.log("partyId =============> " + context.partyId);
                 
 List mainAndExprs = FastList.newInstance();
 
@@ -24,5 +23,4 @@ if (partyIdTo)
     
 commEventList = from("CommunicationEventAndRole").where(mainAndExprs).queryList();
 
-Debug.log("commEventList ============> " + commEventList);
 context.commEventList = commEventList;

@@ -14,15 +14,12 @@ iCount = UtilDateTime.getIntervalDefaultCount(iScope);
 fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
 dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
 
-Debug.log("dateItervals =========> " + dateIntervals);
-
 List introductionDateAndExprs = FastList.newInstance();
 introductionDateAndExprs.add(EntityCondition.makeCondition("introductionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
 introductionDateAndExprs.add(EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
 
 newProducts = from("Product").where(introductionDateAndExprs).queryList();
 newProducts.each { product ->
-    Debug.log("new product id ===========> " + product.productId);
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, fromDateTimestamp, context.locale, context.timeZone);
 } 
 

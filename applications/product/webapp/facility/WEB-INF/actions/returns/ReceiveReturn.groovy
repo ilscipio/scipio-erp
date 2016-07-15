@@ -24,7 +24,6 @@ import org.ofbiz.base.util.*;
 
 facilityId = request.getParameter("facilityId");
 returnId = request.getParameter("returnId");
-Debug.log("returnId =============> " + returnId);
 
 facility = null;
 if (facilityId) {

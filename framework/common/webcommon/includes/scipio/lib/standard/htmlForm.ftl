@@ -2521,13 +2521,16 @@ NOTE: This method conditionally acts on the {{{isError}}} boolean context field.
 TODO: We need more options (and/or types) to make tweakable the special handling in cases of error, new records, etc.
 
   * Parameters *
-    type                    = (params|record|defaults|params-record, default: -from globals-, fallback default: params-record) The value scheme type
+    type                    = (standard|..., default: -from globals-, fallback default: standard) The value scheme type
                               * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
                               * {{{record}}}: looks for value in overrides map, then record map, then defaults map
-                              * {{{defaults}}}: looks for value in overrides map, then defaults map
-                              * {{{params-record}}}: looks for value in overrides map, then EITHER parameters map OR record map, then defaults map
+                              * {{{defaults-only}}}: looks for value in overrides map, then defaults map
+                              * {{{params-record}}}: looks for value in overrides map, then parameters map, then record, then defaults map.
+                                This may be
+                              * {{{params-or-record}}}: looks for value in overrides map, then EITHER parameters map OR record map, then defaults map
                                 At current time (2016-07-08), the selection of parameters or record map default behavior is based on whether an event
                                 error occurred ({{{isError}}} boolean context field).
+                              * {{{standard}}}: In scipio standard API, currently (2016-07-08), this is the same params-or-record, currently considered the standard behavior.
     name                    = Main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)
                               NOTE: As a convenience, name can be passed as single parameter instead of the {{{args}}} map.
     overrideName            = Field name for overrides map
@@ -2559,9 +2562,9 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   <#if isObjectType("string", args)><#-- shorthand -->
     <#local args = {"name": args}>
   </#if>
-  <#local type = args.type!scpAutoValType!"params-record">
-  <#if !type?has_content>
-    <#local type = "params-record">
+  <#local type = args.type!scpAutoValType!"params-or-record">
+  <#if !type?has_content || type == "standard">
+    <#local type = "params-or-record">
   </#if>
 
   <#local overrides = scpAutoValOverrides!{}>
@@ -2583,7 +2586,7 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   </#if>
   
   <#-- 
-    DEV NOTE: We need the behavior of "params-record" to be similar to the code in:
+    DEV NOTE: We need the behavior of "params-or-record" to be similar to the code in:
       org.ofbiz.widget.model.ModelFormField.getEntry(Map, String, boolean)
     but can ignore "useRequestParameters" because our type substitutes for it.
     
@@ -2600,11 +2603,13 @@ TODO: We need more options (and/or types) to make tweakable the special handling
         and because this is stock behavior currently.
   -->
 
-  <#if type == "params" || (type == "params-record" && ((isError!false) == true))>
+  <#if type == "params" || (type == "params-or-record" && ((isError!false) == true))>
     <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.defaultValue!defaults[defaultName]!>
-  <#elseif type == "record" || (type == "params-record")>
+  <#elseif type == "record" || (type == "params-or-record")>
     <#return args.overrideValue!overrides[overrideName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
-  <#elseif type == "defaults">
+  <#elseif type == "params-record">
+    <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
+  <#elseif type == "defaults-only">
     <#return args.overrideValue!overrides[overrideName]!args.defaultValue!defaults[defaultName]!>
   </#if>
 </#function>

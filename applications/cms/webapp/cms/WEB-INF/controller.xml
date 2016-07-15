@@ -40,6 +40,6 @@
     
     <!-- View Mappings -->
     <view-map name="cms" type="cms" />
-    <view-map name="main" type="screen" page="component://cms/widget/CmsScreens.xml#main"/>
+    <view-map name="main" type="screen" page="component://cms/widget/CMSScreens.xml#main"/>
     <view-map name="pagenotfound" type="screen" page=""/>
   </site-conf>

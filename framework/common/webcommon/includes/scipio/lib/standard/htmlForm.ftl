@@ -544,9 +544,10 @@ or even multiple per fieldset.
                                   * If set to boolean false, will prevent all custom default field args and prevent using those set in styles hash. Probably never needed.
                                   e.g.
                                     <@fields type="default" fieldArgs={"labelArea":false}>
-    autoValue                   = ((map)|(boolean), default: -empty-) Auto value configuration to be set as globals for children @field and #getAutoValue calls
+    autoValue                   = ((map)|(boolean), default: -empty/disabled-) Auto value configuration to be set as globals for children @field and #getAutoValue calls
+                                  WARN: NOT FULLY IMPLEMENTED (2016-07-15)
                                   This enables children @field and #getAutoValue calls to use automatic value lookups using parameters, record and defaults maps, which
-                                  are set in globals using this parameter.
+                                  are set in globals using this parameter. Disabled by default.
                                   Possible values:
                                   * as {{{map}}}: if set to a map, all contents are passed as arguments to the #setAutoValueCfg function ({{{setAutoValueCfg(autoValue)}}}), with the exception that if
                                     the {{{autoValue.autoValue}}} boolean is omitted, @fields assumes and sets it to true (only explicit false will disable auto value; this case is rare). 
@@ -1085,7 +1086,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               Added for non-inverted fields.
     invertedClass           = ((css-class)) CSS classes, default inverted class name, added to outer container
                               Does not support extended class +/= syntax.
-    autoValue               = ((boolean)) Fine-grained control to turn auto value lookups on or off
+    autoValue               = ((boolean), default: -from globals-, fallback default: false) Fine-grained control to turn auto value lookups on or off
+                              WARN: NOT FULLY IMPLEMENTED (2016-07-15)
                               @field has the ability to automatically lookup values from parameter, record and defaults maps,
                               through implicit calls to the #getAutoValue function.
                               By default, this auto value enabling is determined by the current globals as set by @fields
@@ -2502,6 +2504,8 @@ TODO: This (and @field args) do not currently provide enough control over large 
 ************
 Returns an appropriate field value (typically for use with @field) based on current values in request
 and context, following a certain scheme type specified directly or previously through globals.
+
+WARN: NOT FULLY IMPLEMENTED (2016-07-15)
 
 Typically the value is looked up in a set of global maps (parameters, a record or entity, defaults, etc.)
 following some predefined priority.

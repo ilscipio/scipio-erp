@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtil;
 
 findResult = delegator.findByAnd("Facility", [ownerPartyId: partyId], null, false);
 
@@ -24,18 +24,18 @@ listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: 
 partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));
 context.partyPostalAddress = partyPostalAddress;
 
-if("productstore".equals(tabButtonItemTop)){
-    if(findResultSize == 0){
+//if("productstore".equals(tabButtonItemTop)){
+    if(findResult.size() == 0){
         request.setAttribute("_ERROR_MESSAGE_", "Facility not set!");
         context.showScreen = "message";
         return;
     }else{
         context.showScreen = "origin";
     }
-}else if("facility".equals(tabButtonItemTop)){
+//}else if("facility".equals(tabButtonItemTop)){
     facilityId = parameters.facilityId;
     if (!facilityId && request.getAttribute("facilityId")) {
-      facilityId = request.getAttribute("facilityId");
+        facilityId = request.getAttribute("facilityId");
     }
     facility = delegator.findOne("Facility", [facilityId : facilityId], false);
     if(facility){
@@ -44,4 +44,4 @@ if("productstore".equals(tabButtonItemTop)){
     }
     context.facility = facility;
     context.facilityId = facilityId;
-}
+//}

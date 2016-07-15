@@ -59,7 +59,6 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
             String partyStatusId = partyStatus.get(UtilRandom.random(partyStatus)); 
             
             Timestamp createdDate = UtilRandom.generateRandomTimestamp(context);
-//            Debug.log("partyId ====> " + partyId + " partyTypeId ======> " + partyTypeId + " partyStatusId ==========> " + partyStatusId);        
             Map fields = UtilMisc.toMap("partyId", partyId, "partyTypeId", partyTypeId, "statusId", partyStatusId, "description", partyId + " description", "createdDate", createdDate);    
             GenericValue party = delegator.makeValue("Party", fields);
             toBeStored.add(party);
@@ -80,7 +79,6 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
             if (gender.toUpperCase().startsWith("F"))
                 g = "F";
             fields = UtilMisc.toMap("partyId", partyId, "salutation", salutation, "firstName", firstName, "lastName", lastName, "gender", g);
-//            Debug.log("partyId ========> " + partyId + "  salutation ==========> " + salutation + "    firstName ===============> " + firstName + "          lastName ===============> " + lastName + "   gender ===========> " + g);
             GenericValue person = delegator.makeValue("Person", fields);
             toBeStored.add(person);
             
@@ -97,7 +95,6 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
                 userLoginEnabled = "N";
             
             fields = UtilMisc.toMap("partyId", partyId, "userLoginId", userLoginId, "currentPassword", currentPassword, "enabled", userLoginEnabled);
-//            Debug.log("partyId ========> " + partyId + "  userLoginId ==========> " + userLoginId);
             GenericValue userLogin = delegator.makeValue("UserLogin", fields);
             toBeStored.add(userLogin);
         }

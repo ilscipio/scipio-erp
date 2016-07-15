@@ -111,8 +111,6 @@ context.searchConstraintStrings = [];
 context.currentSearch = searchString;
 context.currentFilter = searchFilter;
 
-Debug.logInfo("listSize ====> " + context.listSize + " viewIndex =====> " + context.viewIndex + " viewSize ======> " + context.viewSize);
-
 if (!currIndex)
     context.currIndex = 1;
 else

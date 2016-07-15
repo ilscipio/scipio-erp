@@ -462,6 +462,10 @@ or even multiple per fieldset.
       <@field attr="" />
     </@field>
     
+    <@fields autoValue={"record": myEntity!{}, "defaults":{"field1": "some default value"}}>
+      <@field name="field1" />
+    </@fields>
+    
   * Parameters *
     type                        = (default|inherit|inherit-all|generic|..., default: inherit-all) The type of fields arrangement. 
                                   Affects layout and styling of contained fields.
@@ -540,19 +544,43 @@ or even multiple per fieldset.
                                   * If set to boolean false, will prevent all custom default field args and prevent using those set in styles hash. Probably never needed.
                                   e.g.
                                     <@fields type="default" fieldArgs={"labelArea":false}>
+    autoValue                   = ((map)|(boolean), default: -empty-) Auto value configuration to be set as globals for children @field and #getAutoValue calls
+                                  This enables children @field and #getAutoValue calls to use automatic value lookups using parameters, record and defaults maps, which
+                                  are set in globals using this parameter.
+                                  Possible values:
+                                  * as {{{map}}}: if set to a map, all contents are passed as arguments to the #setAutoValueCfg function ({{{setAutoValueCfg(autoValue)}}}), with the exception that if
+                                    the {{{autoValue.autoValue}}} boolean is omitted, @fields assumes and sets it to true (only explicit false will disable auto value; this case is rare). 
+                                    See #setAutoValueCfg for available configuration arguments.
+                                  * as {{{boolean}}}: if set to a boolean, it is equivalent to calling {{{setAutoValueCfg({"autoValue":true})}}}, where only defaults are used.
+                                  In all cases, the previous global auto value configuration is saved before setting these and is restored after @fields is closed.
+                                  NOTE: Unlike other @fields parameters, this parameter is always inherited unless specifically overridden.
+                                  NOTE: Unlike other @fields parameters, this parameter does not survive screen @render boundaries (only has page/template scope, not request scope).
 -->
 <#assign fields_defaultArgs = {
   "type":"", "open":true, "close":true, "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
   "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "ignoreParentField":"", 
-  "fieldArgs":true, "passArgs":{}
+  "fieldArgs":true, "autoValue":0, "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
   <#-- NOTE: this is non-standard args usage -->
-  <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
+  <#local explArgs = mergeArgMapsBasic(args, inlineArgs)>
+  <#local fieldsInfo = makeFieldsInfo(explArgs)>
   <#if (fieldsInfo.open!true) == true>
     <#local dummy = pushRequestStack("scipioFieldsInfoStack", fieldsInfo)>
   </#if>
+  <#local autoValue = explArgs.autoValue!0>
+  <#if !autoValue?is_number>
+    <#local prevAutoValueCfg = getAutoValueCfg()>
+    <#if autoValue?is_boolean>
+      <#local dummy = setAutoValueCfg({"autoValue":autoValue})>
+    <#else>
+      <#local dummy = setAutoValueCfg({"autoValue":true} + autoValue)>
+    </#if>
+  </#if>
     <#nested>
+  <#if !autoValue?is_number>
+    <#local dummy = setAutoValueCfg(prevAutoValueCfg)>
+  </#if>
   <#if (fieldsInfo.close!true) == true>
     <#local dummy = popRequestStack("scipioFieldsInfoStack")>
   </#if>
@@ -1057,7 +1085,18 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               Added for non-inverted fields.
     invertedClass           = ((css-class)) CSS classes, default inverted class name, added to outer container
                               Does not support extended class +/= syntax.
-                                       
+    autoValue               = ((boolean)) Fine-grained control to turn auto value lookups on or off
+                              @field has the ability to automatically lookup values from parameter, record and defaults maps,
+                              through implicit calls to the #getAutoValue function.
+                              By default, this auto value enabling is determined by the current globals as set by @fields
+                              or #setAutoValueCfg. This boolean allows to disable per-field as a quick fix.
+                              NOTE: This does not support the extensive arguments supported by @fields. It only supports 
+                                  explicit boolean on/off to toggle for individual fields.
+    autoValueArgs           = ((map)) Extra arguments that will be passed to #getAutoValue when auto values enabled.
+                              Note that basics such as name, value, and type are already covered.
+                              Some extras that may be specified are: overrideName, paramName, recordName, defaultName.
+                              NOTE: suffix is reserved for use and should never be specified.
+                              See #getAutoValue for a comprehensive list.
         
     * input (alias: text) *
     autoCompleteUrl         = If autocomplete function exists, specification of url will make it available
@@ -1277,7 +1316,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "widgetAreaClass":"", "labelAreaClass":"", "postfixAreaClass":"", "widgetPostfixAreaClass":"",
   "inverted":false, "invertedClass":"", "standardClass":"", "datePostfix":"", "datePostfixColumns":"",
   "manualInput":"",
-  "events":{}, "wrap":"", "passArgs":{} 
+  "events":{}, "wrap":"", 
+  "autoValue":0, "autoValueArgs":{}, 
+  "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
 <#-- WARN: #compress must be used sparingly; using only around code parts -->
@@ -1302,11 +1343,17 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#-- special default fields override -->
   <#local defaultArgs = scipioStdTmplLib.field_defaultArgs>
   <#if !fieldsInfo.fieldArgs?is_boolean>
+    <#-- 2016-07-08: this is probably wrong because it makes fieldArgs keys part of localArgNames,
+      so instead combine it with args map, though it requires a manual toSimpleMap, not ideal
     <#local defaultArgs = defaultArgs + fieldsInfo.fieldArgs>
+    -->
+    <#local args = fieldsInfo.fieldArgs + toSimpleMap(args)>
   </#if>
 
   <#-- standard args -->
-  <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
+  <#local argsMaps = mergeArgMapsEx(args, inlineArgs, defaultArgs)>
+  <#local args = argsMaps.allArgs>
+  <#local explArgs = argsMaps.explArgs>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
         
@@ -1630,6 +1677,93 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         "fieldType":type, "fieldsType":fieldsType, "fieldId":id, "collapse":collapse, "required":required, "labelContentArgs":labelContentArgs, 
         "norows":norows, "nocells":nocells, "container":container,
         "origArgs":origArgs, "passArgs":passArgs}>
+  </#if>
+ 
+  <#-- auto value integration -->
+  <#if !autoValue?is_boolean>
+    <#local autoValue = scpAutoVal!false>
+  </#if>
+  <#if autoValue>
+    <#if type == "checkbox" || type == "radio">
+      <#-- TODO: handle currentValue and others IF applicable -->
+    <#elseif type == "option" || type == "submit" || type == "submitarea" || type == "reset">
+      <#-- do nothing -->
+    <#elseif type == "select">
+      <#-- TODO: handle defaultValue -->
+    <#else>
+      <#-- types with extra inputs -->
+
+      <#if type == "textfind">
+        <#local autoValueArgsAll = {"name":name}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+      
+        <#local autoValueArgsAll = {"name":name, "suffix":"_op"}>
+        <#if explArgs.opValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opValue}>
+        </#if>
+        <#local opValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+        
+        <#-- SPECIAL: checkbox needs to check presence of main value because is not 
+            submitted when not checked -->
+        <#local autoValueArgsAll = {"name":name, "suffix":"_ic",
+          "presParamName":autoValueArgs.paramName!name,
+          "presDefaultParamValue":"",
+          "defaultValue":"Y"
+        }>
+        <#if explArgs.ignoreCaseValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":ignoreCaseValue?string("Y","")}>
+        </#if>
+        <#local ignoreCaseValueStr = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+        <#local ignoreCaseValue = (ignoreCaseValueStr == "Y")>
+
+      <#elseif type == "rangefind">
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+      
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_op"}>
+        <#if explArgs.opFromValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opFromValue}>
+        </#if>
+        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld1_op"}>
+        <#if explArgs.opThruValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opThruValue}>
+        </#if>
+        <#local opThruValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+        
+      <#elseif type == "datefind">
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+      
+        <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_op"}>
+        <#-- NOTE: this must match logic further below -->
+        <#if explArgs.opFromValue?has_content>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opFromValue}>
+        <#elseif explArgs.opValue??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opValue}>
+        </#if>
+        <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+        <#local opValue = opFromValue>
+        
+      <#else>
+        <#-- standard value input case -->
+        <#local autoValueArgsAll = {"name":name}>
+        <#if explArgs.value??>
+          <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
+        </#if>
+        <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+      </#if>
+
+    </#if>
   </#if>
  
   <#local defaultGridArgs = {"totalColumns":totalColumns, "labelColumns":labelColumns, 
@@ -2360,5 +2494,199 @@ TODO: This (and @field args) do not currently provide enough control over large 
     "widgetArea" : widgetAreaClass,
     "postfixArea" : postfixAreaClass
   }>
+</#function>
+
+<#-- 
+*************
+* getAutoValue
+************
+Returns an appropriate field value (typically for use with @field) based on current values in request
+and context, following a certain scheme type specified directly or previously through globals.
+
+Typically the value is looked up in a set of global maps (parameters, a record or entity, defaults, etc.)
+following some predefined priority.
+
+The schema type may be specified directly, but in most cases it should have been specified for a group of 
+getAutoValue calls using @fields, where the specific maps to use when looking up the value may also be specified. 
+It is also possible to manually call #setAutoValueCfg to set them, which should rarely be needed.
+
+NOTE: This method conditionally acts on the {{{isError}}} boolean context field. Usually it is
+    set depending on the result of the last controller event. In non-standard cases you may have
+    to set it manually.
+
+TODO: We need more options (and/or types) to make tweakable the special handling in cases of error, new records, etc.
+
+  * Parameters *
+    type                    = (params|record|defaults|params-record, default: -from globals-, fallback default: params-record) The value scheme type
+                              * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
+                              * {{{record}}}: looks for value in overrides map, then record map, then defaults map
+                              * {{{defaults}}}: looks for value in overrides map, then defaults map
+                              * {{{params-record}}}: looks for value in overrides map, then EITHER parameters map OR record map, then defaults map
+                                At current time (2016-07-08), the selection of parameters or record map default behavior is based on whether an event
+                                error occurred ({{{isError}}} boolean context field).
+    name                    = Main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)
+                              NOTE: As a convenience, name can be passed as single parameter instead of the {{{args}}} map.
+    overrideName            = Field name for overrides map
+    paramName               = Field name for parameters map
+    recordName              = Field name for record map
+    defaultName             = Field name for defaults map
+    suffix                  = Optional suffix added to each of the name parameters
+    overrideValue           = An override values, which takes priority over all
+    paramValue              = A param value, which takes immediate priority over the params map
+    value                   = A value, which takes immediate priority over the record values
+                              It is ignored in all cases where the record map is also ignored (such as {{{type="params"}}}).
+    defaultValue            = A default value, which takes immediate priority over the default map values
+    presParamName           = Optional name of a parameter to check for presence and, if specified, cause this param to always have a param value
+                              This is a workaround for various form limitations. 
+                              It checks the parameter map for a value with this name, and if one is found,
+                              then the current auto value lookup will ensure that a param value is set for this lookup.
+                              If it indeed had no param value, the value of the {{{presDefaultParamValue}}} param is used.
+                              This can be used for surrogate presence checks for HTML checkboxes, for example.
+                              NOTE: this name does not receive a suffix.
+    presDefaultParamValue   = ((string), default: ""/[]/{}) Default param value to use if presParamName checks out
+
+  * Related *
+    @fields
+    #setAutoValueCfg
+-->
+<#assign getAutoValue_defaultArgs = {
+}>
+<#function getAutoValue args={}>
+  <#if isObjectType("string", args)><#-- shorthand -->
+    <#local args = {"name": args}>
+  </#if>
+  <#local type = args.type!scpAutoValType!"params-record">
+  <#if !type?has_content>
+    <#local type = "params-record">
+  </#if>
+
+  <#local overrides = scpAutoValOverrides!{}>
+  <#local params = getAutoValueEffParamsMap()>
+  <#local record = scpAutoValRecord!{}>
+  <#local defaults = scpAutoValDefaults!{}>
+
+  <#local suffix = args.suffix!"">
+  <#local overrideName = (args.overrideName!args.name) + suffix>
+  <#local paramName = (args.paramName!args.name) + suffix>
+  <#local recordName = (args.defaultName!args.name) + suffix>
+  <#local defaultName = (args.defaultName!args.name) + suffix>
+  
+  <#if args.presParamName?has_content && !params[paramName]??>
+    <#if params[args.presParamName]??>
+      <#-- this is awful, but best we can do here -->
+      <#local params = params + {paramName:args.presDefaultParamValue!}>
+    </#if>
+  </#if>
+  
+  <#-- 
+    DEV NOTE: We need the behavior of "params-record" to be similar to the code in:
+      org.ofbiz.widget.model.ModelFormField.getEntry(Map, String, boolean)
+    but can ignore "useRequestParameters" because our type substitutes for it.
+    
+    The stock behavior is that params are only considered if there was an error
+    in the last create/update operation. This usually is fairly sane, it means
+    that user input will be preserved on errors but discarded and reloaded from DB on success.
+    NOTE: the main limitation of this is that it's not possible to call screen with helper-like
+        pre-filled values. But this seems rare.
+        TODO?: we could maybe allow this by detecting if a controller event was run or not...
+            but that is making some assumptions that won't always hold.
+    
+    TODO: Currently the whole form/record must use either parameters or record.
+        We are limiting behavior to prevent problems with some fields such as checkboxes,
+        and because this is stock behavior currently.
+  -->
+
+  <#if type == "params" || (type == "params-record" && ((isError!false) == true))>
+    <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.defaultValue!defaults[defaultName]!>
+  <#elseif type == "record" || (type == "params-record")>
+    <#return args.overrideValue!overrides[overrideName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
+  <#elseif type == "defaults">
+    <#return args.overrideValue!overrides[overrideName]!args.defaultValue!defaults[defaultName]!>
+  </#if>
+</#function>
+
+<#-- 
+*************
+* setAutoValueCfg
+************
+Sets the current global value configuration (maps and settings) used by #getAutoValue, and can also be used 
+to disable auto value lookups for @field.
+
+NOTE: Any parameters not specified leave the existing corresponding globals unchanged.
+
+NOTE: The globals specified by this function currently do not survive screen render boundaries; they
+    have page/template scope, not request scope.
+
+  * Parameters *
+    autoValue               = ((boolean)) Determines if auto value lookups are enabled for macros such as @field
+                              NOTE: Unlike some other macros and functions (such as @fields), for this function, if this
+                                  parameter is omitted, the function will not turn on auto values. It is a manual
+                                  call and requires explicit true.
+    type                    = ((string)) The value scheme type
+                              See #getAutoValue for possible values.
+    overrides               = ((map)) Map to use as overrides map for lookups
+    params                  = ((map)|(boolean)) Map to use as parameters map for lookups
+                              Normally, if this is not specified anywhere, the Ofbiz parameters map is used.
+                              If this is set to boolean false (special value), no parameters map will be used.
+    record                  = ((map)) Map to use as record map for lookups
+                              Usually this is something like an entity value.
+    defaults                = ((map)) Map to use as defaults map for lookups 
+    
+  * Related *
+    #getAutoValueCfg
+    #getAutoValue                       
+-->
+<#assign setAutoValueCfg_defaultArgs = {
+}>
+<#function setAutoValueCfg args={}>
+  <#if args.autoValue??>
+    <#global scpAutoVal = args.autoValue>
+  </#if>
+  <#if args.type??>
+    <#global scpAutoValType = args.type>
+  </#if>
+  <#if args.overrides??>
+    <#global scpAutoValOverrides = args.overrides>
+  </#if>
+  <#if args.params??>
+    <#global scpAutoValParams = args.params>
+  </#if>
+  <#if args.record??>
+    <#global scpAutoValRecord = args.record>
+  </#if>
+  <#if args.defaults??>
+    <#global scpAutoValDefaults = args.defaults>
+  </#if>
+</#function>
+
+<#--
+*************
+* getAutoValueCfg
+************
+Returns the current global auto value configuration (settings and maps).
+
+  * Related *
+    #setAutoValueCfg
+    #getAutoValue
+-->
+<#assign getAutoValueCfg_defaultArgs = {
+}>
+<#function getAutoValueCfg args={}>
+  <#return {"autoValue":scpAutoVal!"", "type":scpAutoValType!"", 
+    "overrides":scpAutoValOverrides!false, "params":scpAutoValParams!false, 
+    "record":scpAutoValRecord!false, "defaults":scpAutoValDefaults!false}>
+</#function>
+
+<#function getAutoValueEffParamsMap>
+  <#if scpAutoValParams?? && !(scpAutoValParams?is_boolean && scpAutoValParams == true)>
+    <#local params = scpAutoValParams>
+    <#if params?is_boolean>
+      <#local params = {}>
+    </#if>
+  <#else>
+    <#-- by default, use parameters map -->
+    <#local params = parameters!{}>
+  </#if>
+  <#return params>
 </#function>
 

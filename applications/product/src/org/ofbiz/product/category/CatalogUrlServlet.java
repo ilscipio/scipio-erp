@@ -20,6 +20,7 @@ package org.ofbiz.product.category;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -32,12 +33,14 @@ import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
@@ -223,14 +226,113 @@ public class CatalogUrlServlet extends HttpServlet {
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * <p>
+     * This version supports a webSiteId and contextPath that, if specified, will turn the link-building into an
+     * inter-webapp mode that avoids use of session information.
+     * NOTE: it will do this even if the passed webSiteId is the same as the one of current request
+     * (there is intentionally no check for this, so the parameter has a double function).
+     * If contextPath is omitted, it is determined automatically from webSiteId.
+     * It is preferable to use webSiteId where possible.
      */
-    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String productId, 
-            String currentCategoryId, String previousCategoryId, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String productId, String currentCategoryId,
+            String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+        if (UtilValidate.isEmpty(webSiteId)) {
+            webSiteId = null;
+        }
+        if (UtilValidate.isEmpty(contextPath)) {
+            contextPath = null;
+        }
         
-        String url = CatalogUrlServlet.makeCatalogUrl(request, 
-                productId, currentCategoryId, previousCategoryId);
-        
-        return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
+        if (webSiteId != null || contextPath != null) {
+            // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
+            // and build as if we had no request
+            
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+            Locale locale = UtilHttp.getLocale(request);
+            
+            return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
+        } else {
+            String url = CatalogUrlServlet.makeCatalogUrl(request, 
+                    productId, currentCategoryId, previousCategoryId);
+            
+            url = appendLinkParams(url, params);
+            
+            return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
+        }
     }
     
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * <p>
+     * This version assumes the current webapp is the target webapp and may use session information.
+     */
+    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, 
+            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+        return makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, params, null, null, fullPath, secure, encode);
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * <p>
+     * This builds the link in a completely static, inter-webapp way, using no request information.
+     * <p>
+     * NOTE: if contextPath is omitted (null), it will be determined automatically.
+     */
+    public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
+            String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure) throws WebAppConfigurationException, IOException {
+        return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, null, null, null);
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * <p>
+     * This builds the link in a completely static, inter-webapp way, using no request information, but may also optionally encode
+     * the resulting link.
+     * <p>
+     * NOTE: if contextPath is omitted (null), it will be determined automatically.
+     */
+    public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
+            String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure,
+            Boolean encode, HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
+        if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
+            throw new IOException("webSiteId and contextPath (prefix) are missing - at least one must be specified");
+        }
+        
+        if (UtilValidate.isEmpty(contextPath)) {
+            contextPath = RequestLinkUtil.getWebSiteContextPath(delegator, webSiteId);
+        }
+        
+        String url;
+        
+        url = makeCatalogUrl(contextPath, null, productId, currentCategoryId, previousCategoryId);
+        
+        url = appendLinkParams(url, params);
+        
+        return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode, request, response);
+    }
+    
+    /**
+     * Appends params for catalog URLs.
+     * <p>
+     * WARN: this currently assumes the url contains no params, could change in future
+     */
+    protected static String appendLinkParams(String url, Object paramsObj) throws IOException {
+        if (paramsObj == null) {
+            return url;
+        }
+        String params = paramsObj.toString();
+        if (params.isEmpty()) {
+            return url;
+        }
+        if (params.startsWith("?")) {
+            url += params;
+        } else {
+            url += "?" + params;
+        }
+        return url;
+    }
 }

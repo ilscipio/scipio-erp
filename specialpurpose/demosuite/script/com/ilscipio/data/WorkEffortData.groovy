@@ -141,7 +141,6 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
         String workEffortTypeId = context.workEffortTypeIdsAndStatusKeys.get(index);
         workEffortTypeIdsAndStatusList = workEffortTypeIdsAndStatus.get(workEffortTypeId);
         String currentStatusId = workEffortTypeIdsAndStatusList.get(UtilRandom.random(workEffortTypeIdsAndStatusList));
-        Debug.log("WorkEffortTypeId ====> " + workEffortTypeId + " currentStatusId ======> " + currentStatusId + " partyId ==========> " + context.partyId);
         String workEffortName = "Demo WorkEffort " + workEffortId;
         minDate = UtilDateTime.nowDate();
         if (context.minDate != null)

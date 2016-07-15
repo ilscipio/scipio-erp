@@ -163,11 +163,9 @@ function getFinAccountTransRunningTotalAndBalances() {
                         <#assign paymentMethodType = "">
                         <#assign glReconciliation = "">
                         <#assign partyName = "">
-                        <#if finAccountTrans.paymentId?has_content>
-                            ${Static["org.ofbiz.base.util.Debug"].log("finAccountTrans id =========> " + finAccountTrans.finAccountTransId + " finAccountTrans payment id =========> " + finAccountTrans.paymentId)}
+                        <#if finAccountTrans.paymentId?has_content>                            
                             <#assign payment = delegator.findOne("Payment", {"paymentId" : finAccountTrans.paymentId}, true)>
-                        <#else>
-                            ${Static["org.ofbiz.base.util.Debug"].log("finAccountTrans id =========> " + finAccountTrans.finAccountTransId)}
+                        <#else>                            
                             <#assign payments = delegator.findByAnd("Payment", {"finAccountTransId" : finAccountTrans.finAccountTransId}, null, false)>
                         </#if>
                         <#assign finAccountTransType = delegator.findOne("FinAccountTransType", {"finAccountTransTypeId" : finAccountTrans.finAccountTransTypeId}, true)>

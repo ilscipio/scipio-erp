@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- import org.ofbiz.base.util.UtilValidate;
- import org.ofbiz.entity.util.EntityUtil;
- import org.ofbiz.product.catalog.CatalogWorker;
+ import javolution.util.FastList
+
+import org.ofbiz.base.util.UtilValidate
+import org.ofbiz.entity.util.EntityUtil
+import org.ofbiz.product.catalog.CatalogWorker
  
  prodCatalog = null;
  prodCatalogId = parameters.prodCatalogId;

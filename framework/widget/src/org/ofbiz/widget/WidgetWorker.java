@@ -345,11 +345,10 @@ public final class WidgetWorker {
                 writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction]\").each( function (j, r) {\r\n");
 
                 writer.append("\t\t\tif ($(r).is(\":checked\")) {\r\n");
-                writer.append("\t\t\tconsole.log(\"radio element ======> \" + $(r).attr(\"name\") + \"   radio value =======> \" + $(r).val());\r\n");
+
                 writer.append("\t\t\t\tchecked = true;\r\n");
                 makeHiddenFieldsForHiddenForm(writer);
                 writer.append("\t\t\tsubmitForm.submit();\r\n");
-                // writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());\r\n");
                 writer.append("\t\t\t}\r\n");
                 writer.append("\t\t});\r\n");
                 writer.append("\t\tif (!checked)\r\n");
@@ -378,7 +377,6 @@ public final class WidgetWorker {
                 writer.append("\t\te.preventDefault();\r\n");
                 makeHiddenFieldsForHiddenForm(writer);
                 writer.append("\t\t\tsubmitForm.submit();\r\n");
-                // writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());\r\n");
                 writer.append("\t\t});\r\n");
             }
             writer.append("\t} else {\r\n");
@@ -434,7 +432,6 @@ public final class WidgetWorker {
     private static void makeHiddenFieldsForHiddenForm(Appendable writer) throws IOException {
         writer.append("\t\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
         writer.append("\t\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n");
-        writer.append("\t\t\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\") + \"   value =======> \" + $(e).val());\r\n");
         writer.append("\t\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
         writer.append("\t\t\t\t\t$(hiddenField).attr(\"type\", \"hidden\");\r\n");
         writer.append("\t\t\t\t\t$(hiddenField).attr(\"name\", $(e).attr(\"name\"));\r\n");

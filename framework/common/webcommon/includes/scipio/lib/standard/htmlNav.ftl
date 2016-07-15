@@ -1416,13 +1416,8 @@ Renders a menu in a tree fashion.
 
 <#-- @treemenu main markup - theme override -->
 <#macro treemenu_markup treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
-    <#if treeMenuLibrary == "jsTree">
-        <#-- ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
-        ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + treeMenuData)} -->
-        <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>         
-        <#-- No longer need to escape this manually; @objectAsScript now prevents auto-escaping by screen context var wrappers -->
-        <#--<#local treeMenuDataJson>${treeMenuDataJson?replace("&#x23;", "#")}</#local>-->
-        <#-- ${Static["org.ofbiz.base.util.Debug"].log("treeMenuDataJson ====> " + treeMenuDataJson)} -->  
+    <#if treeMenuLibrary == "jsTree">        
+        <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>
         <#local nestedEvents><#nested></#local>
 
         <div id="${id!''}"></div>
@@ -1460,22 +1455,10 @@ Renders a menu in a tree fashion.
 <#macro treemenu_event event="">
     <#if event?has_content>
         <#assign validEvents = Static["com.ilscipio.scipio.treeMenu.jsTree.JsTreeEvent"].VALID_EVENTS />        
-        <#assign e = event?keep_before(Static["com.ilscipio.scipio.treeMenu.jsTree.JsTreeEvent"].JSTREE_EVENT) />
-        <#-- ${Static["org.ofbiz.base.util.Debug"].log("e ====> " + e)} -->
+        <#assign e = event?keep_before(Static["com.ilscipio.scipio.treeMenu.jsTree.JsTreeEvent"].JSTREE_EVENT) />        
 
-        <#if validEvents?has_content && validEvents?seq_contains(e)>
-            <#-- ${Static["org.ofbiz.base.util.Debug"].log("valid event")} -->            
+        <#if validEvents?has_content && validEvents?seq_contains(e)>                       
             .on("${event}", function (e, data) {
-				
-				/*for(var propertyName in e) {
-   					console.log("e propertyName =====> " + propertyName);
- 
-				}*/
-				/*for(var propertyName in data.node) {
-                    console.log("data node propertyName =====> " + propertyName);
-                }*/
-                console.log("data node ====> " + data.node.id);
-
                 <#nested>
             })
         </#if>

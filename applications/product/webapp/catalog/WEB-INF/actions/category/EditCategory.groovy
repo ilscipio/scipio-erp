@@ -48,8 +48,5 @@ context.imageUrlPrefix = imageUrlPrefix;
 
 filenameExpander = FlexibleStringExpander.getInstance(imageFilenameFormat, false);
 context.imageNameCategory = imageUrlPrefix + "/" + filenameExpander.expandString([location : "categories", type : "category", id : productCategoryId]);
-Debug.log("imageNameCategory =======> " + context.imageNameCategory);
 context.imageNameLinkOne  = imageUrlPrefix + "/" + filenameExpander.expandString([location : "categories", type : "linkOne", id : productCategoryId]);
-Debug.log("imageNameLinkOne =======> " + context.imageNameLinkOne);
 context.imageNameLinkTwo  = imageUrlPrefix + "/" + filenameExpander.expandString([location : "categories", type : "linkTwo", id : productCategoryId]);
-Debug.log("imageNameLinkTwo =======> " + context.imageNameLinkTwo);

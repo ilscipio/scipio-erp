@@ -355,6 +355,10 @@ under the License.
         <invokehook target="pre-clean" />
         
         <hotdeployant target="clean"/>
+        
+        <!-- SCIPIO: addons dir -->
+        <addonsant target="clean"/>
+        
         <antcall target="clean-specialpurpose"/>
         <antcall target="clean-applications"/>
         <antcall target="clean-framework"/>
@@ -670,6 +674,9 @@ under the License.
             </fileset>
         </externalsubant>
 
+        <!-- SCIPIO: addons dir -->
+        <addonsant/>
+        
         <hotdeployant/>
         <antcall target="clean-svninfo"/>
         <antcall target="clean-gitinfo"/>
@@ -731,6 +738,10 @@ under the License.
         <antcall target="docs-framework"/>
         <antcall target="docs-applications"/>
         <antcall target="docs-specialpurpose"/>
+        
+        <!-- SCIPIO: addons dir -->
+        <addonsant target="docs"/>
+        
         <hotdeployant target="docs"/>
         
         <!-- SCIPIO: hooks -->
@@ -2153,6 +2164,33 @@ under the License.
               </else>
             </if>
         </sequential>
+    </macrodef>
+    
+    <!-- based on hotdeployant - addons behaves more like hot-deploy than specialpurpose -->
+    <macrodef name="addonsant">
+      <attribute name="target" default=""/>
+      <sequential>
+        <!-- a check is done, if no build.xml file is present in hot-deploy dir,
+            then the build.xml files - if present - in hot-deploy sub-dirs will be used.
+            So the previous, simpler, behaviour is kept as long as you don't need
+            to build hot-deploy components in a specific order. -->
+        <if>
+          <available file="addons/build.xml" property="useAddonsBuild"/>
+          <then>
+            <externalsubant target="@{target}">
+              <filelist dir="." files="addons/build.xml"/>
+            </externalsubant>
+          </then>
+          <else>
+            <externalsubant target="@{target}">
+              <fileset dir="${basedir}/addons" casesensitive="no">
+                <exclude name="disabled/**"/>
+                <include name="*/build.xml"/>
+              </fileset>
+            </externalsubant>
+          </else>
+        </if>
+      </sequential>
     </macrodef>
     
 </project>

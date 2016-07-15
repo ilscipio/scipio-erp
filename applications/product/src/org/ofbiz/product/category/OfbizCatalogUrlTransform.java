@@ -20,12 +20,15 @@ package org.ofbiz.product.category;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
@@ -33,9 +36,43 @@ import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
+import freemarker.template.utility.DeepUnwrap;
 
+/**
+ * Catalog URL Transform.
+ * <p>
+ * Accepts the following arguments (see CatalogUrlServlet for their definition):
+ * <ul>
+ * <li>productId</li>
+ * <li>currentCategoryId</li>
+ * <li>previousCategoryId</li>
+ * </ul>
+ * <p>
+ * SCIPIO: This transform is augmented to support the following parameters:
+ * <ul>
+ * <li>fullPath (boolean)</li>
+ * <li>secure (boolean)</li>
+ * <li>encode (boolean)</li>
+ * </ul>
+ * <p>
+ * In addition, it now supports inter-webapp links. If either of the parameters
+ * <ul>
+ * <li>webSiteId</li>
+ * <li>prefix</li>
+ * </ul>
+ * are specified, it enables inter-webapp mode, where no session information
+ * is used and a purely static link is built instead.
+ * For staticly-rendered templates such as emails, webSiteId or prefix is always required.
+ * <p>
+ * It is also now possible to specify a string of parameters (with or without starting "?") using:
+ * <ul>
+ * <li>params</li>
+ * </ul>
+ */
 public class OfbizCatalogUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizCatalogUrlTransform.class.getName();
     
@@ -83,20 +120,45 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                 try {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     BeanModel req = (BeanModel) env.getVariable("request");
+                    
+                    String productId = getStringArg(args, "productId");
+                    String currentCategoryId = getStringArg(args, "currentCategoryId");
+                    String previousCategoryId = getStringArg(args, "previousCategoryId");
+                    
+                    // SCIPIO: webSiteId
+                    String webSiteId = getStringArg(args, "webSiteId");
+                    
+                    String prefix = getStringArg(args, "prefix");
+                    
+                    Object urlParams = DeepUnwrap.unwrap((TemplateModel) args.get("params"));
+                    
                     if (req != null) {
-                        String productId = getStringArg(args, "productId");
-                        String currentCategoryId = getStringArg(args, "currentCategoryId");
-                        String previousCategoryId = getStringArg(args, "previousCategoryId");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         
                         // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
                         BeanModel resp = (BeanModel) env.getVariable("response");
                         HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
                         
-                        String catalogUrl = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, 
-                                fullPath, secure, encode);
+                        String url = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
+                                prefix, fullPath, secure, encode);
 
-                        out.write(catalogUrl);
+                        // SCIPIO: no null
+                        if (url != null) {
+                            out.write(url);
+                        }
+                    } else if (webSiteId != null || prefix != null) {
+                        // SCIPIO: New: Handle non-request cases
+                        Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
+                        LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
+                        Locale locale = (Locale) args.get("locale");
+                        
+                        String url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
+                                prefix, fullPath, secure);
+
+                        // SCIPIO: no null
+                        if (url != null) {
+                            out.write(url);
+                        }
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());

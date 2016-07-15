@@ -426,7 +426,7 @@ under the License.
     
     
     <form name="ListChecksToPrint" type="multi" list-name="payments" target="printChecks" separate-columns="true"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" target-window="_blank"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>

@@ -95,7 +95,7 @@
         </#if>
 
         <#if lookupParty.statusId?has_content>
-            <#assign status = party.getRelatedOne("StatusItem", false)/>
+            <#assign status = delegator.findOne("StatusItem", {"statusId" : lookupParty.statusId}, false)/>
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.CommonStatus}
               </@td>
@@ -133,7 +133,7 @@
                   
                   
                     <#if avsOverride??>
-                      <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="${styles.action_reset!}">${uiLabelMap.CommonReset}</a>
+                      <a href="<@ofbizUrl>resetAvsOverride?partyId=${lookupParty.partyId}</@ofbizUrl>" class="${styles.action_reset!}">${uiLabelMap.CommonReset}</a>
                     </#if>
                 <#else>
                     ${(avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal}

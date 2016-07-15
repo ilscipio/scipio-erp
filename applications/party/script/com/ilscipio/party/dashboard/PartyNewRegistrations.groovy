@@ -19,7 +19,6 @@ for (int i = 0; i <= iCount; i++) {
     createdDateAndExprs.add(EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
     
     createdPartiesCount = from("Party").where(createdDateAndExprs).queryCount();
-//    Debug.log("createdPartiesCount ==========> " + createdPartiesCount);
     
     totalMap.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), createdPartiesCount);    
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);    

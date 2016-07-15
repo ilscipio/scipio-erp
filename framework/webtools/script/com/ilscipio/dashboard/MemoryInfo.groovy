@@ -43,27 +43,17 @@ rt = Runtime.getRuntime();
 memoryInfo = [:];
 maxMemoryMB = ((rt.maxMemory() / 1024) / 1024);
 context.maxMemoryMB = maxMemoryMB;
-//memoryInfo.put("Max Memory", maxMemoryMB);
-Debug.log("Max memory ==========> " + maxMemoryMB + " MB");
-//
+
 totalMemoryMB = ((rt.totalMemory() / 1024) / 1024);
-//memoryInfo.put("Total Memory", totalMemoryMB);
 context.totalMemoryMB = totalMemoryMB;
-Debug.log("Total memory ==========> " + totalMemoryMB + " MB");
 
 freeMemoryMB = ((rt.freeMemory() / 1024) / 1024);
 memoryInfo.put("Free Memory", UtilFormatOut.formatQuantity(freeMemoryMB));
-Debug.log("Free memory ==========> " + freeMemoryMB + " MB");
 
 cachedMemoryMB = ((totalCacheMemory / 1024) / 1024);
 memoryInfo.put("Cache Memory", UtilFormatOut.formatQuantity(cachedMemoryMB));
-Debug.log("Cached memory ==========> " + cachedMemoryMB);
 
 usedMemoryMB = ((((rt.totalMemory() - rt.freeMemory()) - totalCacheMemory)  / 1024) / 1024);
 memoryInfo.put("Used Memory without cache", UtilFormatOut.formatQuantity(usedMemoryMB));
-Debug.log("Used memory ==========> " + usedMemoryMB + " MB");
-
-
-
 
 context.memoryInfo = memoryInfo;

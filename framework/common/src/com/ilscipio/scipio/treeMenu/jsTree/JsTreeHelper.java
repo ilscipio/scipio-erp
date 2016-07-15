@@ -30,7 +30,6 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         boolean r = super.add(e);
         if (r) {
             findRepeatedDataItems();
-            Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
             if (sameIdDataItemsMap.containsKey(e.getId()))
                 updateTreeDataItemsIdAndParentReference(e.getId());
         }
@@ -41,7 +40,6 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
     public void add(int index, JsTreeDataItem element) {
         super.add(index, element);
         findRepeatedDataItems();
-        Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
         if (sameIdDataItemsMap.containsKey(element.getId()))
             updateTreeDataItemsIdAndParentReference(element.getId());
     }
@@ -51,10 +49,7 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         boolean r = super.addAll(c);
         if (r) {
             findRepeatedDataItems();
-            Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
             for (String idKey : sameIdDataItemsMap.keySet()) {
-                // Debug.logInfo("updating id ============> " + idKey + " " +
-                // sameIdDataItemsMap.get(idKey) + " times", module);
                 updateTreeDataItemsIdAndParentReference(idKey);
             }
         }
@@ -66,10 +61,7 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         boolean r = super.addAll(index, c);
         if (r) {
             findRepeatedDataItems();
-            Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
             for (String idKey : sameIdDataItemsMap.keySet()) {
-                // Debug.logInfo("updating id ============> " + idKey + " " +
-                // sameIdDataItemsMap.get(idKey) + " times", module);
                 updateTreeDataItemsIdAndParentReference(idKey);
             }
         }
@@ -119,21 +111,10 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
             if (item.getOriginalId().equals(id) && idCount >= 0) {
                 item.setId(item.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + idCount);
                 idCount--;
-                // Debug.logInfo(
-                // "updating id ============> " + item.getOriginalId() + "
-                // remaining items with the same id to be updated =============>
-                // " + idCount, module);
-            } else if (item.getOriginalId().equals(id) && idCount < 0) {
-                Debug.log("Reached maximum number of replacements for id ====> " + id);
             }
-
             // Update parent
             if (item.getParent().equals(id)) {
                 item.setParent(item.getParent() + JSTREE_FIELD_ID_SEPARATOR + idCount);
-                // Debug.logInfo("updating parent ============> " +
-                // item.getParent() + " remaining items with the same parent to
-                // be updated =============> "
-                // + idCount, module);
             }
         }
     }

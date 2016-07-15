@@ -29,7 +29,6 @@ shipmentTypeList = from("ShipmentType").queryList();
 context.shipmentTypeList = shipmentTypeList;
 
 uomList = from("Uom").where(["uomTypeId" : "CURRENCY_MEASURE"]).queryList();
-Debug.log("uomList ==========> " + uomList);
 context.uomList = uomList;
 
 context.shipmentId = shipmentId;

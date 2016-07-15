@@ -33,7 +33,6 @@ if (inventoryItemId)
 
 
 ecl = EntityCondition.makeCondition(exprsFrom, EntityOperator.AND);
-Debug.log("exprsFrom ==========> " + ecl);
 fromTransfers = from("InventoryTransfer").where(exprsFrom).orderBy("sendDate").queryList();
 if (fromTransfers) {
     context.fromTransfers = fromTransfers;

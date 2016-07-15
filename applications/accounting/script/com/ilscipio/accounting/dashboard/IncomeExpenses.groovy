@@ -46,7 +46,6 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     
     Map<Date, Map<String, BigDecimal>> totalMap = [:];
     for (int i = 0; i <= iCount; i++) {
-        Debug.log("dateBegin ===========> " + dateIntervals.getDateBegin() + "  dateEnd =================> " + dateIntervals.getDateEnd());
         Map<String, BigDecimal> auxMap = [:];
         List transactionDateAndExprs = FastList.newInstance();
         transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));

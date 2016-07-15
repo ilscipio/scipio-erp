@@ -152,15 +152,19 @@ public abstract class RequestLinkUtil {
             webSiteProps = WebSiteProperties.from(request);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return false;
+            return true;
         }
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-        return rh.checkFullSecureOrStandard(request, webSiteProps, null, interWebapp, fullPath, secure);
+        //RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+        return RequestHandler.checkFullSecureOrStandard(request, webSiteProps, null, interWebapp, fullPath, secure);
     }
     
     public static Boolean checkFullSecureOrStandard(Delegator delegator, WebSiteProperties webSiteProps,
-            Boolean interWebapp, Boolean fullPath, Boolean secure) {
-        // FIXME: This case is too simplistic currently, check the website
+            Boolean interWebapp, Boolean fullPath, Boolean secure, HttpServletRequest request, HttpServletResponse response) {
+        // what we can do here depends on whether we got a request/response or not
+        // checkFullSecureOrStandard should handle the case where request was missing (treats as insecure current request)
+        return RequestHandler.checkFullSecureOrStandard(request, webSiteProps, null, interWebapp, fullPath, secure);
+        
+        /* old logic, too simplistic (wrong and insecure compared to new RequestHandler logic)
         if (Boolean.TRUE.equals(secure)) {
             return Boolean.TRUE;
         } else if (Boolean.TRUE.equals(fullPath)) {
@@ -168,27 +172,40 @@ public abstract class RequestLinkUtil {
         } else {
             return null;
         }
+        */
     }
     
     public static Boolean checkFullSecureOrStandard(Delegator delegator, String webSiteId,
-            Boolean interWebapp, Boolean fullPath, Boolean secure) {
-        // FIXME: This case is too simplistic currently, check the website
-        if (Boolean.TRUE.equals(secure)) {
-            return Boolean.TRUE;
-        } else if (Boolean.TRUE.equals(fullPath)) {
-            return Boolean.FALSE;
-        } else {
-            return null;
+            Boolean interWebapp, Boolean fullPath, Boolean secure, HttpServletRequest request, HttpServletResponse response) {
+        WebSiteProperties webSiteProps = null;
+        if (webSiteId != null) {
+            try {
+                webSiteProps = WebSiteProperties.from(delegator, webSiteId);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return true;
+            }
         }
+        return checkFullSecureOrStandard(delegator, webSiteProps, interWebapp, fullPath, secure, request, response);
     }
     
     public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
-            Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+            Boolean fullPath, Boolean secure, Boolean encode,
+            HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
+
+        boolean didFullStandard = false;
+        boolean didFullSecure = false;     
         StringBuilder newURL = new StringBuilder();
         
         // NOTE: this is always treated as inter-webapp, because we don't know our webapp
-        Boolean secureFullPathFlag = checkFullSecureOrStandard(delegator, webSiteId, true, fullPath, secure);
+        Boolean secureFullPathFlag = checkFullSecureOrStandard(delegator, webSiteId, true, fullPath, secure, request, response);
         if (secureFullPathFlag != null) {
+            if (secureFullPathFlag) {
+                didFullSecure = true;
+            } else {
+                didFullStandard = true;
+            }
+            
             OfbizUrlBuilder builder;
             if (UtilValidate.isNotEmpty(webSiteId)) {
                 WebappInfo webAppInfo;
@@ -218,7 +235,31 @@ public abstract class RequestLinkUtil {
             builder.buildHostPart(newURL, url, Boolean.TRUE.equals(secureFullPathFlag));
         }
         newURL.append(url);
-        return newURL.toString();
+        
+        if (request != null && response != null) {
+            String res;
+            if (!Boolean.FALSE.equals(encode)) {
+                RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+                res = rh.doLinkURLEncode(request, response, newURL, true, didFullStandard, didFullSecure);
+            } else {
+                res = newURL.toString();
+            }
+            
+            return res;
+        } else {
+            return newURL.toString();
+        }
+    }
+    
+    public static String getWebSiteContextPath(Delegator delegator, String webSiteId) throws WebAppConfigurationException, IOException {
+        WebappInfo webAppInfo;
+        try {
+            webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+            
+            return webAppInfo.getContextRoot();
+        } catch (SAXException e) {
+            throw new IOException(e);
+        }
     }
     
     /**

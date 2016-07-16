@@ -19,11 +19,15 @@ under the License.
 <#assign requestName><@ofbizUrl>${requestName}</@ofbizUrl></#assign>
 <@script>
 jQuery(document).ready(function() {
-    if (jQuery('#${dependentForm}').length && jQuery('#${dependentForm}_${mainId}').length) {
-      jQuery('#${dependentForm}_${mainId}').change(function(e, data) {
-          getDependentDropdownValues('${requestName}', '${paramKey}', '${dependentForm}_${mainId}', '${dependentForm}_${dependentId}', '${responseName}', '${dependentKeyName}', '${descName}', '_previous_');
+    <#-- SCIPIO: added depFormFieldPrefix as workaround for some form name issues -->
+    <#if !depFormFieldPrefix??>
+      <#assign depFormFieldPrefix = dependentForm + "_">
+    </#if>
+    if (jQuery('#${dependentForm}').length && jQuery('#${depFormFieldPrefix}${mainId}').length) {
+      jQuery('#${depFormFieldPrefix}${mainId}').change(function(e, data) {
+          getDependentDropdownValues('${requestName}', '${paramKey}', '${depFormFieldPrefix}${mainId}', '${depFormFieldPrefix}${dependentId}', '${responseName}', '${dependentKeyName}', '${descName}', '_previous_');
       });
-      getDependentDropdownValues('${requestName}', '${paramKey}', '${dependentForm}_${mainId}', '${dependentForm}_${dependentId}', '${responseName}', '${dependentKeyName}', '${descName}', '${selectedDependentOption}');
+      getDependentDropdownValues('${requestName}', '${paramKey}', '${depFormFieldPrefix}${mainId}', '${depFormFieldPrefix}${dependentId}', '${responseName}', '${dependentKeyName}', '${descName}', '${selectedDependentOption}');
       <#if (focusFieldName??)>
         jQuery('#${focusFieldName}').focus();
       </#if>

@@ -52,6 +52,8 @@
                                     <actions>
                                         <!-- fields for setDependentDropdownValuesJs.ftl -->
                                         <set field="dependentForm" value="NewCustomer"/>
+                                        <!-- SCIPIO: new field required as workaround for Ofbiz issue with form names -->
+                                        <set field="depFormFieldPrefix" value="NewUser_"/>
                                         <set field="paramKey" value="countryGeoId"/>                                        
                                         <set field="mainId" value="USER_COUNTRY"/>
                                         <set field="dependentId" value="USER_STATE"/>

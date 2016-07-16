@@ -22,7 +22,7 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="NewOrganization" type="single" target="${target}${previousParams}"
-        focus-field-name="USER_TITLE" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" --> <!-- SCIPIO: no such field: focus-field-name="USER_TITLE" -->
         <field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field>
         <field name="partyId"><text/></field>

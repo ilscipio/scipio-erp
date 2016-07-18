@@ -67,6 +67,6 @@ if (userLogin && parameters.portalPageId) {
     }
 }
 // Debug.log('======parent portalPageId: ' + parameters.parentPortalPageId);
-if (!context.headerItem && parameters.portalPageId) {
-    context.headerItem = parameters.portalPageId; // and the menu item is highlighted
+if (!context.activeMainMenuItem && parameters.portalPageId) {
+    context.activeMainMenuItem = parameters.portalPageId; // and the menu item is highlighted
 }

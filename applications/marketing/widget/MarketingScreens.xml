@@ -150,7 +150,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="MarketingCampaignRoleCreate" />
-                <set field="campaignTabButtonItem" value="MarketingCampaignRole" />
+                <set field="activeCampaignSubMenuItem" value="MarketingCampaignRole" />
                 <set field="labelTitleProperty" value="PageTitleEditMarketingCampaignRole" />
                 <set field="donePage" value="ListMarketingCampaignRoles" />
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
@@ -179,7 +179,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListMarketingCampaignRole" />
-                <set field="campaignTabButtonItem" value="MarketingCampaignRole" />
+                <set field="activeCampaignSubMenuItem" value="MarketingCampaignRole" />
                 <set field="labelTitleProperty" value="PageTitleListMarketingCampaignRole" />
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="FindMarketingCampaign" />
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />

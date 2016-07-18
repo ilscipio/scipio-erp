@@ -59,7 +59,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResEditPayGrade"/>
                 <set field="activeSubMenuItem" value="PayGrade"/>
-                <set field="subTabButtonItem" value="EditPayGrade"/>
+                <set field="activeSubMenu2Item" value="EditPayGrade"/>
                 <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <entity-one entity-name="PayGrade" value-field="payGrade"/>
             </actions>

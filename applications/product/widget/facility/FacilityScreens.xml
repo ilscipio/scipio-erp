@@ -836,7 +836,7 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
-                <set field="subTabButtonItem" value="EditInventoryItem"/>
+                <set field="activeSubMenu2Item" value="EditInventoryItem"/>
                 <set field="displayWithNoFacility" value="Y"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="inventoryItemId" from-field="parameters.inventoryItemId"/>
@@ -933,7 +933,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditInventoryItem"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
-                <set field="subTabButtonItem" value="ViewInventoryItemDetail"/>
+                <set field="activeSubMenu2Item" value="ViewInventoryItemDetail"/>
 
                 <set field="inventoryItemId" from-field="parameters.inventoryItemId"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -967,7 +967,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditInventoryItemLabels"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
-                <set field="subTabButtonItem" value="EditInventoryItemLabels"/>
+                <set field="activeSubMenu2Item" value="EditInventoryItemLabels"/>
 
                 <set field="inventoryItemId" from-field="parameters.inventoryItemId"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -1359,7 +1359,7 @@ under the License.
                 <set field="titleProperty" value="PageTitlePackageShipmentScheduling"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="Scheduling"/>
-                <set field="scheduleTabButtonItem" value="ScheduleTabButton"/>
+                <set field="activeScheduleSubMenuItem" value="ScheduleTabButton"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
 
                 <!-- get ShipmentRouteSegmentDetails that are PACKED and not CONFIRMED with carrier -->
@@ -1398,7 +1398,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleLabelPrinting"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="Scheduling"/>
-                <set field="scheduleTabButtonItem" value="LabelsTabButton"/>
+                <set field="activeScheduleSubMenuItem" value="LabelsTabButton"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
 
                 <!-- get all carrier CONFIRMED ShipmentPackageRouteDetails -->

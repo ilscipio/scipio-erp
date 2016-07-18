@@ -24,7 +24,7 @@ listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: 
 partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));
 context.partyPostalAddress = partyPostalAddress;
 
-//if("productstore".equals(tabButtonItemTop)){
+if("productstore".equals(context.activeSubMenuItemTop)){
     if(findResult.size() == 0){
         request.setAttribute("_ERROR_MESSAGE_", "Facility not set!");
         context.showScreen = "message";
@@ -32,7 +32,7 @@ context.partyPostalAddress = partyPostalAddress;
     }else{
         context.showScreen = "origin";
     }
-//}else if("facility".equals(tabButtonItemTop)){
+}else if("facility".equals(context.activeSubMenuItemTop)){
     facilityId = parameters.facilityId;
     if (!facilityId && request.getAttribute("facilityId")) {
         facilityId = request.getAttribute("facilityId");
@@ -44,4 +44,4 @@ context.partyPostalAddress = partyPostalAddress;
     }
     context.facility = facility;
     context.facilityId = facilityId;
-//}
+}

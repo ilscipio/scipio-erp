@@ -61,7 +61,7 @@ import org.ofbiz.product.catalog.CatalogWorker
  context.prodCatalogId = prodCatalogId
  context.showScreen = showScreen;
 
- if(("productcategory".equals(tabButtonItem)) || ("product".equals(tabButtonItem))){
+ if(("productcategory".equals(context.activeSubMenuItem)) || ("product".equals(context.activeSubMenuItem))){
      productCategory = null;
      productCategoryId = parameters.productCategoryId;
      showErrorMsg = "N";
@@ -81,7 +81,7 @@ import org.ofbiz.product.catalog.CatalogWorker
      context.productCategoryId = productCategoryId;
      context.productCategory = productCategory;
      
-     if("product".equals(tabButtonItem)){
+     if("product".equals(context.activeSubMenuItem)){
          productId = parameters.productId;
          product = null;
          

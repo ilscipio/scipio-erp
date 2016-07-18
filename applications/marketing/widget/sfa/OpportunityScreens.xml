@@ -121,7 +121,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListCommunications"/>
                 <set field="activeSubMenuItem" value="PartyCommEvents"/>
-                <set field="subTabButtonItem" value="CommunicationEvent"/>
+                <set field="activeSubMenu2Item" value="CommunicationEvent"/>
                 <set field="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
                 <service service-name="findPartyInSalesOpportunityRole" result-map="leadPartyResult">
                     <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>

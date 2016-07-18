@@ -27,7 +27,7 @@ if(productStore){
 context.productStoreId = productStoreId;
 context.productStore = productStore;
 
-//if("website".equals(tabButtonItemTop)){
+if("website".equals(context.activeSubMenuItemTop)){
     if(productStoreId != null){
         webSite = EntityUtil.getFirst(delegator.findByAnd("WebSite", [productStoreId: productStoreId], null, false));
         context.showScreen = "origin";
@@ -37,4 +37,4 @@ context.productStore = productStore;
         return;
     }
     context.webSite = webSite;
-//}
+}

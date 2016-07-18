@@ -489,7 +489,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListInvoiceTerms"/>
-                <set field="tabButtonItem" value="invoiceTerms"/>
+                <set field="activeSubMenuItem" value="invoiceTerms"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
                 <entity-and entity-name="InvoiceTerm" list="invoiceTerms">

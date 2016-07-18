@@ -66,7 +66,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataSource"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataSource"/>
-                 <set field="dataSourceTabButtonItem" value="DataSource"/>
+                 <set field="activeDataSourceSubMenuItem" value="DataSource"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListDataSource"/>
                 <set field="dataSourceId" from-field="parameters.dataSourceId"/>
                 <entity-one entity-name="DataSource" value-field="dataSource"/>
@@ -104,7 +104,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListDataSource"/>
-                <set field="dataSourceTabButtonItem" value="DataSource"/>
+                <set field="activeDataSourceSubMenuItem" value="DataSource"/>
                 <set field="labelTitleProperty" value="PageTitleListDataSource"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListDataSource"/>
@@ -132,7 +132,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataSourceType"/>
-                <set field="dataSourceTabButtonItem" value="DataSourceType"/>
+                <set field="activeDataSourceSubMenuItem" value="DataSourceType"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataSourceType"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListDataSourceType"/>
@@ -172,7 +172,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListDataSourceType"/>
-                <set field="dataSourceTabButtonItem" value="DataSourceType"/>
+                <set field="activeDataSourceSubMenuItem" value="DataSourceType"/>
                 <set field="labelTitleProperty" value="PageTitleListDataSourceType"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListDataSourceType"/>

@@ -150,7 +150,7 @@
         </menu-item>
     </menu>
     <menu name="SalaryBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="EditSalaryStep" 
-        selected-menuitem-context-field-name="subTabButtonItem">
+        selected-menuitem-context-field-name="activeSubMenu2Item">
         <menu-item name="EditPayGrade" title="${uiLabelMap.HumanResPayGrade}">
             <link target="EditPayGrade">
                 <parameter param-name="payGradeId"/>

@@ -148,7 +148,7 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PartyCommunications}: ${parameters.partyId}"/>
                 <set field="activeSubMenuItem" value="PartyCommEvents"/>
-                <set field="subTabButtonItem" value="CommunicationEvent"/>
+                <set field="activeSubMenu2Item" value="CommunicationEvent"/>
                 <service service-name="findPartyInSalesOpportunityRole" result-map="leadPartyResult">
                     <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
                     <field-map field-name="roleTypeId" value="LEAD"/>

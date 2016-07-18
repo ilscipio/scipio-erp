@@ -27,7 +27,7 @@ under the License.
                <set field="titleProperty" value="MarketingContactListFindContactLists"/>
                <set field="activeMainMenuItem" value="ContactList"/>
                <set field="activeSubMenuItem" value="ContactList"/>               
-               <set field="contactListTabButtonItem" value="ContactList"/>
+               <set field="activeContactListSubMenuItem" value="ContactList"/>
                <set field="labelTitleProperty" value="PageTitleFindContactLists"/>
                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindContactList"/>
            </actions>
@@ -59,7 +59,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactList"/>
-                <set field="contactListTabButtonItem" value="ContactList"/>
+                <set field="activeContactListSubMenuItem" value="ContactList"/>
                 <set field="labelTitleProperty" value="PageTitleEditContactList"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactLists"/>
@@ -99,7 +99,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListContactList"/>
-                <set field="contactListTabButtonItem" value="ContactList"/>
+                <set field="activeContactListSubMenuItem" value="ContactList"/>
                 <set field="labelTitleProperty" value="PageTitleListContactList"/>
 
                 <!-- parameters for pagination -->
@@ -131,7 +131,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactListParty"/>
-                <set field="contactListTabButtonItem" value="ContactListParty"/>
+                <set field="activeContactListSubMenuItem" value="ContactListParty"/>
                 <set field="labelTitleProperty" value="PageTitleEditContactListParty"/>
                 
                 <set field="contactListId" from-field="parameters.contactListId"/>
@@ -179,7 +179,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListContactListParty"/>
-                <set field="contactListTabButtonItem" value="ContactListParty"/>
+                <set field="activeContactListSubMenuItem" value="ContactListParty"/>
                 <set field="labelTitleProperty" value="PageTitleListContactListParty"/>
 
                 <!-- parameters for pagination -->
@@ -211,7 +211,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindContactListParty"/>
-                <set field="contactListTabButtonItem" value="ContactListParty"/>
+                <set field="activeContactListSubMenuItem" value="ContactListParty"/>
                 <set field="labelTitleProperty" value="PageTitleFindContactListParty"/>
 
                 <set field="contactListId" from-field="parameters.contactListId"/>
@@ -246,7 +246,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactListCommEvent"/>
-                <set field="contactListTabButtonItem" value="ContactListCommEvent"/>
+                <set field="activeContactListSubMenuItem" value="ContactListCommEvent"/>
                 <set field="labelTitleProperty" value="PageTitleEditContactListCommEvent"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="FindContactListCommEvents?contactListId=${parameters.contactListId}"/>
@@ -287,7 +287,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListContactListCommEvent"/>
-                <set field="contactListTabButtonItem" value="ContactListCommEvent"/>
+                <set field="activeContactListSubMenuItem" value="ContactListCommEvent"/>
                 <set field="labelTitleProperty" value="PageTitleListContactListCommEvent"/>
 
                 <!-- parameters for pagination -->
@@ -319,7 +319,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindContactListCommEvents"/>
-                <set field="contactListTabButtonItem" value="ContactListCommEvent"/>
+                <set field="activeContactListSubMenuItem" value="ContactListCommEvent"/>
                 <set field="labelTitleProperty" value="PageTitleFindContactListCommEvents"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="FindContactListCommEvents?contactListId=${parameters.contactListId}"/>
@@ -346,7 +346,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindImportContactListParties"/>
-                <set field="contactListTabButtonItem" value="ContactListImportParty"/>
+                <set field="activeContactListSubMenuItem" value="ContactListImportParty"/>
                 <set field="labelTitleProperty" value="PageTitleFindImportContactListParties"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="FindImportContactListParties?contactListId=${parameters.contactListId}"/>
@@ -376,7 +376,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleLookupContactList"/>
-                <set field="contactListTabButtonItem" value="ContactListCommEvent"/>
+                <set field="activeContactListSubMenuItem" value="ContactListCommEvent"/>
                 <set field="labelTitleProperty" value="PageTitleLookupContactList"/>
                 <set field="title" value="${uiLabelMap.PageTitleLookupContactList}"/>
                 <set field="entityName" value="ContactList"/>
@@ -400,7 +400,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitlePreferredContactMech"/>
-                <set field="contactListTabButtonItem" value="ContactListCommEvent"/>
+                <set field="activeContactListSubMenuItem" value="ContactListCommEvent"/>
                 <set field="labelTitleProperty" value="PageTitlePreferredContactMech"/>
                 <set field="title" value="${uiLabelMap.PageTitlePreferredContactMech}"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactLists"/>
@@ -422,7 +422,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactListCommEvent"/>
-                <set field="contactListTabButtonItem" value="ContactListCommEvent"/>                
+                <set field="activeContactListSubMenuItem" value="ContactListCommEvent"/>                
                 <set field="labelTitleProperty" value="PageTitleEditContactListCommEvent"/>
 
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
@@ -481,7 +481,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="MarketingWebSiteContactList"/>
-                <set field="contactListTabButtonItem" value="WebSiteContactList"/>
+                <set field="activeContactListSubMenuItem" value="WebSiteContactList"/>
                 <entity-one value-field="contactList" entity-name="ContactList"/>
                 <entity-and list="webSiteContactLists" entity-name="WebSiteContactList">
                     <field-map field-name="contactListId" from-field="contactList.contactListId"/>

@@ -110,7 +110,7 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="titleProperty" value="PageTitleFindSegmentGroup"/>
-                <set field="segmentTabButtonItem" value="SegmentGroupClassification"/>
+                <set field="activeSegmentSubMenuItem" value="SegmentGroupClassification"/>
 
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -154,7 +154,7 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="titleProperty" value="PageTitleListSegmentGroupGeo"/>
-                <set field="segmentTabButtonItem" value="SegmentGroupGeo"/>
+                <set field="activeSegmentSubMenuItem" value="SegmentGroupGeo"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -197,7 +197,7 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="titleProperty" value="PageTitleListSegmentGroupRole"/>
-                <set field="segmentTabButtonItem" value="SegmentGroupRole"/>
+                <set field="activeSegmentSubMenuItem" value="SegmentGroupRole"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>

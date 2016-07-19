@@ -57,11 +57,11 @@ under the License.
        <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=(labelPassword!)/>
 
           <#if ("Y" == useMultitenant) >
-              <#if !requestAttributes.userTenantId??>
+              <#--<#if !requestAttributes.userTenantId??>-->
               <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=(labelTenant!)/>
-              <#else>
+              <#--<#else>
                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
-              </#if>
+              </#if>-->
           </#if>
          
          <@row>

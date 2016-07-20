@@ -175,7 +175,7 @@ under the License.
     </form>
 
     <form name="ListBillingAccountRoles" type="multi" list-name="billingAccountRoleList" target="updateBillingAccountRole?billingAccountId=${billingAccountId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}"
-        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true" use-row-submit="false"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true" use-row-submit="false" paginate-target="EditBillingAccountRoles"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="BillingAccountRole" list="billingAccountRoleList">
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>

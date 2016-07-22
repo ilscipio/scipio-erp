@@ -87,6 +87,12 @@ c. Click "Visual Theme Resources - Reload All, Now"
 Optional Configuration
   http://www.scipioerp.com/community/developer/installation-configuration/configuration/
 
+Docker
+We also provide Docker images if you would like to try out Scipio with minimal effort. To create a fully functional Scipio ERP instance with some demo data already loaded, you can create a container with the following command:
+
+  docker create -p 8080:8080 -p 8443:8443 ilscipio/scipio-erp:demo
+  
+
 *****************
 * S U P P O R T *
 *****************
@@ -159,4 +165,4 @@ of The Apache Software Foundation.
      java.security.* and javax.crypto.* (the JCE, Java Cryptography
      Extensions API)
    * Other classes such as HttpClient and various related ones use
-  the JSSE (Java Secure Sockets Extension) API
+     the JSSE (Java Secure Sockets Extension) API

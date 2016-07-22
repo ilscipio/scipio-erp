@@ -65,10 +65,10 @@ under the License.
           </#if>
          
          <@row>
-             <@cell class="+${styles.text_left!}" columns=9>
-                <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a></small>
+             <@cell class="+${styles.text_left!}" columns=7>
+                <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}</a></small>
              </@cell>
-            <@cell class="+${styles.text_right!}" columns=3>
+            <@cell class="+${styles.text_right!}" columns=5>
                 <input type="hidden" name="JavaScriptEnabled" value="N"/>
                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>
             </@cell>

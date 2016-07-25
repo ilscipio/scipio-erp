@@ -66,7 +66,7 @@ under the License.
     </form>
 
     <!-- SCIPIO: ListMarketingCampaign moved to component://marketing/widget/MarketingCampaignScreens.xml#MarketingCampaignSearchResults -->
-   <!-- <form name="ListMarketingCampaign" type="list" paginate-target="listMarketingCampaign"
+   <!-- <form name="ListMarketingCampaign" type="list" paginate-target="FindMarketingCampaign"
         odd-row-style="alternate-row" header-row-style="header-row-2"> orig: default-table-style=-style="basic-table hover-bar"
         <actions>
             <entity-condition entity-name="MarketingCampaign">

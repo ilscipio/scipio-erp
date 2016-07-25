@@ -207,22 +207,27 @@ public abstract class SolrProductSearch {
             // Construct Documents
             List<Map<String, Object>> fieldList = UtilGenerics.<Map<String, Object>> checkList(context.get("fieldList"));
 
-            Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", module);
-
-            for (Iterator<Map<String, Object>> fieldListIterator = fieldList.iterator(); fieldListIterator.hasNext();) {
-                SolrInputDocument doc1 = SolrUtil.generateSolrDocument(fieldListIterator.next());
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
+            if (fieldList.size() > 0) {
+                Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", module);
+    
+                for (Iterator<Map<String, Object>> fieldListIterator = fieldList.iterator(); fieldListIterator.hasNext();) {
+                    SolrInputDocument doc1 = SolrUtil.generateSolrDocument(fieldListIterator.next());
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
+                    }
+                    docs.add(doc1);
                 }
-                docs.add(doc1);
+                // push Documents to server
+                if (UtilValidate.isNotEmpty(context.get("core"))) {
+                    client = new HttpSolrClient(SolrUtil.solrUrl + "/" + context.get("core"));
+                } else {
+                    client = new HttpSolrClient(SolrUtil.solrFullUrl);
+                }
+                client.add(docs);
+                client.commit();
+            } else {
+                Debug.logInfo("Solr: No documents to index", module);
             }
-            // push Documents to server
-            if (UtilValidate.isNotEmpty(context.get("core")))
-                client = new HttpSolrClient(SolrUtil.solrUrl + "/" + context.get("core"));
-            else
-                client = new HttpSolrClient(SolrUtil.solrFullUrl);
-            client.add(docs);
-            client.commit();
 
             final String statusStr = "Added " + fieldList.size() + " documents to solr index";
             Debug.logInfo("Solr: " + statusStr, module);

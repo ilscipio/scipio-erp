@@ -21,7 +21,7 @@ var isShipStepValidate = false;
 var isShipOptionStepValidate = false;
 var isBillStepValidate = false;
 
-// Scipio: Flag to request trigger reset of billing info when the form comes up
+// SCIPIO: Flag to request trigger reset of billing info when the form comes up
 var useResetBillingInfo = true;
 
 jQuery(document).ready(function(){
@@ -61,7 +61,7 @@ jQuery(document).ready(function(){
     // Update Shipping Address
     jQuery('#savePartyAndShippingContact').click(function() {
         if (validateShip.valid()) {
-        	useResetBillingInfo = true; // Scipio: This will trigger a reset of billing info (which may depend on shipping info, but not always)
+        	useResetBillingInfo = true; // SCIPIO: This will trigger a reset of billing info (which may depend on shipping info, but not always)
             jQuery('#savePartyAndShippingContact').fadeOut('fast');
             jQuery('#processingShippingOptions').fadeIn('fast');
             if (createUpdateCustomerAndShippingAddress()){
@@ -120,7 +120,7 @@ jQuery(document).ready(function(){
     // For Billing Address Same As Shipping
     jQuery('#useShippingAddressForBilling').click(function() {
         useShippingAddressForBillingToggle();
-        // Scipio: this should happen upon submit only...
+        // SCIPIO: this should happen upon submit only...
         //validateBill.valid();
     });
 
@@ -131,17 +131,20 @@ jQuery(document).ready(function(){
         processOrder();
     });
 
+    
     if (jQuery('#shippingForm').length) {
         // Get associate states for Shipping Information
+    	// SCIPIO: NOTE/WARN: some state list calls have been changed to synchronous,
+    	// required otherwise the value reading and setting does not work properly!
         jQuery('#shipToCountryGeoId').change(function(){
             getAssociatedStateList('shipToCountryGeoId', 'shipToStateProvinceGeoId', 'advice-required-shipToStateProvinceGeoId', 'shipToStates');
         });
         if (jQuery('#userLoginId').length) {
             var stateValue = jQuery('#shipToStateProvinceGeoId').val();
-            getAssociatedStateList('shipToCountryGeoId', 'shipToStateProvinceGeoId', 'advice-required-shipToStateProvinceGeoId', 'shipToStates');
+            getAssociatedStateListSync('shipToCountryGeoId', 'shipToStateProvinceGeoId', 'advice-required-shipToStateProvinceGeoId', 'shipToStates');
             jQuery('#shipToStateProvinceGeoId').val(stateValue);
             stateValue = jQuery('#billToStateProvinceGeoId').val();
-            getAssociatedStateList('billToCountryGeoId', 'billToStateProvinceGeoId', 'advice-required-billToStateProvinceGeoId', 'billToStates');
+            getAssociatedStateListSync('billToCountryGeoId', 'billToStateProvinceGeoId', 'advice-required-billToStateProvinceGeoId', 'billToStates');
             jQuery('#billToStateProvinceGeoId').val(stateValue);
         } else {
             getAssociatedStateList('shipToCountryGeoId', 'shipToStateProvinceGeoId', 'advice-required-shipToStateProvinceGeoId', 'shipToStates');
@@ -163,7 +166,7 @@ function getServerError(data) {
     if (jQuery.type(data._ERROR_MESSAGE_LIST_) !== 'undefined') {
         serverErrorHash = data._ERROR_MESSAGE_LIST_;
         jQuery.each(serverErrorHash, function(i, error) {
-        	// Scipio: error appears to be a simple string, not an object; test to make sure
+        	// SCIPIO: error appears to be a simple string, not an object; test to make sure
         	var encodedErrorMessage = null;
         	if (jQuery.type(error.message) == 'string') {
             	encodedErrorMessage = jQuery('<div/>').text(error.message).html();
@@ -258,36 +261,36 @@ function showEditBillingPanel() {
          hideOrderSubmitPanel();
          jQuery('#editBillingPanel').slideDown();
     }
-    // Scipio: We will only change these settings if it's the first time the panel is shown OR
+    // SCIPIO: We will only change these settings if it's the first time the panel is shown OR
     // whenever ship info panel info gets resubmitted.
     // Otherwise user loses input if he goes back and forth
     if (useResetBillingInfo) {
-	    // Scipio: New case: if there was no initial billing contact mech, we use shipping by default
+	    // SCIPIO: New case: if there was no initial billing contact mech, we use shipping by default
 	    // IN ADDITION we can also pre-populate the first and last name
 	    if (!jQuery('#billToContactMechId').val()) {
-	    	// Scipio: This doesn't work
+	    	// SCIPIO: This doesn't work
 	    	//jQuery('#useShippingAddressForBilling').val('true');
-	    	copyShippingAddressToBilling(true); // Scipio: override
-	    	copyShippingFieldsToBilling(false); // Scipio: don't override these ones, no harm to keep names
+	    	copyShippingAddressToBilling(true); // SCIPIO: override
+	    	copyShippingFieldsToBilling(false); // SCIPIO: don't override these ones, no harm to keep names
 	    	jQuery('#billingAddress').slideUp();
-	    	// Scipio: This doesn't make sense, value should always be "N"
+	    	// SCIPIO: This doesn't make sense, value should always be "N"
 	    	//jQuery('#useShippingAddressForBilling').val('Y');
 	    	jQuery('#useShippingAddressForBilling').prop('checked', true);
 	    } else if (jQuery('#shipToContactMechId').val() != jQuery('#billToContactMechId').val()) {
-	    	// Scipio: NOTE: I think we never transfer anything here because relying on a past or default bill method.
+	    	// SCIPIO: NOTE: I think we never transfer anything here because relying on a past or default bill method.
 	    	// If it was changed, it's still based on an existing bill method.
-	    	// Scipio: This doesn't work
+	    	// SCIPIO: This doesn't work
 	        //jQuery('#useShippingAddressForBilling').val('false');
 	        jQuery('#billingAddress').slideDown();
-	        // Scipio: This doesn't make sense, value should always be "N"
+	        // SCIPIO: This doesn't make sense, value should always be "N"
 	        //jQuery('#useShippingAddressForBilling').val('N');
 	        jQuery('#useShippingAddressForBilling').prop('checked', false);
 	    } else if (jQuery('#shipToContactMechId').val() == jQuery('#billToContactMechId').val()) {
-	    	// Scipio: New case: Even if contact mech IDs were the same we still have to retransfer these
+	    	// SCIPIO: New case: Even if contact mech IDs were the same we still have to retransfer these
 	    	// because they may have changed since page loads. I think if don't it becomes inconsistent, but
 	    	// it's not 100% clear.
-	    	copyShippingAddressToBilling(true); // Scipio: override
-	    	copyShippingFieldsToBilling(false); // Scipio: don't override these ones, no harm to keep names
+	    	copyShippingAddressToBilling(true); // SCIPIO: override
+	    	copyShippingFieldsToBilling(false); // SCIPIO: don't override these ones, no harm to keep names
 	    }
 	    useResetBillingInfo = false;
     }
@@ -432,18 +435,18 @@ function setShippingOption() {
 function useShippingAddressForBillingToggle() {
     if (jQuery('#useShippingAddressForBilling').is(':checked') ) {
     	copyShippingAddressToBilling(true);
-    	// Scipio: This doesn't make sense
+    	// SCIPIO: This doesn't make sense
         //jQuery('#useShippingAddressForBilling').val("Y");
     	jQuery('#useShippingAddressForBilling').prop('checked', true);
         jQuery('#billingAddress').slideUp();
     } else {
         jQuery('#billingAddress').slideDown();
-        // Scipio: This doesn't make sense
+        // SCIPIO: This doesn't make sense
         //jQuery('#useShippingAddressForBilling').val("N");
         jQuery('#useShippingAddressForBilling').prop('checked', false);
     }
 }
-// Scipio: Factored out copy of shipping address to billing, also FIXED
+// SCIPIO: Factored out copy of shipping address to billing, also FIXED
 // so that we first check if fields are empty before overriding
 function copyShippingAddressToBilling(override) {
 	if (override !== true) {
@@ -471,12 +474,12 @@ function copyShippingAddressToBilling(override) {
 	    	countryChanged = true;
 	    }
 	}
-    getAssociatedStateList('billToCountryGeoId', 'billToStateProvinceGeoId','advice-required-billToStateProvinceGeoId','billToStates');
+	getAssociatedStateListSync('billToCountryGeoId', 'billToStateProvinceGeoId','advice-required-billToStateProvinceGeoId','billToStates');
 	if (override || !jQuery('#billToStateProvinceGeoId').val() || countryChanged) {
 	    jQuery('#billToStateProvinceGeoId').val(jQuery('#shipToStateProvinceGeoId').val());
 	}
 }
-// Scipio: Copies shipping name to billing for convenience, but ONLY if they are not already filled
+// SCIPIO: Copies shipping name to billing for convenience, but ONLY if they are not already filled
 function copyShippingFieldsToBilling(override) {
 	if (override !== true) {
 		override = false;

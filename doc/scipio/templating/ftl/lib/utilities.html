@@ -438,6 +438,12 @@ Intended for use anywhere in production templates and templating macros.        
                       <div class="lib-entry-extradesc">
         <p>
 Screens are rendered using Ofbiz&#39;s <code>screens.render</code> utility function.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-07-29: The default for the <code>restoreValues</code> parameter has been changed to <code>true</code>.
+By default, all variables passed using <code>ctxVars</code>, <code>globalCtxVars</code> and <code>reqAttribs</code> regain
+their previous values when the macro call returns. This helps guard against bugs in templates
+that use multiple <a href="#entry-render">@render</a> calls as well as nested screens.          </div>
                       </div>
                   </div>
             
@@ -574,8 +580,13 @@ object found in the global <code>scipioNullObject</code> variable.          </di
                             <code>restoreValues</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If true, the original values are saved and restored after invocation</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, the original values are saved and restored after invocation</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-07-29: The default for this parameter has been changed to <code>true</code>.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2009,8 +2020,13 @@ object found in the global <code>scipioNullObject</code> variable.          </di
                             <code>restoreValues</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If true, the original values are saved and restored after invocation</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, the original values are saved and restored after invocation</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-07-29: The default for this parameter has been changed to <code>true</code>.          </div>
+</span>
                         </td>
                       </tr>
               </table>

@@ -280,10 +280,7 @@ under the License.
                   <@field type="input" id="billToCity" name="billToCity" required=true value=(billToCity!) label=uiLabelMap.CommonCity/>
                   <@field type="input" id="billToPostalCode" name="billToPostalCode" required=true value=(billToPostalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
                   <@field type="select" name="billToCountryGeoId" required=true id="billToCountryGeoId" label=uiLabelMap.CommonCountry>
-                    <#if billToCountryGeoId??>
-                      <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
-                    </#if>
-                    <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":billToCountryGeoId!""} restoreValues=true />
                   </@field>
                   <@field type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId" required=true label=uiLabelMap.CommonState>
                     <#if billToStateProvinceGeoId?has_content>

@@ -56,6 +56,11 @@ Renders an Ofbiz screen or other resource.
 
 Screens are rendered using Ofbiz's {{{screens.render}}} utility function.
 
+NOTE: 2016-07-29: The default for the {{{restoreValues}}} parameter has been changed to {{{true}}}.
+    By default, all variables passed using {{{ctxVars}}}, {{{globalCtxVars}}} and {{{reqAttribs}}} regain
+    their previous values when the macro call returns. This helps guard against bugs in templates
+    that use multiple @render calls as well as nested screens.
+
 TODO: Reimplement as transform.
 
   * Parameters *
@@ -82,7 +87,8 @@ TODO: Reimplement as transform.
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
-    restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
+    restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
+                              NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
     asString                = ((boolean), default: false) If true, the render will render to a string like a regular FTL macro; otherwise goes straight to Ofbiz's writer
                               In stock Ofbiz, which is also current Scipio default behavior (for compabilitity and speed), render calls go directly to writer, 
                               which is faster but cannot be captured using freemarker {{{#assign}}} directive. If you need to capture
@@ -651,7 +657,8 @@ to indicate the value null.
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
-    restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
+    restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
+                              NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
 -->
 <#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="">
   <#if !clearValues?is_boolean>
@@ -660,7 +667,7 @@ to indicate the value null.
     <#local clearValues = false>
   </#if>
   <#if !restoreValues?is_boolean>
-    <#local restoreValues = false>
+    <#local restoreValues = true>
   </#if>
   <#local varMaps = {"ctxVars":ctxVars, "globalCtxVars":globalCtxVars, "reqAttribs":reqAttribs}>
   <#if restoreValues && !clearValues>

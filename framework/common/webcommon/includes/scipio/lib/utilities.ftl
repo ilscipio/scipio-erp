@@ -661,7 +661,7 @@ to indicate the value null.
     <#local clearValues = false>
   </#if>
   <#local varMaps = {"ctxVars":ctxVars, "globalCtxVars":globalCtxVars, "reqAttribs":reqAttribs}>
-  <#if restoreValues>
+  <#if restoreValues && !clearValues>
     <#local origValues = extractVars(varMaps, true)>
   </#if>
   <#local dummy = setVars(varMaps)>

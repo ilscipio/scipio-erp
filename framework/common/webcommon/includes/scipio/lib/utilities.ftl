@@ -654,11 +654,11 @@ to indicate the value null.
     restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
 -->
 <#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="">
-  <#if !restoreValues?is_boolean>
-    <#local restoreValues = false>
-  </#if>
   <#if !clearValues?is_boolean>
     <#local clearValues = false>
+  </#if>
+  <#if !restoreValues?is_boolean>
+    <#local restoreValues = false>
   </#if>
   <#local varMaps = {"ctxVars":ctxVars, "globalCtxVars":globalCtxVars, "reqAttribs":reqAttribs}>
   <#if restoreValues && !clearValues>

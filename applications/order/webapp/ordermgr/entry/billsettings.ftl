@@ -181,7 +181,7 @@ function makeExpDate() {
                 <option value="${postalFields.stateProvinceGeoId}">---</option>
               </#if>
                 <option value=""></option>
-                <@render resource="component://common/widget/CommonScreens.xml#states" />
+                <@render resource="component://common/widget/CommonScreens.xml#states" ctxVars={"statesPreselect":!(postalFields.stateProvinceGeoId??)}/>
             </@field>
             <@field type="input" label=uiLabelMap.CommonZipPostalCode required=true size="12" maxlength="10" name="postalCode" value=(postalFields.postalCode!) disabled=fieldDisabled />
             <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId" disabled=fieldDisabled>
@@ -189,7 +189,7 @@ function makeExpDate() {
                 <option>${postalFields.countryGeoId}</option>
                 <option value="${postalFields.countryGeoId}">---</option>
               </#if>
-                <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!(postalFields.countryGeoId??)}/>
             </@field>
 
             <#-- credit card fields -->

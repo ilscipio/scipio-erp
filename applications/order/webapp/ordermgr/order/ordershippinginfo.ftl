@@ -312,7 +312,7 @@ under the License.
             <#if countryGeoId??>
               <option value="${countryGeoId}">${countryGeoId}</option>
             </#if>
-            <@render resource="component://common/widget/CommonScreens.xml#countries" />
+            <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!countryGeoId??}/>
           </@field>
           <@field type="select" name="shipToStateProvinceGeoId" id="stateProvinceGeoId" label=uiLabelMap.PartyState>
             <#if stateProvinceGeoId?has_content>

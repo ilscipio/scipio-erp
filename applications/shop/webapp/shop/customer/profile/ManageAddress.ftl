@@ -59,7 +59,7 @@ under the License.
                <#if countryGeoId??>
                  <option value="${countryGeoId}">${countryGeoId}</option>
                </#if>
-               <@render resource="component://common/widget/CommonScreens.xml#countries" />
+               <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!countryGeoId??}/>
              </select>
           </div>
           <div id="states">

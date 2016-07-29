@@ -17,13 +17,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign countries = Static["org.ofbiz.common.CommonWorkers"].getCountryList(delegator)>
-<#list countries as country>
+<#assign countriesPreselect = countriesPreselect!true>
+<#if countriesPreselect>
+  <#assign countriesPreselectFirst = countriesPreselectFirst!false>
+<#else>
+  <#assign countriesPreselectFirst = false>
+</#if>
+<#assign countriesPreselectInline = countriesPreselect && !countriesPreselectFirst>
+<#assign countriesUseDefault = countriesUseDefault!true>
+<#assign selectedCountry = {}>
+<#assign countryMarkup>
+  <#list countries as country>
     <#-- SCIPIO: support currentCountryGeoId, and use has_content instead of ?? -->
-    <#if (countriesPreselect!true) && currentCountryGeoId?has_content>
+    <#if countriesPreselectInline && currentCountryGeoId?has_content>
         <option value="${country.geoId}"${(country.geoId==currentCountryGeoId)?string(" selected=\"selected\"","")}>${country.get("geoName",locale)!country.geoId}</option>
-    <#elseif (countriesPreselect!true) && defaultCountryGeoId?has_content>
+    <#elseif !currentCountryGeoId?has_content && countriesUseDefault && defaultCountryGeoId?has_content><#-- no countriesPreselectInline here, if use default, always inline -->
         <option value="${country.geoId}"${(country.geoId==defaultCountryGeoId)?string(" selected=\"selected\"","")}>${country.get("geoName",locale)!country.geoId}</option>
     <#else>
         <option value="${country.geoId}">${country.get("geoName",locale)!country.geoId}</option>
     </#if>
-</#list>
+    <#if currentCountryGeoId?has_content>
+        <#if country.geoId==currentCountryGeoId>
+          <#assign selectedCountry = country>
+        </#if>
+    <#elseif !currentCountryGeoId?has_content && countriesUseDefault && defaultCountryGeoId?has_content>
+        <#if country.geoId==defaultCountryGeoId>
+          <#assign selectedCountry = country>
+        </#if>
+    </#if>
+  </#list>
+</#assign>
+<#if countriesPreselectFirst && currentCountryGeoId?has_content && selectedCountry?has_content>
+        <option value="${selectedCountry.geoId}">${selectedCountry.get("geoName",locale)!selectedCountry.geoId}</option>
+        <option value="${selectedCountry.geoId}">---</option>
+</#if>
+<#if (countriesAllowEmpty!false)>
+        <option value=""<#if countriesPreselect && (currentCountryGeoId!) == "NONE"> selected="selected"</#if>></option>
+</#if>
+${countryMarkup}
+

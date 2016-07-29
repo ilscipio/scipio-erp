@@ -1119,6 +1119,7 @@ under the License.
             <actions>
                 <!-- Scipio: we now support currentStateProvinceGeoId -->
                 <set field="currentStateProvinceGeoId" from-field="currentStateProvinceGeoId" default-value="${''}"/>
+                <set field="statesPreselect" from-field="statesPreselect" type="Boolean" default-value="true"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/states.ftl"/></html></platform-specific>
@@ -1131,6 +1132,7 @@ under the License.
                 <!-- Scipio: we now support currentCountryGeoId -->
                 <set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
+                <set field="countriesPreselect" from-field="countriesPreselect" type="Boolean" default-value="true"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/countries.ftl"/></html></platform-specific>

@@ -1116,6 +1116,10 @@ under the License.
     <!-- Included Screens -->
     <screen name="states">
         <section>
+            <actions>
+                <!-- Scipio: we now support currentStateProvinceGeoId -->
+                <set field="currentStateProvinceGeoId" from-field="currentStateProvinceGeoId" default-value="${''}"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/states.ftl"/></html></platform-specific>
             </widgets>

@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign states = Static["org.ofbiz.common.CommonWorkers"].getStateList(delegator)>
 <#list states as state>
-    <option value="${state.geoId}">${state.geoName!state.geoId}</option>
+    <option value="${state.geoId}"<#if (currentStateProvinceGeoId!) == state.geoId> selected="selected"</#if>>${state.geoName!state.geoId}</option>
 </#list>
 
 <#-- Here is some alternate code to get states limited to a region

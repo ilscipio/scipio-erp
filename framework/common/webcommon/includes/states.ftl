@@ -17,9 +17,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign states = Static["org.ofbiz.common.CommonWorkers"].getStateList(delegator)>
-<#list states as state>
-    <option value="${state.geoId}">${state.geoName!state.geoId}</option>
-</#list>
+<#assign statesPreselect = statesPreselect!true>
+<#if statesPreselect>
+  <#assign statesPreselectFirst = statesPreselectFirst!false>
+<#else>
+  <#assign statesPreselectFirst = false>
+</#if>
+<#assign statesPreselectInline = statesPreselect && !statesPreselectFirst>
+<#assign selectedState = {}>
+<#assign statesMarkup>
+  <#list states as state>
+    <option value="${state.geoId}"<#if statesPreselectInline && (currentStateProvinceGeoId!) == state.geoId> selected="selected"</#if>>${state.geoName!state.geoId}</option>
+    <#if (currentStateProvinceGeoId!) == state.geoId>
+      <#assign selectedState = state>
+    </#if>
+  </#list>
+</#assign>
+<#if statesPreselectFirst && currentStateProvinceGeoId?has_content && selectedState?has_content>
+        <option value="${selectedState.geoId}">${selectedState.get("geoName",locale)!selectedState.geoId}</option>
+        <option value="${selectedState.geoId}">---</option>
+</#if>
+<#if (statesAllowEmpty!false)>
+        <option value=""<#if statesPreselect && (currentStateProvinceGeoId!) == "NONE"> selected="selected"</#if>></option>
+</#if>
+${statesMarkup}
 
 <#-- Here is some alternate code to get states limited to a region
 <#if requestParameters.CUSTOMER_COUNTRY??>

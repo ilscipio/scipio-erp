@@ -77,15 +77,28 @@ function setKeyAsParameter(event, ui) {
     stateHiddenTarget.value = ui.item;
 }
 
-//Generic function for fetching country's associated state list.
-function getAssociatedStateList(countryId, stateId, errorId, divId) {
+// SCIPIO: Generic function for fetching country's associated state list, with extended options.
+// New parameters:
+// async : boolean, whether to send sync or async (default: true)
+function getAssociatedStateListEx(options) {
+	var countryId = options.countryId;
+	var stateId = options.stateId;
+	var errorId = options.errorId;
+	var divId = options.divId;
+	
     var countryGeoId = jQuery("#" + countryId).val();
     var requestToSend = "getAssociatedStateList";
     if (jQuery('#orderViewed')) {
         requestToSend = "/ordermgr/control/getAssociatedStateList"
     }
+    // SCIPIO: check for async
+    var async = true;
+    if (options.async === false) {
+    	async = false;
+    }
     jQuery.ajax({
         url: requestToSend,
+        async: async,
         type: "POST",
         data: {countryGeoId: countryGeoId},
         success: function(data) {
@@ -124,3 +137,17 @@ function getAssociatedStateList(countryId, stateId, errorId, divId) {
         }
     });
 }
+
+//Generic function for fetching country's associated state list.
+// SCIPIO: NOTE: this is the original Ofbiz function overload.
+function getAssociatedStateList(countryId, stateId, errorId, divId) {
+	getAssociatedStateListEx({countryId: countryId, stateId: stateId, 
+		errorId: errorId, divId: divId});
+}
+
+// SCIPIO: Generic function for fetching country's associated state list - synchronous drop-in replacement.
+function getAssociatedStateListSync(countryId, stateId, errorId, divId) {
+	getAssociatedStateListEx({countryId: countryId, stateId: 
+		stateId, errorId: errorId, divId: divId, async: false});
+}
+

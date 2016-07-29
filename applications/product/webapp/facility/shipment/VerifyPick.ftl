@@ -199,7 +199,7 @@ under the License.
                                                 <option value="${originGeoId}">---</option>
                                             </#if>
                                             <option value=""></option>
-                                            <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                                            <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!product.originGeoId??}/>
                                         </@field>
                                     </@td>
                                     <@td>${orderItemQuantity!}</@td>

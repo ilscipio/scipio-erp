@@ -2557,6 +2557,9 @@ TODO: We need more options (and/or types) to make tweakable the special handling
     #setAutoValueCfg
 -->
 <#assign getAutoValue_defaultArgs = {
+  "type":"", "name":"", "overrideName":"", "paramName":"", "recordName":"",
+  "defaultName":"", "suffix":"", "overrideValue":"", "paramValue":"", 
+  "value":"", "defaultValue":"", "presParamName":"", "presDefaultParamValue":""
 }>
 <#function getAutoValue args={}>
   <#if isObjectType("string", args)><#-- shorthand -->
@@ -2646,6 +2649,7 @@ NOTE: The globals specified by this function currently do not survive screen ren
     #getAutoValue                       
 -->
 <#assign setAutoValueCfg_defaultArgs = {
+  "autoValue":"", "type":"", "overrides":{}, "params":{}, "record":{}, "defaults":{}
 }>
 <#function setAutoValueCfg args={}>
   <#if args.autoValue??>
@@ -2679,6 +2683,7 @@ Returns the current global auto value configuration (settings and maps).
     #getAutoValue
 -->
 <#assign getAutoValueCfg_defaultArgs = {
+  "dummy":""
 }>
 <#function getAutoValueCfg args={}>
   <#return {"autoValue":scpAutoVal!"", "type":scpAutoValType!"", 

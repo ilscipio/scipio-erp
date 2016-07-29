@@ -49,7 +49,7 @@ under the License.
         <#if billToCountryGeoId??>
           <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
         </#if>
-        <@render resource="component://common/widget/CommonScreens.xml#countries" />
+        <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!billToCountryGeoId??}/>
       </select>
       <span id="advice-required-billToCountryGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
     </div>

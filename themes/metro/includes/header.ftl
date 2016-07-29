@@ -141,7 +141,7 @@ under the License.
 <#-- Macro for rendering the sidebar. Relies on a tiny screenwidget that we are using for rendering menus-->
 <#macro sideBarMenu>
     <#--<#if applicationMenuLocation?has_content && applicationMenuName?has_content>
-        <@render type="menu" name=applicationMenuName resource=applicationMenuLocation restoreValues=true/>
+        <@render type="menu" name=applicationMenuName resource=applicationMenuLocation />
     </#if>-->
     ${sections.render("left-column")}
 </#macro>

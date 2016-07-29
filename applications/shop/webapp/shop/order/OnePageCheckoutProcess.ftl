@@ -110,7 +110,7 @@ under the License.
                   <@field type="input" id="shipToPostalCode" name="shipToPostalCode" required=true value=(shipToPostalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
 
                   <@field type="select" name="shipToCountryGeoId" id="shipToCountryGeoId" required=true label=uiLabelMap.CommonCountry>
-                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":shipToCountryGeoId!""} restoreValues=true />
+                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":shipToCountryGeoId!""} />
                   </@field>
                   <div id="shipToStates">
                     <@field type="select" id="shipToStateProvinceGeoId" required=true name="shipToStateProvinceGeoId" label=uiLabelMap.CommonState>
@@ -280,7 +280,7 @@ under the License.
                   <@field type="input" id="billToCity" name="billToCity" required=true value=(billToCity!) label=uiLabelMap.CommonCity/>
                   <@field type="input" id="billToPostalCode" name="billToPostalCode" required=true value=(billToPostalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
                   <@field type="select" name="billToCountryGeoId" required=true id="billToCountryGeoId" label=uiLabelMap.CommonCountry>
-                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":billToCountryGeoId!""} restoreValues=true />
+                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":billToCountryGeoId!""} />
                   </@field>
                   <@field type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId" required=true label=uiLabelMap.CommonState>
                     <#if billToStateProvinceGeoId?has_content>

@@ -239,6 +239,11 @@ under the License.
                     <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(billToTelecomNumber.areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
                     <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(billToTelecomNumber.contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
                     <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(billToExtension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
+                  <#elseif phoneContactMechId?has_content><#-- SCIPIO: fallback on primary phone -->
+                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(countryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
+                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
+                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
+                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(extension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
                   <#else>
                     <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(parameters.billToCountryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
                     <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(parameters.billToAreaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -

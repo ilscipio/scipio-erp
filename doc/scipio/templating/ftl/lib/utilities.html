@@ -223,6 +223,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-makeAttribMapFromArgMap">makeAttribMapFromArgMap</a>, 
                   <a href="#entry-mergeArgMaps">mergeArgMaps</a>, 
                   <a href="#entry-mergeArgMapsBasic">mergeArgMapsBasic</a>, 
+                  <a href="#entry-mergeArgMapsEx">mergeArgMapsEx</a>, 
                   <a href="#entry-mergeArgMapsToLocals">mergeArgMapsToLocals</a>, 
                   <a href="#entry-mergeArgMapsToLocalsBasic">mergeArgMapsToLocalsBasic</a>, 
                   <a href="#entry-mergeAttribMaps">mergeAttribMaps</a>, 
@@ -339,6 +340,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-mapKeys">mapKeys</a>, 
         <a href="#entry-mergeArgMaps">mergeArgMaps</a>, 
         <a href="#entry-mergeArgMapsBasic">mergeArgMapsBasic</a>, 
+        <a href="#entry-mergeArgMapsEx">mergeArgMapsEx</a>, 
         <a href="#entry-mergeArgMapsToLocals">mergeArgMapsToLocals</a>, 
         <a href="#entry-mergeArgMapsToLocalsBasic">mergeArgMapsToLocalsBasic</a>, 
         <a href="#entry-mergeAttribMaps">mergeAttribMaps</a>, 
@@ -878,7 +880,7 @@ If true, ensures the resulting URL will be a secure link.
 MODIFIED IN SCIPIO: This does not guarantee a full URL will be built, only when needed.
 Pass fullPath <code>true</code> to always force a full path. In addition, this parameter now
 recognizes the value <code>false</code> to force downgrades to HTTP when the target controller request
-is marked as non-secure.          </div>
+is marked as non-secure (or if there there is no target request or unknown - since 2016-07-14).          </div>
         <span>
 (Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)        </span>
 </span>
@@ -5087,6 +5089,77 @@ but otherwise should avoid using this map when possible.          </div>
               </table>
                       </div>
 
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-mergeArgMapsEx"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">mergeArgMapsEx</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeArgMapsEx</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Variant of <a href="#entry-mergeArgMaps">#mergeArgMaps</a> that returns more than one map.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>args</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>defaultArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>overrideArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-return">
+                    <h4>Return Value</h4>
+                    <p>
+a map of arg maps: <code>allArgs</code> (full combined), <code>explArgs</code> (only explicitly passed args)                    </p>
                   </div>
             
 

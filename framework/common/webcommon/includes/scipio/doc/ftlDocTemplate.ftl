@@ -27,8 +27,10 @@
 *   * Small code bits may be surrounded by three curly brackets (like Trac tickets) to delineate code, {{{like this}}}.
 *     Indents may be enough for other cases (but indents don't identify as code in HTML). The three curly brackets will also prevent auto-linking.
 *   * To prevent auto-linking or other textual formatting (but not structural formatting), wrap in three parenthesis, (((like this))).
+*   * To prevent textual formatting AND escaping, wrap in three brackets, [[[<b>like this</b>]]].
+*     This can be used to inject bits of raw HTML.
+*     NOTE: This is a textual operator, so it is slave to structure and currently can't (and shouldn't) be used to make complex structure.
 *   * Supports limited '''bold''', ''italic'', __underline__ in paragraphs (but not labels)
-*
 -->
 <!DOCTYPE html>
 <html lang="en-US">

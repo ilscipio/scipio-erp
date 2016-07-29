@@ -655,6 +655,8 @@ to indicate the value null.
 -->
 <#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="">
   <#if !clearValues?is_boolean>
+    <#-- DEV NOTE: if clearValues was true as default, you'd have to check for explicit
+        restoreValues (!restoreValues?is_boolean) before setting the true default here -->
     <#local clearValues = false>
   </#if>
   <#if !restoreValues?is_boolean>

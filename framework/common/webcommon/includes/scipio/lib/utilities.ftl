@@ -90,7 +90,7 @@ TODO: Reimplement as transform.
                               NOTE: not supported for {{{type="section"}}} as this time.
                               TODO: implement for section
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false asString=false>
+<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" asString=false>
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
@@ -653,7 +653,13 @@ to indicate the value null.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
     restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
 -->
-<#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false>
+<#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="">
+  <#if !restoreValues?is_boolean>
+    <#local restoreValues = false>
+  </#if>
+  <#if !clearValues?is_boolean>
+    <#local clearValues = false>
+  </#if>
   <#local varMaps = {"ctxVars":ctxVars, "globalCtxVars":globalCtxVars, "reqAttribs":reqAttribs}>
   <#if restoreValues>
     <#local origValues = extractVars(varMaps, true)>

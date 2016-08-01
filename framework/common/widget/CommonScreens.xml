@@ -1118,10 +1118,11 @@ under the License.
         <section>
             <actions>
                 <!-- Scipio: we now support currentStateProvinceGeoId -->
-                <set field="currentStateProvinceGeoId" from-field="currentStateProvinceGeoId" default-value="${''}"/>
+                <!--<set field="currentStateProvinceGeoId" from-field="currentStateProvinceGeoId" default-value="${''}"/>-->
                 <set field="statesPreselect" from-field="statesPreselect" type="Boolean" default-value="true"/>
                 <set field="statesPreselectFirst" from-field="statesPreselectFirst" type="Boolean" default-value="false"/>
                 <set field="statesAllowEmpty" from-field="statesAllowEmpty" type="Boolean" default-value="false"/>
+                <!-- see template for other states* options -->
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/states.ftl"/></html></platform-specific>
@@ -1132,13 +1133,14 @@ under the License.
         <section>
             <actions>
                 <!-- Scipio: we now support currentCountryGeoId -->
-                <set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>
+                <!--<set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>-->
                 <property-to-field field="defaultSystemCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
                 <set field="defaultCountryGeoId" from-field="defaultCountryGeoIdOverride" default-value="${defaultSystemCountryGeoId}"/>
                 <set field="countriesUseDefault" from-field="countriesUseDefault" type="Boolean" default-value="true"/>
                 <set field="countriesPreselect" from-field="countriesPreselect" type="Boolean" default-value="true"/>
                 <set field="countriesPreselectFirst" from-field="countriesPreselectFirst" type="Boolean" default-value="false"/>
                 <set field="countriesAllowEmpty" from-field="countriesAllowEmpty" type="Boolean" default-value="false"/>
+                <!-- see template for other countries* options -->
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/countries.ftl"/></html></platform-specific>

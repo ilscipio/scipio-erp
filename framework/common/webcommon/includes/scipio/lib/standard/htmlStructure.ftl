@@ -789,15 +789,10 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#if !menuId?has_content>
         <#local menuId = id + "_menu">
       </#if>
-    <#else>
-      <#local contentId = "">
-      <#local menuId = "">
     </#if>
   <#else>
     <#-- section_core has its own stack; don't need to preserve these -->
-    <#local class = "">
-    <#local contentId = "">
-    <#local menuId = "">    
+    <#local class = "">  
   </#if>
   <@section_core id=id contentId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral 

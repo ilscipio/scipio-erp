@@ -266,10 +266,10 @@ function submitFindForm(val){
               <#if findParams.countryGeoId?has_content>
                   <#assign countryGeoId = findParams.countryGeoId>
                   <#assign geo = delegator.findOne("Geo", {"geoId":countryGeoId}, true)>
-                  <@field type="option" value=countryGeoId>${geo.get("geoName",locale)!}</@field>
+                  <@field type="option" value=countryGeoId selected=true>${geo.get("geoName",locale)!}</@field>
                   <@field type="option" value=countryGeoId>---</@field>
               </#if>
-              <@field type="option" value=""></@field>
+              <@field type="option" value="" selected=(findParams.countryGeoId?? && findParams.countryGeoId == "")></@field>
               <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!(findParams.countryGeoId??)}/>
           </@field>
           <@field type="select" name="includeCountry" label=uiLabelMap.OrderIncludeCountry>

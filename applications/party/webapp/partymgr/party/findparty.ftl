@@ -275,11 +275,11 @@ under the License.
               <input type="hidden" name="viewSize" value="20" />
             </form>
           </@menuitem>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}") text=uiLabelMap.OrderOrderQuotes class="+${styles.action_nav!} ${styles.action_find!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderOrderQuotes class="+${styles.action_nav!} ${styles.action_find!}" />
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}") text=uiLabelMap.OrderNewOrder class="+${styles.action_run_session!} ${styles.action_add!}" />
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}") text=uiLabelMap.OrderNewQuote class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/checkinits?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/EditQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewQuote class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>
           </@menu>
         </@td>

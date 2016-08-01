@@ -539,7 +539,19 @@ if (!selectedService) {
             }
 
             if (canIncludeService && constraintName.equals("definitionLocation")) {
-                fullPath = "file:/" + System.getProperty("ofbiz.home") + "/" + constraintVal;
+                // SCIPIO: this was completely wrong
+                //fullPath = "file:/" + System.getProperty("ofbiz.home") + "/" + constraintVal;
+                if (constraintVal.startsWith("file:")) {
+                    fullPath = constraintVal;
+                } else {
+                    basePath = System.getProperty("ofbiz.home") ?: "";
+                    if (basePath.startsWith("/")) {
+                        basePath = "file:" + basePath;
+                    } else {
+                        basePath = "file:/" + basePath;
+                    }
+                    fullPath = basePath + "/" + constraintVal;
+                }
                 canIncludeService = curServiceModel.definitionLocation.equals(fullPath);
             }
 

@@ -1321,6 +1321,26 @@ NOTES:
 </#function>
 -->
 
+<#-- 
+*************
+* filterMap
+************
+Returns a copy of a map with the given keys excluded.
+
+NOTE: If the original map was a simple map, the result is a simple map as
+    other; if not, a complex map is returned.
+
+TODO: implement as transform.
+-->
+<#function filterMap map exclude=[]>
+  <#local res = Static["org.ofbiz.base.util.UtilMisc"].newMap(map)>
+  <#local dummy = res.keySet().removeAll(exclude)>
+  <#if isObjectType("simplemap", map)>
+    <#return toSimpleMap(res)>
+  <#else>
+    <#return res>
+  </#if>
+</#function>
 
 <#-- 
 *************
@@ -2315,6 +2335,22 @@ TODO: implement as transform.
   <#return exclude>
 </#function>
 
+<#-- 
+*************
+* getFilteredAttribMap
+************
+Returns the attrib map with all the basic excludes applied.
+
+TODO: implement as transform.
+
+  * Related *
+    #makeAttribMapFromArgs
+    @elemAttribStr
+-->
+<#function getFilteredAttribMap attribs={} exclude=[] noExclude=[]>
+  <#local allExcludes = getAttribMapAllExcludes(attribs, exclude, noExclude)>
+  <#return toSimpleMap(filterMap(attribs, allExcludes))>
+</#function>
 
 <#-- 
 *************

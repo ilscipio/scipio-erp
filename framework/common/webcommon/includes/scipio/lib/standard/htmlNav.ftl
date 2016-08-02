@@ -1420,10 +1420,10 @@ Renders a menu in a tree fashion.
         <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>
         <#local nestedEvents><#nested></#local>
 
-        <div id="${id!''}"></div>
+        <div id="${id}"></div>
         <script type="text/javascript"> 
             $(document).ready(function() {
-               $("#${id!''}")
+               $("#${id}")
                 ${nestedEvents?trim}
                 .jstree({
                     "core" : {

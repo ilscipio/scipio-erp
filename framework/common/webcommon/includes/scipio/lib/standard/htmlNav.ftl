@@ -326,7 +326,7 @@ The submenu's main class may be set as altnested in global styles.
   <#local menuIdNum = menuIdNum + 1 />
   <#local dummy = setRequestVar("scipioMenuIdNum", menuIdNum)>
   <#if !id?has_content>
-    <#local id = "menu_" + menuIdNum> <#-- FIXME? is this name too general? -->
+    <#local id = "menu_" + menuIdNum><#-- FIXME?: is this name too generic? -->
   </#if>
 
   <#local prevMenuInfo = readRequestStack("scipioMenuStack")!>
@@ -1375,56 +1375,176 @@ functionality.
 ************
 Renders a menu in a tree fashion.
 
+DEV NOTE: Currently this does not really abstract the library used, because difficult without sacrificing options.
+                    
   * Usage Examples *  
   
-    <@treemenu type="">
-        <li>Text or <a href="#">Anchor</a></li>
+    <@treemenu type="lib-basic">
+        <@treeitem text="Some item" />
+        <@treeitem text="Some item">
+            <@treeitem text="Some item" />
+            <@treeitem text="Some item" />
+        </@treeitem>
+        <@treeitem text="Some item" />
     </@treemenu>
     
     OR
     
-    <@treemenu type="magellan">
-        <@treemenuitem arrival="MyTargetAnchor">Text or <a href="#">Anchor</a></@mli>
-    </@treemenu>
+    <@treemenu type="lib-basic" items=[
+        {"text":"Some item"},
+        {"text":"Some item", "items":[
+            {"text":"Some item"},
+            {"text":"Some item"}
+        ]},
+        {"text":"Some item"}
+    ]/>
                     
   * Parameters *
-    treeMenuLibrary         = (jsTree, default: jsTree)
-    inlineItems             = ((boolean)) If true, generate only items, not menu container    
-    id                      = Menu ID    
+    type                    = (lib-basic|lib-model, default: lib-model) Type of tree and generation method
+                              * {{{lib-basic}}}: uses @treeitem or {{{items}}} list to generate the tree items,
+                                while {{{plugins}}} and {{{settings}}} are extra settings, as simple maps
+                              * {{{lib-model}}}: uses a (java) model from {{{data}}}, {{{plugins}}}, {{{settings}}} arguments to generate the tree
+                              TODO: change the default to lib-basic.
+    library                 = (jsTree, default: jsTree)
+    inlineItems             = ((boolean)) If true, generate only items, not menu container
+                              NOTE: currently unused.
+                              TODO: implement
+    id                      = Menu ID
+                              If omitted, will be auto-generated.
     attribs                 = ((map)) Map of other tree menu attribs
-    data                    = ((object)) If jsTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
-                              Same as @treemenuitem macro parameters.
-    settings                = ((object)) If jsTree: settings
-                              Alternatively, the items can be specified as nested content.        
+                              NOTE: currently unused.
+                              TODO: implement
+    items                   = ((list)) List of items, each a map of a arguments to @treeitem
+    nestedFirst             = ((boolean), default: 
+    data                    = ((object)) Data model
+                              Depends on type and library:
+                              * {{{lib-model}}}, {{{jsTree}}}: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
+                              * {{{lib-basic}}}, {{{jsTree}}}: unused. use {{{items}}} instead.
+    settings                = ((object)) Tree library settings
+                              Depends on type and library:
+                              * {{{lib-model}}}, {{{jsTree}}}: settings model class
+                              * {{{lib-basic}}}, {{{jsTree}}}: map of settings, added alongside the core data
+    plugins                 = ((object)) Tree plugin settings
+                              Depends on type and library:
+                              * {{{lib-model}}}, {{{jsTree}}}: plugins model class
+                              * {{{lib-basic}}}, {{{jsTree}}}: list of maps where each map follows the format:
+                                  {"name":(plugin name), "settings":(map of jsTree plugin settings)}
+    items                   = ((list)) List of maps, where each hash contains arguments representing a menu item,
+                              same as @treeitem macro parameters.
+                              alternatively, the items can be specified as nested content.
+    preItems                = ((list)) Special-case list of maps of items, added before items and nested content
+                              Excluded from sorting.
+                              Templates should generally avoid use unless specific need, but may be used by other macros.
+    postItems               = ((list)) Special-case list of maps of items, added after items and nested content
+                              Excluded from sorting.
+                              Avoid use unless specific need; may be needed by scipio menu handling.
+                              Templates should generally avoid use unless specific need, but may be used by other macros.
+    sort,
+    sortBy,
+    sortDesc                = Items sorting behavior; will only work if items are specified
+                              through items list of hashes, currently does not apply to 
+                              nested items. by default, sorts by text, or sortBy can specify a menu item arg to sort by.
+                              normally case-insensitive.
+    nestedFirst             = ((boolean), default: false) If true, use nested items before items list, otherwise items list always first
+                              Usually should use only one of alternatives, but is versatile.    
+    events                  = ((map)) Map of javascript events to code
+                              The code is inlined into a callback function having arguments {{{(e, data)}}}.
+                              NOTE: Must not specify "on" prefix.
 -->
 <#assign treemenu_defaultArgs = {
-  "library":"jsTree", "data":{}, "settings": {}, "plugins": [], "inlineItems":false, "id":"",  "attribs":{}, "passArgs":{}
+  "type":"", "nestedFirst":false, "library":"jsTree", "data":{}, "settings": {}, "plugins": [], "inlineItems":false, "id":"", "attribs":{}, 
+  "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false, "nestedFirst":false,
+  "events":{}, "passArgs":{}
 }>
 <#macro treemenu args={} inlineArgs...>
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->  
-  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.menu_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.treemenu_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#local attribs = makeAttribMapFromArgMap(args)>  
   
-  <#local treeMenuLibrary = library!"jsTree"/>
+  <#if !type?has_content>
+    <#local type = "lib-model"><#-- TODO: change to lib-basic -->
+  </#if>
   
-  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeMenuData=data treeMenuSettings=settings treeMenuPlugins=plugins id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs>
-        <#nested>
+  <#-- TODO: change #globals into request vars -->
+  
+  <#local treeMenuLibrary = library!"jsTree"/>
+  <#global scipioTreeMenuLibrary = treeMenuLibrary>
+  
+  <#local menuIdNum = getRequestVar("scipioTreeMenuIdNum")!0>
+  <#local menuIdNum = menuIdNum + 1 />
+  <#local dummy = setRequestVar("scipioTreeMenuIdNum", menuIdNum)>
+  <#if !id?has_content>
+    <#local id = "treemenu_" + menuIdNum><#-- FIXME?: is this name too generic? -->
+  </#if>
+  
+  <#global scipioTreeMenuIsFirstItem = true>
+  
+  <@treemenu_markup type=type events=events menuIdNum=menuIdNum treeMenuLibrary=treeMenuLibrary treeMenuData=data treeMenuSettings=settings treeMenuPlugins=plugins id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs>
+    <#if type == "lib-model">
+      <#nested>
+    <#else>
+      <#-- DEV NOTE: TODO?: Currently this is following @menu code. however may want to invert this control/capture... -->
+      <#if !(preItems?is_boolean && preItems == false)>
+        <#if preItems?is_sequence>
+          <#list preItems as item>
+            <@treeitem args=item passArgs=passArgs />
+          </#list>    
+        </#if>
+      </#if>
+      <#if !(items?is_boolean && items == false)>
+        <#if nestedFirst>
+            <#nested>
+        </#if>
+        <#if items?is_sequence>
+          <#if sort && (!sortBy?has_content)>
+            <#local sortBy = "text">
+          </#if>
+          <#if sortBy?has_content>
+            <#local items = items?sort_by(sortBy)>
+            <#if sortDesc>
+              <#local items = items?reverse>
+            </#if>
+          </#if>
+          <#list items as item>
+            <@treeitem args=item passArgs=passArgs/>
+          </#list>
+        </#if>
+        <#if !nestedFirst>
+            <#nested>
+        </#if>
+      </#if>
+      <#if !(postItems?is_boolean && postItems == false)>
+        <#if postItems?is_sequence>
+          <#list postItems as item>
+            <@treeitem args=item passArgs=passArgs/>
+          </#list>
+        </#if>
+      </#if>  
+    </#if>
   </@treemenu_markup>
 </#macro>
 
 <#-- @treemenu main markup - theme override -->
-<#macro treemenu_markup treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
-    <#if treeMenuLibrary == "jsTree">        
-        <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>
-        <#local nestedEvents><#nested></#local>
-
+<#macro treemenu_markup type="" items=[] events={} treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
+    <#if treeMenuLibrary == "jsTree">     
         <div id="${id}"></div>
         <script type="text/javascript"> 
-            $(document).ready(function() {
-               $("#${id}")
+            jQuery(document).ready(function() {
+              <#if type == "lib-model">   
+                <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>
+                <#local nestedEvents><#nested></#local>
+            
+                jQuery("#${id}")
                 ${nestedEvents?trim}
+                <#if events?has_content>
+                  <#list mapKeys(events) as eventName>
+                    .on("${rawString(eventName)?js_string}", function (e, data) {
+                      ${events[rawString(eventName)]}
+                    })
+                  </#list>
+                </#if>
                 .jstree({
                     "core" : {
                         "data" : ${treeMenuDataJson}
@@ -1435,32 +1555,198 @@ Renders a menu in a tree fashion.
                      
                      <#if treeMenuPlugins?has_content>
                         <#list treeMenuPlugins as plugin>
-                            , "${plugin.pluginName()}" : <@objectAsScript lang="json" object=plugin />
+                            , "${rawString(plugin.pluginName())?js_string}" : <@objectAsScript lang="json" object=plugin />
                         </#list>
                         
                         , "plugins" : [
                             <#list treeMenuPlugins as plugin>
-                                "${plugin.pluginName()}"                               
-                                <#if treeMenuPlugins?last.pluginName() != plugin.pluginName()>, </#if> 
+                                "${rawString(plugin.pluginName())?js_string}"                               
+                                <#if plugin_has_next>, </#if> 
+                            </#list>
+                        ]
+                     </#if>
+
+                });
+              <#elseif type == "lib-basic">
+                jQuery("#${id}")
+                <#if events?has_content>
+                  <#list mapKeys(events) as eventName>
+                    .on("${rawString(eventName)?js_string}", function (e, data) {
+                      ${events[rawString(eventName)]}
+                    })
+                  </#list>
+                </#if>
+                .jstree({
+                    
+                    "core" : {
+                        <#-- DEV NOTE: TODO: This control should probably be inverted (so that the listing happens here instead of #nested),
+                            but it requires inverting a lot more -->
+                        "data" : [<#nested>]
+                        <#if treeMenuSettings?has_content>
+                           , <@objectAsScript lang="json" object=toSimpleMap(treeMenuSettings) wrap=false />
+                        </#if>
+                    }
+                    
+                     <#if treeMenuPlugins?has_content>
+                        <#list treeMenuPlugins as plugin>
+                            , "${rawString(plugin.name)?js_string}" : <@objectAsScript lang="json" object=toSimpleMap(plugin.settings!{}) />
+                        </#list>
+                        
+                        , "plugins" : [
+                            <#list treeMenuPlugins as plugin>
+                                "${rawString(plugin.name)?js_string}"                               
+                                <#if plugin_has_next>, </#if> 
                             </#list>
                         ]
                      </#if>
                 });
+              </#if>
             });
         </script>
     </#if>
-    
 </#macro>
 
+<#-- legacy events macro for lib-model tree menus 
+    DEPRECATED: use @treemenu events arg instead -->
 <#macro treemenu_event event="">
     <#if event?has_content>
         <#assign validEvents = Static["com.ilscipio.scipio.treeMenu.jsTree.JsTreeEvent"].VALID_EVENTS />        
         <#assign e = event?keep_before(Static["com.ilscipio.scipio.treeMenu.jsTree.JsTreeEvent"].JSTREE_EVENT) />        
 
         <#if validEvents?has_content && validEvents?seq_contains(e)>                       
-            .on("${event}", function (e, data) {
+            .on("${rawString(event)?js_string}", function (e, data) {
                 <#nested>
             })
         </#if>
     </#if>
+</#macro>
+
+<#-- 
+*************
+* Tree Item
+************
+Renders a tree menu item.
+
+  * Parameters *
+    id                      = item ID
+                              NOTE: Automatically added to attribs.
+    attribs                 = ((map)|(inline)) Attributes for the item, either passed in this map, or inlined to this macro.
+                              For jsTree, these are: icon, id, text, state (map container: opened, selected), type,
+                              li_attr (map), a_attr (map), etc. (see https://www.jstree.com/docs/json/ for full reference)
+                              At least "text" must be specified.
+    items                   = ((list)) Children items: list of maps, where each hash contains arguments representing a menu item,
+                              same as @treeitem macro parameters.
+                              alternatively, the items can be specified as nested content.
+    preItems                = ((list)) For children items: Special-case list of maps of items, added before items and nested content
+                              Excluded from sorting.
+                              Templates should generally avoid use unless specific need, but may be used by other macros.
+    postItems               = ((list)) For children items: Special-case list of maps of items, added after items and nested content
+                              Excluded from sorting.
+                              Avoid use unless specific need; may be needed by scipio menu handling.
+                              Templates should generally avoid use unless specific need, but may be used by other macros.
+    sort,
+    sortBy,
+    sortDesc                = For children items: items sorting behavior; will only work if items are specified
+                              through items list of hashes, currently does not apply to 
+                              nested items. by default, sorts by text, or sortBy can specify a menu item arg to sort by.
+                              normally case-insensitive.
+    nestedFirst             = ((boolean), default: false) For children items: if true, use nested items before items list, otherwise items list always first
+                              Usually should use only one of alternatives, but is versatile.
+-->
+<#assign treeitem_defaultArgs = {
+  "type":"", "nestedFirst":false, "attribs":{}, 
+  "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false, "nestedFirst":false,
+  "passArgs":{}
+}>
+<#macro treeitem args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.treeitem_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <#local attribs = makeAttribMapFromArgMap(args)>  
+  
+  <#local treeMenuLibrary = scipioTreeMenuLibrary!"jsTree">
+  
+  <#local isFirst = scipioTreeMenuIsFirstItem>
+  
+  <#local itemIdNum = getRequestVar("scipioTreeItemIdNum")!0>
+  <#local itemIdNum = itemIdNum + 1 />
+  <#local dummy = setRequestVar("scipioTreeItemIdNum", itemIdNum)>
+  <#-- no need for this, jstree will do it
+  <#if !id?has_content>
+    <#local id = "treeitem_" + itemIdNum><#- FIXME?: is this name too generic? ->
+  </#if>
+  -->
+
+  <#local attribs = getFilteredAttribMap(attribs, [])>
+  <#if id?has_content>
+    <#local attribs = attribs + {"id":id}>
+  </#if>
+  
+  <@treeitem_markup isFirst=isFirst treeMenuLibrary=treeMenuLibrary id=id attribs=attribs itemIdNum=itemIdNum origArgs=origArgs passArgs=passArgs>
+      <#global scipioTreeMenuIsFirstItem = true>
+      <#-- DEV NOTE: TODO?: Currently this is following @menu code. however may want to invert this control/capture... -->
+      <#if !(preItems?is_boolean && preItems == false)>
+        <#if preItems?is_sequence>
+          <#list preItems as item>
+            <@treeitem args=item passArgs=passArgs />
+          </#list>    
+        </#if>
+      </#if>
+      <#if !(items?is_boolean && items == false)>
+        <#if nestedFirst>
+            <#nested>
+        </#if>
+        <#if items?is_sequence>
+          <#if sort && (!sortBy?has_content)>
+            <#local sortBy = "text">
+          </#if>
+          <#if sortBy?has_content>
+            <#local items = items?sort_by(sortBy)>
+            <#if sortDesc>
+              <#local items = items?reverse>
+            </#if>
+          </#if>
+          <#list items as item>
+            <@treeitem args=item passArgs=passArgs/>
+          </#list>
+        </#if>
+        <#if !nestedFirst>
+            <#nested>
+        </#if>
+      </#if>
+      <#if !(postItems?is_boolean && postItems == false)>
+        <#if postItems?is_sequence>
+          <#list postItems as item>
+            <@treeitem args=item passArgs=passArgs/>
+          </#list>
+        </#if>
+      </#if>
+      <#global scipioTreeMenuIsFirstItem = false>
+  </@treeitem_markup>
+
+  <#global scipioTreeMenuIsFirstItem = false>
+</#macro>
+
+<#-- @treeitem main markup - theme override 
+    NOTE: Unlike other macros, attribs here are already filtered. -->
+<#macro treeitem_markup isFirst=false attribs={} treeMenuLibrary="" origArgs={} passArgs={} catchArgs...>
+  <#if !isFirst>, </#if>
+  <#-- DEV NOTE: TODO?: Currently this is following @menu code. however may want to invert this control/capture... 
+      this capture is especially dirty... -->
+  <#local nestedContent><#nested></#local>
+  <#local nestedContent = nestedContent?trim>
+  <#if treeMenuLibrary == "jsTree">
+    <#if nestedContent?has_content>
+      <#local children>[${nestedContent}]</#local>
+      <#local attribs = (attribs + {"children":children})>
+    </#if>
+    <#if !attribs.icon?has_content>
+      <#if nestedContent?has_content>
+        <#local attribs = attribs + {"icon":"jstree-folder"}>
+      <#else>
+        <#local attribs = attribs + {"icon":"jstree-file"}>
+      </#if>
+    </#if>
+    <@objectAsScript lang="json" object=attribs rawVal={"children":true} />
+  </#if>
 </#macro>

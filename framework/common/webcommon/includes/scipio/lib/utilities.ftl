@@ -2286,38 +2286,37 @@ Parameters are analogous to #mergeArgMaps but implied logic differs.
 Takes an args map returned by mergeArgMaps (NOT mergeArgMapsBasic) and checks it for an "attribs"
 sub-map and blends them together logically to make an attribs map.
 
-The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
-NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.
+It uses args.allArgNames to determine the extra "inline" arguments.
 
-NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
-members plus "attribs", "allArgNames", "localArgNames", "excludeNames" and "noExcludeNames" members. 
-
-attribsMapPrioIncludes: this means any args specified in the attribs map will always
-be included and have priority over inline ones. by default, inlines part of defaultArgs
-squash attribs from attribs map.
-
+NOTE: 2016-08-02: This function has been modified so that the result fully represents a usable
+    attribs map as-is. It no longer contains superfluous members (allArgNames, localArgNames, etc.).
+    
+TODO: Implement as transform; very slow! 
+    
   * Related *
     #getAttribMapAllExcludes
 -->
-<#function makeAttribMapFromArgMap args={} attribsMapPrioIncludes=[]>
+<#function makeAttribMapFromArgMap args={} excludes=[]>
+  <#-- TODO: reimplement as transform; filterMap and all of this is slow -->
+  <#local res = filterMap(args, ["allArgNames", "localArgNames"] + (args.allArgNames![]) + excludes)>
   <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
-    <#local args = args.attribs + args>
-    <#if attribsMapPrioIncludes?has_content>
-      <#local alwaysAttribs = filterMap(args.attribs, [], attribsMapPrioIncludes)>
-      <#local args = args + alwaysAttribs>
-      <#local noExcludeNames = (args.noExcludeNames![]) + alwaysAttribs?keys>
-      <#local args = args + {"noExcludeNames":noExcludeNames}>
+    <#local attribs = toSimpleMap(args.attribs)>
+    <#if excludes?has_content>
+      <#local res = filterMap(attribs, excludes) + res>
+    <#else>
+      <#local res = attribs + res>
     </#if>
   </#if>
-  <#return args>
+  <#return res>
 </#function>
 
 <#-- 
 *************
 * getAttribMapAllExcludes
 ************
-Returns the attrib map excludes based on allArgNames list, plus known needed excludes, plus an optional list,
-plus "noExclude" alternatives of all the aforementioned that prevent excludes.
+Returns the attrib map excludes from the given attribs map, which is composed of its
+"scipioExcludeNames" and "scipioNoExcludeNames" members, plus optional additional
+includes passed as arguments.
 The result is returned as a bean-wrapped Set.
 
 TODO: implement as transform.
@@ -2329,17 +2328,14 @@ TODO: implement as transform.
   <#local exclude = toSet(exclude)>
   <#local noExclude = toSet(noExclude)>
   
-  <#if attribs.excludeNames?has_content>
-    <#local dummy = exclude.addAll(attribs.excludeNames)!>
-  </#if>
-  <#if attribs.allArgNames?has_content>
-    <#local dummy = exclude.addAll(attribs.allArgNames)!>
+  <#if attribs.scipioExcludeNames?has_content>
+    <#local dummy = exclude.addAll(attribs.scipioExcludeNames)!>
   </#if>
 
-  <#local dummy = exclude.addAll(["attribs", "allArgNames", "localArgNames", "excludeNames", "noExcludeNames"])>
+  <#local dummy = exclude.addAll(["scipioExcludeNames", "scipioNoExcludeNames"])>
   
-  <#if attribs.noExcludeNames?has_content>
-    <#local dummy = noExclude.addAll(attribs.noExcludeNames)!>
+  <#if attribs.scipioNoExcludeNames?has_content>
+    <#local dummy = noExclude.addAll(attribs.scipioNoExcludeNames)!>
   </#if>
 
   <#if noExclude?has_content>

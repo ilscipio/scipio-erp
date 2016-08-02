@@ -263,10 +263,6 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
   * Parameters *
     attribs                 = ((map)) Attribs map
                               The attribs map here is more versatile and supports mergeArgMaps functions more easily.
-                              It may contain two special members: localArgNames and allArgNames. Both should be lists.
-                              localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
-                              The two will be excluded themselves.
-                              If this map contains an "attribs" member, it will be added for exclude as well.
                               See function getAttribMapAllExcludes for implementation details.
     noExclude               = ((list)) Prevents excludes of attribs with specified names
     (other)                 = See @elemAttribStr; mostly same parameters but with different defaults.

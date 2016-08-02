@@ -1745,9 +1745,15 @@ TODO: doesn't handle dates (ambiguous?)
     hasMore                 = ((boolean), default: false) If true, always include trailing separator in hashes and arrays
     escape                  = ((boolean), default: true) Escape characters in strings
     maxDepth                = ((int), default: -1) Maximum depth, or -1 for no limit
+    rawVal                  = ((boolean)|(map), default: false) If true, treat the object as a pure JSON/other script string.
+                              This can be a map or list of boolean to parallel the object, for recursion.
+                              NOTE: is cumbersome for lists; mostly useful for maps.
+                              NOTE: this is kept separate from the object for security reasons.
 -->
-<#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
-  <#if isObjectType("string", object)>
+<#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
+  <#if rawVal?is_boolean && rawVal == true>
+    ${object?string}<#t>
+  <#elseif isObjectType("string", object)>
     <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   <#elseif object?is_number> 
@@ -1764,7 +1770,9 @@ TODO: doesn't handle dates (ambiguous?)
     <#if (maxDepth < 0) || (currDepth <= maxDepth)>
       <#if wrap>[</#if><#lt>
       <#list object as item> 
-          <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1)/><#else>null</#if><#if item_has_next || hasMore>,</#if>
+          <#if item??><#rt/>
+          <#t/><#if !rawVal?is_boolean><#local rawVal = rawVal[item_index]!false></#if>
+          <#lt/><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawVal/><#else>null</#if><#if item_has_next || hasMore>,</#if>
       </#list> 
       <#if wrap>]</#if><#rt>
     <#else>[]</#if>
@@ -1773,7 +1781,10 @@ TODO: doesn't handle dates (ambiguous?)
       <#if wrap>{</#if><#lt>
       <#list mapKeys(object) as key>
           <#-- NOTE: must use rawString on the keys because FTL will coerce them to strings (forcing auto-escaping from Ofbiz context) before using them as hash keys! -->
-          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><#rt/>
+            <#t/><#if !rawVal?is_boolean><#local rawVal = rawVal[rawString(key)]!false></#if>
+            <#t/><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawVal/>
+            <#lt/><#else>null</#if><#if key_has_next || hasMore>,</#if>
       </#list>
       <#if wrap>}</#if><#rt>
     <#else>{}</#if>

@@ -43,6 +43,10 @@ under the License.
                 <!-- ToDo: Move to themes? -->
                 <set field="layoutSettings.styleSheets[]" value="/base-theme/bower_components/rainbow/rainbow.css" global="true" />
                 
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
+                <set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>  
+                
                 <!-- Use this to prettify code elements
                 <set field="layoutSettings.styleSheets[]" value="/base-theme/bower_components/rainbow/rainbow.css" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />

@@ -1333,6 +1333,50 @@
   </ul>
 </@section>
 
+<@section title="Tree menu">
+    <@treemenu type="lib-basic">
+        <@treeitem text="Some item">
+            <@treeitem text="Some item" />
+            <@treeitem text="Some item" />
+            <@treeitem text="Some item">
+                <@treeitem text="Some item" />
+                <@treeitem text="Some item" />
+                <@treeitem text="Some item" />
+            </@treeitem>
+            <@treeitem text="Some item" />
+            <@treeitem text="Some item">
+                <@treeitem text="Some item" />
+                <@treeitem text="Some item" />
+                <@treeitem text="Some item" />
+            </@treeitem>
+            <@treeitem text="Some item" />
+        </@treeitem>
+        <@treeitem text="Some item" />
+        <@treeitem text="Some item" />
+        <@treeitem text="Some item" />
+        <@treeitem text="Some item" />
+        <@treeitem text="Some item" />
+    </@treemenu>
+
+    <@treemenu type="lib-basic" events={"click":"alert('It is beautiful');"}>
+        <@treeitem text="Some item" attribs={"type":"my-custom-type-attrib", "someAttrib":"my-custom-other-attrib", "attribs":"my-custom-attribs-attrib"}/>
+        <@treeitem text="Some item">
+            <@treeitem text="Some item" />
+            <@treeitem text="Some item" />
+        </@treeitem>
+        <@treeitem text="Some item" />
+    </@treemenu>
+    
+    <@treemenu type="lib-basic" items=[
+        {"text":"Some item"},
+        {"text":"Some item", "items":[
+            {"text":"Some item"},
+            {"text":"Some item"}
+        ]},
+        {"text":"Some item"}
+    ]/>
+</@section>
+
 
 <#-- NOTE: keep last -->
 <hr />

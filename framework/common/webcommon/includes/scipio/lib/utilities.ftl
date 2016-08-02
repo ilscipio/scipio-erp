@@ -2294,12 +2294,22 @@ members plus "attribs", "allArgNames", "localArgNames", "excludeNames" and "noEx
 
 Parameters are analogous to #mergeArgMaps but implied logic differs.
 
+alwaysIncludeFromMap: this means any args specified in the attribs map will always
+be included and have priority over inline ones. by default, inlines part of defaultArgs
+squash attribs from attribs map.
+
   * Related *
     #getAttribMapAllExcludes
 -->
-<#function makeAttribMapFromArgMap args={}>
+<#function makeAttribMapFromArgMap args={} alwaysIncludeFromMap=[]>
   <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
     <#local args = args.attribs + args>
+    <#if alwaysIncludeFromMap?has_content>
+      <#local alwaysAttribs = filterMap(args.attribs, [], alwaysIncludeFromMap)>
+      <#local args = args + alwaysAttribs>
+      <#local noExcludeNames = (args.noExcludeNames![]) + alwaysAttribs?keys>
+      <#local args = args + {"noExcludeNames":noExcludeNames}>
+    </#if>
   </#if>
   <#return args>
 </#function>

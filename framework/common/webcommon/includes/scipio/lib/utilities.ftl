@@ -1332,9 +1332,14 @@ NOTE: If the original map was a simple map, the result is a simple map as
 
 TODO: implement as transform.
 -->
-<#function filterMap map exclude=[]>
+<#function filterMap map exclude=[] include=[]>
   <#local res = Static["org.ofbiz.base.util.UtilMisc"].newMap(map)>
-  <#local dummy = res.keySet().removeAll(exclude)>
+  <#if exclude?has_content>
+    <#local dummy = res.keySet().removeAll(exclude)>
+  </#if>
+  <#if include?has_content>
+    <#local dummy = res.keySet().retainAll(include)>
+  </#if>
   <#if isObjectType("simplemap", map)>
     <#return toSimpleMap(res)>
   <#else>

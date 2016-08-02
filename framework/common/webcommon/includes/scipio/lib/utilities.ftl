@@ -2292,8 +2292,6 @@ NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but 
 NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
 members plus "attribs", "allArgNames", "localArgNames", "excludeNames" and "noExcludeNames" members. 
 
-Parameters are analogous to #mergeArgMaps but implied logic differs.
-
 attribsMapPrioIncludes: this means any args specified in the attribs map will always
 be included and have priority over inline ones. by default, inlines part of defaultArgs
 squash attribs from attribs map.

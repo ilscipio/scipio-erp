@@ -24,21 +24,41 @@ under the License.
   <#assign statesPreselectFirst = false>
 </#if>
 <#assign statesPreselectInline = statesPreselect && !statesPreselectFirst>
-<#assign selectedState = {}>
-<#assign statesMarkup>
-  <#list states as state>
-    <option value="${state.geoId}"<#if statesPreselectInline && (currentStateProvinceGeoId!) == state.geoId> selected="selected"</#if>>${state.geoName!state.geoId}</option>
-    <#if (currentStateProvinceGeoId!) == state.geoId>
-      <#assign selectedState = state>
+<#assign selectedOption = {}>
+<#macro stateOptions optionList>
+  <#if optionList?has_content>
+  <#list optionList as option>
+    <#if option.geoId?has_content>
+      <#local optVal = option.geoId>
+      <#if optionList.getModelEntity??>
+        <#local optLabel = option.get("geoName", locale)!option.geoId>
+      <#else>
+        <#local optLabel = option.geoName!option.geoId>
+      </#if>
+    <#else>
+      <#local optVal = option.value>
+      <#local optLabel = option.label!option.value>
+    </#if>
+    <option value="${optVal}"<#if statesPreselectInline && currentStateProvinceGeoId?has_content && currentStateProvinceGeoId==optVal> selected="selected"</#if>>${optLabel}</option>
+    <#if currentStateProvinceGeoId?has_content && currentStateProvinceGeoId==optVal>
+      <#assign selectedOption = {"optVal":optVal, "optLabel":optLabel}>
     </#if>
   </#list>
+  </#if>
+</#macro>
+<#assign statesMarkup>
+  <#if (statesAllowEmpty!false)>
+        <#-- SCIPIO: NOTE: we usually can't use actual empty value for this test, because of FTL empty vs null semantics when the current gets passed to this template... 
+            caller has to detect and handle (e.g.: <@render ... ctxVars={"currentStateProvinceGeoId":parameters.stateProvinceGeoId!"NONE"} />) -->
+        <option value=""<#if statesPreselect && currentStateProvinceGeoId?? && currentStateProvinceGeoId == (statesEmptyValue!"NONE")> selected="selected"</#if>></option>
+  </#if>
+  <@stateOptions optionList=(statesExtraPreOptions![]) />
+  <@stateOptions optionList=states />
+  <@stateOptions optionList=(statesExtraPostOptions![]) />
 </#assign>
-<#if statesPreselectFirst && currentStateProvinceGeoId?has_content && selectedState?has_content>
-        <option value="${selectedState.geoId}">${selectedState.get("geoName",locale)!selectedState.geoId}</option>
-        <option value="${selectedState.geoId}">---</option>
-</#if>
-<#if (statesAllowEmpty!false)>
-        <option value=""<#if statesPreselect && (currentStateProvinceGeoId!) == "NONE"> selected="selected"</#if>></option>
+<#if statesPreselectFirst && currentStateProvinceGeoId?has_content && selectedOption?has_content>
+        <option value="${selectedOption.optVal!}">${selectedOption.optLabel!}</option>
+        <option value="${selectedOption.optVal!}">---</option>
 </#if>
 ${statesMarkup}
 

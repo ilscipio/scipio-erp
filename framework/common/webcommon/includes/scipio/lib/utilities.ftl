@@ -1321,6 +1321,31 @@ NOTES:
 </#function>
 -->
 
+<#-- 
+*************
+* filterMap
+************
+Returns a copy of a map with the given keys excluded.
+
+NOTE: If the original map was a simple map, the result is a simple map as
+    other; if not, a complex map is returned.
+
+TODO: implement as transform.
+-->
+<#function filterMap map exclude=[] include=[]>
+  <#local res = Static["org.ofbiz.base.util.UtilMisc"].newMap(map)>
+  <#if exclude?has_content>
+    <#local dummy = res.keySet().removeAll(exclude)>
+  </#if>
+  <#if include?has_content>
+    <#local dummy = res.keySet().retainAll(include)>
+  </#if>
+  <#if isObjectType("simplemap", map)>
+    <#return toSimpleMap(res)>
+  <#else>
+    <#return res>
+  </#if>
+</#function>
 
 <#-- 
 *************
@@ -1745,9 +1770,15 @@ TODO: doesn't handle dates (ambiguous?)
     hasMore                 = ((boolean), default: false) If true, always include trailing separator in hashes and arrays
     escape                  = ((boolean), default: true) Escape characters in strings
     maxDepth                = ((int), default: -1) Maximum depth, or -1 for no limit
+    rawVal                  = ((boolean)|(map)|(list), default: false) If true, treat the object as a pure JSON/other script string.
+                              This can be a map or list of boolean to parallel the object, for recursion.
+                              NOTE: is cumbersome for lists; mostly useful for maps.
+                              NOTE: this is kept separate from the object for security reasons.
 -->
-<#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
-  <#if isObjectType("string", object)>
+<#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
+  <#if rawVal?is_boolean && rawVal == true>
+    ${object?string}<#t>
+  <#elseif isObjectType("string", object)>
     <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   <#elseif object?is_number> 
@@ -1764,7 +1795,9 @@ TODO: doesn't handle dates (ambiguous?)
     <#if (maxDepth < 0) || (currDepth <= maxDepth)>
       <#if wrap>[</#if><#lt>
       <#list object as item> 
-          <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1)/><#else>null</#if><#if item_has_next || hasMore>,</#if>
+          <#if item??><#rt/>
+          <#t/><#if !rawVal?is_boolean><#local rawValNext = rawVal[item_index]!false><#else><#local rawValNext = false></#if>
+          <#lt/><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawValNext/><#else>null</#if><#if item_has_next || hasMore>,</#if>
       </#list> 
       <#if wrap>]</#if><#rt>
     <#else>[]</#if>
@@ -1773,7 +1806,10 @@ TODO: doesn't handle dates (ambiguous?)
       <#if wrap>{</#if><#lt>
       <#list mapKeys(object) as key>
           <#-- NOTE: must use rawString on the keys because FTL will coerce them to strings (forcing auto-escaping from Ofbiz context) before using them as hash keys! -->
-          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><#rt/>
+            <#t/><#if !rawVal?is_boolean><#local rawValNext = rawVal[rawString(key)]!false><#else><#local rawValNext = false></#if>
+            <#t/><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawValNext/>
+            <#lt/><#else>null</#if><#if key_has_next || hasMore>,</#if>
       </#list>
       <#if wrap>}</#if><#rt>
     <#else>{}</#if>
@@ -2250,30 +2286,37 @@ Parameters are analogous to #mergeArgMaps but implied logic differs.
 Takes an args map returned by mergeArgMaps (NOT mergeArgMapsBasic) and checks it for an "attribs"
 sub-map and blends them together logically to make an attribs map.
 
-The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
-NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.
+It uses args.allArgNames to determine the extra "inline" arguments.
 
-NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
-members plus "attribs", "allArgNames", "localArgNames", "excludeNames" and "noExcludeNames" members. 
-
-Parameters are analogous to #mergeArgMaps but implied logic differs.
-
+NOTE: 2016-08-02: This function has been modified so that the result fully represents a usable
+    attribs map as-is. It no longer contains superfluous members (allArgNames, localArgNames, etc.).
+    
+TODO: Implement as transform; very slow! 
+    
   * Related *
     #getAttribMapAllExcludes
 -->
-<#function makeAttribMapFromArgMap args={}>
+<#function makeAttribMapFromArgMap args={} excludes=[]>
+  <#-- TODO: reimplement as transform; filterMap and all of this is slow -->
+  <#local res = filterMap(args, ["allArgNames", "localArgNames"] + (args.allArgNames![]) + excludes)>
   <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
-    <#local args = args.attribs + args>
+    <#local attribs = toSimpleMap(args.attribs)>
+    <#if excludes?has_content>
+      <#local res = filterMap(attribs, excludes) + res>
+    <#else>
+      <#local res = attribs + res>
+    </#if>
   </#if>
-  <#return args>
+  <#return res>
 </#function>
 
 <#-- 
 *************
 * getAttribMapAllExcludes
 ************
-Returns the attrib map excludes based on allArgNames list, plus known needed excludes, plus an optional list,
-plus "noExclude" alternatives of all the aforementioned that prevent excludes.
+Returns the attrib map excludes from the given attribs map, which is composed of its
+"scipioExcludeNames" and "scipioNoExcludeNames" members, plus optional additional
+includes passed as arguments.
 The result is returned as a bean-wrapped Set.
 
 TODO: implement as transform.
@@ -2285,17 +2328,14 @@ TODO: implement as transform.
   <#local exclude = toSet(exclude)>
   <#local noExclude = toSet(noExclude)>
   
-  <#if attribs.excludeNames?has_content>
-    <#local dummy = exclude.addAll(attribs.excludeNames)!>
-  </#if>
-  <#if attribs.allArgNames?has_content>
-    <#local dummy = exclude.addAll(attribs.allArgNames)!>
+  <#if attribs.scipioExcludeNames?has_content>
+    <#local dummy = exclude.addAll(attribs.scipioExcludeNames)!>
   </#if>
 
-  <#local dummy = exclude.addAll(["attribs", "allArgNames", "localArgNames", "excludeNames", "noExcludeNames"])>
+  <#local dummy = exclude.addAll(["scipioExcludeNames", "scipioNoExcludeNames"])>
   
-  <#if attribs.noExcludeNames?has_content>
-    <#local dummy = noExclude.addAll(attribs.noExcludeNames)!>
+  <#if attribs.scipioNoExcludeNames?has_content>
+    <#local dummy = noExclude.addAll(attribs.scipioNoExcludeNames)!>
   </#if>
 
   <#if noExclude?has_content>
@@ -2304,6 +2344,22 @@ TODO: implement as transform.
   <#return exclude>
 </#function>
 
+<#-- 
+*************
+* getFilteredAttribMap
+************
+Returns the attrib map with all the basic excludes applied.
+
+TODO: implement as transform.
+
+  * Related *
+    #makeAttribMapFromArgs
+    @elemAttribStr
+-->
+<#function getFilteredAttribMap attribs={} exclude=[] noExclude=[]>
+  <#local allExcludes = getAttribMapAllExcludes(attribs, exclude, noExclude)>
+  <#return toSimpleMap(filterMap(attribs, allExcludes))>
+</#function>
 
 <#-- 
 *************

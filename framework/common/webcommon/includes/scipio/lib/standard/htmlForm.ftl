@@ -1155,6 +1155,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     currentFirst            = ((boolean), default: false) If true (and multiple false), will add a "first" item with current value selected, if there is one
     currentDescription      = If currentFirst true, this is used as first's description if specified
     defaultValue            = Optional selected option value for when none otherwise selected
+                              NOTE: When auto-value is being used (#getAutoValue), this should be omitted.
     manualItemsOnly         = ((boolean)) Optional hint to say this select should contain exclusively manually generated items
                               By default, this is determined based on whether the items arg is specified or not.
     manualItems             = ((boolean)) Optional hint to say that nested content contains manual options (but not necessarily exclusively)
@@ -1212,6 +1213,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               the default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked; this can be single-value string or sequence of value strings
     defaultValue            = Default value, determines checked (convenience parameter; used when currentValue empty; can also be sequence)
+                              NOTE: When auto-value is being used (#getAutoValue), this should be omitted.
     allChecked              = ((boolean|), default: -empty-) Explicit false sets all to unchecked; leave empty "" for no setting (convenience parameter)
     value                   = Default value for any items which do not specify their own
     altValue                = Default alt (off) value for any items which do not specify their own
@@ -1238,7 +1240,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               The default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked
     defaultValue            = Default value, determines checked (convenience option; used when currentValue empty)
-    
+                              NOTE: When auto-value is being used (#getAutoValue), this should be omitted.
+                              
     * file *
     autocomplete            = ((boolean), default: true) If false, prevents autocomplete
     
@@ -1687,11 +1690,34 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   </#if>
   <#if autoValue>
     <#if type == "checkbox" || type == "radio">
-      <#-- TODO: handle currentValue and others IF applicable -->
+      <#-- TODO: handle defaultValue? -->
+      <#local autoValueArgsAll = {"name":name}>
+      <#if explArgs.checked??>
+        <#if (checked?is_boolean && checked == true) || (checked?is_string && checked == "checked")>
+          <#local selectedVal = value>
+        <#else>
+          <#local selectedVal = altValue>
+        </#if>
+        <#local autoValueArgsAll = autoValueArgsAll + {"value":selectedVal}>
+      <#elseif explArgs.currentValue??>
+        <#if currentValue == value>
+          <#local selectedVal = value>
+        <#else>
+          <#local selectedVal = altValue>
+        </#if>
+        <#local autoValueArgsAll = autoValueArgsAll + {"value":selectedVal}>
+      </#if>
+      <#local currentValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
+      <#local checked = (currentValue == value)>
     <#elseif type == "option" || type == "submit" || type == "submitarea" || type == "reset">
       <#-- do nothing -->
     <#elseif type == "select">
-      <#-- TODO: handle defaultValue -->
+      <#-- TODO: handle defaultValue? -->
+      <#local autoValueArgsAll = {"name":name}>
+      <#if explArgs.value??>
+        <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.value}>
+      </#if>
+      <#local currentValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
     <#else>
       <#-- types with extra inputs -->
 
@@ -1711,8 +1737,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#-- SPECIAL: checkbox needs to check presence of main value because is not 
             submitted when not checked -->
         <#local autoValueArgsAll = {"name":name, "suffix":"_ic",
-          "presParamName":autoValueArgs.paramName!name,
-          "presDefaultParamValue":"",
+          "submitFlagParam":autoValueArgs.paramName!name,
+          "submitDefaultParamValue":"",
           "defaultValue":"Y"
         }>
         <#if explArgs.ignoreCaseValue??>
@@ -2543,14 +2569,19 @@ TODO: We need more options (and/or types) to make tweakable the special handling
     value                   = A value, which takes immediate priority over the record values
                               It is ignored in all cases where the record map is also ignored (such as {{{type="params"}}}).
     defaultValue            = A default value, which takes immediate priority over the default map values
-    presParamName           = Optional name of a parameter to check for presence and, if specified, cause this param to always have a param value
-                              This is a workaround for various form limitations. 
-                              It checks the parameter map for a value with this name, and if one is found,
-                              then the current auto value lookup will ensure that a param value is set for this lookup.
-                              If it indeed had no param value, the value of the {{{presDefaultParamValue}}} param is used.
-                              This can be used for surrogate presence checks for HTML checkboxes, for example.
-                              NOTE: this name does not receive a suffix.
-    presDefaultParamValue   = ((string), default: ""/[]/{}) Default param value to use if presParamName checks out
+    submitDetectMethod      = (default|flag|post|none, default: default) Submit detection method
+                              * {{{default}}}: use {{{flag}}} if {{{submitFlagParam}}}, otherwise use {{{post}}}
+                              * {{{flag}}}: use {{{submitFlagParam}}}
+                              * {{{post}}}: use POST request check
+                              * {{{none}}}: none
+    submitFlagParam         = Optional name of a parameter from params map whose presence determines if a form was submitted or not.
+                              Automatically implies {{{submitDetectMethod="flag"}}}.
+                              This parameter is checked using {{{??}}} operator, by simple presence.
+                              This is needed for parameters whose HTML inputs don't always submit a value.
+                              If a submit happened and the field is missing, then the field is given the value specified in {{{submitDefaultParamValue}}}.
+                              By default, submission is detected using presence of POST request, but in most cases,
+                              it is better to have submitFlagParam specified, easiest using @fields.
+    submitDefaultParamValue = ((string), default: ""/[]/{}) Default param value to use if submitFlagParam checks out
 
   * Related *
     @fields
@@ -2559,7 +2590,8 @@ TODO: We need more options (and/or types) to make tweakable the special handling
 <#assign getAutoValue_defaultArgs = {
   "type":"", "name":"", "overrideName":"", "paramName":"", "recordName":"",
   "defaultName":"", "suffix":"", "overrideValue":"", "paramValue":"", 
-  "value":"", "defaultValue":"", "presParamName":"", "presDefaultParamValue":""
+  "value":"", "defaultValue":"", "submitFlagParam":"", "submitDefaultParamValue":"",
+  "submitDetectMethod":"default"
 }>
 <#function getAutoValue args={}>
   <#if isObjectType("string", args)><#-- shorthand -->
@@ -2581,13 +2613,22 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   <#local recordName = (args.defaultName!args.name) + suffix>
   <#local defaultName = (args.defaultName!args.name) + suffix>
   
-  <#if args.presParamName?has_content && !params[paramName]??>
-    <#if params[args.presParamName]??>
-      <#-- this is awful, but best we can do here -->
-      <#local params = params + {paramName:args.presDefaultParamValue!}>
-    </#if>
-  </#if>
+  <#local submitFlagParam = args.submitFlagParam!scpAutoValSubFlagParam!"">
+  <#local submitDetectMethod = args.submitDetectMethod!scpAutoValFlagMethod!"">
   
+  <#-- Submit detection: 
+    we detect submits using submitFlagParam first. If it's not there, then fallback
+    on POST check.
+  -->
+  <#local submitted = (submitFlagParam?has_content && params[args.submitFlagParam]??) ||
+    (submitDetectMethod != "none" && (request.getMethod()!?upper_case) == "POST")>
+    
+  <#-- default param values for non-submitted inputs after a form submit -->
+  <#if !params[paramName]?? && submitted>
+    <#-- this concat is awful, but best we can do here -->
+    <#local params = params + {paramName:args.submitDefaultParamValue!}>
+  </#if>
+
   <#-- 
     DEV NOTE: We need the behavior of "params-or-record" to be similar to the code in:
       org.ofbiz.widget.model.ModelFormField.getEntry(Map, String, boolean)
@@ -2642,14 +2683,18 @@ NOTE: The globals specified by this function currently do not survive screen ren
                               If this is set to boolean false (special value), no parameters map will be used.
     record                  = ((map)) Map to use as record map for lookups
                               Usually this is something like an entity value.
-    defaults                = ((map)) Map to use as defaults map for lookups 
+    defaults                = ((map)) Map to use as defaults map for lookups
+    submitDetectMethod      = ((string)) Submit detection method
+                              See #getAutoValue for possible values.
+    submitFlagParam         = Name of a parameter from params map whose presence can be used to detect whether a form submit occurred
+                              See #getAutoValue for info.
     
   * Related *
     #getAutoValueCfg
     #getAutoValue                       
 -->
 <#assign setAutoValueCfg_defaultArgs = {
-  "autoValue":"", "type":"", "overrides":{}, "params":{}, "record":{}, "defaults":{}
+  "autoValue":"", "type":"", "overrides":{}, "params":{}, "record":{}, "defaults":{}, "submitDetectMethod":"", "submitFlagParam":""
 }>
 <#function setAutoValueCfg args={}>
   <#if args.autoValue??>
@@ -2670,6 +2715,12 @@ NOTE: The globals specified by this function currently do not survive screen ren
   <#if args.defaults??>
     <#global scpAutoValDefaults = args.defaults>
   </#if>
+  <#if args.submitDetectMethod??>
+    <#global scpAutoValSubDetect = args.submitDetectMethod>
+  </#if>
+  <#if args.submitFlagParam??>
+    <#global scpAutoValSubFlagParam = args.submitFlagParam>
+  </#if>
 </#function>
 
 <#--
@@ -2688,7 +2739,8 @@ Returns the current global auto value configuration (settings and maps).
 <#function getAutoValueCfg args={}>
   <#return {"autoValue":scpAutoVal!"", "type":scpAutoValType!"", 
     "overrides":scpAutoValOverrides!false, "params":scpAutoValParams!false, 
-    "record":scpAutoValRecord!false, "defaults":scpAutoValDefaults!false}>
+    "record":scpAutoValRecord!false, "defaults":scpAutoValDefaults!false,
+    "submitDetectMethod":scpAutoValSubDetect!"", "submitFlagParam":scpAutoValSubFlagParam!""}>
 </#function>
 
 <#function getAutoValueEffParamsMap>

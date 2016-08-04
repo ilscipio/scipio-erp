@@ -2265,15 +2265,13 @@ It uses args.allArgNames to determine the extra "inline" arguments.
 NOTE: 2016-08-02: This function has been modified so that the result fully represents a usable
     attribs map as-is. It no longer contains superfluous members (allArgNames, localArgNames, etc.).
     
-TODO: Implement as transform; very slow! 
-    
   * Related *
     #getAttribMapAllExcludes
 -->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function makeAttribMapFromArgMap args={} excludes=[]>
-  <#-- TODO: reimplement as transform -->
   <#local res = copyMap(args, "e", ["allArgNames", "localArgNames"] + (args.allArgNames![]) + excludes)>
-  <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
+  <#if args.attribs?has_content && args.attribs?is_hash>
     <#local attribs = toSimpleMap(args.attribs)>
     <#if excludes?has_content>
       <#local res = copyMap(attribs, "e", excludes) + res>
@@ -2283,6 +2281,7 @@ TODO: Implement as transform; very slow!
   </#if>
   <#return res>
 </#function>
+-->
 
 <#-- 
 *************

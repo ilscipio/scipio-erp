@@ -2582,7 +2582,9 @@ TODO: We need more options (and/or types) to make tweakable the special handling
                               By default, submission is detected using presence of POST request, but in most cases,
                               it is better to have submitFlagParam specified, easiest using @fields.
     submitDefaultParamValue = ((string), default: ""/[]/{}) Default param value to use if submitFlagParam checks out
-
+    submitError             = ((boolean)|"", default: "") Explicit success/error flag
+                              If not specified as boolean (empty string), uses isError context variable.
+                              
   * Related *
     @fields
     #setAutoValueCfg
@@ -2591,7 +2593,7 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   "type":"", "name":"", "overrideName":"", "paramName":"", "recordName":"",
   "defaultName":"", "suffix":"", "overrideValue":"", "paramValue":"", 
   "value":"", "defaultValue":"", "submitFlagParam":"", "submitDefaultParamValue":"",
-  "submitDetectMethod":"default"
+  "submitDetectMethod":"default", "submitError":""
 }>
 <#function getAutoValue args={}>
   <#if isObjectType("string", args)><#-- shorthand -->
@@ -2604,6 +2606,10 @@ TODO: We need more options (and/or types) to make tweakable the special handling
 
   <#local overrides = scpAutoValOverrides!{}>
   <#local params = getAutoValueEffParamsMap()>
+  <#local recordOrBool = scpAutoValRecord!false>
+  <#if !recordOrBool?is_hash>
+    <#local recordOrBool = false>
+  </#if>
   <#local record = scpAutoValRecord!{}>
   <#local defaults = scpAutoValDefaults!{}>
 
@@ -2615,6 +2621,11 @@ TODO: We need more options (and/or types) to make tweakable the special handling
   
   <#local submitFlagParam = args.submitFlagParam!scpAutoValSubFlagParam!"">
   <#local submitDetectMethod = args.submitDetectMethod!scpAutoValFlagMethod!"">
+  
+  <#local submitError = args.submitError!scpAutoValSubError!"">
+  <#if !submitError?is_boolean>
+    <#local submitError = isError!false>
+  </#if>
   
   <#-- Submit detection: 
     we detect submits using submitFlagParam first. If it's not there, then fallback
@@ -2641,13 +2652,14 @@ TODO: We need more options (and/or types) to make tweakable the special handling
         pre-filled values. But this seems rare.
         TODO?: we could maybe allow this by detecting if a controller event was run or not...
             but that is making some assumptions that won't always hold.
+    Special case: if there was no record map, then we'll use parameters. This is close
+    to the "create by default from parameters passed in" special case noted in stock.
     
     TODO: Currently the whole form/record must use either parameters or record.
         We are limiting behavior to prevent problems with some fields such as checkboxes,
         and because this is stock behavior currently.
   -->
-
-  <#if type == "params" || (type == "params-or-record" && ((isError!false) == true))>
+  <#if type == "params" || (type == "params-or-record" && (submitError || recordOrBool?is_boolean))>
     <#return args.overrideValue!overrides[overrideName]!args.paramValue!params[paramName]!args.defaultValue!defaults[defaultName]!>
   <#elseif type == "record" || (type == "params-or-record")>
     <#return args.overrideValue!overrides[overrideName]!args.value!record[recordName]!args.defaultValue!defaults[defaultName]!>
@@ -2688,13 +2700,16 @@ NOTE: The globals specified by this function currently do not survive screen ren
                               See #getAutoValue for possible values.
     submitFlagParam         = Name of a parameter from params map whose presence can be used to detect whether a form submit occurred
                               See #getAutoValue for info.
+    submitError             = ((boolean)|"", default: "") Explicit success/error flag
+                              If not specified as boolean (empty string), uses isError context variable.
     
   * Related *
     #getAutoValueCfg
     #getAutoValue                       
 -->
 <#assign setAutoValueCfg_defaultArgs = {
-  "autoValue":"", "type":"", "overrides":{}, "params":{}, "record":{}, "defaults":{}, "submitDetectMethod":"", "submitFlagParam":""
+  "autoValue":"", "type":"", "overrides":{}, "params":{}, "record":{}, "defaults":{}, 
+  "submitDetectMethod":"", "submitFlagParam":"", "submitError":""
 }>
 <#function setAutoValueCfg args={}>
   <#if args.autoValue??>
@@ -2721,6 +2736,9 @@ NOTE: The globals specified by this function currently do not survive screen ren
   <#if args.submitFlagParam??>
     <#global scpAutoValSubFlagParam = args.submitFlagParam>
   </#if>
+  <#if args.submitError??>
+    <#global scpAutoValSubError = args.submitError>
+  </#if>
 </#function>
 
 <#--
@@ -2740,7 +2758,8 @@ Returns the current global auto value configuration (settings and maps).
   <#return {"autoValue":scpAutoVal!"", "type":scpAutoValType!"", 
     "overrides":scpAutoValOverrides!false, "params":scpAutoValParams!false, 
     "record":scpAutoValRecord!false, "defaults":scpAutoValDefaults!false,
-    "submitDetectMethod":scpAutoValSubDetect!"", "submitFlagParam":scpAutoValSubFlagParam!""}>
+    "submitDetectMethod":scpAutoValSubDetect!"", "submitFlagParam":scpAutoValSubFlagParam!"",
+    "submitError":scpAutoValSubError!""}>
 </#function>
 
 <#function getAutoValueEffParamsMap>

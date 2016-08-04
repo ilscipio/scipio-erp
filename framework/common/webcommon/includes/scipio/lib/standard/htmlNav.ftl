@@ -1498,7 +1498,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
   <#local attribs = makeAttribMapFromArgMap(args)>  
   
   <#if !type?has_content>
-    <#local type = "lib-model"><#-- TODO: change to lib-basic -->
+    <#local type = "lib-basic">
   </#if>
   
   <#-- TODO: change #globals into request vars -->

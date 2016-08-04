@@ -1,5 +1,5 @@
 <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>    
-    <@treemenu id=productStoreId data=treeMenuData settings=treeMenuSettings plugins=treeMenuPlugins>
+    <@treemenu type="lib-model" id=productStoreId data=treeMenuData settings=treeMenuSettings plugins=treeMenuPlugins>
         <@treemenu_event event="activate_node.jstree">
             id = data.node.id;
             if (data.node.li_attr.original_id && data.node.li_attr.original_id != id)

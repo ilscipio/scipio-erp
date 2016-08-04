@@ -1424,11 +1424,11 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
     ]/>
                     
   * Parameters *
-    type                    = (lib-basic|lib-model, default: lib-model) Type of tree and generation method
+    type                    = (lib-basic|lib-model, default: lib-basic) Type of tree and generation method
                               * {{{lib-basic}}}: uses @treeitem or {{{items}}} list to generate the tree items,
                                 while {{{plugins}}} and {{{settings}}} are extra settings, as simple maps
                               * {{{lib-model}}}: uses a (java) model from {{{data}}}, {{{plugins}}}, {{{settings}}} arguments to generate the tree
-                              TODO: change the default to lib-basic.
+                              NOTE: 2016-08-04: The default is now lib-basic.
     library                 = (jstree, default: jstree) Library
                               NOTE: is case insensitive
     inlineItems             = ((boolean)) If true, generate only items, not menu container

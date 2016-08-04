@@ -1375,8 +1375,12 @@ functionality.
 ************
 Renders a menu in a tree fashion.
 
-DEV NOTE: Currently this does not really abstract the library used, because difficult without sacrificing options.
-                    
+The tree can be defined in nested or flat format to describe the hierarchy, and using either 
+macro calls or by passing item lists of maps.
+
+DEV NOTE: Currently this does not fully abstract the library used, because difficult without sacrificing options.
+    But in theory it should be possible to translate attributes from one library to another.
+                                 
   * Usage Examples *  
   
     <@treemenu type="lib-basic">
@@ -1398,6 +1402,26 @@ DEV NOTE: Currently this does not really abstract the library used, because diff
         ]},
         {"text":"Some item"}
     ]/>
+    
+    OR
+    
+    <@treemenu type="lib-basic">
+        <@treeitem text="Some item" parent="#" id="treeitem_3_root1"/>
+        <@treeitem text="Some item" parent="#" id="treeitem_3_root2"/>
+        <@treeitem text="Some item" parent="treeitem_3_root2" id="treeitem_3_child1"/>
+        <@treeitem text="Some item" parent="treeitem_3_root2" id="treeitem_3_child2"/>
+        <@treeitem text="Some item" parent="#" id="treeitem_3_root3"/>
+    </@treemenu>
+    
+    OR
+    
+    <@treemenu type="lib-basic" items=[
+        {"text":"Some item", "isRoot":true, "id":"treeitem_4_root1"},
+        {"text":"Some item", "isRoot":true, "id":"treeitem_4_root2"},
+        {"text":"Some item", "parent":"treeitem_4_root2", "id":"treeitem_4_child1"},
+        {"text":"Some item", "parent":"treeitem_4_root2", "id":"treeitem_4_child2"},
+        {"text":"Some item", "isRoot":true, "id":"treeitem_4_root3"}
+    ]/>
                     
   * Parameters *
     type                    = (lib-basic|lib-model, default: lib-model) Type of tree and generation method
@@ -1405,7 +1429,8 @@ DEV NOTE: Currently this does not really abstract the library used, because diff
                                 while {{{plugins}}} and {{{settings}}} are extra settings, as simple maps
                               * {{{lib-model}}}: uses a (java) model from {{{data}}}, {{{plugins}}}, {{{settings}}} arguments to generate the tree
                               TODO: change the default to lib-basic.
-    library                 = (jsTree, default: jsTree)
+    library                 = (jstree, default: jstree) Library
+                              NOTE: is case insensitive
     inlineItems             = ((boolean)) If true, generate only items, not menu container
                               NOTE: currently unused.
                               TODO: implement
@@ -1418,17 +1443,17 @@ DEV NOTE: Currently this does not really abstract the library used, because diff
     nestedFirst             = ((boolean), default: 
     data                    = ((object)) Data model
                               Depends on type and library:
-                              * {{{lib-model}}}, {{{jsTree}}}: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
-                              * {{{lib-basic}}}, {{{jsTree}}}: unused. use {{{items}}} instead.
+                              * {{{lib-model}}}, {{{jstree}}}: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
+                              * {{{lib-basic}}}, {{{jstree}}}: unused. use {{{items}}} instead.
     settings                = ((object)) Tree library settings
                               Depends on type and library:
-                              * {{{lib-model}}}, {{{jsTree}}}: settings model class
-                              * {{{lib-basic}}}, {{{jsTree}}}: map of settings, added alongside the core data
+                              * {{{lib-model}}}, {{{jstree}}}: settings model class
+                              * {{{lib-basic}}}, {{{jstree}}}: map of settings, added alongside the core data
     plugins                 = ((object)) Tree plugin settings
                               Depends on type and library:
-                              * {{{lib-model}}}, {{{jsTree}}}: plugins model class
-                              * {{{lib-basic}}}, {{{jsTree}}}: list of maps where each map follows the format:
-                                  {"name":(plugin name), "settings":(map of jsTree plugin settings)}
+                              * {{{lib-model}}}, {{{jstree}}}: plugins model class
+                              * {{{lib-basic}}}, {{{jstree}}}: list of maps where each map follows the format:
+                                  {"name":(plugin name), "settings":(map of jstree plugin settings)}
     items                   = ((list)) List of maps, where each hash contains arguments representing a menu item,
                               same as @treeitem macro parameters.
                               alternatively, the items can be specified as nested content.
@@ -1450,10 +1475,19 @@ DEV NOTE: Currently this does not really abstract the library used, because diff
     events                  = ((map)) Map of javascript events to code
                               The code is inlined into a callback function having arguments {{{(e, data)}}}.
                               NOTE: Must not specify "on" prefix.
+    defaultNodeIcon         = ((string), default: -depends on library-) Default (leaf) node icon
+                              Defaults:
+                              * {{{jstree}}}: {{{jstree-file}}} (in standard theme)
+    defaultDirIcon          = ((string), default: -depends on library-) Default non-leaf node icon
+                              Defaults:
+                              * {{{jstree}}}: {{{jstree-folder}}} (in standard theme)
+                              NOTE: Currently, this will only be used for nested jstree format.
+                                  It does not apply to the flat data format (with parent: attributes).
 -->
 <#assign treemenu_defaultArgs = {
-  "type":"", "nestedFirst":false, "library":"jsTree", "data":{}, "settings": {}, "plugins": [], "inlineItems":false, "id":"", "attribs":{}, 
+  "type":"", "nestedFirst":false, "library":"", "data":{}, "settings": {}, "plugins": [], "inlineItems":false, "id":"", "attribs":{}, 
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false, "nestedFirst":false,
+  "defaultNodeIcon":"", "defaultDirIcon":"",
   "events":{}, "passArgs":{}
 }>
 <#macro treemenu args={} inlineArgs...>
@@ -1469,9 +1503,28 @@ DEV NOTE: Currently this does not really abstract the library used, because diff
   
   <#-- TODO: change #globals into request vars -->
   
-  <#local treeMenuLibrary = library!"jsTree"/>
+  <#if !library?has_content>
+    <#local library = styles.treemenu_deflib!"jstree">
+  </#if>
+  <#local treeMenuLibrary = library?lower_case/>
+
   <#global scipioTreeMenuLibrary = treeMenuLibrary>
   
+  <#local libStyleName = "lib_" + treeMenuLibrary?replace("-","_")>
+  
+  <#if !(defaultNodeIcon?is_boolean && defaultNodeIcon == false)>
+    <#if defaultNodeIcon?is_boolean || !defaultNodeIcon?has_content>
+      <#local defaultNodeIcon = styles["treemenu_"+libStyleName+"_defnodeicon"]!"">
+    </#if>
+  </#if>
+  <#if !(defaultDirIcon?is_boolean && defaultDirIcon == false)>
+    <#if defaultDirIcon?is_boolean || !defaultDirIcon?has_content>
+      <#local defaultDirIcon = styles["treemenu_"+libStyleName+"_defdiricon"]!"">
+    </#if>
+  </#if>
+  <#global scipioTreeMenuDefNodeIcon = defaultNodeIcon>
+  <#global scipioTreeMenuDefDirIcon = defaultDirIcon>
+
   <#local menuIdNum = getRequestVar("scipioTreeMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
   <#local dummy = setRequestVar("scipioTreeMenuIdNum", menuIdNum)>
@@ -1528,7 +1581,7 @@ DEV NOTE: Currently this does not really abstract the library used, because diff
 
 <#-- @treemenu main markup - theme override -->
 <#macro treemenu_markup type="" items=[] events={} treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
-    <#if treeMenuLibrary == "jsTree">     
+    <#if treeMenuLibrary == "jstree">     
         <div id="${id}"></div>
         <script type="text/javascript"> 
             jQuery(document).ready(function() {
@@ -1627,13 +1680,28 @@ DEV NOTE: Currently this does not really abstract the library used, because diff
 ************
 Renders a tree menu item.
 
+Supports nested or flat format for hierarchy.
+
   * Parameters *
     id                      = item ID
                               NOTE: Automatically added to attribs.
     attribs                 = ((map)|(inline)) Attributes for the item, either passed in this map, or inlined to this macro.
-                              For jsTree, these are: icon, id, text, state (map container: opened, selected), type,
+                              For jstree, these are: icon, id, text, state (map container: opened, selected), type,
                               li_attr (map), a_attr (map), etc. (see https://www.jstree.com/docs/json/ for full reference)
                               At least "text" must be specified.
+                              "children" should be omitted and {{{items}}} arg used instead.
+                              "parent" should be used along with "id" when using flat format for hierarchy, where root nodes
+                              are marked using {{{parent="#"}}} attribute here (or using {{{isRoot=true}}} macro argument).
+                              NOTE: The {{{attribs}}} map macro argument itself is not that useful, and is mainly for bypassing
+                                  the macro arguments, if needed, for example when an attribute shares the name of a macro
+                                  argument with a different function. But in most cases it is more appropriate to specify inline arguments to the macro
+                                  or even use the {{{args}}} map argument, rather than the {{{attribs}}} map argument.
+                                  Using the {{{attribs}}} map argument may provide less abstraction.
+    isRoot                  = ((boolean)|"", default: "") Helper flag to indicate root nodes
+                              This is mainly needed when using flat hierarchies.
+                              For jstree, passing true is the same as specifying {{{parent="#"}}}.
+                              Default is {{{""}}} which means unspecified.
+                              NOTE: 2016-08-04: At current time, unspecified means no action is taken. Subject to change internally.
     items                   = ((list)) Children items: list of maps, where each hash contains arguments representing a menu item,
                               same as @treeitem macro parameters.
                               alternatively, the items can be specified as nested content.
@@ -1656,6 +1724,7 @@ Renders a tree menu item.
 <#assign treeitem_defaultArgs = {
   "type":"", "nestedFirst":false, "attribs":{}, 
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false, "nestedFirst":false,
+  "isRoot":"",
   "passArgs":{}
 }>
 <#macro treeitem args={} inlineArgs...>
@@ -1664,7 +1733,7 @@ Renders a tree menu item.
   <#local origArgs = args>
   <#local attribs = makeAttribMapFromArgMap(args)>  
   
-  <#local treeMenuLibrary = scipioTreeMenuLibrary!"jsTree">
+  <#local treeMenuLibrary = scipioTreeMenuLibrary!"jstree">
   
   <#local isFirst = scipioTreeMenuIsFirstItem>
   
@@ -1682,7 +1751,8 @@ Renders a tree menu item.
     <#local attribs = attribs + {"id":id}>
   </#if>
   
-  <@treeitem_markup isFirst=isFirst treeMenuLibrary=treeMenuLibrary id=id attribs=attribs itemIdNum=itemIdNum origArgs=origArgs passArgs=passArgs>
+  <@treeitem_markup isFirst=isFirst isRoot=isRoot treeMenuLibrary=treeMenuLibrary id=id attribs=attribs itemIdNum=itemIdNum 
+    defaultNodeIcon=(scipioTreeMenuDefNodeIcon!"") defaultDirIcon=(scipioTreeMenuDefDirIcon!"") origArgs=origArgs passArgs=passArgs>
       <#global scipioTreeMenuIsFirstItem = true>
       <#-- DEV NOTE: TODO?: Currently this is following @menu code. however may want to invert this control/capture... -->
       <#if !(preItems?is_boolean && preItems == false)>
@@ -1729,23 +1799,30 @@ Renders a tree menu item.
 
 <#-- @treeitem main markup - theme override 
     NOTE: Unlike other macros, attribs here are already filtered. -->
-<#macro treeitem_markup isFirst=false attribs={} treeMenuLibrary="" origArgs={} passArgs={} catchArgs...>
+<#macro treeitem_markup isFirst=false isRoot="" attribs={} treeMenuLibrary="" defaultNodeIcon="" defaultDirIcon="" origArgs={} passArgs={} catchArgs...>
   <#if !isFirst>, </#if>
   <#-- DEV NOTE: TODO?: Currently this is following @menu code. however may want to invert this control/capture... 
       this capture is especially dirty... -->
   <#local nestedContent><#nested></#local>
   <#local nestedContent = nestedContent?trim>
-  <#if treeMenuLibrary == "jsTree">
+  <#if treeMenuLibrary == "jstree">
     <#if nestedContent?has_content>
       <#local children>[${nestedContent}]</#local>
       <#local attribs = (attribs + {"children":children})>
     </#if>
     <#if !attribs.icon?has_content>
       <#if nestedContent?has_content>
-        <#local attribs = attribs + {"icon":"jstree-folder"}>
+        <#if !defaultDirIcon?is_boolean && defaultDirIcon?has_content>
+          <#local attribs = attribs + {"icon":defaultDirIcon}>
+        </#if>
       <#else>
-        <#local attribs = attribs + {"icon":"jstree-file"}>
+        <#if !defaultNodeIcon?is_boolean && defaultNodeIcon?has_content>
+          <#local attribs = attribs + {"icon":defaultNodeIcon}>
+        </#if>
       </#if>
+    </#if>
+    <#if !attribs.parent?? && isRoot?is_boolean && isRoot == true>
+      <#local attribs = attribs + {"parent":"#"}>
     </#if>
     <@objectAsScript lang="json" object=attribs rawVal={"children":true} />
   </#if>

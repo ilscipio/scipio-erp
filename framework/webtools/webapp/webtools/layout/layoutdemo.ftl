@@ -1334,6 +1334,7 @@
 </@section>
 
 <@section title="Tree menu">
+  <@section title="Multi-level">
     <@treemenu type="lib-basic">
         <@treeitem text="Some item">
             <@treeitem text="Some item" />
@@ -1357,7 +1358,9 @@
         <@treeitem text="Some item" />
         <@treeitem text="Some item" />
     </@treemenu>
+  </@section>
 
+  <@section title="With event">
     <@treemenu type="lib-basic" events={"click":"alert('It is beautiful');"}>
         <@treeitem text="Some item" attribs={"type":"my-custom-type-attrib", "someAttrib":"my-custom-other-attrib", "attribs":"my-custom-attribs-attrib"}/>
         <@treeitem text="Some item">
@@ -1366,7 +1369,9 @@
         </@treeitem>
         <@treeitem text="Some item" />
     </@treemenu>
-    
+  </@section>
+
+  <@section title="Doc example">
     <@treemenu type="lib-basic" items=[
         {"text":"Some item"},
         {"text":"Some item", "items":[
@@ -1375,6 +1380,40 @@
         ]},
         {"text":"Some item"}
     ]/>
+  </@section>
+
+  <@section title="Doc example with flipped icons">
+    <#-- swapped icons -->
+    <@treemenu type="lib-basic" defaultNodeIcon=(styles.treemenu_icon_dirnode!"") defaultDirIcon=(styles.treemenu_icon_node!"") items=[
+        {"text":"Some item"},
+        {"text":"Some item", "items":[
+            {"text":"Some item"},
+            {"text":"Some item"}
+        ]},
+        {"text":"Some item"}
+    ]/>
+  </@section>
+  
+  <@section title="Flat hierarchy">
+    <@treemenu type="lib-basic">
+        <@treeitem text="Some item" parent="#" id="treeitem_3_root1"/>
+        <@treeitem text="Some item" parent="#" id="treeitem_3_root2"/>
+        <@treeitem text="Some item" parent="treeitem_3_root2" id="treeitem_3_child1"/>
+        <@treeitem text="Some item" parent="treeitem_3_root2" id="treeitem_3_child2"/>
+        <@treeitem text="Some item" parent="#" id="treeitem_3_root3"/>
+    </@treemenu>
+  </@section>
+
+  <@section title="Flat hierarchy">
+    <@treemenu type="lib-basic" items=[
+        {"text":"Some item", "isRoot":true, "id":"treeitem_4_root1"},
+        {"text":"Some item", "isRoot":true, "id":"treeitem_4_root2"},
+        {"text":"Some item", "parent":"treeitem_4_root2", "id":"treeitem_4_child1"},
+        {"text":"Some item", "parent":"treeitem_4_root2", "id":"treeitem_4_child2"},
+        {"text":"Some item", "isRoot":true, "id":"treeitem_4_root3"}
+    ]/>
+  </@section>
+
 </@section>
 
 

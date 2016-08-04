@@ -1751,7 +1751,11 @@ TODO: doesn't handle dates (ambiguous?)
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
   <#if rawVal?is_boolean && rawVal == true>
-    ${object?string}<#t>
+    <#if isObjectType("string", object)>
+      ${rawString(object)}<#t>
+    <#else>
+      ${object?string}<#t>
+    </#if>
   <#elseif isObjectType("string", object)>
     <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>

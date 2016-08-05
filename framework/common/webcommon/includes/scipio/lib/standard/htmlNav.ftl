@@ -274,8 +274,8 @@ The submenu's main class may be set as altnested in global styles.
     style                   = Legacy menu HTML style attribute (for <ul> element)
     attribs                 = ((maps)) Other menu attributes (for <ul> element)
     items                   = ((list)) List of maps, where each hash contains arguments representing a menu item,
-                              same as @menuitem macro parameters.
-                              alternatively, the items can be specified as nested content.
+                              Same as @menuitem macro parameters.
+                              Alternatively, the items can be specified as nested content.
     preItems                = ((list)) Special-case list of maps of items, added before items and nested content
                               Excluded from sorting.
                               Templates should generally avoid use unless specific need, but may be used by other macros.
@@ -1455,8 +1455,8 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                               * {{{lib-basic}}}, {{{jstree}}}: list of maps where each map follows the format:
                                   {"name":(plugin name), "settings":(map of jstree plugin settings)}
     items                   = ((list)) List of maps, where each hash contains arguments representing a menu item,
-                              same as @treeitem macro parameters.
-                              alternatively, the items can be specified as nested content.
+                              Same as @treeitem macro parameters.
+                              Alternatively, the items can be specified as nested content.
     preItems                = ((list)) Special-case list of maps of items, added before items and nested content
                               Excluded from sorting.
                               Templates should generally avoid use unless specific need, but may be used by other macros.
@@ -1683,7 +1683,7 @@ Renders a tree menu item.
 Supports nested or flat format for hierarchy.
 
   * Parameters *
-    id                      = item ID
+    id                      = Item ID
                               NOTE: Automatically added to attribs.
     attribs                 = ((map)|(inline)) Attributes for the item, either passed in this map, or inlined to this macro.
                               For jstree, these are: icon, id, text, state (map container: opened, selected), type,
@@ -1703,8 +1703,8 @@ Supports nested or flat format for hierarchy.
                               Default is {{{""}}} which means unspecified.
                               NOTE: 2016-08-04: At current time, unspecified means no action is taken. Subject to change internally.
     items                   = ((list)) Children items: list of maps, where each hash contains arguments representing a menu item,
-                              same as @treeitem macro parameters.
-                              alternatively, the items can be specified as nested content.
+                              Same as @treeitem macro parameters.
+                              Alternatively, the items can be specified as nested content.
     preItems                = ((list)) For children items: Special-case list of maps of items, added before items and nested content
                               Excluded from sorting.
                               Templates should generally avoid use unless specific need, but may be used by other macros.

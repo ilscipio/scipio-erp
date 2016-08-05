@@ -81,11 +81,11 @@ function setKeyAsParameter(event, ui) {
 // New parameters:
 // async : boolean, whether to send sync or async (default: true)
 function getAssociatedStateListEx(options) {
-	var countryId = options.countryId;
-	var stateId = options.stateId;
-	var errorId = options.errorId;
-	var divId = options.divId;
-	
+    var countryId = options.countryId;
+    var stateId = options.stateId;
+    var errorId = options.errorId;
+    var divId = options.divId;
+    
     var countryGeoId = jQuery("#" + countryId).val();
     var requestToSend = "getAssociatedStateList";
     if (jQuery('#orderViewed')) {
@@ -94,7 +94,7 @@ function getAssociatedStateListEx(options) {
     // SCIPIO: check for async
     var async = true;
     if (options.async === false) {
-    	async = false;
+        async = false;
     }
     jQuery.ajax({
         url: requestToSend,
@@ -115,7 +115,7 @@ function getAssociatedStateListEx(options) {
                 geoValues = this.split(': ');
                 var selectedStr = "";
                 if (selected && selected === geoValues[1]) {
-                	selectedStr = ' selected="selected"';
+                    selectedStr = ' selected="selected"';
                 }
                 stateSelect.append(jQuery('<option value="'+geoValues[1]+'"'+selectedStr+'>'+geoValues[0]+'</option>'));
             });
@@ -141,13 +141,13 @@ function getAssociatedStateListEx(options) {
 //Generic function for fetching country's associated state list.
 // SCIPIO: NOTE: this is the original Ofbiz function overload.
 function getAssociatedStateList(countryId, stateId, errorId, divId) {
-	getAssociatedStateListEx({countryId: countryId, stateId: stateId, 
-		errorId: errorId, divId: divId});
+    getAssociatedStateListEx({countryId: countryId, stateId: stateId,
+        errorId: errorId, divId: divId});
 }
 
 // SCIPIO: Generic function for fetching country's associated state list - synchronous drop-in replacement.
 function getAssociatedStateListSync(countryId, stateId, errorId, divId) {
-	getAssociatedStateListEx({countryId: countryId, stateId: 
-		stateId, errorId: errorId, divId: divId, async: false});
+    getAssociatedStateListEx({countryId: countryId, stateId:
+        stateId, errorId: errorId, divId: divId, async: false});
 }
 

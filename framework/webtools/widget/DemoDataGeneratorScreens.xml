@@ -24,8 +24,8 @@ under the License.
     <screen name="ListDemoDataGeneratorServices">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleDemoDataGenerator"/>               
-                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>        
+                <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>
                 <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorList.groovy"/>
             </actions>
             <widgets>
@@ -43,9 +43,9 @@ under the License.
     <screen name="RunDemoDataGeneratorService">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleDemoDataGenerator"/>                
-                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>       
-                <property-to-field resource="general" property="data.generator.max.records" field="maxRecords" default="50" type="Integer" />                
+                <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
+                <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>
+                <property-to-field resource="general" property="data.generator.max.records" field="maxRecords" default="50" type="Integer" />
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="infoMessage" value="${uiLabelMap.WebtoolsDataGeneratorMaxRecordsInfo} ${uiLabelMap.WebtoolsDataGeneratorMaxRecordsCurrentValue}" type="PlainString"/>
@@ -64,33 +64,33 @@ under the License.
         </section>
     </screen>
 
-	<screen name="DemoDataGeneratorResult">
-		<section>
-			<actions>
-			    <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
+    <screen name="DemoDataGeneratorResult">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
                 <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>
-                <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorResult.groovy"/>	 
-			</actions>
-			<widgets>
-			     <decorator-screen name="CommonDemoDataGeneratorDecorator" location="${parameters.mainDecoratorLocation}">
+                <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorResult.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonDemoDataGeneratorDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-						<screenlet>
-						    <!-- <label>TODO</label> -->
-							<platform-specific>
-								<html><html-template location="component://webtools/webapp/webtools/demoDataGenerator/DemoDataGeneratedResult.ftl" /></html>
-							</platform-specific>
-						</screenlet>
-				    </decorator-section>
-				</decorator-screen>
-			</widgets>
-			<fail-widgets></fail-widgets>
-		</section>
-	</screen>
+                        <screenlet>
+                            <!-- <label>TODO</label> -->
+                            <platform-specific>
+                                <html><html-template location="component://webtools/webapp/webtools/demoDataGenerator/DemoDataGeneratedResult.ftl" /></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets></fail-widgets>
+        </section>
+    </screen>
     
     <screen name="ListDemoDataGeneratorProviders">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleDemoDataGenerator"/>                
+                <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
                 <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>
                 <!-- <script location="component://webtools/script/com/ilscipio/demoDataGenerator/DemoDataGeneratorList.groovy"/> -->
             </actions>

@@ -5,7 +5,7 @@
  * Automatically included at all times, unless overridden by properties or themes.
  * Intended to be swappable.
  *
- * NOTES: 
+ * NOTES:
  * * Currently targeted toward Foundation CSS.
  */
 
@@ -21,7 +21,7 @@ context.styles = [
     
   /* Generic */
     "framework" : "foundation",
-	"customSideBar" : false,
+    "customSideBar" : false,
     "disabled" : "disabled",
     "active" : "active",
     "selected" : "selected",
@@ -266,11 +266,11 @@ context.styles = [
     
     /* General and default styles */
     "treemenu_deflib" : "jstree",
-    /* These can be used more easily from templates. 
+    /* These can be used more easily from templates.
      * NOTE: if deflib is changed, all these must be changed too. These imply default library.
      */
     "treemenu_icon_node" : "jstree-file",        // default node icon (including leaf)
-    "treemenu_icon_dirnode" : "jstree-folder",   // default dir node icon   
+    "treemenu_icon_dirnode" : "jstree-folder",   // default dir node icon
     "treemenu_icon_file" : "jstree-file",
     "treemenu_icon_folder" : "jstree-folder",
     

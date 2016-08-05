@@ -53,11 +53,11 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
 
         fDate = UtilDateTime.toCalendar(userLoginAndHistory.fromDate);
         fromDateUserLoginHistory = Calendar.getInstance();
-        fromDateUserLoginHistory.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));  
+        fromDateUserLoginHistory.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));
         fromDateUserLoginHistory.set(Calendar.MILLISECOND, 0);
-		visit = serverHit.getRelatedOne("Visit", true);
+        visit = serverHit.getRelatedOne("Visit", true);
         if (hitStartDate.getTimeInMillis() == fromDateUserLoginHistory.getTimeInMillis()) {
-            securityAlert = UtilMisc.toMap("userLoginId", userLoginAndHistory.userLoginId, "enabled", userLoginAndHistory.enabled, 
+            securityAlert = UtilMisc.toMap("userLoginId", userLoginAndHistory.userLoginId, "enabled", userLoginAndHistory.enabled,
                 "successfulLogin", userLoginAndHistory.successfulLogin, "contentId", serverHit.contentId, "requestUrl", serverHit.requestUrl,
                 "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "clientIpAddress", visit.clientIpAddress,"fromDate", fromDateUserLoginHistory.getTime());
             securityAlerts.add(securityAlert);
@@ -75,7 +75,7 @@ listSize = securityAlerts ? securityAlerts.size() : 0;
 lowIndex = viewIndex * viewSize;
 highIndex = (viewIndex + 1) * viewSize;
 highIndex = highIndex > listSize ? listSize : highIndex;
-lowIndex = lowIndex > highIndex ? highIndex : lowIndex; 
+lowIndex = lowIndex > highIndex ? highIndex : lowIndex;
 
 resultPartialList = securityAlerts.subList(lowIndex, highIndex);
 

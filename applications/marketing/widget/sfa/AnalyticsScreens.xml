@@ -34,11 +34,11 @@ under the License.
                 <!-- <script location="component://marketing/webapp/sfa/WEB-INF/actions/analytics/FindMyCommunication.groovy"/> -->
             </actions>
             <widgets>
-        	    <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">               
-			        <decorator-section name="body">
+                <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
                         <container style="${styles.grid_row}">
-                                                        <container style="${styles.grid_large}4 ${styles.grid_cell}">
-                                    <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/FindAnalyticsSales.ftl"/></html></platform-specific>
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/FindAnalyticsSales.ftl"/></html></platform-specific>
                             </container>
                             <container style="${styles.grid_large}8 ${styles.grid_cell}">
                                 <include-screen name="AnalyticsSalesStats"/>
@@ -47,16 +47,16 @@ under the License.
                         <container style="${styles.grid_row}">
 
                         </container>
-			        </decorator-section>
-			    </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
     <screen name="AnalyticsSalesStats">
       <section>
-            <actions> 
+            <actions>
                 <set field="chartType" value="line"/>
-                <set field="chartDatasets" value="1"/> 
+                <set field="chartDatasets" value="1"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="month"/> <!-- day|week|month|year -->
                 <set field="title" value="${uiLabelMap.OrderOrders}"/>
@@ -64,13 +64,13 @@ under the License.
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
                 <set field="label1" value="${uiLabelMap.ProductProductsSold}"/>
                 <set field="label2" value="${uiLabelMap.OrderOrders}"/>
-                <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>                
+                <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsSalesChart.ftl"/></html></platform-specific>
             </widgets>
       </section>
-    </screen>      
+    </screen>
     
     <screen name="AnalyticsTracking">
         <section>
@@ -84,7 +84,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">               
+                <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
@@ -102,9 +102,9 @@ under the License.
     <screen name="AnalyticsTrackingStats">
         <section>
             <actions>
-                <set field="chartType" value="line"/>                
+                <set field="chartType" value="line"/>
                 <set field="chartData" value="week"/>
-                <set field="chartDatasets" value="2"/> 
+                <set field="chartDatasets" value="2"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
                 <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
@@ -117,7 +117,7 @@ under the License.
             <widgets>
                 <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsTrackingChart.ftl"/></html></platform-specific>
             </widgets>
-        </section>    
+        </section>
     </screen>
 
 </screens>

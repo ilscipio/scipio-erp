@@ -166,7 +166,7 @@ under the License.
                                 <include-screen name="ScipioEditProduct"/>
                             </container>
                         </container>
-                        <!-- 
+                        <!--
                         <screenlet>
                             <include-form location="component://product/widget/catalog/ProductForms.xml" name="EditProduct"/>
                         </screenlet>
@@ -343,7 +343,7 @@ under the License.
                             <include-screen name="ScipioAddProductCategoryMember"/>
                             <!-- <include-form name="AddProductCategoryMember" location="component://product/widget/catalog/ProductForms.xml"/> -->
                         </screenlet>
-                        <screenlet>                            
+                        <screenlet>
                             <include-screen name="ScipioProductCategoryMemberList"/>
                         </screenlet>
                     </decorator-section>
@@ -364,8 +364,8 @@ under the License.
     </screen>
     
     <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#UpdateProductCategoryMember -->
-    <screen name="ScipioProductCategoryMemberList"> 
-        <section>  
+    <screen name="ScipioProductCategoryMemberList">
+        <section>
              <actions>
                  <entity-condition entity-name="ProductCategoryMember" list="productCategoryMemberList">
                     <condition-expr field-name="productId" from-field="parameters.productId"/>
@@ -375,14 +375,14 @@ under the License.
             </actions>
             <widgets>
                 <section>
-		            <condition>
-		                <not><if-empty field="productCategoryMemberList"/></not>
-		            </condition>
-	                <widgets>
+                    <condition>
+                        <not><if-empty field="productCategoryMemberList"/></not>
+                    </condition>
+                    <widgets>
                         <screenlet title="${uiLabelMap.ProductCategories}">
-	                       <platform-specific><html><html-template location="component://product/webapp/catalog/product/ScipioProductCategoryMemberList.ftl"/></html></platform-specific>
-	                    </screenlet>
-	                </widgets>
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/product/ScipioProductCategoryMemberList.ftl"/></html></platform-specific>
+                        </screenlet>
+                    </widgets>
                 </section>
             </widgets>
         </section>
@@ -1112,7 +1112,7 @@ under the License.
                         <container>
                             <section>
                                 <widgets>
-                                    <!-- 
+                                    <!--
                                     
                                     <screenlet title="${uiLabelMap.ProductAssociationsFromProduct}">
                                         <include-form location="component://product/widget/catalog/ProductForms.xml" name="ListProductAssocs"/>
@@ -1427,7 +1427,7 @@ under the License.
                 <set field="xlabel" value=""/> <!-- x-axis label -->
                 <set field="ylabel" value=""/> <!-- y-axis label -->
                 <set field="label1" value="${uiLabelMap.ProductOne}"/> <!-- 1st dataset label -->
-                <set field="label2" value="${uiLabelMap.ProductTwo}"/> <!-- 2nd dataset label -->  
+                <set field="label2" value="${uiLabelMap.ProductTwo}"/> <!-- 2nd dataset label -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/BestProducts.groovy"/>
             </actions>
             <widgets>
@@ -1610,7 +1610,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioEditProduct.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
             </widgets>
@@ -1639,7 +1639,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductInfo.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1663,7 +1663,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductCategory.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1690,7 +1690,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductDates.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1717,7 +1717,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductInventory.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1741,7 +1741,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductRates.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1766,7 +1766,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductAmount.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1794,7 +1794,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductMeasures.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1822,7 +1822,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductShipping.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1846,7 +1846,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductShoppingCart.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -1872,7 +1872,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/ScipioProductMisc.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>

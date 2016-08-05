@@ -622,7 +622,11 @@ public abstract class LangFtlUtil {
 
     public static SimpleHash copyMapToSimple(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, ObjectWrapper objectWrapper) throws TemplateModelException {
         SimpleHash res = new SimpleHash(objectWrapper);
-        
+        putAll(res, hashModel, inExKeys, include, objectWrapper);
+        return res;
+    }
+    
+    public static void putAll(SimpleHash res, TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (include == Boolean.TRUE) {
             if (inExKeys == null) {
                 inExKeys = new HashSet<String>();
@@ -663,7 +667,6 @@ public abstract class LangFtlUtil {
                 }
             } 
         }
-        return res;
     }
 
     public static SimpleHash copyMapToSimple(Map<String, Object> map, Set<String> inExKeys, Boolean include, ObjectWrapper objectWrapper) throws TemplateModelException {

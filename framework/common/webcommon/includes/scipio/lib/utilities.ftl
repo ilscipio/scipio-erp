@@ -1323,32 +1323,6 @@ NOTES:
 
 <#-- 
 *************
-* filterMap
-************
-Returns a copy of a map with the given keys excluded.
-
-NOTE: If the original map was a simple map, the result is a simple map as
-    other; if not, a complex map is returned.
-
-TODO: implement as transform.
--->
-<#function filterMap map exclude=[] include=[]>
-  <#local res = Static["org.ofbiz.base.util.UtilMisc"].newMap(map)>
-  <#if exclude?has_content>
-    <#local dummy = res.keySet().removeAll(exclude)>
-  </#if>
-  <#if include?has_content>
-    <#local dummy = res.keySet().retainAll(include)>
-  </#if>
-  <#if isObjectType("simplemap", map)>
-    <#return toSimpleMap(res)>
-  <#else>
-    <#return res>
-  </#if>
-</#function>
-
-<#-- 
-*************
 * toRawString
 ************
 Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
@@ -1777,7 +1751,11 @@ TODO: doesn't handle dates (ambiguous?)
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
   <#if rawVal?is_boolean && rawVal == true>
-    ${object?string}<#t>
+    <#if isObjectType("string", object)>
+      ${rawString(object)}<#t>
+    <#else>
+      ${object?string}<#t>
+    </#if>
   <#elseif isObjectType("string", object)>
     <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
@@ -2291,24 +2269,23 @@ It uses args.allArgNames to determine the extra "inline" arguments.
 NOTE: 2016-08-02: This function has been modified so that the result fully represents a usable
     attribs map as-is. It no longer contains superfluous members (allArgNames, localArgNames, etc.).
     
-TODO: Implement as transform; very slow! 
-    
   * Related *
     #getAttribMapAllExcludes
 -->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function makeAttribMapFromArgMap args={} excludes=[]>
-  <#-- TODO: reimplement as transform; filterMap and all of this is slow -->
-  <#local res = filterMap(args, ["allArgNames", "localArgNames"] + (args.allArgNames![]) + excludes)>
-  <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
+  <#local res = copyMap(args, "e", ["allArgNames", "localArgNames"] + (args.allArgNames![]) + excludes)>
+  <#if args.attribs?has_content && args.attribs?is_hash>
     <#local attribs = toSimpleMap(args.attribs)>
     <#if excludes?has_content>
-      <#local res = filterMap(attribs, excludes) + res>
+      <#local res = copyMap(attribs, "e", excludes) + res>
     <#else>
       <#local res = attribs + res>
     </#if>
   </#if>
   <#return res>
 </#function>
+-->
 
 <#-- 
 *************
@@ -2358,7 +2335,7 @@ TODO: implement as transform.
 -->
 <#function getFilteredAttribMap attribs={} exclude=[] noExclude=[]>
   <#local allExcludes = getAttribMapAllExcludes(attribs, exclude, noExclude)>
-  <#return toSimpleMap(filterMap(attribs, allExcludes))>
+  <#return toSimpleMap(copyMap(attribs, "e", allExcludes))>
 </#function>
 
 <#-- 

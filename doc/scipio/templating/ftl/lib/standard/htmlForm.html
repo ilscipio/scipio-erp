@@ -2898,6 +2898,11 @@ If items list not specified, manual nested content options can be specified inst
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Optional selected option value for when none otherwise selected</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+When auto-value is being used (<a href="#entry-getAutoValue">#getAutoValue</a>), this should be omitted.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -3184,6 +3189,11 @@ the default can be overridden on a parent <a href="#entry-field">@field</a> or <
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Default value, determines checked (convenience parameter; used when currentValue empty; can also be sequence)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+When auto-value is being used (<a href="#entry-getAutoValue">#getAutoValue</a>), this should be omitted.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -3336,6 +3346,11 @@ The default can be overridden on a parent <a href="#entry-field">@field</a> or <
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Default value, determines checked (convenience option; used when currentValue empty)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+When auto-value is being used (<a href="#entry-getAutoValue">#getAutoValue</a>), this should be omitted.          </div>
+</span>
                         </td>
                       </tr>
               </table>
@@ -4035,31 +4050,58 @@ It is ignored in all cases where the record map is also ignored (such as <code>t
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>presParamName</code>
+                            <code>submitDetectMethod</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Optional name of a parameter to check for presence and, if specified, cause this param to always have a param value</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default|flag|post|none, default: default)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Submit detection method</span>
                             <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
-This is a workaround for various form limitations.
-It checks the parameter map for a value with this name, and if one is found,
-then the current auto value lookup will ensure that a param value is set for this lookup.
-If it indeed had no param value, the value of the <code>presDefaultParamValue</code> param is used.
-This can be used for surrogate presence checks for HTML checkboxes, for example.
-        </span>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-this name does not receive a suffix.          </div>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>default</code>: use <code>flag</code> if <code>submitFlagParam</code>, otherwise use <code>post</code>        </span>
+      </li>
+      <li>
+        <span>
+<code>flag</code>: use <code>submitFlagParam</code>        </span>
+      </li>
+      <li>
+        <span>
+<code>post</code>: use POST request check        </span>
+      </li>
+      <li>
+        <span>
+<code>none</code>: none        </span>
+      </li>
+  </ul>
+</div>
 </span>
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>presDefaultParamValue</code>
+                            <code>submitFlagParam</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Optional name of a parameter from params map whose presence determines if a form was submitted or not.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Automatically implies <code>submitDetectMethod=&quot;flag&quot;</code>.
+This parameter is checked using <code>??</code> operator, by simple presence.
+This is needed for parameters whose HTML inputs don&#39;t always submit a value.
+If a submit happened and the field is missing, then the field is given the value specified in <code>submitDefaultParamValue</code>.
+By default, submission is detected using presence of POST request, but in most cases,
+it is better to have submitFlagParam specified, easiest using <a href="#entry-fields">@fields</a>.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitDefaultParamValue</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((string), default: &quot;&quot;/[]/{})</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Default param value to use if presParamName checks out</span>
+                            <span class="lib-entry-param-desc-shortdesc"> Default param value to use if submitFlagParam checks out</span>
                         </td>
                       </tr>
               </table>
@@ -4196,6 +4238,31 @@ Usually this is something like an entity value.        </span>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Map to use as defaults map for lookups</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitDetectMethod</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Submit detection method</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-getAutoValue">#getAutoValue</a> for possible values.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitFlagParam</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Name of a parameter from params map whose presence can be used to detect whether a form submit occurred</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-getAutoValue">#getAutoValue</a> for info.        </span>
+</span>
                         </td>
                       </tr>
               </table>

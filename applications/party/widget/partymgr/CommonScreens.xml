@@ -83,7 +83,7 @@ under the License.
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
                 <set field="lookupGroup" from-field="lookupGroup" global="true"/>
-                <set field="lookupPerson" from-field="lookupPerson" global="true"/>                
+                <set field="lookupPerson" from-field="lookupPerson" global="true"/>
                 <service service-name="partyBasePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>
@@ -153,21 +153,21 @@ under the License.
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
-		                        <screenlet title="${uiLabelMap.PartyUserActivity}">
-			                        <container style="${styles.grid_row}">		                                
-			                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-			                                 <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
-			                            </container>
-			                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.PartyUserActivity}">
+                                    <container style="${styles.grid_row}">
+                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                            <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
+                                        </container>
+                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                             <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
                                         </container>
-			                        </container>
-		                        </screenlet>
+                                    </container>
+                                </screenlet>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">                               
-                                <include-screen name="ScipioLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>                                
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="ScipioLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="ScipioSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
@@ -183,14 +183,14 @@ under the License.
     <screen name="ScipioNewRegistrations">
         <section>
             <actions>
-                <set field="chartType" value="bar"/>                                    
+                <set field="chartType" value="bar"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="month"/>
                 <set field="chartIntervalCount" value="6"/>
                 <set field="chartDatasets" value="1"/>
                 <set field="xlabel" value=""/> <!-- x-axis label -->
                 <set field="ylabel" value=""/> <!-- y-axis label -->
-                <set field="label1" value="${uiLabelMap.PartyRegistrations}"/> <!-- 1st dataset label -->                                  
+                <set field="label1" value="${uiLabelMap.PartyRegistrations}"/> <!-- 1st dataset label -->
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/>
            </actions>
            <widgets>
@@ -205,7 +205,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -214,7 +214,7 @@ under the License.
 
     <screen name="ScipioSecurityAlerts">
         <section>
-            <actions>            
+            <actions>
                 <set field="intervalScope" value="month"/>
                 <set field="parameters.VIEW_SIZE" value="10" type="Integer" global="true"/>
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartySecurityAlerts.groovy"/>
@@ -231,7 +231,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartySecurityAlerts.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -241,7 +241,7 @@ under the License.
     <screen name="ScipioLastCommunication">
         <section>
             <actions>
-                <set field="intervalScope" value="month"/>                
+                <set field="intervalScope" value="month"/>
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartyLastCommunications.groovy"/>
            </actions>
            <widgets>
@@ -256,7 +256,7 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyLastCommunications.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>

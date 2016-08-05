@@ -842,7 +842,7 @@
         <value xml:lang="zh_TW">人造物品資訊</value>
     </property>
     <property key="WebtoolsArtifactInfoTimeToLoad">
-    	<value xml:lang="de">(Das Laden könnte etwas dauern!)</value>
+        <value xml:lang="de">(Das Laden könnte etwas dauern!)</value>
         <value xml:lang="en">(may take some time to load)</value>
         <value xml:lang="fr">(cela peut prendre un certain temps à charger)</value>
         <value xml:lang="vi">(đợi chút thời gian)</value>
@@ -1568,10 +1568,10 @@
     </property>
     <!-- Scipio: TODO: Localize -->
     <property key="WebtoolsDemoDataGeneratorServiceList">
-        <value xml:lang="en">Data Generator Services</value>                
+        <value xml:lang="en">Data Generator Services</value>
     </property>
     <property key="WebtoolsDemoDataGeneratorProviders">
-        <value xml:lang="en">Data Generator Providers</value>                
+        <value xml:lang="en">Data Generator Providers</value>
     </property>
     <property key="WebtoolsDeleteFiles">
         <value xml:lang="de">Dateien nachher löschen?</value>
@@ -2417,7 +2417,7 @@
         <value xml:lang="zh_TW">通用JAVA執行緒</value>
     </property>
     <property key="WebtoolsGeoCreateNew">
-    	<value xml:lang="de">Zone erstellen/bearbeiten</value>
+        <value xml:lang="de">Zone erstellen/bearbeiten</value>
         <value xml:lang="en">Create/Edit Geo</value>
         <value xml:lang="fr">Créer/Modifier une zone géographique</value>
         <value xml:lang="ja">位置の作成/編集</value>
@@ -2426,7 +2426,7 @@
         <value xml:lang="zh_TW">新建/編輯地理</value>
     </property>
     <property key="WebtoolsGeoEdit">
-    	<value xml:lang="de">Zone erstellen/bearbeiten</value>
+        <value xml:lang="de">Zone erstellen/bearbeiten</value>
         <value xml:lang="en">Create/Edit Geo</value>
         <value xml:lang="fr">Créer/Modifier la zone géographique</value>
         <value xml:lang="ja">位置の作成/編集</value>
@@ -2435,7 +2435,7 @@
         <value xml:lang="zh_TW">新建/編輯地理</value>
     </property>
     <property key="WebtoolsGeoManagement">
-    	<value xml:lang="de">Zonen Management</value>
+        <value xml:lang="de">Zonen Management</value>
         <value xml:lang="en">Geo Management</value>
         <value xml:lang="fr">Gestion des zones géographiques</value>
         <value xml:lang="ja">位置管理</value>
@@ -2444,7 +2444,7 @@
         <value xml:lang="zh_TW">地理管理</value>
     </property>
     <property key="WebtoolsGeosFind">
-    	<value xml:lang="de">Zonen suchen</value>
+        <value xml:lang="de">Zonen suchen</value>
         <value xml:lang="en">Find Geos</value>
         <value xml:lang="fr">Recherche de zones géographiques</value>
         <value xml:lang="ja">位置の検索</value>
@@ -2453,7 +2453,7 @@
         <value xml:lang="zh_TW">尋找地理</value>
     </property>
     <property key="WebtoolsGeosLink">
-    	<value xml:lang="de">Zonen verknüpfen</value>
+        <value xml:lang="de">Zonen verknüpfen</value>
         <value xml:lang="en">Link Geos</value>
         <value xml:lang="fr">Lier des zones géographiques</value>
         <value xml:lang="ja">位置のリンク</value>
@@ -2462,7 +2462,7 @@
         <value xml:lang="zh_TW">連結地理</value>
     </property>
     <property key="WebtoolsGeosLinkExplained">
-    	<value xml:lang="de">Zonen (miteinander) verknüpfen</value>
+        <value xml:lang="de">Zonen (miteinander) verknüpfen</value>
         <value xml:lang="en">Link Geos (associate Geos to a Geo)</value>
         <value xml:lang="fr">Lier des zones géographiques (association d'une avec plusieurs)</value>
         <value xml:lang="ja">位置のリンク (位置から位置へ関連付け)</value>
@@ -2471,7 +2471,7 @@
         <value xml:lang="zh_TW">連結地理(把它們結合到一個地理位置)</value>
     </property>
     <property key="WebtoolsGeosSelect">
-    	<value xml:lang="de">Zu verknüpfende Zone wählen</value>
+        <value xml:lang="de">Zu verknüpfende Zone wählen</value>
         <value xml:lang="en">Select Geos to associate</value>
         <value xml:lang="fr">Sélectionnez les zones géographiques à associer</value>
         <value xml:lang="ja">関連付けする位置を選択</value>
@@ -3364,9 +3364,9 @@
         <value xml:lang="zh">日志记录</value>
         <value xml:lang="zh_TW">日誌記錄</value>
     </property>
-    <property key="WebtoolsLogs">        
+    <property key="WebtoolsLogs">
         <value xml:lang="en">Logs</value>
-    </property>    
+    </property>
     <property key="WebtoolsMainPage">
         <value xml:lang="de">Startseite</value>
         <value xml:lang="en">Main Page</value>
@@ -5200,7 +5200,7 @@
         <value xml:lang="zh_TW">刷新頁面</value>
     </property>
     <property key="WebtoolsStatsRequestsBy">
-    	<value xml:lang="de">Zugriffe pro</value>
+        <value xml:lang="de">Zugriffe pro</value>
         <value xml:lang="en">Requests by</value>
     </property>
     <property key="WebtoolsStatsRequestId">
@@ -5290,7 +5290,7 @@
         <value xml:lang="zh_TW">檢視統計</value>
     </property>
     <property key="WebtoolsStatsSystemMemory">
-    	<value xml:lang="de">System Speicher</value>
+        <value xml:lang="de">System Speicher</value>
         <value xml:lang="en">System Memory</value>
     </property>
     <property key="WebtoolsStatusInvalid">
@@ -5927,20 +5927,20 @@
     </property>
     <!-- Scipio: TODO: Localize -->
     <property key="WebtoolsEntityUtilityServices">
-        <value xml:lang="de">Entity Utility Services</value>  
-        <value xml:lang="en">Entity Utility Services</value>                
+        <value xml:lang="de">Entity Utility Services</value>
+        <value xml:lang="en">Entity Utility Services</value>
     </property>
     <property key="WebtoolsUtilityServices">
-        <value xml:lang="de">Utility Services</value>  
-        <value xml:lang="en">Utility Services</value>                
+        <value xml:lang="de">Utility Services</value>
+        <value xml:lang="en">Utility Services</value>
     </property>
     <!-- Scipio: TODO: Localize -->
     <property key="WebtoolsUtilityAndDataGen">
-        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>  
-        <value xml:lang="en">Utility and Data Generation</value>                
+        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
+        <value xml:lang="en">Utility and Data Generation</value>
     </property>
-    <property key="WebtoolsDataGeneratorMaxRecordsInfo">        
-        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>                
+    <property key="WebtoolsDataGeneratorMaxRecordsInfo">
+        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>
     </property>
     <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
         <value xml:lang="en">Currently set to ${maxRecords}</value>

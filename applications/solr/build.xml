@@ -62,7 +62,7 @@ under the License.
         <subant target="make.repo">
             <file file="uiloginservice.build.xml"/>
         </subant>
-    </target>   
+    </target>
     
     <target name="build">
         <antcall target="jar"/>
@@ -73,7 +73,7 @@ under the License.
         <subant target="clean">
             <file file="uiloginservice.build.xml"/>
         </subant>
-    </target>   
+    </target>
     
     <target name="clean">
         <delete dir="${build.dir}"/>

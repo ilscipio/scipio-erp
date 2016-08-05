@@ -195,7 +195,7 @@ if (product) {
         context.priceMap = priceMap;
     }
 
-    // get the product review(s) 
+    // get the product review(s)
     // get all product review in case of Purchase Order.
     reviewByAnd = [:];
     reviewByAnd.statusId = "PRR_APPROVED";
@@ -214,7 +214,7 @@ if (product) {
     }
 
     // get the days to ship
-    // if order is purchase then don't calculate available inventory for product. 
+    // if order is purchase then don't calculate available inventory for product.
     if (cart.isSalesOrder()) {
         facilityId = productStore.inventoryFacilityId;
         /*
@@ -309,7 +309,7 @@ if (product) {
                 }
                 variantTree = variantTreeMap.variantTree;
                 imageMap = variantTreeMap.variantSample;
-				virtualVariant = variantTreeMap.virtualVariant;
+                virtualVariant = variantTreeMap.virtualVariant;
                 context.virtualVariant = virtualVariant;
                 if (variantTree) {
                     context.variantTree = variantTree;
@@ -339,8 +339,8 @@ if (product) {
                 if (featureOrder) {
                     context.featureOrderFirst = featureOrder[0];
                 }
-				
-				// SCIPIO: The original OFBiz code was removed here. 
+                
+                // SCIPIO: The original OFBiz code was removed here.
                 if (variantTree && imageMap) {
                     // make a list of variant sku with requireAmount
                     variantsRes = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_VARIANT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
@@ -377,7 +377,7 @@ if (product) {
                                                 break;
                                             }
                                         }
-                                    } else if (UtilValidate.isNotEmpty(entry.getValue())) { 
+                                    } else if (UtilValidate.isNotEmpty(entry.getValue())) {
                                         if (variant.get("productId").equals(entry.getValue().get(0))) {
                                             variantPriceMap.put("variantName", entry.getKey());
                                             break;
@@ -426,7 +426,7 @@ if (product) {
                                                         break;
                                                     }
                                                 }
-                                            } else if (UtilValidate.isNotEmpty(entry.getValue())) { 
+                                            } else if (UtilValidate.isNotEmpty(entry.getValue())) {
                                                 if (virtual.get("productId").equals(entry.getValue().get(0))) {
                                                     virtualPriceMap.put("variantName", entry.getKey());
                                                     break;
@@ -455,7 +455,7 @@ if (product) {
                         }
                     }
                     context.variantPriceList = variantPriceList;
-					context.virtualVariants = virtualVariants;
+                    context.virtualVariants = virtualVariants;
                     context.variantProductInfoMap = variantProductInfoMap; // SCIPIO: Save map
                 }
             }
@@ -463,7 +463,7 @@ if (product) {
     } else {
         context.minimumQuantity= ShoppingCart.getMinimumOrderQuantity(delegator, priceMap.price, productId);
         if(isAlternativePacking){
-            // get alternative product price when product doesn't have any feature 
+            // get alternative product price when product doesn't have any feature
             // make a list of variant sku with requireAmount
             virtualVariantsRes = runService('getAssociatedProducts', [productIdTo : productId, type : "ALTERNATIVE_PACKAGE", checkViewAllow : true, prodCatalogId : categoryId]);
             virtualVariants = virtualVariantsRes.assocProducts;
@@ -477,7 +477,7 @@ if (product) {
             virtualVariantPriceList = [];
             
             if(virtualVariants){
-                // Create the javascript to return the price for each variant    
+                // Create the javascript to return the price for each variant
                 virtualVariants.each { virtualAssoc ->
                     virtual = virtualAssoc.getRelatedOne("MainProduct", false);
                     // Get price from a virtual product
@@ -491,7 +491,7 @@ if (product) {
                     } else {
                         virtualPriceMap = runService('calculatePurchasePrice', priceContext);
                     }
-                }                
+                }
                 context.virtualVariantPriceList = virtualVariantPriceList;
                 context.virtualVariants = virtualVariants;
             }

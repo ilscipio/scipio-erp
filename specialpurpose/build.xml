@@ -23,6 +23,6 @@
         files="
         assetmaint/build.xml,
         example/build.xml,
-    	demosuite/build.xml
+        demosuite/build.xml
     "/>
 </project>

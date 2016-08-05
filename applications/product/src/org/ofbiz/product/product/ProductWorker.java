@@ -490,7 +490,7 @@ public class ProductWorker {
             Debug.logError(e, module);
         }
         return featureTypeFeatures;
-    }    
+    }
     
     /**
      * SCIPIO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
@@ -511,23 +511,23 @@ public class ProductWorker {
                                                     .cache(true)
                                                     .queryList();
             for (GenericValue productFeatureAppl: featuresSorted) {
-            	Map featureType = null;
-            	// Map to previous featureType if exists
-            	for(Map ftype : featureTypeFeatures){
-            		String productFeatureTypeId = ftype.get("productFeatureTypeId") != null ? (String) ftype.get("productFeatureTypeId") :"";
-            		if(productFeatureTypeId.equals(productFeatureAppl.getString("productFeatureTypeId")))
-            		featureType = ftype;
-            	}
-            	// otherwise create a new featureType
-            	if(featureType == null){
-            		featureType = new FastMap<String,Object>();
-            		GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
+                Map featureType = null;
+                // Map to previous featureType if exists
+                for(Map ftype : featureTypeFeatures){
+                    String productFeatureTypeId = ftype.get("productFeatureTypeId") != null ? (String) ftype.get("productFeatureTypeId") :"";
+                    if(productFeatureTypeId.equals(productFeatureAppl.getString("productFeatureTypeId")))
+                    featureType = ftype;
+                }
+                // otherwise create a new featureType
+                if(featureType == null){
+                    featureType = new FastMap<String,Object>();
+                    GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureType.put("description",productFeatureType.getString("description"));
                     featureType.put("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId"));
-            		featureType.put("features", FastList.newInstance());
-            		featureTypeFeatures.add(featureType);
-            	}
-            	List features = (List) featureType.get("features");                
+                    featureType.put("features", FastList.newInstance());
+                    featureTypeFeatures.add(featureType);
+                }
+                List features = (List) featureType.get("features");
                 
                 // Add Product features
                 Map<String,String> featureData = UtilMisc.toMap("productFeatureId", productFeatureAppl.getString("productFeatureId"));
@@ -1299,7 +1299,7 @@ nextProd:
         return false;
     }
 
-    // Method to filter-out out of stock products 
+    // Method to filter-out out of stock products
     public static List<GenericValue> filterOutOfStockProducts (List<GenericValue> productsToFilter, LocalDispatcher dispatcher, Delegator delegator) throws GeneralException {
         ArrayList<GenericValue> productsInStock = new ArrayList<GenericValue>();
         if (UtilValidate.isNotEmpty(productsToFilter)) {
@@ -1315,7 +1315,7 @@ nextProd:
                     Debug.logWarning("Error getting available marketing package.", module);
                     
                     BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
-                    if(availableInventory.compareTo(BigDecimal.ZERO) > 0) { 
+                    if(availableInventory.compareTo(BigDecimal.ZERO) > 0) {
                         productsInStock.add(genericRecord);
                     }
                 } else {

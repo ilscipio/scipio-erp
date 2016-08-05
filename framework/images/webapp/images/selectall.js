@@ -34,9 +34,9 @@ function checkToggleDefault(e) {
 }
 // Scipio: Extended with prefix and exact name options (optional)
 function checkToggle(e, formName, name, namePrefix) {
-	if (!name && !namePrefix) {
-		namePrefix = "_rowSubmit";
-	}
+    if (!name && !namePrefix) {
+        namePrefix = "_rowSubmit";
+    }
     var cform = document[formName];
     if (e.checked) {
         var len = cform.elements.length;
@@ -44,13 +44,13 @@ function checkToggle(e, formName, name, namePrefix) {
         for (var i = 0; i < len; i++) {
             var element = cform.elements[i];
             if (namePrefix) {
-	            if (element.name.substring(0, namePrefix.length) == namePrefix && !element.checked) {
-	                allchecked = false;
-	            }
+                if (element.name.substring(0, namePrefix.length) == namePrefix && !element.checked) {
+                    allchecked = false;
+                }
             } else if (name) {
-            	if (element.name == name && !element.checked) {
-	                allchecked = false;
-	            }
+                if (element.name == name && !element.checked) {
+                    allchecked = false;
+                }
             }
             cform.selectAll.checked = allchecked;
         }
@@ -64,21 +64,21 @@ function toggleAllDefault(e) {
 }
 // Scipio: Extended with prefix and exact name options (optional)
 function toggleAll(e, formName, name, namePrefix) {
-	if (!name && !namePrefix) {
-		namePrefix = "_rowSubmit";
-	}
+    if (!name && !namePrefix) {
+        namePrefix = "_rowSubmit";
+    }
     var cform = document[formName];
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
         var element = cform.elements[i];
         if (namePrefix) {
-	        if (element.name.substring(0, namePrefix.length) == namePrefix && element.checked != e.checked) {
-	            toggle(element);
-	        }
+            if (element.name.substring(0, namePrefix.length) == namePrefix && element.checked != e.checked) {
+                toggle(element);
+            }
         } else if (name) {
-        	if (element.name == name && element.checked != e.checked) {
-	            toggle(element);
-	        }
+            if (element.name == name && element.checked != e.checked) {
+                toggle(element);
+            }
         }
     }
 }
@@ -289,7 +289,7 @@ function ajaxUpdateArea(areaId, target, targetParams) {
 */
 function ajaxUpdateAreas(areaCsvString) {
     /*split all parameters separate by comma, the regExp manage areaId,target,param1=a&param2={b,c,d}&param3=e as three parameters*/
-    var regExpArea = /,(?=(?:[^{}]*{[^{}]*})*[^{}]*$)/g; 
+    var regExpArea = /,(?=(?:[^{}]*{[^{}]*})*[^{}]*$)/g;
     var areaArray = areaCsvString.split(regExpArea);
     var numAreas = parseInt(areaArray.length / 3);
     for (var i = 0; i < numAreas * 3; i = i + 3) {
@@ -860,7 +860,7 @@ function getJSONuiLabels(requiredLabels) {
 }
 
 /**
- * Scipio: reads the required ui labels and returns as an object similar to screen uiLabelMap, with all labels in root map. 
+ * Scipio: reads the required ui labels and returns as an object similar to screen uiLabelMap, with all labels in root map.
  * @param requiredLabels JSON Object {resource : [label1, label2 ...], resource2 : [label1, label2, ...]}
  * @return JSON Object
  */
@@ -869,8 +869,8 @@ function getJSONuiLabelMap(requiredLabels) {
     var labelArrays = getJSONuiLabels(requiredLabels);
     
     jQuery.each(requiredLabels, function(labelCollection, labelNameArray) {
-    	jQuery.each(labelNameArray, function(index, labelName) {
-    		returnVal[labelName] = labelArrays[labelCollection][index];
+        jQuery.each(labelNameArray, function(index, labelName) {
+            returnVal[labelName] = labelArrays[labelCollection][index];
         });
     });
     
@@ -1074,10 +1074,10 @@ function submitPaginationPostForm(obj, url) {
  * TODO: more robust and user-friendly date handling
  */
 function convertToDateTimeNorm(date, fillerDate) {
-	date = date.trim();
-	if (!date) {
-		return "";
-	}
+    date = date.trim();
+    if (!date) {
+        return "";
+    }
     var zeroPat = "0000-00-00 00:00:00.000";
     var result;
     if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
@@ -1098,10 +1098,10 @@ function convertToDateTimeNorm(date, fillerDate) {
            result = date + zeroPat.substr(date.length);
        }
     }
-	// Don't do this in case want to accept higher precision
+    // Don't do this in case want to accept higher precision
     //// TRUNCATE to ensure correctness
     //if (result.length > zeroPat.length) {
-    //	result = result.substring(0, zeroPat.length);
+    //    result = result.substring(0, zeroPat.length);
     //}
     return result;
 }
@@ -1111,10 +1111,10 @@ function convertToDateTimeNorm(date, fillerDate) {
  * TODO: more robust and user-friendly date handling
  */
 function convertToDateNorm(date, fillerDate) {
-	date = date.trim();
-	if (!date) {
-		return "";
-	}
+    date = date.trim();
+    if (!date) {
+        return "";
+    }
     var zeroPat = "0000-01-01";
     var result;
     if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d$/)) {
@@ -1136,8 +1136,8 @@ function convertToDateNorm(date, fillerDate) {
     }
     // TRUNCATE to ensure correctness
     if (result.length > zeroPat.length) {
-    	result = result.substring(0, zeroPat.length);
-    }    
+        result = result.substring(0, zeroPat.length);
+    }
     return result;
 }
 
@@ -1146,18 +1146,18 @@ function convertToDateNorm(date, fillerDate) {
  * TODO: more robust and user-friendly date handling
  */
 function convertToTimeNorm(time, fillerTime) {
-	time = time.trim();
-	if (!time) {
-		return "";
-	}
-	var zeroPat = "00:00:00.000";
-	var result;
-	// Treat the "h" separator as a ":" for user friendliness
-	// NOTE: it only replaces the first occurrence, but that's what we want anyway
-	time = time.replace("h", ":");
-	result = time;
-	/* FIXME: DON'T do any of this for now, because it doesn't handle differences in numbers of digits
-	if (fillerTime && fillerTime.match(/^\d\d:$/)) {
+    time = time.trim();
+    if (!time) {
+        return "";
+    }
+    var zeroPat = "00:00:00.000";
+    var result;
+    // Treat the "h" separator as a ":" for user friendliness
+    // NOTE: it only replaces the first occurrence, but that's what we want anyway
+    time = time.replace("h", ":");
+    result = time;
+    /* FIXME: DON'T do any of this for now, because it doesn't handle differences in numbers of digits
+    if (fillerTime && fillerTime.match(/^\d\d:$/)) {
        if (time.length >= fillerTime.length) {
            result = time;
        }
@@ -1175,11 +1175,11 @@ function convertToTimeNorm(time, fillerTime) {
        }
     }
     */
-	// Don't do this in case want to accept higher precision
+    // Don't do this in case want to accept higher precision
     //// TRUNCATE to ensure correctness
     //if (result.length > zeroPat.length) {
-    //	result = result.substring(0, zeroPat.length);
-    //}   
+    //    result = result.substring(0, zeroPat.length);
+    //}
     return result;
 }
 
@@ -1188,10 +1188,10 @@ function convertToTimeNorm(time, fillerTime) {
  * TODO: more robust and user-friendly date handling
  */
 function convertToMonthNorm(date, fillerDate) {
-	date = date.trim();
-	if (!date) {
-		return "";
-	}
+    date = date.trim();
+    if (!date) {
+        return "";
+    }
     var zeroPat = "0000-01";
     var result;
     if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d$/)) {
@@ -1213,7 +1213,7 @@ function convertToMonthNorm(date, fillerDate) {
     }
     // TRUNCATE to ensure correctness
     if (result.length > zeroPat.length) {
-    	result = result.substring(0, zeroPat.length);
-    }    
+        result = result.substring(0, zeroPat.length);
+    }
     return result;
 }

@@ -29,7 +29,7 @@ public abstract class CategoryUtil {
     /**
      * Gets catalog IDs for specified product category.
      * <p>
-     * This method is a supplement to CatalogWorker methods. 
+     * This method is a supplement to CatalogWorker methods.
      */
     public static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
         List<String> catalogIds = FastList.newInstance();
@@ -47,7 +47,7 @@ public abstract class CategoryUtil {
             }
         }
         return catalogIds;
-    }    
+    }
     
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -65,7 +65,7 @@ public abstract class CategoryUtil {
             List<String> orderBy = UtilMisc.toList("-fromDate");
             List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, orderBy, null, true);
             if (UtilValidate.isNotEmpty(productCategoryRollups)) {
-                /* 2016-03-22: This does not work properly and creates invalid trails. 
+                /* 2016-03-22: This does not work properly and creates invalid trails.
                  * Instead, use recursion.
                 List<List<String>> trailElementsAux = FastList.newInstance();
                 trailElementsAux.addAll(trailElements);
@@ -99,7 +99,7 @@ public abstract class CategoryUtil {
                         trailElements.add(trail);
                     }
                 }
-            } 
+            }
             //} else {
             //    parentProductCategoryId = null;
             //}
@@ -110,7 +110,7 @@ public abstract class CategoryUtil {
         //}
         if (trailElements.isEmpty()) {
             List<String> trailElement = FastList.newInstance();
-        	trailElement.add(productCategoryId);
+            trailElement.add(productCategoryId);
             trailElements.add(trailElement);
         }
         return trailElements;
@@ -120,7 +120,7 @@ public abstract class CategoryUtil {
      * Returns categoryName with trail.
      */
     public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, DispatchContext dctx, List<String> currentTrail) {
-    	return getCategoryNameWithTrail(productCategoryId, catalogId, true,  dctx, currentTrail);
+        return getCategoryNameWithTrail(productCategoryId, catalogId, true,  dctx, currentTrail);
     }
     
     /**
@@ -128,7 +128,7 @@ public abstract class CategoryUtil {
      * <p>
      * 2016-03-22: This now accepts a currentTrail needed because categories may have multiple trails.
      * It is checked to help select the most appropriate of the multiple trails to return.
-     * If not specified, the first trail is returned; 
+     * If not specified, the first trail is returned;
      * CURRENTLY, it works like a hint rather than exact match - if no perfect match, returns the closest one.
      * FIXME?: it's possible we only want exact matches (exact) or matches containing the full currentTrail (containsFullTrail),
      * but I think it's safer for now to return closest-match.
@@ -137,7 +137,7 @@ public abstract class CategoryUtil {
      * Can be gotten using {@link org.ofbiz.product.category.CategoryWorker#getCategoryPathFromTrailAsList}.
      */
     public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
-    	List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
+        List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
         StringBuilder catMember = new StringBuilder();
         String cm = "";
         int i = 0;
@@ -160,8 +160,8 @@ public abstract class CategoryUtil {
                 for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
                     String trailString = (String) trailIter.next();
                     if (catMember.length() > 0){
-                    	catMember.append("/");
-                    	i++;
+                        catMember.append("/");
+                        i++;
                     }
                     
                     catMember.append(trailString);
@@ -172,16 +172,16 @@ public abstract class CategoryUtil {
         if (catMember.length() == 0){catMember.append(productCategoryId);}
         
         if(showDepth) {
-        	cm = i +"/"+ catMember.toString();
+            cm = i +"/"+ catMember.toString();
         } else {
-        	cm = catMember.toString();
+            cm = catMember.toString();
         }
         //Debug.logInfo("catMember "+cm,module);
-    	return cm;
+        return cm;
     }
 
     /**
-     * Returns categoryName with trail. 
+     * Returns categoryName with trail.
      * @deprecated You should usually call the overload
      * with currentTrail instead {@link #getCategoryNameWithTrail(String, DispatchContext, List)}.
      */
@@ -191,7 +191,7 @@ public abstract class CategoryUtil {
     }
 
     /**
-     * Returns categoryName with trail. 
+     * Returns categoryName with trail.
      * @deprecated You should usually call the overload
      * with currentTrail instead {@link #getCategoryNameWithTrail(String, Boolean, DispatchContext, List)}.
      */
@@ -313,47 +313,47 @@ public abstract class CategoryUtil {
     }
     
     
-    /**	
+    /**
      * Returns nextLevel from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be 2.
      */
     public static int getNextLevelFromCategoryId(String productCategoryId, DispatchContext dctx) {
-    	try{
-	    	if (productCategoryId.contains("/")) {
-	    		String[] productCategories = productCategoryId.split("/");
-	    		int level = Integer.parseInt(productCategories[0]);
-	    		return level++;
-	    	} else {
-	    		return 0;
-	    	}
-    	} catch(Exception e) {
-    		return 0;
-    	}
+        try{
+            if (productCategoryId.contains("/")) {
+                String[] productCategories = productCategoryId.split("/");
+                int level = Integer.parseInt(productCategories[0]);
+                return level++;
+            } else {
+                return 0;
+            }
+        } catch(Exception e) {
+            return 0;
+        }
     }
     
-    /**	
+    /**
      * Returns proper FacetFilter from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be
      * "2/SYRACUS2_CATEGORY/FICTION_C/".
      */
     public static String getFacetFilterForCategory(String productCategoryId, DispatchContext dctx) {
-    	try{
-			String[] productCategories = productCategoryId.split("/");
-			int level = Integer.parseInt(productCategories[0]);
-			int nextLevel = level+1;
-			productCategories[0] = ""+nextLevel;
-			// 2016-03-22: Preserve the original ending / if there was one
-			if (productCategoryId.endsWith("/")) {
-			    return StringUtils.join(productCategories,"/") + "/";
-			}
-			else {
-			    return StringUtils.join(productCategories,"/");
-			}
-    	} catch(Exception e) {
-    		return productCategoryId;
-    	}
+        try{
+            String[] productCategories = productCategoryId.split("/");
+            int level = Integer.parseInt(productCategories[0]);
+            int nextLevel = level+1;
+            productCategories[0] = ""+nextLevel;
+            // 2016-03-22: Preserve the original ending / if there was one
+            if (productCategoryId.endsWith("/")) {
+                return StringUtils.join(productCategories,"/") + "/";
+            }
+            else {
+                return StringUtils.join(productCategories,"/");
+            }
+        } catch(Exception e) {
+            return productCategoryId;
+        }
     }
     
 }

@@ -66,7 +66,7 @@ TODO: Reimplement as transform.
   * Parameters *
     resource                = ((string)) The resource identifier, with format depending on type
                               * {{{screen}}}: path and name, or path alone
-                                e.g., 
+                                Examples:
                                   "component://common/widget/CommonScreens.xml#listLocales"
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
@@ -2521,7 +2521,7 @@ a replacing string ("=").
 *************
 * addClassArgReplacing
 ************
-Special case of addClassArg where the required class will become a replacing string ("=" prefix),
+Special case of addClassArg where the required class will become a replacing string ("=" prefix, as in "=my-class"),
 though will not squash previous values. 
 
 NOTE: This destroys information about what macro user requested and affects the default value logic

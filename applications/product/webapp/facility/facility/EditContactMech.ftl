@@ -142,19 +142,13 @@ under the License.
     <@field type="input" label=uiLabelMap.PartyCity required=true size="30" maxlength="30" name="city" value=(mechMap.postalAddress.city)!(request.getParameter('city')!) />
 
     <@field type="select" label=uiLabelMap.PartyState name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
+        <#if (mechMap.postalAddress.stateProvinceGeoId)?has_content>
+            <option value="${mechMap.postalAddress.stateProvinceGeoId}">${mechMap.postalAddress.stateProvinceGeoId}</option>
+        </#if>
     </@field>
     <@field type="input" label=uiLabelMap.PartyZipCode required=true size="12" maxlength="10" name="postalCode" value=(mechMap.postalAddress.postalCode)!(request.getParameter('postalCode')!) />
     <@field type="select" label=uiLabelMap.CommonCountry name="countryGeoId" id="editcontactmechform_countryGeoId">
-        <@render resource="component://common/widget/CommonScreens.xml#countries" />        
-        <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
-          <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
-        <#else>
-         <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
-        </#if>
-        <option selected="selected" value="${defaultCountryGeoId}">
-          <#assign countryGeo = delegator.findOne("Geo",{"geoId":defaultCountryGeoId}, false)>
-          ${countryGeo.get("geoName",locale)}
-        </option>
+        <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":(mechMap.postalAddress.countryGeoId)!, "countriesPreselectFirst":true}/>
     </@field>
   <#elseif "TELECOM_NUMBER" == (mechMap.contactMechTypeId!)>
     <@field type="generic" label=uiLabelMap.PartyPhoneNumber>

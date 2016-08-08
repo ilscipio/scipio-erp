@@ -136,6 +136,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-escapeUrlParamDelims">escapeUrlParamDelims</a>, 
                   <a href="#entry-evalToSimpleMap">evalToSimpleMap</a>, 
                   <a href="#entry-extractVars">extractVars</a>, 
+                  <a href="#entry-filterMap">filterMap</a>, 
                   <a href="#entry-getCurrentHeadingLevel">getCurrentHeadingLevel</a>, 
                   <a href="#entry-getCurrentSectionLevel">getCurrentSectionLevel</a>, 
                   <a href="#entry-getDefaultHeadingLevel">getDefaultHeadingLevel</a>, 
@@ -212,6 +213,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getAllContainerSizes">getAllContainerSizes</a>, 
                   <a href="#entry-getAttribMapAllExcludes">getAttribMapAllExcludes</a>, 
                   <a href="#entry-getClassArgPrefix">getClassArgPrefix</a>, 
+                  <a href="#entry-getFilteredAttribMap">getFilteredAttribMap</a>, 
                   <a href="#entry-getHeadingElemSpecFromStyleStr">getHeadingElemSpecFromStyleStr</a>, 
                   <a href="#entry-getLastContainerSizes">getLastContainerSizes</a>, 
                   <a href="#entry-getPlainClassArgNames">getPlainClassArgNames</a>, 
@@ -223,6 +225,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-makeAttribMapFromArgMap">makeAttribMapFromArgMap</a>, 
                   <a href="#entry-mergeArgMaps">mergeArgMaps</a>, 
                   <a href="#entry-mergeArgMapsBasic">mergeArgMapsBasic</a>, 
+                  <a href="#entry-mergeArgMapsEx">mergeArgMapsEx</a>, 
                   <a href="#entry-mergeArgMapsToLocals">mergeArgMapsToLocals</a>, 
                   <a href="#entry-mergeArgMapsToLocalsBasic">mergeArgMapsToLocalsBasic</a>, 
                   <a href="#entry-mergeAttribMaps">mergeAttribMaps</a>, 
@@ -294,6 +297,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-evalToSimpleMap">evalToSimpleMap</a>, 
         <a href="#entry-extractPrefixedStyleNamesWithInt">extractPrefixedStyleNamesWithInt</a>, 
         <a href="#entry-extractVars">extractVars</a>, 
+        <a href="#entry-filterMap">filterMap</a>, 
         <a href="#entry-formatDate">formatDate</a>, 
         <a href="#entry-formatDateTime">formatDateTime</a>, 
         <a href="#entry-formattedDate">formattedDate</a>, 
@@ -309,6 +313,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-getDefaultHeadingLevel">getDefaultHeadingLevel</a>, 
         <a href="#entry-getDefaultScipioLibLocation">getDefaultScipioLibLocation</a>, 
         <a href="#entry-getDefaultSectionLevel">getDefaultSectionLevel</a>, 
+        <a href="#entry-getFilteredAttribMap">getFilteredAttribMap</a>, 
         <a href="#entry-getHeadingElemSpecFromStyleStr">getHeadingElemSpecFromStyleStr</a>, 
         <a href="#entry-getLabel">getLabel</a>, 
         <a href="#entry-getLastContainerSizes">getLastContainerSizes</a>, 
@@ -339,6 +344,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-mapKeys">mapKeys</a>, 
         <a href="#entry-mergeArgMaps">mergeArgMaps</a>, 
         <a href="#entry-mergeArgMapsBasic">mergeArgMapsBasic</a>, 
+        <a href="#entry-mergeArgMapsEx">mergeArgMapsEx</a>, 
         <a href="#entry-mergeArgMapsToLocals">mergeArgMapsToLocals</a>, 
         <a href="#entry-mergeArgMapsToLocalsBasic">mergeArgMapsToLocalsBasic</a>, 
         <a href="#entry-mergeAttribMaps">mergeAttribMaps</a>, 
@@ -436,6 +442,12 @@ Intended for use anywhere in production templates and templating macros.        
                       <div class="lib-entry-extradesc">
         <p>
 Screens are rendered using Ofbiz&#39;s <code>screens.render</code> utility function.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-07-29: The default for the <code>restoreValues</code> parameter has been changed to <code>true</code>.
+By default, all variables passed using <code>ctxVars</code>, <code>globalCtxVars</code> and <code>reqAttribs</code> regain
+their previous values when the macro call returns. This helps guard against bugs in templates
+that use multiple <a href="#entry-render">@render</a> calls as well as nested screens.          </div>
                       </div>
                   </div>
             
@@ -572,8 +584,13 @@ object found in the global <code>scipioNullObject</code> variable.          </di
                             <code>restoreValues</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If true, the original values are saved and restored after invocation</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, the original values are saved and restored after invocation</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-07-29: The default for this parameter has been changed to <code>true</code>.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -878,7 +895,7 @@ If true, ensures the resulting URL will be a secure link.
 MODIFIED IN SCIPIO: This does not guarantee a full URL will be built, only when needed.
 Pass fullPath <code>true</code> to always force a full path. In addition, this parameter now
 recognizes the value <code>false</code> to force downgrades to HTTP when the target controller request
-is marked as non-secure.          </div>
+is marked as non-secure (or if there there is no target request or unknown - since 2016-07-14).          </div>
         <span>
 (Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)        </span>
 </span>
@@ -2007,8 +2024,13 @@ object found in the global <code>scipioNullObject</code> variable.          </di
                             <code>restoreValues</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> If true, the original values are saved and restored after invocation</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, the original values are saved and restored after invocation</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-07-29: The default for this parameter has been changed to <code>true</code>.          </div>
+</span>
                         </td>
                       </tr>
               </table>
@@ -3561,6 +3583,63 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
           
           
           <hr />
+          <a name="entry-filterMap"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">filterMap</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>filterMap</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns a copy of a map with the given keys excluded.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If the original map was a simple map, the result is a simple map as
+other; if not, a complex map is returned.          </div>
+                      </div>
+                  </div>
+            
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>map</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>exclude</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>include</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-toRawString"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -4611,6 +4690,26 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>rawVal</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|(map)|(list), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, treat the object as a pure JSON/other script string.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+This can be a map or list of boolean to parallel the object, for recursion.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+is cumbersome for lists; mostly useful for maps.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+this is kept separate from the object for security reasons.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>currDepth</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -5095,6 +5194,77 @@ but otherwise should avoid using this map when possible.          </div>
           
           
           <hr />
+          <a name="entry-mergeArgMapsEx"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">mergeArgMapsEx</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeArgMapsEx</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Variant of <a href="#entry-mergeArgMaps">#mergeArgMaps</a> that returns more than one map.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>args</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>defaultArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>overrideArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-return">
+                    <h4>Return Value</h4>
+                    <p>
+a map of arg maps: <code>allArgs</code> (full combined), <code>explArgs</code> (only explicitly passed args)                    </p>
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-mergeArgMapsBasic"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -5299,18 +5469,11 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
 sub-map and blends them together logically to make an attribs map.</p>
                       <div class="lib-entry-extradesc">
         <p>
-The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
-        </p>
+It uses args.allArgNames to determine the extra &quot;inline&quot; arguments.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-this currently does not change the exclude lists (see <a href="#entry-mergeArgMaps">@mergeArgMaps</a>), but could in the future.          </div>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-The resulting map does not contain only attribs. It may contain a large number of unrelated          </div>
-        <p>
-members plus &quot;attribs&quot;, &quot;allArgNames&quot;, &quot;localArgNames&quot;, &quot;excludeNames&quot; and &quot;noExcludeNames&quot; members.        </p>
-        <p>
-Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but implied logic differs.        </p>
+2016-08-02: This function has been modified so that the result fully represents a usable
+attribs map as-is. It no longer contains superfluous members (allArgNames, localArgNames, etc.).          </div>
                       </div>
                   </div>
             
@@ -5323,6 +5486,13 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
                       <tr>
                         <td class="entry-paramname">
                             <code>args</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>excludes</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
@@ -5356,8 +5526,9 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns the attrib map excludes based on allArgNames list, plus known needed excludes, plus an optional list,
-plus &quot;noExclude&quot; alternatives of all the aforementioned that prevent excludes.
+                      <p class="lib-entry-shortdesc">Returns the attrib map excludes from the given attribs map, which is composed of its
+&quot;scipioExcludeNames&quot; and &quot;scipioNoExcludeNames&quot; members, plus optional additional
+includes passed as arguments.
 The result is returned as a bean-wrapped Set.</p>
                       <div class="lib-entry-extradesc">
                       </div>
@@ -5398,6 +5569,68 @@ The result is returned as a bean-wrapped Set.</p>
                      <h4>Related</h4>
                      <p>
                        
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-getFilteredAttribMap"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">getFilteredAttribMap</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getFilteredAttribMap</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns the attrib map with all the basic excludes applied.</p>
+                      <div class="lib-entry-extradesc">
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>exclude</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>noExclude</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       , 
+                       <a href="#entry-elemAttribStr">@elemAttribStr</a>
                      </p>
                   </div>  
             

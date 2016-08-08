@@ -85,7 +85,7 @@ under the License.
                 <#if shipToCountryGeoId??>
                   <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo!(shipToCountryGeoId!)}</option>
                 </#if>
-                <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!shipToCountryGeoId??}/>
               </select>
             </div>
           </div>
@@ -141,7 +141,7 @@ under the License.
               <#if billToCountryGeoId??>
                 <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
               </#if>
-                <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!billToCountryGeoId??}/>
               </select>
             </div>
             <div id="billToStates">

@@ -1,9 +1,9 @@
 /**
  * Master HTML templating variables include, Foundation Metro theme/framework.
  *
- * Overrides the default SCIPIO styles located in 
+ * Overrides the default SCIPIO styles located in
  * htmlVariables.groovy - ofbiz_foundation/framework/common/webcommon/includes/scipio/lib/standard/
- * 
+ *
  */
 
 import java.lang.*;
@@ -21,11 +21,11 @@ GroovyUtil.runScriptAtLocation("component://common/webcommon/includes/scipio/lib
 
 context.styles.putAll([
   /*Metro specific*/
-	"customSideBar" : true,
-	"menu_sidebar" : "topnav slicknav",
-	"menu_sidebar_wrap" :"",
-	"menu_sidebar_specialtype" : "side-bar",	
-	  
+    "customSideBar" : true,
+    "menu_sidebar" : "topnav slicknav",
+    "menu_sidebar_wrap" :"",
+    "menu_sidebar_specialtype" : "side-bar",
+    
   /* Specific display elements */
     /* Address picker */
     "address_list" : "address-list",

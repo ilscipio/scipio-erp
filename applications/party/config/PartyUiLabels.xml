@@ -1943,6 +1943,9 @@
         <value xml:lang="zh">添加会员分区角色</value>
         <value xml:lang="zh_TW">增加團體分區角色</value>
     </property>
+    <property key="PartyTaxAuthPartyAndGeoNotAvailable">
+        <value xml:lang="en">Tax authority is not availble for provided Tax Authority Party and Tax Authority Geo.</value>
+    </property>
     <property key="PageTitleAddPartyTaxAuthInfos">
         <value xml:lang="de">Informationen zur Steuerbehörde des Nutzers hinzufügen</value>
         <value xml:lang="en">Add User Tax Authority Info</value>
@@ -4399,11 +4402,11 @@
         <value xml:lang="zh_TW">通訊事件識別:沒有找到${parameters.commnicationEventId}</value>
     </property>
     <property key="PartyCommunication">
-    	<value xml:lang="de">Kommunikation</value>
+        <value xml:lang="de">Kommunikation</value>
         <value xml:lang="en">Communication</value>
     </property>
     <property key="PartyLastCommunication">
-    	<value xml:lang="de">Jüngste Ereignisse</value>
+        <value xml:lang="de">Jüngste Ereignisse</value>
         <value xml:lang="en">Last Communication</value>
     </property>
     <property key="PartyCommunications">
@@ -11300,7 +11303,7 @@
         <value xml:lang="zh_TW">角色</value>
     </property>
     <property key="PartySecurityAlert">
-    	<value xml:lang="de">Jüngste Warnungen</value>
+        <value xml:lang="de">Jüngste Warnungen</value>
         <value xml:lang="en">Alerts</value>
     </property>
     <property key="PartySecurityGroup">
@@ -12461,11 +12464,11 @@
         <value xml:lang="zh_TW">團體類型識別</value>
     </property>
     <property key="PartyUserActivity">
-    	<value xml:lang="de">Benutzeraktivität</value>
+        <value xml:lang="de">Benutzeraktivität</value>
         <value xml:lang="en">User Activity</value>
     </property>
     <property key="PartyUserManagement">
-    	<value xml:lang="de">Benutzerverwaltung</value>
+        <value xml:lang="de">Benutzerverwaltung</value>
         <value xml:lang="en">User Management</value>
     </property>
     <property key="PartyUnableToLocatePurpose">

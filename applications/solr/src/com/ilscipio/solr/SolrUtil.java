@@ -195,7 +195,7 @@ public abstract class SolrUtil {
     }
     
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize) {
-    	return categoriesAvailable(catalogId,categoryId,productId,null,displayproducts,viewIndex,viewSize, null);
+        return categoriesAvailable(catalogId,categoryId,productId,null,displayproducts,viewIndex,viewSize, null);
     }
     
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize) {
@@ -305,7 +305,7 @@ public abstract class SolrUtil {
         Integer viewIndex = null;
         if (results != null && viewSize != null && viewSize > 0) {
             long start = results.getStart();
-            viewIndex = (int) (start / (long) viewSize); 
+            viewIndex = (int) (start / (long) viewSize);
         }
         return viewIndex;
     }

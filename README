@@ -8,7 +8,7 @@
   ____) | | |____  | | | |      | | | |__| |   | |___  | | \ \  | |
  |_____/   \_____| |_| |_|      |_|  \____/    |_____| |_|  \_\ |_|
 
-					http://www.scipioerp.com
+                    http://www.scipioerp.com
 
 **************************************************************************
 
@@ -71,7 +71,7 @@ c. Windows: start.bat
   Username: admin
   Password: scipio
 
-					Congratulations, you have installed SCIPIO ERP!
+                    Congratulations, you have installed SCIPIO ERP!
 
 Updates
 1. Retrieve latest code updates from git:
@@ -107,7 +107,7 @@ You can get in touch with the community over at:
 *************
 * O F B I Z *
 *************
-Scipio ERP is a fork of the Apache OFBiz project. 
+Scipio ERP is a fork of the Apache OFBiz project.
 
 For more details about OFBiz please visit the OFBiz Documentation page:
 
@@ -129,9 +129,9 @@ developers, the following page will help to get started:
 This software is provided as is and free of charge. There is no warranty
 or support implied under the terms of the license included.
 
-SCIPIO ERP and the SCIPIO logo are trademarks of Ilscipio GmbH. 
+SCIPIO ERP and the SCIPIO logo are trademarks of Ilscipio GmbH.
 © Copyright SCIPIO components 2016 Ilscipio GmbH.
-Apache OFBiz, Apache, the Apache feather logo are trademarks 
+Apache OFBiz, Apache, the Apache feather logo are trademarks
 of The Apache Software Foundation.
 
 ***********************************

@@ -97,12 +97,15 @@ May have implicit dependencies on other parts of Scipio API.        </span>
         <a href="#entry-fields">fields</a>, 
         <a href="#entry-fieldset">fieldset</a>, 
         <a href="#entry-form">form</a>, 
+        <a href="#entry-getAutoValue">getAutoValue</a>, 
+        <a href="#entry-getAutoValueCfg">getAutoValueCfg</a>, 
         <a href="#entry-getDefaultFieldGridStyles">getDefaultFieldGridStyles</a>, 
         <a href="#entry-mapOfbizFieldTypeToScipioFieldType">mapOfbizFieldTypeToScipioFieldType</a>, 
         <a href="#entry-mapOfbizFieldTypeToStyleName">mapOfbizFieldTypeToStyleName</a>, 
         <a href="#entry-mapScipioFieldTypeToStyleName">mapScipioFieldTypeToStyleName</a>, 
         <a href="#entry-progress">progress</a>, 
-        <a href="#entry-progressScript">progressScript</a>
+        <a href="#entry-progressScript">progressScript</a>, 
+        <a href="#entry-setAutoValueCfg">setAutoValueCfg</a>
       </p>
     </div>
 
@@ -963,6 +966,10 @@ or even multiple per fieldset.</p>
       &lt;@field attr=&quot;&quot; /&gt;
       &lt;@field attr=&quot;&quot; /&gt;
     &lt;/@field&gt;
+
+    &lt;@fields autoValue={&quot;record&quot;: myEntity!{}, &quot;defaults&quot;:{&quot;field1&quot;: &quot;some default value&quot;}}&gt;
+      &lt;@field name=&quot;field1&quot; /&gt;
+    &lt;/@fields&gt;
 </pre>                  </div>
             
               
@@ -1251,6 +1258,47 @@ If set to boolean false, will prevent all custom default field args and prevent 
 e.g.
         </span>
 <pre>&lt;@fields type=&quot;default&quot; fieldArgs={&quot;labelArea&quot;:false}&gt;</pre></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>autoValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(boolean), default: -empty/disabled-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Auto value configuration to be set as globals for children <a href="#entry-field">@field</a> and <a href="#entry-getAutoValue">#getAutoValue</a> calls</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+NOT FULLY IMPLEMENTED (2016-07-15)          </div>
+        <span>
+This enables children @field and #getAutoValue calls to use automatic value lookups using parameters, record and defaults maps, which
+are set in globals using this parameter. Disabled by default.
+Possible values:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+as <code>map</code>: if set to a map, all contents are passed as arguments to the <a href="#entry-setAutoValueCfg">#setAutoValueCfg</a> function (<code>setAutoValueCfg(autoValue)</code>), with the exception that if
+the <code>autoValue.autoValue</code> boolean is omitted, <a href="#entry-fields">@fields</a> assumes and sets it to true (only explicit false will disable auto value; this case is rare).
+See #setAutoValueCfg for available configuration arguments.        </span>
+      </li>
+      <li>
+        <span>
+as <code>boolean</code>: if set to a boolean, it is equivalent to calling <code>setAutoValueCfg({&quot;autoValue&quot;:true})</code>, where only defaults are used.        </span>
+      </li>
+  </ul>
+</div>
+        <span>
+In all cases, the previous global auto value configuration is saved before setting these and is restored after @fields is closed.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Unlike other @fields parameters, this parameter is always inherited unless specifically overridden.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Unlike other @fields parameters, this parameter does not survive screen <a href="../utilities.html#entry-render">@render</a> boundaries (only has page/template scope, not request scope).          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2476,6 +2524,50 @@ Does not support extended class +/= syntax.        </span>
 </span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>autoValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from globals-, fallback default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Fine-grained control to turn auto value lookups on or off</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+NOT FULLY IMPLEMENTED (2016-07-15)          </div>
+        <span>
+<a href="#entry-field">@field</a> has the ability to automatically lookup values from parameter, record and defaults maps,
+through implicit calls to the <a href="#entry-getAutoValue">#getAutoValue</a> function.
+By default, this auto value enabling is determined by the current globals as set by <a href="#entry-fields">@fields</a>
+or <a href="#entry-setAutoValueCfg">#setAutoValueCfg</a>. This boolean allows to disable per-field as a quick fix.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This does not support the extensive arguments supported by @fields. It only supports
+explicit boolean on/off to toggle for individual fields.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>autoValueArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra arguments that will be passed to <a href="#entry-getAutoValue">#getAutoValue</a> when auto values enabled.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Note that basics such as name, value, and type are already covered.
+Some extras that may be specified are: overrideName, paramName, recordName, defaultName.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+suffix is reserved for use and should never be specified.          </div>
+        <span>
+See #getAutoValue for a comprehensive list.        </span>
+</span>
+                        </td>
+                      </tr>
               </table>
                             </div>
                             <div class="lib-entry-paramsection lib-entry-paramsection-inputAliasText">
@@ -2806,6 +2898,11 @@ If items list not specified, manual nested content options can be specified inst
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Optional selected option value for when none otherwise selected</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+When auto-value is being used (<a href="#entry-getAutoValue">#getAutoValue</a>), this should be omitted.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2937,7 +3034,7 @@ May also be specified as nested.        </span>
                             <code>value</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Y/N</span>
+                            <span class="lib-entry-param-desc-shortdesc">Value to submit with form when checkbox is selected</span>
                         </td>
                       </tr>
                       <tr>
@@ -2972,7 +3069,7 @@ receives an id with a <code>_hidden</code> suffix.        </span>
                             <code>altValue</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Value to submit when checkbox not selected</span>
+                            <span class="lib-entry-param-desc-shortdesc">Value to submit with form when checkbox is unselected</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>WARN: </strong>
@@ -3026,6 +3123,19 @@ Scipio standard theme:
 </span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>valueType</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(|indicator, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Special and predefined value types</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+<code>indicator</code>: Same as passing <code>value=&quot;Y&quot; altValue=&quot;N&quot; useHidden=true</code>.        </span>
+</span>
+                        </td>
+                      </tr>
               </table>
                             </div>
                             <div class="lib-entry-paramsection lib-entry-paramsection-checkboxMultiMode">
@@ -3040,7 +3150,8 @@ Scipio standard theme:
                             <span class="lib-entry-param-desc-shortdesc">List of maps, if specified, multiple-items checkbox field generated</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-List of {&quot;value&quot;: (value), &quot;altValue&quot;: (value), &quot;useHidden&quot;: (boolean), &quot;description&quot;: (label), &quot;tooltip&quot;: (tooltip), &quot;events&quot;: (js event map), &quot;checked&quot;: (true/false)} maps
+List of {&quot;value&quot;: (value), &quot;altValue&quot;: (value), &quot;useHidden&quot;: (boolean),
+&quot;description&quot;: (label), &quot;tooltip&quot;: (tooltip), &quot;events&quot;: (js event map), &quot;checked&quot;: (true/false)} maps
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
@@ -3078,6 +3189,11 @@ the default can be overridden on a parent <a href="#entry-field">@field</a> or <
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Default value, determines checked (convenience parameter; used when currentValue empty; can also be sequence)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+When auto-value is being used (<a href="#entry-getAutoValue">#getAutoValue</a>), this should be omitted.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -3087,6 +3203,31 @@ the default can be overridden on a parent <a href="#entry-field">@field</a> or <
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean|), default: -empty-)</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Explicit false sets all to unchecked; leave empty &quot;&quot; for no setting (convenience parameter)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>value</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Default value for any items which do not specify their own</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>altValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Default alt (off) value for any items which do not specify their own</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>useHidden</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Default useHidden for any items which do not specify their own</span>
                         </td>
                       </tr>
               </table>
@@ -3205,6 +3346,11 @@ The default can be overridden on a parent <a href="#entry-field">@field</a> or <
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Default value, determines checked (convenience option; used when currentValue empty)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+When auto-value is being used (<a href="#entry-getAutoValue">#getAutoValue</a>), this should be omitted.          </div>
+</span>
                         </td>
                       </tr>
               </table>
@@ -3721,6 +3867,480 @@ This does not have to be 12.          </div>
                         </p>
                       </div>
                   </div>
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-getAutoValue"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">getAutoValue</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAutoValue</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns an appropriate field value (typically for use with <a href="#entry-field">@field</a>) based on current values in request
+and context, following a certain scheme type specified directly or previously through globals.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+NOT FULLY IMPLEMENTED (2016-07-15)          </div>
+        <p>
+Typically the value is looked up in a set of global maps (parameters, a record or entity, defaults, etc.)
+following some predefined priority.        </p>
+        <p>
+The schema type may be specified directly, but in most cases it should have been specified for a group of
+getAutoValue calls using <a href="#entry-fields">@fields</a>, where the specific maps to use when looking up the value may also be specified.
+It is also possible to manually call <a href="#entry-setAutoValueCfg">#setAutoValueCfg</a> to set them, which should rarely be needed.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This method conditionally acts on the <code>isError</code> boolean context field. Usually it is
+set depending on the result of the last controller event. In non-standard cases you may have
+to set it manually.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(standard|..., default: -from globals-, fallback default: standard)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">The value scheme type</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>params</code>: looks for value in overrides map, then parameters map, then defaults map        </span>
+      </li>
+      <li>
+        <span>
+<code>record</code>: looks for value in overrides map, then record map, then defaults map        </span>
+      </li>
+      <li>
+        <span>
+<code>defaults-only</code>: looks for value in overrides map, then defaults map        </span>
+      </li>
+      <li>
+        <span>
+<code>params-record</code>: looks for value in overrides map, then parameters map, then record, then defaults map.
+This may be        </span>
+      </li>
+      <li>
+        <span>
+<code>params-or-record</code>: looks for value in overrides map, then EITHER parameters map OR record map, then defaults map
+At current time (2016-07-08), the selection of parameters or record map default behavior is based on whether an event
+error occurred (<code>isError</code> boolean context field).        </span>
+      </li>
+      <li>
+        <span>
+<code>standard</code>: In scipio standard API, currently (2016-07-08), this is the same params-or-record, currently considered the standard behavior.        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>name</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+As a convenience, name can be passed as single parameter instead of the <code>args</code> map.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>overrideName</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Field name for overrides map</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paramName</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Field name for parameters map</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>recordName</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Field name for record map</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>defaultName</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Field name for defaults map</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>suffix</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Optional suffix added to each of the name parameters</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>overrideValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">An override values, which takes priority over all</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paramValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">A param value, which takes immediate priority over the params map</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>value</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">A value, which takes immediate priority over the record values</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+It is ignored in all cases where the record map is also ignored (such as <code>type=&quot;params&quot;</code>).        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>defaultValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">A default value, which takes immediate priority over the default map values</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitDetectMethod</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default|flag|post|none, default: default)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Submit detection method</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>default</code>: use <code>flag</code> if <code>submitFlagParam</code>, otherwise use <code>post</code>        </span>
+      </li>
+      <li>
+        <span>
+<code>flag</code>: use <code>submitFlagParam</code>        </span>
+      </li>
+      <li>
+        <span>
+<code>post</code>: use POST request check        </span>
+      </li>
+      <li>
+        <span>
+<code>none</code>: none        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitFlagParam</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Optional name of a parameter from params map whose presence determines if a form was submitted or not.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Automatically implies <code>submitDetectMethod=&quot;flag&quot;</code>.
+This parameter is checked using <code>??</code> operator, by simple presence.
+This is needed for parameters whose HTML inputs don&#39;t always submit a value.
+If a submit happened and the field is missing, then the field is given the value specified in <code>submitDefaultParamValue</code>.
+By default, submission is detected using presence of POST request, but in most cases,
+it is better to have submitFlagParam specified, easiest using <a href="#entry-fields">@fields</a>.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitDefaultParamValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: &quot;&quot;/[]/{})</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Default param value to use if submitFlagParam checks out</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                        <strong>NOTE:</strong> This function implements an advanced arguments interface emulating named
+                            parameters using maps, and the parameters above may not be positional. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-fields">@fields</a>, 
+                       <a href="#entry-setAutoValueCfg">#setAutoValueCfg</a>
+                     </p>
+                  </div>  
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-setAutoValueCfg"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">setAutoValueCfg</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setAutoValueCfg</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Sets the current global value configuration (maps and settings) used by <a href="#entry-getAutoValue">#getAutoValue</a>, and can also be used
+to disable auto value lookups for <a href="#entry-field">@field</a>.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Any parameters not specified leave the existing corresponding globals unchanged.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The globals specified by this function currently do not survive screen render boundaries; they
+have page/template scope, not request scope.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>autoValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Determines if auto value lookups are enabled for macros such as <a href="#entry-field">@field</a></span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Unlike some other macros and functions (such as <a href="#entry-fields">@fields</a>), for this function, if this
+parameter is omitted, the function will not turn on auto values. It is a manual
+call and requires explicit true.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">The value scheme type</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-getAutoValue">#getAutoValue</a> for possible values.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>overrides</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Map to use as overrides map for lookups</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>params</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Map to use as parameters map for lookups</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Normally, if this is not specified anywhere, the Ofbiz parameters map is used.
+If this is set to boolean false (special value), no parameters map will be used.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>record</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Map to use as record map for lookups</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Usually this is something like an entity value.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>defaults</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Map to use as defaults map for lookups</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitDetectMethod</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Submit detection method</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-getAutoValue">#getAutoValue</a> for possible values.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitFlagParam</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Name of a parameter from params map whose presence can be used to detect whether a form submit occurred</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-getAutoValue">#getAutoValue</a> for info.        </span>
+</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                        <strong>NOTE:</strong> This function implements an advanced arguments interface emulating named
+                            parameters using maps, and the parameters above may not be positional. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-getAutoValueCfg">#getAutoValueCfg</a>, 
+                       <a href="#entry-getAutoValue">#getAutoValue</a>
+                     </p>
+                  </div>  
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-getAutoValueCfg"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">getAutoValueCfg</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAutoValueCfg</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns the current global auto value configuration (settings and maps).</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>dummy</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                        <strong>NOTE:</strong> This function implements an advanced arguments interface emulating named
+                            parameters using maps, and the parameters above may not be positional. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                        </p>
+                      </div>
+                  </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-setAutoValueCfg">#setAutoValueCfg</a>, 
+                       <a href="#entry-getAutoValue">#getAutoValue</a>
+                     </p>
+                  </div>  
             
 
               <div class="lib-entry-details">

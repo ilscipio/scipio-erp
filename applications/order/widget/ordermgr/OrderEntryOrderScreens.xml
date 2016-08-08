@@ -99,8 +99,8 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-	                            <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
-	                            <html-template location="component://order/webapp/ordermgr/entry/editShipAddress.ftl"/>
+                                <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
+                                <html-template location="component://order/webapp/ordermgr/entry/editShipAddress.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>
@@ -178,7 +178,7 @@ under the License.
                 <set field="asm_asmListItemPercentOfForm" value="95"/>
                 <set field="asm_sortable" value="false"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="asm_title" value="${uiLabelMap.OrderPartySelectRoleForParty}"/-->                
+                <set field="asm_title" value="${uiLabelMap.OrderPartySelectRoleForParty}"/-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCheckoutDecorator" location="${parameters.mainDecoratorLocation}">

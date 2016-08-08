@@ -84,7 +84,7 @@ public class OrderEvents {
                 response.setContentType(orderRoleAndProductContentInfo.getString("mimeTypeId"));
             }
             OutputStream os = response.getOutputStream();
-            GenericValue dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", dataResourceId).cache().queryOne(); 
+            GenericValue dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", dataResourceId).cache().queryOne();
             Map<String, Object> resourceData = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), UtilHttp.getLocale(request), application.getRealPath("/"), false);
             os.write(IOUtils.toByteArray((ByteArrayInputStream) resourceData.get("stream")));
             os.flush();
@@ -123,9 +123,9 @@ public class OrderEvents {
         
         if (selectedItems != null) {
             for (String selectedItem : selectedItems) {
-            	String [] orderItemSeqIdAndOrderItemShipGrpId = selectedItem.split(":");
-            	String orderItemSeqId = orderItemSeqIdAndOrderItemShipGrpId[0];
-            	String shipGroupSeqId = orderItemSeqIdAndOrderItemShipGrpId[1];
+                String [] orderItemSeqIdAndOrderItemShipGrpId = selectedItem.split(":");
+                String orderItemSeqId = orderItemSeqIdAndOrderItemShipGrpId[0];
+                String shipGroupSeqId = orderItemSeqIdAndOrderItemShipGrpId[1];
                         BigDecimal cancelQuantity = new BigDecimal(request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId));
                         Map<String, Object> contextMap = FastMap.newInstance();
                         contextMap.put("orderId", orderId);

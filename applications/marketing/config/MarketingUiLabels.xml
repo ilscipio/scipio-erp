@@ -280,8 +280,8 @@
         <value xml:lang="zh_TW">行銷活動</value>
     </property>
     <property key="MarketingCampaigns">
-    	<value xml:lang="de">Kampagnen</value>           
-        <value xml:lang="en">Campaigns</value>        
+        <value xml:lang="de">Kampagnen</value>
+        <value xml:lang="en">Campaigns</value>
     </property>
     <property key="MarketingCampaignCreate">
         <value xml:lang="de">Marketing Kampagne erstellen</value>
@@ -626,7 +626,7 @@
         <value xml:lang="zh">无法找到电子邮件列表 [${contactListId}]。</value>
         <value xml:lang="zh_TW">無法找到電子郵件清單 [${contactListId}].</value>
     </property>
-    <property key="MarketingServiceCommunicationNotFound">  
+    <property key="MarketingServiceCommunicationNotFound">
         <value xml:lang="en">Could not find communications.</value>
     </property>
     <property key="MarketingContactListOptInVerifyCode">
@@ -972,11 +972,11 @@
         <value xml:lang="en">Marketing</value>
     </property>
     <property key="SfaAnalytics">
-    	<value xml:lang="de">Analyse</value>
+        <value xml:lang="de">Analyse</value>
         <value xml:lang="en">Analytics</value>
     </property>
     <property key="SfaCalendar">
-    	<value xml:lang="de">Kalender</value>
+        <value xml:lang="de">Kalender</value>
         <value xml:lang="en">Calendar</value>
     </property>
     <property key="SfaSales">
@@ -1085,7 +1085,7 @@
         <value xml:lang="zh_TW">分區</value>
     </property>
     <property key="MarketingSegments">
-    	<value xml:lang="de">Segmente</value>        
+        <value xml:lang="de">Segmente</value>
         <value xml:lang="en">Segments</value>
     </property>
     <property key="MarketingSegmentGroupClassCreate">
@@ -1181,7 +1181,7 @@
         <value xml:lang="zh_TW">分區群組檢視權限出錯</value>
     </property>
     <property key="MarketingSegmentGroupNoSegmentGroupFound">
-    	<value xml:lang="de">Keine Segmente gefunden</value>
+        <value xml:lang="de">Keine Segmente gefunden</value>
         <value xml:lang="en">No Segments found </value>
     </property>
     <property key="MarketingSegmentGroupNoSegmentGroupFoundWithId">

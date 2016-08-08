@@ -803,4 +803,25 @@ public class UtilMisc {
         }
         return res;
     }
+    
+    /**
+     * Scipio: Creates a new, empty map.
+     * <p>
+     * This is useful for Freemarker workarounds and to guarantee a map
+     * is of the same type as the other toMap calls in this class.
+     */
+    public static <K, V> Map<K, V> newMap() {
+        return new HashMap<K, V>();
+    }
+    
+    /**
+     * Scipio: Creates a new map initialized from the given map.
+     * <p>
+     * This is useful for Freemarker workarounds and to guarantee a map
+     * is of the same type as the other toMap calls in this class.
+     */
+    public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> map) {
+        return new HashMap<K, V>(map);
+    }
+    
 }

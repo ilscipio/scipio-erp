@@ -37,7 +37,7 @@ under the License.
               <option value="${currentStateGeo.geoId}">---</option>
             </#if>
             <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
-            <@render resource="component://common/widget/CommonScreens.xml#states" />
+            <@render resource="component://common/widget/CommonScreens.xml#states" ctxVars={"statesPreselect":false} />
         </@field>
         
         <@field type="input" name="postalCode" label=uiLabelMap.PartyZipCode value=(parameters.postalCode!) required=true />

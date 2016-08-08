@@ -508,7 +508,7 @@ public class UtilDateTime {
             return null;
         }
         long milliseconds = timestamp.getTime() + (timestamp.getNanos() / 1000000);
-    	return new Date(milliseconds);
+        return new Date(milliseconds);
     }
 
     /**
@@ -1090,7 +1090,7 @@ public class UtilDateTime {
         return dateFormat.format(stamp);
     }
 
-    // Private lazy-initializer class 
+    // Private lazy-initializer class
     private static class TimeZoneHolder {
         private static final List<TimeZone> availableTimeZoneList = getTimeZones();
 
@@ -1216,7 +1216,7 @@ public class UtilDateTime {
      * Returns a copy of <code>date</code> that cannot be modified.
      * Attempts to modify the returned date will result in an
      * <tt>UnsupportedOperationException</tt>.
-     * 
+     *
      * @param date
      */
     public static Date unmodifiableDate(Date date) {
@@ -1315,7 +1315,7 @@ public class UtilDateTime {
         case "quarter":
             Calendar calendar = toCalendar(date);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            int month = UtilDateTime.getMonth(date, timezone, locale);            
+            int month = UtilDateTime.getMonth(date, timezone, locale);
             int quarter = 0;
             if (month >= 2 && month < 5)
                 quarter = 3;
@@ -1324,23 +1324,23 @@ public class UtilDateTime {
             else if (month >= 8 && month < 11)
                 quarter = 9;
             else if (month == 11)
-                quarter = 12;           
+                quarter = 12;
             calendar.set(Calendar.MONTH, quarter);
-            Timestamp monthStart = getMonthStart(toTimestamp(calendar.getTime()));            
+            Timestamp monthStart = getMonthStart(toTimestamp(calendar.getTime()));
             dateBegin = monthStart;
             dateEnd = getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 2), timezone, locale);
             break;
         case "semester":
             calendar = toCalendar(date);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            month = UtilDateTime.getMonth(date, timezone, locale);            
+            month = UtilDateTime.getMonth(date, timezone, locale);
             int semester = 0;
             if (month >= 0 && month < 5)
-                semester = 5;           
+                semester = 5;
             else if (month >= 5)
                 semester = 12;
             calendar.set(Calendar.MONTH, semester);
-            monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()));            
+            monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()));
             dateBegin = monthStart;
             dateEnd = getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 4), timezone, locale);
             break;
@@ -1362,7 +1362,7 @@ public class UtilDateTime {
      * @param period
      * @param locale
      * @param timezone
-     * @return a map with three fixed keys, dateBegin & dateEnd & dateFormatter, representing the beginning and the end of the given period 
+     * @return a map with three fixed keys, dateBegin & dateEnd & dateFormatter, representing the beginning and the end of the given period
      * and the date formatter needed to display the date.
      */
     public static TimeInterval getPeriodIntervalAndFormatter(String period, Timestamp fromDate, Locale locale, TimeZone timezone) {
@@ -1394,7 +1394,7 @@ public class UtilDateTime {
                 quarter = 2;
             if (month >= 6 && month < 9)
                 quarter = 3;
-            if (month >= 9) 
+            if (month >= 9)
                 quarter = 4;
             timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-'" + quarter + "T'"));
             break;
@@ -1402,7 +1402,7 @@ public class UtilDateTime {
             month = UtilDateTime.getMonth(timeInterval.getDateBegin(), timezone, locale);
             int semester = 1;
             if (month >= 5)
-                semester = 2;          
+                semester = 2;
             timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-'" + semester + "S'"));
             break;
         case "year":
@@ -1417,7 +1417,7 @@ public class UtilDateTime {
 
     /**
      * Scipio: Checks if the interval passed is a valid one
-     * 
+     *
      * @param interval
      * @return true or false depending on the result of evaluating the given
      *         interval against the valid list of intervals represented by the
@@ -1436,17 +1436,17 @@ public class UtilDateTime {
         if (iCount < 0)
             iCount = getIntervalDefaultCount(iScope);
         Calendar calendar = Calendar.getInstance();
-        if (iScope.equals("hour")) {            
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - iCount);       
-        } else if (iScope.equals("day")) {            
+        if (iScope.equals("hour")) {
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - iCount);
+        } else if (iScope.equals("day")) {
             calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - iCount);
-        } else if (iScope.equals("week")) {           
+        } else if (iScope.equals("week")) {
             calendar.set(Calendar.DAY_OF_WEEK, 1);
             calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - iCount);
-        } else if (iScope.equals("month") || iScope.equals("quarter") || iScope.equals("semester")) {           
+        } else if (iScope.equals("month") || iScope.equals("quarter") || iScope.equals("semester")) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - iCount);        
-        } else if (iScope.equals("year")) {           
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - iCount);
+        } else if (iScope.equals("year")) {
             calendar.set(Calendar.DAY_OF_YEAR, 1);
             calendar.set(Calendar.MONTH, 1);
             calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - iCount);
@@ -1466,7 +1466,7 @@ public class UtilDateTime {
             iCount = 12;
         } else if (iScope.equals("quarter")) {
             iCount = 16;
-        } else if (iScope.equals("semester")) { 
+        } else if (iScope.equals("semester")) {
             iCount = 24;
         } else if (iScope.equals("year")) {
             iCount = 5;

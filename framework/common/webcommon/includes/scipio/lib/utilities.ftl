@@ -56,12 +56,17 @@ Renders an Ofbiz screen or other resource.
 
 Screens are rendered using Ofbiz's {{{screens.render}}} utility function.
 
+NOTE: 2016-07-29: The default for the {{{restoreValues}}} parameter has been changed to {{{true}}}.
+    By default, all variables passed using {{{ctxVars}}}, {{{globalCtxVars}}} and {{{reqAttribs}}} regain
+    their previous values when the macro call returns. This helps guard against bugs in templates
+    that use multiple @render calls as well as nested screens.
+
 TODO: Reimplement as transform.
 
   * Parameters *
     resource                = ((string)) The resource identifier, with format depending on type
                               * {{{screen}}}: path and name, or path alone
-                                e.g., 
+                                Examples:
                                   "component://common/widget/CommonScreens.xml#listLocales"
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
@@ -82,7 +87,8 @@ TODO: Reimplement as transform.
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
-    restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
+    restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
+                              NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
     asString                = ((boolean), default: false) If true, the render will render to a string like a regular FTL macro; otherwise goes straight to Ofbiz's writer
                               In stock Ofbiz, which is also current Scipio default behavior (for compabilitity and speed), render calls go directly to writer, 
                               which is faster but cannot be captured using freemarker {{{#assign}}} directive. If you need to capture
@@ -90,7 +96,7 @@ TODO: Reimplement as transform.
                               NOTE: not supported for {{{type="section"}}} as this time.
                               TODO: implement for section
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false asString=false>
+<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" asString=false>
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
@@ -651,11 +657,20 @@ to indicate the value null.
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
-    restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
+    restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
+                              NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
 -->
-<#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false>
+<#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="">
+  <#if !clearValues?is_boolean>
+    <#-- DEV NOTE: if clearValues was true as default, you'd have to check for explicit
+        restoreValues (!restoreValues?is_boolean) before setting the true default here -->
+    <#local clearValues = false>
+  </#if>
+  <#if !restoreValues?is_boolean>
+    <#local restoreValues = true>
+  </#if>
   <#local varMaps = {"ctxVars":ctxVars, "globalCtxVars":globalCtxVars, "reqAttribs":reqAttribs}>
-  <#if restoreValues>
+  <#if restoreValues && !clearValues>
     <#local origValues = extractVars(varMaps, true)>
   </#if>
   <#local dummy = setVars(varMaps)>
@@ -1306,7 +1321,6 @@ NOTES:
 </#function>
 -->
 
-
 <#-- 
 *************
 * toRawString
@@ -1730,9 +1744,19 @@ TODO: doesn't handle dates (ambiguous?)
     hasMore                 = ((boolean), default: false) If true, always include trailing separator in hashes and arrays
     escape                  = ((boolean), default: true) Escape characters in strings
     maxDepth                = ((int), default: -1) Maximum depth, or -1 for no limit
+    rawVal                  = ((boolean)|(map)|(list), default: false) If true, treat the object as a pure JSON/other script string.
+                              This can be a map or list of boolean to parallel the object, for recursion.
+                              NOTE: is cumbersome for lists; mostly useful for maps.
+                              NOTE: this is kept separate from the object for security reasons.
 -->
-<#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
-  <#if isObjectType("string", object)>
+<#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
+  <#if rawVal?is_boolean && rawVal == true>
+    <#if isObjectType("string", object)>
+      ${rawString(object)}<#t>
+    <#else>
+      ${object?string}<#t>
+    </#if>
+  <#elseif isObjectType("string", object)>
     <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   <#elseif object?is_number> 
@@ -1749,7 +1773,9 @@ TODO: doesn't handle dates (ambiguous?)
     <#if (maxDepth < 0) || (currDepth <= maxDepth)>
       <#if wrap>[</#if><#lt>
       <#list object as item> 
-          <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1)/><#else>null</#if><#if item_has_next || hasMore>,</#if>
+          <#if item??><#rt/>
+          <#t/><#if !rawVal?is_boolean><#local rawValNext = rawVal[item_index]!false><#else><#local rawValNext = false></#if>
+          <#lt/><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawValNext/><#else>null</#if><#if item_has_next || hasMore>,</#if>
       </#list> 
       <#if wrap>]</#if><#rt>
     <#else>[]</#if>
@@ -1758,7 +1784,10 @@ TODO: doesn't handle dates (ambiguous?)
       <#if wrap>{</#if><#lt>
       <#list mapKeys(object) as key>
           <#-- NOTE: must use rawString on the keys because FTL will coerce them to strings (forcing auto-escaping from Ofbiz context) before using them as hash keys! -->
-          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><#rt/>
+            <#t/><#if !rawVal?is_boolean><#local rawValNext = rawVal[rawString(key)]!false><#else><#local rawValNext = false></#if>
+            <#t/><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawValNext/>
+            <#lt/><#else>null</#if><#if key_has_next || hasMore>,</#if>
       </#list>
       <#if wrap>}</#if><#rt>
     <#else>{}</#if>
@@ -2235,30 +2264,36 @@ Parameters are analogous to #mergeArgMaps but implied logic differs.
 Takes an args map returned by mergeArgMaps (NOT mergeArgMapsBasic) and checks it for an "attribs"
 sub-map and blends them together logically to make an attribs map.
 
-The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
-NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.
+It uses args.allArgNames to determine the extra "inline" arguments.
 
-NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
-members plus "attribs", "allArgNames", "localArgNames", "excludeNames" and "noExcludeNames" members. 
-
-Parameters are analogous to #mergeArgMaps but implied logic differs.
-
+NOTE: 2016-08-02: This function has been modified so that the result fully represents a usable
+    attribs map as-is. It no longer contains superfluous members (allArgNames, localArgNames, etc.).
+    
   * Related *
     #getAttribMapAllExcludes
 -->
-<#function makeAttribMapFromArgMap args={}>
-  <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
-    <#local args = args.attribs + args>
+<#-- IMPLEMENTED AS TRANSFORM
+<#function makeAttribMapFromArgMap args={} excludes=[]>
+  <#local res = copyMap(args, "e", ["allArgNames", "localArgNames"] + (args.allArgNames![]) + excludes)>
+  <#if args.attribs?has_content && args.attribs?is_hash>
+    <#local attribs = toSimpleMap(args.attribs)>
+    <#if excludes?has_content>
+      <#local res = copyMap(attribs, "e", excludes) + res>
+    <#else>
+      <#local res = attribs + res>
+    </#if>
   </#if>
-  <#return args>
+  <#return res>
 </#function>
+-->
 
 <#-- 
 *************
 * getAttribMapAllExcludes
 ************
-Returns the attrib map excludes based on allArgNames list, plus known needed excludes, plus an optional list,
-plus "noExclude" alternatives of all the aforementioned that prevent excludes.
+Returns the attrib map excludes from the given attribs map, which is composed of its
+"scipioExcludeNames" and "scipioNoExcludeNames" members, plus optional additional
+includes passed as arguments.
 The result is returned as a bean-wrapped Set.
 
 TODO: implement as transform.
@@ -2270,17 +2305,14 @@ TODO: implement as transform.
   <#local exclude = toSet(exclude)>
   <#local noExclude = toSet(noExclude)>
   
-  <#if attribs.excludeNames?has_content>
-    <#local dummy = exclude.addAll(attribs.excludeNames)!>
-  </#if>
-  <#if attribs.allArgNames?has_content>
-    <#local dummy = exclude.addAll(attribs.allArgNames)!>
+  <#if attribs.scipioExcludeNames?has_content>
+    <#local dummy = exclude.addAll(attribs.scipioExcludeNames)!>
   </#if>
 
-  <#local dummy = exclude.addAll(["attribs", "allArgNames", "localArgNames", "excludeNames", "noExcludeNames"])>
+  <#local dummy = exclude.addAll(["scipioExcludeNames", "scipioNoExcludeNames"])>
   
-  <#if attribs.noExcludeNames?has_content>
-    <#local dummy = noExclude.addAll(attribs.noExcludeNames)!>
+  <#if attribs.scipioNoExcludeNames?has_content>
+    <#local dummy = noExclude.addAll(attribs.scipioNoExcludeNames)!>
   </#if>
 
   <#if noExclude?has_content>
@@ -2289,6 +2321,22 @@ TODO: implement as transform.
   <#return exclude>
 </#function>
 
+<#-- 
+*************
+* getFilteredAttribMap
+************
+Returns the attrib map with all the basic excludes applied.
+
+TODO: implement as transform.
+
+  * Related *
+    #makeAttribMapFromArgs
+    @elemAttribStr
+-->
+<#function getFilteredAttribMap attribs={} exclude=[] noExclude=[]>
+  <#local allExcludes = getAttribMapAllExcludes(attribs, exclude, noExclude)>
+  <#return toSimpleMap(copyMap(attribs, "e", allExcludes))>
+</#function>
 
 <#-- 
 *************
@@ -2473,7 +2521,7 @@ a replacing string ("=").
 *************
 * addClassArgReplacing
 ************
-Special case of addClassArg where the required class will become a replacing string ("=" prefix),
+Special case of addClassArg where the required class will become a replacing string ("=" prefix, as in "=my-class"),
 though will not squash previous values. 
 
 NOTE: This destroys information about what macro user requested and affects the default value logic

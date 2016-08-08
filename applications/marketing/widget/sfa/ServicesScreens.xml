@@ -36,31 +36,31 @@ under the License.
                     </decorator-section>
                 </decorator-screen>
      -->
-			    <decorator-screen name="CommonServiceDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">               
-			        <decorator-section name="body">
-			             <section>
-			                 <widgets>
-			                     <!-- <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
-			                     <!-- <include-menu name="AccountFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
-			                     <section>
-			                         <widgets>
-		                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-		                                  
-		                                     <decorator-section name="search-options">
-		                                          
-		                                      <!--    <include-form name="FindAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/> -->		                                          
-		                                          <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/FindMyCommunication.ftl"/></html></platform-specific>
-		                                     </decorator-section>
-		                                     <decorator-section name="search-results">
+                <decorator-screen name="CommonServiceDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <!-- <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                                <!-- <include-menu name="AccountFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                                <section>
+                                    <widgets>
+                                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                        
+                                            <decorator-section name="search-options">
+                                                
+                                            <!--    <include-form name="FindAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/> -->
+                                                <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/FindMyCommunication.ftl"/></html></platform-specific>
+                                            </decorator-section>
+                                            <decorator-section name="search-results">
                                                 <include-screen name="PartyCommunicationEventsResults"/>
-		                                     </decorator-section>
-		                                 </decorator-screen>
-			                         </widgets>
-			                     </section>
-			                 </widgets>
-			             </section>
-			        </decorator-section>
-			    </decorator-screen>
+                                            </decorator-section>
+                                        </decorator-screen>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
     
             </widgets>
         </section>
@@ -75,7 +75,7 @@ under the License.
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/services/MyCommunicationList.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/MyCommunicationList.ftl"/></html></platform-specific>                
+                <platform-specific><html><html-template location="component://marketing/webapp/sfa/services/MyCommunicationList.ftl"/></html></platform-specific>
                 <!-- <include-form name="ListPartyCommEvents" location="component://party/widget/partymgr/CommunicationEventForms.xml"/> -->
             </widgets>
         </section>
@@ -100,7 +100,7 @@ under the License.
                                     <link target="request" text="${uiLabelMap.OrderNewRequest}" style="${styles.link_nav} ${styles.action_add}"/>
                                 </container>
                             </decorator-section> -->
-                            <decorator-section name="search-options">                                
+                            <decorator-section name="search-options">
                                 <include-form name="FindRequests" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
@@ -116,7 +116,7 @@ under the License.
     <screen name="ViewRequest">
         <section>
             <actions>
-                <set field="MainColumnStyle" value="rightonly"/>                
+                <set field="MainColumnStyle" value="rightonly"/>
                 <set field="activeMainMenuItem" value="FindRequest"/>
                 <set field="titleProperty" value="PageTitleViewRequest"/>
                 <set field="showRequestManagementLinks" value="Y"/>
@@ -133,7 +133,7 @@ under the License.
     <screen name="EditRequest">
         <section>
             <actions>
-                <set field="titleProperty" value="OrderRequest"/>                
+                <set field="titleProperty" value="OrderRequest"/>
                 <set field="activeMainMenuItem" value="FindRequest"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>

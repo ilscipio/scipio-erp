@@ -18,20 +18,20 @@
  */
  
 function getDependentDropdownValues(request, paramKey, paramField, targetField, responseName, keyName, descName, selected, callback, allowEmpty, hide, hideTitle, inputField){
-// To dynamically populate a dependent drop-down on change on its parent drop-down, doesn't require any fixed naming convention 
+// To dynamically populate a dependent drop-down on change on its parent drop-down, doesn't require any fixed naming convention
 // request      = request calling the service which retrieve the info from the DB, ex: getAssociatedStateList
-// paramKey     = parameter value used in the called service 
+// paramKey     = parameter value used in the called service
 // paramField   = parent drop-down field Id (mainId)
 // targetField  = dependent drop-down field Id (dependentId)
 // responseName = result returned by the service (using a standard json response, ie chaining json request)
-// keyName      = keyName of the dependent drop-down  
+// keyName      = keyName of the dependent drop-down
 // descName     = name of the dependent drop-down description
 // selected     = optional name of a selected option
 // callback     = optional javascript function called at end
 // allowEmpty   = optional boolean argument, allow selection of an empty value for the dependentId
 // hide         = optional boolean argument, if true the dependent drop-down field (targetField) will be hidden when no options are available else only disabled. False by default.
 // hideTitle    = optional boolean argument (hide must be set to true), if true the title of the dependent drop-down field (targetField) will be hidden when no options are available else only disabled. False by default.
-// inputField   = optional name of an input field    
+// inputField   = optional name of an input field
 //             this is to handle a specific case where an input field is needed instead of a drop-down when no values are returned by the request
 //             this will be maybe extended later to use an auto-completed drop-down or a lookup, instead of straight drop-down currently, when there are too much values to populate
 //             this is e.g. currently used in the Product Price Rules screen
@@ -49,15 +49,15 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
         type: 'POST',
         success: function(result){
             list = result[responseName];
-            // Create and show dependent select options            
+            // Create and show dependent select options
             if (list) {
-            	// Scipio: supports new _previous_ selected option; it allows using markup to specify the initial value
-            	if (selected === '_previous_') {
-            		selected = jQuery(target).val();
-            		if (!selected) {
-            			selected = '';
-            		}
-            	}
+                // Scipio: supports new _previous_ selected option; it allows using markup to specify the initial value
+                if (selected === '_previous_') {
+                    selected = jQuery(target).val();
+                    if (!selected) {
+                        selected = '';
+                    }
+                }
                 jQuery.each(list, function(key, value){
                     if (typeof value == 'string') {
                         values = value.split(': ');
@@ -75,12 +75,12 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
                     }
                 })
                 if(allowEmpty) {
-                	var preOptionList = "";
+                    var preOptionList = "";
                     // Allow null selection in dependent and set it as default if no selection exists.
                     if (!selected || selected === "_none_") { // Scipio: check fixed
-                    	preOptionList += '<option selected="selected" value=""></option>';
+                        preOptionList += '<option selected="selected" value=""></option>';
                     } else {
-                    	preOptionList += "<option value=''></option>";
+                        preOptionList += "<option value=''></option>";
                     }
                     optionList = preOptionList + optionList;
                 }
@@ -127,7 +127,7 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
 }
 
 //*** calls any service already mounted as an event
-// arguments must be either a request only (1st argument) or a request followed by {name;value} pair/s parameters 
+// arguments must be either a request only (1st argument) or a request followed by {name;value} pair/s parameters
 function getServiceResult(){
     var request = arguments[0];
     var params =  new Array();
@@ -167,7 +167,7 @@ function checkUomConversion(request, params){
 
 /* initTimeZone is used to intialise the path to timezones files
   
-The timezone region that loads on initialization is North America (the Olson 'northamerica' file). 
+The timezone region that loads on initialization is North America (the Olson 'northamerica' file).
 To change that to another reqion, set timezoneJS.timezone.defaultZoneFile to your desired region, like so:
   timezoneJS.timezone.zoneFileBasePath = '/tz';
   timezoneJS.timezone.defaultZoneFile = 'asia';
@@ -179,10 +179,10 @@ If you want to preload multiple regions, set it to an array, like this:
   timezoneJS.timezone.defaultZoneFile = ['asia', 'backward', 'northamerica', 'southamerica'];
   timezoneJS.timezone.init();
 
-By default the timezoneJS.Date timezone code lazy-loads the timezone data files, pulling them down and parsing them only as needed. 
+By default the timezoneJS.Date timezone code lazy-loads the timezone data files, pulling them down and parsing them only as needed.
 
-For example, if you go with the out-of-the-box setup, you'll have all the North American timezones pre-loaded -- 
-but if you were to add a date with a timezone of 'Asia/Seoul,' it would grab the 'asia' Olson file and parse it 
+For example, if you go with the out-of-the-box setup, you'll have all the North American timezones pre-loaded --
+but if you were to add a date with a timezone of 'Asia/Seoul,' it would grab the 'asia' Olson file and parse it
 before calculating the timezone offset for that date.
 
 You can change this behavior by changing the value of timezoneJS.timezone.loadingScheme. The three possible values are:
@@ -193,7 +193,7 @@ You can change this behavior by changing the value of timezoneJS.timezone.loadin
   
   More at https://github.com/mde/timezone-js
   
-*/  
+*/
 function initTimeZone() {
   timezoneJS.timezone.zoneFileBasePath = '/images/date/timezones/min';
   timezoneJS.timezone.loadingSchemes.PRELOAD_ALL;

@@ -5,7 +5,7 @@
  * Automatically included at all times, unless overridden by properties or themes.
  * Intended to be swappable.
  *
- * NOTES: 
+ * NOTES:
  * * Currently targeted toward Foundation CSS.
  */
 
@@ -21,7 +21,7 @@ context.styles = [
     
   /* Generic */
     "framework" : "foundation",
-	"customSideBar" : false,
+    "customSideBar" : false,
     "disabled" : "disabled",
     "active" : "active",
     "selected" : "selected",
@@ -257,6 +257,22 @@ context.styles = [
     "menu_buttonstyle_alt2" : "button-style-2",         /* stock Ofbiz remnant, "button-style-2" in originals */
     "menu_noclear" : "menu-no-clear",                   /* A remnant from stock Ofbiz menu widgets, some of which label with a "no-clear" style */
     "menu_link_href_default" : "javascript:void(0);",
+    
+  /* Tree menu */
+    
+    /* Lib-specific styles */
+    "treemenu_lib_jstree_defnodeicon" : "jstree-file",
+    "treemenu_lib_jstree_defdiricon" : "jstree-folder",
+    
+    /* General and default styles */
+    "treemenu_deflib" : "jstree",
+    /* These can be used more easily from templates.
+     * NOTE: if deflib is changed, all these must be changed too. These imply default library.
+     */
+    "treemenu_icon_node" : "jstree-file",        // default node icon (including leaf)
+    "treemenu_icon_dirnode" : "jstree-folder",   // default dir node icon
+    "treemenu_icon_file" : "jstree-file",
+    "treemenu_icon_folder" : "jstree-folder",
     
   /* Sections */
     /* type-based styles */

@@ -29,11 +29,11 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * GetPropertyValue - Freemarker Method for getting properties
+ * Scipio: GetPropertyValueMethod - Freemarker Method for getting properties
  */
-public class GetPropertyValue implements TemplateMethodModelEx {
+public class GetPropertyValueMethod implements TemplateMethodModelEx {
 
-    public static final String module = GetPropertyValue.class.getName();
+    public static final String module = GetPropertyValueMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

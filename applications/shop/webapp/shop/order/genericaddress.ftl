@@ -43,7 +43,7 @@ under the License.
     <option>${parameters.countryGeoId}</option>
     <option value="${parameters.countryGeoId}">---</option>
   </#if>
-  <@render resource="component://common/widget/CommonScreens.xml#countries" />
+  <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!((parameters.countryGeoId)??)}/>
 </@field>
 <@field type="select" label=uiLabelMap.PartyState required=true name="stateProvinceGeoId" disabled=(parameters.useShipAddr??)>
   <#if (parameters.stateProvinceGeoId)??>

@@ -713,6 +713,9 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
                               they both apply to the same container.
     style                   = Legacy HTML style attribute, on outermost container
     containerStyle          = Legacy HTML style attribute, on outermost container (synonym for {{{style}}})
+    contentId               = Explicit ID for inner content container
+    contentClass            = ((css-class)) CSS classes, on inner content container
+    contentStyle            = Legacy HTML style attribute, on inner content container
     title                   = Section title
     titleClass              = ((css-class)) Section title class 
                               Supports complex expressions (rarely needed; usually headingLevel enough).
@@ -752,6 +755,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               This is a low-level control; avoid where possible.
+    menuId                  = Explicit ID for menu
     requireMenu             = ((boolean), default: false) If true, add menu elem even if empty
     forceEmptyMenu          = ((boolean), default: false) If true, always add menu and must be empty
     menuItemsInlined        = ((boolean), default: -auto-) Override flag to say if menuContent string contains menu items only or also the menu wrapper
@@ -767,6 +771,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   "titleContainerClass":"", "menuContainerClass":"", "menuTitleContainerClass":"", "menuRole":"", 
   "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleClass":"", 
   "containerClass":"", "containerId":"", "containerStyle":"", 
+  "menuId":"", "contentId":"", "contentClass":"", "contentStyle":"",
   "open":true, "close":true, "passArgs":{}
 }>
 <#macro section args={} inlineArgs...>
@@ -778,24 +783,23 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#local type = "default">
     </#if>
     <#if id?has_content>
-      <#local contentId = id + "_content">
-      <#local menuId = id + "_menu">
-    <#else>
-      <#local contentId = "">
-      <#local menuId = "">
+      <#if !contentId?has_content>
+        <#local contentId = id + "_content">
+      </#if>
+      <#if !menuId?has_content>
+        <#local menuId = id + "_menu">
+      </#if>
     </#if>
   <#else>
     <#-- section_core has its own stack; don't need to preserve these -->
-    <#local class = "">
-    <#local contentId = "">
-    <#local menuId = "">    
+    <#local class = "">  
   </#if>
-  <@section_core id=id collapsibleAreaId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
+  <@section_core id=id contentId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral 
     titleContainerClass=titleContainerClass menuContainerClass=menuContainerClass menuTitleContainerClass=menuTitleContainerClass menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu menuItemsInlined=menuItemsInlined hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
     relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
-    containerClass=containerClass containerId=containerId containerStyle=containerStyle
+    containerClass=containerClass containerId=containerId containerStyle=containerStyle contentClass=contentClass contentStyle=contentStyle
     open=open close=close passArgs=passArgs><#nested /></@section_core>
 </#macro>
 
@@ -808,13 +812,13 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     fromScreenDef     = hint of whether called from Ofbiz screen renderer/xml (true) or FTL macros (false)
     hasContent        = hint to say there will be content; workaround for not being able to assume that all browsers have the CSS support to check if content present -->
 <#assign section_core_defaultArgs = {
-  "type":"", "id":"", "title":"", "class":"", "style":"", "collapsible":false, "saveCollapsed":true, "collapsibleAreaId":"", 
+  "type":"", "id":"", "title":"", "class":"", "style":"", "collapsible":false, "saveCollapsed":true, "contentId":"", 
   "expandToolTip":true, "collapseToolTip":true, "fullUrlString":"", "padded":false, "menuContent":"", 
   "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
   "menuLayoutTitle":"", "menuLayoutGeneral":"", "titleContainerClass":"", "menuContainerClass":"", "menuTitleContainerClass":"",
   "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleStyle":"", 
   "titleContainerStyle":"", "titleConsumeLevel":true, "autoHeadingLevel":true, "headingLevel":"", "relHeadingLevel":"", 
-  "containerClass":"", "containerId":"", "containerStyle":"", 
+  "containerClass":"", "containerId":"", "containerStyle":"", "contentClass":"", "contentStyle":"",
   "defaultHeadingLevel":"", "open":true, "close":true, "passArgs":{}
 }>
 <#macro section_core args={} inlineArgs...>
@@ -828,9 +832,11 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     </#if>
     <#local styleName = type?replace("-","_")>
 
-    <#-- NOTE: This basically does nothing (containerId will not be used if id is present); for consistency only -->
-    <#if !containerId?has_content && id?has_content>
-      <#local containerId = id + "_container">
+    <#if id?has_content>
+      <#-- NOTE: This basically does nothing currently (containerId will not be used if id is present); for consistency and future use only -->
+      <#if !containerId?has_content>
+        <#local containerId = id + "_container">
+      </#if>
     </#if>
   
   <#-- level logic begin -->
@@ -966,7 +972,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
             <#local postMenuItems = []>
           <#else>
             <#local extraMenuItemsMap = makeSectionExtraMainMenuItems(type, sectionLevel, headingLevel, menuLayoutTitle, menuLayoutGeneral, menuRole, hasMenu, 
-              contentFlagClasses, collapsible, collapsed, javaScriptEnabled, collapsibleAreaId, saveCollapsed, expandToolTip, 
+              contentFlagClasses, collapsible, collapsed, javaScriptEnabled, contentId, saveCollapsed, expandToolTip, 
               collapseToolTip, fullUrlString, fromScreenDef)!{}>
             <#local preMenuItems = extraMenuItemsMap.preMenuItems![]>
             <#local postMenuItems = extraMenuItemsMap.postMenuItems![]>        
@@ -1072,21 +1078,20 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     </#if>
   </#if> 
 
-  <#local innerClass = "">
   <#if open && !close>
     <#-- save stack of all the args passed to markup macros that have open/close 
         so they don't have to remember a stack themselves -->
     <#local dummy = pushRequestStack("scipioSectionMarkupStack", {
-      "type":type, "styleName":styleName, "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
+      "type":type, "styleName":styleName, "class":class, "contentFlagClasses":contentFlagClasses, 
       "id":id, "title":title, "style":style, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup, "menuMarkup":menuMarkup,
       "containerClass":containerClass, "containerId":containerId, "containerStyle":containerStyle, 
       
-      "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
+      "collapsed":collapsed, "contentId":contentId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
       "expandToolTip":expandToolTip, "collapseToolTip":collapseToolTip, "padded":padded, "showMore":showMore, "fullUrlString":fullUrlString,
       "javaScriptEnabled":javaScriptEnabled, "fromScreenDef":fromScreenDef, "hasContent":hasContent, 
       "menuLayoutTitle":menuLayoutTitle, "menuLayoutGeneral":menuLayoutGeneral, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu,
       "titleContainerClass":titleContainerClass, "menuContainerClass":menuContainerClass, "menuTitleContainerClass":menuTitleContainerClass,
-      
+      "contentClass":contentClass, "contentStyle":contentStyle,
       "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
@@ -1096,9 +1101,10 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   </#if>
 
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
+  <#-- TODO: collapsibleAreaId was renamed to contentId, so should remove; still passing it for _markup macro compatibility for now -->
   <@section_markup_container type=type styleName=styleName open=open close=close
-    sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuTitleContentArgs={} menuContent=menuMarkup menuContentArgs={} class=class innerClass=innerClass
-    contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
+    sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuTitleContentArgs={} menuContent=menuMarkup menuContentArgs={} class=class contentClass=contentClass contentStyle=contentStyle
+    contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed contentId=contentId collapsibleAreaId=contentId
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
     fromScreenDef=fromScreenDef hasContent=hasContent menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral menuRole=menuRole requireMenu=requireMenu 
@@ -1138,7 +1144,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   * Return Value *
     map of lists, in the format {"preMenuItems":[...], "postMenuItems":[...]} -->
 <#function makeSectionExtraMainMenuItems type sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" hasMenu=false contentFlagClasses="" 
-    collapsible=false collapsed=false javaScriptEnabled=false collapsibleAreaId="" saveCollapsed=false expandToolTip="" 
+    collapsible=false collapsed=false javaScriptEnabled=false contentId="" saveCollapsed=false expandToolTip="" 
     collapseToolTip="" fullUrlString="" fromScreenDef=false catchArgs...>
   <#return {"preMenuItems":[], "postMenuItems":[]}>
   <#-- Scipio: TODO: translate this into vars above if/once needed again (as @menuitem args maps within lists)
@@ -1148,9 +1154,9 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#if collapsible>
     <li class="<#rt/>
     <#if collapsed>
-    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
+    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${contentId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
     <#else>
-    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
+    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${contentId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
     </#if>
     >&nbsp;</a></li>
     </#if>
@@ -1161,7 +1167,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 
 <#-- @section container markup - theme override -->
 <#macro section_markup_container type="" styleName="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuTitleContentArgs={} menuContent="" menuContentArgs={} class="" 
-    innerClass="" contentFlagClasses="" id="" title="" style="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
+    contentClass="" contentStyle="" contentFlagClasses="" id="" title="" style="" collapsed=false contentId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString="" containerClass="" containerId="" containerStyle=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuLayoutGeneral="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
   <#if open>
@@ -1179,15 +1185,15 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>
         <#local class = addClassArg(class, contentFlagClasses)>
-        <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
+        <#local class = addClassArgDefault(class, (styles.grid_large!"") + "12")>
         <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
         <@cell open=true close=false class=compileClassArg(class) />
           <#-- FIXME: This should not be prerendered like this, should be delegated, due to container heuristic issues and other -->
           <@contentArgRender content=menuTitleContent args=menuTitleContentArgs />
           <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-          <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
-          <#local innerClass = addClassArg(innerClass, contentFlagClasses)>
-          <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if><@compiledClassAttribStr class=innerClass />>
+          <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
+          <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
+          <div<#if contentId?has_content> id="${contentId}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${contentStyle}"</#if>>
   </#if>
             <#nested>
   <#if close>

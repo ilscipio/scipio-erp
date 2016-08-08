@@ -116,6 +116,8 @@
       <#elseif entry.type == "link">
         <a href="${entry.value}">${escapeText(entry.text, escape)}</a><#t>
       <#elseif entry.type == "text-raw">
+        ${entry.value}<#t>
+      <#elseif entry.type == "text-plain">
         ${escapeText(entry.value, escape)}<#t>
       <#elseif entry.type == "text-code">
         <code>${escapeText(entry.value, escape)}</code><#t>

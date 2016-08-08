@@ -63,20 +63,10 @@ under the License.
         <@field type="input" size="30" maxlength="30" name="address2" value=((postalFields.address2)!) label=uiLabelMap.AccountingBillToAddress2 disabled=disabled required=true />
         <@field type="input" size="30" maxlength="30" name="city" value=((postalFields.city)!) label=uiLabelMap.CommonCity disabled=disabled required=true />
         <@field type="select" name="stateProvinceGeoId" label=uiLabelMap.CommonStateProvince disabled=disabled required=true>
-            <#if (postalFields.stateProvinceGeoId)??>
-              <option>${postalFields.stateProvinceGeoId}</option>
-              <option value="${postalFields.stateProvinceGeoId}">---</option>
-            <#else>
-              <option value="">${uiLabelMap.CommonNone} ${uiLabelMap.CommonState}</option>
-            </#if>
-            <@render resource="component://common/widget/CommonScreens.xml#states" />
+            <@render resource="component://common/widget/CommonScreens.xml#states" ctxVars={"currentStateProvinceGeoId":(postalFields.stateProvinceGeoId)!, statesPreselectFirst:true}/>
         </@field>
         <@field type="input" size="12" maxlength="10" name="postalCode" value=((postalFields.postalCode)!) label=uiLabelMap.CommonZipPostalCode disabled=disabled required=true/>
         <@field type="select" name="countryGeoId" disabled=disabled label=uiLabelMap.CommonCountry required=true>
-            <#if postalFields.countryGeoId?has_content>
-              <option>${postalFields.countryGeoId}</option>
-              <option value="${postalFields.countryGeoId}">---</option>
-            </#if>
-            <@render resource="component://common/widget/CommonScreens.xml#countries" />
+            <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":(postalFields.countryGeoId)!, "countriesPreselectFirst":true} />
         </@field>        
     </#if>

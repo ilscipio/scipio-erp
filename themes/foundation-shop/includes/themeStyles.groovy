@@ -1,9 +1,9 @@
 /**
  * Master HTML templating variables include, Foundation Shop theme/framework.
  *
- * Overrides the default SCIPIO styles located in 
+ * Overrides the default SCIPIO styles located in
  * htmlVariables.groovy - ofbiz_foundation/framework/common/webcommon/includes/scipio/lib/standard/
- * 
+ *
  */
 
 import java.lang.*;

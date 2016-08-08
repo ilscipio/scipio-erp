@@ -36,7 +36,7 @@ under the License.
         <#if countryGeoId??>
           <option value="${countryGeoId!}">${countryProvinceGeo!(countryGeoId!)}</option>
         </#if>
-        <@render resource="component://common/widget/CommonScreens.xml#countries" />
+        <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!(countryGeoId??)}/>
       </@field>
    
       <@field type="select" id="stateProvinceGeoId" name="stateProvinceGeoId" label=uiLabelMap.CommonState required=true>

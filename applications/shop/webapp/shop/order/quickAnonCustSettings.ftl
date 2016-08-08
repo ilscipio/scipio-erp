@@ -126,7 +126,7 @@ under the License.
                    <option>${parameters.shipToCountryGeoId}</option>
                    <option value="${parameters.shipToCountryGeoId}">---</option>
                 </#if>
-                   <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                   <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!((parameters.shipToCountryGeoId)??)}/>
               </@field>
         </@section>
       </@cell>
@@ -162,7 +162,7 @@ under the License.
                    <option>${parameters.billToCountryGeoId}</option>
                    <option value="${parameters.billToCountryGeoId}">---</option>
                 </#if>
-                   <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                   <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!((parameters.billToCountryGeoId)??)}/>
               </@field>
         </@section>
       </@cell>

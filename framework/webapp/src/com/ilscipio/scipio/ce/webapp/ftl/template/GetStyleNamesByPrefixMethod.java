@@ -31,11 +31,11 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: GetStyleNamesByPrefix - Freemarker Method for extracting style names by prefix from a style string.
+ * Scipio: GetStyleNamesByPrefixMethod - Freemarker Method for extracting style names by prefix from a style string.
  */
-public class GetStyleNamesByPrefix implements TemplateMethodModelEx {
+public class GetStyleNamesByPrefixMethod implements TemplateMethodModelEx {
 
-    public static final String module = GetStyleNamesByPrefix.class.getName();
+    public static final String module = GetStyleNamesByPrefixMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

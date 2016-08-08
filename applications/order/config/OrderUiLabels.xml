@@ -8497,8 +8497,8 @@
         <value xml:lang="zh_TW">已接收訂單於</value>
     </property>
     <property key="OrderOrdersReceivedFrom">
-    	 <value xml:lang="de">Bestellungen erhalten ab</value>
-         <value xml:lang="en">Orders Received From</value>
+        <value xml:lang="de">Bestellungen erhalten ab</value>
+        <value xml:lang="en">Orders Received From</value>
     </property>
     <property key="OrderOrderReturn">
         <value xml:lang="de">Retoure</value>
@@ -15157,11 +15157,11 @@
     <property key="OrderNoShipMethodAvailable">
         <value xml:lang="de">Keine Versandmethoden.</value>
         <value xml:lang="en">No shipping methods available.</value>
-    </property>    
+    </property>
     <property key="OrderMayNotProceedWithOrder">
         <value xml:lang="de">Sie können nicht in der Lage sein, mit dieser Bestellung fortzusetzen. Bitte kontaktieren Sie Ihren Systemadministrator.</value>
         <value xml:lang="en">You may not be able to proceed with this order. Please contact your system administrator.</value>
-    </property>     
+    </property>
     <property key="OrderShippingMethod">
         <value xml:lang="de">Versandmethode</value>
         <value xml:lang="en">Shipping Method</value>
@@ -15170,7 +15170,7 @@
         <value xml:lang="it">Metodo spedizione</value>
         <value xml:lang="nl">Verzend methode</value>
         <value xml:lang="pt_BR">Método de envio</value>
-    </property>    
+    </property>
     <property key="OrderDownloadableFileTitles">
         <value xml:lang="de">Herunterladbaren Datei Titel</value>
         <value xml:lang="en">Downloadable File Titles</value>
@@ -15189,7 +15189,7 @@
         <value xml:lang="de">Sparen zu berücksichtigen</value>
         <value xml:lang="en">Save to account</value>
     </property>
-    <!-- Scipio: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but this is more direct for time being 
+    <!-- Scipio: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but this is more direct for time being
         DO NOT REUSE these for now. -->
     <property key="OrderPaymentDescOffline">
         <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder Zahlungsanweisung.</value>
@@ -15230,9 +15230,9 @@
     <property key="OrderGrossSales">
         <value xml:lang="de">Bruttoumsatz</value>
         <value xml:lang="en">Gross Sales</value>
-    </property>   
+    </property>
     <property key="OrderNetSales">
         <value xml:lang="de">Nettoumsatz</value>
         <value xml:lang="en">Net Sales</value>
-    </property>  
+    </property>
 </resource>

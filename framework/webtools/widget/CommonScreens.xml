@@ -43,6 +43,10 @@ under the License.
                 <!-- ToDo: Move to themes? -->
                 <set field="layoutSettings.styleSheets[]" value="/base-theme/bower_components/rainbow/rainbow.css" global="true" />
                 
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>
+                <set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
+                
                 <!-- Use this to prettify code elements
                 <set field="layoutSettings.styleSheets[]" value="/base-theme/bower_components/rainbow/rainbow.css" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
@@ -88,9 +92,9 @@ under the License.
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.WebtoolsServer}">
-                                    <container style="${styles.grid_row}">                                      
-                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">    
-                                            <include-screen name="ScipioMemoryInfo" location="component://webtools/widget/CommonScreens.xml"/>                                                 
+                                    <container style="${styles.grid_row}">
+                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                            <include-screen name="ScipioMemoryInfo" location="component://webtools/widget/CommonScreens.xml"/>
                                         </container>
                                         <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                             <include-screen name="ScipioUserRequestCount" location="component://webtools/widget/CommonScreens.xml"/>
@@ -101,13 +105,13 @@ under the License.
                         </container>
                         <container style="${styles.grid_row}">
                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-		                        <screenlet>
+                                <screenlet>
                                     <include-screen name="ScipioLogView" location="component://webtools/widget/CommonScreens.xml"/>
-		                        </screenlet>
-		                   </container>
-		                   <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                </screenlet>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                <include-screen name="ScipioSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
-                           </container>
+                            </container>
                         </container>
                     </decorator-section>
                 </decorator-screen>
@@ -119,12 +123,12 @@ under the License.
     <screen name="ScipioMemoryInfo">
         <section>
             <actions>
-                <set field="chartType" value="pie"/>                                    
-                <set field="chartLibrary" value="chart"/>              
+                <set field="chartType" value="pie"/>
+                <set field="chartLibrary" value="chart"/>
                 <set field="chartDatasets" value="1"/>
                 <set field="xlabel" value=""/> <!-- x-axis label -->
                 <set field="ylabel" value=""/> <!-- y-axis label -->
-                <set field="label1" value="${uiLabelMap.WebtoolsMemoryUsage}"/> <!-- 1st dataset label -->                                  
+                <set field="label1" value="${uiLabelMap.WebtoolsMemoryUsage}"/> <!-- 1st dataset label -->
                 <script location="component://webtools/script/com/ilscipio/dashboard/MemoryInfo.groovy"/>
            </actions>
            <widgets>
@@ -137,9 +141,9 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.WebtoolsStatsSystemMemory}">
                             <platform-specific>
-                                <html><html-template location="component://webtools/webapp/webtools/dashboard/MemoryInfo.ftl"/></html>                                                               
+                                <html><html-template location="component://webtools/webapp/webtools/dashboard/MemoryInfo.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -149,14 +153,14 @@ under the License.
     <screen name="ScipioUserRequestCount">
         <section>
             <actions>
-                <set field="chartType" value="bar"/>                                    
+                <set field="chartType" value="bar"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="hour"/>
                 <set field="chartIntervalCount" value="12"/>
                 <set field="chartDatasets" value="1"/>
                 <set field="xlabel" value=""/> <!-- x-axis label -->
-                <set field="ylabel" value=""/> <!-- y-axis label -->               
-                <set field="label1" value="${uiLabelMap.WebtoolsStatsRequestsBy} ${chartIntervalScope}"/> <!-- 1st dataset label -->                                  
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.WebtoolsStatsRequestsBy} ${chartIntervalScope}"/> <!-- 1st dataset label -->
                 <script location="component://webtools/script/com/ilscipio/dashboard/UserRequestCount.groovy"/>
            </actions>
            <widgets>
@@ -169,9 +173,9 @@ under the License.
                      <widgets>
                        <screenlet title="${uiLabelMap.WebtoolsStatsRequestsBy} ${chartIntervalScope}">
                             <platform-specific>
-                                <html><html-template location="component://webtools/webapp/webtools/dashboard/UserRequestCount.ftl"/></html>                                                               
+                                <html><html-template location="component://webtools/webapp/webtools/dashboard/UserRequestCount.ftl"/></html>
                             </platform-specific>
-                       </screenlet>     
+                       </screenlet>
                    </widgets>
                 </section>
            </widgets>
@@ -182,10 +186,10 @@ under the License.
          <section>
              <actions>
                  <property-to-field resource="debug" property="log4j.appender.css.File" field="logFileName" default="runtime/logs/ofbiz.log" no-locale="true"/>
-                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogView.groovy"/>                          
+                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogView.groovy"/>
              </actions>
              <widgets>
-                  <screenlet>                     
+                  <screenlet>
                       <platform-specific>
                           <html><html-template location="component://webtools/webapp/webtools/dashboard/ViewLog.ftl"/></html>
                       </platform-specific>

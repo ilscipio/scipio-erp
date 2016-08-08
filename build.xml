@@ -26,7 +26,7 @@ under the License.
         <classpath>
             <pathelement location="framework/base/lib/ivy-2.2.0.jar"/>
         </classpath>
-    </taskdef> 
+    </taskdef>
 
     <import file="macros.xml"/>
     
@@ -73,7 +73,7 @@ under the License.
     <import optional="true">
         <fileset file="tools/misc/build-dummy.xml" /><!-- at least one import required -->
         <fileset refid="applications.earlymainbuilds" />
-    </import> 
+    </import>
     <import optional="true">
         <fileset file="tools/misc/build-dummy.xml" /><!-- at least one import required -->
         <fileset refid="specialpurpose.earlymainbuilds" />
@@ -95,8 +95,8 @@ under the License.
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx3512M"/>
     <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
-	<!-- Scipio: New properties -->
-	<property name="solr.home" value="applications/solr/"/>
+    <!-- Scipio: New properties -->
+    <property name="solr.home" value="applications/solr/"/>
 
     <import file="framework/build.xml" optional="false"/>
     <available file="applications/build.xml" property="applications.present"/>
@@ -164,7 +164,7 @@ under the License.
         <antcall target="clean-tempfiles"/>
         <antcall target="clean-search-indexes"/>
         <antcall target="clean-downloads"/>
-        <antcall target="clean-uploads"/>        
+        <antcall target="clean-uploads"/>
         <antcall target="clean"/>
         
         <!-- SCIPIO: hooks -->
@@ -438,7 +438,7 @@ under the License.
         </exec>
         <tstamp>
             <format property="dateTime" pattern="yyyy-MM-dd HH:mm:ss"/>
-        </tstamp>        
+        </tstamp>
         <echo message="Found Branch-revision: ${branch}-${revision}"/>
         <echo message=" - Branch-revision: ${branch}-${revision}, ${uiLabelMap.CommonBuiltOn} ${dateTime}" file="runtime/gitinfo.ftl"/>
 
@@ -596,7 +596,7 @@ under the License.
     
     <target name="revert-patch" depends="revert-via-svn,revert-via-patch"/>
 
-    <target name="build-test" 
+    <target name="build-test"
         description="Patch and build all sources for use in a test environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
 
         <!-- SCIPIO: hooks -->
@@ -615,7 +615,7 @@ under the License.
         
     </target>
     
-    <target name="build-qa" 
+    <target name="build-qa"
         description="Patch and build all sources for use in a qa environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
 
         <!-- SCIPIO: hooks -->
@@ -634,7 +634,7 @@ under the License.
         
     </target>
 
-    <target name="build-production" 
+    <target name="build-production"
         description="Patch and build all sources for use in a live environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
 
         <!-- SCIPIO: hooks -->
@@ -651,7 +651,7 @@ under the License.
         <!-- SCIPIO: hooks -->
         <invokehook target="post-build-production" />
         
-    </target>    
+    </target>
     
     <!-- ================================================================== -->
     <!-- Build Components                                                   -->
@@ -809,37 +809,37 @@ under the License.
     <target name="docs-ftl-scipio" depends="build">
         <antcall target="docs-ftl-scipio-ftlonly"/>
     </target>
-	
-	<!-- Scipio: FIXME?: This is currently standard-Scipio-specific and quite hardcoded. May even belong in a separate project.
-	       Or could also integrate this better with other "docs" builds in future (delegate to component build.xml) -->
+    
+    <!-- Scipio: FIXME?: This is currently standard-Scipio-specific and quite hardcoded. May even belong in a separate project.
+        Or could also integrate this better with other "docs" builds in future (delegate to component build.xml) -->
     <target name="docs-ftl-scipio-ftlonly">
         <echo message="[docs-ftl-scipio] ========== Start Building (FTL docs) =========="/>
-    	<echo message="[docs-ftl-scipio] Building Scipio template-writer-friendly FTL lib docs..."/>
+        <echo message="[docs-ftl-scipio] Building Scipio template-writer-friendly FTL lib docs..."/>
         <java classname="com.ilscipio.scipio.ce.webapp.ftl.doc.FtlDocCompiler" fork="true">
             <arg value="scipio-lib"/> <!-- lib format -->
-        	<arg value="templating"/> <!-- doc purpose -->
-        	<arg value="framework/common/webcommon/includes/scipio/lib"/> <!-- base source folder -->
+            <arg value="templating"/> <!-- doc purpose -->
+            <arg value="framework/common/webcommon/includes/scipio/lib"/> <!-- base source folder -->
             <arg value="doc/scipio/templating/ftl/lib"/> <!-- base output folder -->
             <arg value="framework/common/webcommon/includes/scipio/doc/ftlDocTemplate.ftl"/> <!-- doc template -->
-        	<!-- source files to process -->
-        	<arg value="utilities.ftl"/>
-        	<arg value="standard/htmlContent.ftl"/>
-        	<arg value="standard/htmlForm.ftl"/>
+            <!-- source files to process -->
+            <arg value="utilities.ftl"/>
+            <arg value="standard/htmlContent.ftl"/>
+            <arg value="standard/htmlForm.ftl"/>
             <arg value="standard/htmlInfo.ftl"/>
-        	<arg value="standard/htmlNav.ftl"/>
-        	<arg value="standard/htmlScript.ftl"/>
+            <arg value="standard/htmlNav.ftl"/>
+            <arg value="standard/htmlScript.ftl"/>
             <arg value="standard/htmlStructure.ftl"/>
-        	<arg value="standard/htmlTemplate.ftl"/>
+            <arg value="standard/htmlTemplate.ftl"/>
             <classpath>
                 <path location="framework/webapp/build/lib/ofbiz-webapp.jar"/> <!-- the compiler class currently lives in here -->
                 <path location="framework/base/lib/*"/> <!-- includes Freemarker (and some others: log4j) -->
             </classpath>
         </java>
-    	<!-- TODO?: same as above but for docPurpose "theming"... currently I don't see the need,
-    	     theme creators need to look at the FTL files in depth anyway, even with markup separation -->
+        <!-- TODO?: same as above but for docPurpose "theming"... currently I don't see the need,
+            theme creators need to look at the FTL files in depth anyway, even with markup separation -->
         <echo message="[docs-ftl-scipio] ========== Done Building (FTL docs) =========="/>
     </target>
-	
+    
     <!-- ================================================================== -->
     <!-- Contrib Targets                                                    -->
     <!-- ================================================================== -->
@@ -911,17 +911,17 @@ under the License.
 
     <target name="start"
             description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
-    	<!-- Scipio: -->
-    	<property name="currentTarget" value="start"/>
-    	<condition property="spawn" else="false" >
-    	     <isset property="scipio.start.spawn"/>
-    	</condition>
+        <!-- Scipio: -->
+        <property name="currentTarget" value="start"/>
+        <condition property="spawn" else="false" >
+            <isset property="scipio.start.spawn"/>
+        </condition>
         <java jar="ofbiz.jar" fork="true" spawn="${spawn}">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-        	<!-- Scipio: solr home -->
-        	<jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+            <!-- Scipio: solr home -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
@@ -937,7 +937,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
             <!-- Scipio: solr home -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
-        	<arg value="start"/>
+            <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
     </target>
@@ -964,7 +964,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
             <!-- Scipio: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
-        	<arg value="start-batch"/>
+            <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
     </target>
@@ -1007,7 +1007,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
             <!-- Scipio: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
-        	<arg value="pos"/>
+            <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
         </java>
     </target>
@@ -1034,7 +1034,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
             <!-- Scipio: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
-        	<arg value="both"/>
+            <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
     </target>
@@ -1063,7 +1063,7 @@ under the License.
 
     <target name="load-demo" depends="build"
             description="Load all data; meant for generic OFBiz development, testing, demonstration, etc purposes">
-    	<property name="currentTarget" value="load"/>
+        <property name="currentTarget" value="load"/>
         <java jar="ofbiz.jar" fork="true">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
@@ -1593,10 +1593,10 @@ under the License.
 
     <target name="run-tests" description="(Unreliable) Run automated integration tests; you have to manually execute 'ant load-demo' before (and if needed even clear your data before) and see results in runtime/logs/test-results/html/all-tests.html. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <echo>===========================================================</echo>
-    	<echo>= OFBiz / Scipio integration tests. Please be aware, that =</echo>
-    	<echo>= the tests are based on OFBiz_14 and not always reliable.=</echo>
-    	<echo>===========================================================</echo>
-    	<java jar="ofbiz.jar" fork="true" resultproperty="test.result">
+        <echo>= OFBiz / Scipio integration tests. Please be aware, that =</echo>
+        <echo>= the tests are based on OFBiz_14 and not always reliable.=</echo>
+        <echo>===========================================================</echo>
+        <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
@@ -1848,8 +1848,8 @@ under the License.
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">
         <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
-        <echo> </echo>        
-        <echo>======================================================</echo>        
+        <echo> </echo>
+        <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
@@ -1857,11 +1857,11 @@ under the License.
         <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
     </target>
 
-    <target name="download-PG-JDBC" description="Download postgres jdbc driver">        
+    <target name="download-PG-JDBC" description="Download postgres jdbc driver">
         <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgres"/>
-        <echo> </echo>        
-        <echo>======================================================</echo>        
-        <echo>Please check that this version is appropriate for you!</echo>        
+        <echo> </echo>
+        <echo>======================================================</echo>
+        <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
     <target name="download-sonar-ant-task" description="Download sonar related files">
@@ -1870,8 +1870,8 @@ under the License.
 
     <target name="download-mySQL-JDBC" description="Download mySQL jdbc driver">
         <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="mysql"/>
-        <echo> </echo>        
-        <echo>======================================================</echo>        
+        <echo> </echo>
+        <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
@@ -2098,7 +2098,7 @@ under the License.
     <import optional="true">
         <fileset file="tools/misc/build-dummy.xml" /><!-- at least one import required -->
         <fileset refid="applications.mainbuilds" />
-    </import> 
+    </import>
     <import optional="true">
         <fileset file="tools/misc/build-dummy.xml" /><!-- at least one import required -->
         <fileset refid="specialpurpose.mainbuilds" />
@@ -2114,7 +2114,7 @@ under the License.
     
     <!-- invokes build hooks in build-hooks.xml files.
         NOTE: unlike regular builds, hooks in build-hooks.xml files are always invoked using
-            inheritall="true", to allow inspection of the main build. 
+            inheritall="true", to allow inspection of the main build.
         TODO: build-hooks-standalone.xml files to support inheritall="false"; but execution order is a big issue (must be consistent
             even when unpredictable until runtime) -->
     <macrodef name="invokehook">

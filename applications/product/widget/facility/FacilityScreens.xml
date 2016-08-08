@@ -71,8 +71,8 @@ under the License.
     <screen name="FacilitySearchResults">
         <section>
             <condition>
-				<if-service-permission service-name="facilityGenericPermission" main-action="VIEW" />
-			</condition>
+                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW" />
+            </condition>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -193,7 +193,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
-                    <decorator-section name="body">                        
+                    <decorator-section name="body">
                         <platform-specific>
                            <html><html-template location="component://product/webapp/facility/facility/FindFacilityTransfers.ftl"/></html>
                         </platform-specific>
@@ -505,7 +505,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Commented out, it is very similar to EditFacilityInventoryItems but showing more data. 
+    <!-- Scipio: Commented out, it is very similar to EditFacilityInventoryItems but showing more data.
         Quite cumbersome, inventory item detail must be presented to the user in a more friendly way -->
     <!-- <screen name="ViewFacilityInventoryItemsDetails">
         <section>
@@ -746,7 +746,7 @@ under the License.
     <screen name="ViewContactMechs">
         <section>
             <actions>
-                <set field="activeSubMenuItem" value="ViewContactMechs"/>                
+                <set field="activeSubMenuItem" value="ViewContactMechs"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
@@ -762,7 +762,7 @@ under the License.
                                 <condition>
                                     <not><if-empty field="facilityId"/></not>
                                 </condition>
-                                <widgets>                                    
+                                <widgets>
                                     <section>
                                         <condition>
                                             <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
@@ -841,7 +841,7 @@ under the License.
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="inventoryItemId" from-field="parameters.inventoryItemId"/>
                 
-                <set field="title" value="${uiLabelMap.PageTitleEditInventoryItem} ${facilityId}"/>                
+                <set field="title" value="${uiLabelMap.PageTitleEditInventoryItem} ${facilityId}"/>
 
                 <entity-one entity-name="Facility" value-field="facility" auto-field-map="true"/>
                 <entity-one entity-name="InventoryItem" value-field="inventoryItem" auto-field-map="true"/>
@@ -879,7 +879,7 @@ under the License.
                             <widgets>
                                 <!-- Scipio: This makes no sense -->
                                 <!-- <include-menu name="InventoryItemTabBar" location="component://product/widget/facility/FacilityMenus.xml"/> -->
-                                <!-- Scipio: FIXME: Move this to a proper menu -->                                
+                                <!-- Scipio: FIXME: Move this to a proper menu -->
                                 <!-- <container style="widget-container">
                                     <link target="EditInventoryItem" text="${uiLabelMap.ProductNewInventoryItem}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="facilityId" from-field="facilityId"/>
@@ -1063,33 +1063,33 @@ under the License.
     </screen>
     
     <screen name="ScipioReceiveInventoryDetail">
-	    <section>
-		    <condition>
-		        <if-empty field="parameters.returnId"/>
-		    </condition>
-		    <actions>
-		        <script location="component://product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy"/>
-		    </actions>
-		    <widgets>
-		        <platform-specific><html><html-template location="component://product/webapp/facility/inventory/ReceiveInventoryDetail.ftl"/></html></platform-specific>
-		    </widgets>
-	    </section>
+        <section>
+            <condition>
+                <if-empty field="parameters.returnId"/>
+            </condition>
+            <actions>
+                <script location="component://product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/facility/inventory/ReceiveInventoryDetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
     </screen>
     <screen name="ScipioReceiveReturnDetail">
         <section>
-	        <condition>
-	            <and>
-	                <if-empty field="parameters.productId"/>
-	                <if-empty field="parameters.purchaseOrderId"/>
-	            </and>
-	        </condition>
-	        <actions>
-	              <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
-	        </actions>
-	        <widgets>
-	              <platform-specific><html><html-template location="component://product/webapp/facility/returns/ReceiveReturnDetail.ftl"/></html></platform-specific>
-	        </widgets>
-	   </section>
+            <condition>
+                <and>
+                    <if-empty field="parameters.productId"/>
+                    <if-empty field="parameters.purchaseOrderId"/>
+                </and>
+            </condition>
+            <actions>
+                <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/facility/returns/ReceiveReturnDetail.ftl"/></html></platform-specific>
+            </widgets>
+    </section>
     </screen>
 
     <screen name="UpdatedInventoryItemStatus">
@@ -1512,5 +1512,5 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen> -->    
+    </screen> -->
 </screens>

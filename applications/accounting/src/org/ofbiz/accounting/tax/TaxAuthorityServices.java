@@ -264,9 +264,9 @@ public class TaxAuthorityServices {
         //Debug.logInfo("Tax calc taxAuthoritySet after expand:" + taxAuthoritySet, module);
     }
 
-    private static List<GenericValue> getTaxAdjustments(Delegator delegator, GenericValue product, GenericValue productStore, 
-            String payToPartyId, String billToPartyId, Set<GenericValue> taxAuthoritySet, 
-            BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount, 
+    private static List<GenericValue> getTaxAdjustments(Delegator delegator, GenericValue product, GenericValue productStore,
+            String payToPartyId, String billToPartyId, Set<GenericValue> taxAuthoritySet,
+            BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount,
             BigDecimal shippingAmount, BigDecimal orderPromotionsAmount) {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         List<GenericValue> adjustments = FastList.newInstance();
@@ -345,7 +345,7 @@ public class TaxAuthorityServices {
                 productCategoryCond = EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, null);
             }
 
-            // FIXME handles shipping and promo tax. Simple solution, see https://issues.apache.org/jira/browse/OFBIZ-4160 for a better one 
+            // FIXME handles shipping and promo tax. Simple solution, see https://issues.apache.org/jira/browse/OFBIZ-4160 for a better one
             if (product == null && shippingAmount != null) {
                 EntityCondition taxShippingCond = EntityCondition.makeCondition(
                             EntityCondition.makeCondition("taxShipping", EntityOperator.EQUALS, null),
@@ -427,21 +427,21 @@ public class TaxAuthorityServices {
                 if (product != null && taxAuthPartyId != null && taxAuthGeoId != null) {
                     // find a ProductPrice for the productId and taxAuth* values, and see if it has a priceWithTax value
                     productPrice = EntityQuery.use(delegator).from("ProductPrice")
-                            .where("productId", product.get("productId"), 
-                                    "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId, 
+                            .where("productId", product.get("productId"),
+                                    "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId,
                                     "productPricePurposeId", "PURCHASE")
                             .orderBy("-fromDate").filterByDate().queryFirst();
                     
                     
                     if (productPrice == null) {
-                    	GenericValue virtualProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator); 
-                    	if (virtualProduct != null) {
-                    		productPrice = EntityQuery.use(delegator).from("ProductPrice")
-                                    .where("productId", virtualProduct.get("productId"), 
-                                            "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId, 
+                        GenericValue virtualProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator);
+                        if (virtualProduct != null) {
+                            productPrice = EntityQuery.use(delegator).from("ProductPrice")
+                                    .where("productId", virtualProduct.get("productId"),
+                                            "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId,
                                             "productPricePurposeId", "PURCHASE")
                                     .orderBy("-fromDate").filterByDate().queryFirst();
-                    	}
+                        }
                     }
                     //Debug.logInfo("=================== productId=" + product.getString("productId"), module);
                     //Debug.logInfo("=================== productPrice=" + productPrice, module);
@@ -491,8 +491,8 @@ public class TaxAuthorityServices {
 
                 adjustments.add(taxAdjValue);
 
-                if (productPrice != null && itemQuantity != null && 
-                        productPrice.getBigDecimal("priceWithTax") != null && 
+                if (productPrice != null && itemQuantity != null &&
+                        productPrice.getBigDecimal("priceWithTax") != null &&
                         !"Y".equals(productPrice.getString("taxInPrice"))) {
                     BigDecimal priceWithTax = productPrice.getBigDecimal("priceWithTax");
                     BigDecimal price = productPrice.getBigDecimal("price");
@@ -504,9 +504,9 @@ public class TaxAuthorityServices {
                     
                     // tax is not already in price so we want to add it in, but this is a VAT situation so adjust to make it as accurate as possible
 
-                    // for VAT taxes if the calculated total item price plus calculated taxes is different from what would be 
+                    // for VAT taxes if the calculated total item price plus calculated taxes is different from what would be
                     // expected based on the original entered price with taxes (if the price was entered this way), then create
-                    // an adjustment that corrects for the difference, and this correction will be effectively subtracted from the 
+                    // an adjustment that corrects for the difference, and this correction will be effectively subtracted from the
                     // price and not from the tax (the tax is meant to be calculated based on Tax Authority rules and so should
                     // not be shorted)
                     
@@ -516,7 +516,7 @@ public class TaxAuthorityServices {
                     BigDecimal enteredTotalPriceWithTax = priceWithTax.multiply(itemQuantity);
                     BigDecimal calcedTotalPriceWithTax = (baseSubtotal).add(baseTaxAmount);
                     if (!enteredTotalPriceWithTax.equals(calcedTotalPriceWithTax)) {
-                        // if the calculated amount is higher than the entered amount we want the value to be negative 
+                        // if the calculated amount is higher than the entered amount we want the value to be negative
                         //     to get it down to match the entered amount
                         // so, subtract the calculated amount from the entered amount (ie: correction = entered - calculated)
                         BigDecimal correctionAmount = enteredTotalPriceWithTax.subtract(calcedTotalPriceWithTax);

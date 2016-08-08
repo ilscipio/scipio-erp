@@ -25,7 +25,7 @@ echo "  ____) | | |____  | | | |      | | | |__| |   | |___  | | \\ \\  | |"
 echo " |_____/   \\_____| |_| |_|      |_|  \\____/    |_____| |_|  \\_\\ |_|"
 echo ""
 echo ""
-echo "" 
+echo ""
 echo " ============ INSTALLER =============="
 echo ""
 echo " Please make a selection"
@@ -36,7 +36,7 @@ echo " -------------------------------------";
 echo " 3.  Recompile [compile]"
 echo " 4.  List ant compiler information"
 echo " 5.  Exit"
-echo ""  
+echo ""
 echo " ====================================="
 echo ""
 
@@ -57,10 +57,10 @@ do
             sh ant build
             exit 1
             ;;
-	    "List ant info")
+        "List ant info")
             sh ant -p
             exit 1
-            ;;	
+            ;;
         "Quit")
             exit 1;
             ;;

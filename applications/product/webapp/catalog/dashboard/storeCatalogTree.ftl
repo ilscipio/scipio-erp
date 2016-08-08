@@ -1,5 +1,5 @@
-<#if security.hasEntityPermission("CATALOG", "_VIEW", session)>    
-    <@treemenu id=productStoreId data=treeMenuData settings=treeMenuSettings plugins=treeMenuPlugins>
+<#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
+    <@treemenu type="lib-model" id=productStoreId data=treeMenuData settings=treeMenuSettings plugins=treeMenuPlugins>
         <@treemenu_event event="activate_node.jstree">
             id = data.node.id;
             if (data.node.li_attr.original_id && data.node.li_attr.original_id != id)
@@ -13,9 +13,9 @@
             } else if(data.node.type == "product") {
                 URL = 'ViewProduct';
                 dataSet = {"productId" : id};
-            }           
-            if (URL && dataSet) {               
-				window.location = URL + '?' + $.param(dataSet);
+            }
+            if (URL && dataSet) {
+                window.location = URL + '?' + $.param(dataSet);
                 
             }
         </@treemenu_event>

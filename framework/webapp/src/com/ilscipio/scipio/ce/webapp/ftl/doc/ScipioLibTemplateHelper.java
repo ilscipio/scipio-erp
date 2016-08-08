@@ -99,8 +99,12 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
 
     
     private static final Pattern rawTextPat = Pattern.compile(
+            "\\[\\[\\[(.*?)\\]\\]\\]"
+            , Pattern.DOTALL);
+    private static final Pattern plainTextPat = Pattern.compile(
             "\\(\\(\\((.*?)\\)\\)\\)"
             , Pattern.DOTALL);
+    
     private static final Pattern codeTextPat = Pattern.compile(
             "\\{\\{\\{(.*?)\\}\\}\\}"
             , Pattern.DOTALL);
@@ -162,7 +166,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
     }
     
     /**
-     * Splits by [[[, ]]], {{{, }}}, and potential entry refs.
+     * Splits by [[[, ]]], (((, ))), {{{, }}}, and potential entry refs.
      */
     public List<Object> splitByTextualElems(String text, Map<String, Map<String, Object>> entryMap, 
             Map<String, Map<String, Object>> libMap, Map<String, Object> libInfo) {
@@ -179,6 +183,21 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         modelMap = FtlDocFileParser.makeObjectMap();
         modelMap.put("type", "text-raw");
         res = splitByPat(text, rawTextPat, modelMap, "origText", "value");
+        
+        // split remaining text parts by plain pat
+        prevSplit = res;
+        res = new ArrayList<>();
+        modelMap = FtlDocFileParser.makeObjectMap();
+        modelMap.put("type", "text-plain");
+        for(Object part : prevSplit) {
+            if (part instanceof String) {
+                List<Object> listSplit = splitByPat((String) part, plainTextPat, modelMap, "origText", "value");
+                res.addAll(listSplit);
+            }
+            else {
+                res.add(part);
+            }
+        }
         
         // split remaining text parts by code pat
         prevSplit = res;

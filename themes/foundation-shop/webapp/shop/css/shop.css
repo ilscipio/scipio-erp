@@ -18,20 +18,20 @@ body {
 .top-bar-section ul li > a {color:#333; }
 
 .top-bar-section .has-form, .top-bar-section ul li,.top-bar-section li:not(.has-form) a:not(.button){
-	background:transparent;
-	-webkit-transition: all 0.4s ease;
+    background:transparent;
+    -webkit-transition: all 0.4s ease;
     -moz-transition: all 0.4s ease;
     -o-transition: all 0.4s ease;
     transition: all 0.4s ease;
 }
 
 .top-bar-section li:not(.has-form) a:not(.button):hover {
-	background:none;
-	color: #0078a0;
+    background:none;
+    color: #0078a0;
 }
 
 .top-bar-section .has-dropdown > a:after {
-	    border-color: rgba(0, 0, 0, 0.4) transparent transparent transparent;
+        border-color: rgba(0, 0, 0, 0.4) transparent transparent transparent;
 }
 
 .top-bar-section li.divider{
@@ -44,16 +44,16 @@ body {
 .sticky {background:#f4f4f4;}
 
 .sticky_animate {
-	top: 0;
+    top: 0;
 }
 .fixed {
 }
 
 .fixed  .top-bar{
-	background: #f4f4f4;
-	height:45px;
-	padding-top:0px;
-	max-width:100%;
+    background: #f4f4f4;
+    height:45px;
+    padding-top:0px;
+    max-width:100%;
     border-bottom: 1px solid gainsboro;
     -webkit-transition: all 0.4s ease;
     -moz-transition: all 0.4s ease;
@@ -69,9 +69,9 @@ body {
 }
 
 #microcart {
-	display:block;
-	padding-left: 5px;
-	padding-right: 5px;
+    display:block;
+    padding-left: 5px;
+    padding-right: 5px;
     text-decoration: none;
 }
 
@@ -80,25 +80,25 @@ body {
     font-size: 22px;
     }
 #microCartTotal,#microCartQuantity {
-	float: left;    
-	line-height: 2.8125rem;
-	padding-left:4px;
-    } 
+    float: left;
+    line-height: 2.8125rem;
+    padding-left:4px;
+    }
     
 /*BODY*/
 #content-main-section {
-	background:#fff;
-	padding-top:20px;
-	margin-top:10px;
-	max-width:85em;}
+    background:#fff;
+    padding-top:20px;
+    margin-top:10px;
+    max-width:85em;}
 
 #pre-content-section div:first-child {
-	margin-top:0px;
+    margin-top:0px;
 }
 
 #pre-content-section .row:last-child{
-	margin-bottom:0px;
-	
+    margin-bottom:0px;
+    
 }
 
 .other-content{
@@ -150,24 +150,24 @@ body {
 #product-saved{font-size: 0.8em; color:#43ac6a;}
 .pricing-table {position:relative;}
 .ribbon {
-	width:85px;
-	height:88px;
+    width:85px;
+    height:88px;
     overflow: hidden;
     position: absolute;
     top: 0px;
     left: 0px;
     }
 .ribbon span{
-	position: relative;
-	padding: 7px 0;
-	left: -30px;
-	top: 15px;
-	display:block;
-	font-size:14px;
+    position: relative;
+    padding: 7px 0;
+    left: -30px;
+    top: 15px;
+    display:block;
+    font-size:14px;
     width: 120px;
     padding:4px;
     background-color: #43ac6a;
-    color:#fff; 
+    color:#fff;
     text-align: center;
       -webkit-transform: rotate(-45deg);
       -moz-transform:    rotate(-45deg);
@@ -190,7 +190,7 @@ body {
     
 /*FOOTER*/
 footer {
-	max-width: 85em;
+    max-width: 85em;
     margin-left: auto;
     margin-right: auto;
     text-align:center;
@@ -229,7 +229,7 @@ footer {
 }
 
 .address-panel .panel-body, .pay-meth-info-panel .panel-body {
-    /* 
+    /*
     width: 14em;*/
     /* Extra space for button - should be roughly size of button */
     margin-bottom: 1.5rem;
@@ -247,7 +247,7 @@ footer {
 
 .address-panel-content {
     /* was for floating button isntead of absolute
-    padding-right: 1.25rem; 
+    padding-right: 1.25rem;
     padding-bottom: 1.25rem;*/
 }
 

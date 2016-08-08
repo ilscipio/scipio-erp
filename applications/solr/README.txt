@@ -2,7 +2,7 @@
 Solr Component for Apache Ofbiz
 =====================================================
 
-This document describes the Ofbiz solr component, an Ofbiz (http://ofbiz.apache.org/) 
+This document describes the Ofbiz solr component, an Ofbiz (http://ofbiz.apache.org/)
 implementation of the Apache Solr search platform (http://lucene.apache.org/solr/).
 The solr component includes an Ofbiz service-based wrapper layer to the Apache Solr
 webapp queries as well as the native Apache Solr web interface itself.
@@ -46,19 +46,19 @@ In your root Ofbiz build.xml file, add the element "<jvmarg value="-Dsolr.solr.h
 to the "<java jar="ofbiz.jar"...>" invocation of the appropriate Ant target(s) (run, start, run-install, etc.).
 e.g.:
 <target name="start" description="Start OFBiz">
-	<java jar="ofbiz.jar" fork="true">
-		<jvmarg value="${memory.initial.param}"/>
-		<jvmarg value="${memory.max.param}"/>
-		<jvmarg value="${memory.maxpermsize.param}"/>
-		<jvmarg value="-Dsolr.solr.home=hot-deploy/solr"/>
-	</java>
+    <java jar="ofbiz.jar" fork="true">
+        <jvmarg value="${memory.initial.param}"/>
+        <jvmarg value="${memory.max.param}"/>
+        <jvmarg value="${memory.maxpermsize.param}"/>
+        <jvmarg value="-Dsolr.solr.home=hot-deploy/solr"/>
+    </java>
 </target>
 
 
 * solr.solr.home in Eclipse Debug Configurations:
 
 In the applicable Debug configuration sheet (Java Application; see Ofbiz documentation for information on how to
-set up Eclipse debugging for Ofbiz), under the Arguments tab, simply append "-Dsolr.solr.home=hot-deploy/solr" to 
+set up Eclipse debugging for Ofbiz), under the Arguments tab, simply append "-Dsolr.solr.home=hot-deploy/solr" to
 the VM Arguments line.
 e.g.:
 -Xms128M -Xmx512M -XX:MaxPermSize=512m -Dsolr.solr.home=hot-deploy/solr
@@ -112,7 +112,7 @@ using services defined in the file:
 servicesdef/solrservices.xml
 The initial indexing may need to be performed or scheduled manually, but subsequent indexing
 may be partially or fully automated, though automated methods are disabled by default and must be enabled.
-Note that in general, solr services can only successfully run in contexts where the solr webapp is 
+Note that in general, solr services can only successfully run in contexts where the solr webapp is
 loaded and accessible.
 
 There are two methods for indexing data:
@@ -121,8 +121,8 @@ There are two methods for indexing data:
 * Index rebuilding service (rebuildSolrIndex):
 
 The rebuildSolrIndex is the most important data import service. It reindexes
-all Ofbiz Products existing in the system into the solr index. rebuildSolrIndex MUST be run 
-AT LEAST once after installation and also following any data load operation that loads new products using the Ofbiz 
+all Ofbiz Products existing in the system into the solr index. rebuildSolrIndex MUST be run
+AT LEAST once after installation and also following any data load operation that loads new products using the Ofbiz
 "install" starting mode (run-install, load-demo, etc.).
 
 To do this, one can simply use the Webtools backend to invoke the service manually
@@ -146,7 +146,7 @@ for the specific product.
 
 By default, the addToSolr service implementation (and any service intended for use with ECAs) is disabled globally and
 succeeds silently. It can be enabled by setting the "solr.eca.enabled=true" in "config/solrconfig.properties".
-This property is provided for easy toggling. It can also be specified on the command line or using ant through 
+This property is provided for easy toggling. It can also be specified on the command line or using ant through
 the true/false "ofbiz.solr.eca.enabled" system property (which has priority over file-based "solr.eca.enabled") in the same
 way described for the solr home system property (see Installation); this allows toggling them per Ant target.
 
@@ -162,9 +162,9 @@ this behavior results in needlessly prevented reindexing (and thus lost updates)
 configurations. If this is the case, this behavior can be disabled by setting the option
 "solr.eca.useSolrWebappLoadedCheck=false" in the properties file "config/solrconfig.properties".
  
-However, if the above useSolrWebappLoadedCheck option is specified, you will have to manually disable or comment the 
-ECA definitions/services to prevent them from executing during data-load operations; the "solr.eca.enabled" property and "ofbiz.solr.eca.enabled" system property can be used for this purpose. One easy way is to set "solr.eca.enabled=true" in 
-the property files and then specify "-Dofbiz.solr.eca.enabled=false" for any relevant 
+However, if the above useSolrWebappLoadedCheck option is specified, you will have to manually disable or comment the
+ECA definitions/services to prevent them from executing during data-load operations; the "solr.eca.enabled" property and "ofbiz.solr.eca.enabled" system property can be used for this purpose. One easy way is to set "solr.eca.enabled=true" in
+the property files and then specify "-Dofbiz.solr.eca.enabled=false" for any relevant
 Ant build install/run-install/load-demo targets.
 
 Note that simply commenting the ECAs/SECAs or preventing their inclusion using
@@ -191,7 +191,7 @@ Solr queries can be done using two methods:
 
 Simply invoke (manually or in code) the query services found in the file:
 servicesdef/solrservices.xml
-These include solrProductsSearch, solrKeywordSearch and others. Note that in general, 
+These include solrProductsSearch, solrKeywordSearch and others. Note that in general,
 solr services can only successfully run in contexts where the solr webapp is loaded and accessible.
 
 
@@ -216,9 +216,9 @@ any library updates must be done with care to preserve these modifications.
 6. Known Bugs, Limitations and Issues
 -----------------------------------------------------
 
-* In general, solr services can only successfully run in contexts where the solr webapp 
+* In general, solr services can only successfully run in contexts where the solr webapp
 is loaded and accessible.
-* ECA indexing may be problematic due to data loading and unknown complex server configurations; 
+* ECA indexing may be problematic due to data loading and unknown complex server configurations;
 various toggling options are provided to work around this issue (see Data Indexing for details).
 In the future - and ideally - this could be addressed using ofbiz-component.xml (or eecas.xml) directives.
 * The indexing services often produce the log warning "Problem reading product features" due to their

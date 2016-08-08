@@ -996,8 +996,10 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
             
             We cannot simply enable itemUseHidden for all checkboxes currently because some server-side code
             and templates rely on the traditional HTML behavior.
-        -->
+        
+            UPDATE: 2016-08-03: Re-removed this because it is not generic enough solution. see auto value functions.
         <input type="hidden" name="${name?html}_submitted" value="Y"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
+        -->
       </#if>
       <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>

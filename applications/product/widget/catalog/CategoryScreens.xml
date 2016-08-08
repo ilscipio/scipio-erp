@@ -75,17 +75,17 @@ under the License.
                             <html><html-template location="component://product/webapp/catalog/category/UploadCategoryImage.ftl"/></html>
                         </platform-specific>
                         <section>
-	                       <condition>
-	                            <and>
+                        <condition>
+                                <and>
                                     <not><if-empty field="parameters.duplicateCategory"/></not>
                                     <if-compare value="Y" operator="equals" field="parameters.duplicateCategory"/>
                                 </and>
-	                       </condition>
-	                        <widgets>
-		                        <platform-specific>
-		                            <html><html-template location="component://product/webapp/catalog/category/DuplicateCategory.ftl"/></html>
-		                        </platform-specific>
-	                        </widgets>
+                        </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/category/DuplicateCategory.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
                            </section>
                     </decorator-section>
                 </decorator-screen>
@@ -201,7 +201,7 @@ under the License.
     </screen>
     
     <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategoryContentAssoc -->
-    <screen name="ScipioCategoryContentList"> 
+    <screen name="ScipioCategoryContentList">
         <section>
             <widgets>
                 <screenlet>
@@ -216,7 +216,7 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
-                <set field="productCategoryId" from-field="parameters.productCategoryId"/>                
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-condition list="productCategoryContentTypeList" entity-name="ProductCategoryContentType">
                      <order-by field-name="description"/>
                  </entity-condition>
@@ -246,7 +246,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="activeSubMenuItem" value="EditCategoryRollup"/>                
+                <set field="activeSubMenuItem" value="EditCategoryRollup"/>
                 <set field="originalProductCategoryId" value="${parameters.originalProductCategoryId}" default-value="${parameters.productCategoryId}" global="true" />
                 <set field="title" default-value="${uiLabelMap.ProductCategoryAssociations} ${originalProductCategoryId}"/>
             </actions>
@@ -255,7 +255,7 @@ under the License.
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <screenlet title="${uiLabelMap.ProductAddCategoryParent}">                                    
+                                <screenlet title="${uiLabelMap.ProductAddCategoryParent}">
                                     <section>
                                         <actions>
                                             <set field="productCategoryAssociationMode" value="parent" />
@@ -323,39 +323,39 @@ under the License.
     <screen name="ScipioCategoryAssociationList">
         <section>
             <widgets>
-	            <section>
-	                <condition>
-	                    <if-compare operator="equals" value="child" field="productCategoryAssociationMode"/>
-	                </condition>
-	                <actions>
-	                    <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
-			               <condition-expr field-name="productCategoryId" from-field="originalProductCategoryId"/>
-			               <order-by field-name="sequenceNum"/>
-			           </entity-condition>
-			           <set field="sectionTitle" value="${uiLabelMap.ProductCategoryChildCategoryList}"/>
-	                </actions>	            
-	            </section>
-	            <section>
-	                <condition>
-	                    <if-compare operator="equals" value="parent" field="productCategoryAssociationMode"/>                            
-	                </condition>
-	                <actions>
-	                    <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
+                <section>
+                    <condition>
+                        <if-compare operator="equals" value="child" field="productCategoryAssociationMode"/>
+                    </condition>
+                    <actions>
+                        <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
+                        <condition-expr field-name="productCategoryId" from-field="originalProductCategoryId"/>
+                        <order-by field-name="sequenceNum"/>
+                    </entity-condition>
+                    <set field="sectionTitle" value="${uiLabelMap.ProductCategoryChildCategoryList}"/>
+                    </actions>
+                </section>
+                <section>
+                    <condition>
+                        <if-compare operator="equals" value="parent" field="productCategoryAssociationMode"/>
+                    </condition>
+                    <actions>
+                        <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
                             <condition-expr field-name="parentProductCategoryId" from-field="originalProductCategoryId"/>
                             <order-by field-name="sequenceNum"/>
                         </entity-condition>
                         <set field="sectionTitle" value="${uiLabelMap.ProductCategoryParentCategoryList}"/>
-	                </actions>	              
-	            </section>
-	            <section>
-	               <condition><not><if-empty field="productCategoryRollupList"/></not></condition>
-	               <widgets>
-	                   <screenlet title="${sectionTitle}">
-	                       <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryAssociationList.ftl"/></html></platform-specific>
-	                   </screenlet>
-	               </widgets>
-	            </section>
-	            
+                    </actions>
+                </section>
+                <section>
+                <condition><not><if-empty field="productCategoryRollupList"/></not></condition>
+                <widgets>
+                    <screenlet title="${sectionTitle}">
+                        <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryAssociationList.ftl"/></html></platform-specific>
+                    </screenlet>
+                </widgets>
+                </section>
+                
             </widgets>
         </section>
     </screen>
@@ -383,9 +383,9 @@ under the License.
                             </platform-specific>
                         </screenlet>
                         <screenlet>
-	                        <platform-specific>
-	                            <html><html-template location="component://product/webapp/catalog/category/EditCategoryProducts.ftl"/></html>
-	                        </platform-specific>
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/category/EditCategoryProducts.ftl"/></html>
+                            </platform-specific>
                         </screenlet>
                         <section>
                             <condition>

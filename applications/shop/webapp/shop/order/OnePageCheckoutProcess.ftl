@@ -91,6 +91,11 @@ under the License.
                       <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(shipToTelecomNumber.areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
                       <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(shipToTelecomNumber.contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
                       <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(shipToExtension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
+                    <#elseif phoneContactMechId?has_content><#-- SCIPIO: fallback to primary phone -->
+                      <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(countryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
+                      <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
+                      <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
+                      <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(extension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
                     <#else>
                       <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(parameters.shipToCountryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
                       <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(parameters.shipToAreaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
@@ -105,15 +110,12 @@ under the License.
                   <@field type="input" id="shipToPostalCode" name="shipToPostalCode" required=true value=(shipToPostalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
 
                   <@field type="select" name="shipToCountryGeoId" id="shipToCountryGeoId" required=true label=uiLabelMap.CommonCountry>
-                    <#if shipToCountryGeoId??>
-                      <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo?default(shipToCountryGeoId!)}</option>
-                    </#if>
-                    <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":shipToCountryGeoId!""} />
                   </@field>
                   <div id="shipToStates">
                     <@field type="select" id="shipToStateProvinceGeoId" required=true name="shipToStateProvinceGeoId" label=uiLabelMap.CommonState>
                       <#if shipToStateProvinceGeoId?has_content>
-                        <option value="${shipToStateProvinceGeoId!}">${shipToStateProvinceGeo?default(shipToStateProvinceGeoId!)}</option>
+                        <option value="${shipToStateProvinceGeoId!}">${shipToStateProvinceGeo!(shipToStateProvinceGeoId!)}</option>
                       <#else>
                         <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                       </#if>
@@ -237,6 +239,11 @@ under the License.
                     <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(billToTelecomNumber.areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
                     <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(billToTelecomNumber.contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
                     <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(billToExtension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
+                  <#elseif phoneContactMechId?has_content><#-- SCIPIO: fallback on primary phone -->
+                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(countryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
+                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
+                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
+                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(extension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
                   <#else>
                     <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(parameters.billToCountryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
                     <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(parameters.billToAreaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
@@ -273,10 +280,7 @@ under the License.
                   <@field type="input" id="billToCity" name="billToCity" required=true value=(billToCity!) label=uiLabelMap.CommonCity/>
                   <@field type="input" id="billToPostalCode" name="billToPostalCode" required=true value=(billToPostalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
                   <@field type="select" name="billToCountryGeoId" required=true id="billToCountryGeoId" label=uiLabelMap.CommonCountry>
-                    <#if billToCountryGeoId??>
-                      <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
-                    </#if>
-                    <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":billToCountryGeoId!""} />
                   </@field>
                   <@field type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId" required=true label=uiLabelMap.CommonState>
                     <#if billToStateProvinceGeoId?has_content>

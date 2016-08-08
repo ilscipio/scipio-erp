@@ -25,10 +25,10 @@ Timestamp startDate = UtilDateTime.getMonthStart(context.nowTimestamp, context.t
 Timestamp endDate = UtilDateTime.getMonthEnd(startDate, context.timeZone, context.locale); // This month (End)
 
 try {
-	findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",startDate,"thruDate",endDate,"dateInterval","day","userLogin",userLogin));
-	result = findDataMap;
+    findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",startDate,"thruDate",endDate,"dateInterval","day","userLogin",userLogin));
+    result = findDataMap;
 }catch(Exception e){
-	result = ServiceUtil.returnError("Cannot fetch request data");
+    result = ServiceUtil.returnError("Cannot fetch request data");
 }
 
 context.chartData = findDataMap.requests;

@@ -178,10 +178,21 @@ public class ProductServices {
         }
 
         if (featureSet.size() == 0) {
-            errMsg = UtilProperties.getMessage(resourceError,"productservices.problem_reading_product_features", locale);
-            // ToDo DO 2004-02-23 Where should the errMsg go?
-            Debug.logWarning(errMsg + " for product " + productId, module);
-            //return ServiceUtil.returnError(errMsg);
+            // SCIPIO: more versatile handling when no result.
+            String emptyAction = (String) context.get("emptyAction");
+            if (!"success".equals(emptyAction)) {
+                errMsg = UtilProperties.getMessage(resourceError,"productservices.problem_reading_product_features", locale);
+                if ("fail".equals(emptyAction)) {
+                    return ServiceUtil.returnFailure(errMsg);
+                } else if ("error".equals(emptyAction)) {
+                    Debug.logError(errMsg + " for product " + productId, module);
+                    return ServiceUtil.returnError(errMsg);
+                } else { // SCIPIO: default (stock): "warn"
+                    // ToDo DO 2004-02-23 Where should the errMsg go?
+                    Debug.logWarning(errMsg + " for product " + productId, module);
+                    //return ServiceUtil.returnError(errMsg);
+                }
+            }
         }
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("featureSet", featureSet);

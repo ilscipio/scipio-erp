@@ -111,7 +111,7 @@ public abstract class ProductUtil {
                 // if(category.size()>0) dispatchContext.put("category", category);
                 // if(product.get("popularity") != null) dispatchContext.put("popularity", "");
 
-                Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));
+                Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId, "emptyAction", "success"));
                 if (featureSet != null) {
                     dispatchContext.put("features", (Set<?>) featureSet.get("featureSet"));
                 }

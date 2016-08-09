@@ -43,6 +43,9 @@ under the License.
         <description>Gets a Set of product features (distinct)</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="productFeatureApplTypeId" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO: If result empty, emptyAction determines handling. 
+            Can be "warn" (current default - stock), "success", "fail", "error". -->
+        <attribute name="emptyAction" type="String" mode="IN" optional="true"/>
         <attribute name="featureSet" type="java.util.Set" mode="OUT"/>
     </service>
     <service name="getProductVariantTree" engine="java"

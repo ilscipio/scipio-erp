@@ -135,14 +135,18 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/date/FromThruDateCheck.js" global="true"/>                
                 -->     
                                   
-                <!-- Note: Must be run last after all layoutSettings assignments due to a Ofbiz widget vars bug -->    
+                <!-- Note: Must be run last after all layoutSettings assignments due to a Ofbiz widget vars bug -->
+                <!-- SCIPIO: 2016-08-09: this is no longer appropriate as default behavior. the theme should have been already
+                    looked up into rendererVisualThemeResources, which uses more complex lookup logic.
                 <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
                 <service service-name="getVisualThemeResources">
                     <field-map field-name="visualThemeId" />
                     <field-map field-name="themeResources" from-field="layoutSettings" />
                 </service>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
-                
+                -->
+                <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
+
                 <set field="setContextScipioTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/SetContextScipioTmplGlobalVars.groovy" />
             </actions>
@@ -535,13 +539,18 @@ under the License.
                         <set field="userPreferences" from-field="prefResult.userPrefMap" global="true"/>
 
                         <property-map resource="general" map-name="generalProperties" global="true"/>
+
+                        <!-- SCIPIO: 2016-08-09: this is no longer appropriate as default behavior. the theme should have been already
+                            looked up into rendererVisualThemeResources, which uses more complex lookup logic.
                         <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true"/>
                         <service service-name="getVisualThemeResources">
                             <field-map field-name="visualThemeId"/>
                             <field-map field-name="themeResources" from-field="layoutSettings"/>
                         </service>
-
                         <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+                        -->
+                        <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
+
                         <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true"/>
 
                         <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>

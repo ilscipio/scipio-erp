@@ -253,6 +253,9 @@ public class OrderLookupServices {
         String partyId = (String) context.get("partyId");
         List<String> roleTypeList = UtilGenerics.checkList(context.get("roleTypeId"));
 
+        // SCIPIO: must track where partyId came from
+        boolean partyIdFromUserLogin = false;
+        
         if (UtilValidate.isNotEmpty(userLoginId) && UtilValidate.isEmpty(partyId)) {
             GenericValue ul = null;
             try {
@@ -262,6 +265,7 @@ public class OrderLookupServices {
             }
             if (ul != null) {
                 partyId = ul.getString("partyId");
+                partyIdFromUserLogin = true;
             }
         }
 
@@ -323,9 +327,17 @@ public class OrderLookupServices {
         }
 
         if (UtilValidate.isNotEmpty(partyId)) {
-            paramList.add("partyId=" + partyId);
+            // SCIPIO: only append the partyId to paramList if it didn't come from userLoginId
+            if (!partyIdFromUserLogin) {
+                paramList.add("partyId=" + partyId);
+            }
             fieldsToSelect.add("partyId");
             conditions.add(makeExpr("partyId", partyId));
+        }
+        
+        // SCIPIO: append userLoginId to paramList
+        if (UtilValidate.isNotEmpty(userLoginId)) {
+            paramList.add("userLoginId=" + userLoginId);
         }
 
         if (roleTypeList != null) {

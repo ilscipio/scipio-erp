@@ -36,14 +36,16 @@ under the License.
                 <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
                 <set field="layoutSettings.companyName" value="SCIPIO Store" global="true"/>
                 <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" /> -->
-                <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" />
-                <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" />
-                <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]" />
-                <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]" />
-                <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
+                <!-- these execute at the wrong time (and redundant)
+                <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]"/>
+                <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]"/>
+                <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]"/>
+                <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]"/>
+                <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]"/>
                 <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
                 <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
-                <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl"/>
+                <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
+                -->
                 
                 <set field="headerTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>      
                 <!-- The default (main) java scripts -->
@@ -68,6 +70,8 @@ under the License.
                <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonUserChecks.groovy"/>
             </actions>
             <widgets>
+                <!-- FIXME?: there is a pattern issue here where fields and resources set by GlobalDecorator are not accessible to us here (notably, including the include-screen calls below);
+                    requires either more global="true" in GlobalActions/GlobalDecorator (not very reusable) or maybe refactoring this decorator-screen include in a new way -->
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
                     <decorator-section name="pre-content">
                         <decorator-section-include name="pre-content"/>

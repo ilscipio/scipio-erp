@@ -161,12 +161,10 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.ProductSerialNumber name="serialNumber" value=(findParams.serialNumber!)/>
           <@field type="input" label=uiLabelMap.ProductSoftIdentifier name="softIdentifier" value=(findParams.softIdentifier!)/>
           <@field type="select" label=uiLabelMap.PartyRoleType name="roleTypeId" id="roleTypeId" multiple=true>
-              <#if currentRole?has_content>
-                <@field type="option" value=currentRole.roleTypeId>${currentRole.get("description", locale)}</@field>
-              </#if>
               <@field type="option" value="">${uiLabelMap.CommonAnyRoleType}</@field>
               <#list roleTypes as roleType>
-                <@field type="option" value=roleType.roleTypeId>${roleType.get("description", locale)}</@field>
+                <#assign optSelected = (currentRoleTypeIdList![])?seq_contains(roleType.roleTypeId)>
+                <@field type="option" value=roleType.roleTypeId selected=optSelected>${roleType.get("description", locale)}</@field>
               </#list>
           </@field>  
           <@field type="lookup" label=uiLabelMap.PartyPartyId value=(findParams.partyId!) formName="lookuporder" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>

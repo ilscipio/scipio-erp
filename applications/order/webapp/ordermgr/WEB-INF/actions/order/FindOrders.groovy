@@ -64,6 +64,14 @@ context.goodIdentificationTypes = goodIdentificationTypes;
 // current role type
 currentRoleTypeId = parameters.roleTypeId;
 if (currentRoleTypeId) {
+    // SCIPIO: roleTypeId supports multiple, so get only the first, and have a second list of IDs
+    // Leave the existing fields as they were for compatibility.
+    if (currentRoleTypeId instanceof List) {
+        context.currentRoleTypeIdList = currentRoleTypeId;
+        currentRoleTypeId = currentRoleTypeId[0];
+    } else {
+        context.currentRoleTypeIdList = [currentRoleTypeId];
+    }
     currentRole = from("RoleType").where("roleTypeId", currentRoleTypeId).cache(true).queryOne();
     context.currentRole = currentRole;
 }

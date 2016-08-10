@@ -143,7 +143,7 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.OrderExternalId name="externalId" value=(findParams.externalId!)/>
           <@field type="input" label=uiLabelMap.OrderCustomerPo name="correspondingPoId" value=(findParams.correspondingPoId!)/>
           <@field type="input" label=uiLabelMap.OrderInternalCode name="internalCode" value=(findParams.internalCode!)/>
-          <@field type="input" label=uiLabelMap.ProductProductId name="productId" value=(findParams.productId!)/>
+          <@field type="lookup" label=uiLabelMap.ProductProductId name="productId" value=(findParams.productId!) formName="lookuporder" id="productId" fieldFormName="LookupProduct"/>
           <#if goodIdentificationTypes?has_content>
             <@field type="select" label=uiLabelMap.ProductGoodIdentificationType name="goodIdentificationTypeId">
                 <#if currentGoodIdentificationType?has_content>

@@ -55,19 +55,22 @@ under the License.
                 <!-- A lot of pages still need this -->
                 <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
 
-                <!-- Get the store VisualTheme -->
+                <!-- 2016-08-09: this is not appropriate anymore; see GlobalActions
+                <!- Get the store VisualTheme ->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="FOUNDATION_SHOP" global="false"/>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+                -->
+
                 <entity-and list="webAnalyticsConfigs" entity-name="WebAnalyticsConfig">
                     <field-map field-name="webSiteId"/>
                 </entity-and>
                
-               <!-- Default setup --> 
-               <script location="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy"/>
+                <!-- Default setup --> 
+                <script location="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy"/>
                
-               <!-- Common scripts relevant to any/all screens -->
-               <set field="permChecksSetGlobal" type="Boolean" value="true" />
-               <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonUserChecks.groovy"/>
+                <!-- Common scripts relevant to any/all screens -->
+                <set field="permChecksSetGlobal" type="Boolean" value="true" />
+                <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonUserChecks.groovy"/>
             </actions>
             <widgets>
                 <!-- FIXME?: there is a pattern issue here where fields and resources set by GlobalDecorator are not accessible to us here (notably, including the include-screen calls below);

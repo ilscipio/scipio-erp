@@ -174,12 +174,17 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonExtUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="contentId" from-field="parameters.contentId" default-value="${contentId}"/>
+
+                <!-- SCIPIO: 2016-08-09: this is no longer appropriate as default behavior. the theme should have been already
+                    looked up into rendererVisualThemeResources, which uses more complex lookup logic.
                 <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true"/>
                 <service service-name="getVisualThemeResources">
                     <field-map field-name="visualThemeId"/>
                     <field-map field-name="themeResources" from-field="layoutSettings"/>
                 </service>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+                -->
+                <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
             </actions>
             <widgets>
                 <content content-id="${contentId}"/>

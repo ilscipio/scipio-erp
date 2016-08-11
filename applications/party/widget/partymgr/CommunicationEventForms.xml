@@ -90,7 +90,8 @@ under the License.
         <!-- contact list -->
         <field name="contactListId">
             <lookup size="20" target-form-name="LookupContactList">
-                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="${styles.link_nav} ${styles.action_update}">
+                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="${styles.link_nav} ${styles.action_update}"
+                    description="${uiLabelMap.CommonEdit}" use-when="${not empty context.communicationEvent.contactListId}">
                     <parameter param-name="contactListId" from-field="communicationEvent.contactListId"/>
                 </sub-hyperlink>
             </lookup>

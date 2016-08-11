@@ -2425,7 +2425,7 @@ public class OrderServices {
                 }
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                        "OrderErrorCouldNotChangeOrderStatus",locale) + e.getMessage() + ").");
+                        "OrderErrorCouldNotChangeOrderStatus",locale) + " (" + e.getMessage() + ").");
             }
 
             // update the current status
@@ -2448,7 +2448,7 @@ public class OrderServices {
             //Debug.logInfo("For setOrderStatus orderHeader is " + orderHeader, module);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                    "OrderErrorCouldNotChangeOrderStatus",locale) + e.getMessage() + ").");
+                    "OrderErrorCouldNotChangeOrderStatus",locale) + " (" + e.getMessage() + ").");
         }
 
         // release the inital hold if we are cancelled or approved
@@ -5697,7 +5697,7 @@ public class OrderServices {
 
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                    "OrderErrorCouldNotChangeOrderStatus", locale) + e.getMessage() + ").");
+                    "OrderErrorCouldNotChangeOrderStatus", locale) + " (" + e.getMessage() + ").");
         }
 
         return ServiceUtil.returnSuccess();

@@ -74,7 +74,7 @@ under the License.
                                 <not><if-empty field="contactList"/></not>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditContactList}">
+                                <screenlet><!-- SCIPIO: removed: title="${uiLabelMap.PageTitleEditContactList}" -->
                                     <container style="button-bar">
                                         <link text="${uiLabelMap.MarketingContactListCreate}" target="EditContactList" style="${styles.link_nav} ${styles.action_add}">
                                             <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -268,7 +268,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditContactList}">
+                        <screenlet><!-- SCIPIO: removed: title="${uiLabelMap.PageTitleEditContactList}" -->
                             <include-menu location="component://marketing/widget/ContactListMenus.xml" name="ContactListCommBar"/>
                             <container style="button-bar">
                                 <link text="${uiLabelMap.MarketingContactListCommEventCreate}" target="EditContactListCommEvent" style="${styles.link_nav} ${styles.action_add}">

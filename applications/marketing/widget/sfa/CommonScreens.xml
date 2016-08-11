@@ -237,6 +237,17 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: needed to prevent crash when rendering EditContactList screen -->
+    <screen name="CommonContactListDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <include-screen name="CommonContactListDecorator" location="component://marketing/widget/CommonScreens.xml" />
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="main">
         <section>
             <actions>

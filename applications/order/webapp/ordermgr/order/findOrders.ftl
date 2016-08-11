@@ -143,7 +143,7 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.OrderExternalId name="externalId" value=(findParams.externalId!)/>
           <@field type="input" label=uiLabelMap.OrderCustomerPo name="correspondingPoId" value=(findParams.correspondingPoId!)/>
           <@field type="input" label=uiLabelMap.OrderInternalCode name="internalCode" value=(findParams.internalCode!)/>
-          <@field type="input" label=uiLabelMap.ProductProductId name="productId" value=(findParams.productId!)/>
+          <@field type="lookup" label=uiLabelMap.ProductProductId name="productId" value=(findParams.productId!) formName="lookuporder" id="productId" fieldFormName="LookupProduct"/>
           <#if goodIdentificationTypes?has_content>
             <@field type="select" label=uiLabelMap.ProductGoodIdentificationType name="goodIdentificationTypeId">
                 <#if currentGoodIdentificationType?has_content>
@@ -161,12 +161,10 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.ProductSerialNumber name="serialNumber" value=(findParams.serialNumber!)/>
           <@field type="input" label=uiLabelMap.ProductSoftIdentifier name="softIdentifier" value=(findParams.softIdentifier!)/>
           <@field type="select" label=uiLabelMap.PartyRoleType name="roleTypeId" id="roleTypeId" multiple=true>
-              <#if currentRole?has_content>
-                <@field type="option" value=currentRole.roleTypeId>${currentRole.get("description", locale)}</@field>
-              </#if>
               <@field type="option" value="">${uiLabelMap.CommonAnyRoleType}</@field>
               <#list roleTypes as roleType>
-                <@field type="option" value=roleType.roleTypeId>${roleType.get("description", locale)}</@field>
+                <#assign optSelected = (currentRoleTypeIdList![])?seq_contains(roleType.roleTypeId)>
+                <@field type="option" value=roleType.roleTypeId selected=optSelected>${roleType.get("description", locale)}</@field>
               </#list>
           </@field>  
           <@field type="lookup" label=uiLabelMap.PartyPartyId value=(findParams.partyId!) formName="lookuporder" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
@@ -273,17 +271,23 @@ function submitFindForm(val){
               <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!(findParams.countryGeoId??)}/>
           </@field>
           <@field type="select" name="includeCountry" label=uiLabelMap.OrderIncludeCountry>
-              <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
               <#if findParams.includeCountry?has_content>
                  <#assign includeCountry = findParams.includeCountry>
-                 <@field type="option" value=includeCountry><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></@field>
+                 <@field type="option" value=includeCountry selected=true><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></@field>
                  <@field type="option" value=includeCountry>---</@field>
               </#if>
+              <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
               <@field type="option" value="Y">${uiLabelMap.OrderOnlyInclude}</@field>
               <@field type="option" value="N">${uiLabelMap.OrderDoNotInclude}</@field>
           </@field>
           <@field type="select" label=uiLabelMap.AccountingPaymentStatus name="paymentStatusId">
-              <@field type="option" value="">${uiLabelMap.CommonAll}</@field>
+              <#if findParams.paymentStatusId?has_content>
+                  <#assign paymentStatusId = findParams.paymentStatusId>
+                  <#assign currentPaymentStatus = delegator.findOne("StatusItem", {"statusId":paymentStatusId}, true)>
+                  <@field type="option" value=paymentStatusId selected=true>${currentPaymentStatus.get("description", locale)}</@field>
+                  <@field type="option" value=paymentStatusId>---</@field>
+              </#if>
+              <@field type="option" value="" selected=(!findParams.paymentStatusId?has_content)>${uiLabelMap.CommonAll}</@field>
               <#list paymentStatusList as paymentStatus>
                   <@field type="option" value=paymentStatus.statusId>${paymentStatus.get("description", locale)}</@field>
               </#list>

@@ -2739,6 +2739,7 @@ NOTE: The globals specified by this function currently do not survive screen ren
   <#if args.submitError??>
     <#global scpAutoValSubError = args.submitError>
   </#if>
+  <#return "">
 </#function>
 
 <#--

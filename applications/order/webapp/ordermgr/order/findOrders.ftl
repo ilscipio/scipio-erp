@@ -271,17 +271,23 @@ function submitFindForm(val){
               <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!(findParams.countryGeoId??)}/>
           </@field>
           <@field type="select" name="includeCountry" label=uiLabelMap.OrderIncludeCountry>
-              <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
               <#if findParams.includeCountry?has_content>
                  <#assign includeCountry = findParams.includeCountry>
-                 <@field type="option" value=includeCountry><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></@field>
+                 <@field type="option" value=includeCountry selected=true><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></@field>
                  <@field type="option" value=includeCountry>---</@field>
               </#if>
+              <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
               <@field type="option" value="Y">${uiLabelMap.OrderOnlyInclude}</@field>
               <@field type="option" value="N">${uiLabelMap.OrderDoNotInclude}</@field>
           </@field>
           <@field type="select" label=uiLabelMap.AccountingPaymentStatus name="paymentStatusId">
-              <@field type="option" value="">${uiLabelMap.CommonAll}</@field>
+              <#if findParams.paymentStatusId?has_content>
+                  <#assign paymentStatusId = findParams.paymentStatusId>
+                  <#assign currentPaymentStatus = delegator.findOne("StatusItem", {"statusId":paymentStatusId}, true)>
+                  <@field type="option" value=paymentStatusId selected=true>${currentPaymentStatus.get("description", locale)}</@field>
+                  <@field type="option" value=paymentStatusId>---</@field>
+              </#if>
+              <@field type="option" value="" selected=(!findParams.paymentStatusId?has_content)>${uiLabelMap.CommonAll}</@field>
               <#list paymentStatusList as paymentStatus>
                   <@field type="option" value=paymentStatus.statusId>${paymentStatus.get("description", locale)}</@field>
               </#list>

@@ -1268,7 +1268,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                 WARN: FIXME?: Currently this is same as input-button: {{{<input type="button" ... />}}}
                                   This could change to {{{<button...>...</button>}}} without notice...
                               * {{{image}}}: {{{<input type="image" src="..." .../>}}}
-    text                    = Display text
+    text                    = ((string), default: -from global styles-) Display text, for text-link and button submits
+                              If omitted, a default "Submit" text is used from global styles.
+                              NOTE: Reserved values: If set to empty space " " or "_NO_BTN_MARKUP_", 
+                                  button markup is not rendered (shows progress only) (the empty space is from a stock form widget convention).
                               NOTE: {{{value}}} arg is also accepted instead of {{{text}}}.
     href                    = href for submitType "link"  
                               NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 

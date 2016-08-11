@@ -1084,6 +1084,51 @@
 </@section>
 
 <#if debugMode>
+<a name="AutoValueFormFields"></a>
+<@section title="Auto-Value Form Fields">
+  <#assign autoformAction><@ofbizUrl>WebtoolsLayoutDemo<#if debugMode>?debugMode=true</#if></@ofbizUrl></#assign>
+  <#macro simulateErrorField>
+    <#-- NOTE: this field is for demo usage only, bypasses auto-value -->
+    <@field type="checkbox" autoValue=false name="simulateError" label="Simulate Error" value="Y" checked=((parameters.simulateError!"") == "Y") />
+  </#macro>
+
+  <a name="AutoValueForm1"></a>
+  <@section title="Default (params-or-record), with record 1">
+    <p>On success, this form forgets what you just submitted. If Simulate Error is checked, 
+        it should retain your parameters.</p>
+    <form name="autoform1" method="post" action="${autoformAction}#AutoValueForm1">
+      <#assign record = {
+        "input1":353,
+        "input2":"record value 2",
+        "input3":"record value 3",
+        "input5":"record value 5 (you should never see this)"
+      }>
+      <#assign defaults = {
+        "input3":"default value 3 (you should never see this)",
+        "input4":"default value 4"
+      }>
+      <#assign overrides = {
+        "input5":"override value 5 (will always override what you entered)"
+      }>
+      <#assign autoValueArgs = {"record":record, "defaults":defaults, "overrides":overrides}>
+      <#if (parameters.simulateError!"") == "Y">
+        <#assign autoValueArgs = autoValueArgs + {"submitError":true}>
+      </#if>
+      <@fields autoValue=autoValueArgs>
+        <@simulateErrorField />
+        <@field type="input" name="input1" label="Input 1" />
+        <@field type="input" name="input2" label="Input 2" />
+        <@field type="input" name="input3" label="Input 3" />
+        <@field type="input" name="input4" label="Input 4 (with default/fallback)" />
+        <@field type="input" name="input5" label="Input 5 (forced override, always)" />
+        <@field type="submit" />
+      </@fields>
+    </form>
+  </@section>
+</@section>
+</#if>
+
+<#if debugMode>
 <@section title="Class arguments test">
   <#macro myClassTest class="">
     <#local origClass = class>

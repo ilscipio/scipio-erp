@@ -86,22 +86,31 @@ function submitFindForm(val){
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
 <#if parameters.hideFields?has_content>
 <form name="lookupandhidefields${findParams.hideFields!"Y"}" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
-<#assign prevQueryInputParams>
-  <#if (parameters.hideFields!"N")=='Y'>
-    <input type="hidden" name="hideFields" value="N"/>
-  <#else>
-    <input type="hidden" name="hideFields" value="Y"/>
-  </#if>
-  <input type="hidden" name="showAll" value="${showAll!}"/>
-  <input type="hidden" name="viewSize" value="${viewSize}"/>
-  <input type="hidden" name="viewIndex" value="${viewIndex}"/>
-  
+
+<#-- SCIPIO: new flag -->
+<input type="hidden" name="doFindQuery" value="Y" />
+
+<#assign prevQueryInputParamsCore>
   <#if paramIdList?has_content>
     <#list paramIdList as paramIds>
       <#assign paramId = paramIds.split("=")/>
       <input type="hidden" name="${paramId[0]}" value="${paramId[1]}"/>
     </#list>
   </#if>
+</#assign>
+<#assign prevQueryInputParamsWithView>
+  <input type="hidden" name="showAll" value="${showAll!}"/>
+  <input type="hidden" name="viewSize" value="${viewSize}"/>
+  <input type="hidden" name="viewIndex" value="${viewIndex}"/>
+  ${prevQueryInputParamsCore}
+</#assign>
+<#assign prevQueryInputParams>
+  <#if (parameters.hideFields!"N")=='Y'>
+    <input type="hidden" name="hideFields" value="N"/>
+  <#else>
+    <input type="hidden" name="hideFields" value="Y"/>
+  </#if>
+  ${prevQueryInputParamsWithView}
 </#assign>
   ${prevQueryInputParams}
 </form>
@@ -112,6 +121,9 @@ function submitFindForm(val){
 <input type="hidden" name="hideFields" value="Y"/>
 <input type="hidden" name="viewSize" value="${viewSize}"/>
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
+
+<#-- SCIPIO: new flag -->
+<input type="hidden" name="doFindQuery" value="Y" />
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
@@ -320,7 +332,7 @@ document.lookuporder.orderId.focus();
   <#-- note: added this check here for simplicity but haven't removed old code inside; no harm, maybe reuse-->
   <#if orderList?has_content>
   
-    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N"}, "&amp;", false)>
+    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N", "doFindQuery": "Y"}, "&amp;", false)>
     <#-- forcePost required because search done from service event with https="true" -->
     <@paginate mode="content" url=makeOfbizUrl("searchorders") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!1 listSize=orderListSize!0 altParam=true forcePost=true viewIndexFirst=1>
    
@@ -328,6 +340,9 @@ document.lookuporder.orderId.focus();
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>
         <#-- SCIPIO: new flag -->
         <input type="hidden" name="massOrderChangeSubmitted" value="Y" />
+        
+        <#-- SCIPIO: new flag -->
+        <input type="hidden" name="doFindQuery" value="Y" />
         
       <#-- SCIPIO: WARN: here we make sure to pass the params through ?html and ?js_string
           In order to do this we must UNDO the ofbiz manual and screen encoding and then reencode. -->
@@ -339,12 +354,16 @@ document.lookuporder.orderId.focus();
       <#--
       <#assign massParamList = "hideFields=" + rawString(findParams.hideFields!"N")>
       -->
+
+      <#-- 2016-08-11: these are now included in form as POST
       <#assign massParamList = "hideFields=" + "N">
       <#if paramList?has_content>
         <#assign massParamList = massParamList + "&" + rawString(paramList)?replace("&amp;","&")>
       </#if>
+      -->
+      <#assign massParamList = "">
       <#assign massParamListJsHtml = massParamList?js_string?html>
-        
+
         <#--
         <select name="serviceName" onchange="javascript:setServiceName(this);">
            <option value="javascript:void(0);">&nbsp;</option>
@@ -508,7 +527,7 @@ document.lookuporder.orderId.focus();
       
       <#-- SCIPIO: add missing saving of prev query params -->
       ${prevQueryInputParams}
-      <input type="hidden" name="showAll" value="Y"/>
+      <#--<input type="hidden" name="showAll" value="Y"/>-->
     </form>
     
     </@paginate>

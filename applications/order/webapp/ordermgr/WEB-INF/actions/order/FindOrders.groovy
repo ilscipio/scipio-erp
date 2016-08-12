@@ -214,3 +214,9 @@ if ("Y" == parameters.massOrderChangeSubmitted && !Boolean.TRUE.equals(context.i
     }
 }
 
+// SCIPIO: if there was a find query error or any kind, never hide fields
+if (context.isFindQueryError == Boolean.TRUE) {
+    parameters.hideFields = "N";
+}
+
+

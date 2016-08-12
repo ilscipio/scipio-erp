@@ -67,6 +67,12 @@ public class OrderLookupServices {
         Delegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
 
+        // SCIPIO: flag prevents returning Error, returns Fail instead
+        Boolean errorAsFailure = (Boolean) context.get("errorAsFailure");
+        if (errorAsFailure == null) {
+            errorAsFailure = Boolean.FALSE;
+        }
+        
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Integer viewIndex = (Integer) context.get("viewIndex");
         Integer viewSize = (Integer) context.get("viewSize");
@@ -644,7 +650,12 @@ public class OrderLookupServices {
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(e.getMessage());
+                // SCIPIO: error as fail
+                if (errorAsFailure) {
+                    return ServiceUtil.returnFailure(e.getMessage());
+                } else {
+                    return ServiceUtil.returnError(e.getMessage());
+                }
             } finally {
                 if (eli != null) {
                     try {
@@ -686,6 +697,13 @@ public class OrderLookupServices {
      * SCIPIO: stock findOrders service.
      */
     public static Map<String, Object> findOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
+        return findOrders(dctx, context, false);
+    }
+    
+    /**
+     * SCIPIO: stock findOrders service with additions for internal calls.
+     */
+    public static Map<String, Object> findOrdersInternal(DispatchContext dctx, Map<String, ? extends Object> context) {
         return findOrders(dctx, context, false);
     }
 

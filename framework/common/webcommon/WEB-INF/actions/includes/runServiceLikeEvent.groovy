@@ -244,10 +244,10 @@ if (doExec) {
             eventMessageList.addAll(servMsgs._EVENT_MESSAGE_LIST_);
         }
         if (servMsgs._ERROR_MESSAGE_) {
-            eventMessageList.add(servMsgs._ERROR_MESSAGE_);
+            errorMessageList.add(servMsgs._ERROR_MESSAGE_);
         }
         if (servMsgs._ERROR_MESSAGE_LIST_) {
-            eventMessageList.addAll(servMsgs._ERROR_MESSAGE_LIST_);
+            errorMessageList.addAll(servMsgs._ERROR_MESSAGE_LIST_);
         }
         
         rsleRes.isServiceFailure = ServiceUtil.isFailure(servRes);

@@ -3,6 +3,7 @@
 
 # explicit EOL handling 
 # SCIPIO: based on combination of apache, ofbiz and other project svn auto-props
+*.ai binary
 *.apt text
 *.as text
 *.bat text eol=crlf
@@ -25,6 +26,7 @@
 *.dsw text eol=crlf
 *.editorconfig text
 *.eot binary
+*.eps binary
 *.erb text
 *.exe binary
 *.ftl text
@@ -73,6 +75,7 @@
 *.npmignore text
 *.nroff text
 *.nuspec text
+*.otf binary
 *.patch text
 *.php5 text
 *.php text
@@ -117,6 +120,7 @@
 *.txt text
 *.utf binary
 *.woff binary
+*.woff2 binary
 *.wsdl text
 *.xcf binary
 *.xml text

@@ -73,6 +73,7 @@
 *.MF text
 *.mid binary
 *.mif binary
+*.mp3 binary
 *.module text
 *.ms text
 *.m text

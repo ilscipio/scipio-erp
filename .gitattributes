@@ -61,6 +61,7 @@
 *.less text
 *.log text
 *.log text
+*.map text
 *.markdown text
 *.mdo text
 *.md text

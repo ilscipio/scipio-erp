@@ -83,6 +83,7 @@
 *.nuspec text
 *.otf binary
 *.patch text
+*.pdf binary
 *.php5 text
 *.php text
 *.pl text

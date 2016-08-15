@@ -21,6 +21,8 @@
 *.c text
 *.csv text
 *.dbf binary
+*.doc binary
+*.docx binary
 *.dot binary
 *.dsld text
 *.dsp text eol=crlf

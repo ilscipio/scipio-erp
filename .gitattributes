@@ -21,6 +21,7 @@
 *.c text
 *.csv text
 *.dbf binary
+*.dot binary
 *.dsld text
 *.dsp text eol=crlf
 *.dsw text eol=crlf
@@ -106,6 +107,7 @@
 *.sld text
 *.sql text
 *.svg binary
+*.svg.1 binary
 *.swc binary
 *.sxc binary
 *.sxi binary
@@ -178,3 +180,4 @@ Gemfile.lock text
 .bowerrc text
 .fontcustom-data text
 .versions text
+CONTRIBUTING text

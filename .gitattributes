@@ -25,6 +25,7 @@
 *.dsld text
 *.dsp text eol=crlf
 *.dsw text eol=crlf
+*.dtd text
 *.editorconfig text
 *.eot binary
 *.eps binary

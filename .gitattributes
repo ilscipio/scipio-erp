@@ -114,6 +114,7 @@
 *.svg binary
 *.svg.1 binary
 *.swc binary
+*.swf binary
 *.sxc binary
 *.sxi binary
 *.sxw binary

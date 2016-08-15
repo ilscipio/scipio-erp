@@ -20,6 +20,7 @@
 *.c text
 *.csv text
 *.dbf binary
+*.dsld text
 *.dsp text eol=crlf
 *.dsw text eol=crlf
 *.editorconfig text
@@ -27,6 +28,7 @@
 *.erb text
 *.exe binary
 *.ftl text
+*.gdsl text
 *.gif binary
 *.gml text
 *.groovy text
@@ -110,6 +112,7 @@
 *.tif binary
 *.tld text
 *.tpl text
+*.ts text
 *.ttf binary
 *.txt text
 *.utf binary
@@ -162,6 +165,9 @@ rc.ofbiz* text eol=lf
 Readme text
 ReadMe text
 README* text
+readme text
 UPGRADING text
 Gemfile text
 Gemfile.lock text
+.bowerrc text
+.fontcustom-data text

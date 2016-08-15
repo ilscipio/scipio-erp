@@ -117,6 +117,7 @@
 *.tld text
 *.tpl text
 *.ts text
+*.tsv text
 *.ttf binary
 *.txt text
 *.utf binary
@@ -176,3 +177,4 @@ Gemfile text
 Gemfile.lock text
 .bowerrc text
 .fontcustom-data text
+.versions text

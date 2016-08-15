@@ -52,6 +52,7 @@
 *.jsp text
 *.js text
 *.jsx text
+*.jshintrc text
 *.ldif text
 *.less text
 *.log text
@@ -69,6 +70,7 @@
 *.mxml text
 *.npmignore text
 *.nroff text
+*.nuspec text
 *.patch text
 *.php5 text
 *.php text
@@ -78,6 +80,7 @@
 *.project text
 *.properties text
 *.pro text
+*.ps1 text
 *.pyc binary
 *.py text
 *.rake text
@@ -141,6 +144,11 @@ Install text
 INSTALL text
 .jshintignore text
 .jshintrc text
+.jscsrc text
+.csslintrc text
+.eslintignore text
+.eslintrc text
+.mailmap text
 KEYS text
 Licence text
 LICENCE text
@@ -155,3 +163,5 @@ Readme text
 ReadMe text
 README* text
 UPGRADING text
+Gemfile text
+Gemfile.lock text

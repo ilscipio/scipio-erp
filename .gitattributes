@@ -181,3 +181,6 @@ Gemfile.lock text
 .fontcustom-data text
 .versions text
 CONTRIBUTING text
+vl2png text
+vl2svg text
+vl2vg text

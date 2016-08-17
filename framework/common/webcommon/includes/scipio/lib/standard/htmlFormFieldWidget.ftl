@@ -1234,12 +1234,14 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderSubmitField form widget macro 
   * Parameters*
-    buttonType    = (text-link|image|button, default: button) Logical button type (based on ofbiz form widget types)
-    inputType     = the low-level <input> type attrib (within/depends on buttonType) -->
+    buttonType      = (text-link|image|button, default: button) Logical button type (based on ofbiz form widget types)
+    inputType       = The low-level <input> type attrib (within/depends on buttonType) 
+    noButtonMarkup  = ((boolean)) Show progress only if true
+                      Also, can be turned on by passing " " or "_NO_BTN_MARKUP_" for text. -->
 <#assign field_submit_widget_defaultArgs = {
   "buttonType":"", "class":"", "alert":"", "formName":"", "name":"", "events":{}, "imgSrc":"", "confirmation":"", 
   "containerId":"", "ajaxUrl":"", "text":"", "description":"", "fieldTitleBlank":false, "showProgress":"", "href":"", "inputType":"", 
-  "disabled":false, "progressArgs":{}, "progressOptions":{}, "id":"", "inlineLabel":false, "style":"", "passArgs":{}
+  "disabled":false, "progressArgs":{}, "progressOptions":{}, "id":"", "inlineLabel":false, "style":"", "noButtonMarkup":"", "passArgs":{}
 }>
 <#macro field_submit_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_submit_widget_defaultArgs)>
@@ -1257,17 +1259,29 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#else>
     <#local progressArgs = {}>
   </#if>
+  <#-- Scipio: to omit button (show progress only), we use space-only title hack " " similar to what ofbiz does with hyperlinks with no label.
+    also support the string _NO_BTN_MARKUP_ for clarity -->
+  <#if text == " " || text == "_NO_BTN_MARKUP_">
+    <#local text = "">
+    <#if !noButtonMarkup?is_boolean>
+      <#local noButtonMarkup = true>
+    </#if>
+  <#else>
+    <#if !noButtonMarkup?is_boolean>
+      <#local noButtonMarkup = false>
+    </#if>
+  </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events imgSrc=imgSrc confirmation=confirmation 
     containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType 
-    disabled=disabled progressArgs=progressArgs id=id inlineLabel=inlineLabel style=style origArgs=origArgs passArgs=passArgs><#nested></@field_submit_markup_widget>
+    disabled=disabled progressArgs=progressArgs id=id inlineLabel=inlineLabel style=style noButtonMarkup=noButtonMarkup origArgs=origArgs passArgs=passArgs><#nested></@field_submit_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" events={} imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false 
-    progressArgs={} id="" inlineLabel=false style="" origArgs={} passArgs={} catchArgs...>
-  <#-- Scipio: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
-  <#if (buttonType == "text-link" || buttonType != "image") && !(text?trim?has_content)>
+    progressArgs={} id="" inlineLabel=false style="" noButtonMarkup=false origArgs={} passArgs={} catchArgs...>
+
+  <#if noButtonMarkup>
     <#local buttonMarkup = "">
   <#else>
     <#local buttonMarkup>
@@ -1280,6 +1294,9 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#-- FIXME: this static method of disabling links means the link loses information and not easily toggleable -->
         <#if disabled>
           <#local href = "javascript:void(0)">
+        </#if>
+        <#if !text?has_content><#-- NOTE: don't use trim here! -->  
+          <#local text = getTextLabelFromExpr(styles.field_submit_default_text!"")>
         </#if>
         <a<@fieldClassAttribStr class=class alert=alert /> <#rt>
           href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:document.${escapeFullUrl(formName, 'js-html')}.submit()<#else>javascript:void(0)</#if>"<#t/>
@@ -1300,6 +1317,9 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
             Currently, unsure how should have this default semantic, so play it safe. -->
         <#if styles.action_prefix?has_content && !containsStyleNamePrefix(class, styles.action_prefix)>
           <#local class = addClassArgDefault(class, styles.link_run_sys!)>
+        </#if>
+        <#if !text?has_content><#-- NOTE: don't use trim here! -->  
+          <#local text = getTextLabelFromExpr(styles.field_submit_default_text!"")>
         </#if>
         <#-- TODO?: here there is no case to generate <button> (instead of <input type="button">) in case template needs... -->
         <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#rt>

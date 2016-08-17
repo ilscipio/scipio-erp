@@ -230,6 +230,10 @@ under the License.
       <field name="visualThemeSelectorScript" type="long-varchar">
         <description>Scipio: Location of a script tasked with selecting a visual theme at every new render</description>
       </field>
+      <field name="visualThemeId" type="id">
+        <description>Scipio: Specific visual theme ID override; may be used to override the product store 
+            visualThemeId when set (and WebSite is available)</description>
+      </field>
       <prim-key field="webSiteId"/>
       <relation type="one" fk-name="WEB_SITE_THEME_SET" rel-entity-name="VisualThemeSet">
         <key-map field-name="visualThemeSetId"/>

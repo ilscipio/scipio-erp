@@ -58,7 +58,7 @@ under the License.
     <Enumeration enumId="VT_PRIO_JAVASCRIPT" description="Priority JavaScript File URL, included before screen javaScripts (but no guarantee of absolute position)" enumTypeId="VT_RES_TYPE" sequenceId="71"/>
     <Enumeration enumId="VT_FTPR_JAVASCRIPT" description="Priority footer JavaScript File URL, included in footer before footer screen javascripts" enumTypeId="VT_RES_TYPE" sequenceId="72"/>
     <Enumeration enumId="VT_BTM_JAVASCRIPT" description="Bottom-Priority JavaScript File URL, included after all others always at bottom of document" enumTypeId="VT_RES_TYPE" sequenceId="73"/>
-    
+    <Enumeration enumId="VT_ID" description="Visual theme ID" enumTypeId="VT_RES_TYPE" sequenceId="80"/><!-- getVisualThemeResources automatically determines this from visualThemeId if it's not set -->
     
     <VisualThemeSet visualThemeSetId="BACKOFFICE" description="Themes to be used for backoffice applications"/>
     <VisualThemeSet visualThemeSetId="ECOMMERCE"  description="Themes to be used for ECommerce applications"/>

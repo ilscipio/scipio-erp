@@ -67,6 +67,12 @@ public class OrderLookupServices {
         Delegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
 
+        // SCIPIO: flag prevents returning Error, returns Fail instead
+        Boolean errorAsFailure = (Boolean) context.get("errorAsFailure");
+        if (errorAsFailure == null) {
+            errorAsFailure = Boolean.FALSE;
+        }
+        
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Integer viewIndex = (Integer) context.get("viewIndex");
         Integer viewSize = (Integer) context.get("viewSize");
@@ -253,6 +259,9 @@ public class OrderLookupServices {
         String partyId = (String) context.get("partyId");
         List<String> roleTypeList = UtilGenerics.checkList(context.get("roleTypeId"));
 
+        // SCIPIO: must track where partyId came from
+        boolean partyIdFromUserLogin = false;
+        
         if (UtilValidate.isNotEmpty(userLoginId) && UtilValidate.isEmpty(partyId)) {
             GenericValue ul = null;
             try {
@@ -262,6 +271,7 @@ public class OrderLookupServices {
             }
             if (ul != null) {
                 partyId = ul.getString("partyId");
+                partyIdFromUserLogin = true;
             }
         }
 
@@ -323,9 +333,17 @@ public class OrderLookupServices {
         }
 
         if (UtilValidate.isNotEmpty(partyId)) {
-            paramList.add("partyId=" + partyId);
+            // SCIPIO: only append the partyId to paramList if it didn't come from userLoginId
+            if (!partyIdFromUserLogin) {
+                paramList.add("partyId=" + partyId);
+            }
             fieldsToSelect.add("partyId");
             conditions.add(makeExpr("partyId", partyId));
+        }
+        
+        // SCIPIO: append userLoginId to paramList
+        if (UtilValidate.isNotEmpty(userLoginId)) {
+            paramList.add("userLoginId=" + userLoginId);
         }
 
         if (roleTypeList != null) {
@@ -632,7 +650,12 @@ public class OrderLookupServices {
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(e.getMessage());
+                // SCIPIO: error as fail
+                if (errorAsFailure) {
+                    return ServiceUtil.returnFailure(e.getMessage());
+                } else {
+                    return ServiceUtil.returnError(e.getMessage());
+                }
             } finally {
                 if (eli != null) {
                     try {
@@ -674,6 +697,13 @@ public class OrderLookupServices {
      * SCIPIO: stock findOrders service.
      */
     public static Map<String, Object> findOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
+        return findOrders(dctx, context, false);
+    }
+    
+    /**
+     * SCIPIO: stock findOrders service with additions for internal calls.
+     */
+    public static Map<String, Object> findOrdersInternal(DispatchContext dctx, Map<String, ? extends Object> context) {
         return findOrders(dctx, context, false);
     }
 

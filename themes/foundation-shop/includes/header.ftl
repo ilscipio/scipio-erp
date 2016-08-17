@@ -244,24 +244,32 @@ under the License.
 <div class="off-canvas-wrap" data-offcanvas id="body-content">
 <div class="inner-wrap">
 
+  <#assign showHeadActn = (showHeaderActions!true) == true && (useMinimalTheme!false) == false>
+
     <!-- Off Canvas Menu -->
+  <#if showHeadActn>
     <aside class="right-off-canvas-menu">
         <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
             <@rightMenu/>
         </ul>
     </aside>
+  </#if>
     
     <nav class="tab-bar show-for-small">
+      <#if showHeadActn>
         <section class="left-small">
             <@render resource="component://shop/widget/CartScreens.xml#microcart" />
         </section>
+      </#if>
         <section class="middle tab-bar-section">
             <h1><@logoMenu isSmall=true/></h1>
         </section>
+      <#if showHeadActn>
         <section class="right-small">
             <a class="right-off-canvas-toggle menu-icon"><span></span></a>
         </section>
+      </#if>
     </nav>
     
     <div class="sticky">   
@@ -272,8 +280,8 @@ under the License.
           </li>
       </ul>
     
-    
       <section class="top-bar-section">
+      <#if showHeadActn>
         <!-- Right Nav Section -->
         <ul class="right">
           <li class="has-form">
@@ -296,5 +304,7 @@ under the License.
           </li>
           --> 
         </ul>
+      </#if>
       </section>
+    
       

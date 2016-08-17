@@ -521,6 +521,7 @@ under the License.
         <attribute name="visualThemeId" type="String" mode="IN" optional="true"/>
         <attribute name="themeResources" type="Map" mode="IN" optional="true"/>
         <attribute name="themeResources" type="Map" mode="OUT" optional="false"/>
+        <attribute name="visualThemeId" type="String" mode="OUT" optional="false"/><!-- SCIPIO: also return visualThemeId -->
     </service>
 
     <service name="createVisualTheme" default-entity-name="VisualTheme" engine="entity-auto" invoke="create" auth="true">

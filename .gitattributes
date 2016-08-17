@@ -3,6 +3,7 @@
 
 # explicit EOL handling 
 # SCIPIO: based on combination of apache, ofbiz and other project svn auto-props
+*.ai binary
 *.apt text
 *.as text
 *.bat text eol=crlf
@@ -20,13 +21,20 @@
 *.c text
 *.csv text
 *.dbf binary
+*.doc binary
+*.docx binary
+*.dot binary
+*.dsld text
 *.dsp text eol=crlf
 *.dsw text eol=crlf
+*.dtd text
 *.editorconfig text
 *.eot binary
+*.eps binary
 *.erb text
 *.exe binary
 *.ftl text
+*.gdsl text
 *.gif binary
 *.gml text
 *.groovy text
@@ -52,10 +60,12 @@
 *.jsp text
 *.js text
 *.jsx text
+*.jshintrc text
 *.ldif text
 *.less text
 *.log text
 *.log text
+*.map text
 *.markdown text
 *.mdo text
 *.md text
@@ -63,13 +73,17 @@
 *.MF text
 *.mid binary
 *.mif binary
+*.mp3 binary
 *.module text
 *.ms text
 *.m text
 *.mxml text
 *.npmignore text
 *.nroff text
+*.nuspec text
+*.otf binary
 *.patch text
+*.pdf binary
 *.php5 text
 *.php text
 *.pl text
@@ -78,6 +92,7 @@
 *.project text
 *.properties text
 *.pro text
+*.ps1 text
 *.pyc binary
 *.py text
 *.rake text
@@ -97,7 +112,9 @@
 *.sld text
 *.sql text
 *.svg binary
+*.svg.1 binary
 *.swc binary
+*.swf binary
 *.sxc binary
 *.sxi binary
 *.sxw binary
@@ -107,10 +124,13 @@
 *.tif binary
 *.tld text
 *.tpl text
+*.ts text
+*.tsv text
 *.ttf binary
 *.txt text
 *.utf binary
 *.woff binary
+*.woff2 binary
 *.wsdl text
 *.xcf binary
 *.xml text
@@ -141,6 +161,11 @@ Install text
 INSTALL text
 .jshintignore text
 .jshintrc text
+.jscsrc text
+.csslintrc text
+.eslintignore text
+.eslintrc text
+.mailmap text
 KEYS text
 Licence text
 LICENCE text
@@ -154,4 +179,14 @@ rc.ofbiz* text eol=lf
 Readme text
 ReadMe text
 README* text
+readme text
 UPGRADING text
+Gemfile text
+Gemfile.lock text
+.bowerrc text
+.fontcustom-data text
+.versions text
+CONTRIBUTING text
+vl2png text
+vl2svg text
+vl2vg text

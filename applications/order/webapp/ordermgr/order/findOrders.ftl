@@ -86,22 +86,31 @@ function submitFindForm(val){
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
 <#if parameters.hideFields?has_content>
 <form name="lookupandhidefields${findParams.hideFields!"Y"}" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
-<#assign prevQueryInputParams>
-  <#if (parameters.hideFields!"N")=='Y'>
-    <input type="hidden" name="hideFields" value="N"/>
-  <#else>
-    <input type="hidden" name="hideFields" value="Y"/>
-  </#if>
-  <input type="hidden" name="showAll" value="${showAll!}"/>
-  <input type="hidden" name="viewSize" value="${viewSize}"/>
-  <input type="hidden" name="viewIndex" value="${viewIndex}"/>
-  
+
+<#-- SCIPIO: new flag -->
+<input type="hidden" name="doFindQuery" value="Y" />
+
+<#assign prevQueryInputParamsCore>
   <#if paramIdList?has_content>
     <#list paramIdList as paramIds>
       <#assign paramId = paramIds.split("=")/>
       <input type="hidden" name="${paramId[0]}" value="${paramId[1]}"/>
     </#list>
   </#if>
+</#assign>
+<#assign prevQueryInputParamsWithView>
+  <input type="hidden" name="showAll" value="${showAll!}"/>
+  <input type="hidden" name="viewSize" value="${viewSize}"/>
+  <input type="hidden" name="viewIndex" value="${viewIndex}"/>
+  ${prevQueryInputParamsCore}
+</#assign>
+<#assign prevQueryInputParams>
+  <#if (parameters.hideFields!"N")=='Y'>
+    <input type="hidden" name="hideFields" value="N"/>
+  <#else>
+    <input type="hidden" name="hideFields" value="Y"/>
+  </#if>
+  ${prevQueryInputParamsWithView}
 </#assign>
   ${prevQueryInputParams}
 </form>
@@ -112,6 +121,9 @@ function submitFindForm(val){
 <input type="hidden" name="hideFields" value="Y"/>
 <input type="hidden" name="viewSize" value="${viewSize}"/>
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
+
+<#-- SCIPIO: new flag -->
+<input type="hidden" name="doFindQuery" value="Y" />
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
@@ -143,7 +155,7 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.OrderExternalId name="externalId" value=(findParams.externalId!)/>
           <@field type="input" label=uiLabelMap.OrderCustomerPo name="correspondingPoId" value=(findParams.correspondingPoId!)/>
           <@field type="input" label=uiLabelMap.OrderInternalCode name="internalCode" value=(findParams.internalCode!)/>
-          <@field type="input" label=uiLabelMap.ProductProductId name="productId" value=(findParams.productId!)/>
+          <@field type="lookup" label=uiLabelMap.ProductProductId name="productId" value=(findParams.productId!) formName="lookuporder" id="productId" fieldFormName="LookupProduct"/>
           <#if goodIdentificationTypes?has_content>
             <@field type="select" label=uiLabelMap.ProductGoodIdentificationType name="goodIdentificationTypeId">
                 <#if currentGoodIdentificationType?has_content>
@@ -161,12 +173,10 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.ProductSerialNumber name="serialNumber" value=(findParams.serialNumber!)/>
           <@field type="input" label=uiLabelMap.ProductSoftIdentifier name="softIdentifier" value=(findParams.softIdentifier!)/>
           <@field type="select" label=uiLabelMap.PartyRoleType name="roleTypeId" id="roleTypeId" multiple=true>
-              <#if currentRole?has_content>
-                <@field type="option" value=currentRole.roleTypeId>${currentRole.get("description", locale)}</@field>
-              </#if>
               <@field type="option" value="">${uiLabelMap.CommonAnyRoleType}</@field>
               <#list roleTypes as roleType>
-                <@field type="option" value=roleType.roleTypeId>${roleType.get("description", locale)}</@field>
+                <#assign optSelected = (currentRoleTypeIdList![])?seq_contains(roleType.roleTypeId)>
+                <@field type="option" value=roleType.roleTypeId selected=optSelected>${roleType.get("description", locale)}</@field>
               </#list>
           </@field>  
           <@field type="lookup" label=uiLabelMap.PartyPartyId value=(findParams.partyId!) formName="lookuporder" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
@@ -273,17 +283,23 @@ function submitFindForm(val){
               <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!(findParams.countryGeoId??)}/>
           </@field>
           <@field type="select" name="includeCountry" label=uiLabelMap.OrderIncludeCountry>
-              <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
               <#if findParams.includeCountry?has_content>
                  <#assign includeCountry = findParams.includeCountry>
-                 <@field type="option" value=includeCountry><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></@field>
+                 <@field type="option" value=includeCountry selected=true><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></@field>
                  <@field type="option" value=includeCountry>---</@field>
               </#if>
+              <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
               <@field type="option" value="Y">${uiLabelMap.OrderOnlyInclude}</@field>
               <@field type="option" value="N">${uiLabelMap.OrderDoNotInclude}</@field>
           </@field>
           <@field type="select" label=uiLabelMap.AccountingPaymentStatus name="paymentStatusId">
-              <@field type="option" value="">${uiLabelMap.CommonAll}</@field>
+              <#if findParams.paymentStatusId?has_content>
+                  <#assign paymentStatusId = findParams.paymentStatusId>
+                  <#assign currentPaymentStatus = delegator.findOne("StatusItem", {"statusId":paymentStatusId}, true)>
+                  <@field type="option" value=paymentStatusId selected=true>${currentPaymentStatus.get("description", locale)}</@field>
+                  <@field type="option" value=paymentStatusId>---</@field>
+              </#if>
+              <@field type="option" value="" selected=(!findParams.paymentStatusId?has_content)>${uiLabelMap.CommonAll}</@field>
               <#list paymentStatusList as paymentStatus>
                   <@field type="option" value=paymentStatus.statusId>${paymentStatus.get("description", locale)}</@field>
               </#list>
@@ -316,7 +332,7 @@ document.lookuporder.orderId.focus();
   <#-- note: added this check here for simplicity but haven't removed old code inside; no harm, maybe reuse-->
   <#if orderList?has_content>
   
-    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N"}, "&amp;", false)>
+    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N", "doFindQuery": "Y"}, "&amp;", false)>
     <#-- forcePost required because search done from service event with https="true" -->
     <@paginate mode="content" url=makeOfbizUrl("searchorders") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!1 listSize=orderListSize!0 altParam=true forcePost=true viewIndexFirst=1>
    
@@ -324,6 +340,9 @@ document.lookuporder.orderId.focus();
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>
         <#-- SCIPIO: new flag -->
         <input type="hidden" name="massOrderChangeSubmitted" value="Y" />
+        
+        <#-- SCIPIO: new flag -->
+        <input type="hidden" name="doFindQuery" value="Y" />
         
       <#-- SCIPIO: WARN: here we make sure to pass the params through ?html and ?js_string
           In order to do this we must UNDO the ofbiz manual and screen encoding and then reencode. -->
@@ -335,12 +354,16 @@ document.lookuporder.orderId.focus();
       <#--
       <#assign massParamList = "hideFields=" + rawString(findParams.hideFields!"N")>
       -->
+
+      <#-- 2016-08-11: these are now included in form as POST
       <#assign massParamList = "hideFields=" + "N">
       <#if paramList?has_content>
         <#assign massParamList = massParamList + "&" + rawString(paramList)?replace("&amp;","&")>
       </#if>
+      -->
+      <#assign massParamList = "">
       <#assign massParamListJsHtml = massParamList?js_string?html>
-        
+
         <#--
         <select name="serviceName" onchange="javascript:setServiceName(this);">
            <option value="javascript:void(0);">&nbsp;</option>
@@ -504,7 +527,7 @@ document.lookuporder.orderId.focus();
       
       <#-- SCIPIO: add missing saving of prev query params -->
       ${prevQueryInputParams}
-      <input type="hidden" name="showAll" value="Y"/>
+      <#--<input type="hidden" name="showAll" value="Y"/>-->
     </form>
     
     </@paginate>

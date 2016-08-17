@@ -20,6 +20,7 @@ under the License.
 </div><#-- /<div class="off-canvas-wrap" data-offcanvas id="body-content"> -->
 </div><#-- /<div class="inner-wrap"> -->
 
+<#if (showFooterOtherContent!true) == true && (useMinimalTheme!false) == false>
 <@row class="other-content">
     <@cell columns=3>
       <i class="${styles.icon} ${styles.icon_prefix}laptop"></i>
@@ -53,6 +54,7 @@ under the License.
       </ul>
     </@cell>
 </@row>
+</#if>
 
 
     <#-- close the off-canvas menu -->

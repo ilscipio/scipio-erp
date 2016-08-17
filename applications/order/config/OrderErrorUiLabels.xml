@@ -843,18 +843,18 @@
     </property>
     <property key="OrderErrorCouldNotChangeOrderStatus">
         <value xml:lang="de">FEHLER: Auftragsstatus konnte nicht geändert werden</value>
-        <value xml:lang="en">ERROR : Could not change order status (</value>
-        <value xml:lang="es">ERROR: No puede cambiar el estado del pedido (</value>
-        <value xml:lang="fr">Impossible de changer le statut de la commande (</value>
-        <value xml:lang="it">ERRORE : Non è possibile cambiare stato ordine (</value>
-        <value xml:lang="ja">エラー: 注文のステータスを変更できません: </value>
-        <value xml:lang="pt_BR">ERRo : Não foi possível alterar estado do pedido (</value>
-        <value xml:lang="ro">EROARE : Nu este posibila schimbarea statului comenzii (</value>
-        <value xml:lang="ru">ОШИБКА: Невозможно изменить статус заказа (</value>
-        <value xml:lang="th">ERROR : ข้อผิดพลาด ! ไม่สามารถเปลี่ยนสถานะรายการสั่งซื้อ (</value>
+        <value xml:lang="en">ERROR : Could not change order status</value>
+        <value xml:lang="es">ERROR: No puede cambiar el estado del pedido</value>
+        <value xml:lang="fr">Impossible de changer le statut de la commande</value>
+        <value xml:lang="it">ERRORE : Non è possibile cambiare stato ordine</value>
+        <value xml:lang="ja">エラー: 注文のステータスを変更できません</value>
+        <value xml:lang="pt_BR">ERRo : Não foi possível alterar estado do pedido</value>
+        <value xml:lang="ro">EROARE : Nu este posibila schimbarea statului comenzii</value>
+        <value xml:lang="ru">ОШИБКА: Невозможно изменить статус заказа</value>
+        <value xml:lang="th">ERROR : ข้อผิดพลาด ! ไม่สามารถเปลี่ยนสถานะรายการสั่งซื้อ </value>
         <value xml:lang="vi">Lỗi xảy ra : Không thể thay đổi trạng thái đơn hàng</value>
-        <value xml:lang="zh">错误：无法修改订单状态 (</value>
-        <value xml:lang="zh_TW">錯誤：無法修改訂單狀態 (</value>
+        <value xml:lang="zh">错误：无法修改订单状态</value>
+        <value xml:lang="zh_TW">錯誤：無法修改訂單狀態</value>
     </property>
     <property key="OrderErrorCouldNotChangeOrderStatusFromTo">
         <value xml:lang="de">Status ist keine gültige Änderung: von ${custRequest.statusId} nach ${parameters.statusId}</value>

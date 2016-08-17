@@ -1,5 +1,5 @@
 /**
- * Scipio: Returns the visualThemeId for the product store for the site, best-effort.
+ * Scipio: Returns the visualThemeId for the site or product store for the site, best-effort.
  * <p>
  * For use with WebSite.visualThemeSelectorScript entity field.
  * <p>
@@ -18,7 +18,17 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.store.ProductStoreWorker;
  
 visualThemeId = null;
-if (context.request != null) {
+
+if (context.webSite != null && context.webSite.visualThemeId) {
+    // 2016-08-09: It's now possible to override a visualThemeId on the WebSite
+    // which takes precedence over the productStore one.
+    // The downside is it could not work in a context where WebSite cannot be determined.
+    visualThemeId = context.webSite.visualThemeId;
+    
+    // TODO: for ultimate versatility, we'd want a WebSiteProductStoreSettings which
+    // contains a visualThemeId to combine WebSite and productStoreId. In that case,
+    // the more specific visualThemeId would override the one above.
+} else if (context.request != null) {
     // Is a web request. Simply get visualThemeId from associated store for now.
     productStoreId = null;
     

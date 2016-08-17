@@ -879,10 +879,24 @@ under the License.
         <attribute name="lowIndex" type="Integer" mode="OUT" optional="false"/>
     </service>
     
+    <service name="findOrdersInternal" engine="java" transaction-timeout="300" auth="true"
+            location="org.ofbiz.order.order.OrderLookupServices" invoke="findOrdersInternal">
+        <description>Uses dynamic view entity to find orders; returns a list of Order (OrderHeader) objects.
+            SCIPIO: Version of findOrders with extra functions for internal calls (not meant for receiving request parameters directly).</description>
+        <implements service="findOrders" />
+        
+        <!-- SCIPIO: if explicit true, errors return as failure instead of error -->
+        <attribute name="errorAsFailure" type="Boolean" mode="IN" optional="true"/>
+    </service>
+        
     <service name="findOrdersFull" engine="java" transaction-timeout="300" auth="true"
             location="org.ofbiz.order.order.OrderLookupServices" invoke="findOrdersFull">
-        <description>Uses dynamic view entity to find orders; returns a full list of Order (OrderHeader) objects (no limitation set by viewIndex/viewSize)</description>
+        <description>Uses dynamic view entity to find orders; returns a full list of Order (OrderHeader) objects (no limitation set by viewIndex/viewSize).
+            SCIPIO: Version of findOrders that does not limit to view size and returns all.</description>
         <implements service="findOrdersCommon" />
+        
+        <!-- SCIPIO: if explicit true, errors return as failure instead of error -->
+        <attribute name="errorAsFailure" type="Boolean" mode="IN" optional="true"/>
         
         <attribute name="showAll" type="String" mode="INOUT" optional="true"/>
     </service>

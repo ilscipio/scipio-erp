@@ -250,7 +250,7 @@ var Lookup = function(options) {
             // write the new input box id in the ajaxUrl Array
             options.ajaxUrl = options.ajaxUrl.replace(options.ajaxUrl.substring(0, options.ajaxUrl.indexOf(",")), _newInputBoxId);
             new ajaxAutoCompleter(options.ajaxUrl, (options.showDescription == "true") ? true : false, options.defaultMinLength, options.defaultDelay,
-                    options.formName);
+                    options.formName, options.args);
         }
     }
 

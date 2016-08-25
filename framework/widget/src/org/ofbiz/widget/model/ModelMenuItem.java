@@ -192,7 +192,7 @@ public class ModelMenuItem extends ModelWidget {
                 childLogicModelMenu = subMenuModel;
             } else if ("logic".equals(subMenuModelScope)) {
                 childLogicModelMenu = subMenuModel;
-            } else {
+            } else if (!"none".equals(subMenuModelScope)) { // "style"
                 childStyleModelMenu = subMenuModel;
             }
         }

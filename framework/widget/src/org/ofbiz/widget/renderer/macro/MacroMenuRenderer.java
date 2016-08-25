@@ -209,7 +209,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     private boolean isHideIfSelected(ModelMenuItem menuItem, Map<String, Object> context) {
-        ModelMenu menu = menuItem.getModelMenu();
+        ModelMenu menu = menuItem.getLogicModelMenu();
         String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
         String currentItemName = menuItem.getName();
         Boolean hideIfSelected = menuItem.getHideIfSelected();
@@ -456,6 +456,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
         String subMenuStyle = menuItem.getSubMenuStyle(context);
         parameters.put("subMenuStyle", subMenuStyle);
+        
+        // Scipio: sub menu id
+        String subMenuId = menuItem.getSubMenuId(context);
+        parameters.put("subMenuId", subMenuId);
         
         // Scipio: sub menu title
         String subMenuTitle = menuItem.getSubMenuTitle(context);

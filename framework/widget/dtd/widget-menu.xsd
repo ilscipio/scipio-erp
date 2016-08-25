@@ -18,8 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Scipio: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
-modifications to existing elements. Changes are prefixed with the string "Scipio:" in annotations.
+SCIPIO: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
+modifications to existing elements. Changes are prefixed with the string "SCIPIO:" in annotations.
 
 Features and Modifications:
 * All default-xxx-style and xxx-style attributes now support an extended "+/=" prefix.
@@ -78,7 +78,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="default-widget-style" />
             <xs:attribute type="xs:string" name="default-link-style">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Default link style for the links in the menu items of this menu.
+                    <xs:documentation>SCIPIO: Default link style for the links in the menu items of this menu.
                         Each menu item can override with either "link-style" on menu-item element (preferred) or "style" on link element (discouraged).
                         NOTE: This is currently the only </xs:documentation>
                 </xs:annotation>
@@ -114,7 +114,7 @@ Features and Modifications:
                 <xs:annotation>
                     <xs:documentation>Selected menu item context field name. Name of a field in context (usually set by screens) that will be checked for a menu item name.
                         The menu item that matches this field value by name will receive a selection style ('default-selected-style' or 'selected-style').
-                        Scipio: This is a STOCK attribute. This attribute has been upgraded to support multiple field names, semicolon-separated (;).
+                        SCIPIO: This is a STOCK attribute. This attribute has been upgraded to support multiple field names, semicolon-separated (;).
                         With a single field name or expression, the behavior is unchanged from the STOCK implementation.
                         With multiple semicolon-separated names, in the order given, if the first field's value in context is empty OR does not
                         match any menu item name in this menu, it will check the next, and so on.
@@ -141,7 +141,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="default-permission-entity-action" />
             <xs:attribute name="items-sort-mode">
                 <xs:annotation>
-                    <xs:documentation>Scipio: If true, sort final menu items by some attribute, defined by the value. Default off.
+                    <xs:documentation>SCIPIO: If true, sort final menu items by some attribute, defined by the value. Default off.
                         displaytext means try to use linktext, if none use title, if none use name.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
@@ -162,7 +162,7 @@ Features and Modifications:
     </xs:element>
     <xs:element name="include-elements">
         <xs:annotation>
-            <xs:documentation>Scipio: Includes another menu's elements (actions and menu items) into this one. Works on a textual xml level.
+            <xs:documentation>SCIPIO: Includes another menu's elements (actions and menu items) into this one. Works on a textual xml level.
                 This is a convenience directive and same as declaring all the other include-* directives individually.
                 Can use to include all elements from another menu at first, then later split into more precise directives as needed.
                 The more precise directives will override this one for a given menu.</xs:documentation>
@@ -172,7 +172,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="resource" />
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Scipio: If and what to recurse when included menus have their own extends and includes, to find elements.
+                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes, to find elements.
                         'includes-only' means it will follow includes in the target menu. 
                         'extends-only' means it will follow extends directives in the target menu.
                         'full' means will follow all of the above.
@@ -191,7 +191,7 @@ Features and Modifications:
     </xs:element>
     <xs:element name="include-actions">
         <xs:annotation>
-            <xs:documentation>Scipio: Includes another menu's actions into this one. Works on a textual xml level.
+            <xs:documentation>SCIPIO: Includes another menu's actions into this one. Works on a textual xml level.
                 Warning: diamond-like include+extends patterns can result in duplicate actions; use recursive with care.
                 Usually "includes-only" or "no" for recursive option is safest.</xs:documentation>
         </xs:annotation>
@@ -200,7 +200,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="resource" />
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Scipio: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -215,14 +215,14 @@ Features and Modifications:
     </xs:element>
     <xs:element name="include-menu-items">
         <xs:annotation>
-            <xs:documentation>Scipio: Includes another menu's items into this one. Works on a textual xml level.
+            <xs:documentation>SCIPIO: Includes another menu's items into this one. Works on a textual xml level.
                 Note: duplicates are not concern as menu items are keyed by name.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="exclude-item" minOccurs="0">
                     <xs:annotation>
-                        <xs:documentation>Scipio: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
+                        <xs:documentation>SCIPIO: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:attribute type="xs:string" name="name" use="required" />
@@ -233,7 +233,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="resource" />
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Scipio: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -311,7 +311,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="override-mode" default="merge">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Can be used to change the default override behavior.
+                    <xs:documentation>SCIPIO: Can be used to change the default override behavior.
                         'replace' causes this item to override any prior definition instead of merging (merging in STOCK can be problematic).
                         'remove-replace' is the same as replace but explicitly removes the previous item before replacing it;
                         this is almost the same as 'replace' but allows changing the ordering.</xs:documentation>
@@ -326,7 +326,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="sort-mode" default="auto">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Controls whether sorting applies to this item or
+                    <xs:documentation>SCIPIO: Controls whether sorting applies to this item or
                         not. Only meaningful when items-sort-mode is enabled.
                         If set to off, item will try to remain at the same index of the menu items
                         in which it was declared.
@@ -339,26 +339,48 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="sub-menu-id">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: ID for the sub-menu within this menu item.
+                        NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="sub-menu-style">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Style string for the sub-menu within this menu item.
+                    <xs:documentation>SCIPIO: Style string for the sub-menu within this menu item.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="sub-menu-title">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Title for the sub-menu within this menu item.
+                    <xs:documentation>SCIPIO: Title for the sub-menu within this menu item.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="sub-menu-model">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
-                        attribute defaults such as styles, instead of this top-level menu's default attributes.
+                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
+                        attribute defaults such as styles (and others), instead of this top-level menu's default attributes.
                         Can be used to implement sub-menus of different types than the top-level menu.
-                        If no # separator, assumes name lookup in current file.
-                        NOTE (2016-03-01): This currently (intentionally) only works for style attributes; others still taken from top-level containing menu.</xs:documentation>
+                        If no # separator, assumes name lookup in current file.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="sub-menu-model-scope">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If "full", the sub-menu-model specified will be used for menu
+                        logic and functionality such as determining the active menu item in addition to styling. 
+                        If "styling", the model will only be used as model for styling fields.
+                        If "logic", the model will only be used as model for logic fields.
+                        Default: styling
+                        NOTE (2016-08-25): Even when "full", not all attributes may work with sub-menu-model at this time.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="style" />
+                        <xs:enumeration value="logic" />
+                        <xs:enumeration value="full" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

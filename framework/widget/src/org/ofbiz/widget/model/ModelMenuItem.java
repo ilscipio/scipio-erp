@@ -105,12 +105,13 @@ public class ModelMenuItem extends ModelWidget {
     // ===== CONSTRUCTORS =====
 
     public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu) {
-        this(menuItemElement, modelMenu, null, null, null);
+        this(menuItemElement, modelMenu, new ParentMenuItemInfo());
     }
 
-    // SCIPIO: constructor modified to take subMenuModel
-    private ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ModelMenuItem parentMenuItem, ModelMenu styleModelMenu, ModelMenu logicModelMenu) {
+    // SCIPIO: constructor modified to take parentItemInfo
+    ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ParentMenuItemInfo parentItemInfo) {
         super(menuItemElement);
+        ModelMenuItem parentMenuItem = parentItemInfo.menuItem; // SCIPIO: new
         this.modelMenu = modelMenu;
         this.parentMenuItem = parentMenuItem;
         this.entityName = menuItemElement.getAttribute("entity-name");
@@ -159,9 +160,11 @@ public class ModelMenuItem extends ModelWidget {
         }
         
         // SCIPIO: sub-menu-model lookup for child menu-items of this menu-item (NOT for _this_ menu-item!)
+        ModelMenu styleModelMenu = parentItemInfo.styleModelMenu;
         if (styleModelMenu == null) {
             styleModelMenu = modelMenu;
         }
+        ModelMenu logicModelMenu = parentItemInfo.logicModelMenu;
         if (logicModelMenu == null) {
             logicModelMenu = modelMenu;
         }
@@ -196,14 +199,21 @@ public class ModelMenuItem extends ModelWidget {
                 childStyleModelMenu = subMenuModel;
             }
         }
+        ParentMenuItemInfo childParentItemInfo = new ParentMenuItemInfo(this, childStyleModelMenu, childLogicModelMenu); 
+        
+        // SCIPIO: support included sub-menu items
+        Map<String, Element> menuElemCache = new HashMap<String, Element>();
+        ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
+        Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
+        modelMenu.processIncludeMenuItems(menuItemElement, menuItemList, menuItemMap, 
+                modelMenu.getMenuLocation(), true, null, menuElemCache, childParentItemInfo);
         
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
         List<? extends Element> itemElements = UtilXml.childElementList(menuItemElement, "menu-item");
         if (!itemElements.isEmpty()) {
-            ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
-            Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
+
             for (Element itemElement : itemElements) {
-                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, modelMenu, this, childStyleModelMenu, childLogicModelMenu);
+                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, modelMenu, childParentItemInfo);
                 addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
             }
             menuItemList.trimToSize();
@@ -386,36 +396,10 @@ public class ModelMenuItem extends ModelWidget {
         visitor.visit(this);
     }
 
-    private void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
+    private static void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap) {
-        ModelMenuItem existingMenuItem = menuItemMap.get(modelMenuItem.getName());
-        if (existingMenuItem != null) {
-            // SCIPIO: support a replace mode as well
-            ModelMenuItem mergedMenuItem;
-            if ("replace".equals(modelMenuItem.getOverrideMode())) {
-                mergedMenuItem = modelMenuItem;
-                int existingItemIndex = menuItemList.indexOf(existingMenuItem);
-                menuItemList.set(existingItemIndex, mergedMenuItem);
-            }
-            else if ("remove-replace".equals(modelMenuItem.getOverrideMode())) {
-                menuItemList.remove(existingMenuItem);
-                menuItemMap.remove(modelMenuItem.getName());
-                mergedMenuItem = modelMenuItem;
-                menuItemList.add(modelMenuItem);
-            }
-            else {
-                // does exist, update the item by doing a merge/override
-                mergedMenuItem = existingMenuItem.mergeOverrideModelMenuItem(modelMenuItem);
-                int existingItemIndex = menuItemList.indexOf(existingMenuItem);
-                menuItemList.set(existingItemIndex, mergedMenuItem);
-            }
-            
-            menuItemMap.put(modelMenuItem.getName(), mergedMenuItem);
-        } else {
-            // does not exist, add to List and Map
-            menuItemList.add(modelMenuItem);
-            menuItemMap.put(modelMenuItem.getName(), modelMenuItem);
-        }
+        // SCIPIO: this is a copy of the ModelMenu method, so delegate
+        ModelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
     }
 
     public List<ModelAction> getActions() {
@@ -868,6 +852,27 @@ public class ModelMenuItem extends ModelWidget {
         public void renderLinkString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
                 throws IOException {
             menuStringRenderer.renderLink(writer, context, this);
+        }
+    }
+    
+    /**
+     * SCIPIO: For easier passing around the constructors.
+     */
+    static class ParentMenuItemInfo {
+        public final ModelMenu styleModelMenu;
+        public final ModelMenu logicModelMenu;
+        public final ModelMenuItem menuItem;
+        
+        public ParentMenuItemInfo(ModelMenuItem menuItem, ModelMenu styleModelMenu, ModelMenu logicModelMenu) {
+            this.menuItem = menuItem;
+            this.styleModelMenu = styleModelMenu;
+            this.logicModelMenu = logicModelMenu;
+        }
+
+        public ParentMenuItemInfo() {
+            this.menuItem = null;
+            this.styleModelMenu = null;
+            this.logicModelMenu = null;
         }
     }
 }

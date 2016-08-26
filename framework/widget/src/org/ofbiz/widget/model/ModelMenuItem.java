@@ -171,6 +171,40 @@ public class ModelMenuItem extends ModelWidget {
         String subMenuModelLocation = menuItemElement.getAttribute("sub-menu-model");
         String subMenuModelScope = menuItemElement.getAttribute("sub-menu-model-scope");
         ModelMenu subMenuModel = null;  // don't assign this!!! styleModelMenu
+        
+        // check the helper include attribute
+        String subMenuIncludeLocation = menuItemElement.getAttribute("sub-menu-include");
+        Element subMenuIncludeElement = null;
+        if (!subMenuIncludeLocation.isEmpty()) {
+            if (subMenuModelLocation.isEmpty()) {
+                // set this as the model
+                subMenuModelLocation = subMenuIncludeLocation;
+            }
+            if (subMenuModelScope.isEmpty()) {
+                subMenuModelScope = "logic";
+            }
+            
+            String menuResource;
+            String menuName;
+            // TODO: probably another method to split this somewhere...
+            if (subMenuIncludeLocation.contains("#")) {
+                String[] parts = subMenuIncludeLocation.split("#", 2);
+                menuResource = parts[0];
+                menuName = parts[1];
+            }
+            else {
+                menuName = subMenuIncludeLocation;
+                menuResource = null;
+            }
+            // create an extra include element
+            subMenuIncludeElement = menuItemElement.getOwnerDocument().createElement("include-menu-items");
+            subMenuIncludeElement.setAttribute("menu-name", menuName);
+            if (UtilValidate.isNotEmpty(menuResource)) {
+                subMenuIncludeElement.setAttribute("resource", menuResource);
+            }
+            subMenuIncludeElement.setAttribute("recursive", "full");
+        }
+        
         if (!subMenuModelLocation.isEmpty()) {
             String menuResource;
             String menuName;
@@ -202,12 +236,18 @@ public class ModelMenuItem extends ModelWidget {
         ParentMenuItemInfo childParentItemInfo = new ParentMenuItemInfo(this, childStyleModelMenu, childLogicModelMenu); 
         
         // SCIPIO: support included sub-menu items
+        List<Element> preInclElements = null;
+        if (subMenuIncludeElement != null) {
+            preInclElements = new ArrayList<>();
+            preInclElements.add(subMenuIncludeElement);
+        }
         Map<String, Element> menuElemCache = new HashMap<String, Element>();
         ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
         Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
-        modelMenu.processIncludeMenuItems(menuItemElement, menuItemList, menuItemMap, 
+        modelMenu.processIncludeMenuItems(menuItemElement, preInclElements, null, menuItemList, menuItemMap, 
                 modelMenu.getMenuLocation(), true, null, menuElemCache, childParentItemInfo);
         
+        /* SCIPIO: this is already done by processIncludeMenuItems
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
         List<? extends Element> itemElements = UtilXml.childElementList(menuItemElement, "menu-item");
         if (!itemElements.isEmpty()) {
@@ -221,6 +261,10 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.menuItemList = Collections.emptyList();
         }
+        */
+        menuItemList.trimToSize();
+        this.menuItemList = Collections.unmodifiableList(menuItemList);
+        
         // read condition under the "condition" element
         Element conditionElement = UtilXml.firstChildElement(menuItemElement, "condition");
         if (conditionElement != null) {

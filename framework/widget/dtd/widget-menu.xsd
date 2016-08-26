@@ -236,7 +236,7 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="recursive" use="required">
+            <xs:attribute name="recursive">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
                         See include-elements documentation.</xs:documentation>
@@ -286,7 +286,7 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="recursive" use="required">
+            <xs:attribute name="recursive">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
                         See include-elements documentation.</xs:documentation>

@@ -57,8 +57,8 @@ Features and Modifications:
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-elements" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-actions" />
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" />
                 <xs:element minOccurs="0" ref="actions" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />

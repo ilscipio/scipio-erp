@@ -361,7 +361,7 @@ public class ModelMenu extends ModelWidget {
             List<Element> actionInclElements = new ArrayList<Element>();
             actionInclElements.addAll(UtilXml.childElementList(parentElement, "include-elements"));
             actionInclElements.addAll(UtilXml.childElementList(parentElement, "include-actions"));
-            for (Element actionInclElement : getMergedIncludeDirectives(actionInclElements, menuLocation)) {
+            for (Element actionInclElement : getMergedIncludeDirectives(actionInclElements, currResource)) {
                 String inclMenuName = actionInclElement.getAttribute("menu-name");
                 String inclResource = actionInclElement.getAttribute("resource");
                 String inclRecursive = actionInclElement.getAttribute("recursive");
@@ -445,7 +445,7 @@ public class ModelMenu extends ModelWidget {
             List<Element> itemInclElements = new ArrayList<Element>();
             itemInclElements.addAll(UtilXml.childElementList(parentElement, "include-elements"));
             itemInclElements.addAll(UtilXml.childElementList(parentElement, "include-menu-items"));
-            for (Element itemInclElement : getMergedIncludeDirectives(itemInclElements, menuLocation)) {
+            for (Element itemInclElement : getMergedIncludeDirectives(itemInclElements, currResource)) {
                 String inclMenuName = itemInclElement.getAttribute("menu-name");
                 String inclResource = itemInclElement.getAttribute("resource");
                 String inclRecursive = itemInclElement.getAttribute("recursive");

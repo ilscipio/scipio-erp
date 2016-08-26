@@ -616,8 +616,11 @@ public class ModelMenuItem extends ModelWidget {
     }
     
     public String getSubMenuStyle() {
-        return getStyle("subMenuStyle", this.subMenuStyle.getOriginal(), 
-                subMenuModel != null ? subMenuModel.getMenuContainerStyle() : "");
+        String subMenuModelStyle = "";
+        if (subMenuModel != null && isSubMenuModelStyleScope()) {
+            subMenuModelStyle = subMenuModel.getMenuContainerStyle();
+        }
+        return getStyle("subMenuStyle", this.subMenuStyle.getOriginal(), subMenuModelStyle);
     }
     
     public String getSubMenuTitle(Map<String, Object> context) {
@@ -633,6 +636,10 @@ public class ModelMenuItem extends ModelWidget {
     
     public String getSubMenuModelScope() {
         return this.subMenuModelScope;
+    }
+    
+    public boolean isSubMenuModelStyleScope() {
+        return "full".equals(subMenuModelScope) || (!"none".equals(subMenuModelScope) && !"logic".equals(subMenuModelScope));
     }
     
     /**

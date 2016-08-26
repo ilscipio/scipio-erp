@@ -218,7 +218,7 @@ Features and Modifications:
                 Usually "includes-only" or "no" for recursive option is safest.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute type="xs:string" name="menu-name" use="required">
+            <xs:attribute type="xs:string" name="menu-name">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: The target menu name.
                         See include-elements documentation.</xs:documentation>
@@ -268,7 +268,7 @@ Features and Modifications:
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
-            <xs:attribute type="xs:string" name="menu-name" use="required">
+            <xs:attribute type="xs:string" name="menu-name">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: The target menu name.
                         See include-elements documentation.</xs:documentation>

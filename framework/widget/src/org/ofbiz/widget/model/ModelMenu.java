@@ -626,8 +626,8 @@ public class ModelMenu extends ModelWidget {
         for(int i = 0; i < attribs.getLength(); i++) {
             String attrName = attribs.item(i).getNodeName();
             if (!excludeAttribs.contains(attrName)) {
-                if (srcElem.getAttribute(attrName).isEmpty() && !destElem.getAttribute(attrName).isEmpty()) {
-                    srcElem.setAttribute(attrName, destElem.getAttribute(attrName));
+                if (destElem.getAttribute(attrName).isEmpty() && !srcElem.getAttribute(attrName).isEmpty()) {
+                    destElem.setAttribute(attrName, srcElem.getAttribute(attrName));
                 }
             }
         }

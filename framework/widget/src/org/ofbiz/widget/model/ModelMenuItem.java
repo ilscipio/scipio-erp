@@ -203,6 +203,7 @@ public class ModelMenuItem extends ModelWidget {
                 subMenuIncludeElement.setAttribute("resource", menuResource);
             }
             subMenuIncludeElement.setAttribute("recursive", "full");
+            subMenuIncludeElement.setAttribute("is-sub-menu-model-entry", "true"); // special flag to distinguish this entry
         }
         
         if (!subMenuModelLocation.isEmpty()) {
@@ -440,10 +441,10 @@ public class ModelMenuItem extends ModelWidget {
         visitor.visit(this);
     }
 
-    private static void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
+    private void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap) {
         // SCIPIO: this is a copy of the ModelMenu method, so delegate
-        ModelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
+        modelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
     }
 
     public List<ModelAction> getActions() {

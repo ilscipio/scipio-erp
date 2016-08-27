@@ -337,7 +337,10 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         if (modelMenuItem.getLink() != null) {
             visitLink(modelMenuItem.getLink().getLink());
         }
-        for (ModelMenuItem menuItem : modelMenuItem.getMenuItemList()) {
+        
+        // SCIPIO: TODO: print sub-menu elements
+        
+        for (ModelMenuItem menuItem : modelMenuItem.getLegacyMenuItemList()) {
             menuItem.accept(this);
             ;
         }
@@ -662,5 +665,12 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
             visitParameters(updateArea.getParameterList());
             writer.append("</on-event-update-area>");
         }
+    }
+
+    @Override
+    public void visit(ModelSubMenu subMenu) throws Exception {
+        // SCIPIO: new method
+        // TODO: incomplete
+        writer.append("<sub-menu/>");
     }
 }

@@ -41,6 +41,7 @@ import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
+import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 
@@ -592,5 +593,19 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
             writer.append("\"");
         }
         writer.append("/>");
+    }
+
+    @Override
+    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
+            throws IOException {
+        // SCIPIO: will not implement this.
+        throw new UnsupportedOperationException("SCIPIO: HtmlMenuRenderer is deprecated");
+    }
+    
+    @Override
+    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
+            throws IOException {
+        // SCIPIO: will not implement this.
+        throw new UnsupportedOperationException("SCIPIO: HtmlMenuRenderer is deprecated");
     }
 }

@@ -59,7 +59,7 @@ TODO/FIXME:
   
   TODO?: menu-container-style does not currently fully support the standard Scipio +/= class prefix; generally, "+" will be assumed.
 -->
-<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] extraArgs...>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -152,8 +152,8 @@ TODO/FIXME:
   <#local dummy = pushRequestStack("renderMenuStack", menuInfo)> <#-- pushing info to stack, so that this can be used by subsequently --> 
   <#if inlineEntries>
     <#list items as item>
-      <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
-          containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
+      <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=(item.linkArgs!{}) linkStr=(item.linkStr!"") 
+          containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=(item.items![]) 
           itemIndex=item_index menuInfo=menuInfo/>
     </#list>
   <#else>
@@ -161,9 +161,9 @@ TODO/FIXME:
         excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title 
         htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType>
       <#list items as item>
-        <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
-            containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
-            subMenuId=item.subMenuId subMenuStyle=item.subMenuStyle subMenuTitle=item.subMenuTitle 
+        <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=(item.linkArgs!{}) linkStr=(item.linkStr!"") 
+            containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=(item.items![]) 
+            subMenuId=item.subMenuId subMenuStyle=item.subMenuStyle subMenuTitle=item.subMenuTitle subMenuList=(item.subMenuList![])
             disabled=item.disabled selected=item.selected itemIndex=item_index menuInfo=menuInfo/>
       </#list>
     </@menu_markup>
@@ -185,8 +185,12 @@ TODO/FIXME:
 </#macro>
 
 <#-- Scipio: Render full menu item. Separate macro required due to recursive nested menus. 
-    NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
-<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] subMenuStyle="" subMenuTitle="" itemIndex=0 menuInfo={} disabled=false selected=false subMenuId="">
+    NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! 
+    NOTE (2016-08-26): The items arg is no longer populated; instead, an explicit subMenuList is now passed.
+        The subMenuStyle/subMenuTitle/subMenuId are now considered deprecated and appear as style/title/id on the subMenuList
+        hash entries instead. -->
+<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] 
+    subMenuStyle="" subMenuTitle="" itemIndex=0 menuInfo={} disabled=false selected=false subMenuId="" subMenuList=[] extraArgs...>
   <#local class = style>
   <#local id = "">
   <#local type = ""> <#-- TODO: set this to something appropriate based on whether link, submit, etc. (but markup doesn't currently use)... -->
@@ -213,7 +217,10 @@ TODO/FIXME:
     </#if><#t>
     <#if containsNestedMenus>
       <#-- NEW IN SCIPIO: Use recursion to render sub-menu... must be careful... -->
-      <@renderMenuFull boundaryComment="" id=subMenuId style=subMenuStyle title=subMenuTitle inlineEntries=false menuCtxRole=menuInfo.menuCtxRole items=items />
+      <#-- NOTE (2016-08-26): Now using explicit submenu list as opposed to implicit sub-items -->
+      <#list subMenuList as subMenu>
+        <@renderMenuFull boundaryComment="" id=subMenu.id style=subMenu.style title=subMenu.title inlineEntries=false menuCtxRole=menuInfo.menuCtxRole items=subMenu.items />
+      </#list>
       <#-- Previous code (manual, no recursion, unmaintained)...
       <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}<@compiledClassAttribStr class=subMenuStyle />></#if>
       <#list items as item>

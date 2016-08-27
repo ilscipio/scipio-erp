@@ -40,8 +40,9 @@ Features and Modifications:
   (include-elements, include-actions, include-menu-items)
 * Menu items can be sorted. (items-sort-mode, sort-mode)
 * Menu items can completely override parent ("extends") menu items. (override-mode)
-* Nested sub-menu items can be styled using different defaults than the top-level menu. 
-  (functional, but currently limited to styling purposes only) (sub-menu-model)
+* Supports sub-menus using new sub-menu element (nested menus), using either inlined
+  menu items or referencing other menus. The sub-menus can also use a "model" for styling
+  purposes without including anything from the referenced menu.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />
@@ -333,7 +334,10 @@ Features and Modifications:
                 </xs:element>
                 <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" ref="link" />
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" /><!-- SCIPIO: New -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sub-menu" /><!-- SCIPIO: new sub-menu element -->
+                <!-- SCIPIO: NOTE: using inlined menu-item should be considered deprecated.
+                    Instead, using the sub-menu element to wrap the child menu-items.
+                    If you specify these, they will be appended to the FIRST sub-menu. -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
@@ -396,57 +400,22 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="sub-menu-id">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: ID for the sub-menu within this menu item.
-                        NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
             <xs:attribute name="sub-menu-style">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Style string for the sub-menu within this menu item.
+                    <xs:documentation>SCIPIO: DEPRECATED: Use sub-menu element's style attribute instead.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="sub-menu-title">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Title for the sub-menu within this menu item.
+                    <xs:documentation>SCIPIO: DEPRECATED: Use sub-menu element's title attribute instead.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="sub-menu-model">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
-                        attribute defaults such as styles (and others), instead of this top-level menu's default attributes.
-                        Can be used to implement sub-menus of different types than the top-level menu.
-                        If no # separator, assumes name lookup in current file.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="sub-menu-model-scope">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: If "full", the sub-menu-model specified will be used for menu
-                        logic and functionality such as determining the active menu item in addition to styling. 
-                        If "styling", the model will only be used as model for styling fields.
-                        If "logic", the model will only be used as model for logic fields.
-                        Default: "styling" when sub-menu-model is specified.
-                        NOTE (2016-08-25): Even when "full", not all attributes may work with sub-menu-model at this time.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="style" />
-                        <xs:enumeration value="logic" />
-                        <xs:enumeration value="full" />
-                        <xs:enumeration value="none" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="sub-menu-include">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as both model for this item's sub-menu sub-items 
-                        and whose items will also be included as menu items.
-                        This is a shorthand to specifying a sub-menu-model="location#name" with sub-menu-model-scope="logic" and
-                        using the include-menu-items element as child with menu-name="name" resource="location" recursive="full" to include all the items of the menu.
-                        WARN: This feature is a Work-In-Progress.</xs:documentation>
+                    <xs:documentation>SCIPIO: DEPRECATED: Use sub-menu element's model attribute instead.
+                        NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -556,4 +525,117 @@ Features and Modifications:
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="sub-menu">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: New element that can be given as child of menu-item for
+                better clarity on the menu structure. Note that it may not support all attributes
+                found on top-level menus.
+                The first sub-menu listed under a menu-item is considered the "default" one and used
+                in most cases.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-elements" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-actions" />
+                <xs:element minOccurs="0" ref="actions" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Special internal key, can usually be omitted.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="id">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: ID for the sub-menu within this menu item.
+                        NOTE: Currently this has no relation to the (unused) 'sub-menu' attribute.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="style">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Style string for the sub-menu within this menu item.
+                        NOTE: Currently this has no relation to the (unused) 'sub-menu' attribute.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="title">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Title for the sub-menu within this menu item.
+                        NOTE: Currently this has no relation to the (unused) 'sub-menu' attribute.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="model">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
+                        attribute defaults such as styles (and others), instead of this top-level menu's default attributes.
+                        Can be used to implement sub-menus of different types than the top-level menu.
+                        If no # separator, assumes name lookup in current file.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="model-scope">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Scope of the value, or which type of menu attributes it should be used for.
+                        Supported values:
+                        'full': the model specified will be used for menu
+                            logic and functionality such as determining the active menu item in addition to styling. 
+                        'styling': the model will only be used as model for styling fields.
+                        'logic': the model will only be used as model for logic fields.
+                        Default: 'styling' when only model is specified, 'logic' when include is specified instead.
+                        NOTE (2016-08-25): Even when 'full', not all attributes may work with sub-menu-model at this time.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="style" />
+                        <xs:enumeration value="logic" />
+                        <xs:enumeration value="full" />
+                        <xs:enumeration value="none" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="include">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as both model for this item's sub-menu sub-items 
+                        and whose items will also be included as menu items.
+                        This is a shorthand to specifying a model="location#name" with model-scope="logic" and
+                        using the 'include-elements' element as child with menu-name="name" resource="location" recursive="full" 
+                        to include all the items and actions of the menu.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="items-sort-mode">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If true, sort final menu items by some attribute, defined by the value. Default off.
+                        See menu element items-sort-mode description.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="off" />
+                        <xs:enumeration value="name" />
+                        <xs:enumeration value="name-ignorecase" />
+                        <xs:enumeration value="title" />
+                        <xs:enumeration value="title-ignorecase" />
+                        <xs:enumeration value="linktext" />
+                        <xs:enumeration value="linktext-ignorecase" />
+                        <xs:enumeration value="displaytext" />
+                        <xs:enumeration value="displaytext-ignorecase" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="share-scope">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If set to explicit false, any actions in the submenu will
+                        not affect the parent's context. If true, the scope is shared.
+                        Default: true
+                        Also it is less safe, the default is true because menu widgets generally
+                        did not protect scope in Ofbiz.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
 </xs:schema>

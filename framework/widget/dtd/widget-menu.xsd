@@ -169,6 +169,16 @@ Features and Modifications:
                 The more precise directives will override this one for a given menu.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+            <xs:sequence>
+                <xs:element name="exclude-item" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute type="xs:string" name="name" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
             <xs:attribute type="xs:string" name="menu-name">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: The target menu name.

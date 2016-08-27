@@ -367,7 +367,6 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.subMenuModel = existingMenuItem.subMenuModel;
         }
-        // SCIPIO: TODO? there is no +/= combination logic here for now...
         if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuStyle)) {
             this.subMenuStyle = overrideMenuItem.subMenuStyle;
         } else {

@@ -617,9 +617,11 @@ under the License.
                 items-sort-mode="displaytext-ignorecase">
                 <!-- extra items -->
                 <include-elements menu-name="LayoutDemoTest2" recursive="full"/>
-                <include-menu-items menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
+                <!-- This menu-ref overrides the sub-menu include (the "include" attribute
+                    in the "sub-menu" element above) default behavior. Here we exclude an item. -->
+                <include-elements menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
                     <exclude-item name="Enabled"/>
-                </include-menu-items>
+                </include-elements>
                 <!-- demoTestVar1 comes from the actions of LayoutDemoTest2/1 -->
                 <menu-item name="TestTest" title="Extra item ${demoTestVar1}">
                     <link target="${demoTargetUrl}" link-type="hidden-form">

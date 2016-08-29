@@ -1263,6 +1263,10 @@
   <#assign mySet = toSet(["val1", "val2", "val2", "val3", "val4", "val3"])>
   <#assign mySet = toSet(mySet)>
   <p>Basic set: <@objectAsScript lang="raw" escape=false object=mySet /></p>
+  
+  <#assign myMap = {"test1":"a string", "test2": wrapRawScript("a non-quoted script")}>
+  
+  <p>Map with non-quoted script values: <@objectAsScript lang="raw" escape=false object=myMap /></p>
 </@section>
 
 <@section title="Common messages">

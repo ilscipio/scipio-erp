@@ -588,6 +588,13 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="max-depth">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Maximum depth for rendering sub-menus.
+                        1 means render only the top level, -1 means no limit.
+                        Default: -1</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-screen" substitutionGroup="AllWidgets">

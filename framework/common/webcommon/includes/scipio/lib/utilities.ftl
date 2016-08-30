@@ -3009,6 +3009,29 @@ TODO: implement as transform.
 
 <#-- 
 *************
+* attribSpecialVal
+************
+Returns a special value that can be passed to some attribs maps arguments on
+macros (works via @elemAttribStr).
+
+  * Parameters *
+    type                        = (none|empty) 
+
+  * Related *
+    @elemAttribStr
+-->
+<#function attribSpecialVal type>
+  <#-- FIXME: we must use a non-string special class for this instead -->
+  <#if type == "none">
+    <#return "_NO_VALUE_">
+  <#elseif type == "empty">
+    <#return "_EMPTY_VALUE_">
+  </#if>
+</#function>
+
+
+<#-- 
+*************
 * formattedDate
 ************
 Renders a formatted date.

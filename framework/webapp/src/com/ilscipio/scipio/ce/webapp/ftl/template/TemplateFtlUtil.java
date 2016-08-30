@@ -306,6 +306,8 @@ public abstract class TemplateFtlUtil {
      * If emptyValToken non-empty, values matching emptyValToken are treated as empty and 
      * included regardless of includeEmpty setting.
      * noValToken is similar but prevents values altogether.
+     * <p>
+     * NOTE (2016-08-30):  emptyValToken and noValToken should be avoided in favor of {@link com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue}.
      */
     public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, String noValToken,
             Collection<String> exclude, String attribNamePrefix, boolean alwaysAddPrefix,
@@ -360,14 +362,17 @@ public abstract class TemplateFtlUtil {
             if (!exclude.contains(name)) {
                 Object val = pair.getValue();
                 String valStr = (val != null) ? val.toString() : "";
+                if (valStr == null) {
+                    valStr = ""; // just in case
+                }
                 
-                if (includeEmpty || !valStr.isEmpty()) {
+                if (AttribSpecialValue.isSpecialValue(val) || includeEmpty || !valStr.isEmpty()) {
                     sb.append(" ");
                     if (camelCaseToDashLowerNames) {
                         name = LangFtlUtil.camelCaseToDashLowerName(name);
                     }
                     sb.append(name);
-                    if (noValToken == null || !noValToken.equals(valStr)) {
+                    if (!AttribSpecialValue.isNoneValue(val) && (noValToken == null || !noValToken.equals(valStr))) {
                         sb.append("=\"");
                         if (!valStr.equals(emptyValToken)) {
                             sb.append(valStr);

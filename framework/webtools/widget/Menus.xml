@@ -693,5 +693,43 @@ under the License.
     <menu name="LayoutDemoButton2NoSubMenus" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"><!-- Excludes sub-menus -->
         <include-elements menu-name="LayoutDemoButton2" sub-menus="none"/>
     </menu>
+    
+    
+    <menu name="LayoutDemoTest3">
+        <menu-item name="DemoTest1" title="Demo Test 1">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
+        <menu-item name="DemoTest2" title="Demo Test 2">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+            </link>
+            <sub-menu>
+                <menu-item name="DemoTestNested1" title="Demo Test Nested 1">
+                    <link target="${demoTargetUrl}">
+                        <parameter param-name="demoParam1"/>
+                    </link>
+                    <sub-menu>
+                        <menu-item name="DemoTestNestedNested1" title="Demo Test Nested Nested 1">
+                            <link target="${demoTargetUrl}">
+                                <parameter param-name="demoParam1"/>
+                            </link>
+                        </menu-item>
+                        <menu-item name="DemoTestNestedNested2" title="Demo Test Nested Nested 2">
+                            <link target="${demoTargetUrl}">
+                                <parameter param-name="demoParam1"/>
+                            </link>
+                        </menu-item>
+                    </sub-menu>
+                </menu-item>
+                <menu-item name="DemoTestNested2" title="Demo Test Nested 2">
+                    <link target="${demoTargetUrl}">
+                        <parameter param-name="demoParam1"/>
+                    </link>
+                </menu-item>
+            </sub-menu>
+        </menu-item>
+    </menu>
 
 </menus>

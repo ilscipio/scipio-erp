@@ -18,8 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Scipio: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
-modifications to existing elements. Changes are prefixed with the string "Scipio:" in annotations.
+SCIPIO: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
+modifications to existing elements. Changes are prefixed with the string "SCIPIO:" in annotations.
 
 Features and Modifications:
 * Decorator sections have extended controls to allow auto-inclusion, delegation and
@@ -314,7 +314,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="style" default="p">
                 <xs:annotation>
                     <xs:documentation>Label style. 
-                        Scipio: This is a STOCK element.
+                        SCIPIO: This is a STOCK element.
                         In our standard implementation, the label style string is modified to support
                         some advanced syntax in the format "elem:[+=]?class" or "h[+]?:[+=]?class"
                         where "elem" may be one of: div, container, span, h, heading, p, raw.
@@ -334,7 +334,7 @@ Features and Modifications:
     <xs:element name="screenlet" substitutionGroup="AllWidgets">
         <xs:annotation>
             <xs:documentation>Screenlet element.
-                Scipio: This is a STOCK element. 
+                SCIPIO: This is a STOCK element. 
                 In our standard implementation, it is interpreted as a basic section, 
                 corresponding to the Scipio Freemarker macro @section.</xs:documentation>
         </xs:annotation>
@@ -349,7 +349,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute type="xs:string" name="title-style">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Style for the title.
+                    <xs:documentation>SCIPIO: Style for the title.
                         In our standard implementation, it supports
                         some advanced syntax in the format "elem:[+=]?class" or "containerelem:[+=]?containerclass;elem:[+=]?class" or "h[+]?:[+=]?class",
                         where "elem" may be one of: div, container, span, h, heading, p, raw.
@@ -466,7 +466,7 @@ Features and Modifications:
             <xs:attribute name="auto-decorator-section-include" default="false">
                 <xs:annotation>
                     <xs:documentation>
-                        Scipio: If true, this decorator-screen definition will automatically inherit all decorator-sections coming from 
+                        SCIPIO: If true, this decorator-screen definition will automatically inherit all decorator-sections coming from 
                         the calling screen (as if producing a decorator-section element having only a decorator-section-include with same section name)
                         except those having the same names as the decorator-sections explicitly defined in this decorator-screen. 
                         It can be seen as passing-through the incoming decorator-sections from a calling screen to a lower decorator,
@@ -491,7 +491,7 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="use-when">
                 <xs:annotation>
                     <xs:documentation>
-                        Scipio: Minilang/EL/groovy/bsh-style condition string - only pass this section for rendering if the given condition 
+                        SCIPIO: Minilang/EL/groovy/bsh-style condition string - only pass this section for rendering if the given condition 
                         evaluates to true; else the section will be absent from the "sections" context variable passed to the decorator.
                         Expression must evaluation to a boolean, using ${...}, ${groovy: ...} or ${bsh: ...}. 
                         Despite name, not same as the old form widgets use-when attribute, which only uses straight bsh expressions.
@@ -501,7 +501,7 @@ Features and Modifications:
             <xs:attribute name="fallback-auto-include" default="false">
                 <xs:annotation>
                     <xs:documentation>
-                        Scipio: If true, when a use-when condition evaluates to false, the decorator-section with same name inherited/produced
+                        SCIPIO: If true, when a use-when condition evaluates to false, the decorator-section with same name inherited/produced
                         from caller will be used (auto-included) in its place, if one was passed.
                         By default, decorator-sections auto-included by auto-decorator-section-include will never be used when decorator-section 
                         definition of same name exists even when use-when evaluates to false; local defs have priority. Only meaningful when use-when 
@@ -518,7 +518,7 @@ Features and Modifications:
             <xs:attribute name="override-by-auto-include" default="false">
                 <xs:annotation>
                     <xs:documentation>
-                        Scipio: Convenience setting. If true, this decorator-section will not be used if
+                        SCIPIO: Convenience setting. If true, this decorator-section will not be used if
                         one with the same name is inherited/produced from caller, and the one from caller will be used (auto-included) in its place.
                         In other words, the caller's decorator-section, if present, will override this decorator-section.
                         This is the same as: use-when="${groovy: (sections['name'] == null)}" fallback-auto-include="true"

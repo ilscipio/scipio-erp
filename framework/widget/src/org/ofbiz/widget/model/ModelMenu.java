@@ -44,7 +44,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
-import org.ofbiz.widget.model.ModelMenuItem.ParentMenuItemInfo;
+import org.ofbiz.widget.model.ModelMenuItem.ParentItemInfo;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -299,7 +299,7 @@ public class ModelMenu extends ModelWidget {
         
         // SCIPIO: include-menu-items and menu-item
         processIncludeMenuItems(menuElement, null, null, menuItemList, menuItemMap, 
-                menuLocation, true, null, menuElemCache, null);
+                menuLocation, true, null, null, menuElemCache, null);
         
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
@@ -440,8 +440,8 @@ public class ModelMenu extends ModelWidget {
      */
     void processIncludeMenuItems(Element parentElement, List<? extends Element> preInclElements, List<? extends Element> postInclElements, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap, String currResource, 
-            boolean processIncludes, Set<String> excludeItems, Map<String, Element> menuElemCache,
-            ParentMenuItemInfo parentItemInfo) {
+            boolean processIncludes, Set<String> excludeItems, String subMenusFilter, Map<String, Element> menuElemCache,
+            ParentItemInfo parentItemInfo) {
         // WARN: even local cache not fully used (cacheConsume=true so only uses cached from prev actions includes) 
         // to be safe because known that menu-item Elements get written to in some places and 
         // reuse _might_ affect results in complex includes (?).
@@ -469,6 +469,14 @@ public class ModelMenu extends ModelWidget {
                 String inclRecursive = itemInclElement.getAttribute("recursive");
                 if (inclRecursive.isEmpty()) {
                     inclRecursive = "full";
+                }
+                String inclSubMenus = itemInclElement.getAttribute("sub-menus");
+                String nextSubMenusFilter;
+                if ("none".equals(subMenusFilter) || "none".equals(inclSubMenus)) {
+                    // "none" overrides all
+                    nextSubMenusFilter = "none";
+                } else {
+                    nextSubMenusFilter = inclSubMenus;
                 }
                 
                 Set<String> inclExcludeItems = new HashSet<String>();
@@ -503,7 +511,7 @@ public class ModelMenu extends ModelWidget {
                                         inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
                                 if (parentMenuElem != null) {
                                     processIncludeMenuItems(parentMenuElem, null, null, menuItemList, menuItemMap, 
-                                            nextResource, true, inclExcludeItems, menuElemCache, parentItemInfo);
+                                            nextResource, true, inclExcludeItems, nextSubMenusFilter, menuElemCache, parentItemInfo);
                                 }
                                 else {
                                     Debug.logError("Failed to find (via include-menu-items or include-elements) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
@@ -513,11 +521,11 @@ public class ModelMenu extends ModelWidget {
                         
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                             processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
-                                    nextResource, true, inclExcludeItems, menuElemCache, parentItemInfo);
+                                    nextResource, true, inclExcludeItems, nextSubMenusFilter, menuElemCache, parentItemInfo);
                         }
                         else {
                             processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
-                                    nextResource, false, inclExcludeItems, menuElemCache, parentItemInfo);
+                                    nextResource, false, inclExcludeItems, nextSubMenusFilter, menuElemCache, parentItemInfo);
                         }
                     }
                     else {
@@ -531,14 +539,16 @@ public class ModelMenu extends ModelWidget {
         }
         
         List<? extends Element> itemElements = UtilXml.childElementList(parentElement, "menu-item");
+        ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs();
+        itemBuildArgs.omitSubMenus = ("none".equals(subMenusFilter));
         for (Element itemElement : itemElements) {
             String itemName = itemElement.getAttribute("name");
             if (!excludeItems.contains(itemName)) {
                 ModelMenuItem modelMenuItem;
                 if (parentItemInfo != null) {
-                    modelMenuItem = new ModelMenuItem(itemElement, this, parentItemInfo);
+                    modelMenuItem = new ModelMenuItem(itemElement, this, parentItemInfo, itemBuildArgs);
                 } else {
-                    modelMenuItem = new ModelMenuItem(itemElement, this);
+                    modelMenuItem = new ModelMenuItem(itemElement, this, null, itemBuildArgs);
                 }
                 addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
             }

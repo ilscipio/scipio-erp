@@ -67,7 +67,10 @@ public class ModelMenuItem extends ModelWidget {
      */
 
     public static final String module = ModelMenuItem.class.getName();
-
+    
+    private static final BuildArgs defaultBuildArgs = new BuildArgs(); // SCIPIO: WARN: don't modify this!
+    private static final ParentItemInfo defaultParentItemInfo = new ParentItemInfo(); // SCIPIO: WARN: don't modify this!
+    
     private final List<ModelAction> actions;
     private final String align;
     private final String alignStyle;
@@ -116,12 +119,23 @@ public class ModelMenuItem extends ModelWidget {
     // ===== CONSTRUCTORS =====
 
     public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu) {
-        this(menuItemElement, modelMenu, new ParentMenuItemInfo());
+        this(menuItemElement, modelMenu, null, null);
+    }
+    
+    public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, BuildArgs buildArgs) {
+        this(menuItemElement, modelMenu, null, null);
     }
 
-    // SCIPIO: constructor modified to take parentItemInfo
-    ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ParentMenuItemInfo parentItemInfo) {
+    // SCIPIO: constructor modified to take parentItemInfo and buildArgs.
+    // Presence of parentItemInfo.menuItem indicates this item is part of a sub-menu.
+    protected ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ParentItemInfo parentItemInfo, BuildArgs buildArgs) {
         super(menuItemElement);
+        if (parentItemInfo == null) {
+            parentItemInfo = defaultParentItemInfo;
+        }
+        if (buildArgs == null) {
+            buildArgs = defaultBuildArgs;
+        }
         ModelMenuItem parentMenuItem = parentItemInfo.menuItem; // SCIPIO: new
         this.modelMenu = modelMenu;
         this.parentMenuItem = parentMenuItem;
@@ -181,61 +195,72 @@ public class ModelMenuItem extends ModelWidget {
         }
 
         // SCIPIO: legacy inlined menu-items
-        List<? extends Element> itemElements = UtilXml.childElementList(menuItemElement, "menu-item");
-        // old sub-menu-xxx attributes (deprecated)
-        this.subMenuModel = menuItemElement.getAttribute("sub-menu-model");
-        this.subMenuStyle = menuItemElement.getAttribute("sub-menu-style");
-        this.subMenuTitle = menuItemElement.getAttribute("sub-menu-title");
+        if (buildArgs.omitSubMenus) {
+            this.subMenuModel = "";
+            this.subMenuStyle = "";
+            this.subMenuTitle = "";
+            
+            this.subMenuList = Collections.emptyList();
+            this.subMenuMap = Collections.emptyMap();
+        } else {
+            List<? extends Element> itemElements = UtilXml.childElementList(menuItemElement, "menu-item");
 
-        // the sub-menu elements
-        List<Element> subMenuElements = UtilGenerics.checkList(UtilXml.childElementList(menuItemElement, "sub-menu"));
-        if (subMenuElements.isEmpty()) {
-            // we must generate an element for legacy support if there are any inlined menu-items
-            if (!itemElements.isEmpty()) {
-                Element subMenuElem = menuItemElement.getOwnerDocument().createElement("sub-menu");
-                if (!this.subMenuModel.isEmpty()) {
-                    subMenuElem.setAttribute("model", this.subMenuModel);
+            // old sub-menu-xxx attributes (deprecated)
+            this.subMenuModel = menuItemElement.getAttribute("sub-menu-model");
+            this.subMenuStyle = menuItemElement.getAttribute("sub-menu-style");
+            this.subMenuTitle = menuItemElement.getAttribute("sub-menu-title");
+
+            // the sub-menu elements
+            List<Element> subMenuElements = UtilGenerics.checkList(UtilXml.childElementList(menuItemElement, "sub-menu"));
+            if (subMenuElements.isEmpty()) {
+                // we must generate an element for legacy support if there are any inlined menu-items
+                if (!itemElements.isEmpty()) {
+                    Element subMenuElem = menuItemElement.getOwnerDocument().createElement("sub-menu");
+                    if (!this.subMenuModel.isEmpty()) {
+                        subMenuElem.setAttribute("model", this.subMenuModel);
+                    }
+                    if (!this.subMenuStyle.isEmpty()) {
+                        subMenuElem.setAttribute("style", this.subMenuStyle);
+                    }
+                    if (!this.subMenuTitle.isEmpty()) {
+                        subMenuElem.setAttribute("title", this.subMenuTitle);
+                    }
+                    subMenuElements.add(subMenuElem);
                 }
-                if (!this.subMenuStyle.isEmpty()) {
-                    subMenuElem.setAttribute("style", this.subMenuStyle);
-                }
-                if (!this.subMenuTitle.isEmpty()) {
-                    subMenuElem.setAttribute("title", this.subMenuTitle);
-                }
-                subMenuElements.add(subMenuElem);
             }
-        }
-        
-        List<ModelSubMenu> subMenuList = new ArrayList<>();
-        Map<String, ModelSubMenu> subMenuMap = new LinkedHashMap<>();
-        
-        ParentMenuItemInfo childParentItemInfo = new ParentMenuItemInfo(this, styleModelMenu, logicModelMenu);
-        int i = 0;
-        for(Element subMenuElement : subMenuElements) {
-            List<? extends Element> extraMenuItems = null;
-            if (i == 0) {
-                // Add the legacy items as extras to the first sub-menu
-                extraMenuItems = itemElements;
-            }
-            // Determine a name for the sub-menu
-            String effectiveSubMenuName = subMenuElement.getAttribute("name");
-            if (effectiveSubMenuName.isEmpty()) {
+            
+            List<ModelSubMenu> subMenuList = new ArrayList<>();
+            Map<String, ModelSubMenu> subMenuMap = new LinkedHashMap<>();
+            
+            ParentItemInfo childParentItemInfo = new ParentItemInfo(this, styleModelMenu, logicModelMenu);
+            int i = 0;
+            for(Element subMenuElement : subMenuElements) {
+                List<? extends Element> extraMenuItems = null;
                 if (i == 0) {
-                    effectiveSubMenuName = "_submenu_default";
-                } else {
-                    effectiveSubMenuName = "_submenu_" + i;
+                    // Add the legacy items as extras to the first sub-menu
+                    extraMenuItems = itemElements;
                 }
+                // Determine a name for the sub-menu
+                String effectiveSubMenuName = subMenuElement.getAttribute("name");
+                if (effectiveSubMenuName.isEmpty()) {
+                    if (i == 0) {
+                        effectiveSubMenuName = "_submenu_default";
+                    } else {
+                        effectiveSubMenuName = "_submenu_" + i;
+                    }
+                }
+                ModelSubMenu modelSubMenu = new ModelSubMenu(subMenuElement, effectiveSubMenuName, modelMenu, 
+                        childParentItemInfo, extraMenuItems);
+                
+                subMenuMap.put(effectiveSubMenuName, modelSubMenu);
+                subMenuList.add(modelSubMenu);
+                
+                i++;
             }
-            ModelSubMenu modelSubMenu = new ModelSubMenu(subMenuElement, effectiveSubMenuName, modelMenu, 
-                    childParentItemInfo, extraMenuItems);
-            
-            subMenuMap.put(effectiveSubMenuName, modelSubMenu);
-            subMenuList.add(modelSubMenu);
-            
-            i++;
+            this.subMenuList = Collections.unmodifiableList(subMenuList);
+            this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
         }
-        this.subMenuList = Collections.unmodifiableList(subMenuList);
-        this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
+        
         this.styleModelMenu = styleModelMenu;
         this.logicModelMenu = logicModelMenu;
 
@@ -975,21 +1000,30 @@ public class ModelMenuItem extends ModelWidget {
     }
     
     /**
+     * SCIPIO: Basic structure of extra options for menu item construction.
+     */
+    public static class BuildArgs {
+        public boolean omitSubMenus = false;
+
+        public BuildArgs() {
+        }
+    }
+    
+    /**
      * SCIPIO: For easier passing around the constructors.
      */
-    static class ParentMenuItemInfo {
+    static class ParentItemInfo {
         public final ModelMenu styleModelMenu;
         public final ModelMenu logicModelMenu;
         public final ModelMenuItem menuItem;
 
-
-        public ParentMenuItemInfo(ModelMenuItem menuItem, ModelMenu styleModelMenu, ModelMenu logicModelMenu) {
+        public ParentItemInfo(ModelMenuItem menuItem, ModelMenu styleModelMenu, ModelMenu logicModelMenu) {
             this.menuItem = menuItem;
             this.styleModelMenu = styleModelMenu;
             this.logicModelMenu = logicModelMenu;
         }
 
-        public ParentMenuItemInfo() {
+        public ParentItemInfo() {
             this.menuItem = null;
             this.styleModelMenu = null;
             this.logicModelMenu = null;

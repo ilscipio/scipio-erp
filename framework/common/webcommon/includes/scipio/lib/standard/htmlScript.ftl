@@ -260,6 +260,9 @@ Accepts attrib names as both "onxxx" and "xxx".
 Prints a string of element attributes for common macro HTML elements.
 This is nearly the same as elemAttribStr but with different defaults and with more versatile attribs map.
 
+NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE_}}} are now considered deprecated;
+    use #attribSpecialVal instead.
+
   * Parameters *
     attribs                 = ((map)) Attribs map
                               The attribs map here is more versatile and supports mergeArgMaps functions more easily.

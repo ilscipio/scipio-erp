@@ -86,7 +86,8 @@ public class ModelMenuItem extends ModelWidget {
     //private final List<ModelMenuItem> menuItemList; // SCIPIO: This is replaced by ModelSubMenu. This var doesn't contain the sub-menu menu-item elements.
     private final ModelMenu modelMenu;
     private final String overrideName;
-    private final ModelMenuItem parentMenuItem;
+    private final ModelMenuItem parentMenuItem; // SCIPIO: NOTE: this is redundant because we now have parentSubMenu, but can leave anyway
+    private final ModelSubMenu parentSubMenu;   // SCIPIO: new
     private final FlexibleStringExpander parentPortalPageId;
     private final Integer position;
     private final String selectedStyle;
@@ -139,6 +140,7 @@ public class ModelMenuItem extends ModelWidget {
         ModelMenuItem parentMenuItem = parentItemInfo.menuItem; // SCIPIO: new
         this.modelMenu = modelMenu;
         this.parentMenuItem = parentMenuItem;
+        this.parentSubMenu = parentItemInfo.subMenu; // SCIPIO: news
         this.entityName = menuItemElement.getAttribute("entity-name");
         this.title = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("title"));
         this.tooltip = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("tooltip"));
@@ -232,7 +234,7 @@ public class ModelMenuItem extends ModelWidget {
             List<ModelSubMenu> subMenuList = new ArrayList<>();
             Map<String, ModelSubMenu> subMenuMap = new LinkedHashMap<>();
             
-            ParentItemInfo childParentItemInfo = new ParentItemInfo(this, styleModelMenu, logicModelMenu);
+            ParentItemInfo childParentItemInfo = new ParentItemInfo(styleModelMenu, logicModelMenu, this);
             int i = 0;
             for(Element subMenuElement : subMenuElements) {
                 List<? extends Element> extraMenuItems = null;
@@ -301,6 +303,7 @@ public class ModelMenuItem extends ModelWidget {
         //this.menuItemList = Collections.emptyList(); // SCIPIO: moved to ModelSubMenu
         this.overrideName = "";
         this.parentMenuItem = null;
+        this.parentSubMenu = null; // SCIPIO: new
         this.parentPortalPageId = FlexibleStringExpander.getInstance(portalPage.getString("parentPortalPageId"));
         this.position = null;
         this.selectedStyle = "";
@@ -465,6 +468,7 @@ public class ModelMenuItem extends ModelWidget {
         // SCIPIO: this should ALWAYS use the overriding parent item
         //this.parentMenuItem = existingMenuItem.parentMenuItem;
         this.parentMenuItem = overrideMenuItem.parentMenuItem;
+        this.parentSubMenu = overrideMenuItem.parentSubMenu; // SCIPIO: should always be ours
         if (UtilValidate.isNotEmpty(overrideMenuItem.subMenu)) {
             this.subMenu = overrideMenuItem.subMenu;
         } else {
@@ -728,6 +732,30 @@ public class ModelMenuItem extends ModelWidget {
             return null;
         }
     }
+    
+    public ModelMenuItem getModelMenuItemByNameExt(String[] nameList) {
+        return getModelMenuItemByNameExt(nameList[0], nameList, 1);
+    }
+    
+    public ModelMenuItem getModelMenuItemByNameExt(String name, String[] nameList, int nextNameIndex) {
+        String[] currLevelRef = name.split(":", 2);
+        String nextItemName;
+        ModelSubMenu subMenu;
+        if (currLevelRef.length >= 2) {
+            subMenu = this.subMenuMap.get(currLevelRef[0]);
+            nextItemName = currLevelRef[1];
+        } else {
+            subMenu = this.getDefaultSubMenu();
+            nextItemName = currLevelRef[0];
+        }
+        
+        if (subMenu != null) {
+            return subMenu.getModelMenuItemByNameExt(nextItemName, nameList, nextNameIndex + 1);
+        } else {
+            return null;
+        }
+    }
+    
     
     @Deprecated
     public String getSubMenuId(Map<String, Object> context) {
@@ -1016,17 +1044,34 @@ public class ModelMenuItem extends ModelWidget {
         public final ModelMenu styleModelMenu;
         public final ModelMenu logicModelMenu;
         public final ModelMenuItem menuItem;
+        public final ModelSubMenu subMenu;
 
-        public ParentItemInfo(ModelMenuItem menuItem, ModelMenu styleModelMenu, ModelMenu logicModelMenu) {
+        public ParentItemInfo(ModelMenu styleModelMenu, ModelMenu logicModelMenu, ModelMenuItem menuItem) {
             this.menuItem = menuItem;
             this.styleModelMenu = styleModelMenu;
             this.logicModelMenu = logicModelMenu;
+            this.subMenu = null;
+        }
+        
+        public ParentItemInfo(ModelMenu styleModelMenu, ModelMenu logicModelMenu, ModelSubMenu subMenu) {
+            this.menuItem = (subMenu != null) ? subMenu.getParentMenuItem() : null;
+            this.styleModelMenu = styleModelMenu;
+            this.logicModelMenu = logicModelMenu;
+            this.subMenu = null;
+        }
+        
+        public ParentItemInfo(ModelMenu styleModelMenu, ModelMenu logicModelMenu) {
+            this.menuItem = null;
+            this.styleModelMenu = styleModelMenu;
+            this.logicModelMenu = logicModelMenu;
+            this.subMenu = null;
         }
 
         public ParentItemInfo() {
             this.menuItem = null;
             this.styleModelMenu = null;
             this.logicModelMenu = null;
+            this.subMenu = null;
         }
         
     }

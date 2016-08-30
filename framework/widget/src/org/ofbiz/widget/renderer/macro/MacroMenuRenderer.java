@@ -505,7 +505,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             }
             try {
                 for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
-                    childSubMenu.renderSubMenuString(writer, context, this);
+                    if (!(renderState != null && renderState.isActiveSubMenusOnly()) || childSubMenu.isActive(context)) {
+                        childSubMenu.renderSubMenuString(writer, context, this);
+                    }
                 }
             } finally {
                 if (renderState != null) {

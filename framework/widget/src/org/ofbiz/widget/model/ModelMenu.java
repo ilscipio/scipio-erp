@@ -1120,6 +1120,39 @@ public class ModelMenu extends ModelWidget {
     public ModelMenuItem getModelMenuItemByName(String name) {
         return this.menuItemMap.get(name);
     }
+    
+    /**
+     * SCIPIO: Gets a menu item by name, with extended lookup support.
+     * <p>
+     * SCIPIO: 2016-08-30: this method is enhanced so that it can lookup menu items
+     * in sub-menus, using a dot syntax:
+     * topMenuItemName.subMenuItemName.subSubMenuItemName
+     * In case a menu item has multiple sub-menus, they can be disambiguated by adding an
+     * intermediate sub-menu name prefixed with ":":
+     * topMenuItemName.subMenu1:subMenuItemName.subSubMenu2:subSubMenuItemName
+     */
+    public ModelMenuItem getModelMenuItemByNameExt(String nameExpr) {
+        return getModelMenuItemByNameExt(splitMenuItemExpr(nameExpr));
+    }
+    
+    public static String[] splitMenuItemExpr(String nameExpr) {
+        return nameExpr.split("\\.");
+    }
+    
+    public ModelMenuItem getModelMenuItemByNameExt(String[] nameList) {
+        return getModelMenuItemByNameExt(nameList[0], nameList, 1);
+    }
+    
+    public ModelMenuItem getModelMenuItemByNameExt(String name, String[] nameList, int nextNameIndex) {
+        ModelMenuItem currLevelItem = this.menuItemMap.get(name);
+        if (nextNameIndex >= nameList.length) {
+            return currLevelItem;
+        } else if (currLevelItem != null) {
+            return currLevelItem.getModelMenuItemByNameExt(nameList[nextNameIndex], nameList, nextNameIndex + 1);
+        } else {
+            return null;
+        }
+    }
 
     public String getOrientation() {
         return this.orientation;

@@ -1247,21 +1247,29 @@ under the License.
     <screen name="scipioMenuWidgetWrapper">
         <section>
             <widgets>
-                <include-menu name="${scipioWidgetWrapperResName}" location="${scipioWidgetWrapperResLocation}" />
+                <include-menu name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}"
+                    max-depth="${scipioWidgetWrapperArgs.maxDepth}" sub-menus="${scipioWidgetWrapperArgs.subMenus}"/>
             </widgets>
         </section>
     </screen>
     <screen name="scipioFormWidgetWrapper">
         <section>
             <widgets>
-                <include-form name="${scipioWidgetWrapperResName}" location="${scipioWidgetWrapperResLocation}" />
+                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" />
             </widgets>
         </section>
     </screen>
     <screen name="scipioTreeWidgetWrapper">
         <section>
             <widgets>
-                <include-tree name="${scipioWidgetWrapperResName}" location="${scipioWidgetWrapperResLocation}" />
+                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" />
+            </widgets>
+        </section>
+    </screen>
+    <screen name="scipioScreenWidgetWrapper">
+        <section>
+            <widgets>
+                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}"/>
             </widgets>
         </section>
     </screen>

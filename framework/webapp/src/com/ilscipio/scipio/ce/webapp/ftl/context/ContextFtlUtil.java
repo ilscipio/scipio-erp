@@ -674,6 +674,49 @@ public abstract class ContextFtlUtil {
         }
         return getRequestStackAsList(name, request, context, env, objectWrapper, copyTargetType);
     }
+    
+
+    static Integer getRequestStackSize(String name, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        if (request != null) {
+            return getStackSize(getRequestVarMapFromReqAttribs(request), name);
+        }
+        else {
+            Map<String, Object> globalContext = getGlobalContext(context, env);
+            if (globalContext != null) {  
+                return getStackSize(getRequestVarMapFromGlobalContext(globalContext), name);
+            }
+            else if (env != null) {
+                return getStackSize(getRequestVarMapFromFtlGlobals(env), name);
+            }
+            else {
+                return null;
+            }
+        }
+    }
+    
+    private static Integer getStackSize(Map<String, Object> varMap, String name) throws TemplateModelException {
+        List<Object> stack = null;
+        Object stackObj = varMap.get(name);
+        if (stackObj instanceof List) {
+            stack = UtilGenerics.checkList(stackObj);
+        }
+        if (stack != null) {
+            return stack.size();
+        }
+        else {
+            return null;
+        }
+    }
+    
+    public static Integer getRequestStackSize(String name, Environment env) throws TemplateModelException {
+        HttpServletRequest request = getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = getContext(env);
+        }
+        return getRequestStackSize(name, request, context, env);
+    }
 
     /**
      * Returns copy of request stack as a raw List (but elements may still be TemplateModels).

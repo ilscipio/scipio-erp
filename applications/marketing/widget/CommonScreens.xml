@@ -170,4 +170,27 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="SideBarMenu">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="sideBarMenu.name"/></not>
+                    </condition>
+                    <actions>
+                        <set field="sideBarMenuLoc" from-field="sideBarMenu.location" default-value="component://marketing/widget/MarketingMenus.xml" />
+                    </actions>
+                    <widgets>
+                        <include-menu location="${sideBarMenuLoc}" name="${sideBarMenu.name}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="component://marketing/widget/MarketingMenus.xml" name="MarketingAppSideBar"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
 </screens>

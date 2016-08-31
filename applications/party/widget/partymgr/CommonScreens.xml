@@ -262,4 +262,27 @@ under the License.
            </widgets>
         </section>
     </screen>
+    
+    <screen name="SideBarMenu">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="sideBarMenu.name"/></not>
+                    </condition>
+                    <actions>
+                        <set field="sideBarMenuLoc" from-field="sideBarMenu.location" default-value="component://party/widget/partymgr/PartyMenus.xml" />
+                    </actions>
+                    <widgets>
+                        <include-menu location="${sideBarMenuLoc}" name="${sideBarMenu.name}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartyAppSideBar"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
 </screens>

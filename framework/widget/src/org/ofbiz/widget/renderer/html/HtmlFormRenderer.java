@@ -79,7 +79,11 @@ import freemarker.template.TemplateException;
 
 /**
  * Widget Library - HTML Form Renderer implementation
+ * <p>
+ * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRenderer {
 
     public static final String module = HtmlFormRenderer.class.getName();

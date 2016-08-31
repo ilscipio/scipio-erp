@@ -43,7 +43,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
+ * <p>
+ * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlFormWrapper {
 
     public static final String module = HtmlFormWrapper.class.getName();

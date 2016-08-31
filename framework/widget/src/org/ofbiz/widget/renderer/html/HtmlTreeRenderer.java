@@ -41,7 +41,11 @@ import org.ofbiz.widget.renderer.TreeStringRenderer;
 
 /**
  * Widget Library - HTML Tree Renderer implementation
+ * <p>
+ * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRenderer {
 
     ScreenStringRenderer screenStringRenderer = null;

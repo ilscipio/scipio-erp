@@ -26,7 +26,11 @@ import org.ofbiz.widget.model.ModelWidget;
 /**
  * Widget Library - HTML Widget Renderer implementation. HtmlWidgetRenderer
  * is a base class that is extended by other widget HTML rendering classes.
+ * <p>
+ * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlWidgetRenderer {
     public static final String module = HtmlWidgetRenderer.class.getName();
 

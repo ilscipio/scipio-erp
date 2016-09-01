@@ -44,7 +44,6 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
-import org.ofbiz.widget.model.ModelMenuItem.ParentInfo;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -132,7 +131,10 @@ public class ModelMenu extends ModelWidget {
     private final String itemsSortMode;
     
     private final Map<String, ModelSubMenu> subMenuMap; // SCIPIO: map of unique sub-menu names to sub-menus
-
+    private final String autoSubMenuNames;
+    private final String defaultSubMenuModelScope;
+    private final String defaultSubMenuInstanceScope;
+    
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
@@ -174,6 +176,9 @@ public class ModelMenu extends ModelWidget {
         String tooltip = "";
         String type = "";
         String itemsSortMode = "";
+        String autoSubMenuNames = "";
+        String defaultSubMenuModelScope = "";
+        String defaultSubMenuInstanceScope = "";
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
         String parentResource = menuElement.getAttribute("extends-resource");
@@ -209,6 +214,9 @@ public class ModelMenu extends ModelWidget {
                 defaultAlignStyle = parent.defaultAlignStyle;
                 fillStyle = parent.fillStyle;
                 extraIndex = parent.extraIndex;
+                autoSubMenuNames = parent.autoSubMenuNames;
+                defaultSubMenuModelScope = parent.defaultSubMenuModelScope;
+                defaultSubMenuInstanceScope = parent.defaultSubMenuInstanceScope;
                 // SCIPIO: copy list
                 //selectedMenuItemContextFieldName = parent.selectedMenuItemContextFieldName;
                 selectedMenuItemContextFieldName = new ArrayList<FlexibleMapAccessor<String>>(parent.selectedMenuItemContextFieldName);
@@ -285,10 +293,20 @@ public class ModelMenu extends ModelWidget {
         if (!menuElement.getAttribute("extra-index").isEmpty())
             extraIndex = FlexibleStringExpander.getInstance(menuElement.getAttribute("extra-index"));
 
+        if (!menuElement.getAttribute("auto-sub-menu-names").isEmpty())
+            autoSubMenuNames = menuElement.getAttribute("auto-sub-menu-names");
+        if (!menuElement.getAttribute("default-sub-menu-model-scope").isEmpty())
+            defaultSubMenuModelScope = menuElement.getAttribute("default-sub-menu-model-scope");
+        if (!menuElement.getAttribute("default-sub-menu-include-scope").isEmpty())
+            defaultSubMenuInstanceScope = menuElement.getAttribute("default-sub-menu-include-scope");
+        
+        this.autoSubMenuNames = autoSubMenuNames;
+        this.defaultSubMenuModelScope = defaultSubMenuModelScope;
+        this.defaultSubMenuInstanceScope = defaultSubMenuInstanceScope;
+        
         // SCIPIO: include-actions and actions
-        Map<String, Element> menuElemCache = new HashMap<String, Element>();
-        CurrentMenuDefBuildArgs currentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(menuElement);
-        processIncludeActions(menuElement, null, null, actions, menuLocation, true, menuElemCache, currentMenuDefBuildArgs, genBuildArgs);
+        CurrentMenuDefBuildArgs currentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(this);
+        processIncludeActions(menuElement, null, null, actions, menuLocation, true, currentMenuDefBuildArgs, genBuildArgs);
         
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
@@ -327,7 +345,7 @@ public class ModelMenu extends ModelWidget {
         
         // SCIPIO: include-menu-items and menu-item
         processIncludeMenuItems(menuElement, null, null, menuItemList, menuItemMap, 
-                menuLocation, true, null, null, null, menuElemCache, new ParentInfo(this), 
+                menuLocation, true, null, null, null, null,
                 currentMenuDefBuildArgs, genBuildArgs);
         
         menuItemList.trimToSize();
@@ -377,9 +395,11 @@ public class ModelMenu extends ModelWidget {
     /**
      * SCIPIO: implements include-actions and actions reading (moved here).
      * Also does include-elements.
+     * <p>
+     * FIXME: this method interface and its arguments are a mess.
      */
     void processIncludeActions(Element parentElement, List<? extends Element> preInclElements, List<? extends Element> postInclElements, List<ModelAction> actions, 
-            String currResource, boolean processIncludes, Map<String, Element> menuElemCache, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, GeneralBuildArgs genBuildArgs) {
+            String currResource, boolean processIncludes, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, GeneralBuildArgs genBuildArgs) {
         // don't think any problems from local cache for actions
         final boolean useCache = true;  
         final boolean cacheConsume = false;
@@ -401,51 +421,59 @@ public class ModelMenu extends ModelWidget {
                 if (inclRecursive.isEmpty()) {
                     inclRecursive = "full";
                 }
-                
+                String nextResource = UtilValidate.isNotEmpty(inclResource) ? inclResource : currResource;
+
                 if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
                     "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                     Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, 
-                            parentElement, currResource, menuElemCache, useCache, cacheConsume);
-                    
+                            parentElement, currResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
+
                     if (inclMenuElem != null) {
-                        String nextResource;
-                        if (UtilValidate.isNotEmpty(inclResource)) {
-                            nextResource = inclResource;
-                        }
-                        else {
-                            nextResource = currResource;
-                        }
-                        
                         if ("extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
-                            String parentResource = inclMenuElem.getAttribute("extends-resource");
-                            String parentMenu = inclMenuElem.getAttribute("extends");
-                            if (UtilValidate.isNotEmpty(parentMenu)) {
-                                Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, 
-                                        inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
+                            String extendsResource = inclMenuElem.getAttribute("extends-resource");
+                            String extendsMenuName = inclMenuElem.getAttribute("extends");
+                            String extendsNextResource = UtilValidate.isNotEmpty(extendsResource) ? extendsResource : nextResource;
+                            
+                            if (UtilValidate.isNotEmpty(extendsMenuName)) {
+                                Element parentMenuElem = loadIncludedMenu(extendsMenuName, extendsResource, 
+                                        inclMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                                 if (parentMenuElem != null) {
+                                    
+                                    // WARN: we're forced to load this menu model even though we were support to avoid it
+                                    // because we need some resolved attributes off it
+                                    ModelMenu parentMenuModel = getMenuDefinition(extendsResource, extendsMenuName, nextResource, inclMenuElem);
+                                    CurrentMenuDefBuildArgs nextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(parentMenuModel != null ? parentMenuModel : this);
+                                    
                                     processIncludeActions(parentMenuElem, null, null, actions, 
-                                            nextResource, true, menuElemCache, 
-                                            new CurrentMenuDefBuildArgs(parentMenuElem), genBuildArgs);
+                                            extendsNextResource, true, 
+                                            nextCurrentMenuDefBuildArgs, genBuildArgs);
                                 }
                                 else {
-                                    Debug.logError("Failed to find (via include-actions or include-elements) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
+                                    Debug.logError("Failed to find (via include-actions or include-elements) parent menu definition '" + 
+                                            extendsMenuName + "' in resource '" + extendsNextResource + "'", module);
                                 }
                             }
                         }
                         
+                        // WARN: we're forced to load this menu model even though we were support to avoid it
+                        // because we need some resolved attributes off it
+                        ModelMenu inclMenuModel = getMenuDefinition(inclResource, inclMenuName, currResource, parentElement);
+                        CurrentMenuDefBuildArgs nextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(inclMenuModel != null ? inclMenuModel : this);
+                        
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                             processIncludeActions(inclMenuElem, null, null, actions, 
-                                    nextResource, true, menuElemCache, 
-                                    new CurrentMenuDefBuildArgs(inclMenuElem), genBuildArgs);
+                                    nextResource, true, 
+                                    nextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
                         else {
                             processIncludeActions(inclMenuElem, null, null, actions, 
-                                    nextResource, false, menuElemCache, 
-                                    new CurrentMenuDefBuildArgs(inclMenuElem), genBuildArgs);
+                                    nextResource, false, 
+                                    nextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
                     }
                     else {
-                        Debug.logError("Failed to find include-actions or include-elements menu definition '" + inclMenuName + "' in resource '" + inclResource + "'", module);
+                        Debug.logError("Failed to find include-actions or include-elements menu definition '" + 
+                                inclMenuName + "' in resource '" + nextResource + "'", module);
                     }
                 }
                 else {
@@ -464,11 +492,13 @@ public class ModelMenu extends ModelWidget {
     /**
      * SCIPIO: implements include-menu-items and menu-item reading (moved here).
      * Also does include-elements.
+     * <p>
+     * FIXME: this method interface and its arguments are a mess.
      */
     void processIncludeMenuItems(Element parentElement, List<? extends Element> preInclElements, List<? extends Element> postInclElements, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap, String currResource, 
-            boolean processIncludes, Set<String> excludeItems, String subMenusFilter, String forceSubMenuModelScope, Map<String, Element> menuElemCache,
-            ParentInfo parentInfo, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, GeneralBuildArgs genBuildArgs) {
+            boolean processIncludes, Set<String> excludeItems, String subMenusFilter, String forceSubMenuModelScope, 
+            ModelSubMenu parentSubMenu, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, GeneralBuildArgs genBuildArgs) {
         // WARN: even local cache not fully used (cacheConsume=true so only uses cached from prev actions includes) 
         // to be safe because known that menu-item Elements get written to in some places and 
         // reuse _might_ affect results in complex includes (?).
@@ -519,51 +549,59 @@ public class ModelMenu extends ModelWidget {
                     }
                 } 
                 
+                String nextResource = UtilValidate.isNotEmpty(inclResource) ? inclResource : currResource;
+                
                 if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
                     "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                     Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, 
-                            parentElement, currResource, menuElemCache, useCache, cacheConsume);
+                            parentElement, currResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                     
                     if (inclMenuElem != null) {
                         inclExcludeItems.addAll(excludeItems);
-                        String nextResource;
-                        if (UtilValidate.isNotEmpty(inclResource)) {
-                            nextResource = inclResource;
-                        }
-                        else {
-                            nextResource = currResource;
-                        }
                         
                         if ("extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
-                            String parentResource = inclMenuElem.getAttribute("extends-resource");
-                            String parentMenu = inclMenuElem.getAttribute("extends");
-                            if (UtilValidate.isNotEmpty(parentMenu)) {
-                                Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, 
-                                        inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
-                                if (parentMenuElem != null) {
-                                    processIncludeMenuItems(parentMenuElem, null, null, menuItemList, menuItemMap, 
-                                            nextResource, true, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, menuElemCache, parentInfo,
-                                            new CurrentMenuDefBuildArgs(parentMenuElem), genBuildArgs);
+                            String extendsResource = inclMenuElem.getAttribute("extends-resource");
+                            String extendsMenuName = inclMenuElem.getAttribute("extends");
+                            String extendsNextResource = UtilValidate.isNotEmpty(extendsResource) ? extendsResource : nextResource;
+                            if (UtilValidate.isNotEmpty(extendsMenuName)) {
+                                Element extendsMenuElem = loadIncludedMenu(extendsMenuName, extendsResource, 
+                                        inclMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
+                                
+                                // WARN: we're forced to load this menu model even though we were support to avoid it
+                                // because we need some resolved attributes off it
+                                ModelMenu parentMenuModel = getMenuDefinition(extendsResource, extendsMenuName, nextResource, inclMenuElem);
+                                CurrentMenuDefBuildArgs nextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(parentMenuModel != null ? parentMenuModel : this);
+                                
+                                if (extendsMenuElem != null) {
+                                    processIncludeMenuItems(extendsMenuElem, null, null, menuItemList, menuItemMap, 
+                                            extendsNextResource, true, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, parentSubMenu,
+                                            nextCurrentMenuDefBuildArgs, genBuildArgs);
                                 }
                                 else {
-                                    Debug.logError("Failed to find (via include-menu-items or include-elements) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
+                                    Debug.logError("Failed to find (via include-menu-items or include-elements) parent menu definition '" + 
+                                            extendsMenuName + "' in resource '" + extendsNextResource + "'", module);
                                 }
                             }
                         }
                         
+                        // WARN: we're forced to load this menu model even though we were support to avoid it
+                        // because we need some resolved attributes off it
+                        ModelMenu inclMenuModel = getMenuDefinition(inclResource, inclMenuName, currResource, parentElement);
+                        CurrentMenuDefBuildArgs nextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(inclMenuModel != null ? inclMenuModel : this);
+                        
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                             processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
-                                    nextResource, true, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, menuElemCache, parentInfo,
-                                    new CurrentMenuDefBuildArgs(inclMenuElem), genBuildArgs);
+                                    nextResource, true, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, parentSubMenu,
+                                    nextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
                         else {
                             processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
-                                    nextResource, false, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, menuElemCache, parentInfo,
-                                    new CurrentMenuDefBuildArgs(inclMenuElem), genBuildArgs);
+                                    nextResource, false, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, parentSubMenu,
+                                    nextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
                     }
                     else {
-                        Debug.logError("Failed to find include-menu-items or include-elements menu definition '" + inclMenuName + "' in resource '" + inclResource + "'", module);
+                        Debug.logError("Failed to find include-menu-items or include-elements menu definition '" + inclMenuName + "' in resource '" + nextResource + "'", module);
                     }
                 }
                 else {
@@ -573,13 +611,18 @@ public class ModelMenu extends ModelWidget {
         }
         
         List<? extends Element> itemElements = UtilXml.childElementList(parentElement, "menu-item");
-        ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(genBuildArgs, currentMenuDefBuildArgs);
+        ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(genBuildArgs, currentMenuDefBuildArgs, currResource);
         itemBuildArgs.omitSubMenus = ("none".equals(subMenusFilter));
         itemBuildArgs.forceSubMenuModelScope = forceSubMenuModelScope;
         for (Element itemElement : itemElements) {
             String itemName = itemElement.getAttribute("name");
             if (!excludeItems.contains(itemName)) {
-                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, parentInfo, itemBuildArgs);
+                ModelMenuItem modelMenuItem;
+                if (parentSubMenu != null) {
+                    modelMenuItem = new ModelMenuItem(itemElement, parentSubMenu, itemBuildArgs);
+                } else {
+                    modelMenuItem = new ModelMenuItem(itemElement, this, itemBuildArgs);
+                }
                 addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
             }
         }
@@ -1452,6 +1495,8 @@ public class ModelMenu extends ModelWidget {
         public int totalSubMenuCount = 0;
         public int totalMenuItemCount = 0;
         
+        public final Map<String, Element> menuElemCache = new HashMap<>();
+        
     }
     
     /**
@@ -1462,8 +1507,8 @@ public class ModelMenu extends ModelWidget {
         
         public MenuDefCodeBehavior codeBehavior;
         
-        public CurrentMenuDefBuildArgs(Element menuElement) {
-            this.codeBehavior = new MenuDefCodeBehavior(menuElement);
+        public CurrentMenuDefBuildArgs(ModelMenu modelMenu) {
+            this.codeBehavior = new MenuDefCodeBehavior(modelMenu);
         } 
         
         public CurrentMenuDefBuildArgs(MenuDefCodeBehavior codeBehavior) {
@@ -1482,10 +1527,10 @@ public class ModelMenu extends ModelWidget {
             this.defaultSubMenuInstanceScope = null;
         }
 
-        public MenuDefCodeBehavior(Element menuElement) {
-            this.autoSubMenuNames = menuElement.getAttribute("auto-sub-menu-names");
-            this.defaultSubMenuModelScope = menuElement.getAttribute("default-sub-menu-model-scope");
-            this.defaultSubMenuInstanceScope = menuElement.getAttribute("default-sub-menu-include-scope");
+        public MenuDefCodeBehavior(ModelMenu modelMenu) {
+            this.autoSubMenuNames = modelMenu.autoSubMenuNames;
+            this.defaultSubMenuModelScope = modelMenu.defaultSubMenuModelScope;
+            this.defaultSubMenuInstanceScope = modelMenu.defaultSubMenuInstanceScope;
         }
     }
     

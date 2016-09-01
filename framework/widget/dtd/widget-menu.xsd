@@ -189,8 +189,7 @@ Features and Modifications:
                         This is enabled by default but does not make sense in all cases, so sometimes you may have to set this
                         false and assign names manually (in addition to the includes).
                         NOTE: Strictly governs the immediately descendant XML of this menu element;
-                            does NOT apply to external menu includes, which must set their own defaults;
-                            is NOT inherited from parent menu through extends.</xs:documentation>
+                            does NOT apply to external menu includes, which must set their own defaults.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -199,13 +198,13 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="default-sub-menu-model-scope" default="style">
+            <xs:attribute name="default-sub-menu-model-scope">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Default sub-model model attribute scope for all
-                        sub-menus defined as children of this menu element. 
+                    <xs:documentation>SCIPIO: Default sub-model 'model' attribute scope for all
+                        sub-menus defined in document as descendants of this menu element.
+                        Default: 'style'
                         NOTE: Strictly governs the immediately descendant XML of this menu element;
-                            does NOT apply to external menu includes, which must set their own defaults;
-                            is NOT inherited from parent menu through extends.</xs:documentation>
+                            does not apply to external menu includes, which must set their own defaults.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -216,13 +215,13 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="default-sub-menu-include-scope" default="full">
+            <xs:attribute name="default-sub-menu-include-scope">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Default sub-model include attribute scope for all
-                        sub-menus defined as children of this menu element.
+                    <xs:documentation>SCIPIO: Default sub-model 'include' attribute scope for all
+                        sub-menus defined in document as descendants of this menu element.
+                        Default: 'full'
                         NOTE: Strictly governs the immediately descendant XML of this menu element;
-                            does NOT apply to external menu includes, which must set their own defaults;
-                            is NOT inherited from parent menu through extends.</xs:documentation>
+                            does not apply to external menu includes, which must set their own defaults.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

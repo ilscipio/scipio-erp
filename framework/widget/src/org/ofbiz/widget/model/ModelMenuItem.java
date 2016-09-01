@@ -70,8 +70,6 @@ public class ModelMenuItem extends ModelWidget {
 
     public static final String module = ModelMenuItem.class.getName();
     
-    private static final BuildArgs defaultBuildArgs = new BuildArgs(new GeneralBuildArgs(), null); // SCIPIO: WARN: don't modify this!
-    
     private final List<ModelAction> actions;
     private final String align;
     private final String alignStyle;
@@ -112,8 +110,8 @@ public class ModelMenuItem extends ModelWidget {
     @Deprecated
     private final String subMenuTitle;  // SCIPIO: DEPRECATED - use ModelSubMenu instead (no relation to subMenu)
 
-    private final ModelMenu styleModelMenu; // SCIPIO: records which model menu should be used for style fields
-    private final ModelMenu funcModelMenu; // SCIPIO: records which model menu should be used for functional fields
+    private transient ModelMenu styleModelMenu; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
+    private transient ModelMenu funcModelMenu; // SCIPIO: records which model menu should be used for functional fields
  
     private final Map<String, ModelSubMenu> subMenuMap; // SCIPIO: new sub-menu models (order preserved)
     private final List<ModelSubMenu> subMenuList; // SCIPIO: new sub-menu models
@@ -121,22 +119,22 @@ public class ModelMenuItem extends ModelWidget {
     
     // ===== CONSTRUCTORS =====
 
-    
-    public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu) {
-        this(menuItemElement, new ParentInfo(modelMenu), null);
+    public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, BuildArgs buildArgs) {
+        this(menuItemElement, modelMenu, null, buildArgs);
     }
-
+    
+    public ModelMenuItem(Element menuItemElement, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
+        this(menuItemElement, parentSubMenu.getTopModelMenu(), parentSubMenu, buildArgs);
+    }
+    
     // SCIPIO: constructor modified to take parentInfo and buildArgs.
     // Presence of parentInfo.menuItem indicates this item is part of a sub-menu.
-    public ModelMenuItem(Element menuItemElement, ParentInfo parentInfo, BuildArgs buildArgs) {
+    private ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
         super(menuItemElement);
-        if (buildArgs == null) {
-            buildArgs = defaultBuildArgs;
-        }
         buildArgs.genBuildArgs.totalMenuItemCount++;
-        this.modelMenu = parentInfo.topMenu;
+        this.modelMenu = modelMenu;
         //this.parentMenuItem = parentMenuItem;
-        this.parentSubMenu = parentInfo.subMenu; // SCIPIO: news
+        this.parentSubMenu = parentSubMenu; // SCIPIO: new
         this.entityName = menuItemElement.getAttribute("entity-name");
         this.title = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("title"));
         this.tooltip = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("tooltip"));
@@ -183,10 +181,6 @@ public class ModelMenuItem extends ModelWidget {
             this.link = null;
         }
 
-        // SCIPIO: set these early
-        this.styleModelMenu = parentInfo.styleModelMenu;
-        this.funcModelMenu = parentInfo.funcModelMenu;
-        
         // SCIPIO: legacy inlined menu-items
         if (buildArgs.omitSubMenus) {
             this.subMenuModel = "";
@@ -225,7 +219,6 @@ public class ModelMenuItem extends ModelWidget {
             List<ModelSubMenu> subMenuList = new ArrayList<>();
             Map<String, ModelSubMenu> subMenuMap = new LinkedHashMap<>();
             
-            ParentInfo childParentItemInfo = new ParentInfo(this, this.styleModelMenu, this.funcModelMenu);
             int i = 0;
             for(Element subMenuElement : subMenuElements) {
                 List<? extends Element> extraMenuItems = null;
@@ -233,19 +226,13 @@ public class ModelMenuItem extends ModelWidget {
                     // Add the legacy items as extras to the first sub-menu
                     extraMenuItems = itemElements;
                 }
-                // Determine a name for the sub-menu
-                String defaultSubMenuName;
-                if (i == 0) {
-                    defaultSubMenuName = "_submenu_default_" + buildArgs.genBuildArgs.totalSubMenuCount;
-                } else {
-                    defaultSubMenuName = "_submenu_" + i + "_" + buildArgs.genBuildArgs.totalSubMenuCount;
-                }
-                ModelSubMenu.BuildArgs subBuildArgs = new ModelSubMenu.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs);
+                ModelSubMenu.BuildArgs subBuildArgs = new ModelSubMenu.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs,
+                            buildArgs.currResource);
                 subBuildArgs.extraMenuItems = extraMenuItems;
                 subBuildArgs.forceSubMenuModelScope = buildArgs.forceSubMenuModelScope;
                 
-                ModelSubMenu modelSubMenu = new ModelSubMenu(subMenuElement, defaultSubMenuName, 
-                        childParentItemInfo, subBuildArgs);
+                ModelSubMenu modelSubMenu = new ModelSubMenu(subMenuElement, buildArgs.currResource, 
+                        this, subBuildArgs);
                 
                 subMenuMap.put(modelSubMenu.getEffectiveName(), modelSubMenu);
                 subMenuList.add(modelSubMenu);
@@ -314,8 +301,6 @@ public class ModelMenuItem extends ModelWidget {
         this.subMenuModel = "";
         this.subMenuStyle = "";
         this.subMenuTitle = "";
-        this.styleModelMenu = this.modelMenu;
-        this.funcModelMenu = this.modelMenu;
     }
 
     // Merge constructor
@@ -401,10 +386,7 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.subMenuTitle = existingMenuItem.subMenuTitle;
         }
-        // SCIPIO: NOTE: here it should always be the overriding menu item
-        this.styleModelMenu = overrideMenuItem.styleModelMenu;
-        this.funcModelMenu = overrideMenuItem.funcModelMenu;
-        
+
         if (overrideMenuItem.hasSubMenu()) {
             this.subMenuMap = overrideMenuItem.subMenuMap;
             this.subMenuList = overrideMenuItem.subMenuList;
@@ -807,6 +789,9 @@ public class ModelMenuItem extends ModelWidget {
      * SCIPIO: Returns THIS item's alt model menu for style fields.
      */
     public ModelMenu getStyleModelMenu() {
+        if (this.styleModelMenu == null) {
+            this.styleModelMenu = parentSubMenu != null ? parentSubMenu.getStyleModelMenu() : this.getModelMenu();
+        }
         return this.styleModelMenu;
     }
     
@@ -814,6 +799,9 @@ public class ModelMenuItem extends ModelWidget {
      * SCIPIO: Returns THIS item's alt model menu for functional/logic fields.
      */
     public ModelMenu getFuncModelMenu() {
+        if (this.funcModelMenu == null) {
+            this.funcModelMenu = parentSubMenu != null ? parentSubMenu.getFuncModelMenu() : this.getModelMenu();
+        }
         return this.funcModelMenu;
     }
 
@@ -1094,52 +1082,19 @@ public class ModelMenuItem extends ModelWidget {
     public static class BuildArgs {
         public final GeneralBuildArgs genBuildArgs;
         public final CurrentMenuDefBuildArgs currentMenuDefBuildArgs;
+        public String currResource;
         
         public boolean omitSubMenus;
         public String forceSubMenuModelScope;
 
-        public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs) {
+        public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs,
+                    String currResource) {
             this.genBuildArgs = genBuildArgs;
             this.currentMenuDefBuildArgs = currentMenuDefBuildArgs;
+            this.currResource = currResource;
             this.omitSubMenus = false;
             this.forceSubMenuModelScope = null;
         }
     }
-    
-    /**
-     * SCIPIO: For easier passing around the constructors.
-     */
-    static class ParentInfo {
-        protected final ModelMenu topMenu;
-        protected final ModelMenuItem menuItem;
-        protected final ModelSubMenu subMenu;
-        
-        protected final ModelMenu styleModelMenu;
-        protected final ModelMenu funcModelMenu;
 
-        public ParentInfo(ModelMenuItem menuItem, ModelMenu styleModelMenu, ModelMenu funcModelMenu) {
-            this.styleModelMenu = styleModelMenu;
-            this.funcModelMenu = funcModelMenu;
-            this.topMenu = menuItem.getModelMenu();
-            this.menuItem = menuItem;
-            this.subMenu = null;
-        }
-        
-        public ParentInfo(ModelSubMenu subMenu, ModelMenu styleModelMenu, ModelMenu funcModelMenu) {
-            this.styleModelMenu = styleModelMenu;
-            this.funcModelMenu = funcModelMenu;
-            this.topMenu = subMenu.getTopModelMenu();
-            this.menuItem = null;
-            this.subMenu = subMenu;
-        }
-
-        public ParentInfo(ModelMenu topMenu) {
-            this.styleModelMenu = topMenu;
-            this.funcModelMenu = topMenu;
-            this.topMenu = topMenu;
-            this.menuItem = null;
-            this.subMenu = null;
-        }
-        
-    }
 }

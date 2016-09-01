@@ -204,7 +204,9 @@ Features and Modifications:
                         sub-menus defined in document as descendants of this menu element.
                         Default: 'style'
                         NOTE: Strictly governs the immediately descendant XML of this menu element;
-                            does not apply to external menu includes, which must set their own defaults.</xs:documentation>
+                            does not apply to external menu includes, which must set their own defaults.
+                        NOTE: This setting itself is inherited from extends, but it does not apply
+                            to the inherited menu-items' sub-menus unless those sub-menus are overridden.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -221,7 +223,43 @@ Features and Modifications:
                         sub-menus defined in document as descendants of this menu element.
                         Default: 'full'
                         NOTE: Strictly governs the immediately descendant XML of this menu element;
-                            does not apply to external menu includes, which must set their own defaults.</xs:documentation>
+                            does not apply to external menu includes, which must set their own defaults.
+                        NOTE: This setting itself is inherited from extends, but it does not apply
+                            to the inherited menu-items' sub-menus unless those sub-menus are overridden.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="style" />
+                        <xs:enumeration value="func" />
+                        <xs:enumeration value="full" />
+                        <xs:enumeration value="none" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="force-extends-sub-menu-model-scope">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
+                        of all menu items included from the parent.
+                        NOTE: This setting is not inherited through extends.
+                        NOTE: This setting overrides all others in the target menu recursively.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="style" />
+                        <xs:enumeration value="func" />
+                        <xs:enumeration value="full" />
+                        <xs:enumeration value="none" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="force-all-sub-menu-model-scope">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
+                        of all menu items in this menu, regardless of any settings.
+                        This is a convenience setting and can be achieved more verbosely with
+                        combinations of others.
+                        NOTE: This setting is not inherited through extends.
+                        NOTE: This setting overrides all others in the menu and included/extended menus recursively.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

@@ -327,7 +327,7 @@ public class ModelMenu extends ModelWidget {
         
         // SCIPIO: include-menu-items and menu-item
         processIncludeMenuItems(menuElement, null, null, menuItemList, menuItemMap, 
-                menuLocation, true, null, null, menuElemCache, new ParentInfo(this), 
+                menuLocation, true, null, null, null, menuElemCache, new ParentInfo(this), 
                 currentMenuDefBuildArgs, genBuildArgs);
         
         menuItemList.trimToSize();
@@ -467,7 +467,7 @@ public class ModelMenu extends ModelWidget {
      */
     void processIncludeMenuItems(Element parentElement, List<? extends Element> preInclElements, List<? extends Element> postInclElements, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap, String currResource, 
-            boolean processIncludes, Set<String> excludeItems, String subMenusFilter, Map<String, Element> menuElemCache,
+            boolean processIncludes, Set<String> excludeItems, String subMenusFilter, String forceSubMenuModelScope, Map<String, Element> menuElemCache,
             ParentInfo parentInfo, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, GeneralBuildArgs genBuildArgs) {
         // WARN: even local cache not fully used (cacheConsume=true so only uses cached from prev actions includes) 
         // to be safe because known that menu-item Elements get written to in some places and 
@@ -494,6 +494,7 @@ public class ModelMenu extends ModelWidget {
                 String inclMenuName = itemInclElement.getAttribute("menu-name");
                 String inclResource = itemInclElement.getAttribute("resource");
                 String inclRecursive = itemInclElement.getAttribute("recursive");
+                String inclForceSubMenuModelScope = itemInclElement.getAttribute("force-sub-menu-model-scope");
                 if (inclRecursive.isEmpty()) {
                     inclRecursive = "full";
                 }
@@ -504,6 +505,9 @@ public class ModelMenu extends ModelWidget {
                     nextSubMenusFilter = "none";
                 } else {
                     nextSubMenusFilter = inclSubMenus;
+                }
+                if (forceSubMenuModelScope == null || forceSubMenuModelScope.isEmpty()) {
+                    forceSubMenuModelScope = inclForceSubMenuModelScope;
                 }
                 
                 Set<String> inclExcludeItems = new HashSet<String>();
@@ -538,7 +542,7 @@ public class ModelMenu extends ModelWidget {
                                         inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
                                 if (parentMenuElem != null) {
                                     processIncludeMenuItems(parentMenuElem, null, null, menuItemList, menuItemMap, 
-                                            nextResource, true, inclExcludeItems, nextSubMenusFilter, menuElemCache, parentInfo,
+                                            nextResource, true, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, menuElemCache, parentInfo,
                                             new CurrentMenuDefBuildArgs(parentMenuElem), genBuildArgs);
                                 }
                                 else {
@@ -549,12 +553,12 @@ public class ModelMenu extends ModelWidget {
                         
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                             processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
-                                    nextResource, true, inclExcludeItems, nextSubMenusFilter, menuElemCache, parentInfo,
+                                    nextResource, true, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, menuElemCache, parentInfo,
                                     new CurrentMenuDefBuildArgs(inclMenuElem), genBuildArgs);
                         }
                         else {
                             processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
-                                    nextResource, false, inclExcludeItems, nextSubMenusFilter, menuElemCache, parentInfo,
+                                    nextResource, false, inclExcludeItems, nextSubMenusFilter, forceSubMenuModelScope, menuElemCache, parentInfo,
                                     new CurrentMenuDefBuildArgs(inclMenuElem), genBuildArgs);
                         }
                     }
@@ -571,6 +575,7 @@ public class ModelMenu extends ModelWidget {
         List<? extends Element> itemElements = UtilXml.childElementList(parentElement, "menu-item");
         ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(genBuildArgs, currentMenuDefBuildArgs);
         itemBuildArgs.omitSubMenus = ("none".equals(subMenusFilter));
+        itemBuildArgs.forceSubMenuModelScope = forceSubMenuModelScope;
         for (Element itemElement : itemElements) {
             String itemName = itemElement.getAttribute("name");
             if (!excludeItems.contains(itemName)) {

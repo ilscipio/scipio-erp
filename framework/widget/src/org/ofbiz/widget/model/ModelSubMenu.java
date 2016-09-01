@@ -140,6 +140,11 @@ public class ModelSubMenu extends ModelWidget {
             }
         }
         
+        // override
+        if (buildArgs.forceSubMenuModelScope != null && !buildArgs.forceSubMenuModelScope.isEmpty()) {
+            modelScope = buildArgs.forceSubMenuModelScope;
+        }
+        
         // SCIPIO: set these early
         this.model = model;
         this.modelScope = modelScope;
@@ -180,7 +185,7 @@ public class ModelSubMenu extends ModelWidget {
         ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
         Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
         topModelMenu.processIncludeMenuItems(subMenuElement, preInclElements, null, menuItemList, menuItemMap, 
-                topModelMenu.getMenuLocation(), true, null, null, menuElemCache, childParentItemInfo,
+                topModelMenu.getMenuLocation(), true, null, null, buildArgs.forceSubMenuModelScope, menuElemCache, childParentItemInfo,
                 buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
         
         // extra items: replaces the legacy menu-item load originally in ModelMenuItem constructor
@@ -190,6 +195,7 @@ public class ModelSubMenu extends ModelWidget {
             Map<String, ModelMenuItem> extraMenuItemMap = new HashMap<String, ModelMenuItem>();
             
             ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs);
+            itemBuildArgs.forceSubMenuModelScope = buildArgs.forceSubMenuModelScope;
             
             for (Element itemElement : extraMenuItems) {
                 ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, childParentItemInfo, itemBuildArgs);
@@ -445,11 +451,13 @@ public class ModelSubMenu extends ModelWidget {
         public final CurrentMenuDefBuildArgs currentMenuDefBuildArgs;
         
         public List<? extends Element> extraMenuItems;
+        public String forceSubMenuModelScope;
 
         public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs) {
             this.genBuildArgs = genBuildArgs;
             this.currentMenuDefBuildArgs = currentMenuDefBuildArgs;
             this.extraMenuItems = null;
+            this.forceSubMenuModelScope = null;
         }
         
     }

@@ -200,6 +200,7 @@ under the License.
         </section>
      </screen>
 
+    <!-- SCIPIO: NOTE: See component://webtools/widget/CommonScreens.xml#SideBarMenu for more information about this pattern  -->
     <screen name="SideBarMenu">
         <section>
             <actions>

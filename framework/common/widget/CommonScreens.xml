@@ -1274,22 +1274,23 @@ under the License.
         </section>
     </screen>
     
-    <!-- SideBar Menu Common Implementation 
-        Each application should wrap this implementation in its CommonScreens.xml and provide the location
-        of an advanced sidebar menu in sideBarMenu.advLocation/advName, plus any other wanted configuration.
-        This advanced menu may have a complex structure with any number and depth of sub-menus.
+    <!-- Advanced Menu Wrapper (Generic/Tweakable)
+        Renders an complex menu supporting complex structure such as any number and depth of sub-menus.
+        
+        Each application should wrap this implementation (or a variant: AdvSideBarMenu, etc.) in its common screen definitions and provide the location
+        of an complex menu in menuCfg.location/advName, plus any other wanted configuration.
         
         The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
         
-        * activeSubMenu - Name of a sub-menu that is part of the advanced SideBar menu designated by advLocation/advName.
+        * activeSubMenu - Name of a sub-menu that is part of the complex menu designated by advLocation/advName.
           If the field is empty, it indicates the top level (no sub-menu).
           The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
           This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
-          but this location is not used in the advanced menu lookup.
-          If the name is not found within the advanced menu as sub-menu, the name and location is instead used to lookup a 
+          but this location is not used in the complex menu lookup.
+          If the name is not found within the complex menu as sub-menu, the name and location is instead used to lookup a 
           simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
-          but is only necessary if the menu location differs from the default location as specified to this widget in sideBarMenu.defLocation.
-          In fallback mode, a suffix (by default "SideBar") is added to the activeSubMenu value before performing the lookup.
+          but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
+          In fallback mode, a suffix (by default "Menu", or "SideBar" if you use AdvSideBarMenu) is added to the activeSubMenu value before performing the lookup.
         * activeSubMenuItem - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
           on the menu/sub-menu designated/implied by activeSubMenu.
@@ -1297,29 +1298,28 @@ under the License.
           specified, as default behavior or fallback. 
           WARN (2016-08-31): this behavior is for compatibility and is currently subject to change slightly.
         
-        Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an advanced menu.
+        Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.
         Often one will be set by a decorator and the other by a screen.
         activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
-        still necessary to designate items in other non-sidebar menus.
+        still necessary to designate items in other unrelated menus.
         
         NOTES:
         * This widget must always be called with share-scope="false" (which is the widget-screen.xsd default). -->
-    <screen name="SideBarMenu">
+    <screen name="ComplexMenu">
         <section>
             <actions>
-                <!-- advanced menu location -->
-                <set field="advLoc" from-field="sideBarMenu.advLocation" />
-                <set field="advName" from-field="sideBarMenu.advName" />
-                <set field="advSubFilter" from-field="sideBarMenu.advSubMenuFilter" default-value="current" />
-                <set field="advMaxDepth" from-field="sideBarMenu.advMaxDepth" default-value="" />
+                <!-- complex menu location -->
+                <set field="cplxLoc" from-field="menuCfg.location" />
+                <set field="cplxName" from-field="menuCfg.name" />
+                <set field="cplxSubFilter" from-field="menuCfg.subMenuFilter" default-value="current" />
+                <set field="cplxMaxDepth" from-field="menuCfg.maxDepth" default-value="" />
                 
                 <!-- The default selected item field names are appropriate for menus derived from 
                     CommonEmptyAppBarDashboardMenu/CommonAppBarDashboardMenu in component://common/widget/CommonMenus.xml -->
-                <set field="advSelSubField" from-field="sideBarMenu.advSelMenuFieldName" default-value="activeMainSubMenu" />
-                <set field="advSelItemField" from-field="sideBarMenu.advSelMenuItemFieldName" default-value="activeMainMenuItem" />
+                <set field="cplxSelSubField" from-field="menuCfg.selMenuFieldName" default-value="activeMainSubMenu" />
+                <set field="cplxSelItemField" from-field="menuCfg.selMenuItemFieldName" default-value="activeMainMenuItem" />
                 
-
-                <!-- Menu name suffix control for complex/advanced menu
+                <!-- Menu name suffix control for complex menu
                      set advAddSuffix to false (default) if you used explicit names in menu defs, such as: 
                        <sub-menu name="Server" include="ServerSideBar"/>
                        in this case it's best to leave advStripSuffix true for compatibility.
@@ -1327,33 +1327,48 @@ under the License.
                        <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
                        in this case advStripSuffix is ignored (inapplicable).
                 -->
-                <set field="advSuffix" from-field="sideBarMenu.advNameSuffix" type="String" default-value="SideBar" />       
-                <set field="advAddSuffix" from-field="sideBarMenu.advAddNameSuffix" type="Boolean" default-value="false" />
-                <set field="advStripSuffix" from-field="sideBarMenu.advStripNameSuffix" type="Boolean" default-value="true" />
+                <set field="cplxSuffix" from-field="menuCfg.nameSuffix" default-value="Menu" />       
+                <set field="cplxAddSuffix" from-field="menuCfg.addNameSuffix" type="Boolean" default-value="false" />
+                <set field="cplxStripSuffix" from-field="menuCfg.stripNameSuffix" type="Boolean" default-value="true" />
 
                 <!-- Menu name suffix for simple menu (always appended if menu name does not already end up the suffix) -->
-                <set field="simpleSuffix" from-field="sideBarMenu.simpleNameSuffix" default-value="SideBar" />
+                <set field="smplSuffix" from-field="menuCfg.simpleNameSuffix" default-value="${advSuffix}" />
 
-                <!-- sideBarMenu.defaultLocation is for handling legacy/non-complex menus -->
-                <set field="defLoc" from-field="sideBarMenu.defLocation" default-value="component://common/widget/CommonMenus.xml" />
+                <!-- menuCfg.defaultLocation is for handling legacy/non-complex menus -->
+                <set field="defLoc" from-field="menuCfg.defLocation" default-value="component://common/widget/CommonMenus.xml" />
                 
                 <!-- for testing -->
-                <set field="forceSimple" from-field="sideBarMenu.forceSimple" type="Boolean" default-value="false" />
+                <set field="smplForce" from-field="menuCfg.forceSimple" type="Boolean" default-value="false" />
 
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareSideBarMenu.groovy"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareComplexMenu.groovy"/>
             </actions>
             <widgets>
                 <section>
                     <condition>
-                        <if-compare field="useAdvMenu" operator="equals" type="Boolean" value="true" />
+                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
                     </condition>
                     <widgets>
-                        <include-menu location="${advLoc}" name="${advName}" sub-menus="${advSubFilter}" max-depth="${advMaxDepth}"/>
+                        <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
                     </widgets>
                     <fail-widgets>
-                        <include-menu location="${simpleLoc}" name="${simpleName}"/>
+                        <include-menu location="${smplLoc}" name="${smplName}"/>
                     </fail-widgets>
                 </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Advanced SideBar Menu Wrapper - based on AdvGenericMenu
+        Currently sets the activeSubMenu suffix to "SideBar".
+        See AdvGenericMenu for details. -->
+    <screen name="ComplexSideBarMenu">
+        <section>
+            <actions>
+                <set field="cplxSubFilter" from-field="menuCfg.subMenuFilter" default-value="current" />
+                <set field="cplxSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" />       
+            </actions>
+            <widgets>
+                <include-screen name="ComplexMenu"/>
             </widgets>
         </section>
     </screen>

@@ -532,13 +532,14 @@ under the License.
         </section>
     </screen>
     
-    <screen name="DefaultSideBarMenu">
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
         <section>
             <actions>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
             </actions>
             <widgets>
-                <include-screen name="SideBarMenu"/>
+                <include-screen name="MainSideBarMenu"/>
             </widgets>
         </section>
     </screen>

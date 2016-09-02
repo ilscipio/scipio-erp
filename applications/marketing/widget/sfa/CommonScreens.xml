@@ -58,7 +58,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefaultSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -90,7 +90,7 @@ under the License.
                                 <section>
                                     <widgets>
                                         <!-- <include-menu name="TrackingCodeSideBar" location="component://marketing/widget/TrackingCodeMenus.xml"/> -->
-                                        <include-screen name="DefaultSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
+                                        <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -135,11 +135,11 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="DefaultSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefaultSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
-                                <!-- <include-screen name="DefaultSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/> -->
+                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
+                                <!-- <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/> -->
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -172,7 +172,7 @@ under the License.
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegator to main-decorator -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                       <include-screen name="DefaultSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
+                       <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                     </decorator-section>                   
                     <decorator-section name="body">
                         <section>
@@ -214,7 +214,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="DefaultSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -742,28 +742,28 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: SideBar menu factored implementation -->
-    <screen name="SideBarMenu">
+    <!-- SCIPIO: Main SideBar Menu -->
+    <screen name="MainSideBarMenu">
         <section>
             <actions>
-                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
-                <set field="sideBarMenu.advLocation" value="component://marketing/widget/sfa/SfaMenus.xml"/>
-                <set field="sideBarMenu.advName" value="SfaAppSideBar"/>
-                <set field="sideBarMenu.defLocation" value="component://marketing/widget/sfa/SfaMenus.xml"/>
+                <set field="menuCfg.location" value="component://marketing/widget/sfa/SfaMenus.xml"/>
+                <set field="menuCfg.name" value="SfaAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://marketing/widget/sfa/SfaMenus.xml"/>
             </actions>
             <widgets>
-                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
             </widgets>
         </section>
     </screen>
     
-    <screen name="DefaultSideBarMenu">
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
         <section>
             <actions>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
             </actions>
             <widgets>
-                <include-screen name="SideBarMenu"/>
+                <include-screen name="MainSideBarMenu"/>
             </widgets>
         </section>
     </screen>

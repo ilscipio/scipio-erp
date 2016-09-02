@@ -56,7 +56,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -92,7 +92,7 @@ under the License.
                                 <include-menu name="AgreementSideBar" location="component://accounting/widget/AccountingMenus.xml" />
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -213,7 +213,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -271,7 +271,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -555,28 +555,28 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: SideBar menu factored implementation -->
-    <screen name="SideBarMenu">
+    <!-- SCIPIO: Main SideBar Menu -->
+    <screen name="MainSideBarMenu">
         <section>
             <actions>
-                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
-                <set field="sideBarMenu.advLocation" value="component://accounting/widget/AccountingMenus.xml"/>
-                <set field="sideBarMenu.advName" value="AccountingAppSideBar"/>
-                <set field="sideBarMenu.defLocation" value="component://accounting/widget/AccountingMenus.xml"/>
+                <set field="menuCfg.location" value="component://accounting/widget/AccountingMenus.xml"/>
+                <set field="menuCfg.name" value="AccountingAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://accounting/widget/AccountingMenus.xml"/>
             </actions>
             <widgets>
-                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
             </widgets>
         </section>
     </screen>
     
-    <screen name="DefaultSideBarMenu">
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
         <section>
             <actions>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
             </actions>
             <widgets>
-                <include-screen name="SideBarMenu"/>
+                <include-screen name="MainSideBarMenu"/>
             </widgets>
         </section>
     </screen>

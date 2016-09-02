@@ -1,10 +1,10 @@
 /**
- * SCIPIO: Prepares side bar menu.
+ * SCIPIO: Prepares complex menu.
  */
 
 import org.ofbiz.base.util.*;
 
-final module = "PrepareSideBarMenu.groovy";
+final module = "PrepareComplexMenu.groovy";
 
 /* 
 activeSubMenu is the location#name of a sub-menu element (<sub-menu name="..."/>).
@@ -55,44 +55,44 @@ def stripSuffix(name, suffix) {
 }
 
 // append menu name suffix if needed
-if (context.advAddSuffix) {
-    activeSubMenuName = appendSuffix(activeSubMenuName, context.advSuffix);
-    // ignore advStripSuffix
+if (context.cplxAddSuffix) {
+    activeSubMenuName = appendSuffix(activeSubMenuName, context.cplxSuffix);
+    // ignore cplxStripSuffix
 } else {
-    if (context.advStripSuffix) {
-        activeSubMenuName = stripSuffix(activeSubMenuName, context.advSuffix);
+    if (context.cplxStripSuffix) {
+        activeSubMenuName = stripSuffix(activeSubMenuName, context.cplxSuffix);
     }
 }
 
-useAdvMenu = false;
-if (!context.forceSimple) {
+useCplxMenu = false;
+if (!context.smplForce) {
     if (activeSubMenuName) {
-        // check if the advanced menu contains the named submenu.
+        // check if the complex menu contains the named submenu.
         try {
-            advMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
-                context.advLoc, context.advName);
-            if (advMenuModel == null) {
-                throw new IllegalArgumentException("Could not find menu with name [" + context.advName 
-                    + "] in location [" + context.advLoc + "]");
+            cplxMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
+                context.cplxLoc, context.cplxName);
+            if (cplxMenuModel == null) {
+                throw new IllegalArgumentException("Could not find menu with name [" + context.cplxName 
+                    + "] in location [" + context.cplxLoc + "]");
             }
         } catch (Exception e) {
-            Debug.logError(e, "Error loading sidebar advanced menu model", module);
+            Debug.logError(e, "Error loading complex menu model", module);
         }
         
-        if (activeSubMenuName.equals(advMenuModel.getName()) || 
-            advMenuModel.getModelSubMenuByName(activeSubMenuName)) {
-            useAdvMenu = true;
+        if (activeSubMenuName.equals(cplxMenuModel.getName()) || 
+            cplxMenuModel.getModelSubMenuByName(activeSubMenuName)) {
+            useCplxMenu = true;
         }
     } else {
-        // by default assume this is a top level request for the advanced menu
-        useAdvMenu = true;
+        // by default assume this is a top level request for the complex menu
+        useCplxMenu = true;
     }
 }
 
-context.useAdvMenu = useAdvMenu;
+context.useCplxMenu = useCplxMenu;
 
-if (useAdvMenu) {
-    context[context.advSelSubField] = activeSubMenuName;
+if (useCplxMenu) {
+    context[context.cplxSelSubField] = activeSubMenuName;
     
     /*
      To highlight the item, we simply transfer activeSubMenuItem to activeMainMenuItem (note scope is protected).
@@ -102,18 +102,18 @@ if (useAdvMenu) {
       */
     activeSubMenuItem = context.activeSubMenuItem;
     // NOTE: it is possible may have wanted to omit the test: && !activeSubMenuItem
-    // for now this is mitigated by PrepareDefaultSideBarMenu.groovy.
+    // for now this is mitigated by PrepareDefComplexMenu.groovy.
     if (!activeSubMenu && !activeSubMenuItem) {
         activeSubMenuItem = context.activeMainMenuItem;
     }
-    context[context.advSelItemField] = activeSubMenuItem;
+    context[context.cplxSelItemField] = activeSubMenuItem;
 } else {
     // fallback to simple menu
 
     // always append suffix for simple/fallback
-    context.simpleName = appendSuffix(origActiveSubMenuName, context.simpleSuffix);
+    context.smplName = appendSuffix(origActiveSubMenuName, context.smplSuffix);
 
     // for location we use the part before # in activeSubMenu, or the configured default location
-    context.simpleLoc = activeSubMenuLoc ?: context.defLoc;
+    context.smplLoc = activeSubMenuLoc ?: context.defLoc;
 }
 

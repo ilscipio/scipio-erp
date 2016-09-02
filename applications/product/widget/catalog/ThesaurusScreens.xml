@@ -29,7 +29,7 @@ under the License.
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefaultSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>-->
                     <decorator-section name="body">

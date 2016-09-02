@@ -57,7 +57,7 @@
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefaultSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -175,28 +175,28 @@
         </section>
     </screen>
     
-    <!-- SCIPIO: SideBar menu factored implementation -->
-    <screen name="SideBarMenu">
+    <!-- SCIPIO: Main SideBar Menu -->
+    <screen name="MainSideBarMenu">
         <section>
             <actions>
-                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
-                <set field="sideBarMenu.advLocation" value="component://commonext/widget/ofbizsetup/Menus.xml"/>
-                <set field="sideBarMenu.advName" value="SetupAppSideBar"/>
-                <set field="sideBarMenu.defLocation" value="component://commonext/widget/ofbizsetup/Menus.xml"/>
+                <set field="menuCfg.location" value="component://commonext/widget/ofbizsetup/Menus.xml"/>
+                <set field="menuCfg.name" value="SetupAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://commonext/widget/ofbizsetup/Menus.xml"/>
             </actions>
             <widgets>
-                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
             </widgets>
         </section>
     </screen>
     
-    <screen name="DefaultSideBarMenu">
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
         <section>
             <actions>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
             </actions>
             <widgets>
-                <include-screen name="SideBarMenu"/>
+                <include-screen name="MainSideBarMenu"/>
             </widgets>
         </section>
     </screen>

@@ -51,7 +51,7 @@ under the License.
                                 <include-menu name="TaxAuthoritySideBar" location="component://accounting/widget/TaxAuthorityMenus.xml" />
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -172,7 +172,8 @@ TODO/FIXME:
   <#else>
     <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs 
         excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title 
-        htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType>
+        htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType
+        isNestedMenu=isNestedMenu menuLevel=menuLevel>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=(item.linkArgs!{}) linkStr=(item.linkStr!"") 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=(item.items![]) 

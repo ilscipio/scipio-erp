@@ -19,7 +19,6 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,6 +45,7 @@ public class ModelSubMenu extends ModelWidget {
 
     public static final String module = ModelSubMenu.class.getName();
     
+    private final boolean anonName; // true if an anonymous name was generated for this menu
     private final String effectiveName;
     
     private final List<ModelAction> actions;
@@ -119,6 +119,7 @@ public class ModelSubMenu extends ModelWidget {
         
         // figure out our name
         String effectiveName = getName();
+        boolean anonName = false;
         if (effectiveName == null || effectiveName.isEmpty()) {
             // from-include is the default, for convenience
             String autoSubMenuNames = buildArgs.currentMenuDefBuildArgs.codeBehavior.autoSubMenuNames;
@@ -126,9 +127,11 @@ public class ModelSubMenu extends ModelWidget {
                 effectiveName = includeName;
             }
             if (effectiveName == null || effectiveName.isEmpty()) {
-                effectiveName = makeDefaultName(buildArgs);
+                effectiveName = makeAnonName(buildArgs);
+                anonName = true;
             }
         }
+        this.anonName = anonName;
         this.effectiveName = effectiveName;
         
         if (modelScope == null || modelScope.isEmpty()) {
@@ -204,7 +207,13 @@ public class ModelSubMenu extends ModelWidget {
     private ModelSubMenu(ModelSubMenu existingSubMenu, 
             ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(existingSubMenu.getName());
-        this.effectiveName = existingSubMenu.effectiveName;
+        buildArgs.genBuildArgs.totalSubMenuCount++;
+        this.anonName = existingSubMenu.anonName;
+        if (this.anonName) {
+            this.effectiveName = makeAnonName(buildArgs);
+        } else {
+            this.effectiveName = existingSubMenu.effectiveName;
+        }
         this.parentMenuItem = parentMenuItem != null ? parentMenuItem : existingSubMenu.parentMenuItem;
         
         ArrayList<ModelAction> actions = new ArrayList<>(existingSubMenu.actions);
@@ -238,11 +247,9 @@ public class ModelSubMenu extends ModelWidget {
         this.shareScope = existingSubMenu.shareScope;
     }
     
-    String makeDefaultName(BuildArgs buildArgs) {
+    String makeAnonName(BuildArgs buildArgs) {
         String defaultName;
-        // FIXME: NOT GUARANTEED TO MAKE A UNIQUE NAME
-        // if include a menu with same name from different file, will cause errors
-        defaultName = "_" + this.getTopModelMenu().getName() + "_" + buildArgs.genBuildArgs.totalSubMenuCount;
+        defaultName = "_submenu_" + buildArgs.genBuildArgs.totalSubMenuCount;
         return defaultName;
     }
     
@@ -319,6 +326,10 @@ public class ModelSubMenu extends ModelWidget {
      
     public String getEffectiveName() {
         return this.effectiveName;
+    }
+    
+    public boolean isAnonName() {
+        return this.anonName;
     }
     
     public ModelMenuItem getModelMenuItemByName(String name) {
@@ -513,6 +524,9 @@ public class ModelSubMenu extends ModelWidget {
 
         public List<? extends Element> extraMenuItems;
 
+        /**
+         * Specify-all-essentials constructor.
+         */
         public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, 
                 String currResource, String forceSubMenuModelScope) {
             this.genBuildArgs = genBuildArgs;
@@ -523,7 +537,7 @@ public class ModelSubMenu extends ModelWidget {
         }
         
         /**
-         * preserve-all-essentials constructor
+         * Preserve-all-essentials constructor.
          */
         public BuildArgs(ModelMenuItem.BuildArgs itemBuildArgs) {
             this.genBuildArgs = itemBuildArgs.genBuildArgs;
@@ -532,14 +546,6 @@ public class ModelSubMenu extends ModelWidget {
             this.forceSubMenuModelScope = itemBuildArgs.forceSubMenuModelScope;
             this.extraMenuItems = null;
         }
-    }
-    
-    
-    public static class ModelScopeResolver implements Serializable {
-        
-        private transient ModelMenu styleModelMenu;
-        private transient ModelMenu funcModelMenu;
-        
     }
 
 }

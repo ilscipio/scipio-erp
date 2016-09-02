@@ -57,7 +57,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="ExampleAppSideBar" location="component://example/widget/example/ExampleMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://example/widget/example/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

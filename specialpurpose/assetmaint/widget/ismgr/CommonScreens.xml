@@ -52,7 +52,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="IsMgrAppSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

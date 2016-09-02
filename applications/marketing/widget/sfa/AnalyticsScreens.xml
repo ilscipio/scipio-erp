@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="MarketingAnalyticsSales"/>
-                <set field="activeMainMenuItem" value="AnalyticsSales"/>
+                <set field="activeSubMenuItem" value="AnalyticsSales"/>
                 
                 <entity-condition entity-name="Enumeration" list="salesChannelList">
                     <condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
@@ -76,7 +76,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="MarketingAnalytics"/>
-                <set field="activeMainMenuItem" value="AnalyticsTracking"/>
+                <set field="activeSubMenuItem" value="AnalyticsTracking"/>
                 <!-- <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsTracking.groovy"/> -->
                 <entity-condition list="marketingCampaignList" entity-name="MarketingCampaign" filter-by-date="true"/>
                 <entity-condition list="trackingCodeList" entity-name="TrackingCode" >

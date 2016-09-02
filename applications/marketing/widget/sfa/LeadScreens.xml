@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="MarketingFindLeads"/>
                 <set field="currentUrl" value="FindLeads"/>
-                <set field="activeMainMenuItem" value="Leads"/>
+                <set field="activeSubMenuItem" value="Leads"/>
                 <set field="setLeadtDescription" value="${groovy:session.setAttribute(&quot;leadDescription&quot;,activeMainMenuItem)}"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>

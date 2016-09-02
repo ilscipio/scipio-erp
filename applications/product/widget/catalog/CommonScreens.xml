@@ -69,7 +69,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <!-- provide default column for all others -->
-                                        <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                        <include-screen name="DefaultSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                            </fail-widgets>
@@ -111,7 +111,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -181,7 +181,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -246,7 +246,7 @@ under the License.
                                 <include-menu name="ConfigItemSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -340,7 +340,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -56,7 +56,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="ManufacturingAppSideBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://manufacturing/widget/manufacturing/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

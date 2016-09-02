@@ -57,7 +57,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="WorkEffortAppSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -159,7 +159,7 @@ under the License.
                                         <include-menu name="TimesheetSideBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <include-menu name="WorkEffortAppSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                        <include-screen name="DefaultSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>

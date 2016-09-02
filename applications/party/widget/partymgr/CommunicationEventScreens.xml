@@ -34,7 +34,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventSideBar"/>
+                        <include-menu name="CommEventSideBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}">
                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
@@ -71,7 +71,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventSideBar"/>
+                        <include-menu name="CommEventSideBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}">
                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>

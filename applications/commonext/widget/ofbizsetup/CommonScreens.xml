@@ -57,7 +57,7 @@
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="SetupAppSideBar" location="component://commonext/widget/ofbizsetup/Menus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

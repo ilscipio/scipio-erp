@@ -64,7 +64,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartyAppSideBar"/>
+                                <include-menu name="PartyAppSideBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -92,7 +92,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true) and (not empty context.party)}" override-by-auto-include="true">
-                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSideBar"/>
+                        <include-menu name="ProfileSideBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true) and (not empty context.party)}">
                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
@@ -263,27 +263,30 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: NOTE: See component://webtools/widget/CommonScreens.xml#SideBarMenu for more information about this pattern  -->
+    <!-- SCIPIO: SideBar menu factored implementation -->
     <screen name="SideBarMenu">
         <section>
             <actions>
+                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
+                <set field="sideBarMenu.advLocation" value="component://party/widget/partymgr/PartyMenus.xml"/>
+                <set field="sideBarMenu.advName" value="PartyAppSideBar"/>
+                <set field="sideBarMenu.defLocation" value="component://party/widget/partymgr/PartyMenus.xml"/>
             </actions>
             <widgets>
-                <section>
-                    <condition>
-                        <not><if-empty field="sideBarMenu.name"/></not>
-                    </condition>
-                    <actions>
-                        <set field="sideBarMenuLoc" from-field="sideBarMenu.location" default-value="component://party/widget/partymgr/PartyMenus.xml" />
-                    </actions>
-                    <widgets>
-                        <include-menu location="${sideBarMenuLoc}" name="${sideBarMenu.name}"/>
-                    </widgets>
-                    <fail-widgets>
-                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartyAppSideBar"/>
-                    </fail-widgets>
-                </section>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
             </widgets>
         </section>
     </screen>
+    
+    <screen name="DefaultSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="SideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

@@ -69,7 +69,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <!-- provide default column for all others -->
-                                        <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                                        <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                     </widgets>
                                 </section>
                            </fail-widgets>
@@ -111,7 +111,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -181,7 +181,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -246,7 +246,7 @@ under the License.
                                 <include-menu name="ConfigItemSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -340,7 +340,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -817,27 +817,30 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: NOTE: See component://webtools/widget/CommonScreens.xml#SideBarMenu for more information about this pattern  -->
+    <!-- SCIPIO: SideBar menu factored implementation -->
     <screen name="SideBarMenu">
         <section>
             <actions>
+                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
+                <set field="sideBarMenu.advLocation" value="component://product/widget/catalog/CatalogMenus.xml"/>
+                <set field="sideBarMenu.advName" value="CatalogAppSideBar"/>
+                <set field="sideBarMenu.defLocation" value="component://product/widget/catalog/CatalogMenus.xml"/>
             </actions>
             <widgets>
-                <section>
-                    <condition>
-                        <not><if-empty field="sideBarMenu.name"/></not>
-                    </condition>
-                    <actions>
-                        <set field="sideBarMenuLoc" from-field="sideBarMenu.location" default-value="component://product/widget/catalog/CatalogMenus.xml" />
-                    </actions>
-                    <widgets>
-                        <include-menu location="${sideBarMenuLoc}" name="${sideBarMenu.name}"/>
-                    </widgets>
-                    <fail-widgets>
-                        <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
-                    </fail-widgets>
-                </section>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
             </widgets>
         </section>
     </screen>
+    
+    <screen name="DefaultSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="SideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

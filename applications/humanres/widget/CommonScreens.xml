@@ -59,7 +59,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanResAppSideBar"/>
+                                <include-menu name="HumanResAppSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -481,27 +481,30 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: NOTE: See component://webtools/widget/CommonScreens.xml#SideBarMenu for more information about this pattern  -->
+    <!-- SCIPIO: SideBar menu factored implementation -->
     <screen name="SideBarMenu">
         <section>
             <actions>
+                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
+                <set field="sideBarMenu.advLocation" value="component://humanres/widget/HumanresMenus.xml"/>
+                <set field="sideBarMenu.advName" value="HumanResAppSideBar"/>
+                <set field="sideBarMenu.defLocation" value="component://humanres/widget/HumanresMenus.xml"/>
             </actions>
             <widgets>
-                <section>
-                    <condition>
-                        <not><if-empty field="sideBarMenu.name"/></not>
-                    </condition>
-                    <actions>
-                        <set field="sideBarMenuLoc" from-field="sideBarMenu.location" default-value="component://humanres/widget/HumanresMenus.xml" />
-                    </actions>
-                    <widgets>
-                        <include-menu location="${sideBarMenuLoc}" name="${sideBarMenu.name}"/>
-                    </widgets>
-                    <fail-widgets>
-                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanResAppSideBar"/>
-                    </fail-widgets>
-                </section>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
             </widgets>
         </section>
     </screen>
+    
+    <screen name="DefaultSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="SideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

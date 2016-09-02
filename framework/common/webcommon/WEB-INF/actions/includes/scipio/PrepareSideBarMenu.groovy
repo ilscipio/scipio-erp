@@ -101,7 +101,9 @@ if (useAdvMenu) {
      activeSubMenu is not set.
       */
     activeSubMenuItem = context.activeSubMenuItem;
-    if (!activeSubMenuItem && !activeSubMenu) {
+    // NOTE: it is possible may have wanted to omit the test: && !activeSubMenuItem
+    // for now this is mitigated by PrepareDefaultSideBarMenu.groovy.
+    if (!activeSubMenu && !activeSubMenuItem) {
         activeSubMenuItem = context.activeMainMenuItem;
     }
     context[context.advSelItemField] = activeSubMenuItem;

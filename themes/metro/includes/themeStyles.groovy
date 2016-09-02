@@ -24,7 +24,7 @@ context.styles.putAll([
     "customSideBar" : true,
     "menu_sidebar" : "topnav slicknav",
     "menu_sidebar_wrap" :"",
-    "menu_sidebar_specialtype" : "side-bar",
+    "menu_sidebar_specialtype" : "sidebar",
     
   /* Specific display elements */
     /* Address picker */

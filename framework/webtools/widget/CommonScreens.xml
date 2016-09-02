@@ -67,7 +67,7 @@ under the License.
                                 <!-- provide default column for all others -->
                                 <section>
                                     <actions>
-                                        <set field="sideBarMenu" type="NewMap" value="" />
+                                        <set field="activeSubMenu" value="" />
                                     </actions>
                                     <widgets>
                                         <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
@@ -556,6 +556,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
+                <!-- SCIPIO: NOTE: activeSubMenu still supports a location prefix. It is still wanted in this case, in case
+                    the complex nested menu (which doesn't use the location prefix) render fails, because here the fallback menu's location is not in the default Admin menus file.
+                    Also note that "SideBar" suffix is automatically added to the name (SecurityGroupSideBar), so it's not needed here. -->
+                <set field="activeSubMenu" value="component://common/widget/SecurityMenus.xml#SecurityGroup"/>
                 <service service-name="securityPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>
@@ -564,8 +568,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <!-- SCIPIO: TODO: combine into webtools menu (in non-destructive way) -->
-                        <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupSideBar"/>
+                        <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
                         <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupTabBar"/>

@@ -209,6 +209,7 @@ under the License.
                 <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
             </condition>
             <link target="security"/>
+            <sub-menu name="SecurityGroup" include="component://common/widget/SecurityMenus.xml#SecurityGroupSideBar"/>
         </menu-item>
         <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
             <link target="StatsSinceStart"/>

@@ -22,7 +22,7 @@ GroovyUtil.runScriptAtLocation("component://common/webcommon/includes/scipio/lib
 context.styles.putAll([
   /*Metro specific*/
     "customSideBar" : true,
-    "menu_sidebar" : "topnav slicknav",
+    "menu_sidebar" : "side-nav topnav slicknav",
     "menu_sidebar_wrap" :"",
     "menu_sidebar_specialtype" : "sidebar",
     

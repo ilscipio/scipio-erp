@@ -56,6 +56,7 @@ under the License.
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsLayoutDemo"/>
                 <set field="activeMainMenuItem" value="LayoutDemo"/>
+                <set field="activeSubMenu" value="LayoutDemo" />
                 <set field="activeSubMenuItem" value="Selected"/>
                 <set field="demoText" value="${uiLabelMap.WebtoolsLayoutDemoText}" global="true"/>
                 <set field="errorMessage" from-field="demoText" global="true"/>
@@ -77,8 +78,6 @@ under the License.
                 <set field="tableStyle" value="${styles.table_data_list} light-grid"/>
                 <set field="ofbizWidgetsLayoutScreenLocation" value="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemoOfbizWidgets" />
                 <set field="parameters.showLeftColumn" value="Y" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="LayoutDemoSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

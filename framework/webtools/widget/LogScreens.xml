@@ -24,8 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="ServerSideBar" />
+                <set field="activeSubMenu" value="Server" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

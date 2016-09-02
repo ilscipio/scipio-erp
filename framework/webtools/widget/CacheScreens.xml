@@ -24,11 +24,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
+                <set field="activeSubMenu" value="Server" />
                 <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleFindUtilCache"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCache.groovy"/>
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="ServerSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

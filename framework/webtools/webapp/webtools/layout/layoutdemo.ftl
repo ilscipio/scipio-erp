@@ -22,7 +22,8 @@
 </@nav>
 
 <@section containerClass="+my-container-class" class="+my-cell-class" containerId="this-id-never-shown" id="the-id-really-used"
-    containerAttribs={"my-extra-container-attrib":"test-value"} contentAttribs={"my-extra-content-attrib":attribSpecialVal("none"), "my-extra-content-attrib-2":attribSpecialVal("empty")}>
+    contentId="the-inner-div-id"
+    attribs={"my-extra-container-attrib":"test-value"} contentAttribs={"my-extra-content-attrib":attribSpecialVal("none"), "my-extra-content-attrib-2":attribSpecialVal("empty")}>
     <@heading attribs=makeMagTargetAttribMap("grid") id="grid">Grid</@heading>
     <@row class="+${styles.grid_display!}" myExtraRowAttrib="some-value">
         <@cell columns=2 myExtraCellAttrib="some-value">2</@cell>
@@ -1489,8 +1490,16 @@
   </@section>
 
   <@section title="Admin plain site-map/tree">
-    <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+  <@row>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+      </@cell>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo3" />
+      </@cell>
+    </@row>
   </@section>
+
 
 </@section>
 </#if>

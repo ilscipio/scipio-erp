@@ -279,12 +279,15 @@ under the License.
                         <!-- End of Profile -->
 
                         <!-- Menu sidebar begin-->
-                          
-                        <ul class="side-nav" id="menu_2">
-                            <#if userLogin??>  
-                                <@sideBarMenu/> 
-                            </#if>                 
-                        </ul>
+                        <#-- ul already included in target
+                        <ul class="side-nav" id="menu_2">-->
+                        <#-- FIXME?: maybe side-nav should be in global styles for CommonEmptyAppSideBar? --> 
+                        <div class="side-nav">
+                        <#if userLogin??>  
+                            <@sideBarMenu/> 
+                        </#if>                
+                        </div> 
+                        <#--</ul>-->
                         
                     </nav>
                     

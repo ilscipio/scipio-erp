@@ -43,20 +43,20 @@ under the License.
 
 <#macro makeBlock style text><fo:block<#if style?has_content> <@getFoStyle style/></#if>><#if text??>${text}</#if></fo:block></#macro>
 
-<#macro renderField text><#if text??>${text}</#if></#macro>
+<#macro renderField text extraArgs...><#if text??>${text}</#if></#macro>
 
-<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorId="" inPlaceEditorUrl="" inPlaceEditorParams="">
+<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorId="" inPlaceEditorUrl="" inPlaceEditorParams="" extraArgs...>
 <@makeBlock class description />
 </#macro>
-<#macro renderHyperlinkField></#macro>
+<#macro renderHyperlinkField extraArgs...></#macro>
 
-<#macro renderTextField name className alert value textSize maxlength id event action disabled clientAutocomplete ajaxUrl ajaxEnabled mask placeholder="" tooltip=""><@makeBlock className value /></#macro>
+<#macro renderTextField name className alert value textSize maxlength id event action disabled clientAutocomplete ajaxUrl ajaxEnabled mask placeholder="" tooltip="" extraArgs...><@makeBlock className value /></#macro>
 
-<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable language="" buttons="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false maxlength=""><@makeBlock className value /></#macro>
+<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable language="" buttons="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false maxlength="" extraArgs...><@makeBlock className value /></#macro>
 
-<#macro renderDateTimeField name className alert title value size maxlength step timeValues id event action dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName mask><@makeBlock className value /></#macro>
+<#macro renderDateTimeField name className alert title value size maxlength step timeValues id event action dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName mask extraArgs...><@makeBlock className value /></#macro>
 
-<#macro renderDropDownField name className alert id multiple formName otherFieldName event action size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent ajaxEnabled noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch>
+<#macro renderDropDownField name className alert id multiple formName otherFieldName event action size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent ajaxEnabled noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch extraArgs...>
 <#if currentValue?has_content && firstInList?has_content>
 <@makeBlock "" explicitDescription />
 <#else>
@@ -66,86 +66,86 @@ under the License.
 </#if>
 </#macro>
 
-<#macro renderCheckField items className alert id allChecked currentValue name event action fieldType="" fieldTitleBlank=false><@makeBlock "" "" /></#macro>
-<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action fieldType="" fieldTitleBlank=false><@makeBlock "" "" /></#macro>
+<#macro renderCheckField items className alert id allChecked currentValue name event action fieldType="" fieldTitleBlank=false extraArgs...><@makeBlock "" "" /></#macro>
+<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action fieldType="" fieldTitleBlank=false extraArgs...><@makeBlock "" "" /></#macro>
 
-<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false id=""><@makeBlock "" "" /></#macro>
-<#macro renderResetField className alert name title><@makeBlock "" "" /></#macro>
+<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false id="" extraArgs...><@makeBlock "" "" /></#macro>
+<#macro renderResetField className alert name title extraArgs...><@makeBlock "" "" /></#macro>
 
-<#macro renderHiddenField name value id event action></#macro>
-<#macro renderIgnoredField></#macro>
+<#macro renderHiddenField name value id event action extraArgs...></#macro>
+<#macro renderIgnoredField extraArgs...></#macro>
 
-<#macro renderFieldTitle style title id fieldHelpText="" for="">${(title!"")?replace("&nbsp;", " ")}</#macro>
-<#macro renderSingleFormFieldTitle title>${title!""}</#macro>
+<#macro renderFieldTitle style title id fieldHelpText="" for="" extraArgs...>${(title!"")?replace("&nbsp;", " ")}</#macro>
+<#macro renderSingleFormFieldTitle title extraArgs...>${title!""}</#macro>
     
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method=""></#macro>
-<#macro renderFormClose focusFieldName formName containerId hasRequiredField></#macro>
-<#macro renderMultiFormClose></#macro>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" extraArgs...></#macro>
+<#macro renderFormClose focusFieldName formName containerId hasRequiredField extraArgs...></#macro>
+<#macro renderMultiFormClose extraArgs...></#macro>
     
-<#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={}><fo:table border="solid black"><#list columnStyles as columnStyle><fo:table-column<#if columnStyle?has_content> <@getFoStyle columnStyle/></#if>/></#list></#macro>
-<#macro renderFormatListWrapperClose formName></fo:table-body></fo:table></#macro>
+<#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} extraArgs...><fo:table border="solid black"><#list columnStyles as columnStyle><fo:table-column<#if columnStyle?has_content> <@getFoStyle columnStyle/></#if>/></#list></#macro>
+<#macro renderFormatListWrapperClose formName extraArgs...></fo:table-body></fo:table></#macro>
 
-<#macro renderFormatHeaderRowOpen style><fo:table-header><fo:table-row></#macro>
-<#macro renderFormatHeaderRowClose></fo:table-row></fo:table-header><fo:table-body>
+<#macro renderFormatHeaderRowOpen style extraArgs...><fo:table-header><fo:table-row></#macro>
+<#macro renderFormatHeaderRowClose extraArgs...></fo:table-row></fo:table-header><fo:table-body>
 <#-- FIXME: this is an hack to avoid FOP rendering errors for empty lists (fo:table-body cannot be null) -->
 <fo:table-row><fo:table-cell><fo:block/></fo:table-cell></fo:table-row>
 </#macro>
-<#macro renderFormatHeaderRowCellOpen style positionSpan><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><@getFoStyle "listtitlestyle"/>><fo:block></#macro>
-<#macro renderFormatHeaderRowCellClose></fo:block></fo:table-cell></#macro>
+<#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><@getFoStyle "listtitlestyle"/>><fo:block></#macro>
+<#macro renderFormatHeaderRowCellClose extraArgs...></fo:block></fo:table-cell></#macro>
 
-<#macro renderFormatHeaderRowFormCellOpen style><fo:table-cell></#macro>
-<#macro renderFormatHeaderRowFormCellClose></fo:table-cell></#macro>
-<#macro renderFormatHeaderRowFormCellTitleSeparator style isLast></#macro>
+<#macro renderFormatHeaderRowFormCellOpen style extraArgs...><fo:table-cell></#macro>
+<#macro renderFormatHeaderRowFormCellClose extraArgs...></fo:table-cell></#macro>
+<#macro renderFormatHeaderRowFormCellTitleSeparator style isLast extraArgs...></#macro>
 
-<#macro renderFormatFooterRowOpen style></#macro>
-<#macro renderFormatFooterRowClose></#macro>
+<#macro renderFormatFooterRowOpen style extraArgs...></#macro>
+<#macro renderFormatFooterRowClose extraArgs...></#macro>
     
-<#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle><fo:table-row></#macro>
-<#macro renderFormatItemRowClose formName></fo:table-row></#macro>
-<#macro renderFormatItemRowCellOpen fieldName style positionSpan><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><#if style?has_content><@getFoStyle style/><#else><@getFoStyle "tabletext"/></#if>></#macro>
-<#macro renderFormatItemRowCellClose fieldName></fo:table-cell></#macro>
-<#macro renderFormatItemRowFormCellOpen style><fo:table-cell></#macro>
-<#macro renderFormatItemRowFormCellClose></fo:table-cell></#macro>
+<#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle extraArgs...><fo:table-row></#macro>
+<#macro renderFormatItemRowClose formName extraArgs...></fo:table-row></#macro>
+<#macro renderFormatItemRowCellOpen fieldName style positionSpan extraArgs...><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><#if style?has_content><@getFoStyle style/><#else><@getFoStyle "tabletext"/></#if>></#macro>
+<#macro renderFormatItemRowCellClose fieldName extraArgs...></fo:table-cell></#macro>
+<#macro renderFormatItemRowFormCellOpen style extraArgs...><fo:table-cell></#macro>
+<#macro renderFormatItemRowFormCellClose extraArgs...></fo:table-cell></#macro>
 
-<#macro renderFormatSingleWrapperOpen formName style><fo:table><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-body></#macro>
-<#macro renderFormatSingleWrapperClose formName></fo:table-body></fo:table></#macro>
+<#macro renderFormatSingleWrapperOpen formName style extraArgs...><fo:table><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-body></#macro>
+<#macro renderFormatSingleWrapperClose formName extraArgs...></fo:table-body></fo:table></#macro>
 
-<#macro renderFormatFieldRowOpen positions=""><fo:table-row></#macro>
-<#macro renderFormatFieldRowClose></fo:table-row></#macro>
-<#macro renderFormatFieldRowTitleCellOpen style positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={}><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
-<#macro renderFormatFieldRowTitleCellClose fieldType="" fieldTitleBlank=false></fo:block></fo:table-cell></#macro>
-<#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={}><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
-<#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false></fo:table-cell></#macro>
+<#macro renderFormatFieldRowOpen positions="" extraArgs...><fo:table-row></#macro>
+<#macro renderFormatFieldRowClose extraArgs...></fo:table-row></#macro>
+<#macro renderFormatFieldRowTitleCellOpen style positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
+<#macro renderFormatFieldRowTitleCellClose fieldType="" fieldTitleBlank=false extraArgs...></fo:block></fo:table-cell></#macro>
+<#macro renderFormatFieldRowSpacerCell extraArgs...></#macro>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
+<#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false extraArgs...></fo:table-cell></#macro>
 
-<#macro renderFormatEmptySpace> </#macro>
+<#macro renderFormatEmptySpace extraArgs...> </#macro>
 
-<#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase hideOptions=false><@makeBlock className value /></#macro>
+<#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase hideOptions=false extraArgs...><@makeBlock className value /></#macro>
 
-<#macro renderDateFindField className alert name localizedInputTitle value size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty><@makeBlock className value /></#macro>
+<#macro renderDateFindField className alert name localizedInputTitle value size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty extraArgs...><@makeBlock className value /></#macro>
 
-<#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru>
+<#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru extraArgs...>
 <@makeBlock className value />
 </#macro>
 
-<#macro renderLookupField className alert name value size maxlength id event action readonly autocomplete descriptionFieldName formName fieldFormName targetParameterIter imgSrc ajaxUrl ajaxEnabled presentation width height position fadeBackground clearText showDescription initiallyCollapsed lastViewName="main" title="" fieldType="" fieldTitleBlank=false tooltip=""></#macro>
-<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true lowIndex=0 realHighIndex=-1 position=""></#macro>
-<#macro renderFileField className alert name value size maxlength autocomplete><@makeBlock className value /></#macro>
-<#macro renderPasswordField className alert name value size maxlength id autocomplete><@makeBlock className "" /></#macro>
-<#macro renderImageField value description alternate border width height event action><@makeBlock "" "" /></#macro>
-<#macro renderBanner style leftStyle rightStyle leftText text rightText><@makeBlock "" "" /></#macro>
-<#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId collapsible expandToolTip collapseToolTip></#macro>
-<#macro renderFieldGroupClose style id title></#macro>
+<#macro renderLookupField className alert name value size maxlength id event action readonly autocomplete descriptionFieldName formName fieldFormName targetParameterIter imgSrc ajaxUrl ajaxEnabled presentation width height position fadeBackground clearText showDescription initiallyCollapsed lastViewName="main" title="" fieldType="" fieldTitleBlank=false tooltip="" extraArgs...></#macro>
+<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true lowIndex=0 realHighIndex=-1 position="" extraArgs...></#macro>
+<#macro renderFileField className alert name value size maxlength autocomplete extraArgs...><@makeBlock className value /></#macro>
+<#macro renderPasswordField className alert name value size maxlength id autocomplete extraArgs...><@makeBlock className "" /></#macro>
+<#macro renderImageField value description alternate border width height event action extraArgs...><@makeBlock "" "" /></#macro>
+<#macro renderBanner style leftStyle rightStyle leftText text rightText extraArgs...><@makeBlock "" "" /></#macro>
+<#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId collapsible expandToolTip collapseToolTip extraArgs...></#macro>
+<#macro renderFieldGroupClose style id title extraArgs...></#macro>
 
-<#macro renderHyperlinkTitle name title showSelectAll="N"></#macro>
-<#macro renderSortField style title linkUrl ajaxEnabled tooltip=""><@renderFieldTitle style title /></#macro>
+<#macro renderHyperlinkTitle name title showSelectAll="N" extraArgs...></#macro>
+<#macro renderSortField style title linkUrl ajaxEnabled tooltip="" extraArgs...><@renderFieldTitle style title /></#macro>
 <#macro formatBoundaryComment boundaryType widgetType widgetName></#macro>
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description><@renderField description /></#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation><@makeBlock linkStyle description /></#macro>
-<#macro renderTooltip tooltip tooltipStyle></#macro>
-<#macro renderAsterisks requiredField requiredStyle></#macro>
+<#macro renderTooltip tooltip tooltipStyle extraArgs...></#macro>
+<#macro renderAsterisks requiredField requiredStyle extraArgs...></#macro>
 
-<#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns>
+<#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns extraArgs...>
     <#if wrapperOpened>
       <fo:table-row>
         <fo:table-cell <#if (numOfColumns > 1)>number-columns-spanned="${numOfColumns}"</#if>>

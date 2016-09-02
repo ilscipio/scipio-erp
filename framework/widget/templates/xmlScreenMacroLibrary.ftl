@@ -17,44 +17,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#macro renderScreenBegin>
+<#macro renderScreenBegin extraArgs...>
 <?xml version="1.0" encoding="UTF-8"?>
 <export>
 </#macro>
 
-<#macro renderScreenEnd>
+<#macro renderScreenEnd extraArgs...>
 </export>
 </#macro>
 
-<#macro renderSectionBegin boundaryComment>
+<#macro renderSectionBegin boundaryComment extraArgs...>
 </#macro>
 
-<#macro renderSectionEnd boundaryComment>
+<#macro renderSectionEnd boundaryComment extraArgs...>
 </#macro>
 
-<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval>
+<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval extraArgs...>
 </#macro>
-<#macro renderContainerEnd></#macro>
-<#macro renderContentBegin editRequest enableEditValue editContainerStyle></#macro>
-<#macro renderContentBody></#macro>
-<#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue>
+<#macro renderContainerEnd extraArgs...></#macro>
+<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...></#macro>
+<#macro renderContentBody extraArgs...></#macro>
+<#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...>
 </#macro>
-<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue></#macro>
-<#macro renderSubContentBody></#macro>
-<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue>
-</#macro>
-
-<#macro renderHorizontalSeparator id style></#macro>
-<#macro renderLabel text id style></#macro>
-<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name linkUrl text imgStr>
-</#macro>
-<#macro renderImage src id style wid hgt border alt urlString>
+<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue extraArgs...></#macro>
+<#macro renderSubContentBody extraArgs...></#macro>
+<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...>
 </#macro>
 
-<#macro renderContentFrame fullUrl width height border></#macro>
-<#macro renderScreenletBegin id title collapsible saveCollapsed collapsibleAreaId expandToolTip collapseToolTip fullUrlString padded menuString showMore collapsed javaScriptEnabled menuRole="" titleStyle="">
+<#macro renderHorizontalSeparator id style extraArgs...></#macro>
+<#macro renderLabel text id style extraArgs...></#macro>
+<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name linkUrl text imgStr extraArgs...>
 </#macro>
-<#macro renderScreenletSubWidget></#macro>
-<#macro renderScreenletEnd></#macro>
-<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
+<#macro renderImage src id style wid hgt border alt urlString extraArgs...>
+</#macro>
+
+<#macro renderContentFrame fullUrl width height border extraArgs...></#macro>
+<#macro renderScreenletBegin id title collapsible saveCollapsed collapsibleAreaId expandToolTip collapseToolTip fullUrlString padded menuString showMore collapsed javaScriptEnabled menuRole="" titleStyle="" extraArgs...>
+</#macro>
+<#macro renderScreenletSubWidget extraArgs...></#macro>
+<#macro renderScreenletEnd extraArgs...></#macro>
+<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl extraArgs...>
 </#macro>

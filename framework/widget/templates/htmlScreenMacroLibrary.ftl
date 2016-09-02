@@ -22,28 +22,28 @@ Scipio: NOTE: since macro renderer initial context mod, macros here now have acc
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
 -->
-<#macro renderScreenBegin>
+<#macro renderScreenBegin extraArgs...>
 <#-- Scipio: NOTE: HTML head open is now in scipio template macros. 
      In OOTB ofbiz no context is passed here (locale, etc.) so did not belong here and cleaner if in scipio macros. -->
 <!DOCTYPE html>
 </#macro>
 
-<#macro renderScreenEnd>
+<#macro renderScreenEnd extraArgs...>
 </#macro>
 
-<#macro renderSectionBegin boundaryComment>
+<#macro renderSectionBegin boundaryComment extraArgs...>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
 </#macro>
 
-<#macro renderSectionEnd boundaryComment>
+<#macro renderSectionEnd boundaryComment extraArgs...>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
 </#macro>
 
-<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval>
+<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval extraArgs...>
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</@script>
   </#if>
@@ -61,15 +61,15 @@ WARN: no code run here or indirectly from here should assume full current contex
   <@container open=true close=false class=style id=id elem=elem />
 </#macro>
 
-<#macro renderContainerEnd>
+<#macro renderContainerEnd extraArgs...>
   <@container close=true open=false />
 </#macro>
 
-<#macro renderContentBegin editRequest enableEditValue editContainerStyle><#if editRequest?has_content && enableEditValue == "true"><div class=${editContainerStyle}></#if></#macro>
+<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...><#if editRequest?has_content && enableEditValue == "true"><div class=${editContainerStyle}></#if></#macro>
 
-<#macro renderContentBody></#macro>
+<#macro renderContentBody extraArgs...></#macro>
 
-<#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue>
+<#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...>
 
 <#if editRequest?exists && enableEditValue == "true">
 <#if urlString?exists><a href="${urlString}">${editMode}</a><#rt/></#if>
@@ -77,24 +77,24 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#if>
 </#macro>
 
-<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue><#if editRequest?exists && enableEditValue == "true"><div class="${editContainerStyle}"></#if></#macro>
+<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue extraArgs...><#if editRequest?exists && enableEditValue == "true"><div class="${editContainerStyle}"></#if></#macro>
 
-<#macro renderSubContentBody></#macro>
+<#macro renderSubContentBody extraArgs...></#macro>
 
-<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue>
+<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...>
 <#if editRequest?exists && enableEditValue == "true">
 <#if urlString?exists><a href="${urlString}">${editMode}</a><#rt/></#if>
 <#if editContainerStyle?exists></div><#rt/></#if>
 </#if>
 </#macro>
 
-<#macro renderHorizontalSeparator id style><hr<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>/></#macro>
+<#macro renderHorizontalSeparator id style extraArgs...><hr<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>/></#macro>
 
-<#macro renderLabel text id style>
+<#macro renderLabel text id style extraArgs...>
   <@renderLabelCommon text=text id=id style=style />
 </#macro>
 
-<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name height width linkUrl text imgStr>
+<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name height width linkUrl text imgStr extraArgs...>
     <#if "ajax-window" != linkType>
         <#if "hidden-form" == linkType>
             <form method="post" action="${actionUrl}" <#if targetWindow?has_content>target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}"><#rt/>
@@ -149,29 +149,29 @@ WARN: no code run here or indirectly from here should assume full current contex
     </#if>
 </#macro>
 
-<#macro renderImage src id style wid hgt border alt urlString>
+<#macro renderImage src id style wid hgt border alt urlString extraArgs...>
 <#if src?has_content>
 <img <#if id?has_content>id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${border}"</#if> alt="<#if alt?has_content>${alt}</#if>" src="${urlString}" />
 </#if>
 </#macro>
 
-<#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
+<#macro renderContentFrame fullUrl width height border extraArgs...><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
 <#-- Scipio: new params: menuRole, titleStyle -->
-<#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="">
+<#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="" extraArgs...>
     <#-- now delegates to Scipio implementation. TODO? this call is still too closely based on this macro and its args; rework later -->
     <@section_core open=true close=false id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed contentId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
         showMore=showMore collapsed=collapsed javaScriptEnabled=javaScriptEnabled fromScreenDef=true menuRole=menuRole requireMenu=false forceEmptyMenu=false hasContent=true titleStyle=titleStyle titleContainerStyle="" titleConsumeLevel=true 
         autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" />
 </#macro>
 
-<#macro renderScreenletSubWidget></#macro>
+<#macro renderScreenletSubWidget extraArgs...></#macro>
 
-<#macro renderScreenletEnd>
+<#macro renderScreenletEnd extraArgs...>
     <@section_core close=true open=false />
 </#macro>
 
-<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
+<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl extraArgs...>
     <li class="${paginateFirstStyle!"nav-first"}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}" class="${styles.menu_section_item_link!}">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${paginateFirstLabel}</a></#if></li>
     <li class="${paginatePreviousStyle!"nav-previous"}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${previousLinkUrl}" class="${styles.menu_section_item_link!}">${paginatePreviousLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${paginatePreviousLabel}</a></#if></li>
     <#if (listSize?number > 0)><li><span class="text-entry">${lowIndex?number + 1} - ${lowIndex?number + actualPageSize?number} ${ofLabel} ${listSize}</span></li><#rt/></#if>
@@ -179,7 +179,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${lastLinkUrl}" class="${styles.menu_section_item_link!}">${paginateLastLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${paginateLastLabel}</a></#if></li>
 </#macro>
 
-<#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal" columnCount=1>
+<#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal" columnCount=1 extraArgs...>
   <#global portalPageGridUsed = 0>
   <#--
   <#if confMode == "true">
@@ -196,7 +196,7 @@ WARN: no code run here or indirectly from here should assume full current contex
              (can't use grid any other way without rewriting portal page render order?) -->
 </#macro>
 
-<#macro renderPortalPageEnd>
+<#macro renderPortalPageEnd extraArgs...>
       <@row close=true open=false />
     <@cell close=true open=false />
   <@row close=true open=false />
@@ -238,7 +238,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#function>
 
 
-<#macro renderPortalPageColumnBegin originalPortalPageId portalPageId columnSeqId confMode="false" width="auto" delColumnLabel="Delete column" delColumnHint="Delete this column" addPortletLabel="Add portlet" addPortletHint="Add a new portlet to this column" colWidthLabel="Col. width:" setColumnSizeHint="Set column size" columnCount=1 columnIndex=0>
+<#macro renderPortalPageColumnBegin originalPortalPageId portalPageId columnSeqId confMode="false" width="auto" delColumnLabel="Delete column" delColumnHint="Delete this column" addPortletLabel="Add portlet" addPortletHint="Add a new portlet to this column" colWidthLabel="Col. width:" setColumnSizeHint="Set column size" columnCount=1 columnIndex=0 extraArgs...>
   <#local gridSize = 12>
   <#local firstColumn = (columnIndex <= 0)>
   <#local lastColumn = (columnIndex >= (columnCount - 1))>
@@ -298,11 +298,11 @@ WARN: no code run here or indirectly from here should assume full current contex
     </#if>
 </#macro>
 
-<#macro renderPortalPageColumnEnd>
+<#macro renderPortalPageColumnEnd extraArgs...>
     <@cell close=true open=false /> 
 </#macro>
 
-<#macro renderPortalPagePortletBegin originalPortalPageId portalPageId portalPortletId portletSeqId prevPortletId="" prevPortletSeqId="" nextPortletId="" nextPortletSeqId="" columnSeqId="" prevColumnSeqId="" nextColumnSeqId="" confMode="false" delPortletHint="Remove this portlet" editAttribute="false" editAttributeHint="Edit portlet parameters" width="auto" columnCount=1 columnIndex=0>
+<#macro renderPortalPagePortletBegin originalPortalPageId portalPageId portalPortletId portletSeqId prevPortletId="" prevPortletSeqId="" nextPortletId="" nextPortletSeqId="" columnSeqId="" prevColumnSeqId="" nextColumnSeqId="" confMode="false" delPortletHint="Remove this portlet" editAttribute="false" editAttributeHint="Edit portlet parameters" width="auto" columnCount=1 columnIndex=0 extraArgs...>
   <#local portletKey = portalPageId+portalPortletId+portletSeqId>
   <#local portletKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="portalPortletId" value="' + portalPortletId + '" type="hidden"/><input name="portletSeqId" value="' + portletSeqId  + '" type="hidden"/>'>
   
@@ -380,28 +380,28 @@ WARN: no code run here or indirectly from here should assume full current contex
       </#if>
 </#macro>
 
-<#macro renderPortalPagePortletEnd confMode="false">
+<#macro renderPortalPagePortletEnd confMode="false" extraArgs...>
   </div>
   <#if confMode == "true">
     </div>
   </#if>
 </#macro>
 
-<#macro renderColumnContainerBegin id style>
+<#macro renderColumnContainerBegin id style extraArgs...>
   <table cellspacing="0"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>>
   <tr>
 </#macro>
 
-<#macro renderColumnContainerEnd>
+<#macro renderColumnContainerEnd extraArgs...>
   </tr>
   </table>
 </#macro>
 
-<#macro renderColumnBegin id style>
+<#macro renderColumnBegin id style extraArgs...>
   <td<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
 
-<#macro renderColumnEnd>
+<#macro renderColumnEnd extraArgs...>
   </td>
 </#macro>
 

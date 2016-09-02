@@ -514,10 +514,10 @@ The submenu's main class may be set as altnested in global styles.
   </#if>
       <#nested>
   <#if !inlineItems && htmlwrap?has_content>
-    <#if type == "main">
+    <#if specialType == "main">
         <#if htmlwrap?has_content></${htmlwrap}></#if>
       </li>
-    <#elseif type == "sidebar" && !isNestedMenu>
+    <#elseif specialType == "sidebar" && !isNestedMenu>
         <#if htmlwrap?has_content></${htmlwrap}></#if>
       </nav>
     <#else>

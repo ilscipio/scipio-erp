@@ -800,9 +800,9 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="WebtoolsPlainSiteMapDemo">
+    <menu name="WebtoolsPlainSiteMapDemo" selected-menu-context-field-name="activeMainMenu" selected-menuitem-context-field-name="activeMainMenuItem">
         <!-- To achieve this, we can force the scope of all sub-menus to exclude styling using "func" or "none" -->
-        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="func"/>
+        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="none"/>
     </menu> 
     
     <menu name="WebtoolsPlainSiteMapDemo2">
@@ -810,7 +810,7 @@ under the License.
     </menu> 
     
     <!-- alternate way using weird extends -->
-    <menu name="WebtoolsPlainSiteMapDemo3" extends="WebtoolsPlainSiteMapDemo2" force-all-sub-menu-model-scope="none">
+    <menu name="WebtoolsPlainSiteMapDemo3" extends="WebtoolsPlainSiteMapDemo2" force-all-sub-menu-model-scope="func">
         <menu-item name="extraInsertedItem" title="Extra inserted item">
             <!-- here, the model style will be ignored because of force-all-sub-menu-model-scope (model effectively useless).
                 to honor its style, use only force-extends-sub-menu-model-scope="none" (or "func") instead-->

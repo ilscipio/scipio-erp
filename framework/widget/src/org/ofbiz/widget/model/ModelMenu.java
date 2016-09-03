@@ -1423,6 +1423,10 @@ public class ModelMenu extends ModelWidget {
         return this.selectedMenuContextFieldName.get(context);
     }
     
+    public String getSelectedMenuContextFieldName() {
+        return this.selectedMenuContextFieldName.getOriginalName();
+    }
+    
     public ModelMenuItem getSelectedMenuItem(Map<String, Object> context) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
         

@@ -6,6 +6,39 @@ import org.ofbiz.base.util.*;
 
 final module = "PrepareComplexMenu.groovy";
 
+/* configurable render inputs */
+menuCfg = context.menuCfg ?: [:];
+cplxLoc = menuCfg.location ?: "";
+cplxName = menuCfg.name ?: "";
+cplxSubFilter = menuCfg.subMenuFilter ?: "current";
+cplxMaxDepth = menuCfg.maxDepth ?: "";
+
+cplxSelSubField = menuCfg.selMenuFieldName ?: ""; // set further below if needed: ?: "activeMainSubMenu";
+cplxSelItemField = menuCfg.selMenuItemFieldName ?: ""; // set further below if needed: ?: "activeMainMenuItem";
+
+cplxSuffix = menuCfg.nameSuffix ?: "Menu";
+cplxAddSuffix = menuCfg.addNameSuffix; if (cplxAddSuffix == null) { cplxAddSuffix = false; };
+cplxStripSuffix = menuCfg.stripNameSuffix; if (cplxStripSuffix == null) { cplxStripSuffix = true; };
+
+smplSuffix = menuCfg.simpleNameSuffix ?: cplxSuffix;
+
+defLoc = menuCfg.defLocation ?: "";
+
+smplForce = menuCfg.forceSimple;
+if (smplForce == null) {
+    smplForce = false;
+}
+
+activeSubField = menuCfg.activeSubField ?: "activeSubMenu";
+activeSubItemField = menuCfg.activeSubItemField ?: "activeSubMenuItem";
+activeMainItemField = menuCfg.activeMainItemField ?: "activeMainMenuItem";
+
+/* screen inputs */
+activeSubMenu = context[activeSubField];
+activeSubMenuItem = context[activeSubItemField];
+activeMainMenuItem = context[activeMainItemField];
+
+
 /* 
 activeSubMenu is the location#name of a sub-menu element (<sub-menu name="..."/>).
 If location not specified, a default is used, but generally we will no longer
@@ -19,7 +52,6 @@ menus (as much as possible) to make everything easier.
 */
 activeSubMenuName = null;
 activeSubMenuLoc = null;
-activeSubMenu = context.activeSubMenu;
 if (activeSubMenu) {
     if (activeSubMenu.contains("#")) {
         parts = context.activeSubMenu.split("#", 2);
@@ -55,30 +87,32 @@ def stripSuffix(name, suffix) {
 }
 
 // append menu name suffix if needed
-if (context.cplxAddSuffix) {
-    activeSubMenuName = appendSuffix(activeSubMenuName, context.cplxSuffix);
+if (cplxAddSuffix) {
+    activeSubMenuName = appendSuffix(activeSubMenuName, cplxSuffix);
     // ignore cplxStripSuffix
 } else {
-    if (context.cplxStripSuffix) {
-        activeSubMenuName = stripSuffix(activeSubMenuName, context.cplxSuffix);
+    if (cplxStripSuffix) {
+        activeSubMenuName = stripSuffix(activeSubMenuName, cplxSuffix);
     }
 }
 
 useCplxMenu = false;
-if (!context.smplForce) {
+if (!smplForce) {
+    
+    org.ofbiz.widget.model.ModelMenu cplxMenuModel = null;
+    try {
+        cplxMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
+            cplxLoc, cplxName);
+        if (cplxMenuModel == null) {
+            throw new IllegalArgumentException("Could not find menu with name [" + cplxName
+                + "] in location [" + cplxLoc + "]");
+        }
+    } catch (Exception e) {
+        Debug.logError(e, "Error loading complex menu model", module);
+    }
+    
     if (activeSubMenuName) {
         // check if the complex menu contains the named submenu.
-        try {
-            cplxMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
-                context.cplxLoc, context.cplxName);
-            if (cplxMenuModel == null) {
-                throw new IllegalArgumentException("Could not find menu with name [" + context.cplxName 
-                    + "] in location [" + context.cplxLoc + "]");
-            }
-        } catch (Exception e) {
-            Debug.logError(e, "Error loading complex menu model", module);
-        }
-        
         if (activeSubMenuName.equals(cplxMenuModel.getName()) || 
             cplxMenuModel.getModelSubMenuByName(activeSubMenuName)) {
             useCplxMenu = true;
@@ -87,12 +121,44 @@ if (!context.smplForce) {
         // by default assume this is a top level request for the complex menu
         useCplxMenu = true;
     }
+    
+    if (useCplxMenu) {
+        if (cplxMenuModel != null) {
+            if (!cplxSelSubField) {
+                cplxSelSubField = cplxMenuModel.getSelectedMenuContextFieldName();
+            }
+            if (!cplxSelItemField) {
+                cplxSelItemField = cplxMenuModel.getSelectedMenuItemContextFieldNameFirst();
+            }
+        }
+    }
 }
 
-context.useCplxMenu = useCplxMenu;
+// fallback defaults
+cplxSelSubField = cplxSelSubField ?: "activeMainSubMenu";
+cplxSelItemField = cplxSelItemField ?: "activeMainMenuItem";
+
+if (!useCplxMenu) {
+    // fallback to simple menu
+    
+    // always append suffix for simple/fallback
+    smplName = appendSuffix(origActiveSubMenuName, smplSuffix);
+
+    // for location we use the part before # in activeSubMenu, or the configured default location
+    smplLoc = activeSubMenuLoc ?: defLoc;
+    
+    // if that didn't work, render the complex menu instead
+    // this happens on some common screens when forceSimple enabled
+    if (!smplName || !smplLoc) {
+        useCplxMenu = true;
+    } else {
+        context.smplName = smplName;
+        context.smplLoc = smplLoc;
+    }
+}
 
 if (useCplxMenu) {
-    context[context.cplxSelSubField] = activeSubMenuName;
+    context[cplxSelSubField] = activeSubMenuName;
     
     /*
      To highlight the item, we simply transfer activeSubMenuItem to activeMainMenuItem (note scope is protected).
@@ -100,20 +166,19 @@ if (useCplxMenu) {
      We should only use incoming activeMainMenuItem if we were originally rendering the top level menu alone, so when
      activeSubMenu is not set.
       */
-    activeSubMenuItem = context.activeSubMenuItem;
     // NOTE: it is possible may have wanted to omit the test: && !activeSubMenuItem
     // for now this is mitigated by PrepareDefComplexMenu.groovy.
     if (!activeSubMenu && !activeSubMenuItem) {
-        activeSubMenuItem = context.activeMainMenuItem;
+        activeSubMenuItem = activeMainMenuItem;
     }
-    context[context.cplxSelItemField] = activeSubMenuItem;
-} else {
-    // fallback to simple menu
-
-    // always append suffix for simple/fallback
-    context.smplName = appendSuffix(origActiveSubMenuName, context.smplSuffix);
-
-    // for location we use the part before # in activeSubMenu, or the configured default location
-    context.smplLoc = activeSubMenuLoc ?: context.defLoc;
+    context[cplxSelItemField] = activeSubMenuItem;
+    
 }
+
+context.useCplxMenu = useCplxMenu;
+
+context.cplxName = cplxName;
+context.cplxLoc = cplxLoc;
+context.cplxSubFilter = cplxSubFilter;
+context.cplxMaxDepth = cplxMaxDepth;
 

@@ -339,7 +339,7 @@ public class ModelMenu extends ModelWidget {
         this.menuWidth = menuWidth;
         this.orientation = orientation;
         this.parentMenu = parent;
-        this.selectedMenuItemContextFieldName = selectedMenuItemContextFieldName;
+        this.selectedMenuItemContextFieldName = Collections.unmodifiableList(selectedMenuItemContextFieldName);
         this.selectedMenuItemContextFieldNameStr = selectedMenuItemContextFieldNameStr;
         this.selectedMenuContextFieldName = selectedMenuContextFieldName;
         this.target = target;
@@ -1372,8 +1372,43 @@ public class ModelMenu extends ModelWidget {
         return parentMenu;
     }
 
-    public String getSelectedMenuItemContextFieldName() {
+    // SCIPIO: these are modified to a
+    public String getSelectedMenuItemContextFieldNameExprStr() {
         return selectedMenuItemContextFieldNameStr;
+    }
+    
+    public String getSelectedMenuItemContextFieldNameFirst() {
+        if (this.selectedMenuItemContextFieldName != null && !this.selectedMenuItemContextFieldName.isEmpty()) {
+            return this.selectedMenuItemContextFieldName.get(0).getOriginalName();
+        } else {
+            return null;
+        }
+    }
+    
+    public List<String> getSelectedMenuItemContextFieldNames() {
+        List<String> names = new ArrayList<>();
+        if (this.selectedMenuItemContextFieldName != null) {
+            for(FlexibleMapAccessor<String> name : this.selectedMenuItemContextFieldName) {
+                names.add(name.getOriginalName());
+            }
+        }
+        return names;
+    }    
+    
+    public List<FlexibleMapAccessor<String>> getSelectedMenuItemContextFieldNamesExpr() {
+        return this.selectedMenuItemContextFieldName;
+    }    
+    
+    /**
+     * Returns selected menu item context field name.
+     * 
+     * @deprecated SCIPIO: because this now supports multiple values and extended syntax,
+     *   must use {@link #getSelectedMenuItemContextFieldNameExpr} or 
+     *   {@link #getSelectedMenuItemContextFieldNameFirst} to disambiguate.
+     */
+    @Deprecated
+    public String getSelectedMenuItemContextFieldName() {
+        return getSelectedMenuItemContextFieldNameFirst();
     }
 
     /**

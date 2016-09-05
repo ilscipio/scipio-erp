@@ -902,7 +902,7 @@ public class ModelMenuItem extends ModelWidget {
     @Deprecated
     public boolean isSelected(Map<String, Object> context) {
         // SCIPIO: This is modified to heavily simplify and centralize
-        ModelMenuItem selMenuItem = getModelMenu().getSelected(context).getMenuItem();
+        ModelMenuItem selMenuItem = getModelMenu().getSelectedMenuAndItem(context).getMenuItem();
         return (isSame(selMenuItem)); // WARN: this is hackish but it should currently work
     }
 

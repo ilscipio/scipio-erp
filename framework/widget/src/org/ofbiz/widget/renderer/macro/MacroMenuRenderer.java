@@ -214,7 +214,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
     private boolean isHideIfSelected(ModelMenuItem menuItem, Map<String, Object> context) {
         // SCIPIO: this is obsolete
-        //ModelMenu menu = menuItem.getLogicModelMenu();
+        //ModelMenu menu = menuItem.getFuncModelMenu();
         //String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
         //String currentItemName = menuItem.getName();
         //Boolean hideIfSelected = menuItem.getHideIfSelected();

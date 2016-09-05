@@ -902,7 +902,7 @@ public class ModelMenuItem extends ModelWidget {
     @Deprecated
     public boolean isSelected(Map<String, Object> context) {
         // SCIPIO: This is modified to heavily simplify and centralize
-        ModelMenuItem selMenuItem = getModelMenu().getSelectedMenuItem(context);
+        ModelMenuItem selMenuItem = getModelMenu().getSelected(context).getMenuItem();
         return (isSame(selMenuItem)); // WARN: this is hackish but it should currently work
     }
 
@@ -921,6 +921,15 @@ public class ModelMenuItem extends ModelWidget {
             return true;
         } else {
             return isSameOrAncestorOf(menuItem.getParentMenuItem());
+        }
+    }
+    
+    public boolean isAncestorOf(ModelSubMenu subMenu) {
+        if (subMenu == null) {
+            return false;
+        }
+        else {
+            return isSameOrAncestorOf(subMenu.getParentMenuItem());
         }
     }
     

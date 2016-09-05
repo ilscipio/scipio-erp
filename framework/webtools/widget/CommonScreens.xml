@@ -393,7 +393,12 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="labels"/>
-                <set field="activeSubMenu" value="label" />
+                <!-- SCIPIO: this sub-menu had only one entry, so omit. if adding more, uncomment this
+                    and the submenu include in WebtoolsAppSideBar.
+                <set field="activeSubMenu" value="label" />-->
+                <set field="activeSubMenu" value="" />
+                <!-- SCIPIO: force this item -->
+                <set field="activeSubMenuItem" value="labels"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

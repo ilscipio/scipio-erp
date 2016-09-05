@@ -97,6 +97,7 @@ if (cplxAddSuffix) {
 
 useCplxMenu = false;
 org.ofbiz.widget.model.ModelMenu cplxMenuModel = null;
+warnFallback = false;
 if (!smplForce) {
     try {
         cplxMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
@@ -112,8 +113,7 @@ if (!smplForce) {
     if (activeSubMenuName) {
         subInCplx = cplxMenuModel.getModelSubMenuByName(activeSubMenuName);
         if (subInCplx == null) {
-            Debug.logWarning("Could not find (active) sub menu '" + activeSubMenuName + "'" +
-                " in complex menu '" + cplxLoc + "#" + cplxName + "'", module);
+            warnFallback = true;
         }
         
         // check if the complex menu contains the named submenu.
@@ -159,6 +159,12 @@ if (!useCplxMenu) {
     } else {
         context.smplName = smplName;
         context.smplLoc = smplLoc;
+    }
+    
+    if (warnFallback) {
+        Debug.logWarning("Could not find (active) sub menu '" + activeSubMenuName + "'" +
+            " in complex menu '" + cplxLoc + "#" + cplxName + "'; falling back to '" +
+            smplLoc + "#" + smplName + "'", module);
     }
 }
 

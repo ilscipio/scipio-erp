@@ -137,7 +137,7 @@ public class ModelSubMenu extends ModelWidget {
         if (modelScope == null || modelScope.isEmpty()) {
             modelScope = buildArgs.currentMenuDefBuildArgs.codeBehavior.defaultSubMenuModelScope;
             if (modelScope == null || modelScope.isEmpty()) {
-                modelScope = "style";
+                modelScope = "full";
             }
         }
         

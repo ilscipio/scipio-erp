@@ -202,11 +202,11 @@ Features and Modifications:
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Default sub-model 'model' attribute scope for all
                         sub-menus defined in document as descendants of this menu element.
-                        Default: 'style'
+                        Default: 'full'
                         NOTE: Strictly governs the immediately descendant XML of this menu element;
                             does not apply to external menu includes, which must set their own defaults.
                         NOTE: This setting itself is inherited from extends, but it does not apply
-                            to the inherited menu-items' sub-menus unless those sub-menus are overridden.</xs:documentation>
+                            to the inherited menu-items' sub-menus unless the menu-item is overridden.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -225,7 +225,7 @@ Features and Modifications:
                         NOTE: Strictly governs the immediately descendant XML of this menu element;
                             does not apply to external menu includes, which must set their own defaults.
                         NOTE: This setting itself is inherited from extends, but it does not apply
-                            to the inherited menu-items' sub-menus unless those sub-menus are overridden.</xs:documentation>
+                            to the inherited menu-items' sub-menus unless the menu-item is overridden.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -774,7 +774,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute type="xs:string" name="model">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
+                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as model for this item's sub-menu and sub-items some of the
                         attribute defaults such as styles (and others), instead of this top-level menu's default attributes.
                         Can be used to implement sub-menus of different types than the top-level menu.
                         If no # separator, assumes name lookup in current file.</xs:documentation>
@@ -782,13 +782,13 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="model-scope">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Scope of the value, or which type of menu attributes it should be used for.
+                    <xs:documentation>SCIPIO: Scope of the sub-menu model, or which type of menu attributes it should be used for.
                         Supported values:
                         'style': the model will only be used as model for styling fields, or non-functional fields.
                         'func': the model will only be used as model for functional and logic fields, or non-styling fields.
-                        'full': the model specified will be used for all purposes: functional and styling.
+                        'full': the model specified will be used for all implemented purposes: functional and styling.
                         'none': the model won't be used for anything. may be used to limit the effects of the include attribute.
-                        Default: 'style' when only model attribute is specified, 'full' when include attribute is specified instead.
+                        Default: 'full' - this default can be changed per specific menu XML using default-sub-menu-model-scope and default-sub-menu-include-scope on menu.
                         Specifying 'func' or 'none' with an include target specified allows quickly including a menu's items
                         without including its styles (the parent's styles will be used instead).</xs:documentation>
                 </xs:annotation>

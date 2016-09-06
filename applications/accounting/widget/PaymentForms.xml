@@ -79,14 +79,14 @@ under the License.
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="isReduced==false"><display-entity entity-name="StatusItem"/></field>
         <!--<field name="comments" use-when="isReduced==false"><display/></field> -->
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" use-when="isReduced==false">
-            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyFrom.groupName} ${partyFrom.firstName} ${partyFrom.lastName}" link-style="${styles.link_nav_info_id}">
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" use-when="isReduced==false" widget-style="${styles.link_nav_info_id}">
+            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyFrom.groupName} ${partyFrom.firstName} ${partyFrom.lastName}">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
         </field>
         <!--
-        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
-                <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyTo.groupName} ${partyTo.firstName} ${partyTo.lastName}" link-style="${styles.link_nav_info_id}">
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}" widget-style="${styles.link_nav_info_id}">
+                <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyTo.groupName} ${partyTo.firstName} ${partyTo.lastName}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </hyperlink>
         </field>-->

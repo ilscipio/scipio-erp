@@ -66,6 +66,7 @@ under the License.
     <screen name="CommonQuoteDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/QuoteMenus.xml#Quote" />
                 <set field="activeMainMenuItem" value="quote"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 
@@ -80,7 +81,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="QuoteSideBar" location="component://order/widget/QuoteMenus.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="component://order/widget/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -122,6 +123,9 @@ under the License.
     
     <screen name="CommonOrderDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Order" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
@@ -132,7 +136,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="OrderSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -160,6 +164,7 @@ under the License.
     <screen name="CommonOrderCheckoutDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Order" />
                 <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.groovy"/>
@@ -174,7 +179,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="OrderSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -266,6 +271,7 @@ under the License.
     <screen name="CommonRequestDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Request" />
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
             </actions>
@@ -277,7 +283,7 @@ under the License.
                                 <not><if-empty field="custRequest"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="RequestSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <include-screen name="DefMainSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
@@ -305,6 +311,9 @@ under the License.
     
     <screen name="CommonRequirementDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Requirement" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
@@ -315,7 +324,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="RequirementSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -387,6 +396,9 @@ under the License.
     </screen>
     <screen name="CommonReturnDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Return" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}"><decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
@@ -394,7 +406,7 @@ under the License.
                                 <not><if-empty field="returnId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="ReturnSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <section>

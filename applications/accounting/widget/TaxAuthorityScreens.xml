@@ -25,6 +25,7 @@ under the License.
     <screen name="CommonTaxAuthorityDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthority" />
                 <set field="activeMainMenuItem" value="TaxAuthorities"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
@@ -48,7 +49,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="TaxAuthoritySideBar" location="component://accounting/widget/TaxAuthorityMenus.xml" />
+                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>

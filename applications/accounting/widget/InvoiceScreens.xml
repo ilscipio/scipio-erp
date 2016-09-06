@@ -25,7 +25,8 @@ under the License.
          location in parameters.invoiceDecoratorLocation -->
     <screen name="CommonInvoiceDecorator">
         <section>
-            <actions>                
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Invoice" />                
                 <set field="activeMainMenuItem" value="invoices"/>
             </actions>
             <widgets>
@@ -36,7 +37,7 @@ under the License.
                                 <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="InvoiceSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

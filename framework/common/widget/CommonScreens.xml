@@ -1334,7 +1334,7 @@ under the License.
         * simpleNameSuffix - Suffix for simple/fallback menu, always added (unless already ends with)         
         Other:
         * forceSimple - Override to force rendering simple/fallback menu instead of complex
-        * allowSubItemTop (default: true) - Controls behavior when activeSubMenuItem is set but activeSubMenu is empty,
+        * allowSubItemTop (default: false) - Controls behavior when activeSubMenuItem is set but activeSubMenu is empty,
             in other words top-level control.
             If true, when activeSubMenu is empty but activeSubMenuItem is set, uses activeSubMenuItem as top-menu item. 
             If false, in the same case, activeSubMenuItem will be squashed by activeMainMenuItem.

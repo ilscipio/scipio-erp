@@ -1822,18 +1822,19 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
                     + "a new menu render was started", module);
             }
-            
-            MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
-            if (menuRenderArgs != null) {
-                renderState.putAll(menuRenderArgs); // keep same names
+            try {
+                MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
+                if (menuRenderArgs != null) {
+                    renderState.putAll(menuRenderArgs); // keep same names
+                }
+                renderState.setMaxDepth(getMaxDepth(context));
+                renderState.setSubMenuFilter(getSubMenuFilter(context));
+                
+                modelMenu.renderMenuString(writer, context, menuStringRenderer);
+            } finally {
+                // SCIPIO: restore the previous render state just in case
+                MenuRenderState.store(context, prevRenderState);
             }
-            renderState.setMaxDepth(getMaxDepth(context));
-            renderState.setSubMenuFilter(getSubMenuFilter(context));
-            
-            modelMenu.renderMenuString(writer, context, menuStringRenderer);
-            
-            // SCIPIO: restore the previous render state just in case
-            MenuRenderState.store(context, prevRenderState);
             
             // SCIPIO: added scope protect
             if (protectScope) {

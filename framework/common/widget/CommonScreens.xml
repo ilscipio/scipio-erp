@@ -1317,8 +1317,8 @@ under the License.
         * maxDepth - Value for <include-menu max-depth="..." /> attribute (see widget-screen.xsd)
         Default locations:  
         * defLocation (required) - Application's default menu file location for menus
-              This is only used for fallback simple/non-complex menus, when there is no explicit
-              location specified as prefix in activeSubMenu.
+            This is only used for fallback simple/non-complex menus, when there is no explicit
+            location specified as prefix in activeSubMenu.
         Complex menu name suffix control:
         * nameSuffix (default: "Menu") - Complex menu name suffix
         * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenuItem field, for menu lookup
@@ -1334,6 +1334,10 @@ under the License.
         * simpleNameSuffix - Suffix for simple/fallback menu, always added (unless already ends with)         
         Other:
         * forceSimple - Override to force rendering simple/fallback menu instead of complex
+        * allowSubItemTop (default: true) - Controls behavior when activeSubMenuItem is set but activeSubMenu is empty,
+            in other words top-level control.
+            If true, when activeSubMenu is empty but activeSubMenuItem is set, uses activeSubMenuItem as top-menu item. 
+            If false, in the same case, activeSubMenuItem will be squashed by activeMainMenuItem.
         Client screen field overrides:
         * activeSubField (default: "activeSubMenu")
         * activeSubItemField (default: "activeSubMenuItem")

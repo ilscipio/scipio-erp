@@ -28,6 +28,10 @@ smplForce = menuCfg.forceSimple;
 if (smplForce == null) {
     smplForce = false;
 }
+cplxAllowSubItemTop = menuCfg.allowSubItemTop;
+if (cplxAllowSubItemTop == null) {
+    cplxAllowSubItemTop = true;
+}
 
 activeSubField = menuCfg.activeSubField ?: "activeSubMenu";
 activeSubItemField = menuCfg.activeSubItemField ?: "activeSubMenuItem";
@@ -177,10 +181,14 @@ if (useCplxMenu) {
      We should only use incoming activeMainMenuItem if we were originally rendering the top level menu alone, so when
      activeSubMenu is not set.
       */
-    // NOTE: it is possible may have wanted to omit the test: && !activeSubMenuItem
-    // for now this is mitigated by PrepareDefComplexMenu.groovy.
-    if (!activeSubMenu && !activeSubMenuItem) {
-        activeSubMenuItem = activeMainMenuItem;
+    if (cplxAllowSubItemTop) {
+        if (!activeSubMenu && !activeSubMenuItem) {
+            activeSubMenuItem = activeMainMenuItem;
+        }
+    } else {
+        if (!activeSubMenu) {
+            activeSubMenuItem = activeMainMenuItem;
+        }
     }
     context[cplxSelItemField] = activeSubMenuItem;
     

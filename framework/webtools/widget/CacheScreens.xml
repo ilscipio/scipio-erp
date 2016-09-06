@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
-                <set field="activeSubMenu" value="Server" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
                 <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleFindUtilCache"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCache.groovy"/>

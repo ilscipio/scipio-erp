@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="stats"/>
-                <set field="activeSubMenu" value="Stats" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

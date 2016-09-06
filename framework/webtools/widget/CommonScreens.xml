@@ -217,7 +217,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
-                <set field="activeSubMenu" value="configuration"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="configuration"/>
                 <set field="activeSubMenuItem" value="myCertificates"/>
                 <set field="titleProperty" value="WebtoolsCertsX509"/>
             </actions>
@@ -238,7 +238,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="entity"/>
-                <set field="activeSubMenu" value="Entity" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
@@ -276,7 +276,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="service"/>
-                <set field="activeSubMenu" value="service" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="service" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
@@ -314,7 +314,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="importExport"/>
-                <set field="activeSubMenu" value="importExport" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="importExport" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
@@ -353,7 +353,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
-                <set field="activeSubMenu" value="artifact" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="artifact" />
  
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <set field="sideBarMenu" type="NewMap" value="" />
@@ -395,8 +395,8 @@ under the License.
                 <set field="activeMainMenuItem" value="labels"/>
                 <!-- SCIPIO: this sub-menu had only one entry, so omit. if adding more, uncomment this
                     and the submenu include in WebtoolsAppSideBar.
-                <set field="activeSubMenu" value="label" />-->
-                <set field="activeSubMenu" value="" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="label" />-->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
                 <!-- SCIPIO: force this item -->
                 <set field="activeSubMenuItem" value="labels"/>
             </actions>
@@ -435,7 +435,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
-                <set field="activeSubMenu" value="configuration" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="configuration" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
@@ -474,7 +474,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="geoManagement"/>
-                <set field="activeSubMenu" value="geoManagement" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="geoManagement" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
@@ -513,7 +513,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="demoDataGeneratorServiceList"/>
-                <set field="activeSubMenu" value="Entity" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
@@ -557,7 +557,7 @@ under the License.
                 <!-- SCIPIO: NOTE: activeSubMenu still supports a location prefix. It is still wanted in this case, in case
                     the complex nested menu (which doesn't use the location prefix) render fails, because here the fallback menu's location is not in the default Admin menus file.
                     Also note that "SideBar" suffix is automatically added to the name (SecurityGroupSideBar), so it's not needed here. -->
-                <set field="activeSubMenu" value="component://common/widget/SecurityMenus.xml#SecurityGroup"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://common/widget/SecurityMenus.xml#SecurityGroup"/>
                 <service service-name="securityPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>

@@ -97,7 +97,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCreateContact"/>
                 <!--<set field="activeSubMenuItem" value="Contacts"/>-->
-                <set field="activeSubMenu" value="Contact"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Contact"/>
                 <set field="activeSubMenuItem" value="MergeContacts"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
             </actions>

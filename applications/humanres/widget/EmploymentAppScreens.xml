@@ -31,7 +31,7 @@
                 <set field="employmentAppCtx" from-field="parameters"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -56,6 +56,7 @@
             </widgets>
         </section>
     </screen>
+    <!-- SCIPIO: FIXME?: this uses CommonPartyDecorator unlike the others but maybe it shouldn't, it's because the way it was integrated?... -->
     <screen name="EditEmploymentApps">
         <section>
             <actions>
@@ -89,7 +90,7 @@
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
@@ -122,7 +123,7 @@
                                 <set field="titleProperty" value="HumanResNewEmploymentApp"/>
                             </actions>
                             <widgets>
-                                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
                                         <screenlet>
                                             <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
@@ -139,7 +140,7 @@
                                 <set field="titleProperty" value="HumanResEditEmploymentApp"/>
                             </actions>
                             <widgets>
-                                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
                                         <!-- SCIPIO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
                                         <container>
@@ -170,7 +171,7 @@
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!-- SCIPIO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
                         <container>

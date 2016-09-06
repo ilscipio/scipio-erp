@@ -187,6 +187,12 @@ under the License.
     <screen name="CommonEmploymentDecorator">
         <section>
             <actions>
+                <!-- SCIPIO: FIXME?: currently not showing this because Employment menu is removed...
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentSideBar" />
+                -->
+                <!-- SCIPIO: WARN: this item was removed from menu...-->
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Employment"/>
+                
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
@@ -242,6 +248,20 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <!-- SCIPIO: NEW: previously EmploymentApp screens included CommonEmploymentDecorator, but this causes some factoring issues -->
+    <screen name="CommonEmploymentAppDecorator">
+        <section>
+            <actions>
+                <!-- SCIPIO: FIXME?: there is no EmploymentAppSideBar...
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentAppSideBar" />
+                -->
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="EmploymentApp"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonEmploymentDecorator"/>
+            </widgets>
+        </section>
+    </screen>    
     <screen name="CommonPerfReviewDecorator">
         <section>
             <actions>

@@ -648,6 +648,22 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="request-confirmation">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: TODO: REVIEW IMPLEMENTATION</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true" />
+                    <xs:enumeration value="false" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="confirmation-message">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: TODO: REVIEW IMPLEMENTATION</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     <xs:complexType name="image" mixed="true">
         <xs:attribute type="xs:string" name="src" />

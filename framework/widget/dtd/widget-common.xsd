@@ -648,9 +648,10 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="request-confirmation">
+        <xs:attribute name="request-confirmation" default="false">
             <xs:annotation>
-                <xs:documentation>SCIPIO: TODO: REVIEW IMPLEMENTATION</xs:documentation>
+                <xs:documentation>If true then the user is presented with a dialog box, if confirmation-message is empty, use default
+                    SCIPIO: TODO: Currently only implemented for certain types of links (hyperlink)</xs:documentation>
             </xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -661,7 +662,8 @@ under the License.
         </xs:attribute>
         <xs:attribute type="xs:string" name="confirmation-message">
             <xs:annotation>
-                <xs:documentation>SCIPIO: TODO: REVIEW IMPLEMENTATION</xs:documentation>
+                <xs:documentation>The message displayed in confirmation box
+                    SCIPIO: TODO: Currently only implemented for certain types of links (hyperlink)</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>

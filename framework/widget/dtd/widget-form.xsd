@@ -1394,6 +1394,7 @@ Features and Modifications:
                         <xs:documentation>Specifies the string to display, can use the ${} syntax to insert context values; if empty the value of the field will be printed for a default.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <!-- SCIPIO: these definitions are now in widget-common.xsd under "link" element instead
                 <xs:attribute name="request-confirmation" default="false">
                     <xs:annotation>
                         <xs:documentation>If true then the user is presented with a dialog box, if confirmation-message is empty, use default</xs:documentation>
@@ -1410,6 +1411,7 @@ Features and Modifications:
                         <xs:documentation>The message displayed in confirmation box</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                -->
                 <xs:attribute name="also-hidden" default="true">
                     <xs:annotation>
                         <xs:documentation>If set to true, an hidden form field is also rendered, with the name of the field and its content.</xs:documentation>

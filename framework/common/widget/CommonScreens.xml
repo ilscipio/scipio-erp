@@ -1338,6 +1338,8 @@ under the License.
             in other words top-level control.
             If true, when activeSubMenu is empty but activeSubMenuItem is set, uses activeSubMenuItem as top-menu item. 
             If false, in the same case, activeSubMenuItem will be squashed by activeMainMenuItem.
+            The default is false because there was never a case in the original code where
+            activeSubMenuItem (or its original field name) was used for the top-level.
         Client screen field overrides:
         * activeSubField (default: "activeSubMenu")
         * activeSubItemField (default: "activeSubMenuItem")

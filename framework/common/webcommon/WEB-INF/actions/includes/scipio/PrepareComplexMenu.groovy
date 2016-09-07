@@ -103,6 +103,7 @@ useCplxMenu = false;
 org.ofbiz.widget.model.ModelMenu cplxMenuModel = null;
 warnFallback = false;
 if (!smplForce) {
+    cplxMenuModel = null;
     try {
         cplxMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
             cplxLoc, cplxName);
@@ -115,14 +116,11 @@ if (!smplForce) {
     }
     
     if (activeSubMenuName) {
-        subInCplx = cplxMenuModel.getModelSubMenuByName(activeSubMenuName);
-        if (subInCplx == null) {
-            warnFallback = true;
-        }
-        
         // check if the complex menu contains the named submenu.
-        if (activeSubMenuName.equals(cplxMenuModel.getName()) || subInCplx) {
+        if (cplxMenuModel != null && cplxMenuModel.isMenuNameWithinMenu(activeSubMenuName)) {
             useCplxMenu = true;
+        } else {
+            warnFallback = true;
         }
     } else {
         // by default assume this is a top level request for the complex menu

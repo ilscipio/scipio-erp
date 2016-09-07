@@ -1,9 +1,12 @@
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
+
 /**
  * SCIPIO: extra helper class to parse locations.
  */
-public class ModelLocation {
+@SuppressWarnings("serial")
+public class ModelLocation implements Serializable {
 
     protected final String name;
     protected final String resource;

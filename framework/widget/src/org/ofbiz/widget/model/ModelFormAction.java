@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,7 +42,8 @@ import org.w3c.dom.Element;
 /**
  * Abstract form action.
  */
-public abstract class ModelFormAction {
+@SuppressWarnings("serial")
+public abstract class ModelFormAction implements Serializable {
 
     public static final String module = ModelFormAction.class.getName();
 

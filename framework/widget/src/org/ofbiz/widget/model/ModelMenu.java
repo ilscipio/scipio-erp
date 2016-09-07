@@ -19,6 +19,7 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -1675,7 +1676,7 @@ public class ModelMenu extends ModelWidget {
         }
     }
     
-    public static class MenuDefCodeBehavior {
+    public static class MenuDefCodeBehavior implements Serializable {
         public String autoSubMenuNames;
         public String defaultSubMenuModelScope;
         public String defaultSubMenuInstanceScope;
@@ -1697,7 +1698,7 @@ public class ModelMenu extends ModelWidget {
      * SCIPIO: sub-menu and item pair. One or both may be null.
      * Usually when sub-menu is null it means the item is top level.
      */
-    public static class MenuAndItem {
+    public static class MenuAndItem implements Serializable {
         private final ModelSubMenu subMenu;
         private final ModelMenuItem menuItem;
         

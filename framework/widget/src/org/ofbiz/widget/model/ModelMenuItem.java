@@ -19,6 +19,7 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1032,7 +1033,7 @@ public class ModelMenuItem extends ModelWidget {
         return true;
     }
 
-    public static class MenuLink {
+    public static class MenuLink implements Serializable {
         private final ModelMenuItem linkMenuItem;
         private final Link link;
         

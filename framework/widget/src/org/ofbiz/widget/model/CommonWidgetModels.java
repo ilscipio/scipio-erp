@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -57,7 +58,8 @@ public final class CommonWidgetModels {
     private CommonWidgetModels() {
     }
 
-    public static class AutoEntityParameters {
+    @SuppressWarnings("serial")
+    public static class AutoEntityParameters implements Serializable {
         private String entityName;
         List<String> excludeList = new ArrayList<String>();
         boolean includeNonPk;
@@ -124,7 +126,8 @@ public final class CommonWidgetModels {
         }
     }
 
-    public static class AutoServiceParameters {
+    @SuppressWarnings("serial")
+    public static class AutoServiceParameters implements Serializable {
         List<String> excludeList = new ArrayList<String>();
         boolean includeNonPk;
         boolean includePk;
@@ -191,7 +194,8 @@ public final class CommonWidgetModels {
         }
     }
 
-    public static final class Image {
+    @SuppressWarnings("serial")
+    public static final class Image implements Serializable  {
         private final FlexibleStringExpander alt;
         private final FlexibleStringExpander borderExdr;
         private final FlexibleStringExpander heightExdr;
@@ -309,7 +313,8 @@ public final class CommonWidgetModels {
         }
     }
 
-    public static final class Link {
+    @SuppressWarnings("serial")
+    public static final class Link implements Serializable  {
         // FIXME: This is a bad practice. Client code should not need to "know" what this value is.
         public static final String DEFAULT_URL_MODE = "intra-app";
         private final AutoEntityParameters autoEntityParameters;
@@ -568,7 +573,8 @@ public final class CommonWidgetModels {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class Parameter {
+    @SuppressWarnings("serial")
+    public static class Parameter implements Serializable  {
         protected FlexibleMapAccessor<Object> fromField;
         protected String name;
         protected FlexibleStringExpander value;

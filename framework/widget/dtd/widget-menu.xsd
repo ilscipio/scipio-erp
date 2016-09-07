@@ -130,9 +130,8 @@ Features and Modifications:
                         match any menu item name in this menu, it will check the next, and so on.
                         NOTE: default-menu-item-name is explicitly excluded from the "does this field exist in menu?" logic - 
                             default-menu-item-name is only used when all of the listed fields were empty (legacy stock behavior).
-                        NOTE: If the target field's value contains a colon ':', it acts as a separator between (sub-)menu name and menu item name,
-                            such that selected-menu-context-field-name is ignored. 
-                       </xs:documentation>
+                        NOTE: Advanced usage: If the target field's value contains a colon ':', it acts as a separator between (sub-)menu name and menu item name,
+                            such that selected-menu-context-field-name is ignored.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="selected-menu-context-field-name">
@@ -141,7 +140,8 @@ Features and Modifications:
                         This works in conjunction with selected-menuitem-context-field-name for identifying a field name to select
                         in a complex menu having sub-menus (nested menus). The (sub-)menu name combined with field name uniquely
                         identifies the menu item to select, because the (sub-)menu name is expected to be unique across the whole menu.
-                        If this is omitted or evaluates to null/empty, the item will highlight within the top menu.</xs:documentation>
+                        SPECIAL VALUES: If this is attribute is omitted, or its field in context evaluates to null/empty, the name of the top menu
+                        or the special reserved value 'TOP', this designates/implies the top level of the menu and will highlight (within) the top menu level.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="menu-container-style">
@@ -751,7 +751,8 @@ Features and Modifications:
                         sub-menu name, using the referenced menu name with location stripped.
                         NOTE: This name is not used to reference any external menu definition. It is purely used
                             to identify the sub-menu within its top-level menu.
-                        NOTE: The name must be different from the top-level menu's name.</xs:documentation>
+                        NOTE: The name must be different from the top-level menu's name, and cannot be the
+                            value "TOP", which are reserved to designate the top level.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="id">

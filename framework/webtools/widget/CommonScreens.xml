@@ -396,7 +396,7 @@ under the License.
                 <!-- SCIPIO: this sub-menu had only one entry, so omit. if adding more, uncomment this
                     and the submenu include in WebtoolsAppSideBar.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="label" />-->
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
                 <!-- SCIPIO: force this item -->
                 <set field="activeSubMenuItem" value="labels"/>
             </actions>
@@ -589,7 +589,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu -->
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>

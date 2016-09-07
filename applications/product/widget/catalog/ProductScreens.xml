@@ -80,10 +80,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <condition>
-                                        <or>
-                                            <not><if-empty field="product"/></not>
-                                            <not><if-empty field="parameters.bypassIfNoProduct"/></not>
-                                        </or>
+                                        <not><if-empty field="product"/></not>
                                     </condition>
                                     <widgets>
                                         <platform-specific>
@@ -156,7 +153,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="activeSubMenuItem" value="EditProduct"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="parameters.bypassIfNoProduct" value="true"/>
                 <set field="title" value="${groovy: (parameters.productId &amp;&amp; parameters.isCreate != 'true') ? (uiLabelMap.PageTitleEditProduct + ' ' + parameters.productId) : (uiLabelMap.ProductNewProduct) }"/>
             </actions>
             <widgets>

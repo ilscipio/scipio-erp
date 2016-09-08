@@ -267,11 +267,13 @@
                             <if-empty field="visits"/>
                         </not>
                     </condition>
-                    <platform-specific>
-                        <html>
-                            <html-template location="component://party/webapp/partymgr/party/profileblocks/Visits.ftl"/>
-                        </html>
-                    </platform-specific>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://party/webapp/partymgr/party/profileblocks/Visits.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </widgets>
                 </section>
             </widgets>
         </section>
@@ -632,15 +634,19 @@
                     <field-map field-name="partyId"/>
                 </entity-one>
             </actions>
-            <condition>
-                <not>
-                    <if-empty field="partyId"/>
-                </not>
-            </condition>
             <widgets>
-                <platform-specific>
-                    <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ScipioPartyInfo.ftl"/></html>
-                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="partyId"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ScipioPartyInfo.ftl"/></html>
+                        </platform-specific>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

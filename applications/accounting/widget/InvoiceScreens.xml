@@ -714,9 +714,10 @@ under the License.
     <screen name="ScipioInvoicePaymentInfo">
         <section>
             <actions>
-                <service service-name="getInvoicePaymentInfoList" result-map-list="invoicePaymentInfoList">
+                <service service-name="getInvoicePaymentInfoList" result-map="result">
                     <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
                 </service>
+                <set field="invoicePaymentInfoList" from-field="result.invoicePaymentInfoList" />
             </actions>
             <widgets>
                 <section>

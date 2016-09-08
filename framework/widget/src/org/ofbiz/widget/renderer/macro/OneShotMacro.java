@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.template.FtlScriptFormatter;
 
 /**
  * Scipio: Generalized helper class to help implement one-shot macros.
@@ -18,7 +19,13 @@ import org.ofbiz.base.util.Debug;
  * This tries to factor out as much as possible from the stock Ofbiz classes to minimize
  * changes needed.
  * <p>
+ * This only works with macro calls that prepare their arguments as a map (not as a StringBuilder).
+ * <p>
  * FIXME?: The code is inefficient (in particular the substitute vars kludge), but the advantage is less intrusion.
+ * <p>
+ * NOTE (2016-09-07): the String literal handling is currently automatic and behaves the same as
+ * MacroMenuRenderer.executeMacroReal, which is that any String is automatically wrapped using
+ * a makeFtlStringLit call (enclosed in quotes); to prevent the auto quoting, wrap the string in a non-String object.
  */
 class OneShotMacro {
 
@@ -30,12 +37,18 @@ class OneShotMacro {
     private final Map<String, OneShotMacro.Entry> macroNameMap;
     
     private final String macroName;
+    private final FtlScriptFormatter ftlFmt;
     
-    public OneShotMacro(boolean enabled, String macroName, Map<String, Entry> macroNameMap) {
+    public OneShotMacro(boolean enabled, String macroName, Map<String, Entry> macroNameMap, FtlScriptFormatter ftlFmt) {
         this.enabled = enabled;
         this.macroName = macroName;
         this.macroNameMap = macroNameMap;
-        this.state = new State(macroName);
+        this.state = new State(macroName, ftlFmt);
+        this.ftlFmt = (ftlFmt != null) ? ftlFmt : new FtlScriptFormatter();
+    }
+    
+    public OneShotMacro(boolean enabled, String macroName, Map<String, Entry> macroNameMap) {
+        this(enabled, macroName, macroNameMap, null);
     }
     
     public boolean isEnabled() {
@@ -43,7 +56,7 @@ class OneShotMacro {
     }
     
     public void resetState() {
-        state = new State(macroName);
+        state = new State(macroName, ftlFmt);
     }
     
     /**
@@ -87,11 +100,13 @@ class OneShotMacro {
         private final List<LevelInfo> levelStack;
         private final Map<String, VarTextValuePair> substituteVarMap = new HashMap<String, VarTextValuePair>();
         private int subsituteVarCounter = 0;
+        public final FtlScriptFormatter ftlFmt;
         
-        public State(String macroName) {
+        public State(String macroName, FtlScriptFormatter ftlFmt) {
             this.macroName = macroName;
             levelStack = new ArrayList<LevelInfo>();
             levelStack.add(new LevelInfo());
+            this.ftlFmt = ftlFmt;
         }
         
         public LevelInfo getLevelInfo() {
@@ -296,9 +311,7 @@ class OneShotMacro {
                     sb.append(name);
                     sb.append("=");
                     if (value instanceof String) {
-                        sb.append('"');
-                        sb.append(((String) value).replaceAll("\"", "\\\\\""));
-                        sb.append('"');
+                        sb.append(state.ftlFmt.makeStringLiteral((String) value));
                     } else {
                         sb.append(value);
                     }
@@ -338,9 +351,7 @@ class OneShotMacro {
                     sb.append('"');
                     sb.append(':');
                     if (value instanceof String) {
-                        sb.append('"');
-                        sb.append(((String) value).replaceAll("\"", "\\\\\""));
-                        sb.append('"');
+                        sb.append(state.ftlFmt.makeStringLiteral((String) value));
                     } else {
                         sb.append(value);
                     }

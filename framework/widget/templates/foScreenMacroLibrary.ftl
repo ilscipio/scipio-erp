@@ -39,56 +39,56 @@ under the License.
 
 <#escape x as x?xml>
 
-<#macro renderScreenBegin>
+<#macro renderScreenBegin extraArgs...>
 <?xml version="1.0" encoding="UTF-8"?>
 </#macro>
 
-<#macro renderScreenEnd>
+<#macro renderScreenEnd extraArgs...>
 </#macro>
 
-<#macro renderSectionBegin boundaryComment>
+<#macro renderSectionBegin boundaryComment extraArgs...>
 </#macro>
 
-<#macro renderSectionEnd boundaryComment>
+<#macro renderSectionEnd boundaryComment extraArgs...>
 </#macro>
-<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval><fo:block <#if style?has_content><@getFoStyle style/></#if>></#macro>
-<#macro renderContainerEnd></fo:block></#macro>
-<#macro renderContentBegin editRequest enableEditValue editContainerStyle></#macro>
-<#macro renderContentBody></#macro>
-<#macro renderContentEnd></#macro>
-<#macro renderSubContentBegin></#macro>
-<#macro renderSubContentBody></#macro>
-<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue></#macro>
+<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval extraArgs...><fo:block <#if style?has_content><@getFoStyle style/></#if>></#macro>
+<#macro renderContainerEnd extraArgs...></fo:block></#macro>
+<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...></#macro>
+<#macro renderContentBody extraArgs...></#macro>
+<#macro renderContentEnd extraArgs...></#macro>
+<#macro renderSubContentBegin extraArgs...></#macro>
+<#macro renderSubContentBody extraArgs...></#macro>
+<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...></#macro>
 
-<#macro renderHorizontalSeparator id style><fo:block><fo:leader leader-length="100%" leader-pattern="rule" rule-style="solid" rule-thickness="0.1mm" color="black"/></fo:block></#macro>
-<#macro renderLabel text id style><#if text?has_content><fo:block <#if style?has_content><@getFoStyle style/></#if> <#if id?has_content> id="${id}"</#if>>${text}</fo:block></#if></#macro>
-<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name linkUrl text imgStr></#macro>
-<#macro renderImage src id style wid hgt border alt urlString></#macro>
+<#macro renderHorizontalSeparator id style extraArgs...><fo:block><fo:leader leader-length="100%" leader-pattern="rule" rule-style="solid" rule-thickness="0.1mm" color="black"/></fo:block></#macro>
+<#macro renderLabel text id style extraArgs...><#if text?has_content><fo:block <#if style?has_content><@getFoStyle style/></#if> <#if id?has_content> id="${id}"</#if>>${text}</fo:block></#if></#macro>
+<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name linkUrl text imgStr extraArgs...></#macro>
+<#macro renderImage src id style wid hgt border alt urlString extraArgs...></#macro>
 
-<#macro renderContentFrame></#macro>
-<#macro renderScreenletBegin id title collapsible saveCollapsed collapsibleAreaId expandToolTip collapseToolTip fullUrlString padded menuString showMore collapsed javaScriptEnabled menuRole="" titleStyle=""></#macro>
-<#macro renderScreenletSubWidget></#macro>
-<#macro renderScreenletEnd></#macro>
+<#macro renderContentFrame extraArgs...></#macro>
+<#macro renderScreenletBegin id title collapsible saveCollapsed collapsibleAreaId expandToolTip collapseToolTip fullUrlString padded menuString showMore collapsed javaScriptEnabled menuRole="" titleStyle="" extraArgs...></#macro>
+<#macro renderScreenletSubWidget extraArgs...></#macro>
+<#macro renderScreenletEnd extraArgs...></#macro>
 
-<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl></#macro>
+<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl extraArgs...></#macro>
 
-<#macro renderColumnContainerBegin id style>
+<#macro renderColumnContainerBegin id style extraArgs...>
   <fo:table width="100%"<#if id?has_content> id="${id}"</#if><#if style?has_content> <@getFoStyle style/></#if>>
     <fo:table-body>
       <fo:table-row>
 </#macro>
 
-<#macro renderColumnContainerEnd>
+<#macro renderColumnContainerEnd extraArgs...>
       </fo:table-row>
     </fo:table-body>
   </fo:table>
 </#macro>
 
-<#macro renderColumnBegin id style>
+<#macro renderColumnBegin id style extraArgs...>
         <fo:table-cell<#if id?has_content> id="${id}"</#if><#if style?has_content> <@getFoStyle style/></#if>>
 </#macro>
 
-<#macro renderColumnEnd>
+<#macro renderColumnEnd extraArgs...>
         </fo:table-cell>
 </#macro>
 

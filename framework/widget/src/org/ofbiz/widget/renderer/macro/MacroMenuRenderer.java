@@ -39,6 +39,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.base.util.template.FtlScriptFormatter;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
@@ -79,6 +80,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
+    private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("menu");
 
     
@@ -86,8 +88,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
      * Scipio: One-shot macro helper class. Controls whether render macros piecemeal or
      * in one invocation upon close.
      */
-    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", false), 
-            "renderMenuFull", renderEntryMacroNameMap);
+    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", true), 
+            "renderMenuFull", renderEntryMacroNameMap, ftlFmt);
     
     public MacroMenuRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
@@ -142,7 +144,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     /**
-     * Scipio: This is the original executeMacro.
+     * SCIPIO: This is the original executeMacro.
+     * <p>
+     * NOTE: To prevent auto-enclosing String in quotes, pass a StringBuilder or other non-String wrapper instead.
      */
     private void executeMacroReal(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
         StringBuilder sb = new StringBuilder("<@");
@@ -154,9 +158,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 sb.append("=");
                 Object value = parameter.getValue();
                 if (value instanceof String) {
-                    sb.append('"');
-                    sb.append(((String) value).replaceAll("\"", "\\\\\""));
-                    sb.append('"');
+                    sb.append(ftlFmt.makeStringLiteral((String) value));
                 } else {
                     sb.append(value);
                 }
@@ -303,12 +305,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 if (targetParameters.length() > 1) {
                     targetParameters.append(",");
                 }
-                targetParameters.append("{'name':'");
-                targetParameters.append(parameter.getKey());
-                targetParameters.append("'");
-                targetParameters.append(",'value':'");
-                targetParameters.append(parameter.getValue());
-                targetParameters.append("'}");
+                targetParameters.append("{'name':");
+                targetParameters.append(ftlFmt.makeStringLiteralSQ(parameter.getKey()));
+                targetParameters.append(",'value':");
+                targetParameters.append(ftlFmt.makeStringLiteralSQ(parameter.getValue()));
+                targetParameters.append("}");
             }
             targetParameters.append("]");
 
@@ -325,7 +326,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         parameters.put("linkUrl", linkUrl);
         parameters.put("actionUrl", actionUrl);
-        parameters.put("parameterList", targetParameters);
+        parameters.put("parameterList", targetParameters); // SCIPIO: NOTE: this must NOT be a String; explicitly pass StringBuilder (obscure workaround)
         String imgStr = "";
         Image img = link.getImage();
         if (img != null) {
@@ -512,4 +513,5 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             throw new IOException(e);
         }
     }
+    
 }

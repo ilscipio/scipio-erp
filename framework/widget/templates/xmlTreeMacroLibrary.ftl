@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#macro renderNodeBegin style></#macro>
+<#macro renderNodeBegin style extraArgs...></#macro>
 
-<#macro renderLastElement style></#macro>
+<#macro renderLastElement style extraArgs...></#macro>
   
-<#macro renderNodeEnd processChildren isRootNode></#macro>
+<#macro renderNodeEnd processChildren isRootNode extraArgs...></#macro>
  
-<#macro renderLabel id style labelText></#macro>
+<#macro renderLabel id style labelText extraArgs...></#macro>
 
 <#macro formatBoundaryComment boundaryType widgetType widgetName></#macro>
 
-<#macro renderLink id style name title targetWindow linkUrl linkText imgStr></#macro>
+<#macro renderLink id style name title targetWindow linkUrl linkText imgStr extraArgs...></#macro>
 
-<#macro renderImage src id style wid hgt border alt urlString></#macro>
+<#macro renderImage src id style wid hgt border alt urlString extraArgs...></#macro>
  

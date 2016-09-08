@@ -20,7 +20,7 @@ Scipio: Common HTML macro library code
 <#assign dummy = importScipioUtilities()>
 -->
 
-<#macro renderLabelCommon text id style>
+<#macro renderLabelCommon text id style extraArgs...>
   <#if text?has_content>
     <#-- If a label widget has one of the h1-h6 styles, then it is considered block level element.
          Otherwise it is considered an inline element. -->

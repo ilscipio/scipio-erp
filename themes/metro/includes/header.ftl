@@ -279,12 +279,12 @@ under the License.
                         <!-- End of Profile -->
 
                         <!-- Menu sidebar begin-->
-                          
-                        <ul class="side-nav" id="menu_2">
-                            <#if userLogin??>  
-                                <@sideBarMenu/> 
-                            </#if>                 
-                        </ul>
+                        <#-- NOTE: side-nav is on the child ul -->
+                        <div class="side-nav-area">
+                        <#if userLogin??>  
+                            <@sideBarMenu/> 
+                        </#if>                
+                        </div>
                         
                     </nav>
                     

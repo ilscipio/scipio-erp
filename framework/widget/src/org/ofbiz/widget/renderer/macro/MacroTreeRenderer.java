@@ -36,6 +36,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.base.util.template.FtlScriptFormatter;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
@@ -59,6 +60,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     public static final String module = MacroTreeRenderer.class.getName();
     private Template macroLibrary;
     
+    private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("tree");
     
     /**
@@ -123,13 +125,13 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     public void renderBeginningBoundaryComment(Appendable writer, String widgetType, ModelWidget modelWidget) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@formatBoundaryComment ");
-        sr.append(" boundaryType=\"");
-        sr.append("Begin");
-        sr.append("\" widgetType=\"");
-        sr.append(widgetType);
-        sr.append("\" widgetName=\"");
-        sr.append(modelWidget.getBoundaryCommentName());
-        sr.append("\" />");
+        sr.append(" boundaryType=");
+        sr.append(ftlFmt.makeStringLiteral("Begin"));
+        sr.append(" widgetType=");
+        sr.append(ftlFmt.makeStringLiteral(widgetType));
+        sr.append(" widgetName=");
+        sr.append(ftlFmt.makeStringLiteral(modelWidget.getBoundaryCommentName()));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
     
@@ -142,13 +144,13 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     public void renderEndingBoundaryComment(Appendable writer, String widgetType, ModelWidget modelWidget) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@formatBoundaryComment ");
-        sr.append(" boundaryType=\"");
-        sr.append("End");
-        sr.append("\" widgetType=\"");
-        sr.append(widgetType);
-        sr.append("\" widgetName=\"");
-        sr.append(modelWidget.getBoundaryCommentName());
-        sr.append("\" />");
+        sr.append(" boundaryType=");
+        sr.append(ftlFmt.makeStringLiteral("End"));
+        sr.append(" widgetType=");
+        sr.append(ftlFmt.makeStringLiteral(widgetType));
+        sr.append(" widgetName=");
+        sr.append(ftlFmt.makeStringLiteral(modelWidget.getBoundaryCommentName()));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
     
@@ -167,9 +169,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
  
         StringWriter sr = new StringWriter();
         sr.append("<@renderNodeBegin ");
-        sr.append(" style=\"");
-        sr.append(style);
-        sr.append("\" />");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
 
         String pkName = node.getPkName(context);
@@ -262,9 +264,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         if (processChildren.booleanValue()) {            
             StringWriter sr = new StringWriter();
             sr.append("<@renderLastElement ");
-            sr.append("style=\"");
-            sr.append("basic-tree");
-            sr.append("\" />");
+            sr.append("style=");
+            sr.append(ftlFmt.makeStringLiteral("basic-tree"));
+            sr.append("/>");
             executeMacro(writer, sr.toString());
         }
     }
@@ -276,13 +278,13 @@ public class MacroTreeRenderer implements TreeStringRenderer {
 
         StringWriter sr = new StringWriter();
         sr.append("<@renderLabel ");
-        sr.append("id=\"");
-        sr.append(id);
-        sr.append("\" style=\"");
-        sr.append(style);
-        sr.append("\" labelText=\"");
-        sr.append(labelText);        
-        sr.append("\" />");
+        sr.append("id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" labelText=");
+        sr.append(ftlFmt.makeStringLiteral(labelText));        
+        sr.append(" />");
         executeMacro(writer, sr.toString());        
     }
 
@@ -314,23 +316,23 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderLink ");
-        sr.append("id=\"");
-        sr.append(id);
-        sr.append("\" style=\"");
-        sr.append(style);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" title=\"");
-        sr.append(title);
-        sr.append("\" targetWindow=\"");
-        sr.append(targetWindow);  
-        sr.append("\" linkUrl=\"");
-        sr.append(linkUrl);     
-        sr.append("\" linkText=\"");
-        sr.append(linkText);           
-        sr.append("\" imgStr=\"");
-        sr.append(imgStr.replaceAll("\"", "\\\\\""));
-        sr.append("\" />");
+        sr.append("id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(title));
+        sr.append(" targetWindow=");
+        sr.append(ftlFmt.makeStringLiteral(targetWindow));  
+        sr.append(" linkUrl=");
+        sr.append(ftlFmt.makeStringLiteral(linkUrl.toString()));     
+        sr.append(" linkText=");
+        sr.append(ftlFmt.makeStringLiteral(linkText));           
+        sr.append(" imgStr=");
+        sr.append(ftlFmt.makeStringLiteral(imgStr));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
   
@@ -375,23 +377,23 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderImage ");
-        sr.append("src=\"");
-        sr.append(src);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" style=\"");
-        sr.append(style);
-        sr.append("\" wid=\"");
-        sr.append(wid);
-        sr.append("\" hgt=\"");
-        sr.append(hgt);
-        sr.append("\" border=\"");
-        sr.append(border);
-        sr.append("\" alt=\"");
-        sr.append(alt);
-        sr.append("\" urlString=\"");
-        sr.append(urlString);
-        sr.append("\" />");
+        sr.append("src=");
+        sr.append(ftlFmt.makeStringLiteral(src));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" wid=");
+        sr.append(ftlFmt.makeStringLiteral(wid));
+        sr.append(" hgt=");
+        sr.append(ftlFmt.makeStringLiteral(hgt));
+        sr.append(" border=");
+        sr.append(ftlFmt.makeStringLiteral(border));
+        sr.append(" alt=");
+        sr.append(ftlFmt.makeStringLiteral(alt));
+        sr.append(" urlString=");
+        sr.append(ftlFmt.makeStringLiteral(urlString));
+        sr.append(" />");
         executeMacro(writer, sr.toString());        
     }
 
@@ -402,4 +404,5 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         } 
         return null;
     }
+    
 }

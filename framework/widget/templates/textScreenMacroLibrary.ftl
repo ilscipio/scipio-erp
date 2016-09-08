@@ -17,44 +17,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#macro renderScreenBegin>
+<#macro renderScreenBegin extraArgs...>
 </#macro>
 
-<#macro renderScreenEnd>
+<#macro renderScreenEnd extraArgs...>
 </#macro>
 
-<#macro renderSectionBegin boundaryComment>
+<#macro renderSectionBegin boundaryComment extraArgs...>
 </#macro>
 
-<#macro renderSectionEnd boundaryComment>
+<#macro renderSectionEnd boundaryComment extraArgs...>
 </#macro>
 
-<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval></#macro>
-<#macro renderContainerEnd></#macro>
-<#macro renderContentBegin editRequest enableEditValue editContainerStyle></#macro>
-<#macro renderContentBody></#macro>
-<#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue></#macro>
-<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue></#macro>
-<#macro renderSubContentBody></#macro>
-<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue></#macro>
+<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval extraArgs...></#macro>
+<#macro renderContainerEnd extraArgs...></#macro>
+<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...></#macro>
+<#macro renderContentBody extraArgs...></#macro>
+<#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...></#macro>
+<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue extraArgs...></#macro>
+<#macro renderSubContentBody extraArgs...></#macro>
+<#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...></#macro>
 
-<#macro renderHorizontalSeparator id style></#macro>
-<#macro renderLabel text id style>
+<#macro renderHorizontalSeparator id style extraArgs...></#macro>
+<#macro renderLabel text id style extraArgs...>
     <#if text??>
         ${text}<#lt/>
     </#if>
 </#macro>
-<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name linkUrl text imgStr></#macro>
-<#macro renderImage src id style wid hgt border alt urlString></#macro>
+<#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name linkUrl text imgStr extraArgs...></#macro>
+<#macro renderImage src id style wid hgt border alt urlString extraArgs...></#macro>
 
-<#macro renderContentFrame fullUrl width height border></#macro>
-<#macro renderScreenletBegin id title collapsible saveCollapsed collapsibleAreaId expandToolTip collapseToolTip fullUrlString padded menuString showMore collapsed javaScriptEnabled menuRole="" titleStyle=""></#macro>
-<#macro renderScreenletSubWidget></#macro>
-<#macro renderScreenletEnd></#macro>
+<#macro renderContentFrame fullUrl width height border extraArgs...></#macro>
+<#macro renderScreenletBegin id title collapsible saveCollapsed collapsibleAreaId expandToolTip collapseToolTip fullUrlString padded menuString showMore collapsed javaScriptEnabled menuRole="" titleStyle="" extraArgs...></#macro>
+<#macro renderScreenletSubWidget extraArgs...></#macro>
+<#macro renderScreenletEnd extraArgs...></#macro>
 
-<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl></#macro>
+<#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl extraArgs...></#macro>
 
-<#macro renderColumnContainerBegin id style></#macro>
-<#macro renderColumnContainerEnd></#macro>
-<#macro renderColumnBegin id style></#macro>
-<#macro renderColumnEnd></#macro>
+<#macro renderColumnContainerBegin id style extraArgs...></#macro>
+<#macro renderColumnContainerEnd extraArgs...></#macro>
+<#macro renderColumnBegin id style extraArgs...></#macro>
+<#macro renderColumnEnd extraArgs...></#macro>

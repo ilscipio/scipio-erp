@@ -23,17 +23,17 @@ context, such as request, response, etc. however it is only from the initial con
 not "current" context (too intrusive in current renderer design). still relies on macro params.
 2016-01-06: the globalContext is now also dumped into the data model, so uiLabelMap should be available.
 -->
-<#macro renderNodeBegin style>
+<#macro renderNodeBegin style extraArgs...>
 <#if style?has_content><ul class="${style}"></#if>
 <li><#rt/>
 </#macro>
 
-<#macro renderLastElement style>
+<#macro renderLastElement style extraArgs...>
 <ul<#if style?has_content> class="${style}"</#if>>
 <#rt/>
 </#macro>
   
-<#macro renderNodeEnd processChildren isRootNode>
+<#macro renderNodeEnd processChildren isRootNode extraArgs...>
 <#if processChildren?has_content && processChildren>
 </ul><#lt/>
 </#if>
@@ -43,7 +43,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#if> 
 </#macro>
  
-<#macro renderLabel id style labelText>
+<#macro renderLabel id style labelText extraArgs...>
 <span<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>><#rt/>
 <#if id?has_content>{labelText}</#if><#rt/>
 </span>    
@@ -53,7 +53,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <!-- ${boundaryType}  ${widgetType}  ${widgetName} -->
 </#macro>
 
-<#macro renderLink id style name title targetWindow linkUrl linkText imgStr>
+<#macro renderLink id style name title targetWindow linkUrl linkText imgStr extraArgs...>
 <a<#if id?has_content> id="${id}"</#if><#rt/>
 <#if style?has_content> class="${style}"</#if><#rt/>
 <#if name?has_content> name="${name}"</#if><#rt/>
@@ -62,7 +62,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${linkText}<#else>&nbsp;</#if></a><#rt/>
 </#macro>
 
-<#macro renderImage src id style wid hgt border alt urlString>
+<#macro renderImage src id style wid hgt border alt urlString extraArgs...>
 <#if src?has_content>
 <img <#if id?has_content>id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${border}"</#if> alt="<#if alt?has_content>${alt}</#if>" src="${urlString}" /><#rt/>
 </#if>

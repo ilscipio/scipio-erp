@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="currentUrl" value="FindContacts"/>
-                <set field="activeMainMenuItem" value="Contacts"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
                 <set field="setContactDescription" value="${groovy:session.setAttribute(&quot;contactDescription&quot;,activeMainMenuItem)}"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>
@@ -78,7 +78,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateContact"/>
-                <set field="activeMainMenuItem" value="Contacts"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>
@@ -96,7 +96,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateContact"/>
-                <set field="activeMainMenuItem" value="Contacts"/>
+                <!--<set field="activeSubMenuItem" value="Contacts"/>-->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Contact"/>
                 <set field="activeSubMenuItem" value="MergeContacts"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
             </actions>
@@ -138,7 +139,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateContactFromVCard"/>
-                <set field="activeMainMenuItem" value="Contacts"/>
+                <set field="activeSubMenuItem" value="Contacts"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">

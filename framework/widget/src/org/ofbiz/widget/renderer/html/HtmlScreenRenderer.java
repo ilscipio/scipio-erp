@@ -70,8 +70,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - HTML Form Renderer implementation
- * @deprecated Use MacroScreenRenderer.
+ * <p>
+ * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlScreenRenderer extends HtmlWidgetRenderer implements ScreenStringRenderer {
 
     public static final String module = HtmlScreenRenderer.class.getName();

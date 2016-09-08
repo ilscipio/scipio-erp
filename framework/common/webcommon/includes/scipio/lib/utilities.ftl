@@ -71,12 +71,19 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
                               If there is no path for the type or path is optional, then name alone should be specified.
-    type                    = (screen|menu|form|tree, default: screen) The type of resource to render
+    type                    = (screen|menu|form|tree|section, default: screen) The type of resource to render
                               * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
-                              * {{{menu}}}: an Ofbiz menu (widget) by {{{component://}}} location
-                              * {{{form}}}: an Ofbiz form (widget) by {{{component://}}} location
-                              * {{{tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
+                                NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
+                              * {{{screen-widget}}}: an Ofbiz screen (widget) by {{{component://}}} location - 
+                                same as {{{screen}}} but using alternate inclusion method using xml {{{include-screen}}}
+                              * {{{menu}}} or {{{include-menu}}} (currently same): an Ofbiz menu (widget) by {{{component://}}} location
+                              * {{{form}}} or {{{include-form}}} (currently same): an Ofbiz form (widget) by {{{component://}}} location
+                              * {{{tree}}} or {{{include-tree}}} (currently same): an Ofbiz tree (widget) by {{{component://}}} location
                               * {{{section}}}: an Ofbiz screen (widget) decorator section, with {{{name}}} arg
+                              NOTE: screen, menu, form and tree (xxx) can be given a {{{include-}}} prefix. The {{{include-}}} version
+                                  guarantees that the include will be processed using the XML {{{include-xxx}}} element. 
+                                  The non-{{{include-}}} versions may be implemented using other means
+                                  and may be more efficient, but sometimes it may be needed to force the include mechanism.
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
@@ -95,8 +102,13 @@ TODO: Reimplement as transform.
                               output of @render, pass true here.
                               NOTE: not supported for {{{type="section"}}} as this time.
                               TODO: implement for section
+    maxDepth                = ((int), default: -1) Max menu levels to render [{{{menu}}} type only]
+                              See widget-menu.xsd {{{include-menu}}} element for details.
+    subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
+                              See widget-menu.xsd {{{include-menu}}} element for details.
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" asString=false>
+<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
+    asString=false maxDepth="" subMenus="">
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
@@ -108,20 +120,34 @@ TODO: Reimplement as transform.
     <#elseif type == "section">
         ${StringUtil.wrapString(sections.render(name))}<#t>
     <#else>
+      <#-- strip -widget from type, because for the rest it's all the same -->
+      <#local type = type?replace("include-", "")>
       <#if !name?has_content>
         <#local parts = resource?split("#")>
         <#local resource = parts[0]>
         <#local name = (parts[1])!>
       </#if>
       <#-- DEV NOTE: WARN: name clashes -->
-      <#local dummy = setContextField("scipioWidgetWrapperResName", name)>
-      <#local dummy = setContextField("scipioWidgetWrapperResLocation", resource)>
       <#if type == "menu">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource, "maxDepth":maxDepth, "subMenus":subMenus
+        })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource
+        })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString))}<#t>
       <#elseif type == "tree">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource
+        })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString))}<#t>
+      <#elseif type == "screen">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource
+        })>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>
     </#if>
   </@varSection>
@@ -1729,6 +1755,11 @@ For advanced markup; bypasses @section (but a parent @section will restore headi
 ************
 Output a Freemarker variable as a value in Javascript, JSON or similar script language.
 
+Automatically tries to detect types and wrap in appropriate syntax.
+To manually prevent the interpretation of a value inside a structure such as a map,
+either use the {{{rawVal}}} parameter or wrap the nested value itself using
+#wrapRawScript.
+
 DEV NOTE: This is complicated in Ofbiz because Maps and objects from
     widget/java/groovy context don't behave same as FTL types.
     Currently can't use ?keys on Maps and generally for most types gotten from
@@ -1748,9 +1779,12 @@ TODO: doesn't handle dates (ambiguous?)
                               This can be a map or list of boolean to parallel the object, for recursion.
                               NOTE: is cumbersome for lists; mostly useful for maps.
                               NOTE: this is kept separate from the object for security reasons.
+                              
+  * Related *
+    #wrapRawScript
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
-  <#if rawVal?is_boolean && rawVal == true>
+  <#if (rawVal?is_boolean && rawVal == true)><#-- NOTE: there's a duplicate of this further down for performance reasons -->
     <#if isObjectType("string", object)>
       ${rawString(object)}<#t>
     <#else>
@@ -1791,6 +1825,8 @@ TODO: doesn't handle dates (ambiguous?)
       </#list>
       <#if wrap>}</#if><#rt>
     <#else>{}</#if>
+  <#elseif Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)><#-- NOTE: this is done at the end for performance reasons only (it really belongs beside rawVal test) -->
+      ${object?string}<#t>
   <#elseif object?is_string> 
     <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
@@ -1841,6 +1877,39 @@ TODO: doesn't handle dates (ambiguous?)
     needed for html in javascript strings -->
 <#function compressStringBlankspace str>
   <#return str?replace(r"[\n\s\r]+", " ", "r")>
+</#function>
+
+<#-- 
+*************
+* wrapRawScript
+************
+Wraps a string in a special wrapper that when passed to script-handling macros (such as @objectAsScript) gets included as
+a raw script value (rather than enclosed in a string).
+                   
+  * Parameters *
+    object                  = the string to wrap
+    
+  * Related *
+    @objectAsScript
+-->
+<#function wrapRawScript object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(rawString(object))>
+</#function>
+
+<#-- 
+*************
+* isRawScript
+************
+Checks if the object was wrapped with #wrapRawScript.
+                   
+  * Parameters *
+    object                  = the string to wrap
+    
+  * Related *
+    @objectAsScript
+-->
+<#function isRawScript object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
 </#function>
 
 <#-- 
@@ -2836,6 +2905,22 @@ NOTE: AUTO-ESCAPING: Unlike {{{request.getAttribute}}}, values retrieved are not
 
 <#-- 
 *************
+* getRequestStackSize
+************
+Gets the current size of the named stack.
+If the stack doesn't exist, returns void, so can be used to check if a stack exists using {{{??}}} operator.
+    
+  * Parameters *
+    name                    = (required) Global request stack var name
+                              Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function getRequestStackSize name>
+</#function>
+-->
+
+<#-- 
+*************
 * setRequestVar
 ************
 Sets a global var in request scope (request attributes, or if no request, globals).
@@ -2963,6 +3048,51 @@ TODO: implement as transform.
     <#t> ${attribs?string}
   </#if>
 </#macro>
+
+<#-- 
+*************
+* attribSpecialVal
+************
+Returns a special value that can be passed to some attribs maps arguments on
+macros (works via @elemAttribStr).
+
+  * Parameters *
+    type                        = (none|empty) The special value type
+
+  * Related *
+    @elemAttribStr
+    #isAttribSpecialVal
+-->
+<#function attribSpecialVal type>
+  <#-- old (deprecated, should not even be here)
+  <#if type == "none">
+    <#return "_NO_VALUE_">
+  <#elseif type == "empty">
+    <#return "_EMPTY_VALUE_">
+  </#if>
+  -->
+  <#if !scipioAttribSpecialValMap??>
+    <#global scipioAttribSpecialValMap = toSimpleMap(Static["com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue"].getTypeNameMap())>
+  </#if>
+  <#return scipioAttribSpecialValMap[type]>
+</#function>
+
+<#-- 
+*************
+* isAttribSpecialVal
+************
+Checks if a value is one returned by #attribSpecialVal.
+
+  * Parameters *
+    object                      = the object to test                     
+    type                        = (none|empty|, default: -empty-) The special value type to test for, or empty for any special value
+
+  * Related *
+    #attribSpecialVal
+-->
+<#function isAttribSpecialVal val type="">
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue"].isSpecialValue(val, type)>
+</#function>
 
 <#-- 
 *************

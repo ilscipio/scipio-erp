@@ -45,4 +45,31 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://demosuite/widget/DemoSuiteMenus.xml"/>
+                <set field="menuCfg.name" value="MainAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://demosuite/widget/DemoSuiteMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

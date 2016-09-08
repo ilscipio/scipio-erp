@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URLEncoder;
 import java.rmi.server.UID;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,6 +52,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.base.util.template.FtlScriptFormatter;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
@@ -113,8 +116,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private boolean renderPagination = true;
     private boolean widgetCommentsEnabled = false;
 
+    private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("form");
-    
+
     public MacroFormRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         this.request = request;
@@ -191,9 +195,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderLabel ");
-        sr.append("text=\"");
-        sr.append(labelText);
-        sr.append("\"");
+        sr.append("text=");
+        sr.append(ftlFmt.makeStringLiteral(labelText));
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
@@ -222,22 +225,23 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderDisplayField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append("type=\"");
-        sr.append(type);
-        sr.append("\" imageLocation=\"");
-        sr.append(imageLocation);
-        sr.append("\" idName=\"");
-        sr.append(idName);
-        sr.append("\" description=\"");
-        sr.append(FreeMarkerWorker.encodeDoubleQuotes(description));
-        sr.append("\" title=\"");
-        sr.append(title);
-        sr.append("\" class=\"");
-        sr.append(modelFormField.getWidgetStyle(context));
-        sr.append("\" alert=\"");
-        sr.append(modelFormField.shouldBeRed(context) ? "true" : "false");
+        sr.append("type=");
+        sr.append(ftlFmt.makeStringLiteral(type));
+        sr.append(" imageLocation=");
+        sr.append(ftlFmt.makeStringLiteral(imageLocation));
+        sr.append(" idName=");
+        sr.append(ftlFmt.makeStringLiteral(idName));
+        sr.append(" description=");
+        sr.append(ftlFmt.makeStringLiteral(description)); // SCIPIO: redundant: FreeMarkerWorker.encodeDoubleQuotes(description)
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(title));
+        sr.append(" class=");
+        sr.append(ftlFmt.makeStringLiteral(modelFormField.getWidgetStyle(context)));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(modelFormField.shouldBeRed(context)));
         if (ajaxEnabled) {
             String url = inPlaceEditor.getUrl(context);
+            // SCIPIO: FIXME?: the javascript string values should probably be escaped for javascript syntax
             String extraParameter = "{";
             Map<String, Object> fieldMap = inPlaceEditor.getFieldMap(context);
             if (fieldMap != null) {
@@ -255,9 +259,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
             }
             extraParameter += "}";
-            sr.append("\" inPlaceEditorUrl=\"");
-            sr.append(url);
-            sr.append("\" inPlaceEditorParams=\"");
+            sr.append(" inPlaceEditorUrl=");
+            sr.append(ftlFmt.makeStringLiteral(url));
+            sr.append(" inPlaceEditorParams=");
             StringWriter inPlaceEditorParams = new StringWriter();
             inPlaceEditorParams.append("{name: '");
             if (UtilValidate.isNotEmpty(inPlaceEditor.getParamName())) {
@@ -306,9 +310,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 inPlaceEditorParams.append(", cols: '" + inPlaceEditor.getCols() + "'");
             }
             inPlaceEditorParams.append("}");
-            sr.append(inPlaceEditorParams.toString());
+            sr.append(ftlFmt.makeStringLiteral(inPlaceEditorParams.toString()));
         }
-        sr.append("\" />");
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         if (displayField instanceof DisplayEntityField) {
             makeHyperlinkString(writer, ((DisplayEntityField) displayField).getSubHyperlink(), context);
@@ -382,43 +386,39 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderTextField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append("name=\"");
-        sr.append(name);
-        sr.append("\" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" textSize=\"");
-        sr.append(textSize);
-        sr.append("\" maxlength=\"");
-        sr.append(maxlength);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" event=\"");
-        if (event != null) {
-            sr.append(event);
-        }
-        sr.append("\" action=\"");
-        if (action != null) {
-            sr.append(action);
-        }
-        sr.append("\" disabled=");
+        sr.append("name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" textSize=");
+        sr.append(ftlFmt.makeStringLiteral(textSize));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" disabled=");
         sr.append(Boolean.toString(disabled));
-        sr.append(" clientAutocomplete=\"");
-        sr.append(clientAutocomplete);
-        sr.append("\" ajaxUrl=\"");
-        sr.append(ajaxUrl);
-        sr.append("\" ajaxEnabled=");
+        sr.append(" clientAutocomplete=");
+        sr.append(ftlFmt.makeStringLiteral(clientAutocomplete));
+        sr.append(" ajaxUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxUrl));
+        sr.append(" ajaxEnabled=");
         sr.append(Boolean.toString(ajaxEnabled));
-        sr.append(" mask=\"");
-        sr.append(mask);
-        sr.append("\" placeholder=\"");
-        sr.append(placeholder);
-        sr.append("\" tooltip=\""); // SCIPIO: new arg
-        sr.append(tooltip);
-        sr.append("\" />");
+        sr.append(" mask=");
+        sr.append(ftlFmt.makeStringLiteral(mask));
+        sr.append(" placeholder=");
+        sr.append(ftlFmt.makeStringLiteral(placeholder));
+        sr.append(" tooltip="); // SCIPIO: new arg
+        sr.append(ftlFmt.makeStringLiteral(tooltip));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = textField.getSubHyperlink();
         if (subHyperlink != null && subHyperlink.shouldUse(context)) {
@@ -478,32 +478,32 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderTextareaField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append("name=\"");
-        sr.append(name);
-        sr.append("\" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" cols=\"");
-        sr.append(cols);
-        sr.append("\" rows=\"");
-        sr.append(rows);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" readonly=\"");
-        sr.append(readonly);
-        sr.append("\" visualEditorEnable=\"");
-        sr.append(visualEditorEnable);
-        sr.append("\" language=\"");
-        sr.append(language);
-        sr.append("\" buttons=\"");
-        sr.append(buttons);
+        sr.append("name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" cols=");
+        sr.append(ftlFmt.makeStringLiteral(cols));
+        sr.append(" rows=");
+        sr.append(ftlFmt.makeStringLiteral(rows));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" readonly=");
+        sr.append(ftlFmt.makeStringLiteral(readonly));
+        sr.append(" visualEditorEnable=");
+        sr.append(ftlFmt.makeStringLiteral(visualEditorEnable));
+        sr.append(" language=");
+        sr.append(ftlFmt.makeStringLiteral(language));
+        sr.append(" buttons=");
+        sr.append(ftlFmt.makeStringLiteral(buttons));
         // SCIPIO: maxlength added
-        sr.append("\" maxlength=\"");
-        sr.append(maxlength);
-        sr.append("\" />");
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
         this.appendTooltip(writer, context, modelFormField);
@@ -533,7 +533,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             try {
                 step = Integer.valueOf(stepString).intValue();
             } catch (IllegalArgumentException e) {
-                Debug.logWarning("Inavalid value for step property for field[" + paramName + "] with input-method=\"time-dropdown\" " + " Found Value [" + stepString + "]  " + e.getMessage(), module);
+                Debug.logWarning("Invalid value for step property for field[" + paramName + "] with input-method=\"time-dropdown\" " + " Found Value [" + stepString + "]  " + e.getMessage(), module);
             }
             timeValues.append("[");
             for (int i = 0; i <= 59;) {
@@ -698,69 +698,69 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderDateTimeField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append("name=\"");
-        sr.append(name);
-        sr.append("\" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" title=\"");
-        sr.append(localizedInputTitle);
-        sr.append("\" size=\"");
-        sr.append(Integer.toString(size));
-        sr.append("\" maxlength=\"");
-        sr.append(Integer.toString(maxlength));
-        sr.append("\" step=\"");
-        sr.append(Integer.toString(step));
-        sr.append("\" timeValues=\"");
+        sr.append("name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(localizedInputTitle));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(size));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" step=");
+        sr.append(ftlFmt.makeStringLiteral(step));
+        sr.append(" timeValues=\"");
         sr.append(timeValues.toString());
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" event=\"");
-        sr.append(event);
-        sr.append("\" action=\"");
-        sr.append(action);
-        sr.append("\" dateType=\"");
-        sr.append(dateTimeField.getType());
-        sr.append("\" shortDateInput=");
+        sr.append("\" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" dateType=");
+        sr.append(ftlFmt.makeStringLiteral(dateTimeField.getType()));
+        sr.append(" shortDateInput=");
         sr.append(Boolean.toString(shortDateInput));
-        sr.append(" timeDropdownParamName=\"");
-        sr.append(timeDropdownParamName);
-        sr.append("\" defaultDateTimeString=\"");
-        sr.append(defaultDateTimeString);
-        sr.append("\" localizedIconTitle=\"");
-        sr.append(localizedIconTitle);
-        sr.append("\" timeDropdown=\"");
-        sr.append(timeDropdown);
-        sr.append("\" timeHourName=\"");
-        sr.append(timeHourName);
-        sr.append("\" classString=\"");
-        sr.append(classString);
-        sr.append("\" hour1=");
+        sr.append(" timeDropdownParamName=");
+        sr.append(ftlFmt.makeStringLiteral(timeDropdownParamName));
+        sr.append(" defaultDateTimeString=");
+        sr.append(ftlFmt.makeStringLiteral(defaultDateTimeString));
+        sr.append(" localizedIconTitle=");
+        sr.append(ftlFmt.makeStringLiteral(localizedIconTitle));
+        sr.append(" timeDropdown=");
+        sr.append(ftlFmt.makeStringLiteral(timeDropdown));
+        sr.append(" timeHourName=");
+        sr.append(ftlFmt.makeStringLiteral(timeHourName));
+        sr.append(" classString=");
+        sr.append(ftlFmt.makeStringLiteral(classString));
+        sr.append(" hour1=");
         sr.append(Integer.toString(hour1));
         sr.append(" hour2=");
         sr.append(Integer.toString(hour2));
-        sr.append(" timeMinutesName=\"");
-        sr.append(timeMinutesName);
-        sr.append("\" minutes=");
+        sr.append(" timeMinutesName=");
+        sr.append(ftlFmt.makeStringLiteral(timeMinutesName));
+        sr.append(" minutes=");
         sr.append(Integer.toString(minutes));
         sr.append(" isTwelveHour=");
         sr.append(Boolean.toString(isTwelveHour));
-        sr.append(" ampmName=\"");
-        sr.append(ampmName);
-        sr.append("\" amSelected=\"");
-        sr.append(amSelected);
-        sr.append("\" pmSelected=\"");
-        sr.append(pmSelected);
-        sr.append("\" compositeType=\"");
-        sr.append(compositeType);
-        sr.append("\" formName=\"");
-        sr.append(formName);
-        sr.append("\" mask=\"");
-        sr.append(formattedMask);
-        sr.append("\" />");
+        sr.append(" ampmName=");
+        sr.append(ftlFmt.makeStringLiteral(ampmName));
+        sr.append(" amSelected=");
+        sr.append(ftlFmt.makeStringLiteral(amSelected));
+        sr.append(" pmSelected=");
+        sr.append(ftlFmt.makeStringLiteral(pmSelected));
+        sr.append(" compositeType=");
+        sr.append(ftlFmt.makeStringLiteral(compositeType));
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(formName));
+        sr.append(" mask=");
+        sr.append(ftlFmt.makeStringLiteral(formattedMask));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
         this.appendTooltip(writer, context, modelFormField);
@@ -862,30 +862,29 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (options.length() > 1) {
                 options.append(",");
             }
-            options.append("{'key':'");
+            options.append("{'key':");
             String key = encode(optionValue.getKey(), modelFormField, context);
-            options.append(key);
-            options.append("'");
-            options.append(",'description':'");
+            options.append(ftlFmt.makeStringLiteralSQ(key));
+            options.append(",'description':");
             String description = optionValue.getDescription();
             if (textSize > 0 && description.length() > textSize) {
                 description = description.substring(0, textSize - 8) + "..." + description.substring(description.length() - 5);
             }
-            options.append(encode(description, modelFormField, context));
+            options.append(ftlFmt.makeStringLiteralSQ(encode(description, modelFormField, context)));
 
             if (UtilValidate.isNotEmpty(currentValueList)) {
-                options.append("'");
-                options.append(",'selected':'");
+                options.append(",'selected':");
                 if (currentValueList.contains(optionValue.getKey())) {
-                    options.append("selected");
+                    options.append("'selected'");
                 } else {
-                    options.append("");
+                    options.append("''");
                 }
             }
 
-            options.append("'}");
+            options.append("}");
             if (ajaxEnabled) {
                 count++;
+                // SCIPIO: FIXME?: these javascript string values should probably be escaped for javascript syntax
                 ajaxOptions.append(optionValue.getKey()).append(": ");
                 ajaxOptions.append(" '").append(optionValue.getDescription()).append("'");
                 if (count != allOptionValues.size()) {
@@ -928,73 +927,69 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderDropDownField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append("name=\"");
-        sr.append(name);
-        sr.append("\" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" multiple=\"");
-        sr.append(multiple);
-        sr.append("\" formName=\"");
-        sr.append(formName);
-        sr.append("\" otherFieldName=\"");
-        sr.append(otherFieldName);
-        sr.append("\" event=\"");
-        if (event != null) {
-            sr.append(event);
-        }
-        sr.append("\" action=\"");
-        if (action != null) {
-            sr.append(action);
-        }
-        sr.append("\" size=\"");
-        sr.append(size);
-        sr.append("\" firstInList=\"");
-        sr.append(firstInList);
-        sr.append("\" currentValue=\"");
-        sr.append(currentValue);
-        sr.append("\" explicitDescription=\"");
-        sr.append(explicitDescription);
-        sr.append("\" allowEmpty=\"");
-        sr.append(allowEmpty);
-        sr.append("\" options=");
+        sr.append("name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" multiple=");
+        sr.append(ftlFmt.makeStringLiteral(multiple));
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(formName));
+        sr.append(" otherFieldName=");
+        sr.append(ftlFmt.makeStringLiteral(otherFieldName));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(size));
+        sr.append(" firstInList=");
+        sr.append(ftlFmt.makeStringLiteral(firstInList));
+        sr.append(" currentValue=");
+        sr.append(ftlFmt.makeStringLiteral(currentValue));
+        sr.append(" explicitDescription=");
+        sr.append(ftlFmt.makeStringLiteral(explicitDescription));
+        sr.append(" allowEmpty=");
+        sr.append(ftlFmt.makeStringLiteral(allowEmpty));
+        sr.append(" options=");
         sr.append(options.toString());
-        sr.append(" fieldName=\"");
-        sr.append(fieldName);
-        sr.append("\" otherFieldName=\"");
-        sr.append(otherFieldName);
-        sr.append("\" otherValue=\"");
-        sr.append(otherValue);
-        sr.append("\" otherFieldSize=");
+        sr.append(" fieldName=");
+        sr.append(ftlFmt.makeStringLiteral(fieldName));
+        sr.append(" otherFieldName=");
+        sr.append(ftlFmt.makeStringLiteral(otherFieldName));
+        sr.append(" otherValue=");
+        sr.append(ftlFmt.makeStringLiteral(otherValue));
+        sr.append(" otherFieldSize=");
         sr.append(Integer.toString(otherFieldSize));
-        sr.append(" dDFCurrent=\"");
-        sr.append(dDFCurrent);
-        sr.append("\" ajaxEnabled=");
+        sr.append(" dDFCurrent=");
+        sr.append(ftlFmt.makeStringLiteral(dDFCurrent));
+        sr.append(" ajaxEnabled=");
         sr.append(Boolean.toString(ajaxEnabled));
-        sr.append(" noCurrentSelectedKey=\"");
-        sr.append(noCurrentSelectedKey);
-        sr.append("\" ajaxOptions=\"");
-        sr.append(ajaxOptions.toString());
-        sr.append("\" frequency=\"");
-        sr.append(frequency);
-        sr.append("\" minChars=\"");
-        sr.append(minChars);
-        sr.append("\" choices=\"");
-        sr.append(choices);
-        sr.append("\" autoSelect=\"");
-        sr.append(autoSelect);
-        sr.append("\" partialSearch=\"");
-        sr.append(partialSearch);
-        sr.append("\" partialChars=\"");
-        sr.append(partialChars);
-        sr.append("\" ignoreCase=\"");
-        sr.append(ignoreCase);
-        sr.append("\" fullSearch=\"");
-        sr.append(fullSearch);
-        sr.append("\" />");
+        sr.append(" noCurrentSelectedKey=");
+        sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey));
+        sr.append(" ajaxOptions=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxOptions.toString()));
+        sr.append(" frequency=");
+        sr.append(ftlFmt.makeStringLiteral(frequency));
+        sr.append(" minChars=");
+        sr.append(ftlFmt.makeStringLiteral(minChars));
+        sr.append(" choices=");
+        sr.append(ftlFmt.makeStringLiteral(choices));
+        sr.append(" autoSelect=");
+        sr.append(ftlFmt.makeStringLiteral(autoSelect));
+        sr.append(" partialSearch=");
+        sr.append(ftlFmt.makeStringLiteral(partialSearch));
+        sr.append(" partialChars=");
+        sr.append(ftlFmt.makeStringLiteral(partialChars));
+        sr.append(" ignoreCase=");
+        sr.append(ftlFmt.makeStringLiteral(ignoreCase));
+        sr.append(" fullSearch=");
+        sr.append(ftlFmt.makeStringLiteral(fullSearch));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = dropDownField.getSubHyperlink();
         if (subHyperlink != null && subHyperlink.shouldUse(context)) {
@@ -1027,10 +1022,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (items.length() > 1) {
                 items.append(",");
             }
-            items.append("{'value':'");
-            items.append(optionValue.getKey());
-            items.append("', 'description':'" + encode(optionValue.getDescription(), modelFormField, context));
-            items.append("'}");
+            items.append("{'value':");
+            items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
+            items.append(", 'description':");
+            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            items.append("}");
         }
         items.append("]");
         StringWriter sr = new StringWriter();
@@ -1038,27 +1034,23 @@ public final class MacroFormRenderer implements FormStringRenderer {
         appendFieldInfo(sr, context, modelFormField);
         sr.append("items=");
         sr.append(items.toString());
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" allChecked=");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" allChecked=");
         sr.append((allChecked != null ? Boolean.toString(allChecked) : "\"\""));
-        sr.append(" currentValue=\"");
-        sr.append(currentValue);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" event=\"");
-        if (event != null) {
-            sr.append(event);
-        }
-        sr.append("\" action=\"");
-        if (action != null) {
-            sr.append(action);
-        }
-        sr.append("\" />");
+        sr.append(" currentValue=");
+        sr.append(ftlFmt.makeStringLiteral(currentValue));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
     }
@@ -1086,10 +1078,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (items.length() > 1) {
                 items.append(",");
             }
-            items.append("{'key':'");
-            items.append(optionValue.getKey());
-            items.append("', 'description':'" + encode(optionValue.getDescription(), modelFormField, context));
-            items.append("'}");
+            items.append("{'key':");
+            items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
+            items.append(", 'description':");
+            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            items.append("}");
         }
         items.append("]");
         StringWriter sr = new StringWriter();
@@ -1097,25 +1090,21 @@ public final class MacroFormRenderer implements FormStringRenderer {
         appendFieldInfo(sr, context, modelFormField);
         sr.append("items=");
         sr.append(items.toString());
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" currentValue=\"");
-        sr.append(currentValue);
-        sr.append("\" noCurrentSelectedKey=\"");
-        sr.append(noCurrentSelectedKey);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" event=\"");
-        if (event != null) {
-            sr.append(event);
-        }
-        sr.append("\" action=\"");
-        if (action != null) {
-            sr.append(action);
-        }
-        sr.append("\" />");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" currentValue=");
+        sr.append(ftlFmt.makeStringLiteral(currentValue));
+        sr.append(" noCurrentSelectedKey=");
+        sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
     }
@@ -1165,43 +1154,33 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderSubmitField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append("buttonType=\"");
-        sr.append(buttonType);
-        sr.append("\" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" formName=\"");
-        sr.append(formName);
-        sr.append("\" title=\"");
-        sr.append(encode(title, modelFormField, context));
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" event=\"");
-        if (event != null) {
-            sr.append(event);
-        }
-        sr.append("\" action=\"");
-        if (action != null) {
-            sr.append(action);
-        }
-        sr.append("\" imgSrc=\"");
-        sr.append(imgSrc);
-        sr.append("\" containerId=\"");
-        if (ajaxEnabled) {
-            sr.append(formId);
-        }
-        sr.append("\" confirmation =\"");
-        sr.append(confirmation);
-        sr.append("\" ajaxUrl=\"");
-        if (ajaxEnabled) {
-            sr.append(ajaxUrl);
-        }
-        sr.append("\" id=\"");
-        if (id != null) {
-            sr.append(id);
-        }        
-        sr.append("\" />");
+        sr.append("buttonType=");
+        sr.append(ftlFmt.makeStringLiteral(buttonType));
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(formName));
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(encode(title, modelFormField, context)));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" imgSrc=");
+        sr.append(ftlFmt.makeStringLiteral(imgSrc));
+        sr.append(" containerId=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxEnabled ? formId : null));
+        sr.append(" confirmation =");
+        sr.append(ftlFmt.makeStringLiteral(confirmation));
+        sr.append(" ajaxUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxEnabled ? ajaxUrl : null));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));      
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
     }
@@ -1221,15 +1200,15 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderResetField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" title=\"");
-        sr.append(title);
-        sr.append("\" />");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(title));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
     }
@@ -1247,21 +1226,17 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String id = modelFormField.getCurrentContainerId(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderHiddenField ");
-        sr.append(" name=\"");
-        sr.append(name);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" event=\"");
-        if (event != null) {
-            sr.append(event);
-        }
-        sr.append("\" action=\"");
-        if (action != null) {
-            sr.append(action);
-        }
-        sr.append("\" />");
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1291,25 +1266,25 @@ public final class MacroFormRenderer implements FormStringRenderer {
                     }
                     StringWriter sr = new StringWriter();
                     makeHyperlinkString(sr, modelFormField.getHeaderLinkStyle(), targetType, targetBuffer.toString(), null, titleText, "", modelFormField, this.request, this.response, context, "");
-                    String title = sr.toString().replace("\"", "\'");
+                    String title = sr.toString().replace("\"", "\'"); // SCIPIO: FIXME?: this should now be redundant, but leaving in for compabitility/legacy behavior for now
                     sr = new StringWriter();
                     sr.append("<@renderHyperlinkTitle ");
-                    sr.append(" name=\"");
-                    sr.append(modelFormField.getModelForm().getName());
-                    sr.append("\" title=\"");
-                    sr.append(FreeMarkerWorker.encodeDoubleQuotes(title));
-                    sr.append("\" />");
+                    sr.append(" name=");
+                    sr.append(ftlFmt.makeStringLiteral(modelFormField.getModelForm().getName()));
+                    sr.append(" title=");
+                    sr.append(ftlFmt.makeStringLiteral(title)); // SCIPIO: redundant: FreeMarkerWorker.encodeDoubleQuotes(title)
+                    sr.append(" />");
                     executeMacro(writer, sr.toString());
                 } else if (modelFormField.isSortField()) {
                     renderSortField(writer, context, modelFormField, titleText);
                 } else if (modelFormField.isRowSubmit()) {
                     StringWriter sr = new StringWriter();
                     sr.append("<@renderHyperlinkTitle ");
-                    sr.append(" name=\"");
-                    sr.append(modelFormField.getModelForm().getName());
-                    sr.append("\" title=\"");
-                    sr.append(titleText);
-                    sr.append("\" showSelectAll=\"Y\"/>");
+                    sr.append(" name=");
+                    sr.append(ftlFmt.makeStringLiteral(modelFormField.getModelForm().getName()));
+                    sr.append(" title=");
+                    sr.append(ftlFmt.makeStringLiteral(titleText));
+                    sr.append(" showSelectAll=\"Y\"/>");
                     executeMacro(writer, sr.toString());
                 } else {
                     sb.append(titleText);
@@ -1326,8 +1301,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             StringWriter sr = new StringWriter();
             sr.append("<@renderFieldTitle ");
-            sr.append(" style=\"");
-            sr.append(style);
+            sr.append(" style=");
+            sr.append(ftlFmt.makeStringLiteral(style));
             String displayHelpText = UtilProperties.getPropertyValue("widget.properties", "widget.form.displayhelpText");
             if ("Y".equals(displayHelpText)) {
                 Delegator delegator = WidgetWorker.getDelegator(context);
@@ -1336,20 +1311,19 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 String fieldName = modelFormField.getFieldName();
                 String helpText = UtilHelpText.getEntityFieldDescription(entityName, fieldName, delegator, locale);
 
-                sr.append("\" fieldHelpText=\"");
-                sr.append(FreeMarkerWorker.encodeDoubleQuotes(helpText));
+                sr.append(" fieldHelpText=");
+                sr.append(ftlFmt.makeStringLiteral(helpText)); // SCIPIO: redundant: FreeMarkerWorker.encodeDoubleQuotes(helpText)
             }
-            sr.append("\" title=\"");
-            sr.append(sb.toString());
+            sr.append(" title=");
+            sr.append(ftlFmt.makeStringLiteral(sb.toString()));
             if (UtilValidate.isNotEmpty(id)) {
-                sr.append("\" id=\"");
-                sr.append(id);
-                sr.append("_title");
+                sr.append(" id=");
+                sr.append(ftlFmt.makeStringLiteral(id + "_title"));
                 // Render "for"
-                sr.append("\" for=\"");
-                sr.append(id);
+                sr.append(" for=");
+                sr.append(ftlFmt.makeStringLiteral(id));
             }
-            sr.append("\" />");
+            sr.append(" />");
             executeMacro(writer, sr.toString());
         }
     }
@@ -1396,35 +1370,35 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormOpen ");
-        sr.append(" linkUrl=\"");
-        sr.append(linkUrl);
-        sr.append("\" formType=\"");
-        sr.append(formType);
-        sr.append("\" targetWindow=\"");
-        sr.append(targetWindow);
-        sr.append("\" containerId=\"");
-        sr.append(containerId);
-        sr.append("\" containerStyle=\"");
-        sr.append(containerStyle);
-        sr.append("\" autocomplete=\"");
-        sr.append(autocomplete);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" viewIndexField=\"");
-        sr.append(viewIndexField);
-        sr.append("\" viewSizeField=\"");
-        sr.append(viewSizeField);
-        sr.append("\" viewIndex=\"");
-        sr.append(Integer.toString(viewIndex));
-        sr.append("\" viewSize=\"");
-        sr.append(Integer.toString(viewSize));
-        sr.append("\" useRowSubmit=");
+        sr.append(" linkUrl=");
+        sr.append(ftlFmt.makeStringLiteral(linkUrl.toString()));
+        sr.append(" formType=");
+        sr.append(ftlFmt.makeStringLiteral(formType));
+        sr.append(" targetWindow=");
+        sr.append(ftlFmt.makeStringLiteral(targetWindow));
+        sr.append(" containerId=");
+        sr.append(ftlFmt.makeStringLiteral(containerId));
+        sr.append(" containerStyle=");
+        sr.append(ftlFmt.makeStringLiteral(containerStyle));
+        sr.append(" autocomplete=");
+        sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" viewIndexField=");
+        sr.append(ftlFmt.makeStringLiteral(viewIndexField));
+        sr.append(" viewSizeField=");
+        sr.append(ftlFmt.makeStringLiteral(viewSizeField));
+        sr.append(" viewIndex=");
+        sr.append(ftlFmt.makeStringLiteral(viewIndex));
+        sr.append(" viewSize=");
+        sr.append(ftlFmt.makeStringLiteral(viewSize));
+        sr.append(" useRowSubmit=");
         sr.append(Boolean.toString(useRowSubmit));
         sr.append(" attribs=(");
         sr.append(attribs);
-        sr.append(") method=\"");
-        sr.append(method);
-        sr.append("\" />");
+        sr.append(") method=");
+        sr.append(ftlFmt.makeStringLiteral(method));
+        sr.append(" />");
         
         executeMacro(writer, sr.toString());
     }
@@ -1443,15 +1417,15 @@ public final class MacroFormRenderer implements FormStringRenderer {
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormClose ");
-        sr.append(" focusFieldName=\"");
-        sr.append(focusFieldName);
-        sr.append("\" formName=\"");
-        sr.append(formName);
-        sr.append("\" containerId=\"");
-        sr.append(containerId);
-        sr.append("\" hasRequiredField=\"");
-        sr.append(hasRequiredField);
-        sr.append("\" />");
+        sr.append(" focusFieldName=");
+        sr.append(ftlFmt.makeStringLiteral(focusFieldName));
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(formName));
+        sr.append(" containerId=");
+        sr.append(ftlFmt.makeStringLiteral(containerId));
+        sr.append(" hasRequiredField=");
+        sr.append(ftlFmt.makeStringLiteral(hasRequiredField));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         
         // Scipio: same as the multi type form, I think this is the cleanest way to do it
@@ -1533,27 +1507,32 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 fieldNameList.add(childField.getName());
             }
         }
-        columnStyleList = StringUtil.quoteStrList(columnStyleList);
-        String columnStyleListString = StringUtil.join(columnStyleList, ", ");
+        // SCIPIO: this is not good enough
+        //columnStyleList = StringUtil.quoteStrList(columnStyleList);
+        List<String> columnStyleListEscaped = new ArrayList<>(columnStyleList.size());
+        for(String style : columnStyleList) {
+            columnStyleListEscaped.add(ftlFmt.makeStringLiteral(style));
+        }
+        String columnStyleListString = StringUtil.join(columnStyleListEscaped, ", ");
         
         // Scipio: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperOpen ");
-        sr.append(" formName=\"");
-        sr.append(modelForm.getName());
-        sr.append("\" style=\"");
-        sr.append(FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context));
-        sr.append("\" columnStyles=[");
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context)));
+        sr.append(" columnStyles=[");
         if (UtilValidate.isNotEmpty(columnStyleListString)) {
             // this is a fix for forms with no fields
             sr.append(columnStyleListString);
         }
         // Scipio: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
-        sr.append("] formType=\"");
-        sr.append(modelForm.getType());        
-        sr.append("\" attribs=(");
+        sr.append("] formType=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));        
+        sr.append(" attribs=(");
         sr.append(attribs);
         sr.append(") />");
         executeMacro(writer, sr.toString());
@@ -1563,9 +1542,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperClose");
-        sr.append(" formName=\"");
-        sr.append(modelForm.getName());
-        sr.append("\" />");
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         if (this.renderPagination) {
             this.renderNextPrev(writer, context, modelForm, "bottom");
@@ -1582,9 +1561,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatHeaderRowOpen ");
-        sr.append(" style=\"");
-        sr.append(headerStyle);
-        sr.append("\" />");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(headerStyle));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1598,9 +1577,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String areaStyle = modelFormField.getTitleAreaStyle();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatHeaderRowCellOpen ");
-        sr.append(" style=\"");
-        sr.append(areaStyle);
-        sr.append("\" positionSpan=");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(areaStyle));
+        sr.append(" positionSpan=");
         sr.append(Integer.toString(positionSpan));
         sr.append(" />");
         executeMacro(writer, sr.toString());
@@ -1616,9 +1595,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String areaStyle = modelForm.getFormTitleAreaStyle();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatHeaderRowFormCellOpen ");
-        sr.append(" style=\"");
-        sr.append(areaStyle);
-        sr.append("\" />");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(areaStyle));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1632,9 +1611,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String titleStyle = modelFormField.getTitleStyle();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatHeaderRowFormCellTitleSeparator ");
-        sr.append(" style=\"");
-        sr.append(titleStyle);
-        sr.append("\" isLast=");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(titleStyle));
+        sr.append(" isLast=");
         sr.append(Boolean.toString(isLast));
         sr.append(" />");
         executeMacro(writer, sr.toString());
@@ -1658,26 +1637,26 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowOpen ");
-        sr.append(" formName=\"");
-        sr.append(modelForm.getName());
-        sr.append("\" itemIndex=");
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(" itemIndex=");
         sr.append(Integer.toString(itemIndex));
-        sr.append(" altRowStyles=\"");
-        sr.append(altRowStyles);
-        sr.append("\" evenRowStyle=\"");
-        sr.append(evenRowStyle);
-        sr.append("\" oddRowStyle=\"");
-        sr.append(oddRowStyle);
-        sr.append("\" />");
+        sr.append(" altRowStyles=");
+        sr.append(ftlFmt.makeStringLiteral(altRowStyles));
+        sr.append(" evenRowStyle=");
+        sr.append(ftlFmt.makeStringLiteral(evenRowStyle));
+        sr.append(" oddRowStyle=");
+        sr.append(ftlFmt.makeStringLiteral(oddRowStyle));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
     public void renderFormatItemRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowClose ");
-        sr.append(" formName=\"");
-        sr.append(modelForm.getName());
-        sr.append("\"/>");
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append("/>");
         executeMacro(writer, sr.toString());
     }
 
@@ -1685,11 +1664,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String areaStyle = modelFormField.getWidgetAreaStyle();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowCellOpen ");
-        sr.append(" fieldName=\"");
-        sr.append(modelFormField.getName());
-        sr.append("\" style=\"");
-        sr.append(areaStyle);
-        sr.append("\" positionSpan=");
+        sr.append(" fieldName=");
+        sr.append(ftlFmt.makeStringLiteral(modelFormField.getName()));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(areaStyle));
+        sr.append(" positionSpan=");
         sr.append(Integer.toString(positionSpan));
         sr.append(" />");
         executeMacro(writer, sr.toString());
@@ -1698,9 +1677,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatItemRowCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowCellClose");
-        sr.append(" fieldName=\"");
-        sr.append(modelFormField.getName());
-        sr.append("\"/>");
+        sr.append(" fieldName=");
+        sr.append(ftlFmt.makeStringLiteral(modelFormField.getName()));
+        sr.append("/>");
         executeMacro(writer, sr.toString());
     }
 
@@ -1708,9 +1687,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String areaStyle = modelForm.getFormTitleAreaStyle();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowFormCellOpen ");
-        sr.append(" style=\"");
-        sr.append(areaStyle);
-        sr.append("\" />");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(areaStyle));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1724,20 +1703,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String style = FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatSingleWrapperOpen ");
-        sr.append(" formName=\"");
-        sr.append(modelForm.getName());
-        sr.append("\" style=\"");
-        sr.append(style);
-        sr.append("\" />");
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
     public void renderFormatSingleWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatSingleWrapperClose");
-        sr.append(" formName=\"");
-        sr.append(modelForm.getName());
-        sr.append("\"/>");
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append("/>");
         executeMacro(writer, sr.toString());
     }
     
@@ -1780,7 +1759,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (fieldType == null) {
             fieldType = "";
         }
-        sr.append(" fieldType=\"" + fieldType + "\" ");
+        sr.append(" fieldType=" + ftlFmt.makeStringLiteral(fieldType) + " ");
         
         boolean fieldTitleBlank = modelFormField.isBlankTitle(context);
         sr.append(" fieldTitleBlank=" + fieldTitleBlank + " ");
@@ -1794,9 +1773,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowTitleCellOpen ");
-        sr.append(" style=\"");
-        sr.append(style);
-        sr.append("\"");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append("");
         appendPositionParams(sr, context, modelFormField);
         appendFieldInfo(sr, context, modelFormField);
         appendAsterisksParams(sr, context, modelFormField);
@@ -1827,9 +1806,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderFormatFieldRowWidgetCellOpen ");
         //sr.append(" positionSpan=");
         //sr.append(Integer.toString(positionSpan));
-        sr.append(" style=\"");
-        sr.append(areaStyle);
-        sr.append("\"");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(areaStyle));
+        sr.append("");
         appendPositionParams(sr, context, modelFormField);
         appendFieldInfo(sr, context, modelFormField);
         appendAsterisksParams(sr, context, modelFormField);
@@ -1902,41 +1881,41 @@ public final class MacroFormRenderer implements FormStringRenderer {
         boolean hideIgnoreCase = textFindField.getHideIgnoreCase();
         StringWriter sr = new StringWriter();
         sr.append("<@renderTextFindField ");
-        sr.append(" name=\"");
-        sr.append(name);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" defaultOption=\"");
-        sr.append(defaultOption);
-        sr.append("\" opEquals=\"");
-        sr.append(opEquals);
-        sr.append("\" opBeginsWith=\"");
-        sr.append(opBeginsWith);
-        sr.append("\" opContains=\"");
-        sr.append(opContains);
-        sr.append("\" opIsEmpty=\"");
-        sr.append(opIsEmpty);
-        sr.append("\" opNotEqual=\"");
-        sr.append(opNotEqual);
-        sr.append("\" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" size=\"");
-        sr.append(size);
-        sr.append("\" maxlength=\"");
-        sr.append(maxlength);
-        sr.append("\" autocomplete=\"");
-        sr.append(autocomplete);
-        sr.append("\" titleStyle=\"");
-        sr.append(titleStyle);
-        sr.append("\" hideIgnoreCase=");
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" defaultOption=");
+        sr.append(ftlFmt.makeStringLiteral(defaultOption));
+        sr.append(" opEquals=");
+        sr.append(ftlFmt.makeStringLiteral(opEquals));
+        sr.append(" opBeginsWith=");
+        sr.append(ftlFmt.makeStringLiteral(opBeginsWith));
+        sr.append(" opContains=");
+        sr.append(ftlFmt.makeStringLiteral(opContains));
+        sr.append(" opIsEmpty=");
+        sr.append(ftlFmt.makeStringLiteral(opIsEmpty));
+        sr.append(" opNotEqual=");
+        sr.append(ftlFmt.makeStringLiteral(opNotEqual));
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(size));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" autocomplete=");
+        sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        sr.append(" titleStyle=");
+        sr.append(ftlFmt.makeStringLiteral(titleStyle));
+        sr.append(" hideIgnoreCase=");
         sr.append(Boolean.toString(hideIgnoreCase));
         sr.append(" ignCase=");
         sr.append(Boolean.toString(ignCase));
-        sr.append(" ignoreCase=\"");
-        sr.append(ignoreCase);
-        sr.append("\"");
+        sr.append(" ignoreCase=");
+        sr.append(ftlFmt.makeStringLiteral(ignoreCase));
+        sr.append("");
         // Scipio: new args
         sr.append(" hideOptions=");
         sr.append(Boolean.toString(hideOptions));
@@ -1987,41 +1966,39 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String defaultOptionThru = rangeFindField.getDefaultOptionThru();
         StringWriter sr = new StringWriter();
         sr.append("<@renderRangeFindField ");
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" size=\"");
-        sr.append(size);
-        sr.append("\" maxlength=\"");
-        if (maxlength != null) {
-            sr.append(Integer.toString(maxlength));
-        }
-        sr.append("\" autocomplete=\"");
-        sr.append(autocomplete);
-        sr.append("\" titleStyle=\"");
-        sr.append(titleStyle);
-        sr.append("\" defaultOptionFrom=\"");
-        sr.append(defaultOptionFrom);
-        sr.append("\" opEquals=\"");
-        sr.append(opEquals);
-        sr.append("\" opGreaterThan=\"");
-        sr.append(opGreaterThan);
-        sr.append("\" opGreaterThanEquals=\"");
-        sr.append(opGreaterThanEquals);
-        sr.append("\" opLessThan=\"");
-        sr.append(opLessThan);
-        sr.append("\" opLessThanEquals=\"");
-        sr.append(opLessThanEquals);
-        sr.append("\" value2=\"");
-        sr.append(value2);
-        sr.append("\" defaultOptionThru=\"");
-        sr.append(defaultOptionThru);
-        sr.append("\" />");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(size));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" autocomplete=");
+        sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        sr.append(" titleStyle=");
+        sr.append(ftlFmt.makeStringLiteral(titleStyle));
+        sr.append(" defaultOptionFrom=");
+        sr.append(ftlFmt.makeStringLiteral(defaultOptionFrom));
+        sr.append(" opEquals=");
+        sr.append(ftlFmt.makeStringLiteral(opEquals));
+        sr.append(" opGreaterThan=");
+        sr.append(ftlFmt.makeStringLiteral(opGreaterThan));
+        sr.append(" opGreaterThanEquals=");
+        sr.append(ftlFmt.makeStringLiteral(opGreaterThanEquals));
+        sr.append(" opLessThan=");
+        sr.append(ftlFmt.makeStringLiteral(opLessThan));
+        sr.append(" opLessThanEquals=");
+        sr.append(ftlFmt.makeStringLiteral(opLessThanEquals));
+        sr.append(" value2=");
+        sr.append(ftlFmt.makeStringLiteral(value2));
+        sr.append(" defaultOptionThru=");
+        sr.append(ftlFmt.makeStringLiteral(defaultOptionThru));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
     }
@@ -2110,57 +2087,57 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderDateFindField ");
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" localizedInputTitle=\"");
-        sr.append(localizedInputTitle);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" value2=\"");
-        sr.append(value2);
-        sr.append("\" size=\"");
-        sr.append(Integer.toString(size));
-        sr.append("\" maxlength=\"");
-        sr.append(Integer.toString(maxlength));
-        sr.append("\" dateType=\"");
-        sr.append(dateType);
-        sr.append("\" formName=\"");
-        sr.append(formName);
-        sr.append("\" defaultDateTimeString=\"");
-        sr.append(defaultDateTimeString);
-        sr.append("\" imgSrc=\"");
-        sr.append(imgSrc.toString());
-        sr.append("\" localizedIconTitle=\"");
-        sr.append(localizedIconTitle);
-        sr.append("\" titleStyle=\"");
-        sr.append(titleStyle);
-        sr.append("\" defaultOptionFrom=\"");
-        sr.append(defaultOptionFrom);
-        sr.append("\" defaultOptionThru=\"");
-        sr.append(defaultOptionThru);
-        sr.append("\" opEquals=\"");
-        sr.append(opEquals);
-        sr.append("\" opSameDay=\"");
-        sr.append(opSameDay);
-        sr.append("\" opGreaterThanFromDayStart=\"");
-        sr.append(opGreaterThanFromDayStart);
-        sr.append("\" opGreaterThan=\"");
-        sr.append(opGreaterThan);
-        sr.append("\" opGreaterThan=\"");
-        sr.append(opGreaterThan);
-        sr.append("\" opLessThan=\"");
-        sr.append(opLessThan);
-        sr.append("\" opUpToDay=\"");
-        sr.append(opUpToDay);
-        sr.append("\" opUpThruDay=\"");
-        sr.append(opUpThruDay);
-        sr.append("\" opIsEmpty=\"");
-        sr.append(opIsEmpty);
-        sr.append("\" />");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" localizedInputTitle=");
+        sr.append(ftlFmt.makeStringLiteral(localizedInputTitle));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" value2=");
+        sr.append(ftlFmt.makeStringLiteral(value2));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(Integer.toString(size)));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(Integer.toString(maxlength)));
+        sr.append(" dateType=");
+        sr.append(ftlFmt.makeStringLiteral(dateType));
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(formName));
+        sr.append(" defaultDateTimeString=");
+        sr.append(ftlFmt.makeStringLiteral(defaultDateTimeString));
+        sr.append(" imgSrc=");
+        sr.append(ftlFmt.makeStringLiteral(imgSrc.toString()));
+        sr.append(" localizedIconTitle=");
+        sr.append(ftlFmt.makeStringLiteral(localizedIconTitle));
+        sr.append(" titleStyle=");
+        sr.append(ftlFmt.makeStringLiteral(titleStyle));
+        sr.append(" defaultOptionFrom=");
+        sr.append(ftlFmt.makeStringLiteral(defaultOptionFrom));
+        sr.append(" defaultOptionThru=");
+        sr.append(ftlFmt.makeStringLiteral(defaultOptionThru));
+        sr.append(" opEquals=");
+        sr.append(ftlFmt.makeStringLiteral(opEquals));
+        sr.append(" opSameDay=");
+        sr.append(ftlFmt.makeStringLiteral(opSameDay));
+        sr.append(" opGreaterThanFromDayStart=");
+        sr.append(ftlFmt.makeStringLiteral(opGreaterThanFromDayStart));
+        sr.append(" opGreaterThan=");
+        sr.append(ftlFmt.makeStringLiteral(opGreaterThan));
+        sr.append(" opGreaterThan=");
+        sr.append(ftlFmt.makeStringLiteral(opGreaterThan));
+        sr.append(" opLessThan=");
+        sr.append(ftlFmt.makeStringLiteral(opLessThan));
+        sr.append(" opUpToDay=");
+        sr.append(ftlFmt.makeStringLiteral(opUpToDay));
+        sr.append(" opUpThruDay=");
+        sr.append(ftlFmt.makeStringLiteral(opUpThruDay));
+        sr.append(" opIsEmpty=");
+        sr.append(ftlFmt.makeStringLiteral(opIsEmpty));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
     }
@@ -2235,9 +2212,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (targetParameterIter.length() > 1) {
                 targetParameterIter.append(",");
             }
-            targetParameterIter.append("'");
-            targetParameterIter.append(targetParameter);
-            targetParameterIter.append("'");
+            targetParameterIter.append(ftlFmt.makeStringLiteralSQ(targetParameter));
         }
         targetParameterIter.append("]");
         this.appendContentUrl(imgSrc, "/images/fieldlookup.gif");
@@ -2292,70 +2267,66 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderLookupField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" name=\"");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" name=");
 //        if (modelForm.getType().equals("list"))
-//            sr.append(id);
+//            sr.append(makeFtlStringLit(id));
 //        else
-            sr.append(name);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" size=\"");
-        sr.append(size);
-        sr.append("\" maxlength=\"");
-        sr.append((maxlength != null ? Integer.toString(maxlength) : ""));
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" event=\"");
-        if (event != null) {
-            sr.append(event);
-        }
-        sr.append("\" action=\"");
-        if (action != null) {
-            sr.append(action);
-        }
-        sr.append("\" readonly=");
+            sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(size));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" readonly=");
         sr.append(Boolean.toString(readonly));
-        sr.append(" autocomplete=\"");
-        sr.append(autocomplete);
-        sr.append("\" descriptionFieldName=\"");
-        sr.append(descriptionFieldName);
-        sr.append("\" formName=\"");
-        sr.append(formName);
-        sr.append("\" fieldFormName=\"");
-        sr.append(lookupFieldFormName);
-        sr.append("\" targetParameterIter=");
+        sr.append(" autocomplete=");
+        sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        sr.append(" descriptionFieldName=");
+        sr.append(ftlFmt.makeStringLiteral(descriptionFieldName));
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(formName));
+        sr.append(" fieldFormName=");
+        sr.append(ftlFmt.makeStringLiteral(lookupFieldFormName));
+        sr.append(" targetParameterIter=");
         sr.append(targetParameterIter.toString());
-        sr.append(" imgSrc=\"");
-        sr.append(imgSrc.toString());
-        sr.append("\" ajaxUrl=\"");
-        sr.append(ajaxUrl);
-        sr.append("\" ajaxEnabled=");
+        sr.append(" imgSrc=");
+        sr.append(ftlFmt.makeStringLiteral(imgSrc.toString()));
+        sr.append(" ajaxUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxUrl));
+        sr.append(" ajaxEnabled=");
         sr.append(Boolean.toString(ajaxEnabled));
-        sr.append(" presentation=\"");
-        sr.append(lookupPresentation);
-        sr.append("\" height=\"");
-        sr.append(lookupHeight);
-        sr.append("\" width=\"");
-        sr.append(lookupWidth);
-        sr.append("\" position=\"");
-        sr.append(lookupPosition);
-        sr.append("\" fadeBackground=\"");
-        sr.append(fadeBackground);
-        sr.append("\" clearText=\"");
-        sr.append(clearText);
-        sr.append("\" showDescription=\"");
-        sr.append(Boolean.toString(showDescription));
-        sr.append("\" initiallyCollapsed=\"");
-        sr.append(Boolean.toString(isInitiallyCollapsed));
-        sr.append("\" lastViewName=\"");
-        sr.append(lastViewName);
-        sr.append("\" tooltip=\"");
-        sr.append(tooltip); // SCIPIO: new arg
-        sr.append("\" />");
+        sr.append(" presentation=");
+        sr.append(ftlFmt.makeStringLiteral(lookupPresentation));
+        sr.append(" height=");
+        sr.append(ftlFmt.makeStringLiteral(lookupHeight));
+        sr.append(" width=");
+        sr.append(ftlFmt.makeStringLiteral(lookupWidth));
+        sr.append(" position=");
+        sr.append(ftlFmt.makeStringLiteral(lookupPosition));
+        sr.append(" fadeBackground=");
+        sr.append(ftlFmt.makeStringLiteral(fadeBackground));
+        sr.append(" clearText=");
+        sr.append(ftlFmt.makeStringLiteral(clearText));
+        sr.append(" showDescription=");
+        sr.append(ftlFmt.makeStringLiteral(showDescription));
+        sr.append(" initiallyCollapsed=");
+        sr.append(ftlFmt.makeStringLiteral(isInitiallyCollapsed));
+        sr.append(" lastViewName=");
+        sr.append(ftlFmt.makeStringLiteral(lastViewName));
+        sr.append(" tooltip=");
+        sr.append(ftlFmt.makeStringLiteral(tooltip)); // SCIPIO: new arg
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
         this.makeHyperlinkString(writer, lookupField.getSubHyperlink(), context);
@@ -2572,11 +2543,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         boolean paginate = modelForm.getPaginate(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderNextPrev ");
-        sr.append(" paginateStyle=\"");
-        sr.append(paginateStyle);
-        sr.append("\" paginateFirstStyle=\"");
-        sr.append(paginateFirstStyle);
-        sr.append("\" viewIndex=");
+        sr.append(" paginateStyle=");
+        sr.append(ftlFmt.makeStringLiteral(paginateStyle));
+        sr.append(" paginateFirstStyle=");
+        sr.append(ftlFmt.makeStringLiteral(paginateFirstStyle));
+        sr.append(" viewIndex=");
         sr.append(Integer.toString(viewIndex));
         sr.append(" highIndex=");
         sr.append(Integer.toString(highIndex));
@@ -2588,64 +2559,64 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Boolean.toString(ajaxEnabled));
         sr.append(" javaScriptEnabled=");
         sr.append(Boolean.toString(javaScriptEnabled));
-        sr.append(" ajaxFirstUrl=\"");
-        sr.append(ajaxFirstUrl);
-        sr.append("\" ajaxFirstUrl=\"");
-        sr.append(ajaxFirstUrl);
-        sr.append("\" ajaxFirstUrl=\"");
-        sr.append(ajaxFirstUrl);
-        sr.append("\" firstUrl=\"");
-        sr.append(firstUrl);
-        sr.append("\" paginateFirstLabel=\"");
-        sr.append(paginateFirstLabel);
-        sr.append("\" paginatePreviousStyle=\"");
-        sr.append(paginatePreviousStyle);
-        sr.append("\" ajaxPreviousUrl=\"");
-        sr.append(ajaxPreviousUrl);
-        sr.append("\" previousUrl=\"");
-        sr.append(previousUrl);
-        sr.append("\" paginatePreviousLabel=\"");
-        sr.append(paginatePreviousLabel);
-        sr.append("\" pageLabel=\"");
-        sr.append(pageLabel);
-        sr.append("\" ajaxSelectUrl=\"");
-        sr.append(ajaxSelectUrl);
-        sr.append("\" selectUrl=\"");
-        sr.append(selectUrl);
-        sr.append("\" ajaxSelectSizeUrl=\"");
-        sr.append(ajaxSelectSizeUrl);
-        sr.append("\" selectSizeUrl=\"");
-        sr.append(selectSizeUrl);
-        sr.append("\" commonDisplaying=\"");
-        sr.append(commonDisplaying);
-        sr.append("\" paginateNextStyle=\"");
-        sr.append(paginateNextStyle);
-        sr.append("\" ajaxNextUrl=\"");
-        sr.append(ajaxNextUrl);
-        sr.append("\" nextUrl=\"");
-        sr.append(nextUrl);
-        sr.append("\" paginateNextLabel=\"");
-        sr.append(paginateNextLabel);
-        sr.append("\" paginateLastStyle=\"");
-        sr.append(paginateLastStyle);
-        sr.append("\" ajaxLastUrl=\"");
-        sr.append(ajaxLastUrl);
-        sr.append("\" lastUrl=\"");
-        sr.append(lastUrl);
-        sr.append("\" paginateLastLabel=\"");
-        sr.append(paginateLastLabel);
-        sr.append("\" paginateViewSizeLabel=\"");
-        sr.append(paginateViewSizeLabel);
+        sr.append(" ajaxFirstUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxFirstUrl));
+        sr.append(" ajaxFirstUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxFirstUrl));
+        sr.append(" ajaxFirstUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxFirstUrl));
+        sr.append(" firstUrl=");
+        sr.append(ftlFmt.makeStringLiteral(firstUrl));
+        sr.append(" paginateFirstLabel=");
+        sr.append(ftlFmt.makeStringLiteral(paginateFirstLabel));
+        sr.append(" paginatePreviousStyle=");
+        sr.append(ftlFmt.makeStringLiteral(paginatePreviousStyle));
+        sr.append(" ajaxPreviousUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxPreviousUrl));
+        sr.append(" previousUrl=");
+        sr.append(ftlFmt.makeStringLiteral(previousUrl));
+        sr.append(" paginatePreviousLabel=");
+        sr.append(ftlFmt.makeStringLiteral(paginatePreviousLabel));
+        sr.append(" pageLabel=");
+        sr.append(ftlFmt.makeStringLiteral(pageLabel));
+        sr.append(" ajaxSelectUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxSelectUrl));
+        sr.append(" selectUrl=");
+        sr.append(ftlFmt.makeStringLiteral(selectUrl));
+        sr.append(" ajaxSelectSizeUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxSelectSizeUrl));
+        sr.append(" selectSizeUrl=");
+        sr.append(ftlFmt.makeStringLiteral(selectSizeUrl));
+        sr.append(" commonDisplaying=");
+        sr.append(ftlFmt.makeStringLiteral(commonDisplaying));
+        sr.append(" paginateNextStyle=");
+        sr.append(ftlFmt.makeStringLiteral(paginateNextStyle));
+        sr.append(" ajaxNextUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxNextUrl));
+        sr.append(" nextUrl=");
+        sr.append(ftlFmt.makeStringLiteral(nextUrl));
+        sr.append(" paginateNextLabel=");
+        sr.append(ftlFmt.makeStringLiteral(paginateNextLabel));
+        sr.append(" paginateLastStyle=");
+        sr.append(ftlFmt.makeStringLiteral(paginateLastStyle));
+        sr.append(" ajaxLastUrl=");
+        sr.append(ftlFmt.makeStringLiteral(ajaxLastUrl));
+        sr.append(" lastUrl=");
+        sr.append(ftlFmt.makeStringLiteral(lastUrl));
+        sr.append(" paginateLastLabel=");
+        sr.append(ftlFmt.makeStringLiteral(paginateLastLabel));
+        sr.append(" paginateViewSizeLabel=");
+        sr.append(ftlFmt.makeStringLiteral(paginateViewSizeLabel));
         // Scipio: new params
-        sr.append("\" paginate=");
+        sr.append(" paginate=");
         sr.append(Boolean.toString(paginate));
         sr.append(" lowIndex=");
         sr.append(Integer.toString(lowIndex));
         sr.append(" realHighIndex=");
         sr.append(Integer.toString(realHighIndex));
-        sr.append(" position=\"");
-        sr.append(position != null ? position : "");
-        sr.append("\" />");
+        sr.append(" position=");
+        sr.append(ftlFmt.makeStringLiteral(position != null ? position : ""));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -2676,21 +2647,21 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFileField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" size=\"");
-        sr.append(size);
-        sr.append("\" maxlength=\"");
-        sr.append(maxlength);
-        sr.append("\" autocomplete=\"");
-        sr.append(autocomplete);
-        sr.append("\" />");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(size));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" autocomplete=");
+        sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.makeHyperlinkString(writer, textField.getSubHyperlink(), context);
         this.appendTooltip(writer, context, modelFormField);
@@ -2724,26 +2695,36 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (!passwordField.getClientAutocompleteField()) {
             autocomplete = "off";
         }
+        //check for required field style on single forms
+        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
+            String requiredStyle = modelFormField.getRequiredFieldStyle();
+            if (UtilValidate.isEmpty(requiredStyle))
+                requiredStyle = "required";
+            if (UtilValidate.isEmpty(className))
+                className = requiredStyle;
+            else
+                className = requiredStyle + " " + className;
+        }
         StringWriter sr = new StringWriter();
         sr.append("<@renderPasswordField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append(" className=\"");
-        sr.append(className);
-        sr.append("\" alert=\"");
-        sr.append(alert);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" value=\"");
-        sr.append(value);
-        sr.append("\" size=\"");
-        sr.append(size);
-        sr.append("\" maxlength=\"");
-        sr.append(maxlength);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" autocomplete=\"");
-        sr.append(autocomplete);
-        sr.append("\" />");
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" alert=");
+        sr.append(ftlFmt.makeStringLiteral(alert));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" size=");
+        sr.append(ftlFmt.makeStringLiteral(size));
+        sr.append(" maxlength=");
+        sr.append(ftlFmt.makeStringLiteral(maxlength));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" autocomplete=");
+        sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
         this.makeHyperlinkString(writer, passwordField.getSubHyperlink(), context);
@@ -2777,19 +2758,19 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderImageField ");
         appendFieldInfo(sr, context, modelFormField);
-        sr.append(" value=\"");
-        sr.append(value);
-        sr.append("\" description=\"");
-        sr.append(encode(description, modelFormField, context));
-        sr.append("\" alternate=\"");
-        sr.append(encode(alternate, modelFormField, context));
-        sr.append("\" style=\"");
-        sr.append(style);
-        sr.append("\" event=\"");
-        sr.append(event == null ? "" : event);
-        sr.append("\" action=\"");
-        sr.append(action == null ? "" : action);
-        sr.append("\" />");
+        sr.append(" value=");
+        sr.append(ftlFmt.makeStringLiteral(value));
+        sr.append(" description=");
+        sr.append(ftlFmt.makeStringLiteral(encode(description, modelFormField, context)));
+        sr.append(" alternate=");
+        sr.append(ftlFmt.makeStringLiteral(encode(alternate, modelFormField, context)));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" event=");
+        sr.append(ftlFmt.makeStringLiteral(event == null ? "" : event));
+        sr.append(" action=");
+        sr.append(ftlFmt.makeStringLiteral(action == null ? "" : action));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.makeHyperlinkString(writer, imageField.getSubHyperlink(), context);
         this.appendTooltip(writer, context, modelFormField);
@@ -2817,25 +2798,23 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderFieldGroupOpen ");
-        sr.append(" style=\"");
-        if (style != null) {
-            sr.append(style);
-        }
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" title=\"");
-        sr.append(title);
-        sr.append("\" collapsed=");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(title));
+        sr.append(" collapsed=");
         sr.append(Boolean.toString(collapsed));
-        sr.append(" collapsibleAreaId=\"");
-        sr.append(collapsibleAreaId);
-        sr.append("\" collapsible=");
+        sr.append(" collapsibleAreaId=");
+        sr.append(ftlFmt.makeStringLiteral(collapsibleAreaId));
+        sr.append(" collapsible=");
         sr.append(Boolean.toString(collapsible));
-        sr.append(" expandToolTip=\"");
-        sr.append(expandToolTip);
-        sr.append("\" collapseToolTip=\"");
-        sr.append(collapseToolTip);
-        sr.append("\" />");
+        sr.append(" expandToolTip=");
+        sr.append(ftlFmt.makeStringLiteral(expandToolTip));
+        sr.append(" collapseToolTip=");
+        sr.append(ftlFmt.makeStringLiteral(collapseToolTip));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -2846,19 +2825,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String title = titleNotExpanded.expandString(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderFieldGroupClose ");
-        sr.append(" style=\"");
-        if (style != null) {
-            sr.append(style);
-        }
-        sr.append("\" id=\"");
-        if (id != null) {
-            sr.append(id);
-        }
-        sr.append("\" title=\"");
-        if (title != null) {
-            sr.append(title);
-        }
-        sr.append("\" />");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(title));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -2884,19 +2857,19 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderBanner ");
-        sr.append(" style=\"");
-        sr.append(style);
-        sr.append("\" leftStyle=\"");
-        sr.append(leftStyle);
-        sr.append("\" rightStyle=\"");
-        sr.append(rightStyle);
-        sr.append("\" leftText=\"");
-        sr.append(leftText);
-        sr.append("\" text=\"");
-        sr.append(text);
-        sr.append("\" rightText=\"");
-        sr.append(rightText);
-        sr.append("\" />");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" leftStyle=");
+        sr.append(ftlFmt.makeStringLiteral(leftStyle));
+        sr.append(" rightStyle=");
+        sr.append(ftlFmt.makeStringLiteral(rightStyle));
+        sr.append(" leftText=");
+        sr.append(ftlFmt.makeStringLiteral(leftText));
+        sr.append(" text=");
+        sr.append(ftlFmt.makeStringLiteral(text));
+        sr.append(" rightText=");
+        sr.append(ftlFmt.makeStringLiteral(rightText));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -2910,13 +2883,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (this.widgetCommentsEnabled) {
             StringWriter sr = new StringWriter();
             sr.append("<@formatBoundaryComment ");
-            sr.append(" boundaryType=\"");
-            sr.append("Begin");
-            sr.append("\" widgetType=\"");
-            sr.append(widgetType);
-            sr.append("\" widgetName=\"");
-            sr.append(modelWidget.getBoundaryCommentName());
-            sr.append("\" />");
+            sr.append(" boundaryType=");
+            sr.append(ftlFmt.makeStringLiteral("Begin"));
+            sr.append(" widgetType=");
+            sr.append(ftlFmt.makeStringLiteral(widgetType));
+            sr.append(" widgetName=");
+            sr.append(ftlFmt.makeStringLiteral(modelWidget.getBoundaryCommentName()));
+            sr.append(" />");
             executeMacro(writer, sr.toString());
         }
     }
@@ -2931,13 +2904,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (this.widgetCommentsEnabled) {
             StringWriter sr = new StringWriter();
             sr.append("<@formatBoundaryComment ");
-            sr.append(" boundaryType=\"");
-            sr.append("End");
-            sr.append("\" widgetType=\"");
-            sr.append(widgetType);
-            sr.append("\" widgetName=\"");
-            sr.append(modelWidget.getBoundaryCommentName());
-            sr.append("\" />");
+            sr.append(" boundaryType=");
+            sr.append(ftlFmt.makeStringLiteral("End"));
+            sr.append(" widgetType=");
+            sr.append(ftlFmt.makeStringLiteral(widgetType));
+            sr.append(" widgetName=");
+            sr.append(ftlFmt.makeStringLiteral(modelWidget.getBoundaryCommentName()));
+            sr.append(" />");
             executeMacro(writer, sr.toString());
         }
     }
@@ -3003,20 +2976,22 @@ public final class MacroFormRenderer implements FormStringRenderer {
             String newQueryString = sb.toString();
             String urlPath = UtilHttp.removeQueryStringFromTarget(paginateTarget);
             linkUrl = rh.makeLink(this.request, this.response, urlPath.concat(newQueryString));
+            // SCIPIO: known issues; if needed the macros will handle
+            //linkUrl = URLEncoder.encode(linkUrl, "UTF-8");
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderSortField ");
-        sr.append(" style=\"");
-        sr.append(sortFieldStyle);
-        sr.append("\" title=\"");
-        sr.append(titleText);
-        sr.append("\" linkUrl=\"");
-        sr.append(linkUrl);
-        sr.append("\" ajaxEnabled=");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(sortFieldStyle));
+        sr.append(" title=");
+        sr.append(ftlFmt.makeStringLiteral(titleText));
+        sr.append(" linkUrl=");
+        sr.append(ftlFmt.makeStringLiteral(linkUrl));
+        sr.append(" ajaxEnabled=");
         sr.append(Boolean.toString(ajaxEnabled));
         String tooltip = modelFormField.getSortFieldHelpText(context);
         if (!tooltip.isEmpty()) {
-            sr.append(" tooltip=\"").append(tooltip).append("\"");
+            sr.append(" tooltip=").append(ftlFmt.makeStringLiteral(tooltip));
         }
         sr.append(" />");
         executeMacro(writer, sr.toString());
@@ -3141,11 +3116,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String tooltip = modelFormField.getTooltip(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderTooltip ");
-        sr.append("tooltip=\"");
-        sr.append(FreeMarkerWorker.encodeDoubleQuotes(tooltip));
-        sr.append("\" tooltipStyle=\"");
-        sr.append(modelFormField.getTooltipStyle());
-        sr.append("\" />");
+        sr.append("tooltip=");
+        sr.append(ftlFmt.makeStringLiteral(tooltip)); // SCIPIO: redundant: FreeMarkerWorker.encodeDoubleQuotes(tooltip)
+        sr.append(" tooltipStyle=");
+        sr.append(ftlFmt.makeStringLiteral(modelFormField.getTooltipStyle()));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -3181,11 +3156,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
             requiredField = "true";
             requiredStyle = modelFormField.getRequiredFieldStyle();
         }
-        sr.append(" requiredField=\"");
-        sr.append(requiredField);
-        sr.append("\" requiredStyle=\"");
-        sr.append(requiredStyle);
-        sr.append("\"");
+        sr.append(" requiredField=");
+        sr.append(ftlFmt.makeStringLiteral(requiredField));
+        sr.append(" requiredStyle=");
+        sr.append(ftlFmt.makeStringLiteral(requiredStyle));
+        sr.append("");
     }
 
     public void appendContentUrl(Appendable writer, String location) throws IOException {
@@ -3272,29 +3247,29 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             StringWriter sr = new StringWriter();
             sr.append("<@makeHyperlinkString ");
-            sr.append("linkStyle=\"");
-            sr.append(linkStyle == null ? "" : linkStyle);
-            sr.append("\" hiddenFormName=\"");
-            sr.append(hiddenFormName == null ? "" : hiddenFormName);
-            sr.append("\" event=\"");
-            sr.append(event);
-            sr.append("\" action=\"");
-            sr.append(action);
-            sr.append("\" imgSrc=\"");
-            sr.append(imgSrc);
-            sr.append("\" title=\"");
-            sr.append(imgTitle);
-            sr.append("\" alternate=\"");
-            sr.append(alt);
-            sr.append("\" linkUrl=\"");
-            sr.append(linkUrl.toString());
-            sr.append("\" targetWindow=\"");
-            sr.append(targetWindow);
-            sr.append("\" description=\"");
-            sr.append(description);
-            sr.append("\" confirmation =\"");
-            sr.append(confirmation);
-            sr.append("\" />");
+            sr.append("linkStyle=");
+            sr.append(ftlFmt.makeStringLiteral(linkStyle == null ? "" : linkStyle));
+            sr.append(" hiddenFormName=");
+            sr.append(ftlFmt.makeStringLiteral(hiddenFormName == null ? "" : hiddenFormName));
+            sr.append(" event=");
+            sr.append(ftlFmt.makeStringLiteral(event));
+            sr.append(" action=");
+            sr.append(ftlFmt.makeStringLiteral(action));
+            sr.append(" imgSrc=");
+            sr.append(ftlFmt.makeStringLiteral(imgSrc));
+            sr.append(" title=");
+            sr.append(ftlFmt.makeStringLiteral(imgTitle));
+            sr.append(" alternate=");
+            sr.append(ftlFmt.makeStringLiteral(alt));
+            sr.append(" linkUrl=");
+            sr.append(ftlFmt.makeStringLiteral(linkUrl.toString()));
+            sr.append(" targetWindow=");
+            sr.append(ftlFmt.makeStringLiteral(targetWindow));
+            sr.append(" description=");
+            sr.append(ftlFmt.makeStringLiteral(description));
+            sr.append(" confirmation =");
+            sr.append(ftlFmt.makeStringLiteral(confirmation));
+            sr.append(" />");
             executeMacro(writer, sr.toString());
         }
     }
@@ -3314,21 +3289,21 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             StringWriter sr = new StringWriter();
             sr.append("<@makeHiddenFormLinkAnchor ");
-            sr.append("linkStyle=\"");
-            sr.append(linkStyle == null ? "" : linkStyle);
-            sr.append("\" hiddenFormName=\"");
-            sr.append(hiddenFormName == null ? "" : hiddenFormName);
-            sr.append("\" event=\"");
-            sr.append(event);
-            sr.append("\" action=\"");
-            sr.append(action);
-            sr.append("\" imgSrc=\"");
-            sr.append(imgSrc);
-            sr.append("\" description=\"");
-            sr.append(description);
-            sr.append("\" confirmation =\"");
-            sr.append(confirmation);
-            sr.append("\" />");
+            sr.append("linkStyle=");
+            sr.append(ftlFmt.makeStringLiteral(linkStyle == null ? "" : linkStyle));
+            sr.append(" hiddenFormName=");
+            sr.append(ftlFmt.makeStringLiteral(hiddenFormName == null ? "" : hiddenFormName));
+            sr.append(" event=");
+            sr.append(ftlFmt.makeStringLiteral(event));
+            sr.append(" action=");
+            sr.append(ftlFmt.makeStringLiteral(action));
+            sr.append(" imgSrc=");
+            sr.append(ftlFmt.makeStringLiteral(imgSrc));
+            sr.append(" description=");
+            sr.append(ftlFmt.makeStringLiteral(description));
+            sr.append(" confirmation =");
+            sr.append(ftlFmt.makeStringLiteral(confirmation));
+            sr.append(" />");
             executeMacro(writer, sr.toString());
         }
     }
@@ -3343,25 +3318,24 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (parameters.length() > 1) {
                 parameters.append(",");
             }
-            parameters.append("{'name':'");
-            parameters.append(parameter.getName());
-            parameters.append("'");
-            parameters.append(",'value':'");
-            parameters.append(UtilCodec.getEncoder("html").encode(parameter.getValue(context)));
-            parameters.append("'}");
+            parameters.append("{'name':");
+            parameters.append(ftlFmt.makeStringLiteralSQ(parameter.getName()));
+            parameters.append(",'value':");
+            parameters.append(ftlFmt.makeStringLiteralSQ(UtilCodec.getEncoder("html").encode(parameter.getValue(context))));
+            parameters.append("}");
         }
         parameters.append("]");
         StringWriter sr = new StringWriter();
         sr.append("<@makeHiddenFormLinkForm ");
-        sr.append("actionUrl=\"");
-        sr.append(actionUrl.toString());
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" parameters=");
+        sr.append("actionUrl=");
+        sr.append(ftlFmt.makeStringLiteral(actionUrl.toString()));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" parameters=");
         sr.append(parameters.toString());
-        sr.append(" targetWindow=\"");
-        sr.append(targetWindow);
-        sr.append("\" />");
+        sr.append(" targetWindow=");
+        sr.append(ftlFmt.makeStringLiteral(targetWindow));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -3370,11 +3344,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String className = UtilFormatOut.checkNull(containerField.getModelFormField().getWidgetStyle(context));
         StringWriter sr = new StringWriter();
         sr.append("<@renderContainerField ");
-        sr.append("id=\"");
-        sr.append(id);
-        sr.append("\" className=\"");
-        sr.append(className);
-        sr.append("\" />");
+        sr.append("id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -3384,11 +3358,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String text = UtilFormatOut.checkNull(modelForm.getAlternateText(context));
         StringWriter sr = new StringWriter();
         sr.append("<@renderAlternateText ");
-        sr.append("className=\"");
-        sr.append(className);
-        sr.append("\" text=\"");
-        sr.append(text);
-        sr.append("\" wrapperOpened=");
+        sr.append("className=");
+        sr.append(ftlFmt.makeStringLiteral(className));
+        sr.append(" text=");
+        sr.append(ftlFmt.makeStringLiteral(text));
+        sr.append(" wrapperOpened=");
         sr.append(Boolean.toString(wrapperOpened));
         sr.append(" headerRendered=");
         sr.append(Boolean.toString(headerRendered));
@@ -3438,9 +3412,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFooterRowOpen ");
-        sr.append(" style=\"");
-        sr.append(headerStyle);
-        sr.append("\" />");
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(headerStyle));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -3450,6 +3424,5 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderFormatFooterRowClose />");
         executeMacro(writer, sr.toString());
     }
-
     
 }

@@ -57,7 +57,7 @@
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://commonext/widget/ofbizsetup/Menus.xml" name="SetupAppSideBar"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -80,6 +80,7 @@
     <screen name="CommonSetupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://commonext/widget/ofbizsetup/Menus.xml#SetupSub" />
                 <entity-condition entity-name="PartyRole" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
@@ -97,7 +98,7 @@
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu location="component://commonext/widget/ofbizsetup/Menus.xml" name="SetupSubSideBar"/>
+                                <include-screen name="MainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
                             </widgets>
                         </section>
                         <!-- Scipio: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
@@ -174,4 +175,31 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://commonext/widget/ofbizsetup/Menus.xml"/>
+                <set field="menuCfg.name" value="SetupAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://commonext/widget/ofbizsetup/Menus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

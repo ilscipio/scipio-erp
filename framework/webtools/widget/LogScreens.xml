@@ -24,6 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -33,7 +34,7 @@ under the License.
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu location="component://webtools/widget/Menus.xml" name="ServerSideBar"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

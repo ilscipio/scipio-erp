@@ -52,7 +52,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://assetmaint/widget/ismgr/Menus.xml" name="IsMgrAppSideBar"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -77,13 +77,20 @@ under the License.
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
+                            <actions>
+                                <!-- SCIPIO: TODO: move these actions outside here using tests in actions instead -->
+                                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" />
+                            </actions>
                             <widgets>
-                                <include-menu name="ComputerHardwareSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                             </widgets>
                         </section>
                         <section>
+                            <actions>
+                                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#FixedAssetSubSideBar" />
+                            </actions>
                             <widgets>
-                                <include-menu name="FixedAssetSubSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -141,17 +148,19 @@ under the License.
     <screen name="CommonComputerSoftwareDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#FixedAssetSub" />
                 <set field="activeMainMenuItem" value="ComputerSoftware"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                <!--
+                    <!--
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true">
-                        <include-menu name="ComputerHardwareSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" />
+                        <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                     </decorator-section>
                      -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="FixedAssetSubSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -201,4 +210,31 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://assetmaint/widget/ismgr/Menus.xml"/>
+                <set field="menuCfg.name" value="IsMgrAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://assetmaint/widget/ismgr/Menus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

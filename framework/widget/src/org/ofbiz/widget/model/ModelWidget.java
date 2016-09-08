@@ -62,9 +62,16 @@ public abstract class ModelWidget implements Serializable {
      */
     protected ModelWidget(Element widgetElement) {
         this.name = widgetElement.getAttribute("name");
-        this.systemId = (String) widgetElement.getUserData("systemId");
-        this.startColumn = ((Integer) widgetElement.getUserData("startColumn")).intValue();
-        this.startLine = ((Integer) widgetElement.getUserData("startLine")).intValue();
+        // SCIPIO: workarounds for cases where userData not defined
+        //this.systemId = (String) widgetElement.getUserData("systemId");
+        //this.startColumn = ((Integer) widgetElement.getUserData("startColumn")).intValue();
+        //this.startLine = ((Integer) widgetElement.getUserData("startLine")).intValue();
+        String systemId = (String) widgetElement.getUserData("systemId");
+        this.systemId = (systemId != null) ? systemId : "anonymous";
+        Integer startColumn = (Integer) widgetElement.getUserData("startColumn");
+        this.startColumn = (startColumn != null) ? startColumn.intValue() : 0;
+        Integer startLine = (Integer) widgetElement.getUserData("startLine");
+        this.startLine = (startLine != null) ? startLine.intValue() : 0;
     }
 
     public abstract void accept(ModelWidgetVisitor visitor) throws Exception;

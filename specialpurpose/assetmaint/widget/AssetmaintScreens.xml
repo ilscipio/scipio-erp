@@ -79,13 +79,14 @@
     <screen name="CommonFixedAssetMaintDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAssetMaint" />
                 <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
                 <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true"> <!-- Scipio: let callers override -->
-                        <include-menu name="FixedAssetMaintSideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>

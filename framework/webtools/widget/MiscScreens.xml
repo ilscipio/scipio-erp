@@ -56,7 +56,8 @@ under the License.
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsLayoutDemo"/>
                 <set field="activeMainMenuItem" value="LayoutDemo"/>
-                <set field="activeSubMenuItem" value="Selected"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="LayoutDemo" />
+                <set field="activeSubMenuItem" value="${groovy: (context.debugMode ? 'LayoutDemoDebug' : 'LayoutDemo')}"/>
                 <set field="demoText" value="${uiLabelMap.WebtoolsLayoutDemoText}" global="true"/>
                 <set field="errorMessage" from-field="demoText" global="true"/>
                 <set field="eventMessage" from-field="demoText" global="true"/>
@@ -88,7 +89,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="LayoutDemoSideBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -121,7 +122,7 @@ under the License.
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
             <actions>
-
+        
             </actions>
             <widgets>
                 <!-- 
@@ -228,6 +229,24 @@ under the License.
                     <include-menu name="LayoutDemoButton2" location="component://webtools/widget/Menus.xml"/>
                     <include-menu name="LayoutDemoNestedButton" location="component://webtools/widget/Menus.xml"/>
                     <include-menu name="LayoutDemoButtonDropdown" location="component://webtools/widget/Menus.xml"/>
+                    
+                    <screenlet title="Scope sharing test">
+                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/Menus.xml" share-scope="false"/>
+                        <label text="demoTestVar1 value (share-scope test): &quot;${demoTestVar1}&quot; (should be &quot;&quot;)" />
+                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/Menus.xml" share-scope="true"/>
+                        <label text="demoTestVar1 value (share-scope test): &quot;${demoTestVar1}&quot; (should be &quot;demoTestValue1&quot;)" />
+                    </screenlet>
+                    
+                    <screenlet title="Depth limit test">
+                        <label text="Full (default/-1)" style="heading"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1"/>
+                        <label text="max-depth 2" style="heading"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="2"/>
+                        <label text="max-depth 1" style="heading"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="1"/>
+                        <label text="sub-menus 'none' filter (same as max-depth 1)" style="heading"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1" sub-menus="none"/>
+                    </screenlet>
                 </screenlet>
             </widgets>
         </section>

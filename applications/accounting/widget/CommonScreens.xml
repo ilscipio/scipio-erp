@@ -56,7 +56,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -71,6 +71,7 @@ under the License.
     <screen name="CommonAgreementDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Agreement" />
                 <set field="activeMainMenuItem" value="agreements" />
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true" />
@@ -89,10 +90,10 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AgreementSideBar" />
+                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -196,6 +197,7 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Payment" />
                 <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
@@ -209,11 +211,11 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="PaymentSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>                            
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -249,6 +251,7 @@ under the License.
     <screen name="CommonPaymentGroupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
                 <set field="activeMainMenuItem" value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
@@ -267,11 +270,11 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="PaymentGroupSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>                            
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -317,13 +320,14 @@ under the License.
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Organization" />
                 <set field="activeMainMenuItem" value="companies"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.organizationPartyId}" override-by-auto-include="true">
-                        <include-menu name="OrganizationSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -385,16 +389,13 @@ under the License.
     <screen name="CommonSettingsDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Settings" />
                 <set field="activeMainMenuItem" value="settings" />                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>                            
-                            <widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="SettingsSideBar" />
-                            </widgets>                            
-                        </section>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>                            
@@ -494,11 +495,12 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="GlobalGLSettings"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#GlobalGLSettingsSideBar"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="GlobalGLSettingMenus" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -555,4 +557,30 @@ under the License.
         </section>
     </screen>
 
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://accounting/widget/AccountingMenus.xml"/>
+                <set field="menuCfg.name" value="AccountingAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://accounting/widget/AccountingMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

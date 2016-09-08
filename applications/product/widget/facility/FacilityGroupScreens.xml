@@ -47,6 +47,7 @@ under the License.
     <screen name="CommonFacilityGroupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityGroup" />
                 <set field="facilityGroupId" from-field="parameters.facilityGroupId"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
             </actions>
@@ -58,7 +59,7 @@ under the License.
                                 <if-has-permission permission="FACILITY" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="FacilityGroupSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

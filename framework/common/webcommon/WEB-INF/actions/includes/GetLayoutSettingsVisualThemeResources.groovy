@@ -19,7 +19,18 @@ themeResources = (globalContext.layoutSettings != null) ? globalContext.layoutSe
 visualThemeId = null;
 
 if (context.rendererVisualThemeResources) {
-    themeResources.putAll(context.rendererVisualThemeResources);
+    // this squashes any VT_XXX set in screens (though usually meant to be avoided)
+    //themeResources.putAll(context.rendererVisualThemeResources);
+    context.rendererVisualThemeResources.each { k, v ->
+        existingVals = themeResources[k];
+        if (existingVals != null) {
+            existingVals.addAll(v);
+        } else {
+            newVals = []; // copy so no issues editing
+            newVals.addAll(v);
+            themeResources[k] = newVals;
+        }
+    }
     visualThemeId = themeResources.VT_ID[0];
 }
 

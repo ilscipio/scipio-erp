@@ -27,6 +27,7 @@ under the License.
     <screen name="CommonProductDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Product" />
                 <set field="activeMainMenuItem" value="products"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
@@ -53,12 +54,12 @@ under the License.
                                 <entity-one entity-name="Product" value-field="product"/>
                             </actions>
                             <widgets>
-                                <include-menu name="ProductSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                                 <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
                                 <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
                             </widgets>
                             <fail-widgets>
-                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -79,10 +80,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <condition>
-                                        <or>
-                                            <not><if-empty field="product"/></not>
-                                            <not><if-empty field="parameters.bypassIfNoProduct"/></not>
-                                        </or>
+                                        <not><if-empty field="product"/></not>
                                     </condition>
                                     <widgets>
                                         <platform-specific>
@@ -155,7 +153,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="activeSubMenuItem" value="EditProduct"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="parameters.bypassIfNoProduct" value="true"/>
                 <set field="title" value="${groovy: (parameters.productId &amp;&amp; parameters.isCreate != 'true') ? (uiLabelMap.PageTitleEditProduct + ' ' + parameters.productId) : (uiLabelMap.ProductNewProduct) }"/>
             </actions>
             <widgets>

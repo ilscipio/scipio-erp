@@ -21,10 +21,12 @@
     <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}">Cloning</li>
 </@nav>
 
-<@section containerClass="+my-container-class" class="+my-cell-class" containerId="this-id-never-shown" id="the-id-really-used">
+<@section containerClass="+my-container-class" class="+my-cell-class" containerId="this-id-never-shown" id="the-id-really-used"
+    contentId="the-inner-div-id"
+    attribs={"my-extra-container-attrib":"test-value"} contentAttribs={"my-extra-content-attrib":attribSpecialVal("none"), "my-extra-content-attrib-2":attribSpecialVal("empty")}>
     <@heading attribs=makeMagTargetAttribMap("grid") id="grid">Grid</@heading>
-    <@row class="+${styles.grid_display!}">
-        <@cell columns=2>2</@cell>
+    <@row class="+${styles.grid_display!}" myExtraRowAttrib="some-value">
+        <@cell columns=2 myExtraCellAttrib="some-value">2</@cell>
         <@cell columns=4>4</@cell>
         <@cell columns=6>6</@cell>
     </@row>
@@ -1263,6 +1265,10 @@
   <#assign mySet = toSet(["val1", "val2", "val2", "val3", "val4", "val3"])>
   <#assign mySet = toSet(mySet)>
   <p>Basic set: <@objectAsScript lang="raw" escape=false object=mySet /></p>
+  
+  <#assign myMap = {"test1":"a string", "test2": wrapRawScript("a non-quoted script")}>
+  
+  <p>Map with non-quoted script values: <@objectAsScript lang="raw" escape=false object=myMap /></p>
 </@section>
 
 <@section title="Common messages">
@@ -1469,10 +1475,31 @@
   <@render resource=ofbizWidgetsLayoutScreenLocation />
 
   <@section title="Direct inclusions">
+    <p>Button Menu</p>
     <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2" />
+    <p>Button Menu (sub-menus filtered out)</p>
+    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2NoSubMenus" />
+
+    <p>Test form</p>
     <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
 
+    <p>Max depth arg test</p>
+    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" />
+    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" maxDepth="1" />
+    <@render type="include-menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" subMenus="none" />
   </@section>
+
+  <@section title="Admin plain site-map/tree">
+  <@row>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+      </@cell>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo3" />
+      </@cell>
+    </@row>
+  </@section>
+
 
 </@section>
 </#if>

@@ -38,15 +38,21 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
+import org.ofbiz.widget.model.MenuRenderState;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
+import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 
 /**
  * Widget Library - HTML Menu Renderer implementation
+ * <p>
+ * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRenderer {
 
     HttpServletRequest request;
@@ -339,12 +345,16 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     }
 
     public boolean isHideIfSelected(ModelMenuItem menuItem, Map<String, Object> context) {
-        ModelMenu menu = menuItem.getModelMenu();
-        String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
-        String currentItemName = menuItem.getName();
+        // SCIPIO: this is obsolete
+        //ModelMenu menu = menuItem.getFuncModelMenu();
+        //String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
+        //String currentItemName = menuItem.getName();
+        //Boolean hideIfSelected = menuItem.getHideIfSelected();
+        //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-            //Debug.logInfo("in HtmlMenuRenderer, currentMenuItemName:" + currentMenuItemName + " currentItemName:" + currentItemName + " hideIfSelected:" + hideIfSelected,"");
-        return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(context).getMenuItem();
+        return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
     }
 
 
@@ -592,5 +602,19 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
             writer.append("\"");
         }
         writer.append("/>");
+    }
+
+    @Override
+    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
+            throws IOException {
+        // SCIPIO: will not implement this.
+        throw new UnsupportedOperationException("SCIPIO: HtmlMenuRenderer is deprecated");
+    }
+    
+    @Override
+    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
+            throws IOException {
+        // SCIPIO: will not implement this.
+        throw new UnsupportedOperationException("SCIPIO: HtmlMenuRenderer is deprecated");
     }
 }

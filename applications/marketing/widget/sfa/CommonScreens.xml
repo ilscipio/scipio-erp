@@ -58,7 +58,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://marketing/widget/sfa/SfaMenus.xml" name="SfaAppSideBar"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -73,8 +73,9 @@ under the License.
     <screen name="CommonTrackingCodeDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/TrackingCodeMenus.xml#TrackingCode" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="Tracking"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Tracking"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <entity-one entity-name="TrackingCode" value-field="trackingCode"/>
             </actions>
@@ -89,8 +90,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <!-- <include-menu name="TrackingCodeSideBar" location="component://marketing/widget/TrackingCodeMenus.xml"/> -->
-                                        <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -118,9 +118,10 @@ under the License.
     <screen name="CommonMarketingDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
-                <set field="activeMainMenuItem" value="MarketingCampaign"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="MarketingCampaign"/>
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
             </actions>
             <widgets>
@@ -135,11 +136,10 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-menu location="component://marketing/widget/sfa/SfaMenus.xml" name="SfaAppSideBar"/>
-                                <!-- <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/> -->
+                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -165,14 +165,15 @@ under the License.
     <screen name="CommonPromoDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Promotions"/>                
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Promotions"/>                
                 <set field="showMainExtendedBar" type="Boolean" value="true" />                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegator to main-decorator -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                       <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                       <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                     </decorator-section>                   
                     <decorator-section name="body">
                         <section>
@@ -196,7 +197,8 @@ under the License.
     <screen name="CommonSegmentGroupDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Segment"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Segment"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
                 <set field="activeSubMenuItem" value="Segment"/>
 
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
@@ -214,7 +216,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -287,15 +289,16 @@ under the License.
     <screen name="CommonOpportunityDecorator">
         <section>
             <actions>
+                <!--<set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Opportunity" />-->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
                 <!-- Do action here -->
                 <set field="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
-                <set field="activeMainMenuItem" value="Opportunities"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Sales"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <!-- <include-menu name="OpportunitySideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
-                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -325,7 +328,7 @@ under the License.
                         </or>
                     </condition>
                     <actions>
-                        <set field="activeMainMenuItem" value="Leads"/>
+                        <set field="activeSubMenuItem" value="Leads"/>
                         <set field="currentCommonDecorator" value="CommonLeadDecorator"/>
                     </actions>
                     <widgets/>
@@ -335,7 +338,7 @@ under the License.
                         <not><if-empty field="contactDescription"/></not>
                     </condition>
                     <actions>
-                        <set field="activeMainMenuItem" value="Contacts"/>
+                        <set field="activeSubMenuItem" value="Contacts"/>
                         <set field="currentCommonDecorator" value="CommonContactDecorator"/>
                     </actions>
                     <widgets/>
@@ -345,7 +348,7 @@ under the License.
                         <not><if-empty field="accountDescription"/></not>
                     </condition>
                     <actions>
-                        <set field="activeMainMenuItem" value="Accounts"/>
+                        <set field="activeSubMenuItem" value="Accounts"/>
                         <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
                     </actions>
                     <widgets/>
@@ -577,7 +580,14 @@ under the License.
                     <fail-widgets>
                         <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="left-column" override-by-auto-include="true">
-                                <include-menu name="OpportunitySideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                                <section>
+                                    <actions>
+                                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Opportunity" />
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
                             </decorator-section>
                             <decorator-section name="body">
                                 <include-menu name="OpportunitySubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
@@ -591,10 +601,14 @@ under the License.
     </screen>
     <screen name="CommonAccountDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Sales"/>
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                     </decorator-section>                  
                     <decorator-section name="body">
                         <!-- <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
@@ -606,10 +620,14 @@ under the License.
     </screen>
     <screen name="CommonContactDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Sales"/>
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">                        
-                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <!-- <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
@@ -621,10 +639,14 @@ under the License.
     </screen>
     <screen name="CommonServiceDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/ServicesMenus.xml#Services" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Services"/>
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">                        
-                        <include-menu name="ServicesAppSideBar" location="component://marketing/widget/ServicesMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <!-- <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
@@ -636,10 +658,13 @@ under the License.
     </screen>
     <screen name="CommonAnalyticsDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/AnalyticsMenus.xml#Analytics" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">                        
-                        <include-menu name="AnalyticsAppSideBar" location="component://marketing/widget/AnalyticsMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">                        
                         <decorator-section-include name="body"/>
@@ -651,6 +676,8 @@ under the License.
     <screen name="CommonLeadDecorator">
         <section>
             <actions>
+                <!--<set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Lead" />-->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
                  <entity-and entity-name="PartyRelationship" list="relatedCompanies" filter-by-date="true">
                      <field-map field-name="partyIdTo" from-field="partyId"/>
                      <field-map field-name="roleTypeIdFrom" value="ACCOUNT_LEAD"/>
@@ -661,8 +688,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <!-- <include-menu name="LeadSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
-                        <include-menu name="SalesAppSideBar" location="component://marketing/widget/SalesMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <!-- <include-menu name="LeadSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
@@ -675,12 +701,13 @@ under the License.
     <screen name="CommonEventDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Events"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Event" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Events"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="EventSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <include-menu name="EventSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
@@ -705,7 +732,7 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Calendar" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Calendar"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -732,4 +759,31 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://marketing/widget/sfa/SfaMenus.xml"/>
+                <set field="menuCfg.name" value="SfaAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://marketing/widget/sfa/SfaMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

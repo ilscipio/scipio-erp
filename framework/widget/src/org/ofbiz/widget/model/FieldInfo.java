@@ -19,6 +19,7 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,8 @@ import org.w3c.dom.Element;
 /**
  * Form field abstract class.
  */
-public abstract class FieldInfo {
+@SuppressWarnings("serial")
+public abstract class FieldInfo implements Serializable  {
 
     public static final String module = FieldInfo.class.getName();
 

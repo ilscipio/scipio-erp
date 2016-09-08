@@ -16,7 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@heading>${uiLabelMap.WebtoolsLabelManagerViewReferences}</@heading>
+<#-- SCIPIO: duplicate:
+<@heading>${uiLabelMap.WebtoolsLabelManagerViewReferences}</@heading>-->
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
             <@tr>

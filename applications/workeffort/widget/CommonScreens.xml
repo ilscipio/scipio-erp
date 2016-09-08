@@ -57,7 +57,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://workeffort/widget/WorkEffortMenus.xml" name="WorkEffortAppSideBar"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -80,6 +80,7 @@ under the License.
     <screen name="CommonWorkEffortDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#WorkEffort" />
                 <set field="activeMainMenuItem" value="workeffort"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
@@ -94,7 +95,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="WorkEffortSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -141,6 +142,7 @@ under the License.
     <screen name="CommonTimesheetDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/TimesheetMenus.xml#Timesheet" />
                 <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
@@ -156,10 +158,10 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="timesheetId"/></not></condition>
                                     <widgets>
-                                        <include-menu name="TimesheetSideBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <include-menu name="WorkEffortAppSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                        <include-screen name="DefMainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>
@@ -233,4 +235,31 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://workeffort/widget/WorkEffortMenus.xml"/>
+                <set field="menuCfg.name" value="WorkEffortAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://workeffort/widget/WorkEffortMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

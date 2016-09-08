@@ -1,5 +1,6 @@
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +18,8 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * </code>
  * </pre>
  */
-public class AttribsExpression {
+@SuppressWarnings("serial")
+public class AttribsExpression implements Serializable {
 
     private final FlexibleStringExpander attribsExpr;
 

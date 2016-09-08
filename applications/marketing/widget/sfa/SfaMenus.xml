@@ -45,6 +45,24 @@ under the License.
     </menu>
     <menu name="SfaAppSideBar" title="${uiLabelMap.SfaManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SfaAppBar" recursive="full" />
+        <menu-item name="Services">
+            <sub-menu name="Services" include="component://marketing/widget/ServicesMenus.xml#ServicesSideBar"/>
+        </menu-item>
+        <menu-item name="Marketing">
+            <!-- TODO <sub-menu name="" include=""/> -->
+        </menu-item>
+        <menu-item name="Sales">
+            <sub-menu name="Sales" include="component://marketing/widget/SalesMenus.xml#SalesSideBar"/>
+        </menu-item>
+        <menu-item name="Calendar">
+            <!-- TODO <sub-menu name="" include=""/> -->
+        </menu-item>
+        <menu-item name="Analytics">
+            <sub-menu name="Analytics" include="component://marketing/widget/AnalyticsMenus.xml#AnalyticsSideBar"/>
+        </menu-item>
+        <menu-item name="Settings">
+            <!-- TODO <sub-menu name="" include=""/> -->
+        </menu-item>
     </menu>
     
     <menu name="ServicesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

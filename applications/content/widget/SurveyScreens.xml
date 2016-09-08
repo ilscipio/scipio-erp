@@ -62,6 +62,7 @@ under the License.
     <screen name="CommonSurveyDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/SurveyMenus.xml#Survey" />
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="survey"/>
             </actions>
@@ -75,7 +76,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="SurveySideBar" location="component://content/widget/SurveyMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://content/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

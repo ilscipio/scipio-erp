@@ -44,6 +44,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.base.util.template.FtlScriptFormatter;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
@@ -191,6 +192,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
     }
     
+    private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("screen");
     
     
@@ -241,9 +243,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 sb.append("=");
                 Object value = parameter.getValue();
                 if (value instanceof String) {
-                    sb.append('"');
-                    sb.append(((String) value).replaceAll("\"", "\\\\\""));
-                    sb.append('"');
+                    sb.append(ftlFmt.makeStringLiteral((String) value));
                 } else {
                     sb.append(value);
                 }
@@ -374,12 +374,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 if (parameters.length() >1) {
                     parameters.append(",");
                 }
-                parameters.append("{'name':'");
-                parameters.append(parameter.getKey());
-                parameters.append("'");
-                parameters.append(",'value':'");
-                parameters.append(parameter.getValue());
-                parameters.append("'}");
+                parameters.append("{'name':");
+                parameters.append(ftlFmt.makeStringLiteralSQ(parameter.getKey()));
+                parameters.append(",'value':");
+                parameters.append(ftlFmt.makeStringLiteralSQ(parameter.getValue()));
+                parameters.append("}");
             }
             parameters.append("]");
 
@@ -407,33 +406,33 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append("<@renderLink ");
         sr.append("parameterList=");
         sr.append(parameters.length()==0?"\"\"":parameters.toString());
-        sr.append(" targetWindow=\"");
-        sr.append(targetWindow);
-        sr.append("\" target=\"");
-        sr.append(target);
-        sr.append("\" uniqueItemName=\"");
-        sr.append(uniqueItemName);
-        sr.append("\" linkType=\"");
-        sr.append(linkType);
-        sr.append("\" actionUrl=\"");
-        sr.append(actionUrl);
-        sr.append("\" id=\"");
-        sr.append(id);
-        sr.append("\" style=\"");
-        sr.append(style);
-        sr.append("\" name=\"");
-        sr.append(name);
-        sr.append("\" width=\"");
-        sr.append(width);
-        sr.append("\" height=\"");
-        sr.append(height);
-        sr.append("\" linkUrl=\"");
-        sr.append(linkUrl);
-        sr.append("\" text=\"");
-        sr.append(text);
-        sr.append("\" imgStr=\"");
-        sr.append(imgStr.replaceAll("\"", "\\\\\""));
-        sr.append("\" />");
+        sr.append(" targetWindow=");
+        sr.append(ftlFmt.makeStringLiteral(targetWindow));
+        sr.append(" target=");
+        sr.append(ftlFmt.makeStringLiteral(target));
+        sr.append(" uniqueItemName=");
+        sr.append(ftlFmt.makeStringLiteral(uniqueItemName));
+        sr.append(" linkType=");
+        sr.append(ftlFmt.makeStringLiteral(linkType));
+        sr.append(" actionUrl=");
+        sr.append(ftlFmt.makeStringLiteral(actionUrl));
+        sr.append(" id=");
+        sr.append(ftlFmt.makeStringLiteral(id));
+        sr.append(" style=");
+        sr.append(ftlFmt.makeStringLiteral(style));
+        sr.append(" name=");
+        sr.append(ftlFmt.makeStringLiteral(name));
+        sr.append(" width=");
+        sr.append(ftlFmt.makeStringLiteral(width));
+        sr.append(" height=");
+        sr.append(ftlFmt.makeStringLiteral(height));
+        sr.append(" linkUrl=");
+        sr.append(ftlFmt.makeStringLiteral(linkUrl));
+        sr.append(" text=");
+        sr.append(ftlFmt.makeStringLiteral(text));
+        sr.append(" imgStr=");
+        sr.append(ftlFmt.makeStringLiteral(imgStr));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -749,11 +748,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 //MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
                 //MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
                 //context.put("menuStringRenderer", renderer);
-                context.put("menuStringRender_inlineEntries", Boolean.TRUE);
-                context.put("menuStringRender_menuCtxRole", "screenlet-nav-menu");
+                Map<String, Object> menuRenderArgs = UtilMisc.getMapFromMap(context, "menuRenderArgs");
+                menuRenderArgs.put("inlineEntries", Boolean.TRUE);
+                menuRenderArgs.put("menuCtxRole", "screenlet-nav-menu");
                 navMenu.renderWidgetString(sb, context, this);
-                context.remove("menuStringRender_inlineEntries");
-                context.remove("menuStringRender_menuCtxRole");
                 //context.put("menuStringRenderer", savedRenderer);
                 menuRole = "nav-menu";
             } else if (navForm != null) {
@@ -965,17 +963,17 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageBegin ");
-        sr.append("originalPortalPageId=\"");
-        sr.append(originalPortalPageId);
-        sr.append("\" portalPageId=\"");
-        sr.append(portalPageId);
-        sr.append("\" confMode=\"");
-        sr.append(confMode);
-        sr.append("\" addColumnLabel=\"");
-        sr.append(addColumnLabel);
-        sr.append("\" addColumnHint=\"");
-        sr.append(addColumnHint);
-        sr.append("\" columnCount=");
+        sr.append("originalPortalPageId=");
+        sr.append(ftlFmt.makeStringLiteral(originalPortalPageId));
+        sr.append(" portalPageId=");
+        sr.append(ftlFmt.makeStringLiteral(portalPageId));
+        sr.append(" confMode=");
+        sr.append(ftlFmt.makeStringLiteral(confMode));
+        sr.append(" addColumnLabel=");
+        sr.append(ftlFmt.makeStringLiteral(addColumnLabel));
+        sr.append(" addColumnHint=");
+        sr.append(ftlFmt.makeStringLiteral(addColumnHint));
+        sr.append(" columnCount=");
         sr.append(columnCount.toString());
         sr.append(" />");
         executeMacro(writer, sr.toString());
@@ -1027,37 +1025,35 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageColumnBegin ");
-        sr.append("originalPortalPageId=\"");
-        sr.append(originalPortalPageId);
-        sr.append("\" portalPageId=\"");
-        sr.append(portalPageId);
-        sr.append("\" columnSeqId=\"");
-        sr.append(columnSeqId);
-        sr.append("\" ");
+        sr.append("originalPortalPageId=");
+        sr.append(ftlFmt.makeStringLiteral(originalPortalPageId));
+        sr.append(" portalPageId=");
+        sr.append(ftlFmt.makeStringLiteral(portalPageId));
+        sr.append(" columnSeqId=");
+        sr.append(ftlFmt.makeStringLiteral(columnSeqId));
+        sr.append(" ");
         if (UtilValidate.isNotEmpty(columnWidthPixels)) {
-            sr.append("width=\"");
-            sr.append(columnWidthPixels);
-            sr.append("px\"");
+            sr.append("width=");
+            sr.append(ftlFmt.makeStringLiteral(columnWidthPixels + "px"));
         } else if (UtilValidate.isNotEmpty(columnWidthPercentage)) {
-            sr.append("width=\"");
-            sr.append(columnWidthPercentage);
-            sr.append("%\"");
+            sr.append("width=");
+            sr.append(ftlFmt.makeStringLiteral(columnWidthPercentage + "%"));
         }
-        sr.append(" confMode=\"");
-        sr.append(confMode);
-        sr.append("\" delColumnLabel=\"");
-        sr.append(delColumnLabel);
-        sr.append("\" delColumnHint=\"");
-        sr.append(delColumnHint);
-        sr.append("\" addPortletLabel=\"");
-        sr.append(addPortletLabel);
-        sr.append("\" addPortletHint=\"");
-        sr.append(addPortletHint);
-        sr.append("\" colWidthLabel=\"");
-        sr.append(colWidthLabel);
-        sr.append("\" setColumnSizeHint=\"");
-        sr.append(setColumnSizeHint);
-        sr.append("\" columnCount=");
+        sr.append(" confMode=");
+        sr.append(ftlFmt.makeStringLiteral(confMode));
+        sr.append(" delColumnLabel=");
+        sr.append(ftlFmt.makeStringLiteral(delColumnLabel));
+        sr.append(" delColumnHint=");
+        sr.append(ftlFmt.makeStringLiteral(delColumnHint));
+        sr.append(" addPortletLabel=");
+        sr.append(ftlFmt.makeStringLiteral(addPortletLabel));
+        sr.append(" addPortletHint=");
+        sr.append(ftlFmt.makeStringLiteral(addPortletHint));
+        sr.append(" colWidthLabel=");
+        sr.append(ftlFmt.makeStringLiteral(colWidthLabel));
+        sr.append(" setColumnSizeHint=");
+        sr.append(ftlFmt.makeStringLiteral(setColumnSizeHint));
+        sr.append(" columnCount=");
         sr.append(columnCount.toString());
         sr.append(" columnIndex=");
         sr.append(columnIndex.toString());
@@ -1113,47 +1109,45 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPagePortletBegin ");
-        sr.append("originalPortalPageId=\"");
-        sr.append(originalPortalPageId);
-        sr.append("\" portalPageId=\"");
-        sr.append(portalPageId);
-        sr.append("\" portalPortletId=\"");
-        sr.append(portalPortletId);
-        sr.append("\" portletSeqId=\"");
-        sr.append(portletSeqId);
-        sr.append("\" prevPortletId=\"");
-        sr.append(prevPortletId);
-        sr.append("\" prevPortletSeqId=\"");
-        sr.append(prevPortletSeqId);
-        sr.append("\" nextPortletId=\"");
-        sr.append(nextPortletId);
-        sr.append("\" nextPortletSeqId=\"");
-        sr.append(nextPortletSeqId);
-        sr.append("\" columnSeqId=\"");
-        sr.append(columnSeqId);
-        sr.append("\" prevColumnSeqId=\"");
-        sr.append(prevColumnSeqId);
-        sr.append("\" nextColumnSeqId=\"");
-        sr.append(nextColumnSeqId);
-        sr.append("\" delPortletHint=\"");
-        sr.append(delPortletHint);
-        sr.append("\" editAttributeHint=\"");
-        sr.append(editAttributeHint);
-        sr.append("\" confMode=\"");
-        sr.append(confMode);
-        sr.append("\" columnCount=");
+        sr.append("originalPortalPageId=");
+        sr.append(ftlFmt.makeStringLiteral(originalPortalPageId));
+        sr.append(" portalPageId=");
+        sr.append(ftlFmt.makeStringLiteral(portalPageId));
+        sr.append(" portalPortletId=");
+        sr.append(ftlFmt.makeStringLiteral(portalPortletId));
+        sr.append(" portletSeqId=");
+        sr.append(ftlFmt.makeStringLiteral(portletSeqId));
+        sr.append(" prevPortletId=");
+        sr.append(ftlFmt.makeStringLiteral(prevPortletId));
+        sr.append(" prevPortletSeqId=");
+        sr.append(ftlFmt.makeStringLiteral(prevPortletSeqId));
+        sr.append(" nextPortletId=");
+        sr.append(ftlFmt.makeStringLiteral(nextPortletId));
+        sr.append(" nextPortletSeqId=");
+        sr.append(ftlFmt.makeStringLiteral(nextPortletSeqId));
+        sr.append(" columnSeqId=");
+        sr.append(ftlFmt.makeStringLiteral(columnSeqId));
+        sr.append(" prevColumnSeqId=");
+        sr.append(ftlFmt.makeStringLiteral(prevColumnSeqId));
+        sr.append(" nextColumnSeqId=");
+        sr.append(ftlFmt.makeStringLiteral(nextColumnSeqId));
+        sr.append(" delPortletHint=");
+        sr.append(ftlFmt.makeStringLiteral(delPortletHint));
+        sr.append(" editAttributeHint=");
+        sr.append(ftlFmt.makeStringLiteral(editAttributeHint));
+        sr.append(" confMode=");
+        sr.append(ftlFmt.makeStringLiteral(confMode));
+        sr.append(" columnCount=");
         sr.append(columnCount.toString());
         sr.append(" columnIndex=");
         sr.append(columnIndex.toString());
         sr.append("");
         if (UtilValidate.isNotEmpty(columnWidthPixels)) {
-            sr.append(" width=\"");
-            sr.append(columnWidthPixels);
-            sr.append("px\"");
+            sr.append(" width=");
+            sr.append(ftlFmt.makeStringLiteral(columnWidthPixels + "px"));
         } else if (UtilValidate.isNotEmpty(columnWidthPercentage)) {
-            sr.append(" width=\"");
-            sr.append(columnWidthPercentage);
-            sr.append("%\"");
+            sr.append(" width=");
+            sr.append(ftlFmt.makeStringLiteral(columnWidthPercentage + "%"));
         }
         if (UtilValidate.isNotEmpty(editFormName) && UtilValidate.isNotEmpty(editFormLocation)) {
             sr.append(" editAttribute=\"true\"");
@@ -1167,9 +1161,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPagePortletEnd ");
-        sr.append(" confMode=\"");
-        sr.append(confMode);
-        sr.append("\" />");
+        sr.append(" confMode=");
+        sr.append(ftlFmt.makeStringLiteral(confMode));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1204,21 +1198,21 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String id = columnContainer.getId(context);
         String style = columnContainer.getStyle(context);
         StringBuilder sb = new StringBuilder("<@renderColumnContainerBegin");
-        sb.append(" id=\"");
-        sb.append(id);
-        sb.append("\" style=\"");
-        sb.append(style);
-        sb.append("\" />");
+        sb.append(" id=");
+        sb.append(ftlFmt.makeStringLiteral(id));
+        sb.append(" style=");
+        sb.append(ftlFmt.makeStringLiteral(style));
+        sb.append(" />");
         executeMacro(writer, sb.toString());
         for (Column column : columnContainer.getColumns()) {
             id = column.getId(context);
             style = column.getStyle(context);
             sb = new StringBuilder("<@renderColumnBegin");
-            sb.append(" id=\"");
-            sb.append(id);
-            sb.append("\" style=\"");
-            sb.append(style);
-            sb.append("\" />");
+            sb.append(" id=");
+            sb.append(ftlFmt.makeStringLiteral(id));
+            sb.append(" style=");
+            sb.append(ftlFmt.makeStringLiteral(style));
+            sb.append(" />");
             executeMacro(writer, sb.toString());
             for (ModelScreenWidget subWidget : column.getSubWidgets()) {
                 try {
@@ -1231,4 +1225,5 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
         executeMacro(writer, "<@renderColumnContainerEnd />");
     }
+    
 }

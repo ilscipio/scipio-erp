@@ -37,6 +37,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
@@ -1778,11 +1779,17 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public static final String TAG_NAME = "include-menu";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
+        private final FlexibleStringExpander shareScopeExdr; // SCIPIO: added share-scope for menus (not in stock ofbiz)
+        private final FlexibleStringExpander maxDepthExdr; // SCIPIO: new
+        private final FlexibleStringExpander subMenuFilterExdr; // SCIPIO: new
 
         public Menu(ModelScreen modelScreen, Element menuElement) {
             super(modelScreen, menuElement);
             this.nameExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("location"));
+            this.shareScopeExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("share-scope")); // SCIPIO: added
+            this.maxDepthExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("max-depth")); // SCIPIO: added
+            this.subMenuFilterExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("sub-menus")); // SCIPIO: added
         }
 
         @Override
@@ -1793,8 +1800,46 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 Debug.logVerbose("MenuStringRenderer instance not found in rendering context, menu not rendered.", module);
                 return;
             }
+            
+            // SCIPIO: caller may have set these. Remove and transfer them to MenuRenderState
+            Map<String, Object> menuRenderArgs = UtilGenerics.checkMap(context.remove("menuRenderArgs"));
+            
+            // SCIPIO: added scope protect
+            boolean protectScope = !shareScope(context);
+            if (protectScope) {
+                if (!(context instanceof MapStack<?>)) {
+                    context = MapStack.create(context);
+                }
+                UtilGenerics.<MapStack<String>>cast(context).push();
+            }
+            
             ModelMenu modelMenu = getModelMenu(context);
-            modelMenu.renderMenuString(writer, context, menuStringRenderer);
+            
+            // SCIPIO: new render state to carry around max depth
+            // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
+            MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
+            if (prevRenderState != null) {
+                Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
+                    + "a new menu render was started", module);
+            }
+            try {
+                MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
+                if (menuRenderArgs != null) {
+                    renderState.putAll(menuRenderArgs); // keep same names
+                }
+                renderState.setMaxDepth(getMaxDepth(context));
+                renderState.setSubMenuFilter(getSubMenuFilter(context));
+                
+                modelMenu.renderMenuString(writer, context, menuStringRenderer);
+            } finally {
+                // SCIPIO: restore the previous render state just in case
+                MenuRenderState.store(context, prevRenderState);
+            }
+            
+            // SCIPIO: added scope protect
+            if (protectScope) {
+                UtilGenerics.<MapStack<String>>cast(context).pop();
+            }
         }
 
         public ModelMenu getModelMenu(Map<String, Object> context) {
@@ -1826,6 +1871,43 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getLocationExdr() {
             return locationExdr;
+        }
+        
+        public FlexibleStringExpander getShareScopeExdr() { // SCIPIO: added
+            return shareScopeExdr;
+        }
+        
+        public boolean shareScope(Map<String, Object> context) { // SCIPIO: added
+            String shareScopeString = this.shareScopeExdr.expandString(context);
+            // defaults to false, so anything but true is false
+            return "true".equals(shareScopeString);
+        }
+
+        public FlexibleStringExpander getMaxDepthExdr() {
+            return maxDepthExdr;
+        }
+        
+        public Integer getMaxDepth(Map<String, Object> context) {
+            String maxDepthStr = this.maxDepthExdr.expandString(context);
+            if (UtilValidate.isEmpty(maxDepthStr)) {
+                return null;
+            } else {
+                try {
+                    return Integer.parseInt(maxDepthStr);
+                } catch (NumberFormatException e) {
+                    Debug.logError(e, "Menu max-depth expression '" + this.maxDepthExdr.getOriginal() + "' evaluated to invalid number "
+                            + "(from include-menu element referencing " + this.locationExdr.getOriginal() + "#" + this.nameExdr.getOriginal() + ")", module);
+                    return null;
+                }
+            }
+        }
+
+        public FlexibleStringExpander getSubMenuFilterExdr() {
+            return subMenuFilterExdr;
+        }
+        
+        public String getSubMenuFilter(Map<String, Object> context) {
+            return this.subMenuFilterExdr.expandString(context);
         }
     }
 

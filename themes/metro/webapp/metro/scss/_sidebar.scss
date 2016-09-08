@@ -81,6 +81,7 @@ $sidebar-width: 200px;
     font-weight: $side-nav-font-weight;
     margin: $side-nav-list-margin;
     list-style: none;
+    //background: $jet;
 
     // Scipio: added child selector here
     > a:not(.button) {
@@ -88,7 +89,7 @@ $sidebar-width: 200px;
       display: block;
       margin: $side-nav-link-margin;
       padding: $side-nav-link-padding;
-      border-left: 5px solid $jet;
+      border-left: 5px solid transparent;
       
       &:hover,
       &:focus {
@@ -135,7 +136,6 @@ $sidebar-width: 200px;
         }
         
     &.disabled {
-            padding: $side-nav-link-padding;
             color: $aluminum;
             cursor: $input-disabled-cursor;
             
@@ -146,6 +146,33 @@ $sidebar-width: 200px;
                 background:none;
             }
         }
+        
+    ul{ 
+        li {
+            font-size: $side-nav-font-size*0.9;
+            
+            > a:not(.button) {
+               background: none;
+               border-left-width:3px;
+               border-color: transparent;
+               
+                &:hover,
+                &:focus {
+                   background: scale-color($side-nav-link-bg-hover, $lightness:-20%);;
+                   border-color: scale-color($primary-color,$lightness:-20%);
+                   border-left-width:3px;
+                }
+                &:active {
+                    
+                }
+            }
+            &.active > a:first-child:not(.button) {
+                   background: scale-color($side-nav-link-bg-hover, $lightness:-20%);
+                   border-color: scale-color($primary-color,$lightness:-20%);
+                   border-left-width:3px;
+                }
+            }
+      }
   }
 }
 
@@ -262,3 +289,19 @@ $sidebar-width: 200px;
     .top-bar, #content-main-section {margin-left:0px ;}
     } 
 }
+
+.side-nav {
+    /* Nested sidebar menu element */
+    .menu-type-sidebar.nested-sametype {
+        /* NOTE: this will clash with some of the above; best-effort */
+        /* FIXME?: the side-nav-nested was originally supposed to be applied here?... the nested ones...
+          it's what applied the margin-left... but now it's applied to something else... so here is the margin alone...
+        @include side-nav-nested; */
+        margin-left: rem-calc(12);
+        /* extras for metro */
+        padding-top: 0;
+        padding-bottom: 0;
+        
+    }
+}
+

@@ -98,6 +98,7 @@ import org.ofbiz.widget.model.ModelScreenWidget.Screenlet;
 import org.ofbiz.widget.model.ModelScreenWidget.Section;
 import org.ofbiz.widget.model.ModelScreenWidget.Tree;
 import org.ofbiz.widget.model.ModelSingleForm;
+import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelTree;
 import org.ofbiz.widget.model.ModelTree.ModelNode;
 import org.ofbiz.widget.model.ModelTree.ModelNode.ModelSubNode;
@@ -577,5 +578,10 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
                 fieldInfo.accept(fieldInfoGatherer);
             }
         }
+    }
+
+    @Override
+    public void visit(ModelSubMenu subMenu) throws Exception {
+        // SCIPIO: TODO?
     }
 }

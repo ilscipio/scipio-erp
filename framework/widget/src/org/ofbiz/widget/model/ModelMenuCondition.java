@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
+
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.w3c.dom.Element;
 
@@ -26,7 +28,8 @@ import org.w3c.dom.Element;
  * 
  * @see <code>widget-menu.xsd</code>
  */
-public final class ModelMenuCondition {
+@SuppressWarnings("serial")
+public final class ModelMenuCondition implements Serializable {
 
     /*
      * ----------------------------------------------------------------------- *

@@ -1866,7 +1866,7 @@
         <value xml:lang="zh_TW">關</value>
     </property>
     <property key="CommonCode">
-        <value xml:lang="en">Code </value>
+        <value xml:lang="en">Code</value>
     </property>
     <property key="CommonCollapse">
         <value xml:lang="ar">طوي</value>
@@ -16269,5 +16269,10 @@
     </property>
     <property key="CommonIteration">
         <value xml:lang="en">Iteration</value>
+    </property>
+    <property key="CommonRename">
+        <value xml:lang="de">Umbenennen</value>
+        <value xml:lang="en">Rename</value>
+        <value xml:lang="fr">Renommer</value>
     </property>
 </resource>

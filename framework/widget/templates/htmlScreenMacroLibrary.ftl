@@ -159,8 +159,10 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#-- Scipio: new params: menuRole, titleStyle -->
 <#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="" extraArgs...>
-    <#-- now delegates to Scipio implementation. TODO? this call is still too closely based on this macro and its args; rework later -->
-    <@section_core open=true close=false id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed contentId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
+    <#-- now delegates to Scipio implementation. -->
+    <#-- NOTE (2016-09-09): We NO LONGER pass collapsibleAreaId - there is no explicit attribute in screen widgets, 
+        and we should let @section_core assign a default so it is consistent system-wide: contentId=collapsibleAreaId -->
+    <@section_core open=true close=false id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed contentId="" expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
         showMore=showMore collapsed=collapsed javaScriptEnabled=javaScriptEnabled fromScreenDef=true menuRole=menuRole requireMenu=false forceEmptyMenu=false hasContent=true titleStyle=titleStyle titleContainerStyle="" titleConsumeLevel=true 
         autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" />
 </#macro>

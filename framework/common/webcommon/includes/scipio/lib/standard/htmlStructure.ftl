@@ -714,29 +714,30 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
                               {{{generic}}} explicitly expects themes not to change defaults (unless absolutely necessary) whereas it's more acceptable
                               to change {{{default}}} defaults. Custom types may be defined.
                               TODO: Many of the parameters currently not configurable in themes.
-    class                   = ((css-class)) CSS classes, on outer cell element (affects title) (NOT on outermost container)
+    id                      = Section ID, on outermost container and used as prefix for other element IDs
+                              NOTE: By convention (and for compability) this will always be on the outermost container.
+    containerId             = Section ID, on outermost container only (special case of {{{id}}})    
+                              Unlike {{{id}}}, {{{containerId}}} is not used to generate any other IDs, although
+                              it may still be used by the macro where an ID is needed to reference the section (such as any javascript).
+                              NOTE (2016-09-09): If both present, {{{containerId}}} now overrides {{{id}}} on the outer container (previously was the opposite).
+    contentId               = Explicit ID for inner content container
+    containerClass          = ((css-class)) CSS classes, on outermost container
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    cellClass               = ((css-class)) CSS classes, on outer cell element (affects title) (NOT on outermost container)
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               NOTE: boolean false has no effect here
                               NOTE: Grid size classes may be specified here to limit dimensions. 
-    containerClass          = ((css-class)) CSS classes, on outermost container
-                              Supports prefixes (see #compileClassArg for more info):
-                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
-    id                      = Section ID, on outermost container
-                              NOTE: By convention (and for compability) this will always be on the outermost container.
-    containerId             = Section ID, on outermost container (nearly synonym for {{{id}}})    
-                              Unlike {{{id}}}, {{{containerId}}} is never used to generate related IDs automatically.
-                              If {{{id}}} is specified, {{{containerId}}} will not take effect because
-                              they both apply to the same container.
-    style                   = Legacy HTML style attribute, on outermost container
-    containerStyle          = Legacy HTML style attribute, on outermost container (synonym for {{{style}}})
-    attribs                 = ((map)) Extra attributes, on outer container
-    containerAttribs        = ((map)) Extra attributes, on outer container (synonym for {{{attribs}}})
-    contentId               = Explicit ID for inner content container
+    class                   = ((css-class)) CSS classes, on outer cell element (alias for {{{cellClass}}})
     contentClass            = ((css-class)) CSS classes, on inner content container
+    containerStyle          = Legacy HTML style attribute, on outermost container
+    style                   = Legacy HTML style attribute, on outermost container (alias for {{{containerStyle}}})
     contentStyle            = Legacy HTML style attribute, on inner content container
+    containerAttribs        = ((map)) Extra attributes, on outer container
+    attribs                 = ((map)) Extra attributes, on outer container (alias for {{{containerAttribs}}})
     contentAttribs          = ((map)) Extra attributes, on inner content container
     title                   = Section title
     titleClass              = ((css-class)) Section title class 
@@ -788,7 +789,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
                               (workaround for lack of CSS :blank and possibly other browser limitations)
 -->
 <#assign section_defaultArgs = {
-  "type":"", "id":"", "title":"", "style":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
+  "type":"", "id":"", "title":"", "style":"", "cellClass":-1, "class":-1, "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
   "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayoutTitle":"", "menuLayoutGeneral":"", 
   "titleContainerClass":"", "menuContainerClass":"", "menuTitleContainerClass":"", "menuRole":"", 
   "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleClass":"", 
@@ -805,19 +806,11 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#if !type?has_content>
       <#local type = "default">
     </#if>
-    <#if id?has_content>
-      <#if !contentId?has_content>
-        <#local contentId = id + "_content">
-      </#if>
-      <#if !menuId?has_content>
-        <#local menuId = id + "_menu">
-      </#if>
-    </#if>
   <#else>
     <#-- section_core has its own stack; don't need to preserve these -->
     <#local class = "">  
   </#if>
-  <@section_core id=id contentId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
+  <@section_core id=id contentId=contentId title=title cellClass=cellClass class=class style=style padded=padded menuContent=menuContent 
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral 
     titleContainerClass=titleContainerClass menuContainerClass=menuContainerClass menuTitleContainerClass=menuTitleContainerClass menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu menuItemsInlined=menuItemsInlined hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
@@ -836,7 +829,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     fromScreenDef     = hint of whether called from Ofbiz screen renderer/xml (true) or FTL macros (false)
     hasContent        = hint to say there will be content; workaround for not being able to assume that all browsers have the CSS support to check if content present -->
 <#assign section_core_defaultArgs = {
-  "type":"", "id":"", "title":"", "class":"", "style":"", "collapsible":false, "saveCollapsed":true, "contentId":"", 
+  "type":"", "id":"", "title":"", "cellClass":-1, "class":-1, "style":"", "collapsible":false, "saveCollapsed":true, "contentId":"", 
   "expandToolTip":true, "collapseToolTip":true, "fullUrlString":"", "padded":false, "menuContent":"", 
   "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
   "menuLayoutTitle":"", "menuLayoutGeneral":"", "titleContainerClass":"", "menuContainerClass":"", "menuTitleContainerClass":"",
@@ -857,10 +850,31 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     </#if>
     <#local styleName = type?replace("-","_")>
 
-    <#if id?has_content>
-      <#-- NOTE: This basically does nothing currently (containerId will not be used if id is present); for consistency and future use only -->
-      <#if !containerId?has_content>
-        <#local containerId = id + "_container">
+    <#local idPrefix = id><#-- NOTE: must be before containerId = id assign -->
+    <#if containerId?has_content>
+      <#-- NOTE: we can use containerId as the basic ID, but we don't set idPrefix to it because don't want
+          to generate other IDs from it -->
+      <#local id = containerId>
+    <#elseif id?has_content>
+      <#local containerId = id><#-- this was an error: + "_container" -->
+    </#if>
+
+    <#if idPrefix?has_content>
+      <#if !contentId?has_content>
+        <#local contentId = idPrefix + "_content">
+      </#if>
+      <#if !menuId?has_content>
+        <#local menuId = idPrefix + "_menu">
+      </#if>
+    </#if>
+
+    <#-- uses special -1 value for detecting presence. because explicitly specified empty value "" on class=""
+        must be recognized as well as booleans -->
+    <#if cellClass?is_number>
+      <#if !class?is_number>
+        <#local cellClass = class>
+      <#else>
+        <#local cellClass = "">
       </#if>
     </#if>
   
@@ -1004,8 +1018,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
           </#if>
     
           <#if !menuId?has_content>
-            <#if id?has_content>
-              <#local menuId = "${id}_mainmenu">
+            <#if idPrefix?has_content>
+              <#local menuId = idPrefix + "_menu">
             </#if>
           </#if>
         
@@ -1107,8 +1121,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#-- save stack of all the args passed to markup macros that have open/close 
         so they don't have to remember a stack themselves -->
     <#local dummy = pushRequestStack("scipioSectionMarkupStack", {
-      "type":type, "styleName":styleName, "class":class, "contentFlagClasses":contentFlagClasses, 
-      "id":id, "title":title, "style":style, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup, "menuMarkup":menuMarkup,
+      "type":type, "styleName":styleName, "cellClass":cellClass, "contentFlagClasses":contentFlagClasses, 
+      "id":id, "idPrefix":idPrefix, "title":title, "style":style, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup, "menuMarkup":menuMarkup,
       "containerClass":containerClass, "containerId":containerId, "containerStyle":containerStyle, 
       
       "collapsed":collapsed, "contentId":contentId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
@@ -1135,7 +1149,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
   <#-- TODO: collapsibleAreaId was renamed to contentId, so should remove; still passing it for _markup macro compatibility for now -->
   <@section_markup_container type=type styleName=styleName open=open close=close
-    sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuTitleContentArgs={} menuContent=menuMarkup menuContentArgs={} class=class contentClass=contentClass contentStyle=contentStyle
+    sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuTitleContentArgs={} menuContent=menuMarkup menuContentArgs={} class=cellClass contentClass=contentClass contentStyle=contentStyle
     contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed contentId=contentId collapsibleAreaId=contentId
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
@@ -1198,9 +1212,10 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   -->
 </#function>
 
-<#-- @section container markup - theme override -->
+<#-- @section container markup - theme override 
+    NOTE: class refers to cellClass (class for outer cell container) -->
 <#macro section_markup_container type="" styleName="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuTitleContentArgs={} menuContent="" menuContentArgs={} class="" 
-    contentClass="" contentStyle="" contentFlagClasses="" id="" title="" style="" collapsed=false contentId="" collapsible=false saveCollapsed=true 
+    contentClass="" contentStyle="" contentFlagClasses="" id="" idPrefix="" title="" style="" collapsed=false contentId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString="" containerClass="" containerId="" containerStyle=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuLayoutGeneral="" menuRole="" requireMenu=false forceEmptyMenu=false 
     containerAttribs={} containerExcludeAttribs=[] contentAttribs={} contentExcludeAttribs=[]
@@ -1212,7 +1227,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-    <div<@compiledClassAttribStr class=containerClass /><#if id?has_content> id="${id}"<#elseif containerId?has_content> id="${containerId}"</#if><#rt>
+    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#rt>
         <#lt><#if style?has_content> style="${style}"<#elseif containerStyle?has_content> style="${containerStyle}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.

@@ -3480,9 +3480,17 @@ This could change to <code>&lt;button...&gt;...&lt;/button&gt;</code> without no
                             <code>text</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Display text</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -from global styles-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Display text, for text-link and button submits</span>
                             <br/>
-                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If omitted, a default &quot;Submit&quot; text is used from global styles.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Reserved values: If set to empty space &quot; &quot; or &quot;_NO_BTN_MARKUP_&quot;,
+button markup is not rendered (shows progress only) (the empty space is from a stock form widget convention).          </div>
+          <div class="lib-text-note">
             <strong>NOTE: </strong>
 <code>value</code> arg is also accepted instead of <code>text</code>.          </div>
 </span>
@@ -4104,6 +4112,19 @@ it is better to have submitFlagParam specified, easiest using <a href="#entry-fi
                             <span class="lib-entry-param-desc-shortdesc"> Default param value to use if submitFlagParam checks out</span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitError</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|&quot;&quot;, default: &quot;&quot;)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Explicit success/error flag</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If not specified as boolean (empty string), uses isError context variable.        </span>
+</span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -4262,6 +4283,19 @@ See <a href="#entry-getAutoValue">#getAutoValue</a> for possible values.        
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 See <a href="#entry-getAutoValue">#getAutoValue</a> for info.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>submitError</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|&quot;&quot;, default: &quot;&quot;)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Explicit success/error flag</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If not specified as boolean (empty string), uses isError context variable.        </span>
 </span>
                         </td>
                       </tr>

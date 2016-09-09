@@ -652,8 +652,8 @@ inline having priority.          </div>
                             <span class="lib-entry-param-desc-shortdesc">List of maps, where each hash contains arguments representing a menu item,</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-same as <a href="#entry-menuitem">@menuitem</a> macro parameters.
-alternatively, the items can be specified as nested content.        </span>
+Same as <a href="#entry-menuitem">@menuitem</a> macro parameters.
+Alternatively, the items can be specified as nested content.        </span>
 </span>
                         </td>
                       </tr>
@@ -745,6 +745,20 @@ in case it is needed a nested menu behaves as a top-level menu (by passing false
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>menuLevel</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -empty, automatic-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Override to tell the macro which level it&#39;s on</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+The menu macro will try to figure out automatically if not specified.
+Starts at 1.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>parentMenuType</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -752,6 +766,41 @@ in case it is needed a nested menu behaves as a top-level menu (by passing false
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 This is usually determined automatically, but in esoteric cases may need to specify.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>active</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Indicates it is the parent menu of an active item, either target or ancestor</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+NOTE(2016-08-30): Is currently NOT determined automatically, only in menu widgets
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active&quot; translates to (&quot;selected&quot; OR &quot;selected ancestor&quot;) in menu widget terminology (see CommonMenus.xml).          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>activeTarget</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|, default: -empty/unspecified/unknown-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Indicates it is the parent menu of an active target but not ancestor menu item (current page)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If true, implies active. If explicit false, means active ancestor. If not set, unknown or unspecified by template.
+NOTE(2016-09-01): currently this is NOT determined automatically except for menu widgets.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active target&quot; translates to &quot;selected&quot; item in menu widget terminology (see CommonMenus.xml)          </div>
 </span>
                         </td>
                       </tr>
@@ -1022,7 +1071,30 @@ but other characters should not be manually escaped (apart from URL parameter en
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Whether menu item active (current page)</span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether menu item active, either target or ancestor (current page)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active&quot; translates to (&quot;selected&quot; OR &quot;selected ancestor&quot;) in menu widget terminology (see CommonMenus.xml).          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>activeTarget</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|, default: -empty/unspecified/unknown-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether menu item is the active target but not ancestor (current page)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If true, implies active. If explicit false, means active ancestor. If not set, unknown or unspecified by template.
+NOTE(2016-09-01): currently this is NOT determined automatically.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active target&quot; translates to &quot;selected&quot; item in menu widget terminology (see CommonMenus.xml)          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -1705,6 +1777,13 @@ Does not affect paramStr - caller must handle.          </div>
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Renders a menu in a tree fashion.</p>
                       <div class="lib-entry-extradesc">
+        <p>
+The tree can be defined in nested or flat format to describe the hierarchy, and using either
+macro calls or by passing item lists of maps.        </p>
+        <p>
+For <code>settings</code> and <code>plugins</code> map arguments, child map elements which should not
+be interpreted as string but rather as script (such as javascript functions) can be wrapped
+using <a href="../utilities.html#entry-wrapRawScript">#wrapRawScript</a>.        </p>
                       </div>
                   </div>
             
@@ -1731,6 +1810,26 @@ Does not affect paramStr - caller must handle.          </div>
         ]},
         {&quot;text&quot;:&quot;Some item&quot;}
     ]/&gt;
+
+    OR
+
+    &lt;@treemenu type=&quot;lib-basic&quot;&gt;
+        &lt;@treeitem text=&quot;Some item&quot; parent=&quot;#&quot; id=&quot;treeitem_3_root1&quot;/&gt;
+        &lt;@treeitem text=&quot;Some item&quot; parent=&quot;#&quot; id=&quot;treeitem_3_root2&quot;/&gt;
+        &lt;@treeitem text=&quot;Some item&quot; parent=&quot;treeitem_3_root2&quot; id=&quot;treeitem_3_child1&quot;/&gt;
+        &lt;@treeitem text=&quot;Some item&quot; parent=&quot;treeitem_3_root2&quot; id=&quot;treeitem_3_child2&quot;/&gt;
+        &lt;@treeitem text=&quot;Some item&quot; parent=&quot;#&quot; id=&quot;treeitem_3_root3&quot;/&gt;
+    &lt;/@treemenu&gt;
+
+    OR
+
+    &lt;@treemenu type=&quot;lib-basic&quot; items=[
+        {&quot;text&quot;:&quot;Some item&quot;, &quot;isRoot&quot;:true, &quot;id&quot;:&quot;treeitem_4_root1&quot;},
+        {&quot;text&quot;:&quot;Some item&quot;, &quot;isRoot&quot;:true, &quot;id&quot;:&quot;treeitem_4_root2&quot;},
+        {&quot;text&quot;:&quot;Some item&quot;, &quot;parent&quot;:&quot;treeitem_4_root2&quot;, &quot;id&quot;:&quot;treeitem_4_child1&quot;},
+        {&quot;text&quot;:&quot;Some item&quot;, &quot;parent&quot;:&quot;treeitem_4_root2&quot;, &quot;id&quot;:&quot;treeitem_4_child2&quot;},
+        {&quot;text&quot;:&quot;Some item&quot;, &quot;isRoot&quot;:true, &quot;id&quot;:&quot;treeitem_4_root3&quot;}
+    ]/&gt;
 </pre>                  </div>
             
               
@@ -1744,7 +1843,7 @@ Does not affect paramStr - caller must handle.          </div>
                             <code>type</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(lib-basic|lib-model, default: lib-model)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(lib-basic|lib-model, default: lib-basic)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">Type of tree and generation method</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
@@ -1759,6 +1858,9 @@ while <code>plugins</code> and <code>settings</code> are extra settings, as simp
       </li>
   </ul>
 </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-08-04: The default is now lib-basic.          </div>
 </span>
                         </td>
                       </tr>
@@ -1767,7 +1869,13 @@ while <code>plugins</code> and <code>settings</code> are extra settings, as simp
                             <code>library</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(jsTree, default: jsTree)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(jstree, default: jstree)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Library</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+is case insensitive          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -1819,8 +1927,8 @@ currently unused.          </div>
                             <span class="lib-entry-param-desc-shortdesc">List of maps, where each hash contains arguments representing a menu item,</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-same as <a href="#entry-treeitem">@treeitem</a> macro parameters.
-alternatively, the items can be specified as nested content.        </span>
+Same as <a href="#entry-treeitem">@treeitem</a> macro parameters.
+Alternatively, the items can be specified as nested content.        </span>
 </span>
                         </td>
                       </tr>
@@ -1851,11 +1959,11 @@ Depends on type and library:
         <div>  <ul>
       <li>
         <span>
-<code>lib-model</code>, <code>jsTree</code>: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item        </span>
+<code>lib-model</code>, <code>jstree</code>: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item        </span>
       </li>
       <li>
         <span>
-<code>lib-basic</code>, <code>jsTree</code>: unused. use <code>items</code> instead.        </span>
+<code>lib-basic</code>, <code>jstree</code>: unused. use <code>items</code> instead.        </span>
       </li>
   </ul>
 </div>
@@ -1876,11 +1984,11 @@ Depends on type and library:
         <div>  <ul>
       <li>
         <span>
-<code>lib-model</code>, <code>jsTree</code>: settings model class        </span>
+<code>lib-model</code>, <code>jstree</code>: settings model class        </span>
       </li>
       <li>
         <span>
-<code>lib-basic</code>, <code>jsTree</code>: map of settings, added alongside the core data        </span>
+<code>lib-basic</code>, <code>jstree</code>: map of settings, added alongside the core data        </span>
       </li>
   </ul>
 </div>
@@ -1901,13 +2009,13 @@ Depends on type and library:
         <div>  <ul>
       <li>
         <span>
-<code>lib-model</code>, <code>jsTree</code>: plugins model class        </span>
+<code>lib-model</code>, <code>jstree</code>: plugins model class        </span>
       </li>
       <li>
         <span>
-<code>lib-basic</code>, <code>jsTree</code>: list of maps where each map follows the format:
+<code>lib-basic</code>, <code>jstree</code>: list of maps where each map follows the format:
         </span>
-<pre>{&quot;name&quot;:(plugin name), &quot;settings&quot;:(map of jsTree plugin settings)}</pre>      </li>
+<pre>{&quot;name&quot;:(plugin name), &quot;settings&quot;:(map of jstree plugin settings)}</pre>      </li>
   </ul>
 </div>
 </span>
@@ -1973,6 +2081,52 @@ Must not specify &quot;on&quot; prefix.          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>defaultNodeIcon</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -depends on library-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Default (leaf) node icon</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Defaults:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>jstree</code>: <code>jstree-file</code> (in standard theme)        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>defaultDirIcon</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -depends on library-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Default non-leaf node icon</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Defaults:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>jstree</code>: <code>jstree-folder</code> (in standard theme)        </span>
+      </li>
+  </ul>
+</div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this will only be used for nested jstree format.
+It does not apply to the flat data format (with parent: attributes).          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>passArgs</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -2013,6 +2167,10 @@ Must not specify &quot;on&quot; prefix.          </div>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Renders a tree menu item.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Supports nested or flat format for hierarchy.        </p>
+                      </div>
                   </div>
             
               
@@ -2026,7 +2184,7 @@ Must not specify &quot;on&quot; prefix.          </div>
                             <code>id</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">item ID</span>
+                            <span class="lib-entry-param-desc-shortdesc">Item ID</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
@@ -2043,9 +2201,39 @@ Automatically added to attribs.          </div>
                             <span class="lib-entry-param-desc-shortdesc">Attributes for the item, either passed in this map, or inlined to this macro.</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-For jsTree, these are: icon, id, text, state (map container: opened, selected), type,
+For jstree, these are: icon, id, text, state (map container: opened, selected), type,
 li_attr (map), a_attr (map), etc. (see <a href="https://www.jstree.com/docs/json/">https://www.jstree.com/docs/json/</a> for full reference)
-At least &quot;text&quot; must be specified.        </span>
+At least &quot;text&quot; must be specified.
+&quot;children&quot; should be omitted and <code>items</code> arg used instead.
+&quot;parent&quot; should be used along with &quot;id&quot; when using flat format for hierarchy, where root nodes
+are marked using <code>parent=&quot;#&quot;</code> attribute here (or using <code>isRoot=true</code> macro argument).
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The <code>attribs</code> map macro argument itself is not that useful, and is mainly for bypassing
+the macro arguments, if needed, for example when an attribute shares the name of a macro
+argument with a different function. But in most cases it is more appropriate to specify inline arguments to the macro
+or even use the <code>args</code> map argument, rather than the <code>attribs</code> map argument.
+Using the <code>attribs</code> map argument may provide less abstraction.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>isRoot</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|&quot;&quot;, default: &quot;&quot;)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Helper flag to indicate root nodes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+This is mainly needed when using flat hierarchies.
+For jstree, passing true is the same as specifying <code>parent=&quot;#&quot;</code>.
+Default is <code>&quot;&quot;</code> which means unspecified.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-08-04: At current time, unspecified means no action is taken. Subject to change internally.          </div>
 </span>
                         </td>
                       </tr>
@@ -2058,8 +2246,8 @@ At least &quot;text&quot; must be specified.        </span>
                             <span class="lib-entry-param-desc-shortdesc">Children items: list of maps, where each hash contains arguments representing a menu item,</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-same as <a href="#entry-treeitem">@treeitem</a> macro parameters.
-alternatively, the items can be specified as nested content.        </span>
+Same as <a href="#entry-treeitem">@treeitem</a> macro parameters.
+Alternatively, the items can be specified as nested content.        </span>
 </span>
                         </td>
                       </tr>

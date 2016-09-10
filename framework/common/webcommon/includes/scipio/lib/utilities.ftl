@@ -2966,6 +2966,51 @@ TODO: implement as transform.
 
 <#-- 
 *************
+* attribSpecialVal
+************
+Returns a special value that can be passed to some attribs maps arguments on
+macros (works via @elemAttribStr).
+
+  * Parameters *
+    type                        = (none|empty) The special value type
+
+  * Related *
+    @elemAttribStr
+    #isAttribSpecialVal
+-->
+<#function attribSpecialVal type>
+  <#-- old (deprecated, should not even be here)
+  <#if type == "none">
+    <#return "_NO_VALUE_">
+  <#elseif type == "empty">
+    <#return "_EMPTY_VALUE_">
+  </#if>
+  -->
+  <#if !scipioAttribSpecialValMap??>
+    <#global scipioAttribSpecialValMap = toSimpleMap(Static["com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue"].getTypeNameMap())>
+  </#if>
+  <#return scipioAttribSpecialValMap[type]>
+</#function>
+
+<#-- 
+*************
+* isAttribSpecialVal
+************
+Checks if a value is one returned by #attribSpecialVal.
+
+  * Parameters *
+    object                      = the object to test                     
+    type                        = (none|empty|, default: -empty-) The special value type to test for, or empty for any special value
+
+  * Related *
+    #attribSpecialVal
+-->
+<#function isAttribSpecialVal val type="">
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue"].isSpecialValue(val, type)>
+</#function>
+
+<#-- 
+*************
 * formattedDate
 ************
 Renders a formatted date.

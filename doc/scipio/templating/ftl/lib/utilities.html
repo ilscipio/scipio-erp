@@ -136,7 +136,6 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-escapeUrlParamDelims">escapeUrlParamDelims</a>, 
                   <a href="#entry-evalToSimpleMap">evalToSimpleMap</a>, 
                   <a href="#entry-extractVars">extractVars</a>, 
-                  <a href="#entry-filterMap">filterMap</a>, 
                   <a href="#entry-getCurrentHeadingLevel">getCurrentHeadingLevel</a>, 
                   <a href="#entry-getCurrentSectionLevel">getCurrentSectionLevel</a>, 
                   <a href="#entry-getDefaultHeadingLevel">getDefaultHeadingLevel</a>, 
@@ -194,6 +193,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-addClassArgDefaultExplicit">addClassArgDefaultExplicit</a>, 
                   <a href="#entry-addClassArgReplacing">addClassArgReplacing</a>, 
                   <a href="#entry-addStringToBoolStringVal">addStringToBoolStringVal</a>, 
+                  <a href="#entry-attribSpecialVal">attribSpecialVal</a>, 
                   <a href="#entry-combineClassArgs">combineClassArgs</a>, 
                   <a href="#entry-compileClassArg">compileClassArg</a>, 
                   <a href="#entry-compileClassArgExplicit">compileClassArgExplicit</a>, 
@@ -221,6 +221,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getRequestVar">getRequestVar</a>, 
                   <a href="#entry-getScipioMacroDefaultArgs">getScipioMacroDefaultArgs</a>, 
                   <a href="#entry-globalsPutAll">globalsPutAll</a>, 
+                  <a href="#entry-isAttribSpecialVal">isAttribSpecialVal</a>, 
                   <a href="#entry-localsPutAll">localsPutAll</a>, 
                   <a href="#entry-makeAttribMapFromArgMap">makeAttribMapFromArgMap</a>, 
                   <a href="#entry-mergeArgMaps">mergeArgMaps</a>, 
@@ -274,6 +275,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-addParamsToStr">addParamsToStr</a>, 
         <a href="#entry-addParamsToUrl">addParamsToUrl</a>, 
         <a href="#entry-addStringToBoolStringVal">addStringToBoolStringVal</a>, 
+        <a href="#entry-attribSpecialVal">attribSpecialVal</a>, 
         <a href="#entry-camelCaseToDashLowerName">camelCaseToDashLowerName</a>, 
         <a href="#entry-clearVars">clearVars</a>, 
         <a href="#entry-combineClassArgs">combineClassArgs</a>, 
@@ -297,7 +299,6 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-evalToSimpleMap">evalToSimpleMap</a>, 
         <a href="#entry-extractPrefixedStyleNamesWithInt">extractPrefixedStyleNamesWithInt</a>, 
         <a href="#entry-extractVars">extractVars</a>, 
-        <a href="#entry-filterMap">filterMap</a>, 
         <a href="#entry-formatDate">formatDate</a>, 
         <a href="#entry-formatDateTime">formatDateTime</a>, 
         <a href="#entry-formattedDate">formattedDate</a>, 
@@ -332,6 +333,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-globalsPutAll">globalsPutAll</a>, 
         <a href="#entry-htmlContentString">htmlContentString</a>, 
         <a href="#entry-interpretRequestUri">interpretRequestUri</a>, 
+        <a href="#entry-isAttribSpecialVal">isAttribSpecialVal</a>, 
         <a href="#entry-isObjectType">isObjectType</a>, 
         <a href="#entry-joinStyleNames">joinStyleNames</a>, 
         <a href="#entry-joinStyleNamesList">joinStyleNamesList</a>, 
@@ -469,7 +471,7 @@ that use multiple <a href="#entry-render">@render</a> calls as well as nested sc
       <li>
         <span>
 <code>screen</code>: path and name, or path alone
-e.g.,
+Examples:
         </span>
 <pre>&quot;component://common/widget/CommonScreens.xml#listLocales&quot;
 &quot;component://common/widget/CommonScreens.xml&quot;</pre>      </li>
@@ -3583,63 +3585,6 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
           
           
           <hr />
-          <a name="entry-filterMap"></a>
-          <div class="lib-entry lib-entry-type-function">
-
-            <h3 class="lib-entry-title">filterMap</h3>
-            
-            <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>filterMap</code></span>
-                  </h4>
-            </div>
-            
-              
-                  <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns a copy of a map with the given keys excluded.</p>
-                      <div class="lib-entry-extradesc">
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-If the original map was a simple map, the result is a simple map as
-other; if not, a complex map is returned.          </div>
-                      </div>
-                  </div>
-            
-                  <div class="lib-entry-section-params">
-                    <h4>Parameters</h4>
-                    
-                      <div class="lib-entry-params-doc">
-              <table class="entry-parameters">
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>map</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>exclude</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>include</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-              </table>
-                      </div>
-
-                  </div>
-
-            
-          </div>
-          
-          
-          <hr />
           <a name="entry-toRawString"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -5509,6 +5454,11 @@ attribs map as-is. It no longer contains superfluous members (allArgNames, local
                   </div>  
             
 
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
             
           </div>
           
@@ -6056,7 +6006,7 @@ a replacing string (&quot;=&quot;).        </p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Special case of addClassArg where the required class will become a replacing string (&quot;=&quot; prefix),
+                      <p class="lib-entry-shortdesc">Special case of addClassArg where the required class will become a replacing string (&quot;=&quot; prefix, as in &quot;=my-class&quot;),
 though will not squash previous values.</p>
                       <div class="lib-entry-extradesc">
           <div class="lib-text-note">
@@ -7374,6 +7324,121 @@ This is applied after prefix ops are applied.        </span>
                       </div>
 
                   </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-attribSpecialVal"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">attribSpecialVal</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>attribSpecialVal</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns a special value that can be passed to some attribs maps arguments on
+macros (works via <a href="#entry-elemAttribStr">@elemAttribStr</a>).</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(none|empty)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> The special value type</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-elemAttribStr">@elemAttribStr</a>, 
+                       <a href="#entry-isAttribSpecialVal">#isAttribSpecialVal</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-isAttribSpecialVal"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">isAttribSpecialVal</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>isAttribSpecialVal</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Checks if a value is one returned by <a href="#entry-attribSpecialVal">#attribSpecialVal</a>.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>val</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(none|empty|, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> The special value type to test for, or empty for any special value</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>object</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">the object to test</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-attribSpecialVal">#attribSpecialVal</a>
+                     </p>
+                  </div>  
             
 
             

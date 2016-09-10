@@ -34,6 +34,9 @@ TODO:
 * fieldElemAttribStr
 ************
 Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific for these fields.
+
+NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE_}}} are now considered deprecated;
+    use #attribSpecialVal instead.
 -->
 <#macro fieldElemAttribStr attribs includeEmpty=false emptyValToken="_EMPTY_VALUE_" noValToken="_NO_VALUE_" exclude=[] noExclude=[]
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>

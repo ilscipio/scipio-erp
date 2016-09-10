@@ -26,8 +26,8 @@
     contentId="the-inner-div-id" 
     attribs={"my-extra-container-attrib":"test-value"} contentAttribs={"my-extra-content-attrib":attribSpecialVal("none"), "my-extra-content-attrib-2":attribSpecialVal("empty")}>
     <@heading attribs=makeMagTargetAttribMap("grid") id="grid">Grid</@heading>
-    <@row class="+${styles.grid_display!}">
-        <@cell columns=2>2</@cell>
+    <@row class="+${styles.grid_display!}" myExtraRowAttrib="some-value">
+        <@cell columns=2 myExtraCellAttrib="some-value">2</@cell>
         <@cell columns=4>4</@cell>
         <@cell columns=6>6</@cell>
     </@row>

@@ -356,6 +356,33 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra  attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Needed for names containing dashes.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineAttribs...</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra  attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>collapse</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -588,6 +615,33 @@ Default only used if class empty and no column sizes specified.        </span>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 This is often optional in CSS frameworks; affects float alignment.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra  attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Needed for names containing dashes.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineAttribs...</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra  attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
 </span>
                         </td>
                       </tr>
@@ -1278,7 +1332,67 @@ to change <code>default</code> defaults. Custom types may be defined.
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>class</code>
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Section ID, on outermost container and used as prefix for other element IDs</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+By convention (and for compability) this will always be on the outermost container.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>containerId</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Section ID, on outermost container only (special case of <code>id</code>)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Unlike <code>id</code>, <code>containerId</code> is not used to generate any other IDs, although
+it may still be used by the macro where an ID is needed to reference the section (such as any javascript).
+NOTE (2016-09-09): If both present, <code>containerId</code> now overrides <code>id</code> on the outer container (previously was the opposite).        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentId</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Explicit ID for inner content container</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>containerClass</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes, on outermost container</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>cellClass</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
@@ -1309,78 +1423,11 @@ Grid size classes may be specified here to limit dimensions.          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>containerClass</code>
+                            <code>class</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">CSS classes, on outermost container</span>
-                            <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
-        </span>
-        <div>  <ul>
-      <li>
-        <span>
-<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
-      </li>
-      <li>
-        <span>
-<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
-      </li>
-  </ul>
-</div>
-</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>id</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Section ID, on outermost container</span>
-                            <br/>
-                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-By convention (and for compability) this will always be on the outermost container.          </div>
-</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>containerId</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Section ID, on outermost container (nearly synonym for <code>id</code>)</span>
-                            <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
-Unlike <code>id</code>, <code>containerId</code> is never used to generate related IDs automatically.
-If <code>id</code> is specified, <code>containerId</code> will not take effect because
-they both apply to the same container.        </span>
-</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>style</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute, on outermost container</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>containerStyle</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute, on outermost container (synonym for <code>style</code>)</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>contentId</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">Explicit ID for inner content container</span>
+                            <span class="lib-entry-param-desc-shortdesc"> CSS classes, on outer cell element (alias for <code>cellClass</code>)</span>
                         </td>
                       </tr>
                       <tr>
@@ -1394,10 +1441,53 @@ they both apply to the same container.        </span>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>containerStyle</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute, on outermost container</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>style</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute, on outermost container (alias for <code>containerStyle</code>)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>contentStyle</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute, on inner content container</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>containerAttribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Extra attributes, on outer container</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Extra attributes, on outer container (alias for <code>containerAttribs</code>)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentAttribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Extra attributes, on inner content container</span>
                         </td>
                       </tr>
                       <tr>

@@ -21,8 +21,9 @@
     <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}">Cloning</li>
 </@nav>
 
-<@section containerClass="+my-container-class" class="+my-cell-class" containerId="this-id-never-shown" id="the-id-really-used"
-    contentId="the-inner-div-id"
+<#-- NOTE: class and cellClass parameters are interchangeable here, but cellClass disambiguates -->
+<@section containerClass="+my-container-class" cellClass="${styles.grid_small}12 my-cell-class" containerId="the-id-really-used" id="this-id-is-overridden-but-may-be-used-as-base-for-others"
+    contentId="the-inner-div-id" 
     attribs={"my-extra-container-attrib":"test-value"} contentAttribs={"my-extra-content-attrib":attribSpecialVal("none"), "my-extra-content-attrib-2":attribSpecialVal("empty")}>
     <@heading attribs=makeMagTargetAttribMap("grid") id="grid">Grid</@heading>
     <@row class="+${styles.grid_display!}" myExtraRowAttrib="some-value">
@@ -57,7 +58,7 @@
 
 </@section>
 
-<@section>
+<@section id="another-section-id-this-time-used-on-container-and-content">
   <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
   <@section title="Custom per-tile styles (overriding default styles)" relHeadingLevel=+1>
     <@grid type="tiles">  <#-- tilesType="default" -->

@@ -175,8 +175,10 @@ under the License.
                     </widgets>
                 </section>
                 -->
-                <screenlet title="Screenlets">
-                    <screenlet title="Complex title style" title-style="container:mycontainerclass;h:mytitleclass"></screenlet>
+                <screenlet title="Screenlets" id="my-widget-screenlet-parent" navigation-menu-name="WebtoolsInlineSectionMenuDemo">
+                    <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsInlineSectionMenuDemo"/>
+                    <label text="This section/screenlet has a special legacy Ofbiz navigation menu, rendered as section-inline menu type by default."/>
+                    <screenlet id="my-widget-screenlet-child" title="Complex title style" title-style="container:mycontainerclass;h:mytitleclass"></screenlet>
                     <screenlet title="Complex title style 2 (override title elem)" title-style="container:mycontainerclass;container:+mytitleclass"></screenlet>
                     <screenlet title="Complex title style 3 (no classes)" title-style="container;span"></screenlet>
                 </screenlet>

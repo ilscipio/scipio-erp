@@ -89,7 +89,9 @@ under the License.
         from using their own default-xxx-style="..." attributes on their menu items (which currently mostly come from CommonSideBarMenu).
         Ultimately there is no right way to organize the styling. 
         NOTE: the setting doesn't apply recursively; only to the sub-menu XML visible under this menu,
-        so the included menus could also need to be given the setting. 
+        so the included menus could also need to be given the setting.
+      * If the menu-items contain many conditions, it may be helpful to set
+        <menu always-expand-selected-or-ancestor="true".../> to allow selected items to always display regardless of conditions.
     -->
     <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="WebtoolsAppBar" recursive="full" />

@@ -1073,14 +1073,25 @@ public class ModelMenuItem extends ModelWidget {
     
     public boolean shouldBeRendered(Map<String, Object> context, MenuRenderState renderState) {
         // SCIPIO: first check if must always render selected or ancestor
+        Boolean result = null;
+        MenuItemState itemState = renderState.getItemState();
         if (this.getModelMenu().isAlwaysExpandSelectedOrAncestor() &&
-            renderState.getItemState().isSelectedOrAncestor()) {
-            return true;
+            itemState.isSelectedOrAncestor()) {
+            result = Boolean.TRUE;
         }
         if (this.condition != null) {
-            return this.condition.getCondition().eval(context);
+            // SCIPIO: only assign this if always-expand not set, but always store the result.
+            boolean conditionResult = this.condition.getCondition().eval(context);
+            if (result == null) {
+                result = conditionResult;
+            }
+            itemState.setConditionResult(conditionResult);
         }
-        return true;
+        if (result != null) {
+            return result;
+        } else {
+            return true;
+        }
     }
 
     public static class MenuLink implements Serializable {

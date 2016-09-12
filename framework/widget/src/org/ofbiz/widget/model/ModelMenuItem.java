@@ -40,6 +40,7 @@ import org.ofbiz.widget.model.CommonWidgetModels.AutoServiceParameters;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.CommonWidgetModels.Link;
 import org.ofbiz.widget.model.CommonWidgetModels.Parameter;
+import org.ofbiz.widget.model.MenuRenderState.MenuItemState;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
@@ -1006,7 +1007,11 @@ public class ModelMenuItem extends ModelWidget {
     
     public void renderMenuItemString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
             throws IOException {
-        if (shouldBeRendered(context)) {
+        // SCIPIO: figure out this logic early so the condition can use it
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        Object prevItemContext = prepareItemContext(context, renderState);
+
+        if (shouldBeRendered(context, renderState)) {
             AbstractModelAction.runSubActions(actions, context);
             String parentPortalPageId = getParentPortalPageId(context);
             if (UtilValidate.isNotEmpty(parentPortalPageId)) {
@@ -1024,9 +1029,54 @@ public class ModelMenuItem extends ModelWidget {
                 menuStringRenderer.renderMenuItem(writer, context, this);
             }
         }
+        
+        // SCIPIO: restore previous
+        restoreItemContext(context, prevItemContext, renderState);
     }
 
+    /**
+     * SCIPIO: prepares context for an item render and returns the previous
+     * item's state (if any).
+     */
+    public Object prepareItemContext(Map<String, Object> context) {
+        return prepareItemContext(context, MenuRenderState.retrieve(context));
+    }
+    
+    public Object prepareItemContext(Map<String, Object> context, MenuRenderState renderState) {
+        MenuItemState prevItemState = renderState.getItemState();
+        renderState.setItemState(MenuItemState.fromCurrent(this, context, renderState));
+        return prevItemState;
+    }
+    
+    /**
+     * SCIPIO: restores item context, after a call to prepareItemContext.
+     */
+    public void restoreItemContext(Map<String, Object> context, Object prevItemContext) {
+        restoreItemContext(context, prevItemContext, MenuRenderState.retrieve(context));
+    }
+    
+    public void restoreItemContext(Map<String, Object> context, Object prevItemContext, MenuRenderState renderState) {
+        renderState.setItemState((MenuItemState) prevItemContext);
+    }
+    
+    
+    /**
+     * Determines if item should be rendered, basic on condition and context.
+     * <p>
+     * SCIPIO: NOTE: This is ONLY valid if the context was prepared for the item
+     * using {@link #prepareItemContext(Map)}!
+     */
     public boolean shouldBeRendered(Map<String, Object> context) {
+        // SCIPIO: now delegated
+        return shouldBeRendered(context, MenuRenderState.retrieve(context));
+    }
+    
+    public boolean shouldBeRendered(Map<String, Object> context, MenuRenderState renderState) {
+        // SCIPIO: first check if must always render selected or ancestor
+        if (this.getModelMenu().isAlwaysExpandSelectedOrAncestor() &&
+            renderState.getItemState().isSelectedOrAncestor()) {
+            return true;
+        }
         if (this.condition != null) {
             return this.condition.getCondition().eval(context);
         }

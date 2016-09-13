@@ -144,11 +144,13 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getPropertyMsg">getPropertyMsg</a>, 
                   <a href="#entry-getPropertyMsgFromLocExpr">getPropertyMsgFromLocExpr</a>, 
                   <a href="#entry-getPropertyValue">getPropertyValue</a>, 
+                  <a href="#entry-getRequestNextElemIndex">getRequestNextElemIndex</a>, 
                   <a href="#entry-getStyleNamesByPrefix">getStyleNamesByPrefix</a>, 
                   <a href="#entry-getTextLabelFromExpr">getTextLabelFromExpr</a>, 
                   <a href="#entry-htmlContentString">htmlContentString</a>, 
                   <a href="#entry-interpretRequestUri">interpretRequestUri</a>, 
                   <a href="#entry-isObjectType">isObjectType</a>, 
+                  <a href="#entry-isRawScript">isRawScript</a>, 
                   <a href="#entry-joinStyleNames">joinStyleNames</a>, 
                   <a href="#entry-joinStyleNamesList">joinStyleNamesList</a>, 
                   <a href="#entry-makeOfbizContentUrl">makeOfbizContentUrl</a>, 
@@ -183,7 +185,8 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-urlContainsPathPart">urlContainsPathPart</a>, 
                   <a href="#entry-urlEndsWithPathPart">urlEndsWithPathPart</a>, 
                   <a href="#entry-urlStartsWithPath">urlStartsWithPath</a>, 
-                  <a href="#entry-varSection">varSection</a>
+                  <a href="#entry-varSection">varSection</a>, 
+                  <a href="#entry-wrapRawScript">wrapRawScript</a>
                 </p>
 </li>
             <li><a href="#section-API-WRITING UTILITIES">API-WRITING UTILITIES                </a>
@@ -218,6 +221,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getLastContainerSizes">getLastContainerSizes</a>, 
                   <a href="#entry-getPlainClassArgNames">getPlainClassArgNames</a>, 
                   <a href="#entry-getRequestStackAsList">getRequestStackAsList</a>, 
+                  <a href="#entry-getRequestStackSize">getRequestStackSize</a>, 
                   <a href="#entry-getRequestVar">getRequestVar</a>, 
                   <a href="#entry-getScipioMacroDefaultArgs">getScipioMacroDefaultArgs</a>, 
                   <a href="#entry-globalsPutAll">globalsPutAll</a>, 
@@ -325,7 +329,9 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-getPropertyValue">getPropertyValue</a>, 
         <a href="#entry-getRenderContextType">getRenderContextType</a>, 
         <a href="#entry-getRenderPlatformType">getRenderPlatformType</a>, 
+        <a href="#entry-getRequestNextElemIndex">getRequestNextElemIndex</a>, 
         <a href="#entry-getRequestStackAsList">getRequestStackAsList</a>, 
+        <a href="#entry-getRequestStackSize">getRequestStackSize</a>, 
         <a href="#entry-getRequestVar">getRequestVar</a>, 
         <a href="#entry-getScipioMacroDefaultArgs">getScipioMacroDefaultArgs</a>, 
         <a href="#entry-getStyleNamesByPrefix">getStyleNamesByPrefix</a>, 
@@ -335,6 +341,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-interpretRequestUri">interpretRequestUri</a>, 
         <a href="#entry-isAttribSpecialVal">isAttribSpecialVal</a>, 
         <a href="#entry-isObjectType">isObjectType</a>, 
+        <a href="#entry-isRawScript">isRawScript</a>, 
         <a href="#entry-joinStyleNames">joinStyleNames</a>, 
         <a href="#entry-joinStyleNamesList">joinStyleNamesList</a>, 
         <a href="#entry-localsPutAll">localsPutAll</a>, 
@@ -393,7 +400,8 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-urlEndsWithPathPart">urlEndsWithPathPart</a>, 
         <a href="#entry-urlStartsWithPath">urlStartsWithPath</a>, 
         <a href="#entry-varSection">varSection</a>, 
-        <a href="#entry-varsPutAll">varsPutAll</a>
+        <a href="#entry-varsPutAll">varsPutAll</a>, 
+        <a href="#entry-wrapRawScript">wrapRawScript</a>
       </p>
     </div>
 
@@ -498,25 +506,34 @@ If there is no path for the type or path is optional, then name alone should be 
                             <code>type</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(screen|menu|form|tree, default: screen)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(screen|menu|form|tree|section, default: screen)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">The type of resource to render</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
-<code>screen</code>: an Ofbiz screen (widget) by <code>component://</code> location        </span>
+<code>screen</code>: an Ofbiz screen (widget) by <code>component://</code> location
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+this does not go through <code>include-screen</code> element - use <code>include-screen</code> to force that if needed for some reason          </div>
       </li>
       <li>
         <span>
-<code>menu</code>: an Ofbiz menu (widget) by <code>component://</code> location        </span>
+<code>screen-widget</code>: an Ofbiz screen (widget) by <code>component://</code> location -
+same as <code>screen</code> but using alternate inclusion method using xml <code>include-screen</code>        </span>
       </li>
       <li>
         <span>
-<code>form</code>: an Ofbiz form (widget) by <code>component://</code> location        </span>
+<code>menu</code> or <code>include-menu</code> (currently same): an Ofbiz menu (widget) by <code>component://</code> location        </span>
       </li>
       <li>
         <span>
-<code>tree</code>: an Ofbiz tree (widget) by <code>component://</code> location        </span>
+<code>form</code> or <code>include-form</code> (currently same): an Ofbiz form (widget) by <code>component://</code> location        </span>
+      </li>
+      <li>
+        <span>
+<code>tree</code> or <code>include-tree</code> (currently same): an Ofbiz tree (widget) by <code>component://</code> location        </span>
       </li>
       <li>
         <span>
@@ -524,6 +541,12 @@ If there is no path for the type or path is optional, then name alone should be 
       </li>
   </ul>
 </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+screen, menu, form and tree (xxx) can be given a <code>include-</code> prefix. The <code>include-</code> version
+guarantees that the include will be processed using the XML <code>include-xxx</code> element.
+The non-<code>include-</code> versions may be implemented using other means
+and may be more efficient, but sometimes it may be needed to force the include mechanism.          </div>
 </span>
                         </td>
                       </tr>
@@ -611,6 +634,32 @@ output of <a href="#entry-render">@render</a>, pass true here.
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 not supported for <code>type=&quot;section&quot;</code> as this time.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>maxDepth</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -1)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Max menu levels to render [<code>menu</code> type only]</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See widget-menu.xsd <code>include-menu</code> element for details.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>subMenus</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(none|active|all, default: all)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Sub-menu render filter [<code>menu</code> type only]</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See widget-menu.xsd <code>include-menu</code> element for details.        </span>
 </span>
                         </td>
                       </tr>
@@ -4557,6 +4606,60 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
           
           
           <hr />
+          <a name="entry-getRequestNextElemIndex"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">getRequestNextElemIndex</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRequestNextElemIndex</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns and increases a global request count for a certain name.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+The value stored is the last one returned by the function. By default, starts at 1.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>name</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> The global request var name</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>start</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: 1)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> The initial value</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-objectAsScript"></a>
           <div class="lib-entry lib-entry-type-macro">
 
@@ -4571,6 +4674,11 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Output a Freemarker variable as a value in Javascript, JSON or similar script language.</p>
                       <div class="lib-entry-extradesc">
+        <p>
+Automatically tries to detect types and wrap in appropriate syntax.
+To manually prevent the interpretation of a value inside a structure such as a map,
+either use the <code>rawVal</code> parameter or wrap the nested value itself using
+<a href="#entry-wrapRawScript">#wrapRawScript</a>.        </p>
                       </div>
                   </div>
             
@@ -4664,6 +4772,111 @@ this is kept separate from the object for security reasons.          </div>
                       </div>
 
                   </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-wrapRawScript">#wrapRawScript</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-wrapRawScript"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">wrapRawScript</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>wrapRawScript</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Wraps a string in a special wrapper that when passed to script-handling macros (such as <a href="#entry-objectAsScript">@objectAsScript</a>) gets included as
+a raw script value (rather than enclosed in a string).</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>object</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">the string to wrap</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-objectAsScript">@objectAsScript</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-isRawScript"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">isRawScript</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>isRawScript</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Checks if the object was wrapped with <a href="#entry-wrapRawScript">#wrapRawScript</a>.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>object</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">the string to wrap</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-objectAsScript">@objectAsScript</a>
+                     </p>
+                  </div>  
             
 
             
@@ -6801,6 +7014,57 @@ It should only be used for optimization.          </div>
       </li>
   </ul>
 </div>
+</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-getRequestStackSize"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">getRequestStackSize</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRequestStackSize</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Gets the current size of the named stack.
+If the stack doesn&#39;t exist, returns void, so can be used to check if a stack exists using <code>??</code> operator.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>name</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                         </td>
                       </tr>

@@ -253,6 +253,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ConfigItem" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <!-- SCIPIO: session-based browsing aid -->
+                <script location="component://product/webapp/catalog/WEB-INF/actions/config/GetConfigLastProduct.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">

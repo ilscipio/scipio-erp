@@ -25,8 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCatalog"/>
-                <set field="activeMainMenuItem" value="catalogs"/>
-                <set field="activeSubMenuItem" value="FindCatalog"/>
+                <set field="activeSubMenuItem" value="FindCatalog"/><!-- SCIPIO: NOTE: this gets ignored, but leave for reference -->
                 <set field="labelTitleProperty" value="ProductCatalog"/>
             </actions>
             <widgets>

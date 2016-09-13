@@ -118,6 +118,7 @@ public class ModelMenuItem extends ModelWidget {
     private final Map<String, ModelSubMenu> subMenuMap; // SCIPIO: new sub-menu models (order preserved)
     private final List<ModelSubMenu> subMenuList; // SCIPIO: new sub-menu models
     
+    private final FlexibleStringExpander disabled; // SCIPIO: new
     
     // ===== CONSTRUCTORS =====
 
@@ -159,6 +160,7 @@ public class ModelMenuItem extends ModelWidget {
         else
             this.hideIfSelected = null;
         this.disableIfEmpty = menuItemElement.getAttribute("disable-if-empty");
+        this.disabled = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("disabled"));
         this.align = menuItemElement.getAttribute("align");
         this.alignStyle = menuItemElement.getAttribute("align-style");
         Integer position = null;
@@ -275,6 +277,7 @@ public class ModelMenuItem extends ModelWidget {
         this.condition = null;
         this.disabledTitleStyle = "";
         this.disableIfEmpty = "";
+        this.disabled = FlexibleStringExpander.getInstance("");
         this.entityName = "";
         this.hideIfSelected = null;
         //this.menuItemList = Collections.emptyList(); // SCIPIO: moved to ModelSubMenu
@@ -356,6 +359,7 @@ public class ModelMenuItem extends ModelWidget {
         this.condition = existingMenuItem.condition;
         this.disabledTitleStyle = existingMenuItem.disabledTitleStyle;
         this.disableIfEmpty = existingMenuItem.disableIfEmpty;
+        this.disabled = existingMenuItem.disabled;
         this.hideIfSelected = existingMenuItem.hideIfSelected;
         
         //this.menuItemList = existingMenuItem.menuItemList; // SCIPIO: moved to ModelSubMenu
@@ -527,6 +531,12 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.disableIfEmpty = existingMenuItem.disableIfEmpty;
         }
+        if (!overrideMenuItem.disabled.getOriginal().isEmpty()) {
+            this.disabled = overrideMenuItem.disabled;
+        } else {
+            this.disabled = existingMenuItem.disabled;
+        }
+        
         if (overrideMenuItem.hideIfSelected != null) {
             this.hideIfSelected = overrideMenuItem.hideIfSelected;
         } else {
@@ -619,6 +629,21 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getDisableIfEmpty() {
         return this.disableIfEmpty;
+    }
+    
+    public FlexibleStringExpander getDisabled() {
+        return this.disabled;
+    }
+    
+    public Boolean getDisabled(Map<String, Object> context) {
+        String res = this.disabled.expandString(context);
+        if ("true".equals(res)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(res)) {
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
     }
 
     public String getEntityName() {

@@ -259,6 +259,7 @@ under the License.
                                     <section>
                                         <actions>
                                             <set field="productCategoryAssociationMode" value="parent" />
+                                            <set field="addCategoryFormName" value="AddCategoryParent"/>
                                         </actions>
                                         <widgets>
                                             <include-screen name="ScipioAddCategoryAssociation"/>
@@ -271,6 +272,7 @@ under the License.
                                     <section>
                                         <actions>
                                             <set field="productCategoryAssociationMode" value="child" />
+                                            <set field="addCategoryFormName" value="AddCategoryChild"/>
                                         </actions>
                                         <widgets>
                                             <include-screen name="ScipioAddCategoryAssociation"/>

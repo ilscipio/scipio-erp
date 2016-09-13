@@ -1378,6 +1378,10 @@ Renders a menu in a tree fashion.
 The tree can be defined in nested or flat format to describe the hierarchy, and using either 
 macro calls or by passing item lists of maps.
 
+For {{{settings}}} and {{{plugins}}} map arguments, child map elements which should not
+be interpreted as string but rather as script (such as javascript functions) can be wrapped
+using #wrapRawScript.
+
 DEV NOTE: Currently this does not fully abstract the library used, because difficult without sacrificing options.
     But in theory it should be possible to translate attributes from one library to another.
                                  

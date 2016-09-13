@@ -23,18 +23,31 @@
     <screen name="CommonFeatureDecorator">
         <section>
             <actions>
-                <!-- SCIPIO: TODO?: review?
+                <!-- SCIPIO: TODO?: review? -->
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Features" />
-                -->
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->                    
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
+                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>             
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -63,6 +76,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeature"/>
                 <set field="activeMainMenuItem" value="featurecats"/>
+                <set field="activeSubMenuItem" value="Feature"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
                 <entity-and entity-name="SupplierProductFeature" list="supplierProductFeatures">
                     <field-map field-name="productFeatureId" from-field="parameters.productFeatureId"/>
@@ -289,7 +303,8 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/feature/EditFeatureGroups.ftl"/></html>
-                        </platform-specific>                    </decorator-section>
+                        </platform-specific>                    
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

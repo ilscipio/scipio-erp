@@ -270,6 +270,22 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="always-expand-selected-or-ancestor">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If this is true, then for a whole menu render including its sub-menus,
+                        a menu item will always be expanded (condition will always be true) 
+                        if it is the selected one or an ancestor of the selected one.
+                        This can be coded manually in condition elements (see its description) but is easier to
+                        turn on here. 
+                        Default: false</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-elements">
@@ -489,6 +505,15 @@ Features and Modifications:
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="condition" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Menu item condition.
+                            SCIPIO: This is a STOCK attribute. Added in Scipio are available in context for condition testing
+                            the variables:
+                            * currentMenuRenderState.itemState.selected (Boolean)
+                            * currentMenuRenderState.itemState.selectedAncestor (Boolean)
+                            * currentMenuRenderState.itemState.selectedOrAncestor (Boolean)
+                        </xs:documentation>
+                    </xs:annotation>
                     <xs:complexType>
                         <xs:complexContent>
                             <xs:extension base="ConditionRootType">
@@ -553,6 +578,15 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="associated-content-id" />
             <xs:attribute type="xs:string" name="hide-if-selected" />
             <xs:attribute type="xs:string" name="cell-width" />
+            <xs:attribute type="xs:string" name="disabled">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Boolean disabled attribute, more straightforward alternative to disable-if-empty.
+                        It must evaluate to explicit true or false to take effect. If it does, it takes
+                        precedence over disable-if-empty.
+                        NOTE: some state variables can be used in the expression, such as:
+                        * currentMenuRenderState.itemState.conditionResult (Boolean, if there was one)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="disable-if-empty" />
             <xs:attribute type="xs:string" name="disabled-title-style" />
             <xs:attribute type="xs:string" name="target-window" />

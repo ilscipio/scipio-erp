@@ -40,6 +40,7 @@ import org.ofbiz.widget.model.CommonWidgetModels.AutoServiceParameters;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.CommonWidgetModels.Link;
 import org.ofbiz.widget.model.CommonWidgetModels.Parameter;
+import org.ofbiz.widget.model.MenuRenderState.MenuItemState;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
@@ -117,6 +118,7 @@ public class ModelMenuItem extends ModelWidget {
     private final Map<String, ModelSubMenu> subMenuMap; // SCIPIO: new sub-menu models (order preserved)
     private final List<ModelSubMenu> subMenuList; // SCIPIO: new sub-menu models
     
+    private final FlexibleStringExpander disabled; // SCIPIO: new
     
     // ===== CONSTRUCTORS =====
 
@@ -158,6 +160,7 @@ public class ModelMenuItem extends ModelWidget {
         else
             this.hideIfSelected = null;
         this.disableIfEmpty = menuItemElement.getAttribute("disable-if-empty");
+        this.disabled = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("disabled"));
         this.align = menuItemElement.getAttribute("align");
         this.alignStyle = menuItemElement.getAttribute("align-style");
         Integer position = null;
@@ -274,6 +277,7 @@ public class ModelMenuItem extends ModelWidget {
         this.condition = null;
         this.disabledTitleStyle = "";
         this.disableIfEmpty = "";
+        this.disabled = FlexibleStringExpander.getInstance("");
         this.entityName = "";
         this.hideIfSelected = null;
         //this.menuItemList = Collections.emptyList(); // SCIPIO: moved to ModelSubMenu
@@ -355,6 +359,7 @@ public class ModelMenuItem extends ModelWidget {
         this.condition = existingMenuItem.condition;
         this.disabledTitleStyle = existingMenuItem.disabledTitleStyle;
         this.disableIfEmpty = existingMenuItem.disableIfEmpty;
+        this.disabled = existingMenuItem.disabled;
         this.hideIfSelected = existingMenuItem.hideIfSelected;
         
         //this.menuItemList = existingMenuItem.menuItemList; // SCIPIO: moved to ModelSubMenu
@@ -526,6 +531,12 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.disableIfEmpty = existingMenuItem.disableIfEmpty;
         }
+        if (!overrideMenuItem.disabled.getOriginal().isEmpty()) {
+            this.disabled = overrideMenuItem.disabled;
+        } else {
+            this.disabled = existingMenuItem.disabled;
+        }
+        
         if (overrideMenuItem.hideIfSelected != null) {
             this.hideIfSelected = overrideMenuItem.hideIfSelected;
         } else {
@@ -618,6 +629,21 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getDisableIfEmpty() {
         return this.disableIfEmpty;
+    }
+    
+    public FlexibleStringExpander getDisabled() {
+        return this.disabled;
+    }
+    
+    public Boolean getDisabled(Map<String, Object> context) {
+        String res = this.disabled.expandString(context);
+        if ("true".equals(res)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(res)) {
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
     }
 
     public String getEntityName() {
@@ -1006,7 +1032,11 @@ public class ModelMenuItem extends ModelWidget {
     
     public void renderMenuItemString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
             throws IOException {
-        if (shouldBeRendered(context)) {
+        // SCIPIO: figure out this logic early so the condition can use it
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        Object prevItemContext = prepareItemContext(context, renderState);
+
+        if (shouldBeRendered(context, renderState)) {
             AbstractModelAction.runSubActions(actions, context);
             String parentPortalPageId = getParentPortalPageId(context);
             if (UtilValidate.isNotEmpty(parentPortalPageId)) {
@@ -1024,13 +1054,69 @@ public class ModelMenuItem extends ModelWidget {
                 menuStringRenderer.renderMenuItem(writer, context, this);
             }
         }
+        
+        // SCIPIO: restore previous
+        restoreItemContext(context, prevItemContext, renderState);
     }
 
+    /**
+     * SCIPIO: prepares context for an item render and returns the previous
+     * item's state (if any).
+     */
+    public Object prepareItemContext(Map<String, Object> context) {
+        return prepareItemContext(context, MenuRenderState.retrieve(context));
+    }
+    
+    public Object prepareItemContext(Map<String, Object> context, MenuRenderState renderState) {
+        MenuItemState prevItemState = renderState.getItemState();
+        renderState.setItemState(MenuItemState.fromCurrent(this, context, renderState));
+        return prevItemState;
+    }
+    
+    /**
+     * SCIPIO: restores item context, after a call to prepareItemContext.
+     */
+    public void restoreItemContext(Map<String, Object> context, Object prevItemContext) {
+        restoreItemContext(context, prevItemContext, MenuRenderState.retrieve(context));
+    }
+    
+    public void restoreItemContext(Map<String, Object> context, Object prevItemContext, MenuRenderState renderState) {
+        renderState.setItemState((MenuItemState) prevItemContext);
+    }
+    
+    
+    /**
+     * Determines if item should be rendered, basic on condition and context.
+     * <p>
+     * SCIPIO: NOTE: This is ONLY valid if the context was prepared for the item
+     * using {@link #prepareItemContext(Map)}!
+     */
     public boolean shouldBeRendered(Map<String, Object> context) {
-        if (this.condition != null) {
-            return this.condition.getCondition().eval(context);
+        // SCIPIO: now delegated
+        return shouldBeRendered(context, MenuRenderState.retrieve(context));
+    }
+    
+    public boolean shouldBeRendered(Map<String, Object> context, MenuRenderState renderState) {
+        // SCIPIO: first check if must always render selected or ancestor
+        Boolean result = null;
+        MenuItemState itemState = renderState.getItemState();
+        if (this.getModelMenu().isAlwaysExpandSelectedOrAncestor() &&
+            itemState.isSelectedOrAncestor()) {
+            result = Boolean.TRUE;
         }
-        return true;
+        if (this.condition != null) {
+            // SCIPIO: only assign this if always-expand not set, but always store the result.
+            boolean conditionResult = this.condition.getCondition().eval(context);
+            if (result == null) {
+                result = conditionResult;
+            }
+            itemState.setConditionResult(conditionResult);
+        }
+        if (result != null) {
+            return result;
+        } else {
+            return true;
+        }
     }
 
     public static class MenuLink implements Serializable {
@@ -1187,6 +1273,14 @@ public class ModelMenuItem extends ModelWidget {
 
         public Link getLink() {
             return link;
+        }
+
+        public FlexibleStringExpander getUseWhenExdr() { // SCIPIO: new
+            return link.getUseWhenExdr();
+        }
+
+        public Boolean getUseWhen(Map<String, Object> context) { // SCIPIO: new
+            return link.getUseWhen(context);
         }
 
         public void renderLinkString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)

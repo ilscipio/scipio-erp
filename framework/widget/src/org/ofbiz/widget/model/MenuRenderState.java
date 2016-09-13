@@ -7,19 +7,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.collections.CompositeReadOnlyMap;
+import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
+
 /**
  * SCIPIO: a state passed around in context used to record info about the menu
  * render, such as sub-menu depth.
  */
 @SuppressWarnings("serial")
-public class MenuRenderState implements Map<String, Object>, Serializable {
+public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implements Serializable {
     
     public static final String CONTEXT_KEY = "currentMenuRenderState";
     
-    private final Map<String, Object> internalMap = new HashMap<String, Object>();
-    // some operations will be read-only, to prevent issues
-    private final Map<String, Object> readOnlyMap = Collections.unmodifiableMap(internalMap);
-
     private final ModelMenu modelMenu;
     // NOTE: these are also stored in the map, may change the redundancy later
     private int currentDepth;
@@ -29,12 +29,15 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     private transient boolean currentSubMenusOnly;
     private transient ModelMenu.MenuAndItem selectedMenuAndItem;
     
+    private transient MenuItemState itemState;
+    
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
         setCurrentDepth(1);
         setMaxDepth(1);
         setSubMenuFilter(null);
         this.selectedMenuAndItem = null;
+        this.itemState = null;
     }
     
     protected Object setArg(String key, Object value) {
@@ -133,6 +136,15 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
         String res = (String) this.get("menuCtxRole");
         return res != null ? res : "";
     }
+    
+    public MenuItemState getItemState() {
+        return itemState;
+    }
+    
+    public void setItemState(MenuItemState menuItemState) {
+        this.itemState = menuItemState;
+        this.put("itemState", menuItemState);
+    }
 
     /**
      * Gets selected submenu/item pair from model menu from cache.
@@ -173,64 +185,68 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     }
 
     @Override
-    public int size() {
-        return internalMap.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return internalMap.isEmpty();
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        return internalMap.containsKey(key);
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        return internalMap.containsValue(value);
-    }
-
-    @Override
-    public Object get(Object key) {
-        return internalMap.get(key);
-    }
-
-    @Override
     public Object put(String key, Object value) {
         return setArg(key, value);
     }
-
-    @Override
-    public Object remove(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
+    
     @Override
     public void putAll(Map<? extends String, ? extends Object> m) {
         setArgs(m);
     }
 
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
+    public static class MenuItemState extends CompositeReadOnlyMap<String, Object> implements Serializable {
+        private boolean selected;
+        private boolean selectedAncestor;
+        private Boolean conditionResult;
+        
+        public MenuItemState(boolean selected, boolean selectedAncestor) {
+            this(selected, selectedAncestor, null);
+            this.conditionResult = null;
+        }
+        
+        public MenuItemState(boolean selected, boolean selectedAncestor, Boolean conditionResult) {
+            this.selected = selected;
+            this.selectedAncestor = selectedAncestor;
+            this.conditionResult = conditionResult;
+            this.internalMap.put("selected", selected);
+            this.internalMap.put("selectedAncestor", selectedAncestor);
+            this.internalMap.put("selectedOrAncestor", (selected||selectedAncestor));
+        }
+        
+        public static MenuItemState fromCurrent(ModelMenuItem menuItem, Map<String, Object> context) {
+            return fromCurrent(menuItem, context, MenuRenderState.retrieve(context));
+        }
+        
+        public static MenuItemState fromCurrent(ModelMenuItem menuItem, Map<String, Object> context, 
+                MenuRenderState renderState) {
+            MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
+            ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+            ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
+            boolean selected = menuItem.isSame(selectedMenuItem);
+            boolean selectedAncestor = menuItem.isAncestorOf(selectedSubMenu);
+            return new MenuItemState(selected, selectedAncestor);
+        }
+        
+        public boolean isSelected() {
+            return selected;
+        }
+        
+        public boolean isSelectedAncestor() {
+            return selectedAncestor;
+        }
+        
+        public boolean isSelectedOrAncestor() {
+            return (selected||selectedAncestor);
+        }
 
-    @Override
-    public Set<String> keySet() {
-        return readOnlyMap.keySet();
-    }
+        public Boolean getConditionResult() {
+            return conditionResult;
+        }
 
-    @Override
-    public Collection<Object> values() {
-        return readOnlyMap.values();
+        public void setConditionResult(Boolean conditionResult) {
+            this.conditionResult = conditionResult;
+            this.internalMap.put("conditionResult", conditionResult);
+        }
     }
-
-    @Override
-    public Set<java.util.Map.Entry<String, Object>> entrySet() {
-        return readOnlyMap.entrySet();
-    }
-
 
 }

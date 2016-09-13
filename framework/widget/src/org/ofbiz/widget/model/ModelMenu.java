@@ -141,6 +141,8 @@ public class ModelMenu extends ModelWidget {
     private final String forceExtendsSubMenuModelScope;
     private final String forceAllSubMenuModelScope;
     
+    private final boolean alwaysExpandSelectedOrAncestor; // SCIPIO: new
+    
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
@@ -188,6 +190,7 @@ public class ModelMenu extends ModelWidget {
         String defaultSubMenuInstanceScope = "";
         String forceExtendsSubMenuModelScope = "";
         String forceAllSubMenuModelScope = "";
+        boolean alwaysExpandSelectedOrAncestor = false;
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
         String parentResource = menuElement.getAttribute("extends-resource");
@@ -234,6 +237,7 @@ public class ModelMenu extends ModelWidget {
                 selectedMenuItemContextFieldNameStr = parent.selectedMenuItemContextFieldNameStr;
                 selectedMenuContextFieldName = parent.selectedMenuContextFieldName;
                 menuContainerStyleExdr = parent.menuContainerStyleExdr;
+                alwaysExpandSelectedOrAncestor = parent.alwaysExpandSelectedOrAncestor;
             }
         }
         if (!menuElement.getAttribute("type").isEmpty())
@@ -312,6 +316,9 @@ public class ModelMenu extends ModelWidget {
         if (!menuElement.getAttribute("force-all-sub-menu-model-scope").isEmpty())
             forceAllSubMenuModelScope = menuElement.getAttribute("force-all-sub-menu-model-scope");
         
+        if (!menuElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) 
+            alwaysExpandSelectedOrAncestor = "true".equals(menuElement.getAttribute("always-expand-selected-or-ancestor"));
+        
         this.autoSubMenuNames = autoSubMenuNames;
         this.defaultSubMenuModelScope = defaultSubMenuModelScope;
         this.defaultSubMenuInstanceScope = defaultSubMenuInstanceScope;
@@ -350,6 +357,7 @@ public class ModelMenu extends ModelWidget {
         this.tooltip = tooltip;
         this.type = type;
         this.itemsSortMode = itemsSortMode;
+        this.alwaysExpandSelectedOrAncestor = alwaysExpandSelectedOrAncestor;
         
         CurrentMenuDefBuildArgs currentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(this);
 
@@ -1568,11 +1576,20 @@ public class ModelMenu extends ModelWidget {
         return this.itemsSortMode;
     }
 
+    /**
+     * Returns rendered menu item count.
+     */
     public int renderedMenuItemCount(Map<String, Object> context) {
         int count = 0;
         for (ModelMenuItem item : this.menuItemList) {
+            // SCIPIO: every item needs context prepare for it now, otherwise conditions and count may be wrong
+            MenuRenderState renderState = MenuRenderState.retrieve(context);
+            Object prevItemContext = item.prepareItemContext(context, renderState);
+            
             if (item.shouldBeRendered(context))
                 count++;
+            
+            item.restoreItemContext(context, prevItemContext, renderState);
         }
         return count;
     }
@@ -1595,6 +1612,10 @@ public class ModelMenu extends ModelWidget {
 
     public String getForceAllSubMenuModelScope() {
         return forceAllSubMenuModelScope;
+    }
+    
+    public boolean isAlwaysExpandSelectedOrAncestor() {
+        return this.alwaysExpandSelectedOrAncestor;
     }
 
     /**

@@ -45,6 +45,7 @@ import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.MenuRenderState;
+import org.ofbiz.widget.model.MenuRenderState.MenuItemState;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 import org.ofbiz.widget.model.ModelMenuItem;
@@ -199,7 +200,17 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         return environment;
     }
 
+    
+    /**
+     * SCIPIO: NOTE: this now also considers the straight "disabled" attribute new in Scipio.
+     */
     private boolean isDisableIfEmpty(ModelMenuItem menuItem, Map<String, Object> context) {
+        // SCIPIO: check the direct attribute first
+        Boolean disabledDirect = menuItem.getDisabled(context);
+        if (disabledDirect != null) {
+            return disabledDirect;
+        }
+        
         boolean disabled = false;
         String disableIfEmpty = menuItem.getDisableIfEmpty();
         if (UtilValidate.isNotEmpty(disableIfEmpty)) {
@@ -223,9 +234,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //Boolean hideIfSelected = menuItem.getHideIfSelected();
         //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-        MenuRenderState renderState = MenuRenderState.retrieve(context);
-        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(context).getMenuItem();
-        return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
+        MenuItemState itemState = MenuRenderState.retrieve(context).getItemState();
+        return (hideIfSelected != null && hideIfSelected.booleanValue() && itemState.isSelected());
     }
     
     /**
@@ -255,7 +265,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         contextHandler.registerContext(writer, context);
         List<ModelMenuItem> menuItemList = ((ModelMenu) menu).getOrderedMenuItemList(context);
         for (ModelMenuItem currentMenuItem : menuItemList) {
-            renderMenuItem(writer, context, currentMenuItem);
+            // SCIPIO: this is WRONG, must go through the menu item's method, otherwise missing implementation
+            //renderMenuItem(writer, context, currentMenuItem);
+            currentMenuItem.renderMenuItemString(writer, context, (MenuStringRenderer) context.get("menuStringRenderer"));
         }
     }
 
@@ -399,10 +411,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // Scipio: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
-        ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+        //ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
+        MenuItemState menuItemState = renderState.getItemState();
         
-        boolean selected = menuItem.isSame(selectedMenuItem);
+        boolean selected = menuItemState.isSelected();
         boolean selectedAncestor = false;
         if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
@@ -421,7 +434,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
         } else {
             // SCIPIO: support selected-ancestor
-            selectedAncestor = menuItem.isAncestorOf(selectedSubMenu);
+            selectedAncestor = menuItemState.isSelectedAncestor();
             if (selectedAncestor) {
                 String selectedStyle = menuItem.getSelectedAncestorStyle();
                 // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
@@ -455,7 +468,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("toolTip", menuItem.getTooltip(context));
         String linkStr = "";
         MenuLink link = menuItem.getLink();
-        if (link != null) {
+        // SCIPIO: NEW: implement use-when on link
+        boolean useLink = (link != null && !Boolean.FALSE.equals(link.getUseWhen(context)));
+        if (useLink) {
             StringWriter sw = new StringWriter();
             renderLink(sw, context, link);
             linkStr = sw.toString();

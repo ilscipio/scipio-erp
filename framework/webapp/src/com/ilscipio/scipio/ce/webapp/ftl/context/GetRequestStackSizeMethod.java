@@ -23,12 +23,12 @@ import java.util.List;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: GetRequestStackAsListMethod - Freemarker Method providing support for a stack
+ * Scipio: GetRequestStackSizeMethod - Freemarker Method providing support for a stack
  * structure having request scope, with fallback to globals.
  */
-public class GetRequestStackAsListMethod extends RequestStackMethod {
+public class GetRequestStackSizeMethod extends RequestStackMethod {
 
-    public static final String module = GetRequestStackAsListMethod.class.getName();
+    public static final String module = GetRequestStackSizeMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -36,7 +36,7 @@ public class GetRequestStackAsListMethod extends RequestStackMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execGetAsList(args);
+        return execGetSize(args);
     }
 
 }

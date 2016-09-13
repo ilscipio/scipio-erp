@@ -101,4 +101,18 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         return LangFtlUtil.wrap(res, objectWrapper);
     }    
     
+    @SuppressWarnings("unchecked")
+    protected Object execGetSize(List args) throws TemplateModelException {
+        if (args == null || args.size() != 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+        }
+        TemplateModel nameModel = (TemplateModel) args.get(0);
+        if (!(nameModel instanceof TemplateScalarModel)) {
+            throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
+        }
+        String stackName = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel));
+        
+        return ContextFtlUtil.getRequestStackSize(stackName, CommonFtlUtil.getCurrentEnvironment());
+    }    
+    
 }

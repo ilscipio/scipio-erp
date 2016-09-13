@@ -144,6 +144,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getPropertyMsg">getPropertyMsg</a>, 
                   <a href="#entry-getPropertyMsgFromLocExpr">getPropertyMsgFromLocExpr</a>, 
                   <a href="#entry-getPropertyValue">getPropertyValue</a>, 
+                  <a href="#entry-getRequestNextElemIndex">getRequestNextElemIndex</a>, 
                   <a href="#entry-getStyleNamesByPrefix">getStyleNamesByPrefix</a>, 
                   <a href="#entry-getTextLabelFromExpr">getTextLabelFromExpr</a>, 
                   <a href="#entry-htmlContentString">htmlContentString</a>, 
@@ -328,6 +329,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-getPropertyValue">getPropertyValue</a>, 
         <a href="#entry-getRenderContextType">getRenderContextType</a>, 
         <a href="#entry-getRenderPlatformType">getRenderPlatformType</a>, 
+        <a href="#entry-getRequestNextElemIndex">getRequestNextElemIndex</a>, 
         <a href="#entry-getRequestStackAsList">getRequestStackAsList</a>, 
         <a href="#entry-getRequestStackSize">getRequestStackSize</a>, 
         <a href="#entry-getRequestVar">getRequestVar</a>, 
@@ -4597,6 +4599,60 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                        <a href="#entry-getCurrentHeadingLevel">#getCurrentHeadingLevel</a>
                      </p>
                   </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-getRequestNextElemIndex"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">getRequestNextElemIndex</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRequestNextElemIndex</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns and increases a global request count for a certain name.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+The value stored is the last one returned by the function. By default, starts at 1.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>name</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> The global request var name</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>start</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: 1)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> The initial value</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
             
 
             

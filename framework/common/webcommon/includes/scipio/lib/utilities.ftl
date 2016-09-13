@@ -1750,6 +1750,11 @@ The value stored is the last one returned by the function. By default, starts at
 ************
 Output a Freemarker variable as a value in Javascript, JSON or similar script language.
 
+Automatically tries to detect types and wrap in appropriate syntax.
+To manually prevent the interpretation of a value inside a structure such as a map,
+either use the {{{rawVal}}} parameter or wrap the nested value itself using
+#wrapRawScript.
+
 DEV NOTE: This is complicated in Ofbiz because Maps and objects from
     widget/java/groovy context don't behave same as FTL types.
     Currently can't use ?keys on Maps and generally for most types gotten from
@@ -1769,9 +1774,12 @@ TODO: doesn't handle dates (ambiguous?)
                               This can be a map or list of boolean to parallel the object, for recursion.
                               NOTE: is cumbersome for lists; mostly useful for maps.
                               NOTE: this is kept separate from the object for security reasons.
+                              
+  * Related *
+    #wrapRawScript
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
-  <#if rawVal?is_boolean && rawVal == true>
+  <#if (rawVal?is_boolean && rawVal == true)><#-- NOTE: there's a duplicate of this further down for performance reasons -->
     <#if isObjectType("string", object)>
       ${rawString(object)}<#t>
     <#else>
@@ -1812,6 +1820,8 @@ TODO: doesn't handle dates (ambiguous?)
       </#list>
       <#if wrap>}</#if><#rt>
     <#else>{}</#if>
+  <#elseif Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)><#-- NOTE: this is done at the end for performance reasons only (it really belongs beside rawVal test) -->
+      ${object?string}<#t>
   <#elseif object?is_string> 
     <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
@@ -1862,6 +1872,39 @@ TODO: doesn't handle dates (ambiguous?)
     needed for html in javascript strings -->
 <#function compressStringBlankspace str>
   <#return str?replace(r"[\n\s\r]+", " ", "r")>
+</#function>
+
+<#-- 
+*************
+* wrapRawScript
+************
+Wraps a string in a special wrapper that when passed to script-handling macros (such as @objectAsScript) gets included as
+a raw script value (rather than enclosed in a string).
+                   
+  * Parameters *
+    object                  = the string to wrap
+    
+  * Related *
+    @objectAsScript
+-->
+<#function wrapRawScript object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(rawString(object))>
+</#function>
+
+<#-- 
+*************
+* isRawScript
+************
+Checks if the object was wrapped with #wrapRawScript.
+                   
+  * Parameters *
+    object                  = the string to wrap
+    
+  * Related *
+    @objectAsScript
+-->
+<#function isRawScript object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
 </#function>
 
 <#-- 

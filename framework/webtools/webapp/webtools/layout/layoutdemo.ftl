@@ -1479,6 +1479,12 @@
     <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2" />
     <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
 
+
+    <p>Max depth arg test</p>
+    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" />
+    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" maxDepth="1" />
+    <@render type="include-menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" subMenus="none" />
+
   </@section>
 
 </@section>

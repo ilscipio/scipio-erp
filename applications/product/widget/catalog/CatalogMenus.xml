@@ -61,6 +61,9 @@ under the License.
     <menu name="CatalogSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditProductCatalog" title="${uiLabelMap.ProductNewProdCatalog}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="parameters.prodCatalogId"/></not>
+            </condition>
             <link target="EditProdCatalog"/>
         </menu-item>
         <!-- SCIPIO: CreateSeo has been removed -->        

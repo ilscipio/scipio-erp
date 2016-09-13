@@ -1708,6 +1708,10 @@ Does not affect paramStr - caller must handle.          </div>
         <p>
 The tree can be defined in nested or flat format to describe the hierarchy, and using either
 macro calls or by passing item lists of maps.        </p>
+        <p>
+For <code>settings</code> and <code>plugins</code> map arguments, child map elements which should not
+be interpreted as string but rather as script (such as javascript functions) can be wrapped
+using <a href="../utilities.html#entry-wrapRawScript">#wrapRawScript</a>.        </p>
                       </div>
                   </div>
             

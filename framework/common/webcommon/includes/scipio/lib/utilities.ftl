@@ -71,12 +71,19 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
                               If there is no path for the type or path is optional, then name alone should be specified.
-    type                    = (screen|menu|form|tree, default: screen) The type of resource to render
+    type                    = (screen|menu|form|tree|section, default: screen) The type of resource to render
                               * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
-                              * {{{menu}}}: an Ofbiz menu (widget) by {{{component://}}} location
-                              * {{{form}}}: an Ofbiz form (widget) by {{{component://}}} location
-                              * {{{tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
+                                NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
+                              * {{{screen-widget}}}: an Ofbiz screen (widget) by {{{component://}}} location - 
+                                same as {{{screen}}} but using alternate inclusion method using xml {{{include-screen}}}
+                              * {{{menu}}} or {{{include-menu}}} (currently same): an Ofbiz menu (widget) by {{{component://}}} location
+                              * {{{form}}} or {{{include-form}}} (currently same): an Ofbiz form (widget) by {{{component://}}} location
+                              * {{{tree}}} or {{{include-tree}}} (currently same): an Ofbiz tree (widget) by {{{component://}}} location
                               * {{{section}}}: an Ofbiz screen (widget) decorator section, with {{{name}}} arg
+                              NOTE: screen, menu, form and tree (xxx) can be given a {{{include-}}} prefix. The {{{include-}}} version
+                                  guarantees that the include will be processed using the XML {{{include-xxx}}} element. 
+                                  The non-{{{include-}}} versions may be implemented using other means
+                                  and may be more efficient, but sometimes it may be needed to force the include mechanism.
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
@@ -95,8 +102,13 @@ TODO: Reimplement as transform.
                               output of @render, pass true here.
                               NOTE: not supported for {{{type="section"}}} as this time.
                               TODO: implement for section
+    maxDepth                = ((int), default: -1) Max menu levels to render [{{{menu}}} type only]
+                              See widget-menu.xsd {{{include-menu}}} element for details.
+    subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
+                              See widget-menu.xsd {{{include-menu}}} element for details.
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" asString=false>
+<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
+    asString=false maxDepth="" subMenus="">
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
@@ -108,20 +120,34 @@ TODO: Reimplement as transform.
     <#elseif type == "section">
         ${StringUtil.wrapString(sections.render(name))}<#t>
     <#else>
+      <#-- strip -widget from type, because for the rest it's all the same -->
+      <#local type = type?replace("include-", "")>
       <#if !name?has_content>
         <#local parts = resource?split("#")>
         <#local resource = parts[0]>
         <#local name = (parts[1])!>
       </#if>
       <#-- DEV NOTE: WARN: name clashes -->
-      <#local dummy = setContextField("scipioWidgetWrapperResName", name)>
-      <#local dummy = setContextField("scipioWidgetWrapperResLocation", resource)>
       <#if type == "menu">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource, "maxDepth":maxDepth, "subMenus":subMenus
+        })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource
+        })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString))}<#t>
       <#elseif type == "tree">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource
+        })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString))}<#t>
+      <#elseif type == "screen">
+        <#local dummy = setContextField("scipioWidgetWrapperArgs", {
+          "resName":name, "resLocation":resource
+        })>
+        ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>
     </#if>
   </@varSection>
@@ -2895,6 +2921,22 @@ NOTE: AUTO-ESCAPING: Unlike {{{request.getAttribute}}}, values retrieved are not
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function getRequestStackAsList name listType="copy">
+</#function>
+-->
+
+<#-- 
+*************
+* getRequestStackSize
+************
+Gets the current size of the named stack.
+If the stack doesn't exist, returns void, so can be used to check if a stack exists using {{{??}}} operator.
+    
+  * Parameters *
+    name                    = (required) Global request stack var name
+                              Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function getRequestStackSize name>
 </#function>
 -->
 

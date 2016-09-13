@@ -1250,6 +1250,14 @@ public class ModelMenuItem extends ModelWidget {
             return link;
         }
 
+        public FlexibleStringExpander getUseWhenExdr() { // SCIPIO: new
+            return link.getUseWhenExdr();
+        }
+
+        public Boolean getUseWhen(Map<String, Object> context) { // SCIPIO: new
+            return link.getUseWhen(context);
+        }
+
         public void renderLinkString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
                 throws IOException {
             menuStringRenderer.renderLink(writer, context, this);

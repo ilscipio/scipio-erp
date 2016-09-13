@@ -2,16 +2,21 @@
 
 <#if productCategoryAssociationMode?has_content>
     <@section>
-        <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="AddCategory">        
+        <#if addCategoryFormName?has_content>
+          <#assign addCatFormName = addCategoryFormName>
+        <#else>
+          <#assign addCatFormName = "AddCategory_" + getRequestNextElemIndex("scipioAddCatFormNameIndex")>
+        </#if>
+        <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="${addCatFormName}">        
             <input type="hidden" name="originalProductCategoryId" value="${originalProductCategoryId!}" />
             <@row>
                 <@cell columns=12>
                     <#if productCategoryAssociationMode == "parent">
                         <input type="hidden" name="parentProductCategoryId" value="${originalProductCategoryId!}" />
-                        <@field type="lookup" id="productCategoryId" name="productCategoryId" label=uiLabelMap.ProductCategory required=true formName="AddCategory" fieldFormName="LookupProductCategory" />
+                        <@field type="lookup" id="productCategoryId" name="productCategoryId" label=uiLabelMap.ProductCategory required=true formName=addCatFormName fieldFormName="LookupProductCategory" />
                     <#elseif productCategoryAssociationMode == "child">
                         <input type="hidden" name="productCategoryId" value="${originalProductCategoryId!}" />
-                        <@field type="lookup" id="parentProductCategoryId" name="parentProductCategoryId" label=uiLabelMap.ProductCategory required=true formName="AddCategory" fieldFormName="LookupProductCategory" />
+                        <@field type="lookup" id="parentProductCategoryId" name="parentProductCategoryId" label=uiLabelMap.ProductCategory required=true formName=addCatFormName fieldFormName="LookupProductCategory" />
                     </#if>
                 </@cell>
             </@row>

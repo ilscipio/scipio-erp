@@ -2926,6 +2926,22 @@ NOTE: AUTO-ESCAPING: Unlike {{{request.getAttribute}}}, values retrieved are not
 
 <#-- 
 *************
+* getRequestStackSize
+************
+Gets the current size of the named stack.
+If the stack doesn't exist, returns void, so can be used to check if a stack exists using {{{??}}} operator.
+    
+  * Parameters *
+    name                    = (required) Global request stack var name
+                              Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function getRequestStackSize name>
+</#function>
+-->
+
+<#-- 
+*************
 * setRequestVar
 ************
 Sets a global var in request scope (request attributes, or if no request, globals).

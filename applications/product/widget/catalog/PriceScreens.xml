@@ -23,10 +23,6 @@ under the License.
     <screen name="CommonPriceDecorator">
         <section>
             <actions>
-                <!-- SCIPIO: NOTE: there is no pricerules sub-menu. -->
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP"/>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="pricerules"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="pricerules"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
@@ -35,22 +31,7 @@ under the License.
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->    
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                      <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                            </widgets>
-                            <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>                
+                    </decorator-section>-->                    
                     <decorator-section name="body">
                         <section>
                             <!-- do check for CATALOG, _VIEW permission -->
@@ -73,6 +54,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPriceRule"/>
+                <set field="activeMainMenuItem" value="pricerules"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -96,6 +78,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPriceRules"/>
+                <set field="activeMainMenuItem" value="pricerules"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/price/EditProductPriceRules_old.groovy"/>
             </actions>
@@ -114,6 +97,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPriceRules"/>
+                <set field="activeMainMenuItem" value="pricerules"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/price/EditProductPriceRules.groovy"/>
             </actions>

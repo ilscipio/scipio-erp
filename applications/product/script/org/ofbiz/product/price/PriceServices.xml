@@ -409,7 +409,9 @@ under the License.
                 <!-- May prove more useful rather than an entity-and in custom cases-->
             </entity-condition>
             <iterate list="condValues" entry="condValue">
-                <set field="option" value="${condValue.categoryName} ${condValue.description} ${groovy: condValue?.longDescription?.substring(0,10)} [${condValue.productCategoryId}]: ${condValue.productCategoryId}"/>
+                <!-- SCIPIO: This crashes and is excessive anyway
+                <set field="option" value="${condValue.categoryName} ${condValue.description} ${groovy: condValue?.longDescription?.substring(0,10)} [${condValue.productCategoryId}]: ${condValue.productCategoryId}"/> -->
+                <set field="option" value="${condValue.categoryName} ${condValue.description} [${condValue.productCategoryId}]: ${condValue.productCategoryId}"/>
                 <field-to-list list="productPriceRulesCondValues" field="option"/>
             </iterate>
         </if-compare>

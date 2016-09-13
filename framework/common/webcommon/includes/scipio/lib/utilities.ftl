@@ -1726,7 +1726,7 @@ For advanced markup; bypasses @section (but a parent @section will restore headi
 
 <#-- 
 *************
-* getNextRequestElemIndex
+* getRequestNextElemIndex
 ************
 Returns and increases a global request count for a certain name.
 
@@ -1736,7 +1736,7 @@ The value stored is the last one returned by the function. By default, starts at
     name                    = ((string), required) The global request var name
     start                   = ((int), default: 1) The initial value
 -->
-<#function getNextRequestElemIndex name start=1>
+<#function getRequestNextElemIndex name start=1>
   <#-- set as request attrib so survives template environments and screens.render -->
   <#local index = getRequestVar(name)!(start - 1)>
   <#local index = index + 1>

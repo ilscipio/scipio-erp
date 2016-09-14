@@ -179,19 +179,33 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="ProductStoreGroup">
-                <condition-expr field-name="primaryParentGroupId" from-field="nullField"/>
+                <!--<condition-expr field-name="primaryParentGroupId" from-field="nullField"/>-->
                 <order-by field-name="productStoreGroupName"/>
             </entity-condition>
         </actions>
         <field name="productStoreGroupId"><hidden/></field>
         <field name="productStoreGroupName" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
-            <hyperlink target="ListParentProductStoreGroup" description="${productStoreGroupName} [${productStoreGroupId}]">
+            <!--<hyperlink target="ListParentProductStoreGroup" description="${productStoreGroupName} [${productStoreGroupId}]">
+                <parameter param-name="productStoreGroupId"/>
+            </hyperlink>-->
+            <hyperlink target="EditProductStoreGroup" description="${productStoreGroupName} [${productStoreGroupId}]">
                 <parameter param-name="productStoreGroupId"/>
             </hyperlink>
         </field>
         <field name="productStoreGroupTypeId"><display-entity entity-name="ProductStoreGroupType"/></field>
         <field name="description"><display/></field>
-        <field name="selectAction" title="${uiLabelMap.CommonSelect}" widget-style="${styles.link_run_sys} ${styles.action_select}"><submit button-type="button"/></field>
+        <field name="primaryParentGroupId" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
+            <hyperlink target="EditProductStoreGroup" description="${primaryParentGroupId}">
+                <parameter param-name="primaryParentGroupId"/>
+            </hyperlink>
+        </field>
+        <!--<field name="selectAction" title="${uiLabelMap.CommonSelect}" widget-style="${styles.link_run_sys} ${styles.action_select}"><submit button-type="button"/></field>-->
+        <!--<field name="listAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_find}">
+            <hyperlink target="ListParentProductStoreGroup" description="${uiLabelMap.CommonList}">
+                <parameter param-name="productStoreGroupId"/>
+            </hyperlink>
+        </field>
+        -->
     </form>
     <form name="EditProductStoreGroup" target="updateProductStoreGroup" type="single" default-map-name="productStoreGroup">
         <alt-target use-when="productStoreGroup == null" target="createProductStoreGroup"/>

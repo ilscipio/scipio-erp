@@ -88,7 +88,10 @@ under the License.
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditProductCatalog" title="${uiLabelMap.ProductNewProdCatalog}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
-                <not><if-empty field="parameters.prodCatalogId"/></not>
+                <or>
+                    <not><if-empty field="parameters.prodCatalogId"/></not>
+                    <if-compare field="activeSubMenuItem" operator="not-equals" value="EditProductCatalog"/>
+                </or>
             </condition>
             <link target="EditProdCatalog"/>
         </menu-item>
@@ -186,6 +189,12 @@ under the License.
     <menu name="CategorySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditCategory" title="${uiLabelMap.ProductNewCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <not><if-empty field="productCategory"/></not>
+                    <if-compare field="activeSubMenuItem" operator="not-equals" value="EditCategory"/>
+                </or>
+            </condition>
             <link target="EditCategory"/>
         </menu-item>
         <menu-item name="createProductInCategoryStart" title="${uiLabelMap.ProductCreateProductInCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
@@ -338,7 +347,7 @@ under the License.
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
-        <menu-item name="EditProductStoreKeywordOvrd" title="${uiLabelMap.ProductOverride}">
+        <menu-item name="EditProductStoreKeywordOvrd" title="${uiLabelMap.FormFieldTitle_keyword}"><!-- ProductOverride -->
             <link target="editProductStoreKeywordOvrd">
                 <parameter param-name="productStoreId"/>
             </link>
@@ -382,6 +391,16 @@ under the License.
     
     <menu name="ProductStoreSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="EditProductStore" title="${uiLabelMap.ProductNewProductStore}">
+            <condition>
+                <or>
+                    <not><if-empty field="parameters.productStoreId"/></not>
+                    <if-compare field="activeSubMenuItem" operator="not-equals" value="EditProductStore"/>
+                </or>
+            </condition>
+            <link target="EditProductStore"/>
+        </menu-item>
+        <!-- SCIPIO: TODO: Implement the collapse/expand, here or elsewhere
         <menu-item name="Expand" title="${uiLabelMap.CommonExpandAll}" widget-style="+${styles.action_run_local} ${styles.action_show}">
             <condition>
                 <or>
@@ -400,6 +419,7 @@ under the License.
             </condition>
             <link target="javascript:expandAll(false);" url-mode="plain"/>
         </menu-item>
+         -->
     </menu>
 
     <menu name="ProductStoreGroupButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

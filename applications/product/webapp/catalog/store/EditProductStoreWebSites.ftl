@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#if productStoreId?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <#-- Scipio: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite -->
@@ -66,3 +67,6 @@ under the License.
             <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}" />
         </form>
 </@section>
+<#else>
+  <@commonMsg type="error">${uiLabelMap.OrderProductStoreNotExist}</@commonMsg>
+</#if>

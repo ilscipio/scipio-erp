@@ -1523,8 +1523,17 @@ public class ModelMenu extends ModelWidget {
             menuItem = getModelMenuItemBySubName(selItemName, selMenuName);
             if (menuItem != null) {
                 subMenu = menuItem.getParentSubMenu();
+            } else {
+                // NOTE: if there was a screen coding error, it's possible the selItemName returns nothing.
+                // in this case we'll fall back to the sub-menu-name-only check below so the coder can
+                // better see the error.
+                Debug.logError("Menu-item name '" + selItemName + "' was not found within menu "
+                        + "or sub-menu ('" + selMenuName + "'), under top menu '" + this.getMenuLocation() + "#" + 
+                        this.getName() + "'", module);
             }
-        } else {
+        } 
+        
+        if (subMenu == null && menuItem == null) {
             if (UtilValidate.isNotEmpty(selMenuName)) {
                 subMenu = getModelSubMenuByName(selMenuName);
             }

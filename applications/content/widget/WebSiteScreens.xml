@@ -23,21 +23,22 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindWebSite"/>
-                <set field="activeMainMenuItem" value="websites"/>
                 <set field="labelTitleProperty" value="PageTitleFindWebSite"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleListWebSite}">
+                                <screenlet><!-- title="${uiLabelMap.PageTitleListWebSite}" -->
+                                    <!-- SCIPIO: redundant
                                     <container style="button-bar">
                                         <link text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
                                     </container>
+                                    -->
                                     <include-form name="ListWebSites" location="component://content/widget/website/WebSiteForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -54,9 +55,9 @@ under the License.
     <screen name="EditWebSite">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditWebSite"/>
+                <set field="titleProperty" value="${groovy: parameters.webSiteId ? 'PageTitleEditWebSite' : 'ContentCreateNewWebSite'}"/>
                 <set field="activeSubMenuItem" value="EditWebSite"/>
-                <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
+                <set field="labelTitleProperty" from-field="titleProperty"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
             </actions>

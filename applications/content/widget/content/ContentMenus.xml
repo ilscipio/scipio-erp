@@ -148,6 +148,9 @@ under the License.
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
+        <!-- SCIPIO: This is CURRENTLY removed because all the content types available are CMS
+            types and these will be covered by different means. In future, if new WebSiteContent types
+            are added and the CMS ones are removed, this could become useful again.
         <menu-item name="ListWebSiteContent" title="${uiLabelMap.ContentContent}">
             <condition>
                 <not><if-empty field="parameters.webSiteId"/></not>
@@ -156,6 +159,7 @@ under the License.
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
+        -->
         <menu-item name="PathAlias" title="${uiLabelMap.ContentPathAlias}">
             <condition>
                 <not><if-empty field="parameters.webSiteId"/></not>
@@ -333,6 +337,9 @@ under the License.
                 </not>
             </condition>
             <link target="EditWebSite"/>
+        </menu-item>
+        <menu-item name="FindWebSite" title="${uiLabelMap.PageTitleFindWebSite}" widget-style="+${styles.action_nav} ${styles.action_find}">
+            <link target="FindWebSite"/>
         </menu-item>
     </menu>
     <!-- Web Analytics -->

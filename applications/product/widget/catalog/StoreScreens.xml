@@ -179,6 +179,9 @@ under the License.
                 <entity-condition entity-name="WebSite" list="webSites">
                     <order-by field-name="siteName"/>
                 </entity-condition>
+                
+                <!-- SCIPIO: added -->
+                <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">

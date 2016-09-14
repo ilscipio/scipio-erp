@@ -476,8 +476,12 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap.ProductStore}: ${parameters.productStoreId}  ${extraFunctionName}"/>
+                <set field="title" value="${uiLabelMap.ProductStore}: ${parameters.productStoreId} ${extraFunctionName}"/>
                 
+                <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
+                    Do NOT set this global. -->
+                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+
                 <!-- SCIPIO: session-based browsing aid
                     NOTE: this is generally placed because some fallbacks don't have an accessible points -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
@@ -486,23 +490,35 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
-                            <condition><not><if-empty field="productStore"/></not></condition>
+                            <actions>          
+                                <!-- SCIPIO: this guarantees lookup for the following check. many screens already did this, but not all.
+                                    Do NOT set this global. -->
+                                <set field="lookupProductStoreId" from-field="productStoreId" />
+                                <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="false"> 
+                                    <field-map field-name="productStoreId" from-field="lookupProductStoreId"/>
+                                </entity-one>  
+                            </actions>
                             <widgets>
-                                <container>
-                                    <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                                </container>
-                            </widgets>
-                            <fail-widgets>
                                 <section>
-                                    <actions>
-                                        <set field="activeSubMenu" value="TOP"/>
-                                        <set field="activeSubMenuItem" value="store"/>
-                                    </actions>
+                                    <condition><not><if-empty field="productStore"/></not></condition>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <container>
+                                            <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        </container>
                                     </widgets>
+                                    <fail-widgets>
+                                        <section>
+                                            <actions>
+                                                <set field="activeSubMenu" value="TOP"/>
+                                                <set field="activeSubMenuItem" value="store"/>
+                                            </actions>
+                                            <widgets>
+                                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                            </widgets>
+                                        </section>
+                                    </fail-widgets>
                                 </section>
-                            </fail-widgets>
+                            </widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
@@ -562,6 +578,10 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
+                <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
+                    Do NOT set this global. -->
+                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+                
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
             </actions>
@@ -619,6 +639,10 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
+                <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
+                    Do NOT set this global. -->
+                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+                
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
             </actions>
@@ -632,6 +656,9 @@ under the License.
                             <widgets>
                                 <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
@@ -657,8 +684,71 @@ under the License.
     <!-- Scipio: New, transferred from Content app -->
     <screen name="CommonWebSiteDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
+
+                <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
+                    Do NOT set this global. -->
+                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+
+                <!-- SCIPIO: session-based browsing aid -->
+                <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
+            </actions>
             <widgets>
-                <include-screen name="CommonWebSiteDecorator" location="component://content/widget/CommonScreens.xml" />
+                <decorator-screen name="CommonWebSiteDecorator" location="component://content/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Scipio: New, transferred from Content app -->
+    <screen name="CommonWebAnalyticsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
+
+                <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
+                    Do NOT set this global. -->
+                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+
+                <!-- SCIPIO: session-based browsing aid -->
+                <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebAnalyticsDecorator"  location="component://content/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -666,8 +756,26 @@ under the License.
     <!-- Scipio: New, transferred from Content app -->
     <screen name="CommonContentDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Content" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value=""/><!-- SCIPIO: NOTE: nothing for now, this is too generic... -->
+            </actions>
             <widgets>
-                <include-screen name="CommonContentDecorator" location="component://content/widget/CommonScreens.xml" />
+                <decorator-screen name="CommonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

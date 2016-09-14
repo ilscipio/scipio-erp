@@ -371,6 +371,9 @@ under the License.
     
     <menu name="ProductStoreSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ProductStoreTabBar" recursive="includes-only" />
+        <menu-item name="EditProductStoreWebSites">
+            <sub-menu name="WebSite" include="component://content/widget/content/ContentMenus.xml#WebSiteSideBar"/>
+        </menu-item>
         <!-- SCIPIO: sub-menu will only show, as fallback, IF one of the screens is still linked to somwhere -->
         <menu-item name="EditProductStoreShipSetup">
             <sub-menu name="Shipping" include="ShippingSideBar"/>

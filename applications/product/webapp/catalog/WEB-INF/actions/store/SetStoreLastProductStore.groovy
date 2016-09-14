@@ -2,10 +2,9 @@
  * SCIPIO: save the current product store into session as last viewed store product store.
  */
 
-if (context.productStoreId) {
-    session.setAttribute("storeLastProductStoreId", context.productStoreId);
-} else if (globalContext.productStoreId) {
-    session.setAttribute("storeLastProductStoreId", globalContext.productStoreId);
-} else if (parameters.productStoreId) {
-    session.setAttribute("storeLastProductStoreId", parameters.productStoreId);
+storeLastProductStoreId = context.productStoreId ?: (globalContext.productStoreId ?: parameters.productStoreId);
+
+if (storeLastProductStoreId) {
+    session.setAttribute("storeLastProductStoreId", storeLastProductStoreId);
+    context.storeLastProductStoreId = storeLastProductStoreId;
 }

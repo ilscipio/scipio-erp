@@ -20,59 +20,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="CommonFeatureDecorator">
-        <section>
-            <actions>
-                <!-- SCIPIO: TODO?: review? -->
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Features" />
-                <set field="showMainExtendedBar" type="Boolean" value="true" />
-                
-                <!-- SCIPIO: session-based browsing aid -->
-                <script location="component://product/webapp/catalog/WEB-INF/actions/feature/GetFeatureLastProduct.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                            </widgets>
-                            <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>             
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
 
     <screen name="EditFeature">
         <section>
@@ -86,7 +33,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductEditFeature} : ${productFeature.description}">
                             <include-form name="EditProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -116,7 +63,7 @@
                 <set field="activeSubMenuItem" value="FeatureType"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -150,7 +97,7 @@
                 <entity-one entity-name="ProductFeatureType" value-field="productFeatureType"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditFeatureType" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -168,7 +115,7 @@
                 <set field="activeSubMenuItem" value="FeatureInterAction"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -205,7 +152,7 @@
 
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleAddFeatureInterAction}">
                             <include-form name="EditFeatureInterAction" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -223,7 +170,7 @@
                 <set field="activeSubMenuItem" value="FeatureCategory"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditFeatureType}">
                             <include-form name="CreateProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -245,7 +192,7 @@
                 <!--script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeatureCategories.groovy"/-->
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -282,7 +229,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeatureCategoryFeatures.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/feature/EditFeatureCategoryFeatures.ftl"/></html>
@@ -302,7 +249,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeatureGroups.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/feature/EditFeatureGroups.ftl"/></html>
@@ -336,7 +283,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductEditFeatureGroupAppls}">
                             <include-form name="ListFeatureGroupAppls" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -364,7 +311,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/feature/QuickAddProductFeatures.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/feature/BulkAddFeature.ftl"/></html>
@@ -382,7 +329,7 @@
                 <set field="activeSubMenuItem" value="FeaturePrice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditFeaturePrice}">
                             <include-form name="ListFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -398,7 +345,7 @@
     <screen name="CreateFeaturePrice">
         <section>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductQuickApplyFeature}">
                             <include-form name="CreateFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -419,7 +366,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator">
+                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductEditFeature} : ${productFeature.description}">
                             <include-form name="EditProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>

@@ -31929,4 +31929,10 @@
         <value xml:lang="de">Der folgende Bildschirm fügt eine Förderung zu einem bestimmten Geschäft. Verwenden Sie diese Option, um Aktionen für eine begrenzte Zeit zu entkräften.</value>
         <value xml:lang="en">The following Screen adds a promotion to a specific store. Use this in order to invalidate promotions for a limited time.</value>
     </property>    
+    <property key="ProductAttributeShortInstructions">
+        <value xml:lang="de">Auf dieser Seite können Sie generische , Low-Level-Produkteigenschaften , ähnlich wie die Erweiterung der Produkteinheit zu erstellen, zu ändern und zu löschen.
+             Diese erscheinen nur im Shop und andere Anwendungen, wenn benutzerdefinierte codiert, oder wenn das Attribut bereits nach Namen nach einer bestimmten Anwendungsfunktion erkannt wird.</value>
+        <value xml:lang="en">This page allows you to create, modify and delete generic, low-level Product Attributes, similar to extending the Product entity.
+            These only appear in shop and other applications when custom coded, or when the attribute is already recognized by name by a certain application function.</value>
+    </property> 
 </resource>

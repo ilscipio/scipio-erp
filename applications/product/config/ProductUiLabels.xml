@@ -8620,7 +8620,7 @@
     </property>
     <property key="PageTitleAddProductStoreCatalogs">
         <value xml:lang="de">Kataloge zum Shop hinzufügen</value>
-        <value xml:lang="en">Add Product Store Catalogs</value>
+        <value xml:lang="en">Add Store Catalogs</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Añadir catálogos a tienda</value>
         <value xml:lang="fr">Ajouter des catalogues au centre de profit</value>
         <value xml:lang="it">Aggiungi Cataloghi Negozio</value>
@@ -8632,31 +8632,31 @@
     </property>
     <property key="PageTitleAddProductStoreEmailSetup">
         <value xml:lang="de">Shop E-Mail Einstellungen hinzufügen</value>
-        <value xml:lang="en">Add Product Store Email Setup</value>
+        <value xml:lang="en">Add Store Email Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Añadir configuración de email a tienda</value>
         <value xml:lang="fr">Ajoutez des types d'envoi de courriel</value>
         <value xml:lang="it">Aggiungi Negozio Configurazione Emails</value>
         <value xml:lang="ja">製品店舗Eメール設定を追加</value>
-        <value xml:lang="th">Add Product Store Email Setup</value>
+        <value xml:lang="th">Add Store Email Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="vi">Thêm cài đặt email cho cửa hàng</value>
         <value xml:lang="zh">添加产品店铺电子邮件设置</value>
         <value xml:lang="zh_TW">增加產品商店電子郵件設置</value>
     </property>
     <property key="PageTitleAddProductStoreKeywordOvrd">
         <value xml:lang="de">Shop Schlüsselwörter Übersteuerung hinzufügen</value>
-        <value xml:lang="en">Add Product Store Keyword Override</value>
+        <value xml:lang="en">Add Store Keyword Override</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Añadir reemplazo de palabra clave a tienda</value>
         <value xml:lang="fr">Ajouter des remplacements de mot-clé</value>
         <value xml:lang="it">Aggiungi Negozio Prodotto Sostituzione Chiavi</value>
         <value xml:lang="ja">製品店舗キーワード上書を追加</value>
-        <value xml:lang="th">Add Product Store Keyword Override</value>
+        <value xml:lang="th">Add Store Keyword Override</value><!-- orig: "Product Store" -->
         <value xml:lang="vi">Thêm từ khóa cho cửa hàng</value>
         <value xml:lang="zh">添加产品店铺关键字覆盖</value>
         <value xml:lang="zh_TW">增加產品商店關鍵字覆蓋</value>
     </property>
     <property key="PageTitleAddProductStoreShipSetup">
         <value xml:lang="de">Liefereintstellungen den Shops hinzufügen</value>
-        <value xml:lang="en">Add Product Store Ship Setup</value>
+        <value xml:lang="en">Add Store Ship Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Añadir configuración de envío a tienda</value>
         <value xml:lang="fr">Ajoutez des types d'expédition</value>
         <value xml:lang="it">Aggiungi Configurazione Spedizioni Negozio</value>
@@ -8668,7 +8668,7 @@
     </property>
     <property key="PageTitleAddProductStoreSurveys">
         <value xml:lang="de">Umfragen dem Shop hinzufügen</value>
-        <value xml:lang="en">Add Product Store Surveys</value>
+        <value xml:lang="en">Add Store Surveys</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Añadir encuesta a tienda</value>
         <value xml:lang="fr">Ajouter des sondages</value>
         <value xml:lang="it">Aggiungi Sondaggi Negozio</value>
@@ -9898,7 +9898,7 @@
     </property>
     <property key="PageTitleEditProductStore">
         <value xml:lang="de">Shop bearbeiten</value>
-        <value xml:lang="en">Edit Product Store</value>
+        <value xml:lang="en">Edit Store</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Tienda de Productos</value>
         <value xml:lang="fr">Modifier le centre de profit</value>
         <value xml:lang="it">Aggiorna Negozio</value>
@@ -9912,7 +9912,7 @@
     </property>
     <property key="PageTitleEditProductStoreCatalogs">
         <value xml:lang="de">Shop Produktkataloge bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Catalogs</value>
+        <value xml:lang="en">Edit Store Catalogs</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Catálogos de una Tienda de Productos</value>
         <value xml:lang="fr">Modifier les catalogues du centre de profit</value>
         <value xml:lang="it">Aggiorna Cataloghi Negozio</value>
@@ -9926,7 +9926,7 @@
     </property>
     <property key="PageTitleEditProductStoreEmailSetup">
         <value xml:lang="de">E-Mail Einstellungen des Shops bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Email Setup</value>
+        <value xml:lang="en">Edit Store Email Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar configuración de Email para una Tienda de Productos</value>
         <value xml:lang="fr">Modifier les types d'envoi de courriel du centre de profit</value>
         <value xml:lang="it">Aggiorna Negozio Configurazione Emails</value>
@@ -9940,7 +9940,7 @@
     </property>
     <property key="PageTitleEditProductStoreFinAccountSettings">
         <value xml:lang="de">Shop Finanzkonten Einstellungen bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Financial Account Settings</value>
+        <value xml:lang="en">Edit Store Financial Account Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar ajustes de cuenta financiera de producto</value>
         <value xml:lang="fr">Modifier les configurations des comptes financiers</value>
         <value xml:lang="it">Aggiorna Negozio Configurazione Conti Finanziari</value>
@@ -9952,7 +9952,7 @@
     </property>
     <property key="PageTitleEditProductStoreKeywordOvrd">
         <value xml:lang="de">Shop Schlüsselwörter Übersteuerung bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Keyword Override</value>
+        <value xml:lang="en">Edit Store Keyword Override</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar sustitución de palabras clave de producto</value>
         <value xml:lang="fr">Configuration de la substitution des mots-clés du centre de profit</value>
         <value xml:lang="it">Aggiorna Negozio Prodotto Sostituzione Chiavi</value>
@@ -9966,7 +9966,7 @@
     </property>
     <property key="PageTitleEditProductStoreList">
         <value xml:lang="de">Shopliste bearbeiten</value>
-        <value xml:lang="en">Edit Product Store List</value>
+        <value xml:lang="en">Edit Store List</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Lista de Tiendas de Productos</value>
         <value xml:lang="fr">Liste des centres de profit</value>
         <value xml:lang="it">Lista dei negozi</value>
@@ -9980,7 +9980,7 @@
     </property>
     <property key="PageTitleEditProductStorePaySetup">
         <value xml:lang="de">Zahlungenseinstellungen des Shops bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Payment Setup</value>
+        <value xml:lang="en">Edit Store Payment Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Configuración de pagos de una Tienda de Productos</value>
         <value xml:lang="fr">Configuration des paiements du centre de profit</value>
         <value xml:lang="it">Aggiorna Configurazione Pagamenti Negozio</value>
@@ -9994,7 +9994,7 @@
     </property>
     <property key="PageTitleEditProductStorePromos">
         <value xml:lang="de">Shop Aktionen bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Promos</value>
+        <value xml:lang="en">Edit Store Promos</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Promociones de una Tienda de Productos</value>
         <value xml:lang="fr">Configuration des promotions du centre de profit</value>
         <value xml:lang="it">Aggiorna Promozioni Negozio</value>
@@ -10008,7 +10008,7 @@
     </property>
     <property key="PageTitleEditProductStoreRoles">
         <value xml:lang="de">Shop Rollen bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Roles</value>
+        <value xml:lang="en">Edit Store Roles</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Roles de una Tienda de Productos</value>
         <value xml:lang="fr">Configuration des rôles du centre de profit</value>
         <value xml:lang="it">Aggiorna Ruoli Negozio</value>
@@ -10022,7 +10022,7 @@
     </property>
     <property key="PageTitleEditProductStoreShipSetup">
         <value xml:lang="de">Versandeinstellungen des Shops bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Ship Setup</value>
+        <value xml:lang="en">Edit Store Ship Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Configuración de Envíos de una Tienda de Productos</value>
         <value xml:lang="fr">Configuration des expéditions du centre de profit</value>
         <value xml:lang="it">Aggiorna Configurazione Spedizioni Negozio</value>
@@ -10036,7 +10036,7 @@
     </property>
     <property key="PageTitleEditProductStoreShipmentCostEstimates">
         <value xml:lang="de">Schätzung der Versandkosten des Shops bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Shipment Cost Estimates</value>
+        <value xml:lang="en">Edit Store Shipment Cost Estimates</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar estimaciones de gastos de envío de tienda</value>
         <value xml:lang="fr">Modifier les estimations des coûts d'expédition du centre de profit</value>
         <value xml:lang="it">Aggiorna Stime Costi Spedizione Negozio</value>
@@ -10048,7 +10048,7 @@
     </property>
     <property key="PageTitleEditProductStoreSurveys">
         <value xml:lang="de">Umfragen des Shops bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Surveys</value>
+        <value xml:lang="en">Edit Store Surveys</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar encuestas de tienda</value>
         <value xml:lang="fr">Configuration des sondages du centre de profit</value>
         <value xml:lang="it">Aggiorna Sondaggi Negozio</value>
@@ -10062,7 +10062,7 @@
     </property>
     <property key="PageTitleEditProductStoreTaxSetup">
         <value xml:lang="de">Shop Steuereinstellungen bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Tax Setup</value>
+        <value xml:lang="en">Edit Store Tax Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar Configuración de Impuestos de una Tienda de Productos</value>
         <value xml:lang="fr">Configuration des taxes du centre de profit</value>
         <value xml:lang="it">Aggiorna Configurazione Tasse Negozio</value>
@@ -10076,7 +10076,7 @@
     </property>
     <property key="PageTitleEditProductStoreVendorPayments">
         <value xml:lang="de">Zahlungsanbieter des Shops bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Vendor Payments</value>
+        <value xml:lang="en">Edit Store Vendor Payments</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar pagos a proveedor de tienda</value>
         <value xml:lang="fr">Éditer les paiements d'un vendeur du centre de profit</value>
         <value xml:lang="it">Aggiorna Pagamenti dei Fornitori Negozio</value>
@@ -10088,7 +10088,7 @@
     </property>
     <property key="PageTitleEditProductStoreVendorShipments">
         <value xml:lang="de">Lieferungen der Lieferanten bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Vendor Shipments</value>
+        <value xml:lang="en">Edit Store Vendor Shipments</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar envíos de tienda</value>
         <value xml:lang="fr">Modifier les expéditions d'un vendeur du centre de profit</value>
         <value xml:lang="it">Aggiorna Metodi di Spedizione dei Fornitori Negozio</value>
@@ -10100,7 +10100,7 @@
     </property>
     <property key="PageTitleEditProductStoreWebSites">
         <value xml:lang="de">Shop Webseiten bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Web Sites</value>
+        <value xml:lang="en">Edit Store Web Sites</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Editar sitios web de una Tienda de Productos</value>
         <value xml:lang="fr">Configuration des sites web du centre de profit</value>
         <value xml:lang="it">Aggiorna Siti Web Negozio</value>
@@ -10574,7 +10574,7 @@
         <value xml:lang="zh_TW">尋找產品存貨</value>
     </property>
     <property key="PageTitleFindProductStoreRoles">
-        <value xml:lang="en">Find Product Store Roles</value>
+        <value xml:lang="en">Find Store Roles</value><!-- orig: "Product Store" -->
         <value xml:lang="ja">製品店舗ロールを検索</value>
         <value xml:lang="vi">Tìm vai trò Cửa hàng</value>
         <value xml:lang="zh">查找产品店铺角色</value>
@@ -10729,7 +10729,7 @@
     </property>
     <property key="PageTitleListProductStoreFinAccountSettings">
         <value xml:lang="de">Liste Shop Finanzkonten Einstellungen</value>
-        <value xml:lang="en">List Product Store Financial Account Settings</value>
+        <value xml:lang="en">List Store Financial Account Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Listar configuraciones de cuentas</value>
         <value xml:lang="fr">Liste des comptes financiers du centre de profit applicables</value>
         <value xml:lang="it">Lista Negozio Configurazione Conti Finanziari</value>
@@ -10741,7 +10741,7 @@
     </property>
     <property key="PageTitleListProductStorePaySetup">
         <value xml:lang="de">Liste der Zahlungsmethoden des Shops</value>
-        <value xml:lang="en">List Product Store Payment Setup</value>
+        <value xml:lang="en">List Store Payment Setup</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Listar configuración de pago de tienda</value>
         <value xml:lang="fr">Liste des configurations de paiement du centre de profit</value>
         <value xml:lang="it">Lista Configurazione Pagamenti Negozio</value>
@@ -10753,7 +10753,7 @@
     </property>
     <property key="PageTitleListProductStoreVendorPayments">
         <value xml:lang="de">List Shop Anbieter Zahlungen</value>
-        <value xml:lang="en">List Product Store Vendor Payments</value>
+        <value xml:lang="en">List Store Vendor Payments</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Listar pago a proveedores de tienda</value>
         <value xml:lang="fr">Liste des paiements d'un vendeur du centre de profit</value>
         <value xml:lang="it">Lista Pagamenti dei Fornitori Negozio</value>
@@ -10765,7 +10765,7 @@
     </property>
     <property key="PageTitleListProductStoreVendorShipments">
         <value xml:lang="de">Liste der Lieferantenlieferungen</value>
-        <value xml:lang="en">List Product Store Vendor Shipments</value>
+        <value xml:lang="en">List Store Vendor Shipments</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Listar envíos de proveedores a tienda</value>
         <value xml:lang="fr">Liste des expéditions d'un vendeur du centre de profit</value>
         <value xml:lang="it">Lista Metodi di Spedizione dei Fornitori Negozio</value>
@@ -10895,7 +10895,7 @@
     </property>
     <property key="PageTitleLookupProductStore">
         <value xml:lang="de">Shop nachschlagen</value>
-        <value xml:lang="en">Lookup Product Store</value>
+        <value xml:lang="en">Lookup Store</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Buscar tienda de producto</value>
         <value xml:lang="fr">Rechercher un ou des centres de profit</value>
         <value xml:lang="it">Ricerca Negozi</value>
@@ -11245,7 +11245,7 @@
     </property>
     <property key="PageTitleViewProductStoreSegments">
         <value xml:lang="de">Shopsegmente anzeigen</value>
-        <value xml:lang="en">View Product Store Segments</value>
+        <value xml:lang="en">View Store Segments</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Ver Segmentos de una Tienda de Productos</value>
         <value xml:lang="fr">Voir les segments du centre de profit</value>
         <value xml:lang="it">Mostra Segmenti Negozio</value>
@@ -12374,7 +12374,7 @@
         <value xml:lang="zh_TW">增加到包裝</value>
     </property>
     <property key="ProductAddToProductStoreGroup">
-        <value xml:lang="en">Add To Product Store Group</value>
+        <value xml:lang="en">Add To Store Group</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Ajout au groupe de centre de profit</value>
         <value xml:lang="zh">添加到产品店铺组</value>
         <value xml:lang="zh_TW">增加到產品商店群組</value>
@@ -15346,7 +15346,7 @@
     </property>
     <property key="ProductCreateNewProductStore">
         <value xml:lang="de">Neuen Shop erstellen</value>
-        <value xml:lang="en">Create New Product Store</value>
+        <value xml:lang="en">Create New Store</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Crear Nueva Tienda de Productos</value>
         <value xml:lang="fr">Création d'un nouveau centre de profit</value>
         <value xml:lang="it">Nuovo negozio</value>
@@ -21370,7 +21370,7 @@
     </property>
     <property key="ProductNewProductStore">
         <value xml:lang="de">Neuer Shop</value>
-        <value xml:lang="en">New Product Store</value>
+        <value xml:lang="en">New Store</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Nueva tienda</value>
         <value xml:lang="fr">Nouveau centre de profit</value>
         <value xml:lang="it">Nuovo Negozio</value>
@@ -22267,7 +22267,7 @@
     </property>
     <property key="ProductNotModificationRecreatingProductStore">
         <value xml:lang="de">Kann nicht geändert werden ohne den Shop erneut zu erstellen</value>
-        <value xml:lang="en">This cannot be changed without re-creating the Product Store</value>
+        <value xml:lang="en">This cannot be changed without re-creating the Store</value><!-- orig: "Product Store" -->
         <value xml:lang="es">No puede ser modificado sin recrear la tienda</value>
         <value xml:lang="fr">Ceci ne peut être changé sans recréer le centre de profit</value>
         <value xml:lang="it">Questo non può essere cambiata senza ri-creare il Negozio Prodotti</value>
@@ -23453,14 +23453,14 @@
         <value xml:lang="zh_TW">上級群組 [識別]</value>
     </property>
     <property key="ProductParentProductStoreGroups">
-        <value xml:lang="en">Parent Product Store Groups</value>
+        <value xml:lang="en">Parent Store Groups</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Groupes de centre de profit parent</value>
         <value xml:lang="ja">上位(親)製品店舗グループ</value>
         <value xml:lang="zh">上级产品店铺组</value>
         <value xml:lang="zh_TW">上級產品商店群組</value>
     </property>
     <property key="ProductParentProductStoreGroupList">
-        <value xml:lang="en">Parent Product Store Group List</value>
+        <value xml:lang="en">Parent Store Group List</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Liste des groupes de centre de profit parent</value>
         <value xml:lang="ja">上位(親)製品店舗グループ一覧</value>
         <value xml:lang="zh">上级产品店铺组列表</value>
@@ -24910,7 +24910,7 @@
     </property>
     <property key="ProductProductStore">
         <value xml:lang="de">Shop</value>
-        <value xml:lang="en">Product Store</value>
+        <value xml:lang="en">Store</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Tienda de productos</value>
         <value xml:lang="fr">Centre de profit</value>
         <value xml:lang="it">Negozio</value>
@@ -24925,7 +24925,7 @@
     </property>
     <property key="ProductProductStoreEmailSettings">
         <value xml:lang="de">Shop E-Mail Einstellungen</value>
-        <value xml:lang="en">Product Store Email Settings</value>
+        <value xml:lang="en">Store Email Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Configuración de Email de la tienda</value>
         <value xml:lang="fr">Configuration des adresses électroniques du centre de profit</value>
         <value xml:lang="it">Configurazione Email Negozio</value>
@@ -24963,7 +24963,7 @@
     </property>
     <property key="ProductProductStoreGroup">
         <value xml:lang="de">Shopgruppe</value>
-        <value xml:lang="en">Product Store Group</value>
+        <value xml:lang="en">Store Group</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Grupo de tiendas de productos</value>
         <value xml:lang="fr">Groupe de centres de profit</value>
         <value xml:lang="it">Gruppo Negozio</value>
@@ -24990,28 +24990,28 @@
         <value xml:lang="zh_TW">產品商店群組識別</value>
     </property>
     <property key="ProductProductStoreGroupRollup">
-        <value xml:lang="en">Product Store Rollup</value>
+        <value xml:lang="en">Store Group Rollup</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Groupes de centre de profit enfant</value>
         <value xml:lang="ja">製品店舗ロールアップ</value>
         <value xml:lang="zh">产品店铺汇总</value>
         <value xml:lang="zh_TW">產品商店匯總</value>
     </property>
     <property key="ProductProductStoreGroups">
-        <value xml:lang="en">Product Store Groups</value>
+        <value xml:lang="en">Store Groups</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Groupes de centre de profit</value>
         <value xml:lang="ja">製品店舗グループ</value>
         <value xml:lang="zh">产品店铺组</value>
         <value xml:lang="zh_TW">產品商店群組</value>
     </property>
     <property key="ProductProductStoreGroupMain">
-        <value xml:lang="en">Product Store main</value>
+        <value xml:lang="en">Store main</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Accueil groupes</value>
         <value xml:lang="ja">製品店舗メイン</value>
         <value xml:lang="zh">产品店铺主要</value>
         <value xml:lang="zh_TW">產品商店主要</value>
     </property>
     <property key="ProductProductStoreMember">
-        <value xml:lang="en">Product Store Member</value>
+        <value xml:lang="en">Store Member</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Centres de profit associés</value>
         <value xml:lang="ja">製品店舗メンバ</value>
         <value xml:lang="zh">产品店铺成员</value>
@@ -25043,7 +25043,7 @@
     </property>
     <property key="ProductProductStoreList">
         <value xml:lang="de">Shopliste</value>
-        <value xml:lang="en">Product Store List</value>
+        <value xml:lang="en">Store List</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Lista de tiendas de productos</value>
         <value xml:lang="fr">Liste des centres de profit</value>
         <value xml:lang="it">Lista dei negozi</value>
@@ -25058,7 +25058,7 @@
     </property>
     <property key="ProductProductStorePaymentSettings">
         <value xml:lang="de">Zahlungseinstellungen des Shops</value>
-        <value xml:lang="en">Product Store Payment Settings</value>
+        <value xml:lang="en">Store Payment Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Configuración de Pagos de la tienda</value>
         <value xml:lang="fr">Configuration des paiements du centre de profit</value>
         <value xml:lang="it">Configurazione Pagamenti Negozio</value>
@@ -25072,7 +25072,7 @@
     </property>
     <property key="ProductProductStoreRoles">
         <value xml:lang="de">Shop Rollen</value>
-        <value xml:lang="en">Product Store Roles</value>
+        <value xml:lang="en">Store Roles</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Roles de la tienda de productos</value>
         <value xml:lang="fr">Rôles du centre de profit</value>
         <value xml:lang="it">Regole Negozio</value>
@@ -25086,7 +25086,7 @@
     </property>
     <property key="ProductProductStoreShipmentSettings">
         <value xml:lang="de">Versandeinstellungen der Shops</value>
-        <value xml:lang="en">Product Store Shipment Settings</value>
+        <value xml:lang="en">Store Shipment Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Configuración de envíos de la tienda de productos</value>
         <value xml:lang="fr">Configuration des expéditions du centre de profit</value>
         <value xml:lang="it">Configurazione Spedizioni Negozio</value>
@@ -25100,7 +25100,7 @@
     </property>
     <property key="ProductProductStoreTaxSettings">
         <value xml:lang="de">Shop Steuern Einstellungen</value>
-        <value xml:lang="en">Product Store Tax Settings</value>
+        <value xml:lang="en">Store Tax Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Configuración de impuestos de la tienda de productos</value>
         <value xml:lang="fr">Configuration des taxes du centre de profit</value>
         <value xml:lang="it">Configurazione Tasse Negozio</value>
@@ -25114,7 +25114,7 @@
     </property>
     <property key="ProductProductStoreWebSites">
         <value xml:lang="de">Shop Webseiten</value>
-        <value xml:lang="en">Product Store WebSites</value>
+        <value xml:lang="en">Store WebSites</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Sitios web de la tienda de productos</value>
         <value xml:lang="fr">Sites web du centre de profit</value>
         <value xml:lang="it">Siti Web Negozio</value>
@@ -29275,7 +29275,7 @@
         <value xml:lang="zh_TW">商店</value>
     </property>
     <property key="ProductStoreFacilityAssocList">
-        <value xml:lang="en">Product Store Warehouse Settings</value>
+        <value xml:lang="en">Store Warehouse Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Paramétrage des lieux de stockage du centre de profit</value>
         <value xml:lang="ja">製品店舗拠点設定</value>
         <value xml:lang="vi">Thiết lập cửa hàng Chi nhánh / Cơ sở</value>
@@ -29283,7 +29283,7 @@
         <value xml:lang="zh_TW">產品商店場所設定</value>
     </property>
     <property key="ProductStoreFinAccountSettings">
-        <value xml:lang="en">Product Store Financial Account Settings</value>
+        <value xml:lang="en">Store Financial Account Settings</value><!-- orig: "Product Store" -->
         <value xml:lang="fr">Paramétrage des comptes financiers du centre de profit</value>
         <value xml:lang="it">Impostazioni conto finanziario negozio</value>
         <value xml:lang="ja">製品店舗金融アカウント設定</value>
@@ -29413,7 +29413,7 @@
     </property>
     <property key="ProductStoreVendorPayments">
         <value xml:lang="de">Shop Zahlungsanbieter</value>
-        <value xml:lang="en">Product Store Vendor Payments</value>
+        <value xml:lang="en">Store Vendor Payments</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Pagos a proveedores de tienda</value>
         <value xml:lang="fr">Paiements du vendeur du centre de profit</value>
         <value xml:lang="it">Pagamenti fornitore negozio</value>
@@ -29425,7 +29425,7 @@
     </property>
     <property key="ProductStoreVendorShipments">
         <value xml:lang="de">Shop Lieferungen von Lieferanten</value>
-        <value xml:lang="en">Product Store Vendor Shipments</value>
+        <value xml:lang="en">Store Vendor Shipments</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Envíos de proveedores de tienda</value>
         <value xml:lang="fr">Expéditions du vendeur du centre de profit</value>
         <value xml:lang="it">Spedizioni fornitore negozio</value>
@@ -31794,7 +31794,7 @@
     </property>
     <property key="ProductProductStorePromotions">
         <value xml:lang="de">Shop Aktionen</value>
-        <value xml:lang="en">Product Store Promotions</value>
+        <value xml:lang="en">Store Promotions</value><!-- orig: "Product Store" -->
         <value xml:lang="es">Promociones de la tienda de productos</value>
         <value xml:lang="fr">Promotions du centre de profit</value>
     </property>
@@ -31811,10 +31811,10 @@
     </property>
     <property key="PageTitleEditProductStoreFacilities">
         <value xml:lang="de">Shop Einrichtungen bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Facilities</value>
+        <value xml:lang="en">Edit Store Facilities</value><!-- orig: "Product Store" -->
     </property>
     <property key="ProductProductStoreFacilities">
         <value xml:lang="de">Shop Einrichtungen</value>
-        <value xml:lang="en">Product Store Facilities</value>
+        <value xml:lang="en">Store Facilities</value><!-- orig: "Product Store" -->
     </property>
 </resource>

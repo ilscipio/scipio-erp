@@ -70,7 +70,7 @@ under the License.
                         <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
                         <@field type="lookup" required=true label=uiLabelMap.ProductProductId formName="createpromoproductform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                        <@field type="select" name="productPromoApplEnumId">
+                        <@field type="select" name="productPromoApplEnumId" label="Product Promo Appl Enum Id">
                           <#list productPromoApplEnums as productPromoApplEnum>
                             <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                           </#list>
@@ -110,8 +110,8 @@ under the License.
               <form method="post" action="<@ofbizUrl>updateProductPromoRule</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                 <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                <input type="text" size="30" name="ruleName" value="${(productPromoRule.ruleName)!}" />
-                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+                <@field type="input" size="30" name="ruleName" value=(productPromoRule.ruleName)! required=true />
+                <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />
               </form>
           </@modal></strong>
         </@td>
@@ -559,6 +559,7 @@ under the License.
                     <@menuitem type="generic">
                         <@modal id="modal_new_promo_condition_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateCondition class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
+                                <#-- SCIPIO: TODO: Convert to @field -->
                                 <form method="post" action="<@ofbizUrl>createProductPromoCond</@ofbizUrl>">
                                   <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                                   <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
@@ -573,10 +574,10 @@ under the License.
                                       <option value="${(condOperEnum.enumId)!}">${(condOperEnum.get("description",locale))!}</option>
                                     </#list>
                                   </select>
-                                  <label>${uiLabelMap.ProductConditionValue}:</label>
+                                  <label>${uiLabelMap.ProductConditionValue}</label>
                                   <input type="text" size="25" name="condValue" />
-                                  ${uiLabelMap.CommonOther}:<input type="text" size="10" name="otherValue" />
-                                  <label>${uiLabelMap.OrderSelectShippingMethod}:</label>
+                                  ${uiLabelMap.CommonOther}<input type="text" size="10" name="otherValue" />
+                                  <label>${uiLabelMap.OrderSelectShippingMethod}</label>
                                   <select name="carrierShipmentMethod">
                                     <option value="">--${uiLabelMap.OrderSelectShippingMethod}--</option>
                                     <#list carrierShipmentMethods as carrierShipmentMethod>
@@ -591,22 +592,23 @@ under the License.
                     <@menuitem type="generic">
                         <@modal id="modal_new_promo_action_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateAction class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductCreateAction}</@heading>
+                                <#-- SCIPIO: TODO: Convert to @field -->
                                 <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                                     <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                                    <span><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
+                                    <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                                     <select name="productPromoActionEnumId" size="1">
                                       <#list productPromoActionEnums as productPromoActionEnum>
                                         <option value="${(productPromoActionEnum.enumId)!}">${(productPromoActionEnum.get("description",locale))!}</option>
                                       </#list>
                                     </select>
                                     <input type="hidden" name="orderAdjustmentTypeId" value="PROMOTION_ADJUSTMENT" />
-                                    ${uiLabelMap.ProductQuantity}:&nbsp;<input type="text" size="5" name="quantity" />
-                                    ${uiLabelMap.ProductAmount}:&nbsp;<input type="text" size="5" name="amount" />
-                                    ${uiLabelMap.ProductItemId}:&nbsp;<input type="text" size="15" name="productId" />
-                                    ${uiLabelMap.PartyParty}:&nbsp;<input type="text" size="10" name="partyId" /><br />
-                                    ${uiLabelMap.ProductServiceName}:&nbsp;<input type="text" size="20" name="serviceName" />
-                                    ${uiLabelMap.UseCartQuantity}:&nbsp;
+                                    ${uiLabelMap.ProductQuantity}&nbsp;<input type="text" size="5" name="quantity" />
+                                    ${uiLabelMap.ProductAmount}&nbsp;<input type="text" size="5" name="amount" />
+                                    ${uiLabelMap.ProductItemId}&nbsp;<input type="text" size="15" name="productId" />
+                                    ${uiLabelMap.PartyParty}&nbsp;<input type="text" size="10" name="partyId" /><br />
+                                    ${uiLabelMap.ProductServiceName}&nbsp;<input type="text" size="20" name="serviceName" />
+                                    ${uiLabelMap.UseCartQuantity}&nbsp;
                                     <select name="useCartQuantity">
                                       <option value="N">${uiLabelMap.CommonN}</option>
                                       <option value="Y">${uiLabelMap.CommonY}</option>

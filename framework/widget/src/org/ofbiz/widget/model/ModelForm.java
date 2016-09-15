@@ -365,7 +365,9 @@ public abstract class ModelForm extends ModelWidget {
         if (separateColumns.isEmpty() && parentModel != null) {
             this.separateColumns = parentModel.separateColumns;
         } else {
-            this.separateColumns = "true".equals(separateColumns);
+            // SCIPIO: the default is now true, so invert this
+            //this.separateColumns = "true".equals(separateColumns);
+            this.separateColumns = !"false".equals(separateColumns);
         }
         String groupColumns = formElement.getAttribute("group-columns");
         if (groupColumns.isEmpty() && parentModel != null) {

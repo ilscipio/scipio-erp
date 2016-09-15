@@ -321,6 +321,20 @@ public class FormRenderer {
         return innerFormFieldsCells;
     }
     
+    /**
+     * SCIPIO: Creates a row-submit header item.
+     */
+    private ModelFormField createRowSubmitHeaderItem(ModelForm modelForm) {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
+        builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+        builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
+        builder.setModelForm(modelForm);
+        builder.setTitle("Select");
+        builder.setFieldInfo(displayField);
+        return builder.build();
+    }
+    
     private int renderHeaderRow(Appendable writer, Map<String, Object> context)
             throws IOException {
         int maxNumOfColumns = 0;
@@ -426,6 +440,16 @@ public class FormRenderer {
                 innerFormFields.add(modelFormField);
             }
 
+            // SCIPIO: get real/accurate count of inner field cells
+            int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
+            
+            // Scipio: Add an extra column to hold a checkbox or radio button depending on the type of form.
+            if (innerFormFieldsCells > 0 && modelForm.getGroupColumns() && modelForm.getUseRowSubmit()) {
+                if (modelForm.getType().equals("list") || modelForm.getType().equals("multi")) {
+                    innerDisplayHyperlinkFieldsEnd.add(createRowSubmitHeaderItem(modelForm));
+                }
+            }
+            
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsBegin))
                 maxNumOfColumns += innerDisplayHyperlinkFieldsBegin.size();
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
@@ -434,20 +458,7 @@ public class FormRenderer {
             //if (UtilValidate.isNotEmpty(innerFormFields))
             //    maxNumOfColumns += innerFormFields.size();
             if (UtilValidate.isNotEmpty(innerFormFields)) 
-                maxNumOfColumns += getInnerFormFieldCellCount(modelForm, innerFormFields);
-            
-            // Scipio: Add an extra column to hold a checkbox or radio button depending on the type of form.
-            if ((modelForm.getType().equals("list") || modelForm.getType().equals("multi")) && modelForm.getUseRowSubmit()) {
-                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-                ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
-                builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setModelForm(modelForm);
-                builder.setTitle("Select");
-                builder.setFieldInfo(displayField);
-                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
-                maxNumOfColumns++;
-            }
+                maxNumOfColumns += innerFormFieldsCells;
 
             Map<String, List<ModelFormField>> fieldRow = UtilMisc.toMap("displayBefore", innerDisplayHyperlinkFieldsBegin,
                     "inputFields", innerFormFields, "displayAfter", innerDisplayHyperlinkFieldsEnd, "mainFieldList",
@@ -600,6 +611,38 @@ public class FormRenderer {
         }
     }
 
+    /**
+     * SCIPIO: Creates a row-submit radio item.
+     */
+    private ModelFormField createRowSubmitRadioItem(ModelForm modelForm) {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        optionSources.add(new SingleOption("Y", " ", null));
+        ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
+        builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+        builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
+        builder.setModelForm(modelForm);
+        builder.setTitle("Select");
+        builder.setFieldInfo(radioField);
+        return builder.build(); 
+    }
+    
+    /**
+     * SCIPIO: Creates a row-submit checkbox item.
+     */
+    private ModelFormField createRowSubmitCheckboxItem(ModelForm modelForm) {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        optionSources.add(new SingleOption("Y", " ", null));
+        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
+        builder.setFieldName(UtilHttp.ROW_SUBMIT_PREFIX);                
+        builder.setName(UtilHttp.ROW_SUBMIT_PREFIX);
+        builder.setModelForm(modelForm);
+        builder.setTitle("Select");
+        builder.setFieldInfo(checkField);
+        return builder.build();
+    }
+    
     // The fields in the three lists, usually created in the preprocessing phase
     // of the renderItemRows method are rendered: this will create a visual representation
     // of one row (corresponding to one position).
@@ -611,6 +654,15 @@ public class FormRenderer {
         
         // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
         int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
+        
+        // Scipio: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
+        if (innerFormFieldsCells > 0 && modelForm.getGroupColumns() && modelForm.getUseRowSubmit()) {
+            if (modelForm.getType().equals("list")) {
+                innerDisplayHyperlinkFieldsEnd.add(createRowSubmitRadioItem(modelForm));
+            } else if (modelForm.getType().equals("multi")) {
+                innerDisplayHyperlinkFieldsEnd.add(createRowSubmitCheckboxItem(modelForm));                
+            }
+        }
         
         int numOfCells = innerDisplayHyperlinkFieldsBegin.size() + innerDisplayHyperlinkFieldsEnd.size()
                 + innerFormFieldsCells; // + (innerFormFields.size() > 0 ? 1 : 0);
@@ -633,33 +685,6 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
-            // Scipio: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
-            if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
-                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-                List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-                optionSources.add(new SingleOption("Y", " ", null));
-                ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
-                builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setModelForm(modelForm);
-                builder.setTitle("Select");
-                builder.setFieldInfo(radioField);
-                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
-                numOfColumns++;
-            } else if (modelForm.getType().equals("multi") && modelForm.getUseRowSubmit()) {
-                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-                List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-                optionSources.add(new SingleOption("Y", " ", null));
-                ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
-                builder.setFieldName(UtilHttp.ROW_SUBMIT_PREFIX);                
-                builder.setName(UtilHttp.ROW_SUBMIT_PREFIX);
-                builder.setModelForm(modelForm);
-                builder.setTitle("Select");
-                builder.setFieldInfo(checkField);
-                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
-                numOfColumns++;
-            }
-            
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {

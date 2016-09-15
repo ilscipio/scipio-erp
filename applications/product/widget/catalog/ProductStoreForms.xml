@@ -1028,7 +1028,7 @@
                 <entity-options entity-name="ProductPromo" description="[${productPromoId}] ${promoName}"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time/></field>
         <field name="thruDate" position="2"><date-time/></field>
         <field name="manualOnly">
             <drop-down>

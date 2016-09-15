@@ -33,8 +33,8 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productPriceRuleId" title="${uiLabelMap.ProductPriceRuleNameId}" widget-style="${styles.link_nav_info_idname}">
-            <hyperlink target="EditProductPriceRules" description="${ruleName}[${productPriceRuleId}]" >
+        <field name="productPriceRuleId" title="${uiLabelMap.ProductPriceRule}" widget-style="${styles.link_nav_info_idname}">
+            <hyperlink target="EditProductPriceRules" description="${ruleName} [${productPriceRuleId}]" >
                 <parameter param-name="productPriceRuleId"/>
             </hyperlink>
         </field>
@@ -48,7 +48,7 @@
         </field>
     </form>
     <form name="AddPriceRules" type="single" target="createProductPriceRule">
-        <field name="ruleName" title="${uiLabelMap.ProductName}"><text size="30"/></field>
+        <field name="ruleName" title="${uiLabelMap.ProductName}" required-field="true"><text size="30"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     

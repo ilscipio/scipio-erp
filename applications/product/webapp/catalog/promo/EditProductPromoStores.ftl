@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId?? && productPromo??>
-                <@alert type="info">The following Screen adds a promotion to a specific store. Use this in order to invalidate promotions for a limited time.</@alert>
+                <@alert type="info">${uiLabelMap.ProductPromoStoreAddInstructions}</@alert>
 
                 <@section title=uiLabelMap.ProductAddStorePromo>
                     <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">

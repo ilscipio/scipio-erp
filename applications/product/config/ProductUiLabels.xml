@@ -31858,4 +31858,70 @@
         <value xml:lang="en">WebSite Web Analytics Configuration</value>
         <value xml:lang="it">Configurazione analisi Web Sito Web</value>
     </property>
+    <property key="PageTitleFindPriceRule"><!-- FIXME: some language inexact -->
+        <value xml:lang="de">Suche nach Preisregeln</value>
+        <value xml:lang="en">Find Price Rule</value>
+        <value xml:lang="es">Buscar Regla de Precios de Productos</value>
+        <value xml:lang="fr">Recherche de règles de prix</value>
+        <value xml:lang="it">Ricerca Regole Prezzo Prodotto</value>
+        <value xml:lang="ja">製品価格ルールを検索</value>
+        <value xml:lang="nl">Zoek productprijsregels</value>
+        <value xml:lang="ro">Cauta Reguli Pret Produs</value>
+        <value xml:lang="ru">Найти правила назначения цены продукта</value>
+        <value xml:lang="th">ค้นหาสถานะราคาสินค้า</value>
+        <value xml:lang="vi">Tìm quy định giá sản phẩm</value>
+        <value xml:lang="zh">查找产品价格规则</value>
+        <value xml:lang="zh_TW">尋找產品價格規則</value>
+    </property>
+    <property key="ProductPriceRule">
+        <value xml:lang="de">Preisregel</value>
+        <value xml:lang="en">Price Rule</value>
+        <value xml:lang="es">Regla de Precios</value>
+        <value xml:lang="fr">Règle de prix</value>
+    </property>
+    <property key="ProductFindPromotionCode"><!-- FIXME: some language inexact -->
+        <value xml:lang="de">Aktionscode suchen</value>
+        <value xml:lang="en">Find Promotion Code</value>
+        <value xml:lang="es">Buscar Cupón de Promoción</value>
+        <value xml:lang="fr">Recherche de codes de promotion</value>
+        <value xml:lang="it">Ricerca codice promozione</value>
+        <value xml:lang="ja">製品プロモーションコードを検索</value>
+        <value xml:lang="ro">Cauta Cod Promotie Produs</value>
+        <value xml:lang="ru">Найти акционный код продукта</value>
+        <value xml:lang="th">ค้นหารหัสโปรโมชันสินค้า</value>
+        <value xml:lang="vi">Tìm mã khuyến mại sản phẩm</value>
+        <value xml:lang="zh">查找产品促销代码</value>
+        <value xml:lang="zh_TW">尋找產品促銷代碼</value>
+    </property>
+    <property key="ProductFindProductPromo"><!-- FIXME: some language inexact -->
+        <value xml:lang="de">Aktion suchen</value>
+        <value xml:lang="en">Find Promotion</value>
+        <value xml:lang="es">Buscar Promociones</value>
+        <value xml:lang="fr">Recherche de promotions</value>
+        <value xml:lang="it">Ricerca Promozioni</value>
+        <value xml:lang="ja">製品プロモーションを検索</value>
+        <value xml:lang="ro">Cauta Promotii Produs</value>
+        <value xml:lang="ru">Найти акции продукта</value>
+        <value xml:lang="th">ค้นหาโปรโมชันสินค้า</value>
+        <value xml:lang="vi">Tìm khuyến mại sản phẩm</value>
+        <value xml:lang="zh">查找产品促销</value>
+        <value xml:lang="zh_TW">尋找產品促銷</value>
+    </property>
+    <property key="ProductPromotionContent">
+        <value xml:lang="de">Aktion Inhalt</value>
+        <value xml:lang="en">Promotion Content</value>
+        <value xml:lang="fr">Contenu de la Promotion</value>
+    </property>
+    <property key="ProductPromotionStores">
+        <value xml:lang="de">Aktion-Shops</value>
+        <value xml:lang="en">Promotion Stores</value>
+    </property>
+    <property key="ProductPromotionRules">
+        <value xml:lang="de">Aktionsregeln</value>
+        <value xml:lang="en">Promotion Rules</value>
+    </property>
+    <property key="ProductPromoStoreAddInstructions">
+        <value xml:lang="de">Der folgende Bildschirm fügt eine Förderung zu einem bestimmten Geschäft. Verwenden Sie diese Option, um Aktionen für eine begrenzte Zeit zu entkräften.</value>
+        <value xml:lang="en">The following Screen adds a promotion to a specific store. Use this in order to invalidate promotions for a limited time.</value>
+    </property>    
 </resource>

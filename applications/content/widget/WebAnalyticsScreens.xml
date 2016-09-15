@@ -23,7 +23,8 @@ under the License.
     <screen name="FindWebAnalyticsConfigs">
         <section>
             <actions>
-                <set field="titleProperty" value="CatalogWebAnalytics"/>
+                <set field="titleProperty" value="CatalogWebSiteWebAnalytics"/>
+                <set field="labelTitleProperty" value="CatalogWebSiteWebAnalytics"/>
                 <set field="activeSubMenuItem" value="WebAnalytics"/>
                 <set field="activeSubMenuItem2" value="FindWebAnalyticsConfigs"/>
                 <set field="webAnalyticsConfigCtx" from-field="parameters"/>
@@ -48,7 +49,8 @@ under the License.
     <screen name="EditWebAnalyticsConfig">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditWebAnalyticsConfigs"/>
+                <set field="titleProperty" value="CatalogWebSiteWebAnalyticsConfigs"/>
+                <set field="labelTitleProperty" value="CatalogWebSiteWebAnalyticsConfigs"/>
                 <set field="activeSubMenuItem" value="WebAnalytics"/>
                 <set field="activeSubMenuItem2" value="EditWebAnalyticsConfig"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>

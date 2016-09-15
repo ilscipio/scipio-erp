@@ -994,7 +994,7 @@
             </link>
         </menu-item>
         <!-- Invoice -->
-        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur} (${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <and>
                     <not>

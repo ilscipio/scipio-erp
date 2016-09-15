@@ -977,6 +977,7 @@
     <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="InvoiceTabBar" recursive="includes-only" />
         <!-- Purchase Invoice PDF -->
+        <!-- SCIPIO: FIXME: the link target does not exist or was removed
         <menu-item name="acctgTransEntriesPdf" title="${uiLabelMap.AccountingInvoicePurchase}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <and>
@@ -989,10 +990,11 @@
                     </or>
                 </and>
             </condition>
-            <link target="InvoiceAcctgTransEntriesPdf" target-window="_BLANK">
+            <link target="InvoiceAcctgTransEntriesPdf.pdf" target-window="_BLANK">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
+         -->
         <!-- Invoice -->
         <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur} (${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>

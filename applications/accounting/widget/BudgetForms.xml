@@ -197,8 +197,8 @@ under the License.
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListBudgetRoles" type="list" title="" list-name="budgetRoles" paginate-target="BudgetRoles"
-        odd-row-style="alternate-row" header-row-style="header-row-2"><!-- use-row-submit="true"  --><!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <form name="ListBudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetRoles"
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="budgetId"><hidden/></field>
         <field name="partyId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
@@ -237,8 +237,8 @@ under the License.
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListBudgetReviews" type="list" title="" list-name="budgetReviews" paginate-target="BudgetReviews"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- use-row-submit="true" --><!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <form name="ListBudgetReviews" type="list" use-row-submit="true" title="" list-name="budgetReviews" paginate-target="BudgetReviews"
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="budgetId"><hidden/></field>
         <field name="budgetReviewId"><display/></field>
         <field name="partyId" widget-style="${styles.link_nav_info_id}">

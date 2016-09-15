@@ -383,7 +383,7 @@ under the License.
         <field name="deleteAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit /></field>
     </form>
 
-    <form name="NewUser" type="single" target="${target}${previousParams}?test=${displayPassword}"
+    <form name="NewUser" type="single" target="${target}${previousParams}"
         focus-field-name="USER_TITLE" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field>

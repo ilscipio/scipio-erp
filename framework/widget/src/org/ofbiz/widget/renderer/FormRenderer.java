@@ -474,7 +474,9 @@ public class FormRenderer {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
 
                             if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
-                                formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
+                                // SCIPIO: use th element always for this from now on
+                                //formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
+                                formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                                 cellOpened = true;
                             } else if (!modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
@@ -485,7 +487,9 @@ public class FormRenderer {
                             formStringRenderer.renderFieldTitle(writer, context, modelFormField);
 
                             if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
-                                formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
+                                // SCIPIO: use th element always for this from now on
+                                //formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
+                                formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                                 cellOpened = false;
                             } else if (!modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
@@ -503,8 +507,10 @@ public class FormRenderer {
                                 }
                             }
                         }
-//                        if (modelForm.getUseRowSubmit())
-//                            formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+                        // SCIPIO: clean this up but only if not already closed (this test fixes ofbiz bug that lets in extra closing </th>)
+                        if (cellOpened) {
+                            formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+                        }
                     }
                     Iterator<ModelFormField> innerDisplayHyperlinkFieldsEndIt = innerDisplayHyperlinkFieldsEnd.iterator();
                     while (innerDisplayHyperlinkFieldsEndIt.hasNext()) {

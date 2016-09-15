@@ -321,7 +321,7 @@ Only those not marked DEPRECATED should still be used.
   </#if>
   
   <#if isLink>
-    <#local href><#if linkType == "hidden-form">javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if></#local>
+    <#local href><#if linkType == "hidden-form">javascript:document.forms['${uniqueItemName}'].submit()<#else>${linkUrl}</#if></#local>
     <#if disabled>
       <#-- FIXME: this static method of disabling links means the link loses information and not easily toggleable! -->
       <#local href = styles.menu_link_href_default!"">

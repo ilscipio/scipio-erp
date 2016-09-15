@@ -450,8 +450,9 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <!-- SCIPIO: TODO?: review? -->
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Features" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
+
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- SCIPIO: session-based browsing aid -->
@@ -503,6 +504,21 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonSpecificFeatureDecorator">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productFeatureId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
+            </actions>
+            <widgets>
+                <include-screen name="CommonFeatureDecorator" />
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonPromoDecorator">
         <section>
             <actions>
@@ -540,7 +556,7 @@ under the License.
                                         </widgets>
                                 </section>
                                 -->
-
+                                <include-menu name="PromoSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml" />
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

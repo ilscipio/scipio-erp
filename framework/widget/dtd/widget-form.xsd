@@ -234,7 +234,9 @@ Features and Modifications:
                     <xs:documentation>SCIPIO: NOTE: This is a STOCK attribute. It is a top-level
                         "hard" switch to disable all column grouping-based code. If set to false,
                         it will logically imply separate-columns true but may additionally
-                        prevent some other form behaviors.</xs:documentation>
+                        prevent some other form behaviors.
+                        WARN: Nearly all stock and Scipio-modified forms are built and tested using true for this attribute.
+                            It is currently safer to change the separate-columns value.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

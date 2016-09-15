@@ -396,7 +396,7 @@ under the License.
         <field name="USER_ADDRESS1" title="${uiLabelMap.CommonAddress1}" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="USER_ADDRESS2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
         <field name="USER_CITY" title="${uiLabelMap.CommonCity}" required-field="true"><text size="30" maxlength="60"/></field>
-        <field name="USER_STATE" title="${uiLabelMap.CommonState}" widget-style="required"><drop-down allow-empty="false"/></field>                       
+        <field name="USER_STATE" title="${uiLabelMap.CommonState}" required-field="true"><drop-down allow-empty="false"/></field>                       
         <field name="USER_POSTAL_CODE" title="${uiLabelMap.CommonZipPostalCode}" required-field="true"><text size="10" maxlength="30"/></field>
         <field name="USER_COUNTRY" title="${uiLabelMap.CommonCountry}" required-field="true">
             <drop-down no-current-selected-key="${defaultCountryGeoId}">
@@ -434,13 +434,13 @@ under the License.
         <field name="USER_MOBILE_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
         <field name="EmailAddressTitle" title="${uiLabelMap.PartyEmailAddress}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field use-when="require_email!=null" name="USER_EMAIL" title="${uiLabelMap.CommonEmail}" required-field="true"><text size="60" maxlength="250"/></field>
-        <field use-when="require_email==null" name="USER_EMAIL" title="${uiLabelMap.CommonEmail}" widget-style="required"><text size="60" maxlength="250"/></field>
+        <field use-when="require_email==null" name="USER_EMAIL" title="${uiLabelMap.CommonEmail}" required-field="true"><text size="60" maxlength="250"/></field>
         <field name="USER_EMAIL_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
         <!-- <field name="USER_ORDER_EMAIL" title="Order Emails (comma separated)" ><text size="60" maxlength="250"/></field> -->
         <field use-when="displayPassword=='Y'" name="USERNAME" title="${uiLabelMap.CommonUsername}" required-field="true"><text size="30" maxlength="250"/></field>
         <field use-when="displayPassword=='Y'" name="PASSWORD" title="${uiLabelMap.CommonPassword}" required-field="true"><password size="15" maxlength="250"/></field>
-        <field use-when="displayPassword=='Y'" name="CONFIRM_PASSWORD" title="${uiLabelMap.CommonPassword}" tooltip="* ${uiLabelMap.CommonConfirm}" widget-style="required"><password size="15" maxlength="250"/></field>
-        <field use-when="displayPassword!='Y'" name="USERNAME" title="${uiLabelMap.CommonUsername}" tooltip="* ${uiLabelMap.PartyTemporaryPassword}" widget-style="required"><text size="30" maxlength="250"/></field>
+        <field use-when="displayPassword=='Y'" name="CONFIRM_PASSWORD" title="${uiLabelMap.CommonPassword}" tooltip="* ${uiLabelMap.CommonConfirm}" required-field="true"><password size="15" maxlength="250"/></field>
+        <field use-when="displayPassword!='Y'" name="USERNAME" title="${uiLabelMap.CommonUsername}" tooltip="* ${uiLabelMap.PartyTemporaryPassword}" required-field="true"><text size="30" maxlength="250"/></field>
         <!--<field name="RequiredNote" title=" "><display description="${uiLabelMap.PartyRequiredNote}" also-hidden="false"/></field> -->
 
         <field name="PRODUCT_STORE_ID" title="Product Store" required-field="true">
@@ -699,8 +699,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}"/>
-        <field name="accountNumber" title="${uiLabelMap.AccountingAccountNumber}" tooltip="${uiLabelMap.CommonRequired}"/>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"/>
+        <field name="accountNumber" title="${uiLabelMap.AccountingAccountNumber}" required-field="true"/>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 

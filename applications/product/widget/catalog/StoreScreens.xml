@@ -50,8 +50,8 @@ under the License.
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
-                
-                <set field="labelTitleProperty" value="${groovy: (context.productStore || (parameters.productStoreId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductProductStore' : 'ProductCreateNewProductStore'}"/>
+                <!-- orig: ProductProductStore -->
+                <set field="labelTitleProperty" value="${groovy: (context.productStore || (parameters.productStoreId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductStore' : 'ProductCreateNewProductStore'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
@@ -142,7 +142,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreCatalogs"/>
                 <set field="activeSubMenuItem" value="EditProductStoreCatalogs"/>
-                <set field="labelTitleProperty" value="ProductCatalogs"/>
+                <set field="labelTitleProperty" value="ProductProductStoreCatalogs"/><!-- ProductCatalogs -->
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>
@@ -418,7 +418,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewProductStoreSegments"/>
                 <set field="activeSubMenuItem" value="ViewProductStoreSegments"/>
-                <set field="labelTitleProperty" value="ProductSegments"/>
+                <set field="labelTitleProperty" value="ProductProductStoreSegments"/><!-- ProductSegments -->
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
 

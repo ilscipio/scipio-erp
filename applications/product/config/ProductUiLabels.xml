@@ -31823,4 +31823,10 @@
         <value xml:lang="es">Catálogos de una Tienda de Productos</value>
         <value xml:lang="fr">Catalogues du centre de profit</value>
     </property>
+    <property key="ProductProductStoreSegments">
+        <value xml:lang="de">Shopsegmente</value>
+        <value xml:lang="en">Store Segments</value><!-- orig: "Product Store" -->
+        <value xml:lang="es">Segmentos de una Tienda de Productos</value>
+        <value xml:lang="fr">Segments du centre de profit</value>
+    </property>
 </resource>

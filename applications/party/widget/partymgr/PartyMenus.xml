@@ -294,8 +294,6 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
-        
-        <!-- SCIPIO: Remove - Already covered by Quotes & Orders menu
         <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_CREATE"/>
@@ -313,7 +311,7 @@
                 <parameter param-name="partyId"/>
                 <parameter param-name="externaLoginKey" from-field="externalLoginKey"/>
             </link>
-        </menu-item> -->
+        </menu-item>
     </menu>
     <menu name="create-new-party" type="simple" menu-container-style="+basic-nav">
         <menu-item name="create-party-group" title="${uiLabelMap.PartyCreateNewPartyGroup}" widget-style="+${styles.action_nav} ${styles.action_add}">

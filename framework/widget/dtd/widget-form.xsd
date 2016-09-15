@@ -215,6 +215,13 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="extends" />
             <xs:attribute type="xs:string" name="extends-resource" />
             <xs:attribute name="separate-columns" default="false">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: NOTE: This is a STOCK attribute. It is usually
+                        only considered when group-columns is true. It is an "inner" switch
+                        to disable grouping within the form-building logic and is the one
+                        most popularly used in most forms.
+                    </xs:documentation>
+                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -223,6 +230,12 @@ Features and Modifications:
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="group-columns" default="true">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: NOTE: This is a STOCK attribute. It is a top-level
+                        "hard" switch to disable all column grouping-based code. If set to false,
+                        it will logically imply separate-columns true but may additionally
+                        prevent some other form behaviors.</xs:documentation>
+                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />

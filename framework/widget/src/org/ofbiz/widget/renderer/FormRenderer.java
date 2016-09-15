@@ -297,6 +297,30 @@ public class FormRenderer {
         }
     }
 
+    /**
+     * SCIPIO: Gets the real/accurate number of inner form field cells, by running through them in advance.
+     */
+    private int getInnerFormFieldCellCount(ModelForm modelForm, List<ModelFormField> innerFormFields) {
+        int innerFormFieldsCells = 0;
+        if (modelForm.getGroupColumns()) {
+            if (innerFormFields.size() > 0) {
+                Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
+                while (innerFormFieldsIt.hasNext()) {
+                    ModelFormField modelFormField = innerFormFieldsIt.next();
+                    if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                        innerFormFieldsCells++;
+                    }
+                }
+                if (innerFormFieldsCells < 1) {
+                    innerFormFieldsCells = 1; // minimum one
+                }
+            }
+        } else {
+            innerFormFieldsCells = innerFormFields.size();
+        }
+        return innerFormFieldsCells;
+    }
+    
     private int renderHeaderRow(Appendable writer, Map<String, Object> context)
             throws IOException {
         int maxNumOfColumns = 0;
@@ -406,8 +430,11 @@ public class FormRenderer {
                 maxNumOfColumns += innerDisplayHyperlinkFieldsBegin.size();
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
                 maxNumOfColumns += innerDisplayHyperlinkFieldsEnd.size();
-            if (UtilValidate.isNotEmpty(innerFormFields))
-                maxNumOfColumns += innerFormFields.size();
+            // SCIPIO: this is not enough. we must exclude any grouped columns.
+            //if (UtilValidate.isNotEmpty(innerFormFields))
+            //    maxNumOfColumns += innerFormFields.size();
+            if (UtilValidate.isNotEmpty(innerFormFields)) 
+                maxNumOfColumns += getInnerFormFieldCellCount(modelForm, innerFormFields);
             
             // Scipio: Add an extra column to hold a checkbox or radio button depending on the type of form.
             if ((modelForm.getType().equals("list") || modelForm.getType().equals("multi")) && modelForm.getUseRowSubmit()) {
@@ -436,13 +463,16 @@ public class FormRenderer {
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd = listsMap.get("displayAfter");
             List<ModelFormField> mainFieldList = listsMap.get("mainFieldList");
 
+            // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
+            int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
+            
             int numOfCells = innerDisplayHyperlinkFieldsBegin.size() + innerDisplayHyperlinkFieldsEnd.size()
-                    + (innerFormFields.size() > 0 ? 1 : 0);
+                    + innerFormFieldsCells; //+ (innerFormFields.size() > 0 ? 1 : 0);
             int numOfColumnsToSpan = maxNumOfColumns - numOfCells + 1;
             if (numOfColumnsToSpan < 1) {
                 numOfColumnsToSpan = 1;
             }
-
+            
             if (numOfCells > 0) {
                 formStringRenderer.renderFormatHeaderRowOpen(writer, context, modelForm);
 
@@ -518,9 +548,6 @@ public class FormRenderer {
                         formStringRenderer.renderFieldTitle(writer, context, modelFormField);
                         formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
                     }
-                    
-                    
-                    
                 } else {
                     Iterator<ModelFormField> mainFieldListIter = mainFieldList.iterator();
                     while (mainFieldListIter.hasNext()) {
@@ -581,8 +608,12 @@ public class FormRenderer {
             List<ModelFormField> innerDisplayHyperlinkFieldsBegin, List<ModelFormField> innerFormFields,
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd, List<ModelFormField> mainFieldList, int position,
             int numOfColumns) throws IOException {
+        
+        // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
+        int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
+        
         int numOfCells = innerDisplayHyperlinkFieldsBegin.size() + innerDisplayHyperlinkFieldsEnd.size()
-                + (innerFormFields.size() > 0 ? 1 : 0);
+                + innerFormFieldsCells; // + (innerFormFields.size() > 0 ? 1 : 0);
         int numOfColumnsToSpan = numOfColumns - numOfCells + 1;
         if (numOfColumnsToSpan < 1) {
             numOfColumnsToSpan = 1;

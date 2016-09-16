@@ -91,7 +91,6 @@ import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.Paginator;
 import org.ofbiz.widget.renderer.UtilHelpText;
-import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import com.ibm.icu.util.Calendar;
 

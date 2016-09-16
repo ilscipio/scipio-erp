@@ -45,7 +45,6 @@ import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
-import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.Template;

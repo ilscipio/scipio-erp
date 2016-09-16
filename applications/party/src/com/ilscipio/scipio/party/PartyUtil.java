@@ -6,8 +6,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.base.util.UtilMisc;
 
 /**
- * Scipio - General purpose Party utility functions
- *
+ * SCIPIO: General purpose Party utility functions
  */
 public final class PartyUtil {
 

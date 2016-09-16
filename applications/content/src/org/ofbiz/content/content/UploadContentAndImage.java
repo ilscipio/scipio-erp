@@ -80,7 +80,7 @@ public class UploadContentAndImage {
 
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
             
-            // Scipio patch - from ServiceEventHandler: create the progress listener and add it to the session
+            // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
             FileUploadProgressListener listener = new FileUploadProgressListener();
             dfu.setProgressListener(listener);
             request.getSession().setAttribute("uploadProgressListener", listener);
@@ -353,7 +353,7 @@ public class UploadContentAndImage {
 
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
             
-            // Scipio patch - from ServiceEventHandler: create the progress listener and add it to the session
+            // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
             FileUploadProgressListener listener = new FileUploadProgressListener();
             dfu.setProgressListener(listener);
             request.getSession().setAttribute("uploadProgressListener", listener);

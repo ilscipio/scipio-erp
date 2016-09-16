@@ -116,7 +116,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final Map<String, Object> context;
         private final Appendable writer;
         
-        // Scipio feature: ability to render previously-defined sections (from a caller) as if part of these sections.
+        // SCIPIO: feature: ability to render previously-defined sections (from a caller) as if part of these sections.
         // Essentially we mix sections from different decorators therefore different contexts.
         // This is not well encapsulated; SectionsRenderer implements
         // Map and that part is public. but context is private so it should be
@@ -1056,7 +1056,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public static final String TAG_NAME = "decorator-section";
         private final List<ModelScreenWidget> subWidgets;
         
-        // Scipio feature: conditional section definitions
+        // SCIPIO: feature: conditional section definitions
         private final FlexibleStringExpander useWhen;
         private final boolean fallbackAutoInclude;
         private final boolean overrideByAutoInclude;
@@ -1094,7 +1094,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
         
         /**
-         * Returns true if this section should be used as-is,
+         * SCIPIO: Returns true if this section should be used as-is,
          * based on the decorator-section use-when minilang/EL/bsh/groovy-style condition
          * and current screen context.
          * <p>

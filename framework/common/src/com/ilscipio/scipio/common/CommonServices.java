@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.mail.MimeMessageWrapper;
 
 /**
- * Scipio Common Services
+ * SCIPIO: Common Services
  */
 public class CommonServices {
 

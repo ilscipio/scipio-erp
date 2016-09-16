@@ -68,7 +68,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     @SuppressWarnings("rawtypes")
     public static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // SCIPIO: NOTE: can now return null
         Object o = args.get(key);
-        // Scipio (2016-02): we now support real booleans. 
+        // SCIPIO: NOTE (2016-02): we now support real booleans. 
         // In addition, SimpleScalar was a bad type to use.
         //if (o instanceof SimpleScalar) {
         //    SimpleScalar s = (SimpleScalar) o;

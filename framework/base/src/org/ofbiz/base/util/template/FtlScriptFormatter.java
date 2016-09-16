@@ -1,5 +1,8 @@
 package org.ofbiz.base.util.template;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -172,4 +175,99 @@ public class FtlScriptFormatter {
         this.literalSQGeneralDefault = literalSQGeneralDefault;
     }
 
+    /**
+     * Makes a Freemarker literal from any supported object type.
+     */
+    public String makeLiteral(Object object, boolean singleQuote) {
+        StringBuilder sb = new StringBuilder();
+        makeLiteral(sb, object, singleQuote);
+        return sb.toString();
+    }
+    
+    /**
+     * Makes a Freemarker literal from any supported object type.
+     */
+    public String makeLiteral(Object object) {
+        StringBuilder sb = new StringBuilder();
+        makeLiteral(sb, object, false);
+        return sb.toString();
+    }
+    
+    /**
+     * Makes a Freemarker literal from any supported object type.
+     */
+    public String makeLiteralSQ(Object object) {
+        StringBuilder sb = new StringBuilder();
+        makeLiteral(sb, object, true);
+        return sb.toString();
+    }
+    
+    /**
+     * Makes a Freemarker literal from any supported object type, automatically producing the most
+     * appropriate type.
+     * <p>
+     * TODO: May not yet support all types.
+     * <p>
+     * <strong>WARN:</strong> LISTS WITH NULL VALUES CANNOT BE EXPRESSED IN FREEMARKER LITERALS AND WILL
+     * BE TRUNCATED!
+     */
+    public void makeLiteral(StringBuilder sb, Object object, boolean singleQuote) {
+        if (object == null) {
+            return;
+        }
+        else if (object instanceof Map) {
+            sb.append("{");
+            int i = 0;
+            for(Map.Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
+                if (entry.getValue() != null) {
+                    if (i > 0) {
+                        sb.append(",");
+                    }
+                    makeLiteral(sb, entry.getKey(), singleQuote);
+                    sb.append(":");
+                    makeLiteral(sb, entry.getValue(), singleQuote);
+                    i++;
+                }
+            }
+            sb.append("}");
+        } else if (object instanceof Iterable) {
+            sb.append("[");
+            int i = 0;
+            for(Object entry : (Iterable<?>) object) {
+                // FIXME?: can't add nulls! changes array size!
+                if (entry != null) {
+                    if (i > 0) {
+                        sb.append(",");
+                    }
+                    makeLiteral(sb, entry, singleQuote);
+                    i++;
+                }
+            }
+            sb.append("]");
+        } else if (object instanceof Object[]) {
+            sb.append("[");
+            int i = 0;
+            for(Object entry : (Object[]) object) {
+                // FIXME?: can't add nulls! changes array size!
+                if (entry != null) {
+                    if (i > 0) {
+                        sb.append(",");
+                    }
+                    makeLiteral(sb, entry, singleQuote);
+                    i++;
+                }
+            }
+            sb.append("]");
+        } else if (object instanceof String) {
+            sb.append(singleQuote ? makeStringLiteralSQ((String) object) : makeStringLiteral((String) object)); 
+        } else if (object instanceof Number) {
+            sb.append(object.toString());
+        } else if (object instanceof Boolean) {
+            sb.append(((Boolean) object) ? "true" : "false");
+        } else {
+            sb.append(singleQuote ? makeStringLiteralSQ(object.toString()) : makeStringLiteral(object.toString())); 
+        }
+    }
+    
+    
 }

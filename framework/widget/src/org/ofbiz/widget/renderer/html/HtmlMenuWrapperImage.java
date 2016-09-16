@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 /**
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  * <p>
- * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * @deprecated SCIPIO: 2016-08-30: Considered deprecated and
  * will not be maintained. Use macro renderer instead.
  */
 @Deprecated

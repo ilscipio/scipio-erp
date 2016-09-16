@@ -44,10 +44,10 @@ import org.xml.sax.SAXException;
 /**
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  * <p>
- * @deprecated SCIPIO(2016-08-30): Considered deprecated and
- * will not be maintained. Use macro renderer instead.
+ * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
+ * Use is still discouraged; the context populated by this wrapper
+ * may be incomplete. Other means are available to invoke menu renders from templates.
  */
-@Deprecated
 public class HtmlFormWrapper {
 
     public static final String module = HtmlFormWrapper.class.getName();
@@ -78,7 +78,11 @@ public class HtmlFormWrapper {
             this.modelForm = FormFactory.getFormFromWebappContext(resourceName, formName, request);
         }
 
-        this.renderer = new HtmlFormRenderer(request, response);
+        // SCIPIO: 2016-09-15: use macro renderer, now available in request
+        this.renderer = (FormStringRenderer) request.getAttribute("formStringRenderer");
+        if (this.renderer == null) { // fallback (shouldn't happen)
+            this.renderer = new HtmlFormRenderer(request, response);
+        }
 
         this.context = new HashMap<String, Object>();
         Map<String, Object> parameterMap = UtilHttp.getParameterMap(request);

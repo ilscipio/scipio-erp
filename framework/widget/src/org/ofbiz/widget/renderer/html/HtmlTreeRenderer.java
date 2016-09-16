@@ -348,4 +348,9 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
         }
         return screenStringRenderer;
     }
+
+    @Override
+    public String getRendererName() { // SCIPIO: new
+        return "html";
+    }
 }

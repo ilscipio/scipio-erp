@@ -115,10 +115,17 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private boolean renderPagination = true;
     private boolean widgetCommentsEnabled = false;
 
+    // SCIPIO: new
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("form");
-
-    public MacroFormRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
+    private final String rendererName;
+    
+    /**
+     * Constructor.
+     * <p>
+     * SCIPIO: modified to require name.
+     */
+    public MacroFormRenderer(String name, String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         this.request = request;
         this.response = response;
@@ -126,11 +133,17 @@ public final class MacroFormRenderer implements FormStringRenderer {
         this.rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         this.javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
         internalEncoder = UtilCodec.getEncoder("string");
+        this.rendererName = name; // SCIPIO: new
     }
 
+    /**
+     * Constructor.
+     * <p>
+     * SCIPIO: modified to require rendererName.
+     */
     @Deprecated
-    public MacroFormRenderer(String macroLibraryPath, Appendable writer, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
-        this(macroLibraryPath, request, response);
+    public MacroFormRenderer(String name, String macroLibraryPath, Appendable writer, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
+        this(name, macroLibraryPath, request, response);
     }
 
     /**
@@ -138,6 +151,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
+    }
+    
+    /**
+     * SCIPIO: Returns the renderer name (html, xml, etc.).
+     */
+    public String getRendererName() {
+        return rendererName;
     }
     
     public boolean getRenderPagination() {

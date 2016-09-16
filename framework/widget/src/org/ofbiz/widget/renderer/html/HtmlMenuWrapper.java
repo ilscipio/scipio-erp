@@ -108,7 +108,7 @@ public class HtmlMenuWrapper {
     public MenuStringRenderer getMenuRenderer() {
         // SCIPIO: 2016-09-15: use macro renderer, now available in request
         MenuStringRenderer renderer = (MenuStringRenderer) request.getAttribute("menuStringRenderer");
-        if (renderer == null) { // fallback (shouldn't happen)
+        if (renderer == null || !"html".equals(renderer.getRendererName())) { // fallback (shouldn't happen)
             renderer = new HtmlMenuRenderer(request, response);
         }
         return renderer;

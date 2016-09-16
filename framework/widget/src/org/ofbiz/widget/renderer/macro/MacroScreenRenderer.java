@@ -82,11 +82,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private static final String formrenderer = UtilProperties.getPropertyValue("widget", "screen.formrenderer");
     private int screenLetsIdCounter = 1;
 
+    // SCIPIO: new
     MapStack<String> initialContext = null; // SCIPIO: context reference as received at beginning of screen render
     //private Map<String, Object> initialContextCopy = null; // SCIPIO: not needed for now
-    
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("screen");
+    private static final String formrendererName = UtilProperties.getPropertyValue("widget", "screen.name");
     
     public MacroScreenRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
@@ -688,7 +689,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 FormStringRenderer savedRenderer = (FormStringRenderer) context.get("formStringRenderer");
                 MacroFormRenderer renderer = null;
                 try {
-                    renderer = new MacroFormRenderer(formrenderer, request, response);
+                    // SCIPIO: FIXME: this is hardcoded to HTML because formrender variable always points to html render
+                    // this is wrong on many levels
+                    renderer = new MacroFormRenderer(formrendererName, formrenderer, request, response); // SCIPIO: modified for name
                 } catch (TemplateException e) {
                     Debug.logError("Not rendering content, error on MacroFormRenderer creation.", module);
                 }

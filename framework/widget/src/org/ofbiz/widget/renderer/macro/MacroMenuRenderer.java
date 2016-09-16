@@ -85,9 +85,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
+    // SCIPIO: new
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("menu");
-
+    private final String rendererName;
     
     /**
      * SCIPIO: One-shot macro helper class. Controls whether render macros piecemeal or
@@ -96,10 +97,16 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", true), 
             "renderMenuFull", renderEntryMacroNameMap, ftlFmt);
     
-    public MacroMenuRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
+    /**
+     * Constructor.
+     * <p>
+     * SCIPIO: modified to require name.
+     */
+    public MacroMenuRenderer(String name, String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         this.request = request;
         this.response = response;
+        this.rendererName = name; // SCIPIO: new
     }
 
     /**
@@ -107,6 +114,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
+    }
+    
+    /**
+     * SCIPIO: Returns the renderer name (html, xml, etc.).
+     */
+    public String getRendererName() {
+        return rendererName;
     }
     
     // Made this a separate method so it can be externalized and reused.

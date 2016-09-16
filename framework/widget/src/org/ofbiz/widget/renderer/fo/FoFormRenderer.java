@@ -463,4 +463,9 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public String getRendererName() { // SCIPIO: new
+        return "xsl-fo";
+    }
 }

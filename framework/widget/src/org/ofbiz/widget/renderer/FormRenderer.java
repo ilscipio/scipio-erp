@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.xmlrpc.util.HttpUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -321,20 +320,6 @@ public class FormRenderer {
         return innerFormFieldsCells;
     }
     
-    /**
-     * SCIPIO: Creates a row-submit header item.
-     */
-    private ModelFormField createRowSubmitHeaderItem(ModelForm modelForm) {
-        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-        ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
-        builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-        builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-        builder.setModelForm(modelForm);
-        builder.setTitle("Select");
-        builder.setFieldInfo(displayField);
-        return builder.build();
-    }
-    
     private int renderHeaderRow(Appendable writer, Map<String, Object> context)
             throws IOException {
         int maxNumOfColumns = 0;
@@ -449,7 +434,7 @@ public class FormRenderer {
             // SCIPIO: Add an extra column to hold a checkbox or radio button depending on the type of form.
             if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
                 if (modelForm.getType().equals("list") || modelForm.getType().equals("multi")) {
-                    ModelFormField headerItem = createRowSubmitHeaderItem(modelForm);
+                    ModelFormField headerItem = modelForm.getRowSubmitHeaderItem(context);
                     innerDisplayHyperlinkFieldsEnd.add(headerItem);
                     mainFieldList.add(headerItem);
                 }
@@ -624,37 +609,7 @@ public class FormRenderer {
         }
     }
 
-    /**
-     * SCIPIO: Creates a row-submit radio item.
-     */
-    private ModelFormField createRowSubmitRadioItem(ModelForm modelForm) {
-        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-        optionSources.add(new SingleOption("Y", " ", null));
-        ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
-        builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-        builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-        builder.setModelForm(modelForm);
-        builder.setTitle("Select");
-        builder.setFieldInfo(radioField);
-        return builder.build(); 
-    }
-    
-    /**
-     * SCIPIO: Creates a row-submit checkbox item.
-     */
-    private ModelFormField createRowSubmitCheckboxItem(ModelForm modelForm) {
-        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-        optionSources.add(new SingleOption("Y", " ", null));
-        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
-        builder.setFieldName(UtilHttp.ROW_SUBMIT_PREFIX);                
-        builder.setName(UtilHttp.ROW_SUBMIT_PREFIX);
-        builder.setModelForm(modelForm);
-        builder.setTitle("Select");
-        builder.setFieldInfo(checkField);
-        return builder.build();
-    }
+
     
     // The fields in the three lists, usually created in the preprocessing phase
     // of the renderItemRows method are rendered: this will create a visual representation
@@ -670,12 +625,7 @@ public class FormRenderer {
         
         // SCIPIO: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
         if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
-            ModelFormField item = null;
-            if (modelForm.getType().equals("list")) {
-                item = createRowSubmitRadioItem(modelForm);
-            } else if (modelForm.getType().equals("multi")) {
-                item = createRowSubmitCheckboxItem(modelForm);                
-            }
+            ModelFormField item = modelForm.getRowSubmitRadioItem(localContext);
             if (item != null) {
                 innerDisplayHyperlinkFieldsEnd.add(item);
                 mainFieldList.add(item);

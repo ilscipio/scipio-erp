@@ -282,7 +282,6 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local scrollable = false>
     <#local style = removeStyleNames(style, "non-scrollable")>
   </#if>
-  <#local dummy = pushRequestStack("renderFormatListWrapperStack", {"formName":formName, "style":style, "responsive":responsive, "scrollable":scrollable})>
   <#-- Scipio: use @table macro to open -->
   <#if style?has_content>
     <#-- specified style will replace default class from @table (unless prefixed with "+" in widget defs) -->
@@ -300,11 +299,22 @@ WARN: no code run here or indirectly from here should assume full current contex
     responsive: ${responsive?string} 
     scrollable: ${scrollable?string} -->
   <@table open=true close=false type=tableType class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
+  <#local tableInfo = {
+    "formName":formName, 
+    "style":style, 
+    "responsive":responsive, 
+    "scrollable":scrollable,
+    "tableId":getRequestVar("scipioCurrentTableInfo").id
+  }>
+  <#local dummy = pushRequestStack("renderFormatListWrapperStack", tableInfo)>
 </#macro>
 
 <#macro renderFormatListWrapperClose formName extraArgs...>
   <#local stackValues = popRequestStack("renderFormatListWrapperStack")!{}>
   <@table close=true open=false />
+  <#-- save the table info for post-table stuff -->
+  <#local dummy = setRequestVar("renderFormLastTableInfo", stackValues)>
+  <#-- TABLE ID: ${stackValues.tableId}, ${getRequestVar("scipioLastTableInfo").id} -->
   <#-- Scipio: unset form info, but only if it was the list wrapper that set it -->
   <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>

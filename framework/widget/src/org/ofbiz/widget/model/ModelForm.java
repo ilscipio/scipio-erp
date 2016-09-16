@@ -1766,17 +1766,21 @@ public abstract class ModelForm extends ModelWidget {
     
     
     /**
-     * SCIPIO: Gets row-submit header item.
+     * SCIPIO: Gets row-submit header field.
      */
-    public ModelFormField getRowSubmitHeaderItem(Map<String, Object> context) {
-        // FIXME?: DOES IT ALWAYS NEED TO BE REBUILT?
-        return createRowSubmitHeaderItem(context);
+    public ModelFormField getRowSubmitHeaderSelectField(Map<String, Object> context) {
+        if (getType().equals("list") || getType().equals("multi")) {
+            // FIXME?: DOES IT ALWAYS NEED TO BE REBUILT?
+            return createRowHeaderSelectField(context);
+        } else {
+            return null;
+        }
     }
     
     /**
-     * SCIPIO: Creates a row-submit header item.
+     * SCIPIO: Creates a row-submit header field.
      */
-    private ModelFormField createRowSubmitHeaderItem(Map<String, Object> context) {
+    private ModelFormField createRowHeaderSelectField(Map<String, Object> context) {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
         builder.setFieldName(getRowSubmitHeaderSelectFieldName(context));
@@ -1788,23 +1792,23 @@ public abstract class ModelForm extends ModelWidget {
     }
     
     /**
-     * SCIPIO: Gets row-submit item.
+     * SCIPIO: Gets row-submit field (data rows).
      */
-    public ModelFormField getRowSubmitRadioItem(Map<String, Object> context) {
+    public ModelFormField getRowSubmitSelectField(Map<String, Object> context) {
         // FIXME?: DOES IT ALWAYS NEED TO BE REBUILT?
         ModelFormField item = null;
         if (getType().equals("list")) {
-            item = createRowSubmitRadioItem(context);
+            item = createRowSubmitRadioField(context);
         } else if (getType().equals("multi")) {
-            item = createRowSubmitCheckboxItem(context);                
+            item = createRowSubmitCheckboxField(context);                
         }
         return item;
     }
     
     /**
-     * SCIPIO: Creates a row-submit radio item.
+     * SCIPIO: Creates a row-submit radio field.
      */
-    private ModelFormField createRowSubmitRadioItem(Map<String, Object> context) {
+    private ModelFormField createRowSubmitRadioField(Map<String, Object> context) {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
         optionSources.add(new SingleOption("Y", " ", null));
@@ -1818,9 +1822,9 @@ public abstract class ModelForm extends ModelWidget {
     }
     
     /**
-     * SCIPIO: Creates a row-submit checkbox item.
+     * SCIPIO: Creates a row-submit checkbox field.
      */
-    private ModelFormField createRowSubmitCheckboxItem(Map<String, Object> context) {
+    private ModelFormField createRowSubmitCheckboxField(Map<String, Object> context) {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
         optionSources.add(new SingleOption("Y", " ", null));

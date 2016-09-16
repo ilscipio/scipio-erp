@@ -11,7 +11,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.template.FtlScriptFormatter;
 
 /**
- * Scipio: Generalized helper class to help implement one-shot macros.
+ * SCIPIO: Generalized helper class to help implement one-shot macros.
  * <p>
  * This produces a single macro invocation with the old Ofbiz sub-invocations converted
  * to map arguments, which may then contain further maps within.
@@ -89,7 +89,7 @@ class OneShotMacro {
     public void appendData(Appendable origWriter, String macroName, Map<String, Object> macroParameters) {
         Entry entry = macroNameMap.get(macroName);
         if (entry == null) {
-            throw new IllegalStateException("Scipio: unknown widget menu render entry type (" + macroName + "). Did Ofbiz source change?");
+            throw new IllegalStateException("SCIPIO: unknown widget menu render entry type (" + macroName + "). Did Ofbiz source change?");
         }
         entry.appendData(state, macroParameters, origWriter);
     }

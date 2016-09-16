@@ -82,11 +82,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private static final String formrenderer = UtilProperties.getPropertyValue("widget", "screen.formrenderer");
     private int screenLetsIdCounter = 1;
 
-    private MapStack<String> initialContext = null; // Scipio: context reference as received at beginning of screen render
-    //private Map<String, Object> initialContextCopy = null; // Scipio: not needed for now
+    private MapStack<String> initialContext = null; // SCIPIO: context reference as received at beginning of screen render
+    //private Map<String, Object> initialContextCopy = null; // SCIPIO: not needed for now
     
     /**
-     * Scipio: Saves the initial screen context to use in populating a context upon creation
+     * SCIPIO: Saves the initial screen context to use in populating a context upon creation
      * of Environments used to render macros, to provide context var support to Ofbiz widget macros.
      * <p>
      * 2016-01-06: Previously this class only saved and passed a few major global values from the
@@ -135,7 +135,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                         //screenRenderer.initialContextCopy = new HashMap<String, Object>(context);
                     }
                     else {
-                        throw new IllegalStateException("Scipio: Expected initial screen context to be a MapStack, "
+                        throw new IllegalStateException("SCIPIO: Expected initial screen context to be a MapStack, "
                                 + "but was of type: " + context.getClass().getName());
                     }
                 }
@@ -207,7 +207,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     /**
-     * Scipio: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer. 
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
@@ -256,7 +256,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            // Scipio: custom render context
+            // SCIPIO: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
@@ -442,9 +442,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String src = image.getSrc(context);
 
         String urlMode = image.getUrlMode();
-        Boolean fullPath = null; // Scipio: changed from boolean to Boolean
-        Boolean secure = null; // Scipio: changed from boolean to Boolean
-        Boolean encode = false; // Scipio: changed from boolean to Boolean
+        Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
+        Boolean secure = null; // SCIPIO: changed from boolean to Boolean
+        Boolean encode = false; // SCIPIO: changed from boolean to Boolean
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         String urlString = "";
@@ -744,7 +744,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             }
             StringWriter sb = new StringWriter();
             if (navMenu != null) {
-                // Scipio: use the macro renderer for this
+                // SCIPIO: use the macro renderer for this
                 //MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
                 //MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
                 //context.put("menuStringRenderer", renderer);

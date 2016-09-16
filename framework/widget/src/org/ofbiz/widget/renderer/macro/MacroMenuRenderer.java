@@ -64,7 +64,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     public static final String module = MacroMenuRenderer.class.getName();
     
     /**
-     * Scipio: Maps traditional Ofbiz macro names to one-shot macro render entries.
+     * SCIPIO: Maps traditional Ofbiz macro names to one-shot macro render entries.
      */
     static final Map<String, OneShotMacro.Entry> renderEntryMacroNameMap;
     static {
@@ -91,7 +91,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
     
     /**
-     * Scipio: One-shot macro helper class. Controls whether render macros piecemeal or
+     * SCIPIO: One-shot macro helper class. Controls whether render macros piecemeal or
      * in one invocation upon close.
      */
     private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", true), 
@@ -104,7 +104,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     /**
-     * Scipio: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer. 
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
@@ -122,9 +122,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(src) && request != null && response != null) {
             String urlMode = image.getUrlMode();
             if ("ofbiz".equalsIgnoreCase(urlMode)) {
-                Boolean fullPath = null; // Scipio: changed from boolean to Boolean
-                Boolean secure = null; // Scipio: changed from boolean to Boolean
-                Boolean encode = false; // Scipio: changed from boolean to Boolean
+                Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
+                Boolean secure = null; // SCIPIO: changed from boolean to Boolean
+                Boolean encode = false; // SCIPIO: changed from boolean to Boolean
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 src = rh.makeLink(request, response, src, fullPath, secure, encode);
@@ -178,7 +178,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
     
     /**
-     * Scipio: Modified executeMacro.
+     * SCIPIO: Modified executeMacro.
      */
     private void executeMacro(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
         if (oneShotMacro.isEnabled()) {
@@ -192,7 +192,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            // Scipio: custom render context
+            // SCIPIO: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
@@ -239,7 +239,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
     
     /**
-     * Scipio: Renders full menu in one macro call using data previously collected in buffer.
+     * SCIPIO: Renders full menu in one macro call using data previously collected in buffer.
      */
     protected void renderMenuFull(Appendable writer, Map<String, Object> context, ModelMenu menu, StringBuffer sb) throws IOException {
         try {
@@ -289,13 +289,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = new HashMap<String, Object>();
         String target = link.getTarget(context);
         ModelMenuItem menuItem = link.getLinkMenuItem();
-        // Scipio: Let macro decide what to do when disabled.
+        // SCIPIO: Let macro decide what to do when disabled.
         //if (isDisableIfEmpty(menuItem, context)) {
         //    target = null;
         //}
         boolean disabled = isDisableIfEmpty(menuItem, context);
         
-        // Scipio: tell macro which selected and disabled
+        // SCIPIO: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
@@ -362,7 +362,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
         
-        // Scipio: add disabled and selected
+        // SCIPIO: add disabled and selected
         parameters.put("disabled", disabled);
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
@@ -393,7 +393,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         } catch (TemplateException e) {
             throw new IOException(e);
         }
-        // Scipio: reset one-shot macro buffer
+        // SCIPIO: reset one-shot macro buffer
         if (oneShotMacro.isReady()) {
             renderMenuFull(writer, context, menu, oneShotMacro.getBuffer());
             oneShotMacro.resetState();
@@ -408,7 +408,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = new HashMap<String, Object>();
         String style = menuItem.getWidgetStyle();
         
-        // Scipio: tell macro which selected and disabled
+        // SCIPIO: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         //ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
@@ -419,7 +419,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean selectedAncestor = false;
         if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
-            // Scipio: Must use new combination logic
+            // SCIPIO: Must use new combination logic
             //if (UtilValidate.isEmpty(selectedStyle)) {
             //    selectedStyle = "selected";
             //}
@@ -446,7 +446,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         boolean disabled = this.isDisableIfEmpty(menuItem, context);
         if (disabled) {
-            // Scipio: Must use new combination logic
+            // SCIPIO: Must use new combination logic
             //style = menuItem.getDisabledTitleStyle();
             style = ModelMenu.combineExtraStyle(style, menuItem.getDisabledTitleStyle());
         }
@@ -455,12 +455,12 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         String alignStyle = menuItem.getAlignStyle();
         if (UtilValidate.isNotEmpty(alignStyle)) {
-            // Scipio: Must use new combination logic
+            // SCIPIO: Must use new combination logic
             //style = style.concat(" ").concat(alignStyle);
             style = ModelMenu.combineExtraStyle(style, alignStyle);
         }
         
-        // Scipio: expand the style here (not done previously, and _may_ expand on its own through FTL, but
+        // SCIPIO: expand the style here (not done previously, and _may_ expand on its own through FTL, but
         // may not produce expected results!)
         style = FlexibleStringExpander.expandString(style, context).trim();
                 
@@ -498,24 +498,24 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("containsNestedMenus", containsNestedMenus);
         
         
-        // Scipio: menu context role
+        // SCIPIO: menu context role
         String menuCtxRole = MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty();
         parameters.put("menuCtxRole", menuCtxRole);
         
-        // Scipio: sub menu style
+        // SCIPIO: sub menu style
         // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
         String subMenuStyle = menuItem.getSubMenuStyle(context);
         parameters.put("subMenuStyle", subMenuStyle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
-        // Scipio: sub menu id
+        // SCIPIO: sub menu id
         String subMenuId = menuItem.getSubMenuId(context);
         parameters.put("subMenuId", subMenuId); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
-        // Scipio: sub menu title
+        // SCIPIO: sub menu title
         String subMenuTitle = menuItem.getSubMenuTitle(context);
         parameters.put("subMenuTitle", subMenuTitle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
-        // Scipio: disabled and selected
+        // SCIPIO: disabled and selected
         parameters.put("selected", selected);
         parameters.put("disabled", disabled);
         parameters.put("selectedAncestor", selectedAncestor);
@@ -608,7 +608,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         
-        // Scipio: menu context role
+        // SCIPIO: menu context role
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
 
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
@@ -632,7 +632,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         
-        // Scipio: menu context role
+        // SCIPIO: menu context role
         parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
         
         try {

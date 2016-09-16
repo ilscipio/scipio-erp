@@ -31,7 +31,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: SetRequestVarMethod - Freemarker Method for setting request-scope variables
+ * SCIPIO: SetRequestVarMethod - Freemarker Method for setting request-scope variables
  * with fallback to globals.
  * <p>
  * Values set by this transform should only be read using {@link GetRequestVarMethod}.

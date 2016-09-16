@@ -49,7 +49,7 @@ webSiteId = WebSiteWorker.getWebSiteId(request);
 context.productStoreId = productStoreId;
 context.currencyUomId = currencyUomId;
 
-// Scipio: Some patches to prevent missing userLogin crash
+// SCIPIO: Some patches to prevent missing userLogin crash
 
 // get the top level shopping lists for the logged in user
 exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin?.partyId),

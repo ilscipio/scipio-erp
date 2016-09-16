@@ -11,7 +11,7 @@ import org.ofbiz.content.content.ContentWorker;
 import javolution.util.FastMap;
 import javolution.util.FastList;
 
-// Scipio: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
 
 
 private void getCatalogCategoriesByType(productCategoryId, title, id) {

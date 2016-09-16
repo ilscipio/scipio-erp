@@ -30,7 +30,7 @@ if (product) {
             quantityUom = mainProduct.getRelatedOne("QuantityUom", true);
             mainProductMap.productId = mainProduct.productId;
             mainProductMap.piecesIncluded = mainProduct.piecesIncluded;
-            if (quantityUom) { // Scipio: This could be missing
+            if (quantityUom) { // SCIPIO: This could be missing
                 mainProductMap.uomDesc = quantityUom.description;
             }
             mainProducts.add(mainProductMap);

@@ -375,7 +375,7 @@ public class CategoryWorker {
 
     public static List<String> getTrail(ServletRequest request) {
         HttpSession session = ((HttpServletRequest) request).getSession();
-        // Scipio: 2016-13-22: Trail must also be checked in request attributes to ensure the request is consistent
+        // SCIPIO: 2016-13-22: Trail must also be checked in request attributes to ensure the request is consistent
         //List<String> crumb = UtilGenerics.checkList(session.getAttribute("_BREAD_CRUMB_TRAIL_"));
         List<String> crumb = UtilGenerics.checkList(request.getAttribute("_BREAD_CRUMB_TRAIL_"));
         if (crumb == null) {
@@ -385,7 +385,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Version that returns a copy of the trail without the TOP category.
+     * SCIPIO: Version that returns a copy of the trail without the TOP category.
      */
     public static List<String> getTrailNoTop(ServletRequest request) {
         List<String> fullTrail = getTrail(request);
@@ -406,24 +406,24 @@ public class CategoryWorker {
     /**
      * Sets breadcrumbs trail to the exact given value.
      * <p>
-     * Scipio: This is modified to accept a onlyIfNewInRequest boolean that will check to see
+     * SCIPIO: This is modified to accept a onlyIfNewInRequest boolean that will check to see
      * if a breadcrumb was already set in the request. Default is false. 
      * This is needed in some places to prevent squashing breadcrumbs set in servlets and filters.
      */
     public static List<String> setTrail(ServletRequest request, List<String> crumb, boolean onlyIfNewInRequest) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         if (onlyIfNewInRequest) {
-            // Scipio: Check if was already set
+            // SCIPIO: Check if was already set
             if (request.getAttribute("_BREAD_CRUMB_TRAIL_") == null) {
                 session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
-                // Scipio: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
+                // SCIPIO: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
                 request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
             }
         }
         else {
-            // Scipio: stock case
+            // SCIPIO: stock case
             session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
-            // Scipio: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
+            // SCIPIO: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
             request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
         }
         return crumb;
@@ -437,7 +437,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Sets breadcrumbs trail to the exact given value but only if not yet set during request.
+     * SCIPIO: Sets breadcrumbs trail to the exact given value but only if not yet set during request.
      */
     public static List<String> setTrailIfFirstInRequest(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, true);
@@ -598,7 +598,7 @@ public class CategoryWorker {
     }
 
     /**
-     * Scipio: Retrieves categories based on either a list of
+     * SCIPIO: Retrieves categories based on either a list of
      * ProductCategoryRollup or ProdCatalogCategory and returns a list of
      * TreeDataItem representing categories
      * 
@@ -668,7 +668,7 @@ public class CategoryWorker {
     }
 
     /**
-     * Scipio: Retrieves products members for a given category and returns a list
+     * SCIPIO: Retrieves products members for a given category and returns a list
      * of JsTreeDataItem representing products
      * 
      * @param delegator
@@ -707,7 +707,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Returns true only if the category ID is child of the given parent category ID.
+     * SCIPIO: Returns true only if the category ID is child of the given parent category ID.
      * <p>
      * NOTE: is caching
      */
@@ -726,7 +726,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Returns true only if the category ID is child of the given parent category ID.
+     * SCIPIO: Returns true only if the category ID is child of the given parent category ID.
      * <p>
      * NOTE: is caching
      */
@@ -736,7 +736,7 @@ public class CategoryWorker {
     }    
     
     /**
-     * Scipio: Returns true only if the category ID is a top category.
+     * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
@@ -757,7 +757,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Returns true only if the category ID is a top category.
+     * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
@@ -767,7 +767,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Returns true only if the category ID is a top category.
+     * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
@@ -789,7 +789,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Returns true only if the category contains the product, NON-recursive.
+     * SCIPIO: Returns true only if the category contains the product, NON-recursive.
      * <p>
      * NOTE: is caching
      */
@@ -802,7 +802,7 @@ public class CategoryWorker {
     
     
     /**
-     * Scipio: Returns a valid category path/trail (as parts) from the given trail,
+     * SCIPIO: Returns a valid category path/trail (as parts) from the given trail,
      * starting with the top category (but without the fake "TOP" category). 
      * If none could be determined, returns null.
      * <p>
@@ -838,7 +838,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Returns a valid category path/trail (as parts) from the current request trail in session,
+     * SCIPIO: Returns a valid category path/trail (as parts) from the current request trail in session,
      * starting with the top category (but without the fake "TOP" category). 
      * If none could be determined, returns null.
      */
@@ -847,7 +847,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Checks the given trail for the last recorded top category ID, if any.
+     * SCIPIO: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      * <p>
      * NOTE: is caching
@@ -870,7 +870,7 @@ public class CategoryWorker {
     
     
     /**
-     * Scipio: Checks the given trail for the last recorded top category ID, if any.
+     * SCIPIO: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      */
     public static String getTopCategoryFromTrail(ServletRequest request, List<String> trail) {
@@ -879,7 +879,7 @@ public class CategoryWorker {
     }
     
     /**
-     * Scipio: Checks the current trail for the last recorded top category ID, if any.
+     * SCIPIO: Checks the current trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      */
     public static String getTopCategoryFromTrail(ServletRequest request) {
@@ -888,7 +888,7 @@ public class CategoryWorker {
     
     
     /**
-     * Scipio: Attempts to determine a suitable category for the given product from given trail.
+     * SCIPIO: Attempts to determine a suitable category for the given product from given trail.
      */
     public static String getCategoryForProductFromTrail(ServletRequest request, String productId, List<String> trail) {
         if (UtilValidate.isNotEmpty(productId)) {
@@ -905,7 +905,7 @@ public class CategoryWorker {
     }   
     
     /**
-     * Scipio: Attempts to determine a suitable category for the given product from the trail in session.
+     * SCIPIO: Attempts to determine a suitable category for the given product from the trail in session.
      */
     public static String getCategoryForProductFromTrail(ServletRequest request, String productId) {
         return getCategoryForProductFromTrail(request, productId, CategoryWorker.getTrail(request));

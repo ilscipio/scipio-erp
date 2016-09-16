@@ -1300,7 +1300,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
         if (this.renderPagination) {
             this.renderNextPrev(writer, context, modelForm);
         }
-        // Scipio: Removed the invalid HTML5 attribute (cellspacing)
+        // SCIPIO: Removed the invalid HTML5 attribute (cellspacing)
         writer.append(" <table class=\"");
         if (UtilValidate.isNotEmpty(modelForm.getDefaultTableStyle())) {
             writer.append(FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context));

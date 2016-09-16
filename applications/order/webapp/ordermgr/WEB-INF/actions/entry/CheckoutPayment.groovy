@@ -50,7 +50,7 @@ context.checkOutPaymentId = checkOutPaymentId;
 paymentMethodList = EntityUtil.filterByDate(party?.getRelated("PaymentMethod", null, ["paymentMethodTypeId"], false), true);
 context.paymentMethodList = paymentMethodList;
 
-billingAccountList = (party) ? BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher) : null; // Scipio: missing party check
+billingAccountList = (party) ? BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher) : null; // SCIPIO: missing party check
 if (billingAccountList) {
     context.selectedBillingAccountId = cart.getBillingAccountId();
     context.billingAccountList = billingAccountList;
@@ -75,7 +75,7 @@ if (checkIdealPayment) {
     }
 }
 
-// Scipio: Make party, person, partyGroup available
+// SCIPIO: Make party, person, partyGroup available
 context.party = party;
 person = from("Person").where("partyId", partyId).cache(true).queryOne();
 context.person = person;
@@ -83,7 +83,7 @@ partyGroup = from("PartyGroup").where("partyId", partyId).cache(true).queryOne()
 context.partyGroup = partyGroup;
 
 
-// Scipio: Need a list of ALL payment meths selected in cart
+// SCIPIO: Need a list of ALL payment meths selected in cart
 // WARN: Th
 checkOutPaymentIdSet = [] as Set;
 if (cart) {
@@ -166,7 +166,7 @@ if (parameters.checkOutPaymentId || "Y" == parameters.addGiftCard) {
 }
 
 
-// Scipio: group pay methods by payment method type
+// SCIPIO: group pay methods by payment method type
 paymentMethodListsByType = new LinkedHashMap();
 if (paymentMethodList) {
     for (paymentMethod in paymentMethodList) {

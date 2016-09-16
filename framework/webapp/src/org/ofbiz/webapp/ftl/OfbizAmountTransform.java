@@ -57,7 +57,7 @@ public class OfbizAmountTransform implements TemplateTransformModel {
             if (o instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) o;
                 try {
-                    // Scipio: bypass auto-escaping on this
+                    // SCIPIO: bypass auto-escaping on this
                     //result = s.getAsString();
                     result = LangFtlUtil.getAsStringNonEscaping(s);
                 } catch (TemplateModelException e) {
@@ -90,7 +90,7 @@ public class OfbizAmountTransform implements TemplateTransformModel {
             }
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
-                // Scipio: bypass auto-escaping on this
+                // SCIPIO: bypass auto-escaping on this
                 //return Double.valueOf(s.getAsString());
                 try {
                     return Double.valueOf(LangFtlUtil.getAsStringNonEscaping(s));

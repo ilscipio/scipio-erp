@@ -24,7 +24,7 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 
-// Scipio: Some fixes to prevent crash on missing userLogin
+// SCIPIO: Some fixes to prevent crash on missing userLogin
 
 cart = session.getAttribute("shoppingCart");
 currencyUomId = cart.getCurrency();

@@ -135,7 +135,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                         //screenRenderer.initialContextCopy = new HashMap<String, Object>(context);
                     }
                     else {
-                        throw new IllegalStateException("SCIPIO: Expected initial screen context to be a MapStack, "
+                        throw new IllegalStateException("Scipio: Expected initial screen context to be a MapStack, "
                                 + "but was of type: " + context.getClass().getName());
                     }
                 }

@@ -30,11 +30,11 @@ import org.ofbiz.product.category.CategoryWorker;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
-// Scipio: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
 
 module = "KeywordSearch.groovy";
 
-// Scipio: this allows to use the script for local scopes without affecting request
+// SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;
 if (localVarsOnly == null) {
     localVarsOnly = false;
@@ -92,7 +92,7 @@ result = dispatcher.runSync("solrKeywordSearch",[query:searchString,queryFilter:
 context.listIndex = 0;
 if (result.viewSize > 0)
     context.listIndex = Math.ceil(result.listSize/result.viewSize);
-// Scipio: this may not make sense anymore since SOLR patches
+// SCIPIO: this may not make sense anymore since SOLR patches
 //if (!viewSize.equals(String.valueOf(result.viewSize))) {
 //    pageViewSize = Integer.parseInt(viewSize).intValue();
 //    context.listIndex = Math.ceil(result.listSize/pageViewSize);
@@ -129,7 +129,7 @@ for (categoryTrail in categoriesTrail.keySet()) {
     }
 }
 
-/* Scipio: do NOT do this from here (not needed and may cause issues)
+/* SCIPIO: do NOT do this from here (not needed and may cause issues)
 parameters.VIEW_SIZE = viewSize;
 parameters.VIEW_INDEX = viewIndex;
 parameters.SEARCH_STRING = searchString;

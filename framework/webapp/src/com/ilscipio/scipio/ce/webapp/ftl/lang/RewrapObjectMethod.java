@@ -29,7 +29,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: RewrapObjectMethod - Rewraps objects with different Freemarker wrappers.
+ * SCIPIO: RewrapObjectMethod - Rewraps objects with different Freemarker wrappers.
  */
 public class RewrapObjectMethod implements TemplateMethodModelEx {
 

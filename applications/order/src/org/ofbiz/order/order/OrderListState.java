@@ -110,7 +110,7 @@ public class OrderListState implements Serializable {
      * directly, instead use getInstance().
      */
     protected OrderListState() {
-        // Scipio: unhardcode default
+        // SCIPIO: unhardcode default
         // viewSize = 10;
         viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.defaultViewSize", 10);
         viewIndex = 0;

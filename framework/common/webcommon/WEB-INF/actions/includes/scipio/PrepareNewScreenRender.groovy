@@ -1,5 +1,5 @@
 /**
- * Scipio: Prepares request and widget context for new render.
+ * SCIPIO: Prepares request and widget context for new render.
  * <p>
  * Invoked by the screen renderer upon start of view/screen rendering.
  * <p>

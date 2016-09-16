@@ -86,7 +86,7 @@ public class RequestHandler {
     private final String charset;
     
     /**
-     * Scipio: Allows or prevents override view URIs, based on web.xml config. Default: true (stock behavior).
+     * SCIPIO: Allows or prevents override view URIs, based on web.xml config. Default: true (stock behavior).
      */
     private final boolean allowOverrideViewUri;
 
@@ -117,7 +117,7 @@ public class RequestHandler {
         this.cookies = !"false".equalsIgnoreCase(context.getInitParameter("cookies"));
         this.charset = context.getInitParameter("charset");
         
-        // Scipio: New (currently true by default)
+        // SCIPIO: New (currently true by default)
         this.allowOverrideViewUri = !"false".equalsIgnoreCase(context.getInitParameter("allowOverrideViewUri"));
     }
 
@@ -174,7 +174,7 @@ public class RequestHandler {
             }
         }
 
-        // Scipio: may now prevent this
+        // SCIPIO: may now prevent this
         //String overrideViewUri = RequestHandler.getOverrideViewUri(request.getPathInfo());
         String overrideViewUri = null;
         if (allowOverrideViewUri) {
@@ -243,7 +243,7 @@ public class RequestHandler {
             if (request.getAttribute("_POST_CHAIN_VIEW_") != null) {
                 overrideViewUri = (String) request.getAttribute("_POST_CHAIN_VIEW_");
             } else {
-                // Scipio: may now prevent this
+                // SCIPIO: may now prevent this
                 if (allowOverrideViewUri) {
                     overrideViewUri = RequestHandler.getOverrideViewUri(chain);
                 }
@@ -314,7 +314,7 @@ public class RequestHandler {
                     if (request.getQueryString() != null) {
                         urlBuf.append("?").append(request.getQueryString());
                     }
-                    // Scipio: Always make full URL for redirect so uses host from entities
+                    // SCIPIO: Always make full URL for redirect so uses host from entities
                     //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
                     String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                     if (newUrl.toUpperCase().startsWith("HTTPS")) {
@@ -332,7 +332,7 @@ public class RequestHandler {
                 if (request.getQueryString() != null) {
                     urlBuf.append("?").append(request.getQueryString());
                 }
-                // Scipio: Call proper method for this
+                // SCIPIO: Call proper method for this
                 //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
                 String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                 if (newUrl.toUpperCase().startsWith("HTTP")) {
@@ -606,7 +606,7 @@ public class RequestHandler {
                     redirectTarget += "?" + queryString;
                 }
                 
-                // Scipio: Always make full link early
+                // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
                 callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString);
 
@@ -633,7 +633,7 @@ public class RequestHandler {
             throw new RequestHandlerException("Illegal response; handler could not process request [" + requestMap.uri + "] and event return [" + eventReturn + "].");
         }
 
-        // Scipio: Parse value
+        // SCIPIO: Parse value
         String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse.value, requestMap);
         
         if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ", parsed-value=" + nextRequestResponseValue + ", sessionId=" + UtilHttp.getSessionId(request), module);
@@ -684,28 +684,28 @@ public class RequestHandler {
             
             if ("url".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
-                // Scipio: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
+                // SCIPIO: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
                 callRedirect(nextRequestResponseValue, response, request, statusCodeString);
             } else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
                 String url = nextRequestResponseValue.startsWith("/") ? nextRequestResponseValue : "/" + nextRequestResponseValue;
-                // Scipio: Modified to pass through encodeURL and more intelligent link-building method
+                // SCIPIO: Modified to pass through encodeURL and more intelligent link-building method
                 // NOTE: no support for webSiteId, so absPath assumed true
                 //callRedirect(url + this.makeQueryString(request, nextRequestResponse), response, request, statusCodeString);
-                // Scipio: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                // SCIPIO: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 String targetUrl = makeLinkAutoFull(request, response, url + this.makeQueryString(request, nextRequestResponse), true, true, null, null);
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (targetUrl == null || targetUrl.isEmpty()) {
                     Debug.logError("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
@@ -713,15 +713,15 @@ public class RequestHandler {
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")");
                 }
-                // Scipio: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                // SCIPIO: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse), response, request, statusCodeString);
                 String targetUrl = makeLinkFullWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse);
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (targetUrl == null || targetUrl.isEmpty()) {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
@@ -729,15 +729,15 @@ public class RequestHandler {
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")");
                 }
-                // Scipio: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                // SCIPIO: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLink(request, response, nextRequestResponseValue), response, request, statusCodeString);
                 String targetUrl = makeLinkFull(request, response, nextRequestResponseValue);
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (targetUrl == null || targetUrl.isEmpty()) {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
@@ -747,7 +747,7 @@ public class RequestHandler {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 // check for an override view, only used if "success" = eventReturn
                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (viewName == null || viewName.isEmpty()) {
                     Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
@@ -783,7 +783,7 @@ public class RequestHandler {
                         }
                     }
                 }
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (viewName == null || viewName.isEmpty()) {
                     Debug.logError("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
@@ -805,7 +805,7 @@ public class RequestHandler {
                  } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
                      viewName = nextRequestResponseValue;
                  }
-                 // Scipio: Sanity check
+                 // SCIPIO: Sanity check
                  if (viewName == null || viewName.isEmpty()) {
                      Debug.logError("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
                      throw new RequestHandlerException("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
@@ -828,7 +828,7 @@ public class RequestHandler {
                         request.setAttribute(urlParamEntry.getKey(), urlParamEntry.getValue());
                     }
                 }
-                // Scipio: Sanity check
+                // SCIPIO: Sanity check
                 if (viewName == null || viewName.isEmpty()) {
                     Debug.logError("Scipio: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
@@ -845,7 +845,7 @@ public class RequestHandler {
     }
 
     /**
-     * Scipio: New feature that allows controller responses to dig values out of request attributes using the 
+     * SCIPIO: New feature that allows controller responses to dig values out of request attributes using the 
      * EL-like syntax: ${scope.name}. The value must be a string otherwise an error is logged.
      * returned.
      * <p>
@@ -986,16 +986,16 @@ public class RequestHandler {
     /**
      * Performs HTTP redirect to the given URL.
      * <p>
-     * Scipio: NOTE: All the code currently calling this may append jsessionIds (through processing
+     * SCIPIO: NOTE: All the code currently calling this may append jsessionIds (through processing
      * of changing encode to true to correct filter hook behavior).
      * Currently I don't see how this is bad.
      * If need to remove jsessionId from redirects, could uncomment the lines below.
      */
     private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString) throws RequestHandlerException {
-        // Scipio: Uncomment this to force remove jsessionId from controller redirects...
+        // SCIPIO: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
         if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "], sessionId=" + UtilHttp.getSessionId(req), module);
-        // Scipio: sanity check
+        // SCIPIO: sanity check
         if (url == null || url.isEmpty()) {
             Debug.logError("Scipio: Redirect URL is empty", module);
             throw new RequestHandlerException("Scipio: Redirect URL is empty");
@@ -1034,7 +1034,7 @@ public class RequestHandler {
         }
     }
     private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName) throws RequestHandlerException {
-        // Scipio: sanity check
+        // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
             throw new RequestHandlerException("Scipio: View name is empty");
@@ -1312,7 +1312,7 @@ public class RequestHandler {
     /**
      * Builds links with added query string.
      * <p>
-     * Scipio: Modified overload to allow boolean flags.
+     * SCIPIO: Modified overload to allow boolean flags.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode, 
             ConfigXMLReader.RequestResponse requestResponse) {
@@ -1324,14 +1324,14 @@ public class RequestHandler {
     /**
      * Builds links with added query string.
      * <p>
-     * Scipio: Original signature method, now delegates.
+     * SCIPIO: Original signature method, now delegates.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
         return makeLinkWithQueryString(request, response, url, null, null, null, requestResponse);
     }
     
     /**
-     * Scipio: Builds a full-path link (HTTPS as necessary) with added query string.
+     * SCIPIO: Builds a full-path link (HTTPS as necessary) with added query string.
      */
     public String makeLinkFullWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
         return makeLinkWithQueryString(request, response, url, true, null, null, requestResponse);
@@ -1342,7 +1342,7 @@ public class RequestHandler {
     }
     
     /**
-     * Scipio: Builds a full-path link (HTTPS as necessary).
+     * SCIPIO: Builds a full-path link (HTTPS as necessary).
      */
     public String makeLinkFull(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeLink(request, response, url, true, null, null);
@@ -1351,7 +1351,7 @@ public class RequestHandler {
     /**
      * Builds an Ofbiz navigation link.
      * <p>
-     * Scipio: This function is heavily modified to support non-controller intra-webapp links
+     * SCIPIO: This function is heavily modified to support non-controller intra-webapp links
      * as well as inter-webapp links. It should be able to generate all possible types of webapp
      * navigation links. However, it will only build links for webapps recognized by the server,
      * because in most cases we require information from the webapp.
@@ -1414,52 +1414,52 @@ public class RequestHandler {
      */
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller, 
             Boolean fullPath, Boolean secure, Boolean encode) {
-        // Scipio: We now accept nulls for all booleans to prevent rehardcoding defaults and allow more options
+        // SCIPIO: We now accept nulls for all booleans to prevent rehardcoding defaults and allow more options
         if (interWebapp == null) {
             interWebapp = Boolean.FALSE;
         }
         if (controller == null) {
             controller = Boolean.TRUE;
         }
-        // Scipio: Code must be aware of whether these were explicitly requested or not
-        // Scipio: NOTE: change to Boolean not fully exploited yet
+        // SCIPIO: Code must be aware of whether these were explicitly requested or not
+        // SCIPIO: NOTE: change to Boolean not fully exploited yet
         //if (fullPath == null) {
         //    fullPath = Boolean.FALSE;
         //}
         //if (secure == null) {
-        //    // Scipio: NOTE: this does not mean the link is "insecure"!
+        //    // SCIPIO: NOTE: this does not mean the link is "insecure"!
         //    secure = Boolean.FALSE;
         //}
         if (encode == null) {
             encode = Boolean.TRUE;
         }
         
-        Delegator delegator = (Delegator) request.getAttribute("delegator"); // Scipio: need delegator
-        OfbizUrlBuilder builder = null; // Scipio: reuse this outside
-        WebSiteProperties webSiteProps; // Scipio: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
-        WebSiteProperties requestWebSiteProps; // Scipio: will always need request web site props, for comparisons
+        Delegator delegator = (Delegator) request.getAttribute("delegator"); // SCIPIO: need delegator
+        OfbizUrlBuilder builder = null; // SCIPIO: reuse this outside
+        WebSiteProperties webSiteProps; // SCIPIO: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
+        WebSiteProperties requestWebSiteProps; // SCIPIO: will always need request web site props, for comparisons
 
-        // Scipio: enforce this check for time being
+        // SCIPIO: enforce this check for time being
         if (interWebapp && webappInfo == null) {
             throw new IllegalArgumentException("Scipio: Cannot build inter-webapp URL without webapp info");
         }
         
-        // Scipio: Sanity check: null/missing URL
+        // SCIPIO: Sanity check: null/missing URL
         if (url == null || url.isEmpty()) {
             Debug.logError("Scipio: makeLink received null URL; returning null", module);
             return null;
         }
         
-        // Scipio: always get current request webSiteProps
+        // SCIPIO: always get current request webSiteProps
         try {
             requestWebSiteProps = WebSiteProperties.from(request);
-        } catch (Exception e) { // Scipio: just catch everything: GenericEntityException
+        } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
             // If the entity engine is throwing exceptions, then there is no point in continuing.
             Debug.logError(e, "Exception thrown while getting web site properties: ", module);
             return null;
         }
         
-        // Scipio: Multiple possible ways to get webSiteProps
+        // SCIPIO: Multiple possible ways to get webSiteProps
         if (interWebapp) {
             try {
                 if (webappInfo != null) {
@@ -1474,17 +1474,17 @@ public class RequestHandler {
                 else {
                     webSiteProps = WebSiteProperties.from(request);
                 }
-            } catch (Exception e) { // Scipio: just catch everything: GenericEntityException
+            } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
                 // If the entity engine is throwing exceptions, then there is no point in continuing.
                 Debug.logError(e, "Exception thrown while getting web site properties: ", module);
                 return null;
             }
         } else {
-            // Scipio: stock case (get from request, or defaults)
+            // SCIPIO: stock case (get from request, or defaults)
             webSiteProps = requestWebSiteProps;
         }
         
-        // Scipio: Special case: If we have inter-webapp, we need to check if the web site properties
+        // SCIPIO: Special case: If we have inter-webapp, we need to check if the web site properties
         // for this link different from the current request's. If so, we have to force full-path
         // link. Here we compare the effective values to ensure correctness. 
         // TODO? It is possible we could want to always force fullPath for all inter-webapp links.
@@ -1498,13 +1498,13 @@ public class RequestHandler {
         String requestUri = null;
         ConfigXMLReader.RequestMap requestMap = null;
         
-        // Scipio: only lookup if we want to use controller
+        // SCIPIO: only lookup if we want to use controller
         if (controller) {
             requestUri = RequestHandler.getRequestUri(url);
             
             if (requestUri != null) {
                 try {
-                    // Scipio: Lookup correct controller for webapp
+                    // SCIPIO: Lookup correct controller for webapp
                     if (interWebapp) {
                         try {
                             requestMap = ConfigXMLReader.getControllerConfig(webappInfo).getRequestMapMap().get(requestUri);
@@ -1514,7 +1514,7 @@ public class RequestHandler {
                         }
                     }
                     else {
-                        // Scipio: stock case
+                        // SCIPIO: stock case
                         requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
                     }
                 } catch (WebAppConfigurationException e) {
@@ -1524,7 +1524,7 @@ public class RequestHandler {
                 }
             }
             
-            // Scipio: 2016-05-06: If controller requested and request could not be found, show an error and return null.
+            // SCIPIO: 2016-05-06: If controller requested and request could not be found, show an error and return null.
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
@@ -1535,13 +1535,13 @@ public class RequestHandler {
         
         boolean didFullSecure = false;
         boolean didFullStandard = false;
-        // Scipio: We need to enter even if no controller (and other cases)
+        // SCIPIO: We need to enter even if no controller (and other cases)
         //if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
         // We don't need this condition anymore, because it doesn't make sense to require enableHttps to produce full path URLs
         //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
         {
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
-            // Scipio: These conditions have been change (see method)
+            // SCIPIO: These conditions have been change (see method)
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
             //    didFullSecure = true;
             //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
@@ -1562,14 +1562,14 @@ public class RequestHandler {
             try {
                 if (builder == null) {
                     if (interWebapp) {
-                        // Scipio: builder should be made using webappInfo if one was passed to us 
+                        // SCIPIO: builder should be made using webappInfo if one was passed to us 
                         builder = OfbizUrlBuilder.from(webappInfo, webSiteProps, delegator);
                     } else {
-                        // Scipio: stock case
+                        // SCIPIO: stock case
                         builder = OfbizUrlBuilder.from(request);
                     }
                 }
-                builder.buildHostPart(newURL, url, didFullSecure, controller); // Scipio: controller flag
+                builder.buildHostPart(newURL, url, didFullSecure, controller); // SCIPIO: controller flag
             } catch (GenericEntityException e) {
                 // If the entity engine is throwing exceptions, then there is no point in continuing.
                 Debug.logError(e, "Exception thrown while getting web site properties: ", module);
@@ -1583,19 +1583,19 @@ public class RequestHandler {
                 Debug.logError(e, "Exception thrown while writing to StringBuilder: ", module);
                 return null;
             } catch (SAXException e) {
-                // Scipio: new case
+                // SCIPIO: new case
                 Debug.logError(e, "Scipio: Exception thrown while getting web site properties: ", module);
                 return null;
             }
         }
         
-        // Scipio: build the path part (context root, servlet/controller path)
+        // SCIPIO: build the path part (context root, servlet/controller path)
         if (interWebapp) {
             if (builder == null) {
                 try {
                     builder = OfbizUrlBuilder.from(webappInfo, webSiteProps, delegator);
                 } catch (Exception e) {
-                    // Scipio: new case
+                    // SCIPIO: new case
                     Debug.logError(e, "Scipio: Exception thrown while getting web site properties: ", module);
                     return null;
                 }
@@ -1609,22 +1609,22 @@ public class RequestHandler {
                     builder.buildPathPartWithContextRoot(newURL, url);
                 }
             } catch (WebAppConfigurationException e) {
-                // Scipio: new case
+                // SCIPIO: new case
                 Debug.logError(e, "Scipio: Exception thrown while building url path part: ", module);
                 return null;
             } catch (IOException e) {
-                // Scipio: new case
+                // SCIPIO: new case
                 Debug.logError(e, "Scipio: Exception thrown while building url path part: ", module);
                 return null;
             }
         } else {
             if (controller) { 
-                // Scipio: This is the original stock case: intra-webapp, controller link
+                // SCIPIO: This is the original stock case: intra-webapp, controller link
                 // create the path to the control servlet
                 String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
                 newURL.append(controlPath);
             } else {
-                // Scipio: Here we point to any servlet or file in the webapp, so only append context path
+                // SCIPIO: Here we point to any servlet or file in the webapp, so only append context path
                 String contextPath = request.getContextPath();
                 newURL.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
             }
@@ -1660,7 +1660,7 @@ public class RequestHandler {
      */
     protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
-        // Scipio: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
+        // SCIPIO: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
         // We will NEVER build insecure URLs to requests marked secure.
         // This way, there is less control, but fullPath becomes easier and safer to use.
         // 2016-04-06: WE DO NOT DOWNGRADE CONNECTIONS WITH didFullStandard UNLESS EXPLICITLY REQUESTED
@@ -1697,17 +1697,17 @@ public class RequestHandler {
     protected String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
             boolean didFullStandard, boolean didFullSecure) {
         String encodedUrl;
-        // Scipio: do something different for inter-webapp links
+        // SCIPIO: do something different for inter-webapp links
         if (interWebapp) {
             if (response != null) {
-                // Scipio: We want to run inter-webapp links through URL encoding for outbound-rules and things,
+                // SCIPIO: We want to run inter-webapp links through URL encoding for outbound-rules and things,
                 // but we should never add a jsessionId.
                 encodedUrl = RequestLinkUtil.encodeURLNoJsessionId(newURL.toString(), response);
             } else {
                 encodedUrl = newURL.toString();    
             }
         } else {
-            // Scipio: stock case
+            // SCIPIO: stock case
             boolean forceManualJsessionid = !cookies;
             boolean isSpider = false;
 
@@ -1752,7 +1752,7 @@ public class RequestHandler {
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
         return makeLink(request, response, url, null, null, null, fullPath, secure, encode);
         
-        /* Scipio: Below is the original implementation of this method (with this signature), for reference only; unmaintained and may become out of date
+        /* SCIPIO: Below is the original implementation of this method (with this signature), for reference only; unmaintained and may become out of date
         WebSiteProperties webSiteProps = null;
         try {
             webSiteProps = WebSiteProperties.from(request);
@@ -1866,7 +1866,7 @@ public class RequestHandler {
     }
     
     /**
-     * Scipio: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * SCIPIO: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
      * <p>
      * The <code>url</code> may be a relative URI such as controller URI, a servlet path relative to context root,
@@ -2045,7 +2045,7 @@ public class RequestHandler {
     }
 
     /**
-     * Scipio: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * SCIPIO: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
      * 
      * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
@@ -2055,7 +2055,7 @@ public class RequestHandler {
     }
     
     /**
-     * Scipio: Builds an Ofbiz navigation full link (with HTTPS as necessary), where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * SCIPIO: Builds an Ofbiz navigation full link (with HTTPS as necessary), where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
      * and <code>webSiteId</code>.
      * 
      * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
@@ -2067,13 +2067,13 @@ public class RequestHandler {
     /**
      * Builds an Ofbiz URL.
      * <p>
-     * Scipio: This is modified to pass encode <code>true</code> (<code>null</code>) instead of <code>false</code>.
+     * SCIPIO: This is modified to pass encode <code>true</code> (<code>null</code>) instead of <code>false</code>.
      * This is <string>necessary</strong> to achieve filter hooks.
      * <strong>WARN</strong>: This may lead to extra jsessionid added in some cases.
      * See {@link #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)} for details.
      */
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
-        // Scipio: Pass encode = true
+        // SCIPIO: Pass encode = true
         //return makeUrl(request, response, url, false, false, false);
         return makeUrl(request, response, url, null, null, null);
     }
@@ -2085,7 +2085,7 @@ public class RequestHandler {
     }
     
     /**
-     * Scipio: Builds a full-path link (HTTPS as necessary).
+     * SCIPIO: Builds a full-path link (HTTPS as necessary).
      */
     public static String makeUrlFull(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeUrl(request, response, url, true, null, null);
@@ -2165,7 +2165,7 @@ public class RequestHandler {
     }
     
     /**
-     * Scipio: Utility method that can be used for security checks to check if controller of current webapp
+     * SCIPIO: Utility method that can be used for security checks to check if controller of current webapp
      * has the specified URI and allows direct/public access.
      */
     public static boolean controllerHasRequestUriDirect(HttpServletRequest request, String uri) {
@@ -2177,7 +2177,7 @@ public class RequestHandler {
     }
     
     /**
-     * Scipio: Utility method that can be used for security checks to check if controller of current webapp
+     * SCIPIO: Utility method that can be used for security checks to check if controller of current webapp
      * has the specified URI and allows direct/public access.
      */
     public boolean controllerHasRequestUriDirect(String uri) {
@@ -2195,7 +2195,7 @@ public class RequestHandler {
     }
     
     /**
-     * Scipio: Necessary accessor method for external code.
+     * SCIPIO: Necessary accessor method for external code.
      */
     public boolean isUseCookies() {
         return cookies;

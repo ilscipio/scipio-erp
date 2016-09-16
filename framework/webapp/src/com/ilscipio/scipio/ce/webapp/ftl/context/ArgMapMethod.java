@@ -32,7 +32,7 @@ import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: ArgsMapMethod - base class for methods that deal with Scipio macro arg patterns.
+ * SCIPIO: ArgsMapMethod - base class for methods that deal with Scipio macro arg patterns.
  */
 public abstract class ArgMapMethod implements TemplateMethodModelEx {
 

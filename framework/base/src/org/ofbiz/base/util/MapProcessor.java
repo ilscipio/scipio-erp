@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Scipio: Basic interface for a map processor.
+ * SCIPIO: Basic interface for a map processor.
  * <p>
  * Generalization of the logical minilang SimpleMapProcessor interface; processors may be written in any language.
  * <p>

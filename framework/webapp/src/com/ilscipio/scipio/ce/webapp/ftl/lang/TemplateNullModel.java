@@ -3,7 +3,7 @@ package com.ilscipio.scipio.ce.webapp.ftl.lang;
 import freemarker.template.AdapterTemplateModel;
 
 /**
- * Scipio: Special Freemarker TemplateModel that can be used to represent null in some functions.
+ * SCIPIO: Special Freemarker TemplateModel that can be used to represent null in some functions.
  */
 public final class TemplateNullModel implements AdapterTemplateModel {
 

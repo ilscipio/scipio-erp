@@ -1101,7 +1101,7 @@ public class PartyServices {
         }
         result.put("viewIndex", Integer.valueOf(viewIndex));
 
-        // Scipio: unhardcode default
+        // SCIPIO: unhardcode default
         //int viewSize = 20;
         int viewSize;
         try {

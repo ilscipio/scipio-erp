@@ -74,7 +74,7 @@ public class KeyStoreUtil {
 
     public static KeyStore getComponentKeyStore(String componentName, String keyStoreName) throws IOException, GeneralSecurityException, GenericConfigException {
         ComponentConfig.KeystoreInfo ks = ComponentConfig.getKeystoreInfo(componentName, keyStoreName);
-        // Scipio: Prevent confusing NPE
+        // SCIPIO: Prevent confusing NPE
         if (ks == null) {
             throw new IOException("Could not get keystore info for given keystore; not found");
         }

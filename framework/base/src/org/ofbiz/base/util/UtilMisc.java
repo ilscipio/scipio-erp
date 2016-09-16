@@ -791,7 +791,7 @@ public class UtilMisc {
     }
     
     /**
-     * Scipio: Gets map entries matching the given prefix.
+     * SCIPIO: Gets map entries matching the given prefix.
      */
     public static Map<String, Object> getPrefixedMapEntries(Map<String, Object> map, String prefix) {
         Map<String, Object> res = new HashMap<String, Object>();
@@ -805,7 +805,7 @@ public class UtilMisc {
     }
     
     /**
-     * Scipio: Creates a new, empty map.
+     * SCIPIO: Creates a new, empty map.
      * <p>
      * This is useful for Freemarker workarounds and to guarantee a map
      * is of the same type as the other toMap calls in this class.
@@ -815,7 +815,7 @@ public class UtilMisc {
     }
     
     /**
-     * Scipio: Creates a new map initialized from the given map.
+     * SCIPIO: Creates a new map initialized from the given map.
      * <p>
      * This is useful for Freemarker workarounds and to guarantee a map
      * is of the same type as the other toMap calls in this class.

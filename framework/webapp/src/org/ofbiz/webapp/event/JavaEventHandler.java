@@ -77,7 +77,7 @@ public class JavaEventHandler implements EventHandler {
         Debug.logVerbose("*[[Event invocation]]*", module);
         Object[] params = new Object[] {request, response};
 
-        return invoke(event.path, event.invoke, eventClass, paramTypes, params, event); // Scipio: pass the event
+        return invoke(event.path, event.invoke, eventClass, paramTypes, params, event); // SCIPIO: pass the event
     }
 
     private String invoke(String eventPath, String eventMethod, Class<?> eventClass, Class<?>[] paramTypes, Object[] params, Event event) throws EventHandlerException {
@@ -98,7 +98,7 @@ public class JavaEventHandler implements EventHandler {
 
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             
-            // Scipio: Trigger transaction abort if configured
+            // SCIPIO: Trigger transaction abort if configured
             if ("error".equals(eventReturn) && ("on-any-error".equals(event.abortTransaction) || "on-error-result".equals(event.abortTransaction))) {
                 try {
                     TransactionUtil.rollback(beganTransaction, "Event returned an error", null);
@@ -112,7 +112,7 @@ public class JavaEventHandler implements EventHandler {
         } catch (java.lang.reflect.InvocationTargetException e) {
             Throwable t = e.getTargetException();
 
-            // Scipio: Trigger transaction abort if configured
+            // SCIPIO: Trigger transaction abort if configured
             if ("on-any-error".equals(event.abortTransaction) || "on-exception".equals(event.abortTransaction)) {
                 try {
                     TransactionUtil.rollback(beganTransaction, "Event exception", t);
@@ -131,7 +131,7 @@ public class JavaEventHandler implements EventHandler {
             }
         } catch (Exception e) {
             
-            // Scipio: Trigger transaction abort if configured
+            // SCIPIO: Trigger transaction abort if configured
             if ("on-any-error".equals(event.abortTransaction) || "on-exception".equals(event.abortTransaction)) {
                 try {
                     TransactionUtil.rollback(beganTransaction, "Event exception", e);

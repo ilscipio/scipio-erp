@@ -60,7 +60,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
             if (o instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) o;
                 try {
-                    // Scipio: This should bypass auto-escaping
+                    // SCIPIO: This should bypass auto-escaping
                     result = LangFtlUtil.getAsStringNonEscaping(s);
                 } catch (TemplateModelException e) {
                     Debug.logError(e, "Template Exception", module);
@@ -85,7 +85,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
 
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
-                // Scipio: This needs to bypass auto-escaping
+                // SCIPIO: This needs to bypass auto-escaping
                 //return new BigDecimal(s.getAsString());
                 try {
                     return new BigDecimal(LangFtlUtil.getAsStringNonEscaping(s));
@@ -119,7 +119,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
             }
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
-                // Scipio: This should bypass auto-escaping
+                // SCIPIO: This should bypass auto-escaping
                 //return Integer.valueOf(s.getAsString());
                 try {
                     return Integer.valueOf(LangFtlUtil.getAsStringNonEscaping(s));

@@ -122,7 +122,7 @@ public class CoreEvents {
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
         String serviceCnt = (String) params.remove("SERVICE_COUNT");
         String retryCnt = (String) params.remove("SERVICE_MAXRETRY");
-        // Scipio: Event ID
+        // SCIPIO: Event ID
         String eventId = (String) params.remove("SERVICE_EVENTID");
 
         // the frequency map
@@ -305,7 +305,7 @@ public class CoreEvents {
             maxRetry = modelService.maxRetry;
         }
 
-        // Scipio: Event ID
+        // SCIPIO: Event ID
         // TODO: more verification
         if (eventId != null && eventId.isEmpty()) {
             eventId = null;
@@ -323,7 +323,7 @@ public class CoreEvents {
             if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").equals("Y")) {
                 syncServiceResult = dispatcher.runSync(serviceName, serviceContext);
             } else {
-                // Scipio: now pass eventId
+                // SCIPIO: now pass eventId
                 dispatcher.schedule(jobName, poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry, eventId);
             }
         } catch (GenericServiceException e) {

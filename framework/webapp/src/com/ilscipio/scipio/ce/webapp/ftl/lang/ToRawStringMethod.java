@@ -31,7 +31,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: ToRawStringMethod - Prevents Ofbiz auto-escaping of string.
+ * SCIPIO: ToRawStringMethod - Prevents Ofbiz auto-escaping of string.
  */
 public class ToRawStringMethod implements TemplateMethodModelEx {
 

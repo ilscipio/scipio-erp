@@ -224,7 +224,7 @@ public final class WebSiteProperties {
     }
     
     /**
-     * Scipio: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
+     * SCIPIO: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
      * in the WebSite entity value for the given webSiteId.
      * 
      * @param delegator
@@ -309,7 +309,7 @@ public final class WebSiteProperties {
     }
     
     /**
-     * Scipio: Returns true if and only if all fields in this object match 
+     * SCIPIO: Returns true if and only if all fields in this object match 
      * the ones in the other WebSiteProperties.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
@@ -334,7 +334,7 @@ public final class WebSiteProperties {
     }
     
     /**
-     * Scipio: Returns true if and only if all fields in this object match 
+     * SCIPIO: Returns true if and only if all fields in this object match 
      * the ones in the other WebSiteProperties. Fields which are missing, 
      * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when 
      * performing the comparison.
@@ -363,7 +363,7 @@ public final class WebSiteProperties {
     }
     
     private static boolean sameFields(String first, String second) {
-        // Scipio: treat null and empty the same, just to be safe
+        // SCIPIO: treat null and empty the same, just to be safe
         if (first != null && !first.isEmpty()) {
             return first.equals(second);
         }

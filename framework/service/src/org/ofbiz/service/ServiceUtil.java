@@ -239,7 +239,7 @@ public class ServiceUtil {
     }
     
     /**
-     * Scipio: Alternative to {@link #getMessages(HttpServletRequest, Map, String)} that preserves lists when setting in request.
+     * SCIPIO: Alternative to {@link #getMessages(HttpServletRequest, Map, String)} that preserves lists when setting in request.
      * The lists are appended to existing, but single message is replaced.
      */
     public static void appendMessageLists(HttpServletRequest request, Map<String, ? extends Object> result) {
@@ -360,21 +360,21 @@ public class ServiceUtil {
 
     
     /**
-     * Scipio: The default message prefix. 
+     * SCIPIO: The default message prefix. 
      */
     private static final String defaultMessagePrefix = UtilProperties.getMessageNoTrim("DefaultMessages", "service.message.prefix", Locale.getDefault());;
     
     /**
      * Joins messages from a list into a single string.
      * <p>
-     * Scipio: <strong>NOTE</strong> This method has been modified so that
+     * SCIPIO: <strong>NOTE</strong> This method has been modified so that
      * by default, if msgPrefix is null, a default will be looked up (service.message.prefix in DefaultMessages resource).
      * This is because a number of cases fail to set a proper space separator and text ends up scrunched.
      * This can be overridden by passing the empty string.
      */
     public static String makeMessageList(List<? extends Object> msgList, String msgPrefix, String msgSuffix) {
         StringBuilder outMsg = new StringBuilder();
-        // Scipio: Lookup default prefix
+        // SCIPIO: Lookup default prefix
         if (msgPrefix == null) {
             msgPrefix = defaultMessagePrefix;
         }

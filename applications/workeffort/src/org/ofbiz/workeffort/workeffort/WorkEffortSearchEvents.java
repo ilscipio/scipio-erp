@@ -45,7 +45,7 @@ public class WorkEffortSearchEvents {
 
         // ========== Create View Indexes
         int viewIndex = 0;
-        // Scipio: unhardcode default
+        // SCIPIO: unhardcode default
         //int viewSize = 20;
         int viewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
         int highIndex = 0;
@@ -65,7 +65,7 @@ public class WorkEffortSearchEvents {
 
         // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
         Integer resultOffset = Integer.valueOf(lowIndex + 1);
-        // Scipio: FIXME: if maxResults is set to viewSize, pagination is always disabled...
+        // SCIPIO: FIXME: if maxResults is set to viewSize, pagination is always disabled...
         Integer maxResults = Integer.valueOf(viewSize);
 
         // ========== Do the actual search

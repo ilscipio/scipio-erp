@@ -22,7 +22,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 
-// Scipio: Some fixes to prevent crash on missing userLogin
+// SCIPIO: Some fixes to prevent crash on missing userLogin
 
 partyRole = from("PartyRole").where("partyId", userLogin?.partyId, "roleTypeId", "SUPPLIER").queryOne();
 if (partyRole) {
@@ -41,9 +41,9 @@ orderHeaderList = EntityUtil.orderBy(EntityUtil.filterByAnd(EntityUtil.getRelate
         [EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED")]), ["orderDate DESC"]);
 context.orderHeaderList = orderHeaderList;
 
-// Scipio: order by ProductContent.sequenceNum
+// SCIPIO: order by ProductContent.sequenceNum
 downloadOrderRoleAndProductContentInfoList = from("OrderRoleAndProductContentInfo").where("partyId", userLogin?.partyId, "roleTypeId", "PLACING_CUSTOMER", "productContentTypeId", "DIGITAL_DOWNLOAD", "statusId", "ITEM_COMPLETED").orderBy("sequenceNum ASC").queryList();
 context.downloadOrderRoleAndProductContentInfoList = downloadOrderRoleAndProductContentInfoList;
 
-// Scipio: Flag
+// SCIPIO: Flag
 context.hasOrderDownloads = downloadOrderRoleAndProductContentInfoList ? true : false;

@@ -31,7 +31,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: GetStyleNamesByPrefixMethod - Freemarker Method for extracting style names by prefix from a style string.
+ * SCIPIO: GetStyleNamesByPrefixMethod - Freemarker Method for extracting style names by prefix from a style string.
  */
 public class GetStyleNamesByPrefixMethod implements TemplateMethodModelEx {
 

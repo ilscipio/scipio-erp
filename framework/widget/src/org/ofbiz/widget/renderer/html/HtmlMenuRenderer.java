@@ -574,9 +574,9 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         if (UtilValidate.isNotEmpty(src)) {
             writer.append(" src=\"");
             String urlMode = image.getUrlMode();
-            Boolean fullPath = null; // Scipio: changed from boolean to Boolean
-            Boolean secure = null; // Scipio: changed from boolean to Boolean
-            Boolean encode = false; // Scipio: changed from boolean to Boolean
+            Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
+            Boolean secure = null; // SCIPIO: changed from boolean to Boolean
+            Boolean encode = false; // SCIPIO: changed from boolean to Boolean
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
@@ -608,13 +608,13 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
             throws IOException {
         // SCIPIO: will not implement this.
-        throw new UnsupportedOperationException("SCIPIO: HtmlMenuRenderer is deprecated");
+        throw new UnsupportedOperationException("Scipio: HtmlMenuRenderer is deprecated");
     }
     
     @Override
     public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu menuItem)
             throws IOException {
         // SCIPIO: will not implement this.
-        throw new UnsupportedOperationException("SCIPIO: HtmlMenuRenderer is deprecated");
+        throw new UnsupportedOperationException("Scipio: HtmlMenuRenderer is deprecated");
     }
 }

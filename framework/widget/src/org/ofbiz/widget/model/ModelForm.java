@@ -211,14 +211,14 @@ public abstract class ModelForm extends ModelWidget {
     private final boolean defaultCombineActionFields;
     
     /**
-     * Scipio: string expression representing a json-like map of extra form attributes.
+     * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
     
     
     /**
-     * Scipio: the <form> get or post method! somehow missing from stock defs.
+     * SCIPIO: the <form> get or post method! somehow missing from stock defs.
      */
     private final FlexibleStringExpander method;
     
@@ -462,11 +462,11 @@ public abstract class ModelForm extends ModelWidget {
             this.defaultCombineActionFields = "true".equals(defaultCombineActionFields);
         }
         
-        // Scipio: extra attribs map
+        // SCIPIO: extra attribs map
         String attribsExprStr = formElement.getAttribute("attribs");
         this.attribsExpr = AttribsExpression.makeAttribsExpr(attribsExprStr, (parentModel != null ? parentModel.attribsExpr : null));
         
-        // Scipio: form submit method
+        // SCIPIO: form submit method
         FlexibleStringExpander method = FlexibleStringExpander.getInstance(formElement.getAttribute("method"));
         if (method.isEmpty()) {
             if (parentModel != null) {
@@ -885,7 +885,7 @@ public abstract class ModelForm extends ModelWidget {
             if (UtilValidate.isNotEmpty(autoFieldsEntity.mapName)) {
                 builder.setMapName(autoFieldsEntity.mapName);
             }
-            // Scipio: add extra default attribs
+            // SCIPIO: add extra default attribs
             builder.setAttribsExpr(autoFieldsEntity.attribsExpr);
             addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
         }
@@ -928,7 +928,7 @@ public abstract class ModelForm extends ModelWidget {
                                     builder.setMapName(autoFieldsService.mapName);
                                 }
                                 builder.setRequiredField(!modelParam.optional);
-                                // Scipio: add extra default attribs
+                                // SCIPIO: add extra default attribs
                                 builder.setAttribsExpr(autoFieldsService.attribsExpr);
                                 addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
                                 // continue to skip creating based on service param
@@ -1755,7 +1755,7 @@ public abstract class ModelForm extends ModelWidget {
         public final Integer defaultPositionSpan;
         
         /**
-         * Scipio: string expression representing a json-like map of extra form attributes.
+         * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
          */
         private final AttribsExpression attribsExpr;
@@ -1800,7 +1800,7 @@ public abstract class ModelForm extends ModelWidget {
         public final Integer defaultPositionSpan;
         
         /**
-         * Scipio: string expression representing a json-like map of extra form attributes.
+         * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
          */
         private final AttribsExpression attribsExpr;

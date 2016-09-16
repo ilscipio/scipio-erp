@@ -1,5 +1,5 @@
 /**
- * Scipio: Common permission checks that any store screen may need.
+ * SCIPIO: Common permission checks that any store screen may need.
  */
 
 import org.ofbiz.base.util.*;

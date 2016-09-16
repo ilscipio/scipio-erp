@@ -51,7 +51,7 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("Invalid number of arguements");
         if (!(args.get(0) instanceof TemplateScalarModel))
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel");
-        // Scipio: This is too limiting
+        // SCIPIO: This is too limiting
         //if (!(args.get(1) instanceof BeanModel) && !(args.get(1) instanceof TemplateNumberModel) && !(args.get(1) instanceof TemplateScalarModel))
         //    throw new TemplateModelException("Second argument not an instance of BeanModel nor TemplateNumberModel nor TemplateScalarModel");
 
@@ -62,14 +62,14 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
         String name = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         Object valueModel = args.get(1);
         Object value = null;
-        // Scipio: Let DeepUnwrap handle this...
+        // SCIPIO: Let DeepUnwrap handle this...
         //if (args.get(1) instanceof TemplateScalarModel)
         //    value = ((TemplateScalarModel) args.get(1)).getAsString();
         //if (args.get(1) instanceof TemplateNumberModel)
         //    value = ((TemplateNumberModel) args.get(1)).getAsNumber();
         //if (args.get(1) instanceof BeanModel)
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
-        // Scipio: NOTE: Unlike this above, this call will avoid the auto-escaping as implemented by Ofbiz (sensitive to DeepUnwrap implementation)
+        // SCIPIO: NOTE: Unlike this above, this call will avoid the auto-escaping as implemented by Ofbiz (sensitive to DeepUnwrap implementation)
         value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
         
         globalContext.put(name, value);

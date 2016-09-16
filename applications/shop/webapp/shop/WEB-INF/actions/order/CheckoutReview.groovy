@@ -63,7 +63,7 @@ context.paymentMethods = cart.getPaymentMethods();
 paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 paymentMethodType = null;
 paymentMethodTypeId = null;
-/* Scipio: This contradicts OrderStatus.groovy. paymentMethodType should only be set to a 
+/* SCIPIO: This contradicts OrderStatus.groovy. paymentMethodType should only be set to a 
 if (paymentMethodTypeIds) {
     paymentMethodTypeId = paymentMethodTypeIds[0];
     paymentMethodType = from("PaymentMethodType").where("paymentMethodTypeId", paymentMethodTypeId).queryOne();

@@ -59,17 +59,17 @@ public final class WebAppUtil {
     private static final UtilCache<String, WebXml> webXmlCache = UtilCache.createUtilCache("webapp.WebXml");
 
     /**
-     * Scipio: Fast, light homemache cache to optimize control servlet path lookups.
+     * SCIPIO: Fast, light homemache cache to optimize control servlet path lookups.
      */
     private static final Map<String, String> controlServletPathWebappInfoCache = new ConcurrentHashMap<String, String>();
     
     /**
-     * Scipio: Fast, light homemache cache to optimize WebappInfo lookups by webSiteId.
+     * SCIPIO: Fast, light homemache cache to optimize WebappInfo lookups by webSiteId.
      */
     private static final Map<String, WebappInfo> webappInfoWebSiteIdCache = new ConcurrentHashMap<String, WebappInfo>();
 
     /**
-     * Scipio: Fast, light homemache cache to optimize WebappInfo lookups by exact context path.
+     * SCIPIO: Fast, light homemache cache to optimize WebappInfo lookups by exact context path.
      */
     private static final Map<String, WebappInfo> webappInfoContextPathCache = new ConcurrentHashMap<String, WebappInfo>();
     
@@ -86,7 +86,7 @@ public final class WebAppUtil {
      */
     public static String getControlServletPath(WebappInfo webAppInfo) throws IOException, SAXException {
         Assert.notNull("webAppInfo", webAppInfo);
-        // Scipio: Go through cache first. No need to synchronize, doesn't matter.
+        // SCIPIO: Go through cache first. No need to synchronize, doesn't matter.
         String res = controlServletPathWebappInfoCache.get(webAppInfo.getContextRoot()); // key on context root (global unique)
         if (res != null) {
             // We take empty string to mean lookup found nothing
@@ -114,20 +114,20 @@ public final class WebAppUtil {
                 }
             }
             if (servletMapping == null) {
-                // Scipio: empty string means we did lookup and failed
+                // SCIPIO: empty string means we did lookup and failed
                 controlServletPathWebappInfoCache.put(webAppInfo.getContextRoot(), "");
                 throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
             }
             servletMapping = servletMapping.replace("*", "");
             String servletPath = webAppInfo.contextRoot.concat(servletMapping);
-            // Scipio: save result
+            // SCIPIO: save result
             controlServletPathWebappInfoCache.put(webAppInfo.getContextRoot(), servletPath);
             return servletPath;
         }
     }
     
     /**
-     * Scipio: Returns the control servlet path with no exceptions generated and with a terminating slash,
+     * SCIPIO: Returns the control servlet path with no exceptions generated and with a terminating slash,
      * or null. The path consists of the web application's mount-point
      * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
@@ -162,7 +162,7 @@ public final class WebAppUtil {
      */
     public static WebappInfo getWebappInfoFromWebsiteId(String webSiteId) throws IOException, SAXException {
         Assert.notNull("webSiteId", webSiteId);
-        // Scipio: Go through cache first. No need to synchronize, doesn't matter.
+        // SCIPIO: Go through cache first. No need to synchronize, doesn't matter.
         WebappInfo res = webappInfoWebSiteIdCache.get(webSiteId);
         if (res != null) {
             return res;
@@ -170,7 +170,7 @@ public final class WebAppUtil {
         else {
             for (WebappInfo webAppInfo : ComponentConfig.getAllWebappResourceInfos()) {
                 if (webSiteId.equals(WebAppUtil.getWebSiteId(webAppInfo))) {
-                    webappInfoWebSiteIdCache.put(webSiteId, webAppInfo); // Scipio: save in cache
+                    webappInfoWebSiteIdCache.put(webSiteId, webAppInfo); // SCIPIO: save in cache
                     return webAppInfo;
                 }
             }
@@ -179,7 +179,7 @@ public final class WebAppUtil {
     }
     
     /**
-     * Scipio: Returns the <code>WebappInfo</code> instance that has the same mount-point prefix as
+     * SCIPIO: Returns the <code>WebappInfo</code> instance that has the same mount-point prefix as
      * the given path.
      * <p>
      * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
@@ -220,7 +220,7 @@ public final class WebAppUtil {
     }
     
     /**
-     * Scipio: Returns the <code>WebappInfo</code> instance that the given exact context path as mount-point
+     * SCIPIO: Returns the <code>WebappInfo</code> instance that the given exact context path as mount-point
      * <p>
      * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
      * 
@@ -231,7 +231,7 @@ public final class WebAppUtil {
     public static WebappInfo getWebappInfoFromContextPath(String contextPath) throws IOException, SAXException {
         Assert.notNull("contextPath", contextPath);
         
-        // Scipio: Go through cache first. No need to synchronize, doesn't matter.
+        // SCIPIO: Go through cache first. No need to synchronize, doesn't matter.
         WebappInfo res = webappInfoContextPathCache.get(contextPath);
         if (res != null) {
             return res;
@@ -239,7 +239,7 @@ public final class WebAppUtil {
         else {
             for (WebappInfo webAppInfo : ComponentConfig.getAllWebappResourceInfos()) {
                 if (contextPath.equals(webAppInfo.getContextRoot())) {
-                    webappInfoContextPathCache.put(contextPath, webAppInfo); // Scipio: save in cache
+                    webappInfoContextPathCache.put(contextPath, webAppInfo); // SCIPIO: save in cache
                     return webAppInfo;
                 }
             }
@@ -248,7 +248,7 @@ public final class WebAppUtil {
     }
     
     /**
-     * Scipio: Returns the <code>WebappInfo</code> instance for the current request's webapp.
+     * SCIPIO: Returns the <code>WebappInfo</code> instance for the current request's webapp.
      * 
      * @param webSiteId
      * @throws IOException
@@ -284,7 +284,7 @@ public final class WebAppUtil {
     public static WebXml getWebXml(WebappInfo webAppInfo) throws IOException, SAXException {
         Assert.notNull("webAppInfo", webAppInfo);
         String webXmlFileLocation = webAppInfo.getLocation().concat(webAppFileName);
-        // Scipio: TEMPORARILY CHANGED THIS TO NON-VALIDATING
+        // SCIPIO: TEMPORARILY CHANGED THIS TO NON-VALIDATING
         // FIXME: RETURN THIS TO VALIDATING ONCE ALL web.xml VALIDATION ISSUES ARE MERGED FROM UPSTREAM
         // The ofbiz team neglected to do it in this part of code, probably
         // because stock doesn't use it much yet... but we rely on it

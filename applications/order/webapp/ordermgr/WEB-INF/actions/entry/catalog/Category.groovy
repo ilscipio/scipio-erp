@@ -79,15 +79,15 @@ if (category) {
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request);
     
-    // Scipio: Do NOT HTML-escape this here
+    // SCIPIO: Do NOT HTML-escape this here
     categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
 
-    // Scipio: don't want page title overridden/forced by groovy
+    // SCIPIO: don't want page title overridden/forced by groovy
     if (pageTitle) {
         //context.title = pageTitle.textData;
         context.categoryTitle = pageTitle.textData;
     } else {
-        // Scipio: Do NOT HTML-escape this here
+        // SCIPIO: Do NOT HTML-escape this here
         //context.title = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
         context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "raw".toString());
     }

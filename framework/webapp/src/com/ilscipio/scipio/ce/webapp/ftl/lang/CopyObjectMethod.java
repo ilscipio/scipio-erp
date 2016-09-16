@@ -29,7 +29,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: CopyObjectMethod - Helper method to clone (shallow copy) a map or list.
+ * SCIPIO: CopyObjectMethod - Helper method to clone (shallow copy) a map or list.
  */
 public class CopyObjectMethod implements TemplateMethodModelEx {
 

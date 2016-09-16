@@ -36,7 +36,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: MakeAttribMapFromArgMapMethod - Freemarker Method for getting an attribs map from an args map.
+ * SCIPIO: MakeAttribMapFromArgMapMethod - Freemarker Method for getting an attribs map from an args map.
  */
 public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
 

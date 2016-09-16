@@ -1261,6 +1261,7 @@ public class FormRenderer {
                         formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, positionSpan);
                         submitField.renderFieldString(writer, context, formStringRenderer);
                         formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
+                        i++;
                     }
                 }
                 formStringRenderer.renderFormatFooterRowClose(writer, context, modelForm);

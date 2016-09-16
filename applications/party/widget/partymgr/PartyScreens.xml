@@ -497,7 +497,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
-                                    <link target="backHome" text="[${uiLabelMap.CommonBack}]" style="${styles.link_nav_cancel}"/>
+                                    <link target="backHome" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/>
                                 </container>
                                 <container>
                                     <label>${uiLabelMap.PartyMsgContactNotBelongToYou}</label>

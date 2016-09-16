@@ -509,6 +509,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) throws IOException {
+        // SCIPIO: NOTE: for compatibility only: this registerContext SHOULD not be needed but legacy code called directly
+        contextHandler.registerContext(writer, context);
         ModelFormField modelFormField = dateTimeField.getModelFormField();
         String paramName = modelFormField.getParameterName(context);
         String defaultDateTimeString = dateTimeField.getDefaultDateTimeString(context);

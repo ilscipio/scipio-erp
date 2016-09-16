@@ -250,7 +250,7 @@ public class FormRenderer {
 
         
         // find the highest position number to get the max positions used
-        // Scipio: use explicit if set, and also take position-span into account here
+        // SCIPIO: use explicit if set, and also take position-span into account here
         Integer positions = modelForm.getPositions();
         if (positions == null || positions < 1) {
             positions = 1;
@@ -445,7 +445,7 @@ public class FormRenderer {
             // SCIPIO: get real/accurate count of inner field cells
             int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
             
-            // Scipio: Add an extra column to hold a checkbox or radio button depending on the type of form.
+            // SCIPIO: Add an extra column to hold a checkbox or radio button depending on the type of form.
             if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
                 if (modelForm.getType().equals("list") || modelForm.getType().equals("multi")) {
                     ModelFormField headerItem = createRowSubmitHeaderItem(modelForm);
@@ -511,7 +511,7 @@ public class FormRenderer {
                         
                         // TODO: manage colspan
                         formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
-                        // Scipio: There is currently an issue where sometimes the title separator gets printed
+                        // SCIPIO: There is currently an issue where sometimes the title separator gets printed
                         // in BETWEEN cell items. I don't know what started causing this, but am adding a sanity
                         // check boolean that will fix at least that specific problem (but there could be others).
                         boolean cellOpened = true;
@@ -540,7 +540,7 @@ public class FormRenderer {
                             if (innerFormFieldsIt.hasNext()) {
                                 // TODO: determine somehow if this is the last one... how?
                                 if (!modelForm.getSeparateColumns() && !modelFormField.getSeparateColumn()) {
-                                    // Scipio: ONLY do this if we know we have an open cell
+                                    // SCIPIO: ONLY do this if we know we have an open cell
                                     if (cellOpened) {
                                         formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
                                             modelFormField, false);
@@ -664,7 +664,7 @@ public class FormRenderer {
         // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
         int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
         
-        // Scipio: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
+        // SCIPIO: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
         if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
             ModelFormField item = null;
             if (modelForm.getType().equals("list")) {
@@ -739,7 +739,7 @@ public class FormRenderer {
                 
                 // render the "form" cell                
                 formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
-                // Scipio: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
+                // SCIPIO: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
                 boolean cellOpen = true;
 
                 if (formPerItem) {
@@ -828,7 +828,7 @@ public class FormRenderer {
     }
 
     /**
-     * Scipio: callbacks for important render item rows events.
+     * SCIPIO: callbacks for important render item rows events.
      */
     private interface RenderItemRowsEventHandler {
         void notifyHasList() throws IOException;
@@ -1116,7 +1116,7 @@ public class FormRenderer {
     }
 
     /**
-     * Scipio: Helper object to handle renderer the table wrappers, headers, etc.
+     * SCIPIO: Helper object to handle renderer the table wrappers, headers, etc.
      */
     private class RenderListFormHandler implements RenderItemRowsEventHandler {
         
@@ -1229,7 +1229,7 @@ public class FormRenderer {
         }
 
         public void renderTableFooter() throws IOException {
-            // Scipio: Renders the submit button in the tfoot
+            // SCIPIO: Renders the submit button in the tfoot
             if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
                 Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                 formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
@@ -1272,7 +1272,7 @@ public class FormRenderer {
         
         listFormHandler.renderTableClose();
         
-        // Scipio: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
+        // SCIPIO: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
         formStringRenderer.renderSubmitForm(writer, context, modelForm);
        
         listFormHandler.renderFinalize();
@@ -1484,7 +1484,7 @@ public class FormRenderer {
             }
 
             Integer nextPositionInRow = null;
-            // Scipio: support a specific position span. note: the value we pass to macro is one less.
+            // SCIPIO: support a specific position span. note: the value we pass to macro is one less.
             Integer fieldPositionSpan = currentFormField.getPositionSpan();
             int positionSpan;
             if (fieldPositionSpan != null && fieldPositionSpan > 0) {
@@ -1514,7 +1514,7 @@ public class FormRenderer {
                 }
             }
 
-            // Scipio: pass these (and unset below)
+            // SCIPIO: pass these (and unset below)
             context.put("formFieldRender_positions", positions);
             
             if (stayingOnRow) {
@@ -1547,7 +1547,7 @@ public class FormRenderer {
             
             context.remove("formFieldRender_positions");
             
-            // Scipio: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
+            // SCIPIO: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
             // This allows delayed render so more info available and fixes ofbiz bug where nextFormField was
             // sometimes a field that was not going to be rendered, giving invalid positions.
             // render form field
@@ -1576,7 +1576,7 @@ public class FormRenderer {
     }
 
     /**
-     * Scipio: Factored out field entry render code
+     * SCIPIO: Factored out field entry render code
      */
     private class RenderFieldEntry {
         private final ModelFormField formField;
@@ -1658,7 +1658,7 @@ public class FormRenderer {
     }
     
     /**
-     * Scipio: renders accumulated field entries all at once (for delayed render).
+     * SCIPIO: renders accumulated field entries all at once (for delayed render).
      */
     private class RenderRowFieldEntrySequencer {
         private List<RenderFieldEntry> fieldEntries = new ArrayList<RenderFieldEntry>();
@@ -1703,7 +1703,7 @@ public class FormRenderer {
                 }
                     
                 Integer nextPositionInRow = null;
-                // Scipio: support a specific position span. note: the value we pass to macro is one less.
+                // SCIPIO: support a specific position span. note: the value we pass to macro is one less.
                 Integer fieldPositionSpan = currentFormField.getPositionSpan();
                 int positionSpan;
                 if (fieldPositionSpan != null && fieldPositionSpan > 0) {

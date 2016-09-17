@@ -331,7 +331,7 @@ public class FormRenderer {
         List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
         tempFieldList.addAll(modelForm.getFieldList());    
         // SCIPIO: NOTE: this addAll added by us
-        if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseRowSubmit()) {
+        if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseMasterSubmitField()) {
             tempFieldList.addAll(modelForm.getMultiSubmitFields());
         }
         for (int j = 0; j < tempFieldList.size(); j++) {
@@ -1018,15 +1018,13 @@ public class FormRenderer {
                     }
                           
                     // SCIPIO: Adding submit buttons if use-row-submit flag in the form definition is set to false
-                    if ("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) {
+                    if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseMasterSubmitField()) {
                         Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                         while (submitFields.hasNext()) {
                             ModelFormField submitField = submitFields.next();
                             if (submitField != null && submitField.shouldUse(context)) {
-                                if (!modelForm.getUseRowSubmit()) {
-                                    innerDisplayHyperlinkFieldsEnd.add(submitField);
-                                    fieldListByPosition.add(submitField);
-                                }
+                                innerDisplayHyperlinkFieldsEnd.add(submitField);
+                                fieldListByPosition.add(submitField);
                             }
                         }
                     }
@@ -1251,7 +1249,7 @@ public class FormRenderer {
         // TODO: set formPerItem = false when figure out alternative, because it produces invalid HTML
         this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
         
-        if (modelForm.getUseRowSubmit())
+        if (modelForm.getUseMasterSubmitField())
             listFormHandler.renderTableFooter();
         
         listFormHandler.renderTableClose();
@@ -1280,7 +1278,7 @@ public class FormRenderer {
         final boolean formPerItem = false; // SCIPIO: NOTE: this was always false even in stock ofbiz
         this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
         
-        if (modelForm.getUseRowSubmit())        
+        if (modelForm.getUseMasterSubmitField())        
             listFormHandler.renderTableFooter(); 
 
         listFormHandler.renderTableClose();

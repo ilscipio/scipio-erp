@@ -876,7 +876,7 @@ public abstract class ModelForm extends ModelWidget {
             this.rowSubmitSelectFieldParamNamePrefix = this.rowSubmitSelectFieldNamePrefix;
         }
         String rowSubmitSelectFieldName = makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix);
-        String rowSubmitSelectFieldParamName = makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldParamNamePrefix);
+        String rowSubmitSelectFieldParamName = this.rowSubmitSelectFieldParamNamePrefix;
         String rowSubmitSelectFieldTitle = "${uiLabelMap.CommonSelect}";
         
         ModelFormField rowSubmitHeaderSelectField = null;
@@ -1745,6 +1745,11 @@ public abstract class ModelForm extends ModelWidget {
 
     public boolean getUseRowSubmit() {
         return this.useRowSubmit;
+    }
+    
+    // SCIPIO: helper check for clarity
+    public boolean getUseMasterSubmitField() {
+        return this.useRowSubmit || "multi".equals(getType());
     }
 
     public Set<String> getUseWhenFields() {

@@ -749,23 +749,35 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
-<#macro renderSubmitForm hiddenFormName="" formType="" targetUrl="" targetWindow="" params={} useRowSubmit=false submitEntries=[] extraArgs...>
+<#macro renderSubmitForm hiddenFormName="" formName="" formType="" targetUrl="" targetWindow="" 
+    params={} useRowSubmit=false useMasterSubmitField=false submitEntries=[] extraArgs...>
+  <#-- NOTE: if (useRowSubmit==false && useMasterSubmitField==true), we can basically skip this entire macro,
+    but there's no harm going through this in case we need the hook -->
+  <#--<#if !(!useRowSubmit && useMasterSubmitField)>-->
+  
   <#-- NOTE: escaping must be done by the macro on this one. is a glimpse of the future. -->
   <#local tableId = (getRequestVar("renderFormLastTableInfo").tableId)!"_TABLE_ID_NOT_FOUND_">
   
-  <#if useRowSubmit && submitEntries?has_content>
+  <#if (useRowSubmit || useMasterSubmitField) && submitEntries?has_content>
     <@script>
         jQuery(document).ready(function() {
+          <#if useRowSubmit>
             var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+          <#else>
+            var submitForm = $("form[name=${escapePart(formName, 'js')}]");
+          </#if>
+            
             if (submitForm) {
               <#list submitEntries as submitEntry>
                 <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
                 <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
-                <#local selectFieldNamePrefixJs = escapePart(submitEntry.selectFieldNamePrefix, 'js')><#-- selectAction -->
+               
 
                 var submitField = $("#${submitFieldIdJs}");
                 $(submitField).click(function(e) {
                     e.preventDefault();
+                  <#if useRowSubmit>
+                    <#local selectFieldNamePrefixJs = escapePart(submitEntry.selectFieldNamePrefix, 'js')><#-- selectAction -->
                     var checked = false;
               
                     $("#${escapePart(tableId, 'js')}").find("input[type=radio][name^=${selectFieldNamePrefixJs}],"+ 
@@ -784,7 +796,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
                                     $(hiddenField).attr("value", $(e).val());
                                     $(submitForm).append($(hiddenField));
                                 }
-                            });   
+                            });  
                         }
                     });
                     if (checked) {
@@ -792,6 +804,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
                     } else {
                         alert("${escapePart(uiLabelMap.CommonNoRowSelected, 'js')}");
                     }
+                  <#else>
+                    submitForm.submit();
+                  </#if>
                 });
               </#list>
             } else {
@@ -799,7 +814,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
             }
         });
     </@script>
-  <#elseif !useRowSubmit && submitEntries?has_content>
+  <#elseif submitEntries?has_content>
     <@script>
         jQuery(document).ready(function() {
             var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
@@ -833,7 +848,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
         });
     </@script>
   </#if>
-  <#if submitEntries?has_content>
+  <#if submitEntries?has_content && (useRowSubmit || !useMasterSubmitField)>
   <#-- TODO: can't use here yet: escapeFullUrl(targetUrl, 'html') because individual params already escaped by renderer, but don't really want that anymore... -->
   <form method="post" action="${targetUrl}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
     <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapePart(hiddenFormName, 'html')}">
@@ -845,6 +860,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </#if>
   </form>
   </#if>
+  <#--</#if>-->
 </#macro>
 
   

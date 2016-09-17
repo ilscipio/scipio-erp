@@ -225,6 +225,15 @@ public abstract class ModelForm extends ModelWidget {
      */
     private final FlexibleStringExpander method;
     
+    // SCIPIO: special select fields for when use-row-submit is true
+    // FIXME: currently these are NOT included in the other field lists, but they should be!
+    private final ModelFormField rowSubmitHeaderSelectField;
+    private final ModelFormField rowSubmitSelectField;
+    
+    // SCIPIO: new
+    private final String rowSubmitSelectFieldNamePrefix;
+    private final String rowSubmitSelectFieldFieldNamePrefix;
+    
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -855,6 +864,41 @@ public abstract class ModelForm extends ModelWidget {
             focusFieldName = parentModel.focusFieldName;
         }
         this.focusFieldName = focusFieldName;
+        
+        // SCIPIO: new
+        // TODO: Unhardcode everything below
+        this.rowSubmitSelectFieldNamePrefix = "selectAction";
+        if (getType().equals("multi")) {
+            this.rowSubmitSelectFieldFieldNamePrefix = UtilHttp.ROW_SUBMIT_PREFIX;
+        } else {
+            this.rowSubmitSelectFieldFieldNamePrefix = this.rowSubmitSelectFieldNamePrefix;
+        }
+        String rowSubmitSelectFieldTitle = "${uiLabelMap.CommonSelect}";
+        
+        ModelFormField rowSubmitHeaderSelectField = null;
+        ModelFormField rowSubmitSelectField = null;
+        if (getUseRowSubmit()) {
+            if ("list".equals(getType()) || "multi".equals(getType())) {
+                ModelFormFieldBuilder builder;
+                builder = createHeaderFieldBuilder();
+                builder.setName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix)); 
+                builder.setFieldName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix)); // NOTE: SAME as Name, ONLY for header
+                builder.setTitle(rowSubmitSelectFieldTitle);
+                rowSubmitHeaderSelectField = builder.build();
+                
+                if ("list".equals(getType())) {
+                    builder = createRadioFieldBuilder();
+                } else {
+                    builder = createCheckboxFieldBuilder();
+                }
+                builder.setName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix));
+                builder.setFieldName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldFieldNamePrefix)); 
+                builder.setTitle(rowSubmitSelectFieldTitle);
+                rowSubmitSelectField = builder.build();
+            }
+        }
+        this.rowSubmitHeaderSelectField = rowSubmitHeaderSelectField;
+        this.rowSubmitSelectField = rowSubmitSelectField;
     }
 
     private void addAutoFieldsFromEntity(AutoFieldsEntity autoFieldsEntity, ModelReader entityModelReader,
@@ -1723,118 +1767,72 @@ public abstract class ModelForm extends ModelWidget {
     /**
      * SCIPIO: Returns row-submit special select field name prefix.
      */
-    public String getRowSubmitSelectFieldNamePrefix(Map<String, Object> context) {
-        // FIXME: HARDCODED!
-        return "selectAction";
+    public String getRowSubmitSelectFieldNamePrefix() {
+        return rowSubmitSelectFieldNamePrefix;
     }
     
     /**
-     * SCIPIO: Returns row-submit special select field name.
+     * SCIPIO: Returns row-submit special select field name prefix.
      */
-    public String getRowSubmitHeaderSelectFieldName(Map<String, Object> context) {
-        // FIXME: HARDCODED!
-        return getRowSubmitSelectFieldNamePrefix(context) + getItemIndexSeparator() + getName();
+    public String getRowSubmitSelectFieldFieldNamePrefix() {
+        return rowSubmitSelectFieldFieldNamePrefix;
     }
     
-    /**
-     * SCIPIO: Returns row-submit special select field name.
-     */
-    public String getRowSubmitItemSelectFieldName(Map<String, Object> context) {
+    private String makeRowSubmitSelectFieldName(String prefix) {
         // FIXME: HARDCODED!
-        if (getType().equals("multi")) {
-            return UtilHttp.ROW_SUBMIT_PREFIX;
-        } else {
-            return getRowSubmitSelectFieldNamePrefix(context) + getItemIndexSeparator() + getName();
-        }
+        return prefix + getItemIndexSeparator() + getName();
     }
-    
-    /**
-     * SCIPIO: Returns row-submit special select field name.
-     */
-    public String getRowSubmitHeaderSelectFieldTitle(Map<String, Object> context) {
-        // FIXME: HARDCODED!
-        return UtilProperties.getMessage("CommonUiLabels", "CommonSelect", (Locale) context.get("locale"));
-    }
-    
-    /**
-     * SCIPIO: Returns row-submit special select field name.
-     */
-    public String getRowSubmitItemSelectFieldTitle(Map<String, Object> context) {
-        // FIXME: HARDCODED!
-        return UtilProperties.getMessage("CommonUiLabels", "CommonSelect", (Locale) context.get("locale"));
-    }
-    
-    
+
+
     /**
      * SCIPIO: Gets row-submit header field.
      */
-    public ModelFormField getRowSubmitHeaderSelectField(Map<String, Object> context) {
-        if (getType().equals("list") || getType().equals("multi")) {
-            // FIXME?: DOES IT ALWAYS NEED TO BE REBUILT?
-            return createRowHeaderSelectField(context);
-        } else {
-            return null;
-        }
+    public ModelFormField getRowSubmitHeaderSelectField() {
+        return rowSubmitHeaderSelectField;
     }
     
     /**
-     * SCIPIO: Creates a row-submit header field.
+     * SCIPIO: new
      */
-    private ModelFormField createRowHeaderSelectField(Map<String, Object> context) {
+    private ModelFormFieldBuilder createHeaderFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
-        builder.setFieldName(getRowSubmitHeaderSelectFieldName(context));
-        builder.setName(getRowSubmitHeaderSelectFieldName(context));
         builder.setModelForm(this);
-        builder.setTitle(getRowSubmitHeaderSelectFieldTitle(context));
         builder.setFieldInfo(displayField);
-        return builder.build();
+        return builder;
     }
     
     /**
      * SCIPIO: Gets row-submit field (data rows).
      */
-    public ModelFormField getRowSubmitSelectField(Map<String, Object> context) {
-        // FIXME?: DOES IT ALWAYS NEED TO BE REBUILT?
-        ModelFormField item = null;
-        if (getType().equals("list")) {
-            item = createRowSubmitRadioField(context);
-        } else if (getType().equals("multi")) {
-            item = createRowSubmitCheckboxField(context);                
-        }
-        return item;
+    public ModelFormField getRowSubmitSelectField() {
+        return rowSubmitSelectField;
     }
     
     /**
-     * SCIPIO: Creates a row-submit radio field.
+     * SCIPIO: new
      */
-    private ModelFormField createRowSubmitRadioField(Map<String, Object> context) {
+    private ModelFormFieldBuilder createRadioFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
         optionSources.add(new SingleOption("Y", " ", null));
         ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
-        builder.setFieldName(getRowSubmitItemSelectFieldName(context));
-        builder.setName(getRowSubmitItemSelectFieldName(context));
         builder.setModelForm(this);
-        builder.setTitle(getRowSubmitItemSelectFieldTitle(context));
         builder.setFieldInfo(radioField);
-        return builder.build(); 
+        return builder; 
     }
     
     /**
-     * SCIPIO: Creates a row-submit checkbox field.
+     * SCIPIO: new
      */
-    private ModelFormField createRowSubmitCheckboxField(Map<String, Object> context) {
+    private ModelFormFieldBuilder createCheckboxFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
         optionSources.add(new SingleOption("Y", " ", null));
         ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
-        builder.setFieldName(getRowSubmitItemSelectFieldName(context));                
-        builder.setName(getRowSubmitItemSelectFieldName(context));
         builder.setModelForm(this);
-        builder.setTitle(getRowSubmitItemSelectFieldTitle(context));
         builder.setFieldInfo(checkField);
-        return builder.build();
+        return builder;
     }
     
     

@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -93,10 +94,13 @@ import org.ofbiz.widget.renderer.Paginator;
 import org.ofbiz.widget.renderer.UtilHelpText;
 
 import com.ibm.icu.util.Calendar;
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
 
 /**
  * Widget Library - Form Renderer implementation based on Freemarker macros
@@ -1466,11 +1470,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         //FIXME copy from HtmlFormRenderer.java (except for the closing form tag itself, that is now converted)
-        if (!modelForm.getUseRowSubmit()) {    
-            // SCIPIO: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
-            this.renderSubmitForm(writer, context, modelForm);
-        }
-        
         StringWriter sr = new StringWriter();
         sr.append("<@renderMultiFormClose />");
         executeMacro(writer, sr.toString());
@@ -3413,21 +3412,97 @@ public final class MacroFormRenderer implements FormStringRenderer {
         parameterMap.put(viewIndexField, Integer.toString(viewIndex));
         parameterMap.put(viewSizeField, Integer.toString(viewSize));
 
-        Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
-        Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
-        if (modelForm.getType().equals("multi")) {        
-            if (postMultiFormWriter == null) {
-                postMultiFormWriter = new StringWriter();
-                if (wholeFormContext != null)
-                    wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
+        // this has to be rendered OUTSIDE/AFTER the multi form stuff; handled by FormRenderer
+        //Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
+        //Appendable effWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
+        //if (modelForm.getType().equals("multi")) {        
+        //    if (effWriter == null) {
+        //        effWriter = new StringWriter();
+        //        if (wholeFormContext != null)
+        //            wholeFormContext.put("postMultiFormWriter", effWriter);
+        //    }
+        //} else {
+        //effWriter = writer;
+        //}
+        Appendable effWriter = writer;
+        
+        // SCIPIO: now use a macro instead
+        //WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
+
+        // SCIPIO: WARN: the FTL must encode everything passed below!
+        
+        String hiddenFormName = WidgetWorker.makeLinkHiddenFormName(context, modelForm,
+                "submitForm" + modelForm.getItemIndexSeparator() + getNextRenderSubmitFormIdNum(writer, context, modelForm)); 
+        
+        StringWriter targetUrlSw = new StringWriter();
+        WidgetWorker.buildHyperlinkUrl(targetUrlSw, modelForm.getTarget(context, modelForm.getTargetType()), 
+                modelForm.getTargetType(), null, null, null, null, null, request, response, context);
+        String targetUrl = targetUrlSw.toString();
+        
+        List<Map<String, Object>> submitEntries = new ArrayList<>();
+        if (modelForm.getUseRowSubmit()) {
+            List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
+            if (rowSubmitFields != null) {
+                for (ModelFormField rowSubmitField : rowSubmitFields) {
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("submitFieldId", rowSubmitField.getCurrentContainerId(context));
+                    map.put("submitFieldName", rowSubmitField.getFieldName());
+                    map.put("selectFieldNamePrefix", modelForm.getRowSubmitSelectFieldFieldNamePrefix());
+                    submitEntries.add(map);
+                }
             }
         } else {
-            postMultiFormWriter = writer;
+            List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
+            if (rowSubmitFields != null) {
+                for (ModelFormField rowSubmitField : rowSubmitFields) {
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("submitFieldId", rowSubmitField.getCurrentContainerId(context));
+                    map.put("submitFieldName", rowSubmitField.getFieldName());
+                    submitEntries.add(map);
+                }
+            }
         }
-        // SCIPIO: TODO: delegate to FTL macro
-        WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
+        
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderSubmitForm");
+        sr.append(" hiddenFormName=");
+        sr.append(ftlFmt.makeStringLiteral(hiddenFormName));
+        sr.append(" formType=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));
+        sr.append(" targetUrl=");
+        sr.append(ftlFmt.makeStringLiteral(targetUrl));
+        sr.append(" targetWindow=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getTargetWindow()));
+        sr.append(" params=");
+        sr.append(ftlFmt.makeLiteralSQ(parameterMap));
+        sr.append(" useRowSubmit=");
+        sr.append(modelForm.getUseRowSubmit() ? "true" : "false");
+        sr.append(" submitEntries=");
+        sr.append(ftlFmt.makeLiteralSQ(submitEntries));
+        sr.append(" />");
+        executeMacro(effWriter, sr.toString());
     }
 
+    /**
+     * SCIPIO: returns a new submit form hidden form unique count.
+     */
+    private int getNextRenderSubmitFormIdNum(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        try {
+            Object numObj = ContextFtlUtil.getRequestVar("renderSubmitForm_formIdNum", request, contextHandler.getRenderContext(writer, context));
+            Integer num = (Integer) LangFtlUtil.unwrap(numObj);
+            
+            if (num == null) {
+                num = 1;
+            } else {
+                num = num + 1;
+            }
+            ContextFtlUtil.setRequestVar("renderSubmitForm_formIdNum", num, request, contextHandler.getRenderContext(writer, context));
+            return num;
+        } catch (TemplateModelException e) {
+            throw new IOException(e);
+        } 
+    }
+    
     @Override
     public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         contextHandler.registerContext(writer, context);

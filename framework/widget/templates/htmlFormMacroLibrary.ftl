@@ -747,4 +747,98 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   </#if>
 </#macro>
 
+<#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
+<#macro renderSubmitForm hiddenFormName="" formType="" targetUrl="" targetWindow="" params={} useRowSubmit=false submitEntries=[] extraArgs...>
+  <!-- renderSubmitForm -->
+  <#local tableId = (getRequestVar("renderFormLastTableInfo").tableId)!"_TABLE_ID_NOT_FOUND_">
+  <#if useRowSubmit && submitEntries?has_content>
+    <@script>
+        jQuery(document).ready(function() {
+            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+            if (submitForm) {
+              <#list submitEntries as submitEntry>
+                <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
+                <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
+                <#local selectFieldNamePrefixJs = escapePart(submitEntry.selectFieldNamePrefix, 'js')><#-- selectAction -->
+
+                var submitField = $("#${submitFieldIdJs}");
+                $(submitField).click(function(e) {
+                    e.preventDefault();
+                    var checked = false;
+              
+                    $("#${escapePart(tableId, 'js')}").find("input[type=radio][name^=${selectFieldNamePrefixJs}],"+ 
+                        "input[type=checkbox][name^=${selectFieldNamePrefixJs}]").each(function (j, r) {
+
+                        if ($(r).is(":checked")) {
+                            checked = true;
+                            
+                            <#-- makeHiddenFieldsForHiddenForm -->
+                            $(this).closest("tr").find("input[type=text], input[type=hidden], input[type=radio],"+ 
+                                    "input[type=checkbox], select, textarea").each(function (i, e) {
+                                if ($(submitForm).find("input[name=" + $(e).attr("name") + "]").length <= 0) {
+                                    var hiddenField = $("<input></input>")
+                                    $(hiddenField).attr("type", "hidden");
+                                    $(hiddenField).attr("name", $(e).attr("name"));
+                                    $(hiddenField).attr("value", $(e).val());
+                                    $(submitForm).append($(hiddenField));
+                                }
+                            });   
+                        }
+                    });
+                    if (checked) {
+                        submitForm.submit();
+                    } else {
+                        alert("${escapePart(uiLabelMap.CommonNoRowSelected, 'js')}");
+                    }
+                });
+              </#list>
+            } else {
+                return false;
+            }
+        });
+    </@script>
+  <#elseif !useRowSubmit && submitEntries?has_content>
+    <@script>
+        jQuery(document).ready(function() {
+            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+            if (submitForm) {
+              <#list submitEntries as submitEntry>
+                <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
+                <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
+   
+                var id = $("[id^=${submitFieldIdJs}]");
+                $(id).click(function(e) {
+                    e.preventDefault();
+                    
+                    <#-- makeHiddenFieldsForHiddenForm -->
+                    $(this).closest("tr").find("input[type=text], input[type=hidden], input[type=radio],"+ 
+                            "input[type=checkbox], select, textarea").each(function (i, e) {
+                        if ($(submitForm).find("input[name=" + $(e).attr("name") + "]").length <= 0) {
+                            var hiddenField = $("<input></input>")
+                            $(hiddenField).attr("type", "hidden");
+                            $(hiddenField).attr("name", $(e).attr("name"));
+                            $(hiddenField).attr("value", $(e).val());
+                            $(submitForm).append($(hiddenField));
+                        }
+                    });
+                        
+                    submitForm.submit();
+                });
+              </#list>
+            } else {
+                return false;
+            }
+        });
+    </@script>
+  </#if>
+  <#if submitEntries?has_content>
+  <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
+    <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapePart(hiddenFormName, 'html')}">
+    <#list mapKeys(params) as paramName>
+      <input type="hidden" name="${escapePart(paramName, 'html')}" value="${escapePart(params[escapePart(paramName, 'html')], 'html')}" />
+    </#list>
+  </form>
+  </#if>
+</#macro>
+
   

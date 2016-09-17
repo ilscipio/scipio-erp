@@ -433,7 +433,7 @@ public class FormRenderer {
             
             // SCIPIO: Add an extra column to hold a checkbox or radio button depending on the type of form.
             if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
-                ModelFormField headerItem = modelForm.getRowSubmitHeaderSelectField(context);
+                ModelFormField headerItem = modelForm.getRowSubmitHeaderSelectField();
                 if (headerItem != null) {
                     innerDisplayHyperlinkFieldsEnd.add(headerItem);
                     mainFieldList.add(headerItem);
@@ -625,7 +625,7 @@ public class FormRenderer {
         
         // SCIPIO: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
         if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
-            ModelFormField item = modelForm.getRowSubmitSelectField(localContext);
+            ModelFormField item = modelForm.getRowSubmitSelectField();
             if (item != null) {
                 innerDisplayHyperlinkFieldsEnd.add(item);
                 mainFieldList.add(item);
@@ -1084,6 +1084,7 @@ public class FormRenderer {
         private boolean footerRendered = false;
         private boolean alternateTextRendered = false;
         private boolean wrapperClosed = false;
+        private boolean submitFormRendered = false;
         
         private boolean hasList = false;
         private boolean hasResult = false;
@@ -1098,7 +1099,7 @@ public class FormRenderer {
         public void renderInit() throws IOException {
             context.put("formHasList", hasList);
             context.put("formHasListResult", hasResult);   
-            context.put("formHasDisplayResult", hasDisplayResult); 
+            context.put("formHasDisplayResult", hasDisplayResult);
         }
 
         @Override
@@ -1138,7 +1139,7 @@ public class FormRenderer {
             renderAlternateText(false);
             renderTableWrapperClose();
         }
-        
+
         public void renderFinalize() throws IOException {
             context.remove("formHasList");
             context.remove("formHasListResult"); 
@@ -1184,9 +1185,11 @@ public class FormRenderer {
 
         /**
          * SCIPIO: Renders the submit button in the tfoot
+         * <p>
+         * never causes a table to appear on its own.
          */
         public void renderTableFooter() throws IOException {
-            if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
+            if (!footerRendered && wrapperOpened && hasDisplayResult && !wrapperClosed && UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields())) {
                 Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                 formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
                 
@@ -1218,7 +1221,17 @@ public class FormRenderer {
                 footerRendered = true;
             }
         }
-
+        
+        public void renderSubmitForm() throws IOException {
+            if (!submitFormRendered && wrapperOpened && wrapperClosed && hasDisplayResult) {
+                // in addition, if row-submit, we should have rendered a foot
+                if (footerRendered || !modelForm.getUseRowSubmit()) {
+                    // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.       
+                    formStringRenderer.renderSubmitForm(writer, context, modelForm);
+                    submitFormRendered = true;
+                }
+            }
+        }
     }
     
     private void renderListFormString(Appendable writer, Map<String, Object> context,
@@ -1241,8 +1254,8 @@ public class FormRenderer {
         
         listFormHandler.renderTableClose();
         
-        // SCIPIO: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
-        formStringRenderer.renderSubmitForm(writer, context, modelForm);
+        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.       
+        listFormHandler.renderSubmitForm();
        
         listFormHandler.renderFinalize();
     }
@@ -1272,6 +1285,10 @@ public class FormRenderer {
         if (!modelForm.getSkipEnd()) {
             formStringRenderer.renderMultiFormClose(writer, context, modelForm);
         }
+        
+        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.   
+        // NOTE: this must be OUTSIDE the multi form close because it has its own <form> element
+        listFormHandler.renderSubmitForm();
 
         listFormHandler.renderFinalize();
     }

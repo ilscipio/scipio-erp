@@ -33,8 +33,9 @@ class ContextHandler {
 
     private final String rendererLabel;
     private MacroScreenRenderer screenRenderer = null;
+    private Map<String, Object> lastRenderContext = new HashMap<String, Object>();
 
-    ContextHandler(String rendererLabel) {
+    protected ContextHandler(String rendererLabel) {
         super();
         this.rendererLabel = rendererLabel;
     }
@@ -50,7 +51,7 @@ class ContextHandler {
      * Registers the context as an initial context for the render thread.
      * Call from methods where the original context is expected to be passed at some point.
      */
-    void registerInitialContext(Appendable writer, Map<String, Object> context) throws IOException {
+    public void registerInitialContext(Appendable writer, Map<String, Object> context) throws IOException {
         registerScreenRenderer(writer, context);
         if (screenRenderer != null) {
             if (screenRenderer.initialContext == null) {
@@ -74,7 +75,7 @@ class ContextHandler {
      * Registers/saves elements from context as needed.
      * Call from any *StringRenderer method that may be important.
      */
-    void registerContext(Appendable writer, Map<String, Object> context) throws IOException {
+    public void registerContext(Appendable writer, Map<String, Object> context) throws IOException {
         registerScreenRenderer(writer, context);
     }
     
@@ -86,25 +87,32 @@ class ContextHandler {
      * we currently (still) try to emulate as best as possible using an initial context.
      * otherwise have to rewrite nearly all renderer methods (may have to...).
      */
-    Map<String, Object> createRenderContext(Appendable writer, Map<String, Object> currentContext, Map<String, Object> extraValues) throws IOException {
+    public Map<String, Object> createRenderContext(Appendable writer, Map<String, Object> currentContext, Map<String, Object> extraValues) throws IOException {
+        Map<String, Object> renderContext;
         if (currentContext != null) {
             throw new UnsupportedOperationException("Not expecting to receive current context in current implementation");
         }
         else if (screenRenderer != null) {
             MapStack<String> initContext = screenRenderer.initialContext;
             if (initContext != null) {
-                return createRenderContextFromInitial(initContext, extraValues);
+                renderContext = createRenderContextFromInitial(initContext, extraValues);
             }
             else {
                 Debug.logError("macro " + rendererLabel + " renderer template environment initial context absent", MacroScreenRenderer.module);
-                return new HashMap<String, Object>(extraValues);
+                renderContext = new HashMap<String, Object>(extraValues);
             }
         }
         else {
             Debug.logError("macro " + rendererLabel + " renderer template environment initial context populate "
                     + "could not retrieve macro screen renderer instance", MacroScreenRenderer.module);
-            return new HashMap<String, Object>(extraValues);
+            renderContext = new HashMap<String, Object>(extraValues);
         }
+        lastRenderContext = renderContext;
+        return renderContext;
+    }
+    
+    public Map<String, Object> getRenderContext(Appendable writer, Map<String, Object> currentContext) throws IOException {
+        return lastRenderContext;
     }
     
     private Map<String, Object> createRenderContextFromInitial(MapStack<String> initContext, Map<String, Object> extraValues) throws IOException {

@@ -3432,7 +3432,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // SCIPIO: WARN: the FTL must encode everything passed below!
         
         String hiddenFormName = WidgetWorker.makeLinkHiddenFormName(context, modelForm,
-                "submitForm" + modelForm.getItemIndexSeparator() + getNextRenderSubmitFormIdNum(writer, context, modelForm)); 
+                modelForm.getSubmitHiddenFormName(Integer.toString(getNextRenderSubmitFormIdNum(writer, context, modelForm)))); 
         
         StringWriter targetUrlSw = new StringWriter();
         WidgetWorker.buildHyperlinkUrl(targetUrlSw, modelForm.getTarget(context, modelForm.getTargetType()), 
@@ -3446,7 +3446,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 for (ModelFormField rowSubmitField : rowSubmitFields) {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("submitFieldId", rowSubmitField.getCurrentContainerId(context));
-                    map.put("submitFieldName", rowSubmitField.getFieldName());
+                    map.put("submitFieldName", rowSubmitField.getParameterName(context));
                     map.put("selectFieldNamePrefix", modelForm.getRowSubmitSelectFieldParamNamePrefix());
                     submitEntries.add(map);
                 }
@@ -3457,7 +3457,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 for (ModelFormField rowSubmitField : rowSubmitFields) {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("submitFieldId", rowSubmitField.getCurrentContainerId(context));
-                    map.put("submitFieldName", rowSubmitField.getFieldName());
+                    map.put("submitFieldName", rowSubmitField.getParameterName(context));
                     submitEntries.add(map);
                 }
             }

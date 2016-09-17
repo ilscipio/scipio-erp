@@ -232,7 +232,7 @@ public abstract class ModelForm extends ModelWidget {
     
     // SCIPIO: new
     private final String rowSubmitSelectFieldNamePrefix;
-    private final String rowSubmitSelectFieldFieldNamePrefix;
+    private final String rowSubmitSelectFieldParamNamePrefix;
     
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
@@ -869,10 +869,12 @@ public abstract class ModelForm extends ModelWidget {
         // TODO: Unhardcode everything below
         this.rowSubmitSelectFieldNamePrefix = "selectAction";
         if (getType().equals("multi")) {
-            this.rowSubmitSelectFieldFieldNamePrefix = UtilHttp.ROW_SUBMIT_PREFIX;
+            this.rowSubmitSelectFieldParamNamePrefix = UtilHttp.ROW_SUBMIT_PREFIX;
         } else {
-            this.rowSubmitSelectFieldFieldNamePrefix = this.rowSubmitSelectFieldNamePrefix;
+            this.rowSubmitSelectFieldParamNamePrefix = this.rowSubmitSelectFieldNamePrefix;
         }
+        String rowSubmitSelectFieldName = makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix);
+        String rowSubmitSelectFieldParamName = makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldParamNamePrefix);
         String rowSubmitSelectFieldTitle = "${uiLabelMap.CommonSelect}";
         
         ModelFormField rowSubmitHeaderSelectField = null;
@@ -880,19 +882,21 @@ public abstract class ModelForm extends ModelWidget {
         if (getUseRowSubmit()) {
             if ("list".equals(getType()) || "multi".equals(getType())) {
                 ModelFormFieldBuilder builder;
-                builder = createHeaderFieldBuilder();
-                builder.setName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix)); 
-                builder.setFieldName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix)); // NOTE: SAME as Name, ONLY for header
+                builder = getHeaderFieldBuilder();
+                builder.setName(rowSubmitSelectFieldName); 
+                builder.setFieldName(rowSubmitSelectFieldName);
+                builder.setParameterName(rowSubmitSelectFieldName); // NOTE: SAME as Name, ONLY for header
                 builder.setTitle(rowSubmitSelectFieldTitle);
                 rowSubmitHeaderSelectField = builder.build();
                 
                 if ("list".equals(getType())) {
-                    builder = createRadioFieldBuilder();
+                    builder = getRadioFieldBuilder();
                 } else {
-                    builder = createCheckboxFieldBuilder();
+                    builder = getCheckboxFieldBuilder();
                 }
-                builder.setName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix));
-                builder.setFieldName(makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldFieldNamePrefix)); 
+                builder.setName(rowSubmitSelectFieldName);
+                builder.setFieldName(rowSubmitSelectFieldName);
+                builder.setParameterName(rowSubmitSelectFieldParamName); 
                 builder.setTitle(rowSubmitSelectFieldTitle);
                 rowSubmitSelectField = builder.build();
             }
@@ -1774,15 +1778,14 @@ public abstract class ModelForm extends ModelWidget {
     /**
      * SCIPIO: Returns row-submit special select field name prefix.
      */
-    public String getRowSubmitSelectFieldFieldNamePrefix() {
-        return rowSubmitSelectFieldFieldNamePrefix;
+    public String getRowSubmitSelectFieldParamNamePrefix() {
+        return rowSubmitSelectFieldParamNamePrefix;
     }
     
     private String makeRowSubmitSelectFieldName(String prefix) {
         // FIXME: HARDCODED!
         return prefix + getItemIndexSeparator() + getName();
     }
-
 
     /**
      * SCIPIO: Gets row-submit header field.
@@ -1794,7 +1797,7 @@ public abstract class ModelForm extends ModelWidget {
     /**
      * SCIPIO: new
      */
-    private ModelFormFieldBuilder createHeaderFieldBuilder() {
+    private ModelFormFieldBuilder getHeaderFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
         builder.setModelForm(this);
@@ -1812,7 +1815,7 @@ public abstract class ModelForm extends ModelWidget {
     /**
      * SCIPIO: new
      */
-    private ModelFormFieldBuilder createRadioFieldBuilder() {
+    private ModelFormFieldBuilder getRadioFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
         optionSources.add(new SingleOption("Y", " ", null));
@@ -1825,7 +1828,7 @@ public abstract class ModelForm extends ModelWidget {
     /**
      * SCIPIO: new
      */
-    private ModelFormFieldBuilder createCheckboxFieldBuilder() {
+    private ModelFormFieldBuilder getCheckboxFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
         List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
         optionSources.add(new SingleOption("Y", " ", null));

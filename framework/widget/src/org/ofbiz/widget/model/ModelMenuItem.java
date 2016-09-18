@@ -242,6 +242,7 @@ public class ModelMenuItem extends ModelWidget {
                 }
                 ModelSubMenu.BuildArgs subBuildArgs = new ModelSubMenu.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs);
                 subBuildArgs.extraMenuItems = extraMenuItems;
+                subBuildArgs.forceSubMenuModelScope = buildArgs.forceSubMenuModelScope;
                 
                 ModelSubMenu modelSubMenu = new ModelSubMenu(subMenuElement, defaultSubMenuName, 
                         childParentItemInfo, subBuildArgs);
@@ -1095,11 +1096,13 @@ public class ModelMenuItem extends ModelWidget {
         public final CurrentMenuDefBuildArgs currentMenuDefBuildArgs;
         
         public boolean omitSubMenus;
+        public String forceSubMenuModelScope;
 
         public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs) {
             this.genBuildArgs = genBuildArgs;
             this.currentMenuDefBuildArgs = currentMenuDefBuildArgs;
             this.omitSubMenus = false;
+            this.forceSubMenuModelScope = null;
         }
     }
     

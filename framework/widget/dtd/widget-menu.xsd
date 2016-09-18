@@ -311,6 +311,23 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="force-sub-menu-model-scope">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
+                        of all menu items included with this directive, recursively.
+                        The 'func' or 'none' value can be useful (though limited) to duplicate a complex menu without
+                        inheriting any of its styles.
+                        NOTE: this also forces the include attribute scope.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="style" />
+                        <xs:enumeration value="func" />
+                        <xs:enumeration value="full" />
+                        <xs:enumeration value="none" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-actions">
@@ -411,6 +428,21 @@ Features and Modifications:
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="none" />
                         <xs:enumeration value="all" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="force-sub-menu-model-scope">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
+                        of all menu items included with this directive, recursively.
+                        See include-elements documentation.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="style" />
+                        <xs:enumeration value="func" />
+                        <xs:enumeration value="full" />
+                        <xs:enumeration value="none" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

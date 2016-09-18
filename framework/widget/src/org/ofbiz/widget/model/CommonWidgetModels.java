@@ -337,6 +337,7 @@ public final class CommonWidgetModels {
         // FIXME: These don't belong in this class (might have been used for image)
         private final String height;
         private final String width;
+        private final FlexibleStringExpander useWhenExdr; // SCIPIO: new
 
         public Link(Element linkElement) {
             this.textExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("text"));
@@ -394,6 +395,7 @@ public final class CommonWidgetModels {
             this.size = size;
             this.width = linkElement.getAttribute("width");
             this.height = linkElement.getAttribute("height");
+            this.useWhenExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("use-when"));
         }
 
         // Portal constructor
@@ -417,6 +419,7 @@ public final class CommonWidgetModels {
             this.size = null;
             this.width = "";
             this.height = "";
+            this.useWhenExdr = FlexibleStringExpander.getInstance("");
         }
 
         public AutoEntityParameters getAutoEntityParameters() {
@@ -565,6 +568,21 @@ public final class CommonWidgetModels {
 
         public String getWidth() {
             return this.width;
+        }
+
+        public FlexibleStringExpander getUseWhenExdr() { // SCIPIO: new
+            return useWhenExdr;
+        }
+        
+        public Boolean getUseWhen(Map<String, Object> context) { // SCIPIO: new
+            String useWhenStr = useWhenExdr.expandString(context);
+            if ("true".equals(useWhenStr)) {
+                return Boolean.TRUE;
+            } else if ("false".equals(useWhenStr)) {
+                return Boolean.FALSE;
+            } else {
+                return null;
+            }
         }
     }
 

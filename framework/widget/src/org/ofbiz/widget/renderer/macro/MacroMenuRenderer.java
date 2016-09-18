@@ -458,7 +458,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("toolTip", menuItem.getTooltip(context));
         String linkStr = "";
         MenuLink link = menuItem.getLink();
-        if (link != null) {
+        // SCIPIO: NEW: implement use-when on link
+        boolean useLink = (link != null && !Boolean.FALSE.equals(link.getUseWhen(context)));
+        if (useLink) {
             StringWriter sw = new StringWriter();
             renderLink(sw, context, link);
             linkStr = sw.toString();

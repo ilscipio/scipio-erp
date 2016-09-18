@@ -403,18 +403,20 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             //    style += " " ;
             //}
             //style += selectedStyle ;
-            if (UtilValidate.isEmpty(selectedStyle)) {
-                selectedStyle = "+selected";
-            } 
+            // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
+            //if (UtilValidate.isEmpty(selectedStyle)) {
+            //    selectedStyle = "+selected";
+            //} 
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
         } else {
             // SCIPIO: support selected-ancestor
             selectedAncestor = menuItem.isSameOrAncestorOf(selectedMenuItem);
             if (selectedAncestor) {
                 String selectedStyle = menuItem.getSelectedAncestorStyle();
-                if (UtilValidate.isEmpty(selectedStyle)) {
-                    selectedStyle = "+selected";
-                } 
+                // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
+                //if (UtilValidate.isEmpty(selectedStyle)) {
+                //    selectedStyle = "+selected-ancestor";
+                //} 
                 style = ModelMenu.combineExtraStyle(style, selectedStyle);
             }
         }

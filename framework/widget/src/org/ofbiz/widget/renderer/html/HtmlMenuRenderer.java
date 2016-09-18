@@ -344,12 +344,15 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     }
 
     public boolean isHideIfSelected(ModelMenuItem menuItem, Map<String, Object> context) {
-        ModelMenu menu = menuItem.getFuncModelMenu();
-        String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
-        String currentItemName = menuItem.getName();
+        // SCIPIO: this is obsolete
+        //ModelMenu menu = menuItem.getFuncModelMenu();
+        //String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
+        //String currentItemName = menuItem.getName();
+        //Boolean hideIfSelected = menuItem.getHideIfSelected();
+        //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-            //Debug.logInfo("in HtmlMenuRenderer, currentMenuItemName:" + currentMenuItemName + " currentItemName:" + currentItemName + " hideIfSelected:" + hideIfSelected,"");
-        return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
+        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
     }
 
 

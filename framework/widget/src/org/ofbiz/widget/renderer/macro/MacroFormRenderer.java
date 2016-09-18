@@ -135,7 +135,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     /**
-     * Scipio: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer. 
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
@@ -166,7 +166,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            // Scipio: custom render context
+            // SCIPIO: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
@@ -605,7 +605,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (value.length() > maxlength) {
                 value = value.substring(0, maxlength);
             }
-            // Scipio: NOW do escaping TODO: review encoding in general
+            // SCIPIO: NOW do escaping TODO: review encoding in general
             UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
             if (simpleEncoder != null) {
                 value = simpleEncoder.encode(value);
@@ -1145,7 +1145,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
         }
         
-        // Scipio: Getting the id of the element from the context
+        // SCIPIO: Getting the id of the element from the context
         String id = null;
         if (submitField.getModelFormField().getCurrentContainerId(context) != null) {
             id = submitField.getModelFormField().getCurrentContainerId(context);
@@ -1362,10 +1362,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
             autocomplete = "off";
         }
         
-        // Scipio: extra attribs map (json-like)
+        // SCIPIO: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
         
-        // Scipio: form method
+        // SCIPIO: form method
         String method = modelForm.getMethod(context);
 
         StringWriter sr = new StringWriter();
@@ -1428,7 +1428,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" />");
         executeMacro(writer, sr.toString());
         
-        // Scipio: same as the multi type form, I think this is the cleanest way to do it
+        // SCIPIO: same as the multi type form, I think this is the cleanest way to do it
         // see if there is anything that needs to be added outside of the list-form
         Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
         Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
@@ -1446,7 +1446,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         //FIXME copy from HtmlFormRenderer.java (except for the closing form tag itself, that is now converted)
         if (!modelForm.getUseRowSubmit()) {    
-            // Scipio: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
+            // SCIPIO: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
             this.renderSubmitForm(writer, context, modelForm);
         }
         
@@ -1515,7 +1515,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         String columnStyleListString = StringUtil.join(columnStyleListEscaped, ", ");
         
-        // Scipio: extra attribs map (json-like)
+        // SCIPIO: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
@@ -1529,7 +1529,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             // this is a fix for forms with no fields
             sr.append(columnStyleListString);
         }
-        // Scipio: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
+        // SCIPIO: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
         sr.append("] formType=");
         sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));        
         sr.append(" attribs=(");
@@ -1626,7 +1626,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String oddRowStyle = "";
         if (itemIndex != null) {
             altRowStyles = modelForm.getStyleAltRowStyle(context);
-            // Scipio: this is silly, pass both and let FTL make the check so it has more info
+            // SCIPIO: this is silly, pass both and let FTL make the check so it has more info
             //if (itemIndex.intValue() % 2 == 0) {
             //    evenRowStyle = modelForm.getEvenRowStyle();
             //} else {
@@ -1736,7 +1736,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
     
     /**
-     * Scipio: appends position params.
+     * SCIPIO: appends position params.
      */
     private void appendPositionParams(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         Integer positions = (Integer) context.get("formFieldRender_positions");
@@ -1768,7 +1768,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String style = modelFormField.getTitleAreaStyle();
         
-        // Scipio: extra attribs map (json-like)
+        // SCIPIO: extra attribs map (json-like)
         String attribs = modelFormField.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
@@ -1799,7 +1799,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowWidgetCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) throws IOException {
         String areaStyle = modelFormField.getWidgetAreaStyle();
         
-        // Scipio: extra attribs map (json-like)
+        // SCIPIO: extra attribs map (json-like)
         String attribs = modelFormField.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
@@ -1853,7 +1853,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         Locale locale = (Locale) context.get("locale");
-        // Scipio: pass options hide setting to macro
+        // SCIPIO: pass options hide setting to macro
         boolean hideOptions = textFindField.getHideOptions();
         if (!hideOptions) {
             opEquals = UtilProperties.getMessage("conditional", "equals", locale);
@@ -1916,7 +1916,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" ignoreCase=");
         sr.append(ftlFmt.makeStringLiteral(ignoreCase));
         sr.append("");
-        // Scipio: new args
+        // SCIPIO: new args
         sr.append(" hideOptions=");
         sr.append(Boolean.toString(hideOptions));
         sr.append(" />");
@@ -2182,7 +2182,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             autoCompleterTarget = autoCompleterTarget + "ajaxLookup=Y";
             updateAreas = new LinkedList<ModelForm.UpdateArea>();
-            //Scipio: ugly hack but seems to work for now, so the lookup field can find the proper field
+            //SCIPIO: ugly hack but seems to work for now, so the lookup field can find the proper field
             String updateAreaId = id;
             if (modelFormField.getModelForm().getType().equals("list"))
                 updateAreaId = name;
@@ -2345,7 +2345,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         return result;
     }
 
-    // Scipio: new param: position
+    // SCIPIO: new param: position
     public void renderNextPrev(Appendable writer, Map<String, Object> context, ModelForm modelForm, String position) throws IOException {
         boolean ajaxEnabled = false;
         List<ModelForm.UpdateArea> updateAreas = modelForm.getOnPaginateUpdateAreas();
@@ -2384,7 +2384,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             commonDisplaying = UtilProperties.getMessage("CommonUiLabels", "CommonDisplaying", messageMap, (Locale) context.get("locale"));
         }
         
-        // Scipio: realHighIndex needed for macro
+        // SCIPIO: realHighIndex needed for macro
         int realHighIndex = Integer.valueOf(lowIndex + actualPageSize);
         
         // for legacy support, the viewSizeParam is VIEW_SIZE and viewIndexParam is VIEW_INDEX when the fields are "viewSize" and "viewIndex"
@@ -2409,7 +2409,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String urlPath = UtilHttp.removeQueryStringFromTarget(targetService);
         String prepLinkText = UtilHttp.getQueryStringFromTarget(targetService);
         
-        // Scipio: Also prevent duplicate params between queryString and targetService
+        // SCIPIO: Also prevent duplicate params between queryString and targetService
         if (!UtilValidate.isEmpty(queryString) && !queryString.equals("null") &&
             !UtilValidate.isEmpty(prepLinkText)) {
             // get queryString param names
@@ -2607,7 +2607,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(paginateLastLabel));
         sr.append(" paginateViewSizeLabel=");
         sr.append(ftlFmt.makeStringLiteral(paginateViewSizeLabel));
-        // Scipio: new params
+        // SCIPIO: new params
         sr.append(" paginate=");
         sr.append(Boolean.toString(paginate));
         sr.append(" lowIndex=");
@@ -3147,7 +3147,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
     
     /**
-     * Scipio: Factors out renderAstericks macro args.
+     * SCIPIO: Factors out renderAstericks macro args.
      */
     public void appendAsterisksParams(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String requiredField = "false";

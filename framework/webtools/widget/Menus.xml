@@ -613,7 +613,8 @@ under the License.
         </menu-item>
         <!-- Modifies the previous to exclude one of the items and add an extra before -->
         <menu-item name="top7">
-            <sub-menu include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown">
+            <sub-menu include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown, sorted"
+                items-sort-mode="displaytext-ignorecase">
                 <!-- extra items -->
                 <include-elements menu-name="LayoutDemoTest2" recursive="full"/>
                 <include-menu-items menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->

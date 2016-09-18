@@ -243,6 +243,9 @@ second is cleaner to express.
 Note that both macros support arguments passed in a hash (or map) using the "args" argument, so the entire menu definition
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.    
           
+The generated menu ID following a call can be read using: {{{getRequestVar("scipioLastMenuInfo").id}}}.
+At current time (2016-09-16), other members of that map should not be relied upon.
+          
 * Nested Menus *
 
 Nested menus (sub-menus) will inherit the type of the parent if no type is specified. The macro will automatically
@@ -438,6 +441,7 @@ The submenu's main class may be set as altnested in global styles.
     "nestedFirst":nestedFirst, "isNestedMenu":isNestedMenu, 
     "parentMenuType":parentMenuType, "parentMenuSpecialType":parentMenuSpecialType, "parentStyleName":parentStyleName,
     "active":active, "activeTarget":activeTarget, "menuLevel":menuLevel}>
+  <#local dummy = setRequestVar("scipioCurrentMenuInfo", menuInfo)><#-- for easier access from nested content, in case -->
   <#local dummy = pushRequestStack("scipioMenuStack", menuInfo)>
   <#local dummy = setRequestVar("scipioCurrentMenuItemIndex", 0)>
   

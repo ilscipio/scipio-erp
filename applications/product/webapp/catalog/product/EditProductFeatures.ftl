@@ -27,7 +27,7 @@ under the License.
       <input type="hidden" name="productId" value="${productId}"/>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
-            <@tr class="header-row">
+          <@tr class="header-row">
             <@th>${uiLabelMap.CommonId}</@th>
             <@th>${uiLabelMap.CommonDescription}</@th>
             <@th>${uiLabelMap.ProductUomId}</@th>
@@ -36,6 +36,7 @@ under the License.
             <@th>${uiLabelMap.CommonFromDate}</@th>
             <@th>${uiLabelMap.ProductThruDateAmountSequenceApplicationType}</@th>
             <@th>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');"/></@th>
+            <@th></@th>
           </@tr>
         </@thead>
         <@tbody>

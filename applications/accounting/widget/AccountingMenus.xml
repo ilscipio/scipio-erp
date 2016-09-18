@@ -1011,7 +1011,7 @@
                 <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
             </link>
         </menu-item>
-        <menu-item name="pdf" title="${uiLabelMap.AccountingInvoice}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+        <menu-item name="pdf" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <not>
                     <if-empty field="invoice.invoiceId" />
@@ -1215,6 +1215,16 @@
                 </and>
             </condition>
             <link target="addtax">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
+        <menu-item name="pdf" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>

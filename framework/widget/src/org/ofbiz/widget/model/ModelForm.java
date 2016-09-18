@@ -40,6 +40,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -1716,6 +1717,51 @@ public abstract class ModelForm extends ModelWidget {
     public String getMethod(Map<String, Object> context) {
         return method.expandString(context);
     }
+    
+    /**
+     * SCIPIO: Returns row-submit special select field name prefix.
+     */
+    public String getRowSubmitSelectFieldNamePrefix(Map<String, Object> context) {
+        // FIXME: HARDCODED!
+        return "selectAction";
+    }
+    
+    /**
+     * SCIPIO: Returns row-submit special select field name.
+     */
+    public String getRowSubmitHeaderSelectFieldName(Map<String, Object> context) {
+        // FIXME: HARDCODED!
+        return getRowSubmitSelectFieldNamePrefix(context) + getItemIndexSeparator() + getName();
+    }
+    
+    /**
+     * SCIPIO: Returns row-submit special select field name.
+     */
+    public String getRowSubmitItemSelectFieldName(Map<String, Object> context) {
+        // FIXME: HARDCODED!
+        if (getType().equals("multi")) {
+            return UtilHttp.ROW_SUBMIT_PREFIX;
+        } else {
+            return getRowSubmitSelectFieldNamePrefix(context) + getItemIndexSeparator() + getName();
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns row-submit special select field name.
+     */
+    public String getRowSubmitHeaderSelectFieldTitle(Map<String, Object> context) {
+        // FIXME: HARDCODED!
+        return UtilProperties.getMessage("CommonUiLabels", "CommonSelect", (Locale) context.get("locale"));
+    }
+    
+    /**
+     * SCIPIO: Returns row-submit special select field name.
+     */
+    public String getRowSubmitItemSelectFieldTitle(Map<String, Object> context) {
+        // FIXME: HARDCODED!
+        return UtilProperties.getMessage("CommonUiLabels", "CommonSelect", (Locale) context.get("locale"));
+    }
+    
     
     public static class AltRowStyle implements Serializable {
         public final String useWhen;

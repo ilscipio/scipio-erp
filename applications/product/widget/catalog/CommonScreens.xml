@@ -247,6 +247,121 @@ under the License.
         </section>
     </screen>
     
+    <!-- Custom apps can use their own Product Decorator by specifying its
+         location in parameters.productDecoratorLocation -->
+    <screen name="CommonProductDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Product" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productId" from-field="parameters.productId" global="true"/>
+                <entity-one entity-name="Product" value-field="product"/>
+                <set field="product" from-field="product" global="true"/>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <!-- SCIPIO: session-based browsing aid -->
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/SetProductLastProduct.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
+                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                                </or>
+                            </condition>
+                            <actions>
+                                <!-- SCIPIO: this seems duplicate from above and will clashes with global...
+                                <set field="productId" from-field="parameters.productId"/>
+                                <entity-one entity-name="Product" value-field="product"/> -->
+                            </actions>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="product"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
+                                        <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
+                                    </widgets>
+                                    <fail-widgets>
+                                        <section>
+                                            <actions>
+                                                <set field="activeSubMenu" value="TOP"/>
+                                                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                                            </actions>
+                                            <widgets>
+                                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                            </widgets>
+                                        </section>
+                                    </fail-widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
+                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                                </or>
+                            </condition>
+                            <actions>
+                                <!-- SCIPIO: this seems duplicate from above and will clashes with global...
+                                <set field="productId" from-field="parameters.productId"/>
+                                <entity-one entity-name="Product" value-field="product"/>-->
+                            </actions>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="product"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
+                                        </platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <section>
+                                            <condition>
+                                                <or>
+                                                    <if-compare operator="not-equals" value="EditProduct" field="activeSubMenuItem"/>
+                                                </or>
+                                            </condition>
+                                            <widgets>
+                                                <platform-specific>
+                                                    <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
+                                                </platform-specific>
+                                            </widgets>
+                                        </section>
+                                    </fail-widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonConfigDecorator">
         <section>
             <actions>
@@ -358,9 +473,14 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.ProductStore}: ${parameters.productStoreId}  ${extraFunctionName}"/>
+                
+                <!-- SCIPIO: session-based browsing aid
+                    NOTE: this is generally placed because some fallbacks don't have an accessible points -->
+                <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -373,8 +493,15 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <section>
+                                    <actions>
+                                        <set field="activeSubMenu" value="TOP"/>
+                                        <set field="activeSubMenuItem" value="store"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -430,17 +557,38 @@ under the License.
     <screen name="CommonProductStoreGroupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EditProductStoreGroups"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <!-- SCIPIO: session-based browsing aid -->
+                <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="ProductStoreGroupTree"/>
+                        <!--<include-screen name="ProductStoreGroupTree"/>-->
+                        <section>
+                            <condition><not><if-empty field="parameters.productStoreGroupId"/></not></condition>
+                            <widgets>
+                                <container>
+                                    <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                </container>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <actions>
+                                        <set field="activeSubMenu" value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
+                                        <set field="activeSubMenuItem" value="EditProductStoreGroups"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
-                    <!-- Scipio: what is this?
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="ProductStoreGroupButtonBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                    </decorator-section>-->
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -468,7 +616,11 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Shipping" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <!-- SCIPIO: session-based browsing aid -->
+                <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

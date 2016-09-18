@@ -49,7 +49,7 @@ under the License.
         <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" required-field="true">
             <text size="10" maxlength="30"/>
         </field>
-        <field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}" widget-style="required"><drop-down allow-empty="false"/></field>
+        <field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}" required-field="true"><drop-down allow-empty="false"/></field>
         <field name="countryGeoId" title="${uiLabelMap.CommonCountry}" required-field="true">
             <drop-down no-current-selected-key="${defaultCountryGeoId}">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} - ${geoId}">

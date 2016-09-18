@@ -1518,7 +1518,7 @@
         <value xml:lang="zh_TW">警告:沒有新建出貨;找不到任何要送的.</value>
     </property>
     <property key="FacilityShipmentNotCreatedForNotReserveInventory">
-        <value xml:lang="en">ProductStore ${productStore.productStoreId} does not reserve inventory; cannot use Quick Ship for Multiple Facilities</value>
+        <value xml:lang="en">ProductStore ${productStore.productStoreId} does not reserve inventory; cannot use Quick Ship for Multiple Warehouses</value>
         <value xml:lang="it">Negozio ${productStore.productStoreId} non riserva inventario; non è possibile utilizzare la spedizione veloce per stabilimenti multipli</value>
         <value xml:lang="ja">製品店舗 {0} は在庫予約していません; 複数の拠点にクイック発送は使用できません</value>
         <value xml:lang="vi">Cửa hàng ${productStore.productStoreId} không có kho hàng dự trữ, nên không thể sử dụng Chuyển hàng nhanh cho Nhiều Chi nhánh / Cơ sở</value>
@@ -1526,7 +1526,7 @@
         <value xml:lang="zh_TW">產品商店 ${productStore.productStoreId} 沒有預訂庫存;不能為多個場所使用快速送貨</value>
     </property>
     <property key="FacilityShipmentNotCreatedForExplodesOrderItems">
-        <value xml:lang="en">ProductStore ${productStore.productStoreId} explodes order items; cannot use Quick Ship for Multiple Facilities</value>
+        <value xml:lang="en">ProductStore ${productStore.productStoreId} explodes order items; cannot use Quick Ship for Multiple Warehouses</value>
         <value xml:lang="it">Negozio ${productStore.productStoreId} esplosione righe ordine; non è possibile utilizzare la spedizione veloce per stabilimenti multipli</value>
         <value xml:lang="ja">製品店舗 {0} は注文アイテムが分散されています; 複数の拠点にクイック発送は使用できません</value>
         <value xml:lang="vi">Cửa hàng ${productStore.productStoreId} không có hàng hóa đặt hàng nên không thể sử dụng Chuyển hàng nhanh cho Nhiều Chi nhánh / Cơ sở</value>
@@ -9580,7 +9580,7 @@
     </property>
     <property key="PageTitleEditProductFacilities">
         <value xml:lang="de">Produkt Einrichtungen bearbeiten</value>
-        <value xml:lang="en">Edit Product Facilities</value>
+        <value xml:lang="en">Edit Product Warehouses</value>
         <value xml:lang="es">Editar Almacenes de un Producto</value>
         <value xml:lang="fr">Modification des stocks</value>
         <value xml:lang="it">Aggiorna Stabilimento Prodotto</value>
@@ -16942,7 +16942,7 @@
     </property>
     <property key="ProductFacilities">
         <value xml:lang="de">Einrichtungen</value>
-        <value xml:lang="en">Facilities</value>
+        <value xml:lang="en">Warehouses</value>
         <value xml:lang="es">Almacenes</value>
         <value xml:lang="fr">Lieux de stockage</value>
         <value xml:lang="it">Stabilimenti</value>
@@ -16957,7 +16957,7 @@
     </property>
     <property key="ProductFacilitiesList">
         <value xml:lang="de">Liste der Einrichtungen</value>
-        <value xml:lang="en">Facilities List</value>
+        <value xml:lang="en">Warehouse List</value>
         <value xml:lang="es">Lista de Almacenes</value>
         <value xml:lang="fr">Liste des lieux de stockage</value>
         <value xml:lang="it">Lista Stabilimenti</value>
@@ -17715,7 +17715,7 @@
     </property>
     <property key="ProductFindFacilities">
         <value xml:lang="de">Einrichtungen suchen</value>
-        <value xml:lang="en">Find Facilities</value>
+        <value xml:lang="en">Find Warehouses</value>
         <value xml:lang="es">Lista de Almacenes</value>
         <value xml:lang="fr">Liste des lieux de stockage</value>
         <value xml:lang="it">Lista Stabilimenti</value>
@@ -28936,7 +28936,7 @@
     </property>
     <property key="ProductShowAllFacilities">
         <value xml:lang="de">Alle Einrichtungen anzeigen</value>
-        <value xml:lang="en">Show All Facilities</value>
+        <value xml:lang="en">Show All Warehouses</value>
         <value xml:lang="es">ver todos los Almacenes</value>
         <value xml:lang="fr">Voir tous les lieux de stockage</value>
         <value xml:lang="it">Mostra tutte le Stabilimento</value>
@@ -28964,7 +28964,7 @@
     </property>
     <property key="ProductShowProductFacilities">
         <value xml:lang="de">Alle Produkteinrichtungen anzeigen</value>
-        <value xml:lang="en">Show Product Facilities</value>
+        <value xml:lang="en">Show Product Warehouses</value>
         <value xml:lang="es">Mostrar almacenes</value>
         <value xml:lang="fr">Montrer les lieux de stockage de l'article</value>
         <value xml:lang="it">Mostra Stabilimento Prodotto</value>
@@ -31811,11 +31811,11 @@
     </property>
     <property key="PageTitleEditProductStoreFacilities">
         <value xml:lang="de">Shop Einrichtungen bearbeiten</value>
-        <value xml:lang="en">Edit Store Facilities</value><!-- orig: "Product Store" -->
+        <value xml:lang="en">Edit Store Warehouses</value><!-- orig: "Product Store" -->
     </property>
     <property key="ProductProductStoreFacilities">
         <value xml:lang="de">Shop Einrichtungen</value>
-        <value xml:lang="en">Store Facilities</value><!-- orig: "Product Store" -->
+        <value xml:lang="en">Store Warehouses</value><!-- orig: "Product Store" -->
     </property>
     <property key="ProductProductStoreCatalogs">
         <value xml:lang="de">Shop Produktkataloge</value>

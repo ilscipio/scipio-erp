@@ -26,11 +26,12 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreList"/>
                 <set field="activeSubMenuItem" value="EditProductStoreList"/>
+                <set field="labelTitleProperty" value="ProductProductStoreList"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductProductStoreList}">
+                        <screenlet><!-- title="${uiLabelMap.ProductProductStoreList}" -->
                             <include-form name="ListProductStore" location="component://product/widget/catalog/StoreForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -42,18 +43,20 @@ under the License.
     <screen name="EditProductStore">
        <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductStore"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="${groovy: parameters.productStoreId ? 'PageTitleEditProductStore' : 'ProductCreateNewProductStore'}"/>
                 <set field="activeSubMenuItem" value="EditProductStore"/>
-                <set field="labelTitleProperty" value="ProductStore"/>
-
+                <!--<set field="labelTitleProperty" value="ProductStore"/>-->    
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                
+                <set field="labelTitleProperty" value="${groovy: (context.productStore || (parameters.productStoreId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductProductStore' : 'ProductCreateNewProductStore'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductProductStore}">
+                        <screenlet><!-- title="${uiLabelMap.ProductProductStore}" -->
                             <include-form name="EditProductStore" location="component://product/widget/catalog/ProductStoreForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -92,15 +95,15 @@ under the License.
     <screen name="EditProductStorePromos">
        <section>
             <actions>
-                
                 <set field="titleProperty" value="PageTitleEditProductStorePromos"/>
                 <set field="activeSubMenuItem" value="EditProductStorePromos"/>
-                <set field="labelTitleProperty" value="ProductPromotions"/>
+                <set field="labelTitleProperty" value="ProductProductStorePromotions"/><!-- ProductPromotions -->
                 <set field="userEntered" from-field="parameters.userEntered"/>
                 <set field="activeOnly" from-field="parameters.activeOnly" default-value="true"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>                
                 
+                <!-- FIXME: filter-by-date syntax error -->
                 <entity-condition entity-name="ProductStorePromoAndAppl" list="productStorePromoAndAppls" filter-by-date="${activeOnly}">
                     <condition-list combine="and">
                         <condition-expr field-name="userEntered" from-field="userEntered" ignore-if-empty="true"/>
@@ -169,7 +172,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreWebSites"/>
                 <set field="activeSubMenuItem" value="EditProductStoreWebSites"/>
-                <set field="labelTitleProperty" value="ProductProductStoreWebSites"/>
+                <set field="labelTitleProperty" value="ProductProductStoreWebSites"/><!-- ProductProductStoreWebSites -->
+                <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
                 <set field="productStoreId" from-field="parameters.viewProductStoreId"/>
                 <set field="productStoreId" from-field="parameters.productStoreId" default-value="${productStoreId}"/>
                 <entity-condition entity-name="WebSite" list="storeWebSites">
@@ -270,7 +274,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductStoreShipmentCostEstimates}">
+                        <screenlet><!--  title="${uiLabelMap.PageTitleEditProductStoreShipmentCostEstimates}" -->
                             <include-form name="ListShipmentCostEstimates" location="component://product/widget/catalog/ProductStoreForms.xml"/>
                         </screenlet>
                         <section>
@@ -526,6 +530,38 @@ under the License.
         </section>
     </screen>
 
+    <screen name="ProductStoreFacilities">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductStoreFacilities"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
+                <set field="productStoreId" from-field="parameters.productStoreId"/>
+                <entity-one entity-name="ProductStore" value-field="productStore"/>
+                <set field="activeSubMenuItem" value="EditProductStoreFacilities"/>
+                <set field="labelTitleProperty" value="ProductProductStoreFacilities"/><!-- ProductFacility -->
+                <set field="activeMainMenuItem" value="store"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
+                <!-- 
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="leftbar"/>
+                    </decorator-section>
+                -->
+                    <decorator-section name="body">
+                        <section>
+                            <condition><not><if-empty field="productStore"/></not></condition>
+                            <widgets>
+                                <include-portal-page id="ProductStoreFacility"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!--   Assoc with product -->
     <screen name="ListProductStoreFacility">
         <section>
@@ -569,6 +605,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductProductStoreGroup"/>
+                <set field="labelTitleProperty" value="ProductProductStoreGroup"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreGroupDecorator" location="${parameters.mainDecoratorLocation}">
@@ -587,6 +624,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductProductStoreGroup"/>
+                <set field="labelTitleProperty" value="ProductProductStoreGroup"/>
                 <entity-one entity-name="ProductStoreGroup" value-field="productStoreGroup"/>
             </actions>
             <widgets>
@@ -612,8 +650,8 @@ under the License.
     <screen name="EditProductStoreGroupAndAssoc">
         <section>
             <actions>
-                <property-map map-name="uiLabelMap" resource="CommonUiLabels"/>
-                <property-map map-name="uiLabelMap" resource="ProductUiLabels"/>
+                <property-map map-name="uiLabelMap" resource="CommonUiLabels" global="true"/>
+                <property-map map-name="uiLabelMap" resource="ProductUiLabels" global="true"/>
                 <entity-one entity-name="ProductStoreGroup" value-field="productStoreGroup"/>
             </actions>
             <widgets>

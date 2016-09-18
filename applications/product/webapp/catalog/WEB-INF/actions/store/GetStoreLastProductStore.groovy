@@ -4,8 +4,20 @@
  * set globalContext, only context, for safety.
  */
 
+useGlobal = context.getStoreLastProductStore?.global;
+if (useGlobal == null) {
+    useGlobal = false;
+}
+  
+storeLastProductStoreId = session.getAttribute("storeLastProductStoreId");
+context.storeLastProductStoreId = storeLastProductStoreId;
+ 
 if (!parameters.productStoreId && !context.productStoreId && !globalContext.productStoreId) {
     productStoreId = session.getAttribute("storeLastProductStoreId"); 
     parameters.productStoreId = productStoreId;
-    context.productStoreId = productStoreId;
+    if (useGlobal) {
+        globalContext.productStoreId = productStoreId;
+    } else {
+        context.productStoreId = productStoreId;
+    }
 }

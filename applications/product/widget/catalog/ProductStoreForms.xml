@@ -36,6 +36,7 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="isCreate" use-when="productStore==null"><hidden value="true"/></field><!-- SCIPIO: new -->
         <field name="title" title="${uiLabelMap.ProductTitle}"><text size="30" maxlength="100"/></field>
         <field name="subtitle" title="${uiLabelMap.ProductSubTitle}"><text size="60" maxlength="250"/></field>
         <field name="payToPartyId"><lookup target-form-name="LookupPartyName"/></field>
@@ -43,7 +44,7 @@
         <field name="oneInventoryFacility">
             <drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="inventoryFacilityId" position="2">
+        <field name="inventoryFacilityId" position="2" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
                     <entity-order-by field-name="facilityName"/>

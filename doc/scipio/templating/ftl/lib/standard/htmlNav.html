@@ -1109,18 +1109,17 @@ If false, the nested content will come before or after (depending on nestedFirst
                             <code>contentWrapElem</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|div|..., default: -depends on type-)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">For <code>generic</code> and <code>text</code> type items, controls the extra content wrapper around nested</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|div|..., default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">For <code>generic</code> type items, controls the extra content wrapper around nested</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-If true, a <code>div</code> (generic) or <code>span</code> (text) will be added around nested; if any string, the given string will be used as the element.
+If true, a <code>div</code> will be added around nested; if any string, the given string will be used as the element.
 This wrapper will receive the contentClass and other content attributes normally given to inline elements for the other types.
 If false, no wrapper will be added.
-For generic, the default is false. For text, the default is true.
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-This currently only works for <code>generic</code> and <code>text</code> type items.          </div>
+This currently only works for <code>generic</code> type items.          </div>
 </span>
                         </td>
                       </tr>

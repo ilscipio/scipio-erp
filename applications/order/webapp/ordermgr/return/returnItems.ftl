@@ -98,24 +98,27 @@ under the License.
 
           <#-- information about orders and amount refunded/credited on past returns -->
           <#if orh??>
-          <@tr><@td colspan="10">
+          <@tr>
+            <@td colspan="10">
               <@table type="summary"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>
-                  <@td width="25%">${uiLabelMap.OrderOrderTotal}</@td>
+                  <@th width="25%">${uiLabelMap.OrderOrderTotal}</@th>
                   <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>
                 </@tr>
                 <@tr>
-                  <@td width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</@td>
+                  <@th width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</@th>
                   <@td><@ofbizCurrency amount=orh.getReturnedCreditTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></@td>
                 </@tr>
                 <@tr>
-                  <@td width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</@td>
+                  <@th width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</@th>
                   <@td><@ofbizCurrency amount=orh.getReturnedRefundTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></@td>
                 </@tr>
               </@table>
-          </@td></@tr>
+            </@td>
+          </@tr>
           </#if>
-          <@tr><@td colspan="10"><br /></@td></@tr>
+
+          <#--<@tr><@td colspan="10"><br /></@td></@tr>-->
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.OrderOrderItems}</@th>
@@ -265,14 +268,17 @@ under the License.
               <#-- toggle the row color -->
               <#assign alt_row = !alt_row>
             </#list>
-        <#else>
+          <#else>
             <@tr>
               <@td colspan="9">${uiLabelMap.OrderNoReturnItemsFound}</@td>
             </@tr>
-        </#if>
-            <@tr type="util"><@td colspan="10"><hr/></@td></@tr>
-        <#-- these are general return adjustments not associated with a particular item (itemSeqId = "_NA_" -->
-        <#if (returnAdjustments?has_content)>
+          </#if>
+          
+          <#-- these are general return adjustments not associated with a particular item (itemSeqId = "_NA_" -->
+          <#if (returnAdjustments?has_content)>
+          
+          <@tr type="util"><@td colspan="10"><hr/></@td></@tr>
+
             <#list returnAdjustments as returnAdjustment>
                 <#assign adjEditable = !readOnly> <#-- they are editable if the rest of the return items are -->
                 <@displayReturnAdjustment returnAdjustment=returnAdjustment adjEditable=adjEditable/>
@@ -293,7 +299,7 @@ under the License.
                   <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}" /></@td>
               </@tr>
            </#if>
-           <@tr type="util"><@td colspan="10"><hr/></@td></@tr>
+           <#--<@tr type="util"><@td colspan="10"><hr/></@td></@tr>-->
         </@table>
         </form>
         <#if returnItems?has_content>

@@ -75,6 +75,8 @@ public class ModelMenu extends ModelWidget {
 
     public static final String module = ModelMenu.class.getName();
 
+    public static final String TOP_MENU_NAME = "TOP";
+    
     private final List<ModelAction> actions;
     private final String defaultAlign;
     private final String defaultAlignStyle;
@@ -905,11 +907,23 @@ public class ModelMenu extends ModelWidget {
         }
         if (subMenuMap.containsKey(this.getName())) {
             Debug.logError("Menu " + this.getName() + " contains a sub-menu with same name as the top-level menu; "
-                    + "invalid and ignored", module);
+                    + "invalid and will be ignored in unique sub-menu lookups", module);
             subMenuMap.remove(this.getName());
         }
+        if (subMenuMap.containsKey(ModelMenu.TOP_MENU_NAME)) {
+            Debug.logError("Menu " + this.getName() + " contains a sub-menu having the special reserved value '" + 
+                    ModelMenu.TOP_MENU_NAME + "' as name; invalid and will be ignored in unique sub-menu lookups", module);
+            subMenuMap.remove(TOP_MENU_NAME);
+        }
+        if (subMenuMap.containsKey(null)) {
+            Debug.logError("Menu " + this.getName() + " contains a null key; should not happen", module);
+            subMenuMap.remove(null);
+        }
+        if (subMenuMap.containsKey("")) {
+            Debug.logError("Menu " + this.getName() + " contains an empty key; should not happen", module);
+            subMenuMap.remove("");
+        }
     }
-    
     
     public List<ModelAction> getActions() {
         return actions;
@@ -1343,12 +1357,20 @@ public class ModelMenu extends ModelWidget {
         }
     }
     
-    public boolean nameIsTopMenu(String subMenuName) {
-        return (subMenuName == null || subMenuName.isEmpty() || subMenuName.equals(getName()));
+    public boolean isMenuNameTopMenu(String menuName) {
+        return (menuName == null || menuName.isEmpty() || TOP_MENU_NAME.equals(menuName) || menuName.equals(getName()));
+    }
+    
+    public boolean isMenuNameSubMenu(String menuName) {
+        return getModelSubMenuByName(menuName) != null;
+    }
+    
+    public boolean isMenuNameWithinMenu(String menuName) {
+        return isMenuNameTopMenu(menuName) || isMenuNameSubMenu(menuName);
     }
     
     public ModelMenuItem getModelMenuItemBySubName(String menuItemName, String subMenuName) {
-        if (nameIsTopMenu(subMenuName)) {
+        if (isMenuNameTopMenu(subMenuName)) {
             return getModelMenuItemByName(menuItemName);
         } else {
             ModelSubMenu subMenu = getModelSubMenuByName(subMenuName);
@@ -1505,7 +1527,7 @@ public class ModelMenu extends ModelWidget {
                 // ok, have a sub-menu
                 String defaultMenuItemName = subMenu.getDefaultMenuItemName();
                 menuItem = subMenu.getModelMenuItemByName(defaultMenuItemName);
-            } else if (nameIsTopMenu(selMenuName)) {
+            } else if (isMenuNameTopMenu(selMenuName)) {
                 // use top menu (us), though only if it was intended for us
                 if (UtilValidate.isNotEmpty(this.defaultMenuItemName)) {
                     menuItem = getModelMenuItemByName(this.defaultMenuItemName);

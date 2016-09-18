@@ -309,7 +309,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: Main SideBar Menu -->
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>

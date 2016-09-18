@@ -65,14 +65,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <section>
-                                    <actions>
-                                        <set field="activeSubMenu" value="" />
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
-                                    </widgets>
-                                </section>
+                                <include-screen name="DefMainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -231,7 +224,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://webtools/webapp/webtools/cert/viewbrowsercerts.ftl"/></html></platform-specific>
@@ -256,7 +249,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -294,7 +287,7 @@ under the License.
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -333,7 +326,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -373,7 +366,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -410,7 +403,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -449,7 +442,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -488,7 +481,7 @@ under the License.
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -527,7 +520,7 @@ under the License.
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -568,7 +561,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
                         <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupTabBar"/>
@@ -591,29 +584,28 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: SideBar menu factored implementation -->
-    <screen name="SideBarMenu">
+    <!-- SCIPIO: Main SideBar Menu -->
+    <screen name="MainSideBarMenu">
         <section>
             <actions>
-                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
-                <set field="sideBarMenu.advLocation" value="component://webtools/widget/Menus.xml"/>
-                <set field="sideBarMenu.advName" value="WebtoolsAppSideBar"/>
-                <set field="sideBarMenu.defLocation" value="component://webtools/widget/Menus.xml"/>
+                <set field="menuCfg.location" value="component://webtools/widget/Menus.xml"/>
+                <set field="menuCfg.name" value="WebtoolsAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://webtools/widget/Menus.xml"/>
             </actions>
             <widgets>
-                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
             </widgets>
         </section>
     </screen>
     
-    <!-- SCIPIO: Default SideBar menu, with no selected submenu (shows top level) -->
-    <screen name="DefaultSideBarMenu">
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
         <section>
             <actions>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
             </actions>
             <widgets>
-                <include-screen name="SideBarMenu"/>
+                <include-screen name="MainSideBarMenu"/>
             </widgets>
         </section>
     </screen>

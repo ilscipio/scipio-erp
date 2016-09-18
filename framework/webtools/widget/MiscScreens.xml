@@ -89,7 +89,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

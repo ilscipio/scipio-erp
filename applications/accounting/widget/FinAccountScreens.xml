@@ -43,7 +43,7 @@ under the License.
                                         <include-menu name="FinAccountSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                                        <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>

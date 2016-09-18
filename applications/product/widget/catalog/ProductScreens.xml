@@ -58,7 +58,7 @@ under the License.
                                 <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefaultSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

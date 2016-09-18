@@ -504,6 +504,9 @@ public class FormRenderer {
                         formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
                     }
                     if (innerFormFields.size() > 0) {
+                        // SCIPIO: FIXME?: the renderFormatHeaderRowFormCellOpen calls here always pass position span 1,
+                        // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
+                        
                         // TODO: manage colspan
                         formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                         // Scipio: There is currently an issue where sometimes the title separator gets printed
@@ -552,7 +555,9 @@ public class FormRenderer {
                     while (innerDisplayHyperlinkFieldsEndIt.hasNext()) {
                         ModelFormField modelFormField = innerDisplayHyperlinkFieldsEndIt.next();
                         // span columns only if this is the last column in the row (not just in this first list)
-                        if (innerDisplayHyperlinkFieldsEndIt.hasNext() || numOfCells > innerDisplayHyperlinkFieldsEnd.size()) {
+                        // SCIPIO: bad check
+                        //if (innerDisplayHyperlinkFieldsEndIt.hasNext() || numOfCells > innerDisplayHyperlinkFieldsEnd.size()) {
+                        if (innerDisplayHyperlinkFieldsEndIt.hasNext()) {
                             formStringRenderer.renderFormatHeaderRowCellOpen(writer, context, modelForm, modelFormField, 1);
                         } else {
                             formStringRenderer.renderFormatHeaderRowCellOpen(writer, context, modelForm, modelFormField,
@@ -727,6 +732,9 @@ public class FormRenderer {
 
             // The form cell is rendered only if there is at least an input field
             if (innerFormFields.size() > 0) {
+                // SCIPIO: FIXME?: the renderFormatItemRowCellOpen calls here always pass position span 1,
+                // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
+                
                 // render the "form" cell                
                 formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
                 // Scipio: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)

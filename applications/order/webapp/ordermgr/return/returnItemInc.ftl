@@ -34,15 +34,15 @@ under the License.
   <@section>
         <@table type="summary"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@tr>
-            <@td width="25%">${uiLabelMap.OrderOrderTotal}</@td>
+            <@th width="25%">${uiLabelMap.OrderOrderTotal}</@th>
             <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>
           </@tr>
           <@tr>
-            <@td width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</@td>
+            <@th width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</@th>
             <@td><@ofbizCurrency amount=orh.getOrderReturnedCreditTotalBd() isoCode=orh.getCurrency()/></@td>
           </@tr>
           <@tr>
-            <@td width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</@td>
+            <@th width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</@th>
             <@td><@ofbizCurrency amount=orh.getOrderReturnedRefundTotalBd() isoCode=orh.getCurrency()/></@td>
           </@tr>
         </@table>
@@ -54,17 +54,18 @@ under the License.
   <@table type="data-list">
     <@thead>
     <@tr class="header-row">
-      <@td>${uiLabelMap.CommonDescription}</@td>
-      <@td>${uiLabelMap.OrderOrderQty}</@td>
-      <@td>${uiLabelMap.OrderReturnQty}</@td>
-      <@td>${uiLabelMap.OrderUnitPrice}</@td>
-      <@td>${uiLabelMap.OrderReturnPrice}*</@td>
-      <@td>${uiLabelMap.OrderReturnReason}</@td>
-      <@td>${uiLabelMap.OrderReturnType}</@td>
-      <@td>${uiLabelMap.OrderItemStatus}</@td>
-      <@td align="right">${uiLabelMap.OrderOrderInclude}?</@td>
+      <@th>${uiLabelMap.CommonDescription}</@th>
+      <@th>${uiLabelMap.OrderOrderQty}</@th>
+      <@th>${uiLabelMap.OrderReturnQty}</@th>
+      <@th>${uiLabelMap.OrderUnitPrice}</@th>
+      <@th>${uiLabelMap.OrderReturnPrice}*</@th>
+      <@th>${uiLabelMap.OrderReturnReason}</@th>
+      <@th>${uiLabelMap.OrderReturnType}</@th>
+      <@th>${uiLabelMap.OrderItemStatus}</@th>
+      <@th align="right">${uiLabelMap.OrderOrderInclude}?</@th>
     </@tr>
     </@thead>
+    <@tbody>
       <#assign rowCount = 0>
       <#assign alt_row = false>
       <#list returnableItems.keySet() as orderItem>
@@ -72,14 +73,17 @@ under the License.
             <#-- this is an order item adjustment -->
             <#assign returnAdjustmentType = returnItemTypeMap.get(orderItem.get("orderAdjustmentTypeId"))/>
             <#assign adjustmentType = orderItem.getRelatedOne("OrderAdjustmentType", false)/>
-            <#assign description = orderItem.description?default(adjustmentType.get("description",locale))/>
+            <#assign description = orderItem.description!(adjustmentType.get("description",locale))/>
 
             <@tr id="returnItemId_tableRow_${rowCount}" valign="middle" alt=alt_row>
-              <@td colspan="4">
+              <@td><#-- SCIPIO: this is breaking datatables for some reason: colspan="4" -->
                 <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
                 <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${orderItem.orderAdjustmentId}"/>
                 ${htmlContentString(description)!(uiLabelMap.CommonNA)}
               </@td>
+              <@td></@td>
+              <@td></@td>
+              <@td></@td>
               <@td>
                 ${orderItem.amount?string("##0.00")}
                 <#--<input type="text" size="8" name="amount_o_${rowCount}" <#if orderItem.amount?has_content>value="${orderItem.amount?string("##0.00")}"</#if>/>-->
@@ -88,7 +92,7 @@ under the License.
               <@td>
                 <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
-                  <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  <option value="${type.returnTypeId}"<#if type.returnTypeId == "RTN_REFUND"> selected="selected"</#if>>${type.get("description",locale)!(type.returnTypeId)}</option>
                   </#list>
                 </select>
               </@td>
@@ -168,6 +172,7 @@ under the License.
         <#-- toggle the row color -->
         <#assign alt_row = !alt_row>
       </#list>
+    </@tbody>
   </@table>
   </@section>
 
@@ -183,44 +188,46 @@ under the License.
   <@section title=sectionTitle>
     <#if orderHeaderAdjustments?has_content>
       <@table type="data-list">
-      <@thead>
-      <@tr type="meta" class="header-row">
-        <@th>${uiLabelMap.CommonDescription}</@th>
-        <@th>${uiLabelMap.CommonAmount}</@th>
-        <@th>${uiLabelMap.OrderReturnType}</@th>
-        <@th align="right">${uiLabelMap.OrderOrderInclude}?</@th>
-      </@tr>
-      </@thead>
-      <#list orderHeaderAdjustments as adj>
-        <#assign returnAdjustmentType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
-        <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType", false)/>
-        <#assign description = adj.description?default(adjustmentType.get("description",locale))/>
-        <@tr id="returnItemId_tableRow_${rowCount}">
-          <@td>
-            <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
-            <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
-            <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
-            <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
-            <div>
-              ${description!(uiLabelMap.CommonNA)}
-            </div>
-          </@td>
-          <@td>
-            <input type="text" size="8" name="amount_o_${rowCount}" <#if adj.amount?has_content>value="${adj.amount?string("##0.00")}"</#if>/>
-          </@td>
-          <@td>
-            <select name="returnTypeId_o_${rowCount}">
-              <#list returnTypes as type>
-              <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
-              </#list>
-            </select>
-          </@td>
-          <@td align="right">
-            <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
-          </@td>
-        </@tr>
-        <#assign rowCount = rowCount + 1>
-      </#list>
+        <@thead>
+          <@tr type="meta" class="header-row">
+            <@th>${uiLabelMap.CommonDescription}</@th>
+            <@th>${uiLabelMap.CommonAmount}</@th>
+            <@th>${uiLabelMap.OrderReturnType}</@th>
+            <@th align="right">${uiLabelMap.OrderOrderInclude}?</@th>
+          </@tr>
+        </@thead>
+        <@tbody>
+          <#list orderHeaderAdjustments as adj>
+            <#assign returnAdjustmentType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
+            <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType", false)/>
+            <#assign description = adj.description?default(adjustmentType.get("description",locale))/>
+            <@tr id="returnItemId_tableRow_${rowCount}">
+              <@td>
+                <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
+                <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
+                <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
+                <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
+                <div>
+                  ${description!(uiLabelMap.CommonNA)}
+                </div>
+              </@td>
+              <@td>
+                <input type="text" size="8" name="amount_o_${rowCount}" <#if adj.amount?has_content>value="${adj.amount?string("##0.00")}"</#if>/>
+              </@td>
+              <@td>
+                <select name="returnTypeId_o_${rowCount}">
+                  <#list returnTypes as type>
+                  <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  </#list>
+                </select>
+              </@td>
+              <@td align="right">
+                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
+              </@td>
+            </@tr>
+            <#assign rowCount = rowCount + 1>
+          </#list>
+        </@tbody>
       </@table>
     <#else>
       <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderAdjustments}</@commonMsg>
@@ -242,6 +249,7 @@ under the License.
             <@th align="right">${uiLabelMap.OrderOrderInclude}?</@th>
           </@tr>
           </@thead>
+          <@tbody>
             <@tr id="returnItemId_tableRow_${rowCount}">
               <@td>
                 <input type="text" size="30" name="description_o_${rowCount}" />
@@ -260,6 +268,7 @@ under the License.
                 <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
               </@td>
             </@tr>
+          </@tbody>
         </@table>
 
     <#assign rowCount = rowCount + 1>
@@ -275,5 +284,5 @@ under the License.
 
 </#if>
 
-    <p><span class="tooltip">*${uiLabelMap.OrderReturnPriceNotIncludeTax}</span></p>
+    <@commonMsg type="info">*${uiLabelMap.OrderReturnPriceNotIncludeTax}</@commonMsg>
      

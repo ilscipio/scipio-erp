@@ -121,7 +121,7 @@ under the License.
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
             <actions>
-
+        
             </actions>
             <widgets>
                 <!-- 
@@ -245,6 +245,8 @@ under the License.
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="2"/>
                         <label text="max-depth 1" style="heading"/>
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="1"/>
+                        <label text="sub-menus 'none' filter (same as max-depth 1)" style="heading"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1" sub-menus="none"/>
                     </screenlet>
                 </screenlet>
             </widgets>

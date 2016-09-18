@@ -535,6 +535,9 @@ second is cleaner to express.        </p>
         <p>
 Note that both macros support arguments passed in a hash (or map) using the &quot;args&quot; argument, so the entire menu definition
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.        </p>
+        <p>
+The generated menu ID following a call can be read using: <code>getRequestVar(&quot;scipioLastMenuInfo&quot;).id</code>.
+At current time (2016-09-16), other members of that map should not be relied upon.        </p>
         <h4>Nested Menus</h4>
         <p>
 Nested menus (sub-menus) will inherit the type of the parent if no type is specified. The macro will automatically

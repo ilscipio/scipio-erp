@@ -1008,6 +1008,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
+                        <label style="common-msg-info-important" text="${uiLabelMap.ProductAttributeShortInstructions}" />
                         <screenlet title="${uiLabelMap.ProductAddProductAttributeNameValueType}">
                             <include-form name="AddProductAttribute" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>

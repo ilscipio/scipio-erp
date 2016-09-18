@@ -25,9 +25,9 @@ under the License.
 <#-- 2016-06-15: if a productId was specified but we got no product for it, then that
     is an error and shouldn't allow anything -->
 <#if productId?has_content && !product?has_content && (parameters.isCreate!) != "true">
-  <@section>
+
     <@commonMsg type="error">${getLabel("OrderProductNotFound", "OrderErrorUiLabels")!} (${productId})</@commonMsg>
-  </@section>
+
 <#else>
 
 <@section>

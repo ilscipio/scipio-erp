@@ -3456,6 +3456,12 @@ public class ModelFormField implements Serializable {
             boolean shouldUse = true;
             String useWhen = this.getUseWhen(context);
             if (UtilValidate.isNotEmpty(useWhen)) {
+                // SCIPIO: optimization/shortcut: check for pre-evaluated true and false values
+                if ("true".equals(useWhen)) {
+                    return true;
+                } else if ("false".equals(useWhen)) {
+                    return false;
+                }
                 try {
                     Interpreter bsh = (Interpreter) context.get("bshInterpreter");
                     if (bsh == null) {

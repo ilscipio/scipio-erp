@@ -230,6 +230,13 @@ under the License.
                     <include-menu name="LayoutDemoButton2" location="component://webtools/widget/Menus.xml"/>
                     <include-menu name="LayoutDemoNestedButton" location="component://webtools/widget/Menus.xml"/>
                     <include-menu name="LayoutDemoButtonDropdown" location="component://webtools/widget/Menus.xml"/>
+                    
+                    <screenlet title="Scope sharing test">
+                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/Menus.xml" share-scope="false"/>
+                        <label text="demoTestVar1 value (share-scope test): &quot;${demoTestVar1}&quot; (should be &quot;&quot;)" />
+                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/Menus.xml" share-scope="true"/>
+                        <label text="demoTestVar1 value (share-scope test): &quot;${demoTestVar1}&quot; (should be &quot;demoTestValue1&quot;)" />
+                    </screenlet>
                 </screenlet>
             </widgets>
         </section>

@@ -51,9 +51,9 @@ under the License.
             <#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
             <@tr valign="middle" alt=alt_row>
                 <@td>${shipmentItem.shipmentItemSeqId}</@td>
-                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav_info_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
-                <@td>${shipmentItem.quantity?default("&nbsp;")}</@td>
-                <@td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</@td>
+                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
+                <@td>${shipmentItem.quantity!("&nbsp;")}</@td>
+                <@td colspan="2">${shipmentItem.shipmentContentDescription!("&nbsp;")}</@td>
                 <@td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
             </@tr>
             <form name="deleteShipmentItem${shipmentItemData_index}" method="post" action="<@ofbizUrl>deleteShipmentItem</@ofbizUrl>">
@@ -63,7 +63,7 @@ under the License.
             <#list orderShipments as orderShipment>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderShipment.orderId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</@td>
+                    <@td><span>${uiLabelMap.FacilityShipment}<#--${uiLabelMap.ProductOrderItem}--></span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderShipment.orderId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.orderId!}</a> - ${orderShipment.orderItemSeqId!}</@td>
                     <@td>&nbsp;</@td>
                     <@td>${orderShipment.quantity!}</@td>
                     <@td>&nbsp;</@td>
@@ -74,8 +74,8 @@ under the License.
             <#list itemIssuances as itemIssuance>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav_info_id_long!}">${itemIssuance.orderId!} -  ${itemIssuance.orderItemSeqId!}</a></@td>
-                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" target="_blank" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId!}</a></@td>
+                    <@td><span>${uiLabelMap.FacilityIssuance}<#--${uiLabelMap.ProductOrderItem}--></span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id_long!}">${itemIssuance.orderId!}</a> - ${itemIssuance.orderItemSeqId!}</@td>
+                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId!}</a></@td>
                     <@td>${itemIssuance.quantity!}</@td>
                     <@td>${itemIssuance.issuedDateTime!}</@td>
                     <@td>${uiLabelMap.ProductFuturePartyRoleList}</@td>

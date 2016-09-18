@@ -77,6 +77,8 @@ under the License.
                 <set field="tableStyle" value="${styles.table_data_list} light-grid"/>
                 <set field="ofbizWidgetsLayoutScreenLocation" value="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemoOfbizWidgets" />
                 <set field="parameters.showLeftColumn" value="Y" />
+                <set field="sideBarMenu" type="NewMap" value="" />
+                <set field="sideBarMenu.name" value="LayoutDemoSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -88,7 +90,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="LayoutDemoSideBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

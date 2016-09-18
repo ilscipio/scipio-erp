@@ -27,12 +27,14 @@ under the License.
                 <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleFindUtilCache"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCache.groovy"/>
+                <set field="sideBarMenu" type="NewMap" value="" />
+                <set field="sideBarMenu.name" value="ServerSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="ServerSideBar" location="component://webtools/widget/Menus.xml"/>
-                     </decorator-section>
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="SideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for UTIL_CACHE, _VIEW permission -->

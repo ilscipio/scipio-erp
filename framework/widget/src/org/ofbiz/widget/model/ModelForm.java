@@ -55,6 +55,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.widget.WidgetWorker;
+import org.ofbiz.widget.model.ModelFormField.OptionSource;
+import org.ofbiz.widget.model.ModelFormField.SingleOption;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
@@ -1760,6 +1762,75 @@ public abstract class ModelForm extends ModelWidget {
     public String getRowSubmitItemSelectFieldTitle(Map<String, Object> context) {
         // FIXME: HARDCODED!
         return UtilProperties.getMessage("CommonUiLabels", "CommonSelect", (Locale) context.get("locale"));
+    }
+    
+    
+    /**
+     * SCIPIO: Gets row-submit header item.
+     */
+    public ModelFormField getRowSubmitHeaderItem(Map<String, Object> context) {
+        // FIXME?: DOES IT ALWAYS NEED TO BE REBUILT?
+        return createRowSubmitHeaderItem(context);
+    }
+    
+    /**
+     * SCIPIO: Creates a row-submit header item.
+     */
+    private ModelFormField createRowSubmitHeaderItem(Map<String, Object> context) {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
+        builder.setFieldName(getRowSubmitHeaderSelectFieldName(context));
+        builder.setName(getRowSubmitHeaderSelectFieldName(context));
+        builder.setModelForm(this);
+        builder.setTitle(getRowSubmitHeaderSelectFieldTitle(context));
+        builder.setFieldInfo(displayField);
+        return builder.build();
+    }
+    
+    /**
+     * SCIPIO: Gets row-submit item.
+     */
+    public ModelFormField getRowSubmitRadioItem(Map<String, Object> context) {
+        // FIXME?: DOES IT ALWAYS NEED TO BE REBUILT?
+        ModelFormField item = null;
+        if (getType().equals("list")) {
+            item = createRowSubmitRadioItem(context);
+        } else if (getType().equals("multi")) {
+            item = createRowSubmitCheckboxItem(context);                
+        }
+        return item;
+    }
+    
+    /**
+     * SCIPIO: Creates a row-submit radio item.
+     */
+    private ModelFormField createRowSubmitRadioItem(Map<String, Object> context) {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        optionSources.add(new SingleOption("Y", " ", null));
+        ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
+        builder.setFieldName(getRowSubmitItemSelectFieldName(context));
+        builder.setName(getRowSubmitItemSelectFieldName(context));
+        builder.setModelForm(this);
+        builder.setTitle(getRowSubmitItemSelectFieldTitle(context));
+        builder.setFieldInfo(radioField);
+        return builder.build(); 
+    }
+    
+    /**
+     * SCIPIO: Creates a row-submit checkbox item.
+     */
+    private ModelFormField createRowSubmitCheckboxItem(Map<String, Object> context) {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        optionSources.add(new SingleOption("Y", " ", null));
+        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
+        builder.setFieldName(getRowSubmitItemSelectFieldName(context));                
+        builder.setName(getRowSubmitItemSelectFieldName(context));
+        builder.setModelForm(this);
+        builder.setTitle(getRowSubmitItemSelectFieldTitle(context));
+        builder.setFieldInfo(checkField);
+        return builder.build();
     }
     
     

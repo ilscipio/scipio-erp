@@ -358,18 +358,18 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
     @Override
     public void renderMenuClose(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException {
-        Map<String, Object> parameters = null;
+        Map<String, Object> parameters = new HashMap<String, Object>();
+
+        // SCIPIO: new entries
+        parameters.put("style", menu.getMenuContainerStyle(context));
+        parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
+        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+        if (menuCtxRole == null) {
+            menuCtxRole = "";
+        }
+        parameters.put("menuCtxRole", menuCtxRole);
+        
         if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
-            parameters = new HashMap<String, Object>();
-            
-            parameters.put("style", menu.getMenuContainerStyle(context));
-            parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
-            String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-            if (menuCtxRole == null) {
-                menuCtxRole = "";
-            }
-            parameters.put("menuCtxRole", menuCtxRole);
-            
             StringBuilder sb = new StringBuilder("End Menu Widget ");
             sb.append(menu.getBoundaryCommentName());
             parameters.put("boundaryComment", sb.toString());

@@ -1278,11 +1278,16 @@ under the License.
         Renders an complex menu supporting complex structure such as any number and depth of sub-menus.
         
         Each application should wrap this implementation (or a variant: AdvSideBarMenu, etc.) in its common screen definitions and provide the location
-        of an complex menu in menuCfg.location/advName, plus any other wanted configuration.
+        of an complex menu in menuCfg.location/name, plus any other wanted configuration in the menuCfg map.
         
         The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
+        * activeSubMenu (required)
+        * activeSubMenuItem (required)
+        * activeMainMenuItem (not strictly required but usually should be set)
+        (NOTE: these are the default input field names, possible to override)
         
-        * activeSubMenu - Name of a sub-menu that is part of the complex menu designated by advLocation/advName.
+        Details:
+        * activeSubMenu (required) - Name of a sub-menu that is part of the complex menu designated by location/name.
           If the field is empty, it indicates the top level (no sub-menu).
           The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
           This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
@@ -1291,7 +1296,7 @@ under the License.
           simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
           but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
           In fallback mode, a suffix (by default "Menu", or "SideBar" if you use AdvSideBarMenu) is added to the activeSubMenu value before performing the lookup.
-        * activeSubMenuItem - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
+        * activeSubMenuItem (required) - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
           on the menu/sub-menu designated/implied by activeSubMenu.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
@@ -1303,44 +1308,40 @@ under the License.
         activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
         still necessary to designate items in other unrelated menus.
         
-        NOTES:
-        * This widget must always be called with share-scope="false" (which is the widget-screen.xsd default). -->
+        menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
+        Complex menu location:
+        * location (required) - Complex menu location
+        * name (required) - Complex menu name
+        Complex menu render options:
+        * subMenuFilter - Value for <include-menu sub-menus="..." /> attribute (see widget-screen.xsd)
+        * maxDepth - Value for <include-menu max-depth="..." /> attribute (see widget-screen.xsd)
+        Default locations:  
+        * defLocation (required) - Application's default menu file location for menus
+              This is only used for fallback simple/non-complex menus, when there is no explicit
+              location specified as prefix in activeSubMenu.
+        Complex menu name suffix control:
+        * nameSuffix (default: "Menu") - Complex menu name suffix
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenuItem field, for menu lookup
+            (only appends if not already ends with)
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenuItem field, for menu lookup
+            Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
+              <sub-menu name="Server" include="ServerSideBar"/>
+            In this case it's best to leave cplxStripSuffix true for compatibility.
+            Set cplxStripSuffix to true (default) if you used implicit or reused full names, such as: 
+                <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
+            In this case cplxStripSuffix is ignored (inapplicable).
+        Simple/fallback menu name suffix control:
+        * simpleNameSuffix - Suffix for simple/fallback menu, always added (unless already ends with)         
+        Other:
+        * forceSimple - Override to force rendering simple/fallback menu instead of complex
+        Client screen field overrides:
+        * activeSubField (default: "activeSubMenu")
+        * activeSubItemField (default: "activeSubMenuItem")
+        * activeMainItemField (default: "activeMainMenuItem")
+    -->
     <screen name="ComplexMenu">
         <section>
             <actions>
-                <!-- complex menu location -->
-                <set field="cplxLoc" from-field="menuCfg.location" />
-                <set field="cplxName" from-field="menuCfg.name" />
-                <set field="cplxSubFilter" from-field="menuCfg.subMenuFilter" default-value="current" />
-                <set field="cplxMaxDepth" from-field="menuCfg.maxDepth" default-value="" />
-                
-                <!-- The default selected item field names are appropriate for menus derived from 
-                    CommonEmptyAppBarDashboardMenu/CommonAppBarDashboardMenu in component://common/widget/CommonMenus.xml -->
-                <!-- TODO?: could be looked up automatically from menu model -->
-                <set field="cplxSelSubField" from-field="menuCfg.selMenuFieldName" default-value="activeMainSubMenu" />
-                <set field="cplxSelItemField" from-field="menuCfg.selMenuItemFieldName" default-value="activeMainMenuItem" />
-                
-                <!-- Menu name suffix control for complex menu
-                     set advAddSuffix to false (default) if you used explicit names in menu defs, such as: 
-                       <sub-menu name="Server" include="ServerSideBar"/>
-                       in this case it's best to leave advStripSuffix true for compatibility.
-                     set advAddSuffix to true (default) if you used implicit or reused full names, such as: 
-                       <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
-                       in this case advStripSuffix is ignored (inapplicable).
-                -->
-                <set field="cplxSuffix" from-field="menuCfg.nameSuffix" default-value="Menu" />       
-                <set field="cplxAddSuffix" from-field="menuCfg.addNameSuffix" type="Boolean" default-value="false" />
-                <set field="cplxStripSuffix" from-field="menuCfg.stripNameSuffix" type="Boolean" default-value="true" />
-
-                <!-- Menu name suffix for simple menu (always appended if menu name does not already end up the suffix) -->
-                <set field="smplSuffix" from-field="menuCfg.simpleNameSuffix" default-value="${advSuffix}" />
-
-                <!-- menuCfg.defaultLocation is for handling legacy/non-complex menus -->
-                <set field="defLoc" from-field="menuCfg.defLocation" default-value="component://common/widget/CommonMenus.xml" />
-                
-                <!-- for testing -->
-                <set field="smplForce" from-field="menuCfg.forceSimple" type="Boolean" default-value="false" />
-
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareComplexMenu.groovy"/>
             </actions>
             <widgets>
@@ -1359,17 +1360,28 @@ under the License.
         </section>
     </screen>
     
-    <!-- Advanced SideBar Menu Wrapper - based on AdvGenericMenu
-        Currently sets the activeSubMenu suffix to "SideBar".
-        See AdvGenericMenu for details. -->
+    <!-- Complex SideBar Menu Wrapper - based on ComplexMenu
+        Currently same as ComplexMenu except sets the activeSubMenu suffix to "SideBar".
+        See ComplexMenu for details. -->
     <screen name="ComplexSideBarMenu">
         <section>
             <actions>
-                <set field="cplxSubFilter" from-field="menuCfg.subMenuFilter" default-value="current" />
-                <set field="cplxSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" />       
+                <set field="menuCfg.subMenuFilter" from-field="menuCfg.subMenuFilter" default-value="current" />
+                <set field="menuCfg.nameSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" /> 
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareComplexMenu.groovy"/>
             </actions>
             <widgets>
-                <include-screen name="ComplexMenu"/>
+                <section>
+                    <condition>
+                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
+                    </condition>
+                    <widgets>
+                        <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="${smplLoc}" name="${smplName}"/>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>

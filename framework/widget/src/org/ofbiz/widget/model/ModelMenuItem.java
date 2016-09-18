@@ -305,6 +305,7 @@ public class ModelMenuItem extends ModelWidget {
     private ModelMenuItem(ModelMenuItem existingMenuItem, 
             ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
         super(existingMenuItem.getName());
+        buildArgs.genBuildArgs.totalMenuItemCount++;
         // SCIPIO: this is an error; when we retried the modelMenu we want the effective one,
         // not the original one
         //this.modelMenu = existingMenuItem.modelMenu;
@@ -330,10 +331,12 @@ public class ModelMenuItem extends ModelWidget {
   
         ArrayList<ModelSubMenu> subMenuList = new ArrayList<>();
         Map<String, ModelSubMenu> subMenuMap = new HashMap<>();
-        ModelSubMenu.cloneModelSubMenus(existingMenuItem.getSubMenuList(), 
-                subMenuList, subMenuMap, getModelMenu(), this,
-                new ModelSubMenu.BuildArgs(buildArgs));
-        subMenuList.trimToSize();
+        if (!buildArgs.omitSubMenus) {
+            ModelSubMenu.cloneModelSubMenus(existingMenuItem.getSubMenuList(), 
+                    subMenuList, subMenuMap, getModelMenu(), this,
+                    new ModelSubMenu.BuildArgs(buildArgs));
+            subMenuList.trimToSize();
+        }
         this.subMenuList = Collections.unmodifiableList(subMenuList);
         this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
 
@@ -372,6 +375,7 @@ public class ModelMenuItem extends ModelWidget {
     private ModelMenuItem(ModelMenuItem existingMenuItem, ModelMenuItem overrideMenuItem, 
             BuildArgs buildArgs) {
         super(overrideMenuItem.getName());
+        buildArgs.genBuildArgs.totalMenuItemCount++;
         // SCIPIO: this is an error; when we retried the modelMenu we want the effective one,
         // not the original one
         //this.modelMenu = existingMenuItem.modelMenu;
@@ -455,20 +459,27 @@ public class ModelMenuItem extends ModelWidget {
         }
 
         List<ModelSubMenu> srcSubMenuList;
-        if (overrideMenuItem.hasSubMenu()) {
-            // WARN: this is probably excessive and stupidly slow because overrideMenuItem was just created,
+        boolean subMenusFromOverriding = overrideMenuItem.hasSubMenu();
+        if (subMenusFromOverriding) {
+            // WARN: cloning the overriding is probably excessive and stupidly slow because overrideMenuItem was just created,
             // but we need to update all the backreferences to this item in the children (and other things if caller passed), 
-            // so we have no choice
+            // so we have no choice.
             srcSubMenuList = overrideMenuItem.getSubMenuList();
         } else {
             srcSubMenuList = existingMenuItem.getSubMenuList();
         }
         ArrayList<ModelSubMenu> subMenuList = new ArrayList<>();
         Map<String, ModelSubMenu> subMenuMap = new HashMap<>();
-        ModelSubMenu.cloneModelSubMenus(srcSubMenuList, 
-                subMenuList, subMenuMap, getModelMenu(), this,
-                new ModelSubMenu.BuildArgs(buildArgs));
-        subMenuList.trimToSize();
+        // SCIPIO: NOTE: the omit logic here is for completeness but it is not really used in practice.
+        // the first (non-recursive) call to processIncludeMenuItems method actually always passes omitSubMenus=false,
+        // and instead the existingMenuItem was recursively built with omitSubMenus true in the XML constructor.
+        if (!buildArgs.omitSubMenus || subMenusFromOverriding) { // NOTE: the omit flag is intended only for the existing, not the overriding
+            // TODO?: in the future we could support recursive merging here, but it's a can of worms.
+            ModelSubMenu.cloneModelSubMenus(srcSubMenuList, 
+                    subMenuList, subMenuMap, getModelMenu(), this,
+                    new ModelSubMenu.BuildArgs(buildArgs));
+            subMenuList.trimToSize();
+        }
         this.subMenuList = Collections.unmodifiableList(subMenuList);
         this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
 
@@ -1185,6 +1196,9 @@ public class ModelMenuItem extends ModelWidget {
 
         public boolean omitSubMenus;
 
+        /**
+         * Specify-all-essentials constructor.
+         */
         public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs,
                     String currResource, String forceSubMenuModelScope) {
             this.genBuildArgs = genBuildArgs;
@@ -1195,7 +1209,7 @@ public class ModelMenuItem extends ModelWidget {
         }
         
         /**
-         * preserve-all-essentials constructor
+         * Preserve-all-essentials constructor.
          */
         public BuildArgs(ModelSubMenu.BuildArgs subBuildArgs) {
             this.genBuildArgs = subBuildArgs.genBuildArgs;

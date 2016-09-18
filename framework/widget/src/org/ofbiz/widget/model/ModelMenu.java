@@ -130,7 +130,7 @@ public class ModelMenu extends ModelWidget {
     
     private final String itemsSortMode;
     
-    private final Map<String, ModelSubMenu> subMenuMap; // SCIPIO: map of unique sub-menu names to sub-menus
+    private final Map<String, ModelSubMenu> subMenuMap; // SCIPIO: map of unique sub-menu names to sub-menus NOTE: only valid post-construction
     private final String autoSubMenuNames;
     private final String defaultSubMenuModelScope;
     private final String defaultSubMenuInstanceScope;
@@ -500,8 +500,6 @@ public class ModelMenu extends ModelWidget {
                                         includedMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                                 if (extendedMenuElem != null) {
                                     
-                                    // WARN: we're forced to load this menu model even though we were support to avoid it
-                                    // because we need some resolved attributes off it
                                     ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, nextResource, includedMenuElem, genBuildArgs);
                                     CurrentMenuDefBuildArgs extendedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(extendedMenuModel != null ? extendedMenuModel : this);
                                     
@@ -620,6 +618,7 @@ public class ModelMenu extends ModelWidget {
                         
                         // WARN: we're forced to load this menu model even though we were support to avoid it
                         // because we need some resolved attributes off it
+                        // NOTE: this is not meant to be used for any backreferences; we want them all to point to 'this' menu
                         ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, currResource, parentElement, genBuildArgs);
                         CurrentMenuDefBuildArgs includedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(includedMenuModel != null ? includedMenuModel : this);
                         
@@ -637,8 +636,6 @@ public class ModelMenu extends ModelWidget {
                                 Element extendedMenuElem = loadIncludedMenu(extendedMenuName, extendedResource, 
                                         includedMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                                 
-                                // WARN: we're forced to load this menu model even though we were support to avoid it
-                                // because we need some resolved attributes off it
                                 ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, nextResource, includedMenuElem, genBuildArgs);
                                 CurrentMenuDefBuildArgs extendedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(extendedMenuModel != null ? extendedMenuModel : this);
                                 
@@ -685,16 +682,24 @@ public class ModelMenu extends ModelWidget {
         }
         
         List<? extends Element> itemElements = UtilXml.childElementList(parentElement, "menu-item");
+        
+        // SCIPIO: NOTE: the first (non-recursive) call to this method actually sets omitSubMenus=false for itemBuildArgs.
+        // that's why we can set overrideItemBuildArgs = itemBuildArgs.
+        // addUpdateMenuItem is called with omitSubMenus=false, but there will be no submenus on existingMenuItem anyway
+        // because the previous recursive calls already built existingMenuItem with omitSubMenus=true, and everything
+        // else below with omitSubMenus=true as well. so it automagically works out.
         ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(genBuildArgs, currentMenuDefBuildArgs, currResource, forceSubMenuModelScope);
         itemBuildArgs.omitSubMenus = ("none".equals(subMenusFilter));
+        ModelMenuItem.BuildArgs overrideItemBuildArgs = itemBuildArgs;
+        
         for (Element itemElement : itemElements) {
             String itemName = itemElement.getAttribute("name");
             if (!excludeItems.contains(itemName)) {
                 ModelMenuItem modelMenuItem;
                 if (parentSubMenu != null) {
-                    modelMenuItem = new ModelMenuItem(itemElement, parentSubMenu, itemBuildArgs);
+                    modelMenuItem = new ModelMenuItem(itemElement, parentSubMenu, overrideItemBuildArgs);
                 } else {
-                    modelMenuItem = new ModelMenuItem(itemElement, this, itemBuildArgs);
+                    modelMenuItem = new ModelMenuItem(itemElement, this, overrideItemBuildArgs);
                 }
                 addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap, itemBuildArgs);
             }
@@ -857,6 +862,9 @@ public class ModelMenu extends ModelWidget {
      * add/override modelMenuItem using the menuItemList and menuItemMap
      * <p>
      * SCIPIO: made this static and accessible by ModelMenuItem.
+     * <p>
+     * NOTE: we assume the overriding modelMenuItem was initialized with the
+     * proper backreferences already.
      */
     void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap, ModelMenuItem.BuildArgs buildArgs) {
@@ -1349,6 +1357,8 @@ public class ModelMenu extends ModelWidget {
 
     /**
      * SCIPIO: get the sub-menu by unique name.
+     * <p>
+     * NOTE: this method is only valid for use post-construction of ModelMenu.
      */
     public ModelSubMenu getModelSubMenuByName(String name) {
         return this.subMenuMap.get(name);
@@ -1585,7 +1595,13 @@ public class ModelMenu extends ModelWidget {
      */
     public static class GeneralBuildArgs {
 
+        /**
+         * WARN: this is not an exact figure and is mostly for generating names.
+         */
         public int totalSubMenuCount = 0;
+        /**
+         * WARN: this is not an exact figure and is mostly for generating names.
+         */
         public int totalMenuItemCount = 0;
         public Map<String, ModelMenu> localModelMenuCache = new HashMap<>();
         

@@ -24910,7 +24910,7 @@
     </property>
     <property key="ProductProductStore">
         <value xml:lang="de">Shop</value>
-        <value xml:lang="en">Store</value><!-- orig: "Product Store" -->
+        <value xml:lang="en">Product Store</value>
         <value xml:lang="es">Tienda de productos</value>
         <value xml:lang="fr">Centre de profit</value>
         <value xml:lang="it">Negozio</value>

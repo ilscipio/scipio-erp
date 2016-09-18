@@ -20,6 +20,8 @@ under the License.
                      
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
+        <@menuitem type="link" href=makeOfbizUrl("FindProductPromoCode") text="${uiLabelMap.CommonShowAll}" class="+${styles.action_nav!} ${styles.action_find!}"/>
+
         <@menuitem type="generic">
             <@modal id="modal_new_importcodeset_${productPromoId!}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</@heading>
@@ -80,12 +82,19 @@ under the License.
              </@modal>
         </@menuitem>
 
-        <@menuitem type="link" href=makeOfbizUrl("EditProductPromoCode") text="${uiLabelMap.ProductNewPromotionCode}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+        <#if productPromoId?has_content>
+            <#assign targetUrl = makeOfbizUrl("EditProductPromoCode?productPromoId=${productPromoId}")>
+        <#else>
+            <#assign targetUrl = makeOfbizUrl("EditProductPromoCode")>
+        </#if>
+        <@menuitem type="link" href=targetUrl text="${uiLabelMap.ProductNewPromotionCode}" class="+${styles.action_nav!} ${styles.action_add!}"/>
 
     </@menu>
 </#macro> 
+<#--
 <@section menuContent=menuContent>
-    <@alert type="info">
-            The Promotion codes can be imported in bulk, or added individually. 
-    </@alert>
 </@section>
+-->
+    <@menuContent menuArgs={"type":"section"} />
+
+    <@alert type="info">${uiLabelMap.ProductPromoCodeAddInstructions}</@alert>

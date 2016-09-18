@@ -60,7 +60,7 @@ under the License.
                     <order-by field-name="description"/>
                 </entity-condition>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategory.groovy"/>
-                <set field="labelTitleProperty" value="${groovy: (context.productCategory || (parameters.productCategoryId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductCategory' : 'ProductCreateNewCategory'}"/>
+                <set field="labelTitleProperty" value="${groovy: (context.productCategory || (parameters.productCategoryId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductCategory' : 'ProductNewCategory'}"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">

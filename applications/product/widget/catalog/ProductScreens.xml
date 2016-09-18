@@ -67,7 +67,7 @@ under the License.
                 <entity-one entity-name="Product" value-field="lookupProduct"/>
                 <set field="product" from-field="lookupProduct" global="true"/>
                 <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
-                <set field="labelTitleProperty" value="${groovy: (context.product || (parameters.productId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductProduct' : 'ProductCreateNewProduct' }"/>
+                <set field="labelTitleProperty" value="${groovy: (context.product || (parameters.productId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductProduct' : 'ProductNewProduct' }"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">

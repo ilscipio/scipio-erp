@@ -383,6 +383,7 @@ under the License.
     <screen name="CommonConfigDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ConfigItem" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
@@ -448,6 +449,7 @@ under the License.
     <screen name="CommonFeatureDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <!-- SCIPIO: TODO?: review? -->
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Features" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
@@ -504,9 +506,15 @@ under the License.
     <screen name="CommonPromoDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Promo" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="promos" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productPromoId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
@@ -541,6 +549,26 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonPromoCodeDecorator">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Promo" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="FindProductPromoCode"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="promos" />
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <!-- ONLY the edit screen should do this -->
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="promoCodeTitle" value="${uiLabelMap[titleKey]} ${parameters.productPromoCodeId}" />
+                <set field="title" from-field="title" default-value="${groovy: (context.usePromoCodeTitle == true) ? context.promoCodeTitle : null}"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonPromoDecorator" />
             </widgets>
         </section>
     </screen>
@@ -635,6 +663,7 @@ under the License.
     <screen name="CommonProductStoreGroupDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EditProductStoreGroups"/>
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
@@ -699,6 +728,7 @@ under the License.
     <screen name="CommonShippingDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Shipping" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
@@ -747,12 +777,78 @@ under the License.
         </section>
     </screen>
 
+    <screen name="CommonPriceDecorator">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!-- SCIPIO: NOTE: there is no pricerules sub-menu. -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="pricerules"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="pricerules"/>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productPriceRuleId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
+                    <!-- Scipio: delegate to main-decorator
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
+                    </decorator-section>-->    
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                      <section>
+                            <!-- do check for CATALOG, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>                
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for CATALOG, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- Scipio: New, transferred from Content app -->
     <screen name="CommonWebSiteDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
+
+                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
+                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                <entity-one entity-name="WebSite" value-field="webSite"/>
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
 
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
@@ -764,7 +860,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebSiteDecorator" location="component://content/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -777,6 +873,29 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <!--<container style="button-bar">
+                                    <link text="${uiLabelMap.ContentNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>-->
+                                <container>
+                                    <include-menu name="websiteMenu" location="component://content/widget/content/ContentMenus.xml"/>
+                                </container>
+                                <!-- SCIPIO: too verbose, redundant with page title
+                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}] ${${extraFunctionName}}"/>
+                                -->
+                                
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -789,8 +908,19 @@ under the License.
     <screen name="CommonWebAnalyticsDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
+
+                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
+                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                <entity-one entity-name="WebSite" value-field="webSite"/>
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
 
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
@@ -802,7 +932,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebAnalyticsDecorator"  location="component://content/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -818,6 +948,22 @@ under the License.
                             </fail-widgets>
                         </section>
                     </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="button-bar">
+                                    <include-menu name="WebAnalyticsConfigButtonBar" location="component://content/widget/content/ContentMenus.xml"/>
+                                </container>
+                                <!-- SCIPIO: too verbose/redundant
+                                <label style="heading" text="${uiLabelMap.CatalogWebAnalytics} ${uiLabelMap.CommonFor} : ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
+                                -->
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -827,10 +973,13 @@ under the License.
     <screen name="CommonContentDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Content" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value=""/><!-- SCIPIO: NOTE: nothing for now, this is too generic... -->
             </actions>
             <widgets>
+                <!-- NOTE: for now this SHOULD delegate to content because many webapps may use this pattern; whereas WebSite is only accessible from catalog -->
                 <decorator-screen name="CommonContentDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>

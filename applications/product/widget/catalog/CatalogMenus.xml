@@ -454,7 +454,7 @@ under the License.
         </menu-item>
         <menu-item name="FindProductPromo" title="${uiLabelMap.ProductPromotion}">
             <condition>
-                    <if-empty field="productPromoId"/>
+                <if-empty field="productPromoId"/>
             </condition>
             <link target="FindProductPromo" />
         </menu-item>

@@ -402,6 +402,7 @@ public class FormRenderer {
                     continue;
                 }
 
+                // SCIPIO: added SUBMIT here
                 if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
                         && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
                         && fieldInfo.getFieldType() != FieldInfo.HYPERLINK  
@@ -430,6 +431,7 @@ public class FormRenderer {
                 }
 
                 // skip all of the display/hyperlink fields
+                // SCIPIO: added SUBMIT here
                 if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
                         || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
                         || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
@@ -1017,6 +1019,7 @@ public class FormRenderer {
                         }
 
                         // skip all of the display/hyperlink fields
+                        // SCIPIO: added SUBMIT here
                         if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
                                 || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
                                 || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
@@ -1043,6 +1046,7 @@ public class FormRenderer {
                         }
 
                         // skip all non-display and non-hyperlink fields
+                        // SCIPIO: added SUBMIT here
                         if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
                                 && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
                                 && fieldInfo.getFieldType() != FieldInfo.HYPERLINK
@@ -1059,14 +1063,16 @@ public class FormRenderer {
                         currentPosition = modelFormField.getPosition();
                     }
                           
-                    // Scipio: Adding submit buttons if use-row-submit flag in the form definition is set to false
+                    // SCIPIO: Adding submit buttons if use-row-submit flag in the form definition is set to false
                     if ("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) {
                         Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                         while (submitFields.hasNext()) {
                             ModelFormField submitField = submitFields.next();
                             if (submitField != null && submitField.shouldUse(context)) {
-                                if (!modelForm.getUseRowSubmit())
+                                if (!modelForm.getUseRowSubmit()) {
                                     innerDisplayHyperlinkFieldsEnd.add(submitField);
+                                    fieldListByPosition.add(submitField);
+                                }
                             }
                         }
                     }

@@ -19,8 +19,8 @@ under the License.
 <#if productStoreId?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <#-- Scipio: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite -->
-    <@menuitem type="link" href=makeOfbizUrl("EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}") text=uiLabelMap.ProductCreateNewProductStoreWebSite class="+${styles.action_nav!} ${styles.action_add!}" />
+    <#-- Scipio: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite...&amp;externalLoginKey=${requestAttributes.externalLoginKey} -->
+    <@menuitem type="link" href=makeOfbizUrl("EditWebSite?productStoreId=${productStoreId}") text=uiLabelMap.ProductCreateNewProductStoreWebSite class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleEditProductStoreWebSites menuContent=menuContent>
@@ -37,8 +37,8 @@ under the License.
            <@tbody>
               <#list storeWebSites as webSite>
                 <@tr valign="middle">
-                  <#-- Scipio: This is now accessible internally from product app: <@ofbizInterWebappUrl>/content/control/EditWebSite -->
-                  <@td><a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
+                  <#-- Scipio: This is now accessible internally from product app: <@ofbizInterWebappUrl>/content/control/EditWebSite...&amp;externalLoginKey=${requestAttributes.externalLoginKey} -->
+                  <@td><a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
                   <@td>${webSite.httpHost?default('&nbsp;')}</@td>
                   <@td>${webSite.httpPort?default('&nbsp;')}</@td>
                   <@td align="center">

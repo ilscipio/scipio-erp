@@ -8644,12 +8644,12 @@
     </property>
     <property key="PageTitleAddProductStoreKeywordOvrd">
         <value xml:lang="de">Shop Schlüsselwörter Übersteuerung hinzufügen</value>
-        <value xml:lang="en">Add Product Store Keyword Ovrd</value>
+        <value xml:lang="en">Add Product Store Keyword Override</value>
         <value xml:lang="es">Añadir reemplazo de palabra clave a tienda</value>
         <value xml:lang="fr">Ajouter des remplacements de mot-clé</value>
         <value xml:lang="it">Aggiungi Negozio Prodotto Sostituzione Chiavi</value>
         <value xml:lang="ja">製品店舗キーワード上書を追加</value>
-        <value xml:lang="th">Add Product Store Keyword Ovrd</value>
+        <value xml:lang="th">Add Product Store Keyword Override</value>
         <value xml:lang="vi">Thêm từ khóa cho cửa hàng</value>
         <value xml:lang="zh">添加产品店铺关键字覆盖</value>
         <value xml:lang="zh_TW">增加產品商店關鍵字覆蓋</value>
@@ -9952,7 +9952,7 @@
     </property>
     <property key="PageTitleEditProductStoreKeywordOvrd">
         <value xml:lang="de">Shop Schlüsselwörter Übersteuerung bearbeiten</value>
-        <value xml:lang="en">Edit Product Store Keyword Ovrd</value>
+        <value xml:lang="en">Edit Product Store Keyword Override</value>
         <value xml:lang="es">Editar sustitución de palabras clave de producto</value>
         <value xml:lang="fr">Configuration de la substitution des mots-clés du centre de profit</value>
         <value xml:lang="it">Aggiorna Negozio Prodotto Sostituzione Chiavi</value>

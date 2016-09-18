@@ -655,4 +655,5 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
     }
 
+    
 }

@@ -471,17 +471,22 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
     
     /**
-     * SCIPIO: reads back the default supplier ID (currently in attributes)
+     * SCIPIO: reads back the default supplier ID (currently in attributes), or null if none/empty.
      */
     public String getSupplierPartyId() {
-        return getAttribute("supplierPartyId");
+        String supplierPartyId = getAttribute("supplierPartyId");
+        if (UtilValidate.isEmpty(supplierPartyId)) {
+            return null;
+        } else {
+            return supplierPartyId;
+        }
     }
     
     /**
      * SCIPIO: set the default supplier ID (currently in attributes)
      */
     public void setSupplierPartyId(String supplierPartyId) {
-        setAttribute("supplierPartyId", supplierPartyId);
+        setAttribute("supplierPartyId", (UtilValidate.isEmpty(supplierPartyId)) ? null : supplierPartyId);
     }
 
     public GenericValue getSupplierProduct(String productId, BigDecimal quantity, LocalDispatcher dispatcher) {

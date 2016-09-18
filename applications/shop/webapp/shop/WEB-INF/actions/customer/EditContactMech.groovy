@@ -22,7 +22,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 
-// Scipio: Some patches to prevent crash for missing userLogin
+// SCIPIO: Some patches to prevent crash for missing userLogin
 
 /* puts the following in the context: "contactMech", "contactMechId",
         "partyContactMech", "partyContactMechPurposes", "contactMechTypeId",

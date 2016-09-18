@@ -16,7 +16,7 @@ public final class PartyUtil {
     
     
     /**
-     * Scipio: Return a person's full name. Defaults to partyId if empty.
+     * SCIPIO: Return a person's full name. Defaults to partyId if empty.
      * 
      * @param delegator
      * @param partyId

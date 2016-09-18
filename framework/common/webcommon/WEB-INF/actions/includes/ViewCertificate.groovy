@@ -1,5 +1,5 @@
 /**
- * Scipio: View certificate action code.
+ * SCIPIO: View certificate action code.
  */
 
 import org.ofbiz.base.util.KeyStoreUtil

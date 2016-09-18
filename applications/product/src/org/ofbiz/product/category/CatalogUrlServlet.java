@@ -100,7 +100,7 @@ public class CatalogUrlServlet extends HttpServlet {
             String lastPathElement = pathElements.get(pathElements.size() - 1);
             if (lastPathElement.startsWith("p_")) {
                 productId = lastPathElement.substring(2);
-                // Scipio: remove for products only
+                // SCIPIO: remove for products only
                 pathElements.remove(pathElements.size() - 1);
             } else {
                 GenericValue productCategory =  EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", lastPathElement).cache(true).queryOne();
@@ -108,17 +108,17 @@ public class CatalogUrlServlet extends HttpServlet {
                     categoryId = lastPathElement;
                 } else {
                     productId = lastPathElement;
-                    // Scipio: remove for products only
+                    // SCIPIO: remove for products only
                     pathElements.remove(pathElements.size() - 1);
                 }
             }
-            // Scipio: Don't remove this here; remove only for products
+            // SCIPIO: Don't remove this here; remove only for products
             //pathElements.remove(pathElements.size() - 1);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error in looking up ProductUrl or CategoryUrl with path info [" + pathInfo + "]: " + e.toString(), module);
         }
 
-        // Scipio: 2016-03-22: NEW EXTRA BEHAVIOR FOR TOP-LESS BROWSING: 
+        // SCIPIO: 2016-03-22: NEW EXTRA BEHAVIOR FOR TOP-LESS BROWSING: 
         // We have a problem here that CatalogUrlFilter does not have:
         // CatalogUrlFilter should (now) always set a top category, but for CatalogUrlServlet,
         // it's often possible for us to receive links that don't indicate full path AND for which we
@@ -151,12 +151,12 @@ public class CatalogUrlServlet extends HttpServlet {
             }
         }
         
-        // Scipio: Update the categoryId to match the last path element
+        // SCIPIO: Update the categoryId to match the last path element
         if (pathElements.size() >= 1) {
             categoryId = pathElements.get(pathElements.size() - 1);
         }
         
-        // Scipio: Delegate the logic previously here to factored method
+        // SCIPIO: Delegate the logic previously here to factored method
         CatalogUrlFilter.updateRequestAndTrail(request, categoryId, productId, pathElements, null);
 
         RequestDispatcher rd = request.getRequestDispatcher("/" + CONTROL_MOUNT_POINT + "/" + (productId != null ? PRODUCT_REQUEST : CATEGORY_REQUEST));

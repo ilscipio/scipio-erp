@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Scipio: Standard template markup FTL utils.
+ * SCIPIO: Standard template markup FTL utils.
  * <p>
  * These are utilities used to assist the markup implementations found under:
  * <code>component://framework/common/webcommon/includes/scipio/lib/standard</code>

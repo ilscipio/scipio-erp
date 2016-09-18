@@ -865,14 +865,14 @@ public class ProductSearchSession {
 
         // ========== Create View Indexes
         int viewIndex = 0;
-        // Scipio: unhardcode default
+        // SCIPIO: unhardcode default
         //int viewSize = 20;
         int viewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
         int highIndex = 0;
         int lowIndex = 0;
         int listSize = 0;
         String paging = "Y";
-        // Scipio: unhardcode default
+        // SCIPIO: unhardcode default
         //int previousViewSize = 20;
         int previousViewSize = viewSize;
         Map<String, Object> requestParams = UtilHttp.getCombinedMap(request);
@@ -904,7 +904,7 @@ public class ProductSearchSession {
             previousViewSize = previousViewSizeInteger.intValue();
         }
 
-        // Scipio: FIXME: paging is completely ignored in the stock code below! Not implemented!
+        // SCIPIO: FIXME: paging is completely ignored in the stock code below! Not implemented!
         String pag = productSearchOptions.getPaging();
         if (pag != null && !pag.isEmpty()) {
             paging = pag;
@@ -1053,7 +1053,7 @@ public class ProductSearchSession {
                 ProductSearch.CategoryConstraint cc = (ProductSearch.CategoryConstraint) psc;
                 categoriesCount++;
                 if (isNotFirst) {
-                    // Scipio: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
+                    // SCIPIO: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
                     // Same applies to all others below
                     searchParamString.append("&amp;");
                 } else {

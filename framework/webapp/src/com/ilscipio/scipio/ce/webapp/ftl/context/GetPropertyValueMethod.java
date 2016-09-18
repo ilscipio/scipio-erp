@@ -29,7 +29,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: GetPropertyValueMethod - Freemarker Method for getting properties
+ * SCIPIO: GetPropertyValueMethod - Freemarker Method for getting properties
  */
 public class GetPropertyValueMethod implements TemplateMethodModelEx {
 

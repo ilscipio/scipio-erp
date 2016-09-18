@@ -378,7 +378,7 @@ public class ServiceEventHandler implements EventHandler {
             request.setAttribute("_EVENT_MESSAGE_LIST_", result.get(ModelService.SUCCESS_MESSAGE_LIST));
             request.setAttribute("_EVENT_MESSAGE_", result.get(ModelService.SUCCESS_MESSAGE));
             
-            // Scipio: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...) 
+            // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...) 
             // or because the service is just a direct DB operation
             if (responseString.equals(ModelService.RESPOND_SUCCESS) && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_LIST_"))
                     && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_"))) {

@@ -11,13 +11,13 @@ import org.ofbiz.entity.util.EntityUtil;
 
 final module = "Product.groovy";
 
-// Scipio: this allows to use the script for local scopes without affecting request
+// SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;
 if (localVarsOnly == null) {
     localVarsOnly = false;
 }
 context.remove("localVarsOnly");
-// Scipio: In some screens may need to read request vars/params, but not update request...
+// SCIPIO: In some screens may need to read request vars/params, but not update request...
 updateRequestVars = context.updateRequestVars;
 if (updateRequestVars == null) {
     if (localVarsOnly) {
@@ -35,7 +35,7 @@ productCategoryId = request.getAttribute("productCategoryId");
 
 if (productId) {
     if (updateRequestVars) {
-        // Scipio: If we're allowed to update request vars, do this call which will ensure
+        // SCIPIO: If we're allowed to update request vars, do this call which will ensure
         // the session trail and request attributes are set in the case that it was not already done previously in request.
         // In stock Ofbiz, this was only done in special filter requests, but this leaves other requests barren.
         // NOTE: This could also be done in uri="product" request as event, but here it has more chances of running

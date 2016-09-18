@@ -571,7 +571,7 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessage(String resource, String name, Locale locale) {
-        // Scipio: This whole method can delegate to NoTrim version.
+        // SCIPIO: This whole method can delegate to NoTrim version.
         String value = getMessageNoTrim(resource, name, locale);
         return value == null ? name : value.trim();
     }
@@ -579,7 +579,7 @@ public class UtilProperties implements Serializable {
     /** Returns the value of the specified property name from the specified
      *  resource/properties file corresponding to the given locale.
      * <p>
-     * Scipio: Version that guarantees no trim() operation. 
+     * SCIPIO: Version that guarantees no trim() operation. 
      *  
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -648,7 +648,7 @@ public class UtilProperties implements Serializable {
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
      * <p>
-     * Scipio: Version that guarantees no trim() operation.
+     * SCIPIO: Version that guarantees no trim() operation.
      * 
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -697,7 +697,7 @@ public class UtilProperties implements Serializable {
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
      * <p>
-     * Scipio: Version that guarantees no trim() operation.
+     * SCIPIO: Version that guarantees no trim() operation.
      * 
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file

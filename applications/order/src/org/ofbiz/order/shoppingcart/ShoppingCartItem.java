@@ -435,7 +435,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             if (product.get("reservMaxPersons") != null) {
                 BigDecimal reservMaxPersons = product.getBigDecimal("reservMaxPersons");
                  if (reservMaxPersons.compareTo(reservPersons) < 0)    {
-                     // Scipio: This prints nonsensical value: product.getString("reservMaxPersons")
+                     // SCIPIO: This prints nonsensical value: product.getString("reservMaxPersons")
                      Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("reservMaxPersons", product.getBigDecimal("reservMaxPersons"), "reservPersons", reservPersons);
                      String excMsg = UtilProperties.getMessage(resource_error, "item.maximum_number_of_person_renting", messageMap, cart.getLocale());
 
@@ -491,7 +491,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps, true, triggerPriceRules, skipInventoryChecks.booleanValue());
         } catch (CartItemModifyException e) {
             Debug.logWarning(e.getMessage(), module);
-            // Scipio: patched to pass triggerExternalOps
+            // SCIPIO: patched to pass triggerExternalOps
             cart.removeCartItem(cart.getItemIndex(newItem), triggerExternalOps, dispatcher);
             cart.clearItemShipInfo(newItem);
             cart.removeEmptyCartItems();

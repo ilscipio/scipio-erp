@@ -27,7 +27,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: Ofbiz and Freemarker context-handling Freemarker utils.
+ * SCIPIO: Ofbiz and Freemarker context-handling Freemarker utils.
  * <p>
  * Manages request attributes, context vars, and FTL context.
  * <p>

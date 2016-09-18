@@ -926,9 +926,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * Scipio: Remove an item from the cart object. 
+     * SCIPIO: Remove an item from the cart object. 
      * <p>
-     * Scipio: Modified to support triggerExternalOps bool.
+     * SCIPIO: Modified to support triggerExternalOps bool.
      */
     public void removeCartItem(ShoppingCartItem item, boolean triggerExternalOps, LocalDispatcher dispatcher) throws CartItemModifyException {
         if (item == null) return;
@@ -941,9 +941,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /** 
-     * Scipio: Remove an item from the cart object. 
+     * SCIPIO: Remove an item from the cart object. 
      * <p>
-     * Scipio: Modified to support triggerExternalOps bool.
+     * SCIPIO: Modified to support triggerExternalOps bool.
      */
     public void removeCartItem(int index, boolean triggerExternalOps, LocalDispatcher dispatcher) throws CartItemModifyException {
         if (isReadOnlyCart()) {
@@ -960,7 +960,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /**
      * Remove an item from the cart object.
      * <p>
-     * Scipio: Implies triggerExternalOps true.
+     * SCIPIO: Implies triggerExternalOps true.
      */
     public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
         removeCartItem(index, true, dispatcher);
@@ -1558,7 +1558,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         CartPaymentInfo inf = new CartPaymentInfo();
         inf.refNum[0] = refNum;
         inf.amount = amount;
-        inf.origAmount = amount;    // Scipio: Save the original amount, that was specified upon creation
+        inf.origAmount = amount;    // SCIPIO: Save the original amount, that was specified upon creation
         
         if (!isPaymentMethodType(id)) {
             inf.paymentMethodTypeId = this.getPaymentMethodTypeId(id);
@@ -1575,7 +1575,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         inf.refNum[0] = refNum;
         inf.refNum[1] = authCode;
         inf.amount = amount;
-        inf.origAmount = amount;    // Scipio: Save the original amount, that was specified upon creation
+        inf.origAmount = amount;    // SCIPIO: Save the original amount, that was specified upon creation
 
         if (!isPaymentMethodType(id)) {
             inf.paymentMethodTypeId = this.getPaymentMethodTypeId(id);
@@ -1619,7 +1619,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return foundRecords;
     }
 
-    /** Scipio: Returns all payment infos  */
+    /** SCIPIO: Returns all payment infos  */
     public List<CartPaymentInfo> getPaymentInfos() {
         return paymentInfo;
     }
@@ -1706,14 +1706,14 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
     
     /** 
-     * Scipio: returns the original payment method/payment method type amount as specified
+     * SCIPIO: returns the original payment method/payment method type amount as specified
      * upon payment meth info creation (usually by the user).
      */
     public BigDecimal getPaymentOrigAmount(String id) {
         return this.getPaymentInfo(id).origAmount;
     }
     
-    /** Scipio: Returns all payment amounts */
+    /** SCIPIO: Returns all payment amounts */
     public Map<String, BigDecimal> getPaymentAmountsByIdOrType() {
         // BASED ON OrderReadHelper.getOrderPaymentPreferenceTotalsByIdOrType
         // NOTE: Summing may be redundant but should not hurt...
@@ -1765,7 +1765,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * Scipio: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
+     * SCIPIO: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
      * other words the cart payments in current state can effectively be used to pay for the order.
      */
     public boolean isPaymentsAdequate() {
@@ -1877,7 +1877,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return pmt;
     }
     
-    /** Scipio: Returns the Payment Method Ids that have no paymentMethodIds */
+    /** SCIPIO: Returns the Payment Method Ids that have no paymentMethodIds */
     public List<String> getPaymentMethodTypeIdsNoPaymentMethodIds() {
         List<String> pmt = FastList.newInstance();
         for (CartPaymentInfo inf : paymentInfo) {
@@ -2373,7 +2373,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
     
     /**
-     * Scipio: Get all shipping contact mech IDs.
+     * SCIPIO: Get all shipping contact mech IDs.
      */
     public List<String> getAllShippingContactMechId() {
         List<String> res = new ArrayList<String>(shipInfo.size());
@@ -4901,10 +4901,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public boolean isPresent = false;
         public boolean isSwiped = false;
         public boolean overflow = false;
-        public BigDecimal origAmount = null; // Scipio: original amount as specified upon creation. should not change.
+        public BigDecimal origAmount = null; // SCIPIO: original amount as specified upon creation. should not change.
 
         /**
-         * Scipio: Default constructor
+         * SCIPIO: Default constructor
          */
         public CartPaymentInfo() {
             super();
@@ -5227,7 +5227,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
     
     /**
-     * Scipio: Gets all emails that are OR are to be associated with the order, including
+     * SCIPIO: Gets all emails that are OR are to be associated with the order, including
      * party's to-be-associated emails and order additional emails.
      * <p>
      * WARN: This is not guaranteed to match the final order! The party's

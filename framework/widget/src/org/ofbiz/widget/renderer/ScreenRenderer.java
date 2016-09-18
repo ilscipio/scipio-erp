@@ -403,7 +403,7 @@ public class ScreenRenderer {
             context.put("isError", Boolean.TRUE);
         }
 
-        // Scipio: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
+        // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
         
         populateContextScripts(context);
@@ -420,19 +420,19 @@ public class ScreenRenderer {
         this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
                 dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
         
-        // Scipio: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
+        // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
         
         populateContextScripts(serviceContext);
     }
     
     /**
-     * Scipio: Calls scripts defined in widgetContextScripts.properties to help populate root context.
+     * SCIPIO: Calls scripts defined in widgetContextScripts.properties to help populate root context.
      * <p>
      * Should be called after rest of context populated and scripts will fish out what they need out of the context.
      */
     public static void populateContextScripts(Map<String, Object> context) {
-        // Scipio: runs scripts on initial render context to help populate
+        // SCIPIO: runs scripts on initial render context to help populate
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources;
         try {

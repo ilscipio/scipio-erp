@@ -25,7 +25,7 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
 
 cart = session.getAttribute("shoppingCart");
-party = userLogin?.getRelatedOne("Party", false); // Scipio: Prevent NPE
+party = userLogin?.getRelatedOne("Party", false); // SCIPIO: Prevent NPE
 productStore = ProductStoreWorker.getProductStore(request);
 
 if (cart) {

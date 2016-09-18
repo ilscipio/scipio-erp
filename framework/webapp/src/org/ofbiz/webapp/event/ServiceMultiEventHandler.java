@@ -148,7 +148,7 @@ public class ServiceMultiEventHandler implements EventHandler {
         }
 
         // some default message settings
-        // Scipio: FIXME?: These getMessage calls trim the string, so space delimiter is impossible...
+        // SCIPIO: FIXME?: These getMessage calls trim the string, so space delimiter is impossible...
         // but may not be safe to fix until further testing. Could change to getMessageNoTrim.
         String errorPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.error.prefix", locale);
         String errorSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.error.suffix", locale);

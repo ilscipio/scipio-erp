@@ -349,7 +349,7 @@ public class UtilFormatOut {
     }
     
     /** 
-     * Scipio: Formats a <code>Date</code> into a time <code>String</code> using the specified locale and time zone,
+     * SCIPIO: Formats a <code>Date</code> into a time <code>String</code> using the specified locale and time zone,
      * or using the specified format.
      *
      * @param date The date to format

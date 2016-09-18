@@ -85,7 +85,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
 
         BeanModel req = (BeanModel) env.getVariable("request");
 
-        // Scipio: new flags
+        // SCIPIO: new flags
         final Boolean fullPath = checkBooleanArg(args, "fullPath", null);
         final Boolean secure = checkBooleanArg(args, "secure", null);
         final Boolean encode = checkBooleanArg(args, "encode", null);
@@ -138,15 +138,15 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
         }
     }
     
-    // Scipio: new
+    // SCIPIO: new
     @SuppressWarnings("unchecked")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Scipio: NOTE: can now return null
+    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // SCIPIO: NOTE: can now return null
         return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
     }
     
-    // Scipio: new
+    // SCIPIO: new
     @SuppressWarnings("unchecked")
-    private static String checkStringArg(Map args, String key, String defaultValue) { // Scipio: NOTE: can now return null
+    private static String checkStringArg(Map args, String key, String defaultValue) { // SCIPIO: NOTE: can now return null
         return OfbizUrlTransform.checkStringArg(args, key, defaultValue);
     }
 }

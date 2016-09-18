@@ -211,7 +211,7 @@ public class PersistedServiceJob extends GenericServiceJob {
             }
             nextRecurrence = next;
             
-            // Scipio: Transfer the special new eventId field
+            // SCIPIO: Transfer the special new eventId field
             newJob.set("eventId", jobValue.getString("eventId"));
             
             delegator.createSetNextSeqId(newJob);

@@ -28,7 +28,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import javolution.util.FastList;
 
-// Scipio: NOTE: some patches so doesn't crash without userLogin
+// SCIPIO: NOTE: some patches so doesn't crash without userLogin
 
 cart = session.getAttribute("shoppingCart");
 party = userLogin?.getRelatedOne("Party", false);

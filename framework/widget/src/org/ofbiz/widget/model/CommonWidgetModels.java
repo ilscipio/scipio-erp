@@ -319,15 +319,15 @@ public final class CommonWidgetModels {
         public static final String DEFAULT_URL_MODE = "intra-app";
         private final AutoEntityParameters autoEntityParameters;
         private final AutoServiceParameters autoServiceParameters;
-        private final Boolean encode; // Scipio: changed from boolean to Boolean
-        private final Boolean fullPath; // Scipio: changed from boolean to Boolean
+        private final Boolean encode; // SCIPIO: changed from boolean to Boolean
+        private final Boolean fullPath; // SCIPIO: changed from boolean to Boolean
         private final FlexibleStringExpander idExdr;
         private final Image image;
         private final String linkType; // anchor or hidden form
         private final FlexibleStringExpander nameExdr;
         private final List<Parameter> parameterList;
         private final FlexibleStringExpander prefixExdr;
-        private final Boolean secure; // Scipio: changed from boolean to Boolean
+        private final Boolean secure; // SCIPIO: changed from boolean to Boolean
         private final Integer size;
         private final FlexibleStringExpander styleExdr;
         private final FlexibleStringExpander targetExdr;
@@ -348,7 +348,7 @@ public final class CommonWidgetModels {
             this.targetWindowExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("target-window"));
             this.prefixExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("prefix"));
             this.urlMode = linkElement.getAttribute("url-mode");
-            // Scipio: changed from boolean to Boolean
+            // SCIPIO: changed from boolean to Boolean
             this.fullPath = "true".equals(linkElement.getAttribute("full-path")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("full-path")) ? Boolean.FALSE : null);
             this.secure = "true".equals(linkElement.getAttribute("secure")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("secure")) ? Boolean.FALSE : null);
             this.encode = "true".equals(linkElement.getAttribute("encode")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("encode")) ? Boolean.FALSE : null);
@@ -402,8 +402,8 @@ public final class CommonWidgetModels {
         public Link(GenericValue portalPage, List<Parameter> parameterList, String target, Locale locale) {
             this.autoEntityParameters = null;
             this.autoServiceParameters = null;
-            this.encode = null; // Scipio: Null default
-            this.fullPath = null; // Scipio: Null default
+            this.encode = null; // SCIPIO: Null default
+            this.fullPath = null; // SCIPIO: Null default
             this.idExdr = FlexibleStringExpander.getInstance("");
             this.image = null;
             this.linkType = "";
@@ -430,11 +430,11 @@ public final class CommonWidgetModels {
             return autoServiceParameters;
         }
 
-        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+        public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
             return this.encode;
         }
 
-        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+        public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
             return this.fullPath;
         }
 
@@ -510,7 +510,7 @@ public final class CommonWidgetModels {
             return prefixExdr;
         }
 
-        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+        public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
             return this.secure;
         }
 

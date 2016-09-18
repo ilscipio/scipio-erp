@@ -25,7 +25,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: MapKeysMethod - Helper method to get the logical map keys for any type of map (?keys or .ketSet()).
+ * SCIPIO: MapKeysMethod - Helper method to get the logical map keys for any type of map (?keys or .ketSet()).
  */
 public class MapKeysMethod implements TemplateMethodModelEx {
 

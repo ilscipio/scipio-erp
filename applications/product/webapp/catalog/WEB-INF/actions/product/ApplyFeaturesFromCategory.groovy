@@ -94,7 +94,7 @@ try {
 }
 
 context.productFeatures = productFeatures;
-// Scipio: flag to tell template pagination happened
+// SCIPIO: flag to tell template pagination happened
 context.productFeaturesPaginated = true;
 
 productFeatureApplMap = [:];

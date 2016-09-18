@@ -45,7 +45,7 @@ public class ContentSearchEvents {
 
         // ========== Create View Indexes
         int viewIndex = 0;
-        // Scipio: unhardcode default
+        // SCIPIO: unhardcode default
         //int viewSize = 20;
         int viewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
         int highIndex = 0;
@@ -65,7 +65,7 @@ public class ContentSearchEvents {
 
         // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
         Integer resultOffset = Integer.valueOf(lowIndex + 1);
-        // Scipio: FIXME: maxResults of viewSize ensures pagination is disabled. The whole thing needs rewriting to support pagination.
+        // SCIPIO: FIXME: maxResults of viewSize ensures pagination is disabled. The whole thing needs rewriting to support pagination.
         Integer maxResults = Integer.valueOf(viewSize);
 
         // ========== Do the actual search

@@ -87,9 +87,9 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
         return null;
     }
 
-    // Scipio: Added and modified to support Boolean
+    // SCIPIO: Added and modified to support Boolean
     @SuppressWarnings("unchecked")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Scipio: NOTE: can now return null
+    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // SCIPIO: NOTE: can now return null
         return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
     }
     
@@ -98,7 +98,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, final Map args) throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
         
-        // Scipio: new flags
+        // SCIPIO: new flags
         final Boolean fullPath = checkBooleanArg(args, "fullPath", null);
         final Boolean secure = checkBooleanArg(args, "secure", null);
         final Boolean encode = checkBooleanArg(args, "encode", null);

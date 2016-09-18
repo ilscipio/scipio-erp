@@ -93,7 +93,7 @@ if (userLogin) {
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 context.contentPathPrefix = contentPathPrefix;
 
-product = context.product;  // Scipio: prevents crash if missing
+product = context.product;  // SCIPIO: prevents crash if missing
 
 // get the product detail information
 if (product) {
@@ -125,7 +125,7 @@ if (product) {
     context.productContentWrapper = productContentWrapper;
 
     // get the main detail image (virtual or single product)
-    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "raw"); // Scipio: changed to raw (let templating escape)
+    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "raw"); // SCIPIO: changed to raw (let templating escape)
     if (mainDetailImage) {
         mainDetailImageUrl = ContentUrlTag.getContentPrefix(request) + mainDetailImage;
         context.mainDetailImageUrl = mainDetailImageUrl.toString();
@@ -246,7 +246,7 @@ if (product) {
     sizeProductFeatureAndAppls = from("ProductFeatureAndAppl").where("productId", productId, "productFeatureTypeId", "SIZE").orderBy("sequenceNum", "defaultSequenceNum").queryList();
     context.sizeProductFeatureAndAppls = sizeProductFeatureAndAppls;
     
-    // Scipio: always get selectable features, in case need (affects nothing else)
+    // SCIPIO: always get selectable features, in case need (affects nothing else)
     if (true) {
         selFeatureMap = runService('getProductFeatureSet', [productId : productId, productFeatureApplTypeId : "SELECTABLE_FEATURE"]);
         selFeatureSet = selFeatureMap.featureSet;
@@ -284,7 +284,7 @@ if (product) {
                 quantityUom = mainProduct.getRelatedOne("QuantityUom", true);
                 mainProductMap.productId = mainProduct.productId;
                 mainProductMap.piecesIncluded = mainProduct.piecesIncluded;
-                if (quantityUom) { // Scipio: This could be missing
+                if (quantityUom) { // SCIPIO: This could be missing
                     mainProductMap.uomDesc = quantityUom.description;
                 }
                 mainProducts.add(mainProductMap);
@@ -538,7 +538,7 @@ if (product) {
     context.accessoryProducts = accessoryProducts.assocProducts;
 
     // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
-    // Scipio: This should order by sequenceNum
+    // SCIPIO: This should order by sequenceNum
     downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").orderBy("sequenceNum ASC").cache(true).queryList();
     context.downloadProductContentAndInfoList = downloadProductContentAndInfoList;
 
@@ -582,7 +582,7 @@ if (product) {
     }
 }
 
-// Scipio: Decide the next possible reserv start date (next day)
+// SCIPIO: Decide the next possible reserv start date (next day)
 nextDayTimestamp = UtilDateTime.getDayStart(nowTimestamp, 1, timeZone, locale);
 context.nextDayTimestamp = nextDayTimestamp;
 earliestReservStartDate = nextDayTimestamp;

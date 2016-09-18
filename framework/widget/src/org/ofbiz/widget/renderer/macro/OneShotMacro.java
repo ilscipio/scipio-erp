@@ -89,7 +89,7 @@ class OneShotMacro {
     public void appendData(Appendable origWriter, String macroName, Map<String, Object> macroParameters) {
         Entry entry = macroNameMap.get(macroName);
         if (entry == null) {
-            throw new IllegalStateException("SCIPIO: unknown widget menu render entry type (" + macroName + "). Did Ofbiz source change?");
+            throw new IllegalStateException("Scipio: unknown widget menu render entry type (" + macroName + "). Did Ofbiz source change?");
         }
         entry.appendData(state, macroParameters, origWriter);
     }

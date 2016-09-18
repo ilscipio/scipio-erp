@@ -458,7 +458,7 @@ public class CategoryServices {
     @SuppressWarnings("unchecked")
     @Deprecated
     /**
-     * Scipio: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
+     * SCIPIO: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
      * If an event is wanted though, use TODO: Implement the required events so they can be used to populate a jsTree via ajax too.
      */
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {

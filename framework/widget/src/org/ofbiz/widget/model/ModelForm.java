@@ -231,6 +231,7 @@ public abstract class ModelForm extends ModelWidget {
     private final ModelFormField rowSubmitSelectField;
     
     // SCIPIO: new
+    private final String submitHiddenFormNamePrefix;
     private final String rowSubmitSelectFieldNamePrefix;
     private final String rowSubmitSelectFieldParamNamePrefix;
     
@@ -867,6 +868,7 @@ public abstract class ModelForm extends ModelWidget {
         
         // SCIPIO: new
         // TODO: Unhardcode everything below
+        this.submitHiddenFormNamePrefix = "postSubmitForm";
         this.rowSubmitSelectFieldNamePrefix = "selectAction";
         if (getType().equals("multi")) {
             this.rowSubmitSelectFieldParamNamePrefix = UtilHttp.ROW_SUBMIT_PREFIX;
@@ -1766,6 +1768,20 @@ public abstract class ModelForm extends ModelWidget {
     
     public String getMethod(Map<String, Object> context) {
         return method.expandString(context);
+    }
+    
+    /**
+     * SCIPIO: new
+     */
+    public String getSubmitHiddenFormNamePrefix() {
+        return submitHiddenFormNamePrefix;
+    }
+    
+    /**
+     * SCIPIO: new
+     */
+    public String getSubmitHiddenFormName(String uniquefix) {
+        return getSubmitHiddenFormNamePrefix() + getItemIndexSeparator() + uniquefix;
     }
     
     /**

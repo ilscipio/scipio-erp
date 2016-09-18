@@ -188,7 +188,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local method = "post">
   </#if>
   <#-- showProgress=false progressOptions="" progressSuccessAction=""  -->
-  <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
+  <#-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#-- Scipio: process extra attribs -->
   <#local showProgress = (attribs.showProgress)!false>
   <#if !showProgress?is_boolean>
@@ -202,19 +202,20 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if attribs.fieldsType?has_content>
     <@fields type=attribs.fieldsType open=true close=false />
   </#if>
-  <#local progressOptions = (attribs.progressOptions)!{}> <#-- NOTE: this may be a string repr of a map! -->
+  <#local progressOptions = (attribs.progressOptions)!{}><#-- NOTE: this may be a string repr of a map! -->
   <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
   <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : progressOptions, "progressSuccessAction" : progressSuccessAction, "attribs":attribs}>
   <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
   <form method="${method}" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
-      <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
-        <input type="hidden" name="${viewIndexField}" value="${viewIndex}"/>
-      </#if>
-      <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
-        <input type="hidden" name="${viewSizeField}" value="${viewSize}"/>
-      </#if>
+    </#if>
+    <#-- SCIPIO: moved this OUTSIDE the useRowSubmit check -->
+    <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
+      <input type="hidden" name="${viewIndexField}" value="${viewIndex}"/>
+    </#if>
+    <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
+      <input type="hidden" name="${viewSizeField}" value="${viewSize}"/>
     </#if>
 </#macro>
 <#-- Scipio: WARN: also exists renderMultiFormClose below -->
@@ -749,8 +750,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
 <#macro renderSubmitForm hiddenFormName="" formType="" targetUrl="" targetWindow="" params={} useRowSubmit=false submitEntries=[] extraArgs...>
-  <!-- renderSubmitForm -->
+  <#-- NOTE: escaping must be done by the macro on this one. is a glimpse of the future. -->
   <#local tableId = (getRequestVar("renderFormLastTableInfo").tableId)!"_TABLE_ID_NOT_FOUND_">
+  
   <#if useRowSubmit && submitEntries?has_content>
     <@script>
         jQuery(document).ready(function() {
@@ -832,11 +834,15 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </@script>
   </#if>
   <#if submitEntries?has_content>
-  <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
+  <#-- TODO: can't use here yet: escapeFullUrl(targetUrl, 'html') because individual params already escaped by renderer, but don't really want that anymore... -->
+  <form method="post" action="${targetUrl}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
     <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapePart(hiddenFormName, 'html')}">
     <#list mapKeys(params) as paramName>
       <input type="hidden" name="${escapePart(paramName, 'html')}" value="${escapePart(params[escapePart(paramName, 'html')], 'html')}" />
     </#list>
+    <#if useRowSubmit>
+      <input type="hidden" name="_useRowSubmit" value="Y"/>
+    </#if>
   </form>
   </#if>
 </#macro>

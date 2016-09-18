@@ -1247,7 +1247,9 @@ public class FormRenderer {
         int numOfColumns = listFormHandler.getNumOfColumns();
         
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, listFormHandler);
+        final boolean formPerItem = true; // SCIPIO: NOTE: the orig stock value was true.
+        // TODO: set formPerItem = false when figure out alternative, because it produces invalid HTML
+        this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
         
         if (modelForm.getUseRowSubmit())
             listFormHandler.renderTableFooter();
@@ -1275,7 +1277,8 @@ public class FormRenderer {
         int numOfColumns = listFormHandler.getNumOfColumns();
         
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns, listFormHandler);
+        final boolean formPerItem = false; // SCIPIO: NOTE: this was always false even in stock ofbiz
+        this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
         
         if (modelForm.getUseRowSubmit())        
             listFormHandler.renderTableFooter(); 

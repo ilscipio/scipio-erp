@@ -3447,7 +3447,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("submitFieldId", rowSubmitField.getCurrentContainerId(context));
                     map.put("submitFieldName", rowSubmitField.getFieldName());
-                    map.put("selectFieldNamePrefix", modelForm.getRowSubmitSelectFieldFieldNamePrefix());
+                    map.put("selectFieldNamePrefix", modelForm.getRowSubmitSelectFieldParamNamePrefix());
                     submitEntries.add(map);
                 }
             }

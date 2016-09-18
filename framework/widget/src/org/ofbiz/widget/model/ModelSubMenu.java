@@ -19,6 +19,7 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,7 +32,6 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
-import org.ofbiz.widget.model.ModelMenuItem.ParentInfo;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Element;
 
@@ -46,8 +46,6 @@ public class ModelSubMenu extends ModelWidget {
 
     public static final String module = ModelSubMenu.class.getName();
     
-    private static final BuildArgs defaultBuildArgs = new BuildArgs(new GeneralBuildArgs(), null);
-    
     private final String effectiveName;
     
     private final List<ModelAction> actions;
@@ -61,21 +59,17 @@ public class ModelSubMenu extends ModelWidget {
     private final FlexibleStringExpander title;
     private final ModelMenu model;
     private final String modelScope;
-    private final ModelMenu styleModelMenu;
-    private final ModelMenu funcModelMenu;
+    private transient ModelMenu styleModelMenu; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
+    private transient ModelMenu funcModelMenu; // SCIPIO: records which model menu should be used for functional fields
     
     private final String itemsSortMode;
 
     private final FlexibleStringExpander shareScope;
     
-    public ModelSubMenu(Element subMenuElement, String defaultName, ParentInfo parentInfo, BuildArgs buildArgs) {
+    public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
-        if (buildArgs == null) {
-            buildArgs = defaultBuildArgs;
-        }
         buildArgs.genBuildArgs.totalSubMenuCount++;
-        ModelMenuItem parentMenuItem = parentInfo.menuItem;
-        ModelMenu topModelMenu = parentInfo.topMenu;
+        ModelMenu topModelMenu = parentMenuItem.getModelMenu();
         List<? extends Element> extraMenuItems = buildArgs.extraMenuItems;
         this.parentMenuItem = parentMenuItem;
         
@@ -83,7 +77,7 @@ public class ModelSubMenu extends ModelWidget {
         
         String modelAddress = subMenuElement.getAttribute("model");
         String modelScope = subMenuElement.getAttribute("model-scope");
-        ModelMenu model = null;  // don't assign this!!! styleModelMenu
+        ModelMenu model = null;
         
         // check the helper include attribute
         String includeAddress = subMenuElement.getAttribute("include");
@@ -128,7 +122,7 @@ public class ModelSubMenu extends ModelWidget {
                 effectiveName = includeName;
             }
             if (effectiveName == null || effectiveName.isEmpty()) {
-                effectiveName = defaultName;
+                effectiveName = makeDefaultName(buildArgs);
             }
         }
         this.effectiveName = effectiveName;
@@ -145,27 +139,9 @@ public class ModelSubMenu extends ModelWidget {
             modelScope = buildArgs.forceSubMenuModelScope;
         }
         
-        // SCIPIO: set these early
+        // set these early
         this.model = model;
         this.modelScope = modelScope;
-        this.styleModelMenu = parentInfo.styleModelMenu;
-        this.funcModelMenu = parentInfo.funcModelMenu;
-        
-        // By default, child will inherit ours, unless something was specified
-        ModelMenu childStyleModelMenu = parentInfo.styleModelMenu;
-        ModelMenu childLogicModelMenu = parentInfo.funcModelMenu;
-        if (model != null) {
-            if ("full".equals(modelScope)) {
-                childStyleModelMenu = model;
-                childLogicModelMenu = model;
-            } else if ("func".equals(modelScope)) {
-                childLogicModelMenu = model;
-            } else if (!"none".equals(modelScope)) { // "style"
-                childStyleModelMenu = model;
-            }
-        }
-        
-        ParentInfo childParentItemInfo = new ParentInfo(this, childStyleModelMenu, childLogicModelMenu);
         
         // support included sub-menu items
         List<Element> preInclElements = null;
@@ -175,9 +151,9 @@ public class ModelSubMenu extends ModelWidget {
         }
         
         // include actions
-        Map<String, Element> menuElemCache = new HashMap<String, Element>();
-        topModelMenu.processIncludeActions(subMenuElement, preInclElements, null, actions, topModelMenu.getMenuLocation(), 
-                true, menuElemCache, buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
+        topModelMenu.processIncludeActions(subMenuElement, preInclElements, null, actions, 
+                currResource, true, 
+                buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
 
@@ -185,7 +161,7 @@ public class ModelSubMenu extends ModelWidget {
         ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
         Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
         topModelMenu.processIncludeMenuItems(subMenuElement, preInclElements, null, menuItemList, menuItemMap, 
-                topModelMenu.getMenuLocation(), true, null, null, buildArgs.forceSubMenuModelScope, menuElemCache, childParentItemInfo,
+                currResource, true, null, null, buildArgs.forceSubMenuModelScope, this,
                 buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
         
         // extra items: replaces the legacy menu-item load originally in ModelMenuItem constructor
@@ -194,11 +170,12 @@ public class ModelSubMenu extends ModelWidget {
             ArrayList<ModelMenuItem> extraMenuItemList = new ArrayList<ModelMenuItem>();
             Map<String, ModelMenuItem> extraMenuItemMap = new HashMap<String, ModelMenuItem>();
             
-            ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs);
+            ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs,
+                        buildArgs.currResource);
             itemBuildArgs.forceSubMenuModelScope = buildArgs.forceSubMenuModelScope;
             
             for (Element itemElement : extraMenuItems) {
-                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, childParentItemInfo, itemBuildArgs);
+                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this, itemBuildArgs);
                 topModelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
                 topModelMenu.addUpdateMenuItem(modelMenuItem, extraMenuItemList, extraMenuItemMap);
             }
@@ -221,6 +198,16 @@ public class ModelSubMenu extends ModelWidget {
         this.shareScope = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("share-scope"));
     }
 
+    String makeDefaultName(BuildArgs buildArgs) {
+        String defaultName;
+        if (buildArgs.indexInParent == 0) {
+            defaultName = "_submenu_default_" + buildArgs.genBuildArgs.totalSubMenuCount;
+        } else {
+            defaultName = "_submenu_" + buildArgs.indexInParent + "_" + buildArgs.genBuildArgs.totalSubMenuCount;
+        }
+        return defaultName;
+    }
+    
     /**
      * WARN: we are forced to do this due to the way the ModelMenuItem merging works.
      * After merging we would be pointing back to the wrong menu item instance if we
@@ -332,12 +319,36 @@ public class ModelSubMenu extends ModelWidget {
         return parentMenuItem;
     }
 
+    /**
+     * SCIPIO: Returns THIS item's alt model menu for style fields.
+     * <p>
+     * DEV NOTE: Can only be called only after the ModelMenu is fully constructed.
+     */
     public ModelMenu getStyleModelMenu() {
-        return styleModelMenu;
+        if (this.styleModelMenu == null) {
+            ModelMenu styleModelMenu = this.parentMenuItem.getStyleModelMenu();
+            if (model != null && isModelStyleScope()) {
+                styleModelMenu = model;
+            }
+            this.styleModelMenu = styleModelMenu;
+        }
+        return this.styleModelMenu;
     }
-
-    public ModelMenu getLogicModelMenu() {
-        return funcModelMenu;
+    
+    /**
+     * SCIPIO: Returns THIS item's alt model menu for functional/logic fields.
+     * <p>
+     * DEV NOTE: Can only be called only after the ModelMenu is fully constructed.
+     */
+    public ModelMenu getFuncModelMenu() {
+        if (this.funcModelMenu == null) {
+            ModelMenu funcModelMenu = this.parentMenuItem.getFuncModelMenu();
+            if (model != null && isModelFuncScope()) {
+                funcModelMenu = model;
+            }
+            this.funcModelMenu = funcModelMenu;
+        }
+        return this.funcModelMenu;
     }
     
     public String getItemsSortMode() {
@@ -449,16 +460,29 @@ public class ModelSubMenu extends ModelWidget {
     public static class BuildArgs {
         public final GeneralBuildArgs genBuildArgs;
         public final CurrentMenuDefBuildArgs currentMenuDefBuildArgs;
-        
+        public String currResource;
+        public int indexInParent;
+
         public List<? extends Element> extraMenuItems;
         public String forceSubMenuModelScope;
 
-        public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs) {
+        public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, 
+                String currResource) {
             this.genBuildArgs = genBuildArgs;
             this.currentMenuDefBuildArgs = currentMenuDefBuildArgs;
+            this.currResource = currResource;
+            this.indexInParent = 0;
             this.extraMenuItems = null;
             this.forceSubMenuModelScope = null;
         }
+        
+    }
+    
+    
+    public static class ModelScopeResolver implements Serializable {
+        
+        private transient ModelMenu styleModelMenu;
+        private transient ModelMenu funcModelMenu;
         
     }
 

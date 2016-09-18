@@ -238,7 +238,7 @@ under the License.
           <fo:block/>
         </fo:table-cell>
         <fo:table-cell number-columns-spanned="1">
-            <fo:block>${taxRate.description}</fo:block>
+            <fo:block>${taxRate.description!}</fo:block>
         </fo:table-cell>
         <fo:table-cell number-columns-spanned="1" text-align="right">
             <fo:block font-weight="bold"><@ofbizCurrency amount=vatTaxesByType[vatTaxId] isoCode=(invoice.currencyUomId!)/></fo:block>

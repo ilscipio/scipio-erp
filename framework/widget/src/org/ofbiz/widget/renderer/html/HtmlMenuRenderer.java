@@ -344,7 +344,7 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     }
 
     public boolean isHideIfSelected(ModelMenuItem menuItem, Map<String, Object> context) {
-        ModelMenu menu = menuItem.getLogicModelMenu();
+        ModelMenu menu = menuItem.getFuncModelMenu();
         String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
         String currentItemName = menuItem.getName();
         Boolean hideIfSelected = menuItem.getHideIfSelected();

@@ -1,28 +1,61 @@
 package org.ofbiz.widget.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * SCIPIO: a state passed around in context used to record info about the menu
  * render, such as sub-menu depth.
  */
-public class MenuRenderState {
+@SuppressWarnings("serial")
+public class MenuRenderState implements Map<String, Object>, Serializable {
     
-    public static final String CONTEXT_KEY = "menuStringRender_renderState";
+    public static final String CONTEXT_KEY = "currentMenuRenderState";
     
+    private final Map<String, Object> internalMap = new HashMap<String, Object>();
+    // some operations will be read-only, to prevent issues
+    private final Map<String, Object> readOnlyMap = Collections.unmodifiableMap(internalMap);
+
+    // NOTE: these are also stored in the map, may change the redundancy later
     private int currentDepth;
     private int maxDepth;
     private String subMenuFilter;
     private transient boolean noSubMenus;
-    private transient boolean activeSubMenusOnly;
+    private transient boolean currentSubMenusOnly;
     
     protected MenuRenderState() {
-        this.currentDepth = 1;
-        this.maxDepth = -1;
-        this.subMenuFilter = null;
-        this.noSubMenus = false;
-        this.activeSubMenusOnly = false;
+        setCurrentDepth(1);
+        setMaxDepth(1);
+        setSubMenuFilter(null);
+    }
+    
+    protected Object setArg(String key, Object value) {
+        if ("currentDepth".equals(key)) {
+            this.setCurrentDepth((Integer) value);
+            return this.get(key);
+        } else if ("maxDepth".equals(key)) {
+            this.setMaxDepth((Integer) value);
+            return this.get(key);
+        } else if ("subMenuFilter".equals(key)) {
+            this.setSubMenuFilter((String) value);
+            return this.get(key);
+        } else {
+            return setInternal(key, value);
+        }
+    }
+    
+    protected void setArgs(Map<? extends String, ?> args) {
+        for(Map.Entry<? extends String, ?> entry : args.entrySet()) {
+            this.setArg(entry.getKey(), entry.getValue());
+        }
+    }
+    
+    protected Object setInternal(String key, Object value) {
+        return internalMap.put(key, value);
     }
     
     public static MenuRenderState create() {
@@ -39,6 +72,7 @@ public class MenuRenderState {
         } else {
             this.currentDepth = currentDepth;
         }
+        setInternal("currentDepth", this.currentDepth);
     }
     
     public int getMaxDepth() {
@@ -51,6 +85,7 @@ public class MenuRenderState {
         } else {
             this.maxDepth = maxDepth;
         }
+        setInternal("maxDepth", this.maxDepth);
     }
     
     public String getSubMenuFilter() {
@@ -60,23 +95,39 @@ public class MenuRenderState {
     public void setSubMenuFilter(String subMenuFilter) {
         this.subMenuFilter = subMenuFilter;
         this.noSubMenus = "none".equals(subMenuFilter);
-        this.activeSubMenusOnly = "active".equals(subMenuFilter);
+        this.currentSubMenusOnly = "current".equals(subMenuFilter);
+        setInternal("subMenuFilter", this.subMenuFilter);
     }
 
     public void increaseCurrentDepth() {
         this.currentDepth++;
+        setInternal("currentDepth", this.currentDepth);
     }
     
     public void decreaseCurrentDepth() {
         this.currentDepth--;
+        setInternal("currentDepth", this.currentDepth);
     }
     
     public boolean hasReachedMaxDepth() {
         return noSubMenus || ((maxDepth >= 0) && (currentDepth >= maxDepth));
     }
     
-    public boolean isActiveSubMenusOnly() {
-        return activeSubMenusOnly;
+    public boolean isCurrentSubMenusOnly() {
+        return currentSubMenusOnly;
+    }
+    
+    public boolean isInlineEntries() {
+        return Boolean.TRUE.equals(this.get("inlineEntries"));
+    }
+    
+    public String getMenuCtxRole() {
+        return (String) this.get("menuCtxRole");
+    }
+    
+    public String getMenuCtxRoleOrEmpty() {
+        String res = (String) this.get("menuCtxRole");
+        return res != null ? res : "";
     }
 
     
@@ -103,4 +154,66 @@ public class MenuRenderState {
     public static MenuRenderState remove(Map<String, Object> context) {
         return (MenuRenderState) context.remove(CONTEXT_KEY);
     }
+
+    @Override
+    public int size() {
+        return internalMap.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return internalMap.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return internalMap.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return internalMap.containsValue(value);
+    }
+
+    @Override
+    public Object get(Object key) {
+        return internalMap.get(key);
+    }
+
+    @Override
+    public Object put(String key, Object value) {
+        return setArg(key, value);
+    }
+
+    @Override
+    public Object remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ? extends Object> m) {
+        setArgs(m);
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return readOnlyMap.keySet();
+    }
+
+    @Override
+    public Collection<Object> values() {
+        return readOnlyMap.values();
+    }
+
+    @Override
+    public Set<java.util.Map.Entry<String, Object>> entrySet() {
+        return readOnlyMap.entrySet();
+    }
+
+
 }

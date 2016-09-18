@@ -215,11 +215,15 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     private boolean isHideIfSelected(ModelMenuItem menuItem, Map<String, Object> context) {
-        ModelMenu menu = menuItem.getLogicModelMenu();
-        String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
-        String currentItemName = menuItem.getName();
+        // SCIPIO: this is obsolete
+        //ModelMenu menu = menuItem.getLogicModelMenu();
+        //String currentMenuItemName = menu.getSelectedMenuItemContextFieldName(context);
+        //String currentItemName = menuItem.getName();
+        //Boolean hideIfSelected = menuItem.getHideIfSelected();
+        //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-        return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
+        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
     }
     
     /**
@@ -257,11 +261,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException {
         Map<String, Object> parameters = createImageParameters(context, image);
         
-        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-        if (menuCtxRole == null) {
-            menuCtxRole = "";
-        }
-        parameters.put("menuCtxRole", menuCtxRole);
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
         
         try {
             executeMacro(writer, "renderImage", parameters);
@@ -281,7 +281,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //}
         boolean disabled = isDisableIfEmpty(menuItem, context);
         // Scipio: tell macro which selected and disabled
-        boolean selected = menuItem.isSelected(context);
+        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        boolean selected = menuItem.isSame(selectedMenuItem);
+        boolean selectedAncestor = !selected && menuItem.isSameOrAncestorOf(selectedMenuItem);
         parameters.put("id", link.getId(context));
         parameters.put("style", link.getStyle(context));
         parameters.put("name", link.getName(context));
@@ -340,15 +342,12 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         parameters.put("imgStr", imgStr);
         
-        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-        if (menuCtxRole == null) {
-            menuCtxRole = "";
-        }
-        parameters.put("menuCtxRole", menuCtxRole);
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
         
         // Scipio: add disabled and selected
         parameters.put("disabled", disabled);
         parameters.put("selected", selected);
+        parameters.put("selectedAncestor", selectedAncestor);
         
         try {
             executeMacro(writer, "renderLink", parameters);
@@ -363,12 +362,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
         // SCIPIO: new entries
         parameters.put("style", menu.getMenuContainerStyle(context));
-        parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
-        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-        if (menuCtxRole == null) {
-            menuCtxRole = "";
-        }
-        parameters.put("menuCtxRole", menuCtxRole);
+        parameters.put("inlineEntries", MenuRenderState.retrieve(context).isInlineEntries());
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
         
         if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
             StringBuilder sb = new StringBuilder("End Menu Widget ");
@@ -395,7 +390,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = new HashMap<String, Object>();
         String style = menuItem.getWidgetStyle();
         // Scipio: tell macro which selected and disabled
-        boolean selected = menuItem.isSelected(context);
+        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        boolean selected = menuItem.isSame(selectedMenuItem);
+        boolean selectedAncestor = false;
         if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
             // Scipio: Must use new combination logic
@@ -410,6 +407,16 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 selectedStyle = "+selected";
             } 
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
+        } else {
+            // SCIPIO: support selected-ancestor
+            selectedAncestor = menuItem.isSameOrAncestorOf(selectedMenuItem);
+            if (selectedAncestor) {
+                String selectedStyle = menuItem.getSelectedAncestorStyle();
+                if (UtilValidate.isEmpty(selectedStyle)) {
+                    selectedStyle = "+selected";
+                } 
+                style = ModelMenu.combineExtraStyle(style, selectedStyle);
+            }
         }
         boolean disabled = this.isDisableIfEmpty(menuItem, context);
         if (disabled) {
@@ -465,10 +472,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         
         // Scipio: menu context role
-        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-        if (menuCtxRole == null) {
-            menuCtxRole = "";
-        }
+        String menuCtxRole = MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty();
         parameters.put("menuCtxRole", menuCtxRole);
         
         // Scipio: sub menu style
@@ -487,6 +491,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // Scipio: disabled and selected
         parameters.put("selected", selected);
         parameters.put("disabled", disabled);
+        parameters.put("selectedAncestor", selectedAncestor);
         
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);
@@ -506,7 +511,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             }
             try {
                 for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
-                    if (!(renderState != null && renderState.isActiveSubMenusOnly()) || childSubMenu.isActive(context)) {
+                    if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isAncestorOf(selectedMenuItem)) {
                         childSubMenu.renderSubMenuString(writer, context, this);
                     }
                 }
@@ -541,12 +546,14 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("id", menu.getId());
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
-        parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
-        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-        if (menuCtxRole == null) {
-            menuCtxRole = "";
-        }
-        parameters.put("menuCtxRole", menuCtxRole);
+        parameters.put("inlineEntries", MenuRenderState.retrieve(context).isInlineEntries());
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
+        
+        ModelMenuItem selectedMenuItem = menu.getSelectedMenuItem(context);
+        boolean selected = menu.isParentOf(selectedMenuItem);
+        boolean selectedAncestor = !selected && selectedMenuItem != null;
+        parameters.put("selected", selected);
+        parameters.put("selectedAncestor", selectedAncestor);
         
         try {
             executeMacro(writer, "renderMenuBegin", parameters);
@@ -570,11 +577,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("effectiveName", subMenu.getEffectiveName());
         
         // Scipio: menu context role
-        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-        if (menuCtxRole == null) {
-            menuCtxRole = "";
-        }
-        parameters.put("menuCtxRole", menuCtxRole);
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
+
+        ModelMenuItem selectedMenuItem = subMenu.getTopModelMenu().getSelectedMenuItem(context);
+        boolean selected = subMenu.isParentOf(selectedMenuItem);
+        boolean selectedAncestor = !selected && subMenu.isAncestorOf(selectedMenuItem);
+        parameters.put("selected", selected);
+        parameters.put("selectedAncestor", selectedAncestor);
         
         try {
             executeMacro(writer, "renderSubMenuBegin", parameters);
@@ -591,11 +600,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = new HashMap<String, Object>();
         
         // Scipio: menu context role
-        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
-        if (menuCtxRole == null) {
-            menuCtxRole = "";
-        }
-        parameters.put("menuCtxRole", menuCtxRole);
+        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
         
         try {
             executeMacro(writer, "renderSubMenuEnd", parameters);

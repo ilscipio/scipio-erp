@@ -37,6 +37,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
@@ -1800,6 +1801,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 return;
             }
             
+            // SCIPIO: caller may have set these. Remove and transfer them to MenuRenderState
+            Map<String, Object> menuRenderArgs = UtilGenerics.checkMap(context.remove("menuRenderArgs"));
+            
             // SCIPIO: added scope protect
             boolean protectScope = !shareScope(context);
             if (protectScope) {
@@ -1818,6 +1822,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             
             MenuRenderState renderState = MenuRenderState.createAndStore(context);
+            if (menuRenderArgs != null) {
+                renderState.putAll(menuRenderArgs); // keep same names
+            }
             renderState.setMaxDepth(getMaxDepth(context));
             renderState.setSubMenuFilter(getSubMenuFilter(context));
             

@@ -59,7 +59,7 @@ TODO/FIXME:
   
   TODO?: menu-container-style does not currently fully support the standard Scipio +/= class prefix; generally, "+" will be assumed.
 -->
-<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] extraArgs...>
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] selected=false selectedAncestor=false extraArgs...>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -67,6 +67,7 @@ TODO/FIXME:
   <#local prevMenuInfo = readRequestStack("renderMenuStack")!{}>
   <#local topLevel = !(prevMenuInfo.type)??>
   <#local isNestedMenu = !topLevel>
+  <#local menuLevel = (getRequestStackSize("renderMenuStack")!0)+1>
   
   <#local parentMenuType = "">
   <#local parentStyleName = "">
@@ -114,6 +115,18 @@ TODO/FIXME:
     <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
   </#if>
 
+  <#if selected>
+    <#local class = addClassArg(class, (styles["menu_" + styleName + "_active"]!styles["menu_default_active"]!""))>
+  </#if>
+  <#if selectedAncestor>
+    <#local class = addClassArg(class, (styles["menu_" + styleName + "_activeancestor"]!styles["menu_default_activeancestor"]!""))>
+  </#if>
+
+  <#local menuLevelPrefix = styles["menu_" + styleName + "_levelprefix"]!styles["menu_default_levelprefix"]!"">
+  <#if menuLevelPrefix?has_content>
+    <#local class = addClassArg(class, menuLevelPrefix + menuLevel?string)>
+  </#if>
+
   <#-- Count menu and make sure has ID -->
   <#local menuIdNum = getRequestVar("scipioMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
@@ -147,7 +160,7 @@ TODO/FIXME:
   
   <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, 
     "menuIdNum":menuIdNum, "menuCtxRole":menuCtxRole, "inlineEntries":inlineEntries, "htmlwrap":htmlwrap,
-    "isNestedMenu":isNestedMenu, 
+    "isNestedMenu":isNestedMenu, "menuLevel":menuLevel,
     "parentMenuType":parentMenuType, "parentMenuSpecialType":parentMenuSpecialType, "parentStyleName":parentStyleName}>
   <#local dummy = pushRequestStack("renderMenuStack", menuInfo)> <#-- pushing info to stack, so that this can be used by subsequently --> 
   <#if inlineEntries>
@@ -164,7 +177,7 @@ TODO/FIXME:
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=(item.linkArgs!{}) linkStr=(item.linkStr!"") 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=(item.items![]) 
             subMenuId=item.subMenuId subMenuStyle=item.subMenuStyle subMenuTitle=item.subMenuTitle subMenuList=(item.subMenuList![])
-            disabled=item.disabled selected=item.selected itemIndex=item_index menuInfo=menuInfo/>
+            disabled=item.disabled selected=item.selected selectedAncestor=item.selectedAncestor itemIndex=item_index menuInfo=menuInfo/>
       </#list>
     </@menu_markup>
   </#if>
@@ -190,7 +203,7 @@ TODO/FIXME:
         The subMenuStyle/subMenuTitle/subMenuId are now considered deprecated and appear as style/title/id on the subMenuList
         hash entries instead. -->
 <#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] 
-    subMenuStyle="" subMenuTitle="" itemIndex=0 menuInfo={} disabled=false selected=false subMenuId="" subMenuList=[] extraArgs...>
+    subMenuStyle="" subMenuTitle="" itemIndex=0 menuInfo={} disabled=false selected=false selectedAncestor=false subMenuId="" subMenuList=[] extraArgs...>
   <#local class = style>
   <#local id = "">
   <#local type = ""> <#-- TODO: set this to something appropriate based on whether link, submit, etc. (but markup doesn't currently use)... -->
@@ -205,13 +218,13 @@ TODO/FIXME:
   <#-- NOTE: our "selected" actually means "active" to the Scipio macros -->
   <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
       style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
-      disabled=disabled active=selected
-      isNestedMenu=menuInfo.isNestedMenu parentMenuType=menuInfo.parentMenuType parentMenuSpecialType=menuInfo.parentMenuSpecialType itemIndex=itemIndex><#rt>
+      disabled=disabled active=selected activeAncestor=selectedAncestor
+      isNestedMenu=menuInfo.isNestedMenu menuLevel=menuInfo.menuLevel parentMenuType=menuInfo.parentMenuType parentMenuSpecialType=menuInfo.parentMenuSpecialType itemIndex=itemIndex><#rt>
     <#if linkArgs?has_content>
       <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
           uniqueItemName=linkArgs.uniqueItemName actionUrl=linkArgs.actionUrl linkType=linkArgs.linkType id=linkArgs.id 
           style=linkArgs.style name=linkArgs.name height=linkArgs.height width=linkArgs.width text=linkArgs.text imgArgs=linkArgs.imgArgs!{} imgStr=linkArgs.imgStr!""
-          menuCtxRole=linkArgs.menuCtxRole disabled=linkArgs.disabled selected=linkArgs.selected itemIndex=itemIndex menuInfo=menuInfo/><#t>
+          menuCtxRole=linkArgs.menuCtxRole disabled=linkArgs.disabled selected=linkArgs.selected selectedAncestor=linkArgs.selectedAncestor itemIndex=itemIndex menuInfo=menuInfo/><#t>
     <#elseif linkStr?has_content>
       ${linkStr}
     </#if><#t>
@@ -219,7 +232,8 @@ TODO/FIXME:
       <#-- NEW IN SCIPIO: Use recursion to render sub-menu... must be careful... -->
       <#-- NOTE (2016-08-26): Now using explicit submenu list as opposed to implicit sub-items -->
       <#list subMenuList as subMenu>
-        <@renderMenuFull boundaryComment="" id=subMenu.id style=subMenu.style title=subMenu.title inlineEntries=false menuCtxRole=menuInfo.menuCtxRole items=subMenu.items />
+        <@renderMenuFull boundaryComment="" id=subMenu.id style=subMenu.style title=subMenu.title inlineEntries=false menuCtxRole=menuInfo.menuCtxRole 
+            items=subMenu.items selected=subMenu.selected selectedAncestor=subMenu.selectedAncestor/>
       </#list>
       <#-- Previous code (manual, no recursion, unmaintained)...
       <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}<@compiledClassAttribStr class=subMenuStyle />></#if>
@@ -394,7 +408,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#macro>
 
 <#-- Scipio: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
-<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false itemIndex=0 menuInfo={}>
+<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false selectedAncestor=false itemIndex=0 menuInfo={} extraArgs...>
   <#local class = style>
   <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
   <#-- Scipio: hack: for screenlet nav menus, always impose buttons if no style specified, 
@@ -439,11 +453,14 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#if selected>
       <#local class = addClassArg(class, (styles["menu_" + menuInfo.styleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))>
     </#if>
-    <@menuitem_link_markup class=class id=id style="" name=name href=href onClick="" target=targetWindow title="" 
-        attribs={} excludeAttribs=[] disabled=disabled active=selected itemIndex=itemIndex>${innerContent}</@menuitem_link_markup><#t>
+    <#if selectedAncestor>
+      <#local class = addClassArg(class, (styles["menu_" + menuInfo.styleName + "_item_contentactiveancestor"]!styles["menu_default_item_contentactiveancestor"]!""))>
+    </#if>
+    <@menuitem_link_markup class=class id=id style="" name=name href=href onClick="" target=targetWindow title="" menuLevel=menuInfo.menuLevel
+        attribs={} excludeAttribs=[] disabled=disabled active=selected activeAncestor=selectedAncestor itemIndex=itemIndex>${innerContent}</@menuitem_link_markup><#t>
   <#else>
-    <@menuitem_generic_markup class=class id=id style="" onClick="" title="" 
-        attribs={} excludeAttribs=[] disabled=disabled active=selected itemIndex=itemIndex>${innerContent}</@menuitem_generic_markup><#t>
+    <@menuitem_generic_markup class=class id=id style="" onClick="" title="" menuLevel=menuInfo.menuLevel
+        attribs={} excludeAttribs=[] disabled=disabled active=selected activeAncestor=selectedAncestor itemIndex=itemIndex>${innerContent}</@menuitem_generic_markup><#t>
   </#if>
 </#macro>
 

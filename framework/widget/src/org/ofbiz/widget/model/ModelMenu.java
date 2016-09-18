@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,6 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
@@ -46,6 +48,7 @@ import org.ofbiz.widget.model.ModelMenuItem.ParentMenuItemInfo;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.SAXException;
 
 /**
@@ -371,6 +374,9 @@ public class ModelMenu extends ModelWidget {
                 String inclMenuName = actionInclElement.getAttribute("menu-name");
                 String inclResource = actionInclElement.getAttribute("resource");
                 String inclRecursive = actionInclElement.getAttribute("recursive");
+                if (inclRecursive.isEmpty()) {
+                    inclRecursive = "full";
+                }
                 
                 if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
                     "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
@@ -461,6 +467,9 @@ public class ModelMenu extends ModelWidget {
                 String inclMenuName = itemInclElement.getAttribute("menu-name");
                 String inclResource = itemInclElement.getAttribute("resource");
                 String inclRecursive = itemInclElement.getAttribute("recursive");
+                if (inclRecursive.isEmpty()) {
+                    inclRecursive = "full";
+                }
                 
                 Set<String> inclExcludeItems = new HashSet<String>();
                 List<? extends Element> skipItemElems = UtilXml.childElementList(itemInclElement, "exclude-item");
@@ -544,26 +553,89 @@ public class ModelMenu extends ModelWidget {
         // must preserve order
         Map<String, Element> dirMap = new LinkedHashMap<String, Element>();
         for(Element inclElem : includeElems) {
+            String elemKey;
+            
+            String inclRef = inclElem.getAttribute("menu-ref");
             String inclMenuName = inclElem.getAttribute("menu-name");
             String inclResource = inclElem.getAttribute("resource");
-            if (UtilValidate.isEmpty(inclResource)) {
-                inclResource = menuLocation;
+            
+            if (!inclRef.isEmpty()) {
+                if ("sub-menu-model".equals(inclRef)) {
+                    elemKey = "#sub-menu-model#";
+                } else {
+                    Debug.logError("Invalid ref value on include directive (" + menuLocation + "#" + getName() + ")", module);
+                    continue;
+                }
+            } else {
+                
+                if (UtilValidate.isEmpty(inclResource) && !inclMenuName.startsWith("#")) {
+                    inclResource = menuLocation;
+                }
+                elemKey = inclResource + "#" + inclMenuName;
+
+                if (inclMenuName.isEmpty()) {
+                    Debug.logError("Missing menu-name or ref attribute on include directive (" + menuLocation + "#" + getName() + ")", module);
+                    continue;
+                }
             }
-            String fullLocation = inclResource + "#" + inclMenuName;
             
             // here, we only want to keep the LAST include directive, so later ones override previous,
             // so must remove first
-            if (dirMap.containsKey(fullLocation)) {
-                dirMap.remove(fullLocation);
+            if (dirMap.containsKey(elemKey)) {
+                dirMap.remove(elemKey);
             }
-            dirMap.put(fullLocation, inclElem);
+            dirMap.put(elemKey, inclElem);
         }
-
+        
+        // 2016-08-25: SPECIAL CASE: if there's an entry with menu-name "sub-menu-model",
+        // it's a reference to another entry. we must remove that entry, re-insert it where
+        // we are and modify it.
+        Element subMenuRefElem = dirMap.get("#sub-menu-model#");
+        if (subMenuRefElem != null) {
+            String subMenuModelKey = null;
+            Element subMenuModelElem = null;
+            for(Map.Entry<String, Element> entry : dirMap.entrySet()) {
+                Element elem = entry.getValue();
+                if ("true".equals(elem.getAttribute("is-sub-menu-model-entry"))) {
+                    subMenuModelKey = entry.getKey();
+                    subMenuModelElem = elem;
+                }
+            }
+            if (subMenuModelElem == null) {
+                Debug.logError("include directive has menu-ref 'sub-menu-model' to reference "
+                        + "a parent element sub-menu-model, but no such model was defined on parent (" + menuLocation + "#" + getName() + ")", 
+                        module);
+                dirMap.remove("#sub-menu-model#"); // can't substitute, so kill it
+            } else {
+                // remove the original entry
+                dirMap.remove(subMenuModelKey);
+                
+                // Clone the ref entry so we can modify it
+                Element newElem = (Element) subMenuRefElem.cloneNode(true);
+                // transfer the attribs not overridden
+                copyAllElemAttribsNotSet(subMenuModelElem, newElem, UtilMisc.toSet("menu-ref"));
+                dirMap.put("#sub-menu-model#", newElem);
+            }
+        }
+ 
         return dirMap.values();
     }
     
-    // SCIPIO: made static and accessible
-    static Element loadIncludedMenu(String menuName, String resource, 
+    static void copyAllElemAttribsNotSet(Element srcElem, Element destElem, Collection<String> excludeAttribs) {
+        NamedNodeMap attribs = srcElem.getAttributes();
+        for(int i = 0; i < attribs.getLength(); i++) {
+            String attrName = attribs.item(i).getNodeName();
+            if (!excludeAttribs.contains(attrName)) {
+                if (srcElem.getAttribute(attrName).isEmpty() && !destElem.getAttribute(attrName).isEmpty()) {
+                    srcElem.setAttribute(attrName, destElem.getAttribute(attrName));
+                }
+            }
+        }
+    }
+    
+    
+    // SCIPIO: made accessible
+    Element loadIncludedMenu(String menuName, String resource, 
             Element currMenuElem, String currResource, 
             Map<String, Element> menuElemCache, boolean useCache, boolean cacheConsume) {
         Element inclMenuElem = null;
@@ -626,7 +698,7 @@ public class ModelMenu extends ModelWidget {
      * <p>
      * SCIPIO: made this static and accessible by ModelMenuItem.
      */
-    static void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
+    void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap) {
         ModelMenuItem existingMenuItem = menuItemMap.get(modelMenuItem.getName());
         if (existingMenuItem != null) {

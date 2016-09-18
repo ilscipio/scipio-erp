@@ -168,15 +168,37 @@ Features and Modifications:
                 The more precise directives will override this one for a given menu.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute type="xs:string" name="menu-name" use="required" />
+            <xs:attribute type="xs:string" name="menu-name">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: The target menu name.
+                        Required if ref is not specified.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="resource" />
-            <xs:attribute name="recursive" use="required">
+            <xs:attribute name="menu-ref">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Special reference to another menu to modify.
+                        Required if menu-name not specified.
+                        Possible values:
+                        sub-menu-model: When this include is child of a menu-item (as sub-menu), the special value
+                            'sub-menu-model' may be used to invoke the sub-menu-model or sub-menu-include specified
+                            on the enclosing menu item; this allows reusing the sub-menu-model location and/or modifying 
+                            the sub-menu-include behavior (without retyping the menu name and location).</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="sub-menu-model" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="recursive">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes, to find elements.
                         'includes-only' means it will follow includes in the target menu. 
                         'extends-only' means it will follow extends directives in the target menu.
                         'full' means will follow all of the above.
-                        'no' means will follow none.</xs:documentation>
+                        'no' means will follow none.
+                        Default: 'full'</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -196,11 +218,28 @@ Features and Modifications:
                 Usually "includes-only" or "no" for recursive option is safest.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute type="xs:string" name="menu-name" use="required" />
+            <xs:attribute type="xs:string" name="menu-name" use="required">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: The target menu name.
+                        See include-elements documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="resource" />
+            <xs:attribute name="menu-ref">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Special reference to another menu to modify.
+                        See include-elements documentation.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="sub-menu-model" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
+                        See include-elements documentation.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -229,11 +268,28 @@ Features and Modifications:
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
-            <xs:attribute type="xs:string" name="menu-name" use="required" />
+            <xs:attribute type="xs:string" name="menu-name" use="required">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: The target menu name.
+                        See include-elements documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="resource" />
+            <xs:attribute name="menu-ref">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Special reference to another menu to modify.
+                        See include-elements documentation.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="sub-menu-model" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
+                        See include-elements documentation.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

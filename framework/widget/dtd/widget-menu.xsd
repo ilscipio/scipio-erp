@@ -277,6 +277,7 @@ Features and Modifications:
                 </xs:element>
                 <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" ref="link" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" /><!-- SCIPIO: New -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
@@ -382,6 +383,15 @@ Features and Modifications:
                         <xs:enumeration value="none" />
                     </xs:restriction>
                 </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="sub-menu-include">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Location in resource#name format of a menu to use as both model for this item's sub-menu sub-items 
+                        and whose items will also be included as menu items.
+                        This is a shorthand to specifying a sub-menu-model="location#name" with sub-menu-model-scope="logic" and
+                        using the include-menu-items element as child with menu-name="name" resource="location" recursive="full" to include all the items of the menu.
+                        WARN: This feature is a Work-In-Progress.</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

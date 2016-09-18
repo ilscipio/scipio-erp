@@ -42,6 +42,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
+import org.ofbiz.widget.model.ModelMenuItem.ParentMenuItemInfo;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -111,7 +112,7 @@ public class ModelMenu extends ModelWidget {
     private final String orientation;
     private final ModelMenu parentMenu;
     /**
-     * Scipio: List of selected menu item context field names.
+     * SCIPIO: List of selected menu item context field names.
      * <p>
      * We now support multiple lookups instead of only one.
      */
@@ -129,7 +130,7 @@ public class ModelMenu extends ModelWidget {
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
-        // Scipio: This MUST be set early so the menu item constructor can get the location!
+        // SCIPIO: This MUST be set early so the menu item constructor can get the location!
         this.menuLocation = menuLocation;
         ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
         String defaultAlign = "";
@@ -155,7 +156,7 @@ public class ModelMenu extends ModelWidget {
         Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
         String menuWidth = "";
         String orientation = "horizontal";
-        // Scipio: now using list
+        // SCIPIO: now using list
         //FlexibleMapAccessor<String> selectedMenuItemContextFieldName = FlexibleMapAccessor.getInstance("");
         List<FlexibleMapAccessor<String>> selectedMenuItemContextFieldName = new ArrayList<FlexibleMapAccessor<String>>();
         String selectedMenuItemContextFieldNameStr = "";
@@ -198,7 +199,7 @@ public class ModelMenu extends ModelWidget {
                 defaultAlignStyle = parent.defaultAlignStyle;
                 fillStyle = parent.fillStyle;
                 extraIndex = parent.extraIndex;
-                // Scipio: copy list
+                // SCIPIO: copy list
                 //selectedMenuItemContextFieldName = parent.selectedMenuItemContextFieldName;
                 selectedMenuItemContextFieldName = new ArrayList<FlexibleMapAccessor<String>>(parent.selectedMenuItemContextFieldName);
                 selectedMenuItemContextFieldNameStr = parent.selectedMenuItemContextFieldNameStr;
@@ -222,7 +223,7 @@ public class ModelMenu extends ModelWidget {
             tooltip = menuElement.getAttribute("tooltip");
         if (!menuElement.getAttribute("default-entity-name").isEmpty())
             defaultEntityName = menuElement.getAttribute("default-entity-name");
-        // Scipio: MUST pass all the -style attributes through buildStyle to combine with parent values
+        // SCIPIO: MUST pass all the -style attributes through buildStyle to combine with parent values
         if (!menuElement.getAttribute("default-title-style").isEmpty())
             defaultTitleStyle = buildStyle(menuElement.getAttribute("default-title-style"), parent != null ? parent.defaultTitleStyle : null, "");
         if (!menuElement.getAttribute("default-selected-style").isEmpty())
@@ -267,7 +268,7 @@ public class ModelMenu extends ModelWidget {
         if (!menuElement.getAttribute("extra-index").isEmpty())
             extraIndex = FlexibleStringExpander.getInstance(menuElement.getAttribute("extra-index"));
         
-        // Scipio: include-actions and actions
+        // SCIPIO: include-actions and actions
         Map<String, Element> menuElemCache = new HashMap<String, Element>();
         processIncludeActions(menuElement, actions, menuLocation, true, menuElemCache);
         
@@ -293,14 +294,14 @@ public class ModelMenu extends ModelWidget {
         this.id = id;
         this.menuContainerStyleExdr = menuContainerStyleExdr;
         
-        // Scipio: include-menu-items and menu-item
+        // SCIPIO: include-menu-items and menu-item
         processIncludeMenuItems(menuElement, menuItemList, menuItemMap, 
-                menuLocation, true, null, menuElemCache);
+                menuLocation, true, null, menuElemCache, null);
         
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
-        // Scipio: This MUST be set early so the menu item constructor can get the location!
+        // SCIPIO: This MUST be set early so the menu item constructor can get the location!
         //this.menuLocation = menuLocation;
         this.menuWidth = menuWidth;
         this.orientation = orientation;
@@ -315,11 +316,11 @@ public class ModelMenu extends ModelWidget {
     }
 
     /**
-     * Scipio: Menu loading factored out of main constructor and modified for reuse.
+     * SCIPIO: Menu loading factored out of main constructor and modified for reuse.
      */
     static ModelMenu getMenuDefinition(String resource, String name, String menuLocation, Element anyMenuElement) {
         ModelMenu modelMenu = null;
-        // Scipio: Added a superficial check for same-location to prevent some endless loops.
+        // SCIPIO: Added a superficial check for same-location to prevent some endless loops.
         // WARN: this is only a superficial check to prevent endless loops while refactoring menus.
         if (resource != null && !resource.isEmpty() && !(menuLocation.equals(resource))) {
             try {
@@ -347,10 +348,10 @@ public class ModelMenu extends ModelWidget {
     }
         
     /**
-     * Scipio: implements include-actions and actions reading (moved here).
+     * SCIPIO: implements include-actions and actions reading (moved here).
      * Also does include-elements.
      */
-    private void processIncludeActions(Element menuElement, List<ModelAction> actions, 
+    void processIncludeActions(Element parentElement, List<ModelAction> actions, 
             String currResource, boolean processIncludes, Map<String, Element> menuElemCache) {
         // don't think any problems from local cache for actions
         final boolean useCache = true;  
@@ -358,8 +359,8 @@ public class ModelMenu extends ModelWidget {
 
         if (processIncludes) {
             List<Element> actionInclElements = new ArrayList<Element>();
-            actionInclElements.addAll(UtilXml.childElementList(menuElement, "include-elements"));
-            actionInclElements.addAll(UtilXml.childElementList(menuElement, "include-actions"));
+            actionInclElements.addAll(UtilXml.childElementList(parentElement, "include-elements"));
+            actionInclElements.addAll(UtilXml.childElementList(parentElement, "include-actions"));
             for (Element actionInclElement : getMergedIncludeDirectives(actionInclElements, menuLocation)) {
                 String inclMenuName = actionInclElement.getAttribute("menu-name");
                 String inclResource = actionInclElement.getAttribute("resource");
@@ -368,7 +369,7 @@ public class ModelMenu extends ModelWidget {
                 if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
                     "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                     Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, 
-                            menuElement, currResource, menuElemCache, useCache, cacheConsume);
+                            parentElement, currResource, menuElemCache, useCache, cacheConsume);
                     
                     if (inclMenuElem != null) {
                         String nextResource;
@@ -415,19 +416,20 @@ public class ModelMenu extends ModelWidget {
         }
         
         // read all actions under the "actions" element
-        Element actionsElement = UtilXml.firstChildElement(menuElement, "actions");
+        Element actionsElement = UtilXml.firstChildElement(parentElement, "actions");
         if (actionsElement != null) {
             actions.addAll(ModelMenuAction.readSubActions(this, actionsElement));
         }
     }
     
     /**
-     * Scipio: implements include-menu-items and menu-item reading (moved here).
+     * SCIPIO: implements include-menu-items and menu-item reading (moved here).
      * Also does include-elements.
      */
-    private void processIncludeMenuItems(Element menuElement, List<ModelMenuItem> menuItemList,
+    void processIncludeMenuItems(Element parentElement, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap, String currResource, 
-            boolean processIncludes, Set<String> excludeItems, Map<String, Element> menuElemCache) {
+            boolean processIncludes, Set<String> excludeItems, Map<String, Element> menuElemCache,
+            ParentMenuItemInfo parentItemInfo) {
         // WARN: even local cache not fully used (cacheConsume=true so only uses cached from prev actions includes) 
         // to be safe because known that menu-item Elements get written to in some places and 
         // reuse _might_ affect results in complex includes (?).
@@ -441,8 +443,8 @@ public class ModelMenu extends ModelWidget {
         
         if (processIncludes) {
             List<Element> itemInclElements = new ArrayList<Element>();
-            itemInclElements.addAll(UtilXml.childElementList(menuElement, "include-elements"));
-            itemInclElements.addAll(UtilXml.childElementList(menuElement, "include-menu-items"));
+            itemInclElements.addAll(UtilXml.childElementList(parentElement, "include-elements"));
+            itemInclElements.addAll(UtilXml.childElementList(parentElement, "include-menu-items"));
             for (Element itemInclElement : getMergedIncludeDirectives(itemInclElements, menuLocation)) {
                 String inclMenuName = itemInclElement.getAttribute("menu-name");
                 String inclResource = itemInclElement.getAttribute("resource");
@@ -460,7 +462,7 @@ public class ModelMenu extends ModelWidget {
                 if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
                     "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                     Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, 
-                            menuElement, currResource, menuElemCache, useCache, cacheConsume);
+                            parentElement, currResource, menuElemCache, useCache, cacheConsume);
                     
                     if (inclMenuElem != null) {
                         inclExcludeItems.addAll(excludeItems);
@@ -480,7 +482,7 @@ public class ModelMenu extends ModelWidget {
                                         inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
                                 if (parentMenuElem != null) {
                                     processIncludeMenuItems(parentMenuElem, menuItemList, menuItemMap, 
-                                            nextResource, true, inclExcludeItems, menuElemCache);
+                                            nextResource, true, inclExcludeItems, menuElemCache, parentItemInfo);
                                 }
                                 else {
                                     Debug.logError("Failed to find (via include-menu-items or include-elements) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
@@ -490,11 +492,11 @@ public class ModelMenu extends ModelWidget {
                         
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                             processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, 
-                                    nextResource, true, inclExcludeItems, menuElemCache);
+                                    nextResource, true, inclExcludeItems, menuElemCache, parentItemInfo);
                         }
                         else {
                             processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, 
-                                    nextResource, false, inclExcludeItems, menuElemCache);
+                                    nextResource, false, inclExcludeItems, menuElemCache, parentItemInfo);
                         }
                     }
                     else {
@@ -507,11 +509,16 @@ public class ModelMenu extends ModelWidget {
             } 
         }
         
-        List<? extends Element> itemElements = UtilXml.childElementList(menuElement, "menu-item");
+        List<? extends Element> itemElements = UtilXml.childElementList(parentElement, "menu-item");
         for (Element itemElement : itemElements) {
             String itemName = itemElement.getAttribute("name");
             if (!excludeItems.contains(itemName)) {
-                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this);
+                ModelMenuItem modelMenuItem;
+                if (parentItemInfo != null) {
+                    modelMenuItem = new ModelMenuItem(itemElement, this, parentItemInfo);
+                } else {
+                    modelMenuItem = new ModelMenuItem(itemElement, this);
+                }
                 addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
             }
         }
@@ -543,7 +550,8 @@ public class ModelMenu extends ModelWidget {
         return dirMap.values();
     }
     
-    private Element loadIncludedMenu(String menuName, String resource, 
+    // SCIPIO: made static and accessible
+    static Element loadIncludedMenu(String menuName, String resource, 
             Element currMenuElem, String currResource, 
             Map<String, Element> menuElemCache, boolean useCache, boolean cacheConsume) {
         Element inclMenuElem = null;
@@ -574,7 +582,7 @@ public class ModelMenu extends ModelWidget {
                 }
             }
             //else {
-                // Scipio: No! we must reload the orig doc always because the Elements get written to!
+                // SCIPIO: No! we must reload the orig doc always because the Elements get written to!
                 // must have fresh versions.
                 // try to find a menu definition in the same file
                 //inclRootElem = currMenuElem.getOwnerDocument().getDocumentElement();
@@ -603,13 +611,14 @@ public class ModelMenu extends ModelWidget {
 
     /**
      * add/override modelMenuItem using the menuItemList and menuItemMap
-     *
+     * <p>
+     * SCIPIO: made this static and accessible by ModelMenuItem.
      */
-    private void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
+    static void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap) {
         ModelMenuItem existingMenuItem = menuItemMap.get(modelMenuItem.getName());
         if (existingMenuItem != null) {
-            // Scipio: support a replace mode as well
+            // SCIPIO: support a replace mode as well
             ModelMenuItem mergedMenuItem;
             if ("replace".equals(modelMenuItem.getOverrideMode())) {
                 mergedMenuItem = modelMenuItem;
@@ -747,7 +756,7 @@ public class ModelMenu extends ModelWidget {
 
     
     /**
-     * Scipio: Builds a style string from current, parent, and default, based on "+"/"="
+     * SCIPIO: Builds a style string from current, parent, and default, based on "+"/"="
      * combination logic.
      * <p>
      * NOTE: subtle difference between null and empty string.
@@ -761,7 +770,7 @@ public class ModelMenu extends ModelWidget {
     static String buildStyle(String style, String parentStyle, String defaultStyle) {
         String res;
         if (!style.isEmpty()) {
-            // Scipio: support extending styles
+            // SCIPIO: support extending styles
             if (style.startsWith("+")) {
                 String addStyles = style.substring(1);
                 String inheritedStyles;
@@ -803,7 +812,7 @@ public class ModelMenu extends ModelWidget {
     }
     
     /**
-     * Scipio: Combines an extra style (like selected-style) to a main style 
+     * SCIPIO: Combines an extra style (like selected-style) to a main style 
      * string (like widget-style).
      * <p>
      * NOTE: currently, the extra style is always added as an extra, and
@@ -1027,9 +1036,9 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getSelectedMenuItemContextFieldName(Map<String, Object> context) {
-        // Scipio: we support multiple lookups.
+        // SCIPIO: we support multiple lookups.
         //String menuItemName = this.selectedMenuItemContextFieldName.get(context);
-        // Scipio: New code start...
+        // SCIPIO: New code start...
         String menuItemName = null;
         String firstMenuItemName = null;
         for (FlexibleMapAccessor<String> fieldNameExpr : this.selectedMenuItemContextFieldName) {
@@ -1056,7 +1065,7 @@ public class ModelMenu extends ModelWidget {
         if (UtilValidate.isEmpty(menuItemName) && UtilValidate.isNotEmpty(firstMenuItemName)) {
             menuItemName = firstMenuItemName;
         }
-        // Scipio: ... new code end
+        // SCIPIO: ... new code end
         if (UtilValidate.isEmpty(menuItemName)) {
             return this.defaultMenuItemName;
         }
@@ -1146,7 +1155,7 @@ public class ModelMenu extends ModelWidget {
     }
     
     /**
-     * Scipio: make list of flexible accessors from a semicolon-separated string.
+     * SCIPIO: make list of flexible accessors from a semicolon-separated string.
      * TODO: support escaping semicolons
      */
     private static List<FlexibleMapAccessor<String>> makeAccessorList(String accessorsStr) {

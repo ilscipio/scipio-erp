@@ -237,10 +237,15 @@ TODO/FIXME:
     <#if linkArgs?has_content>
       <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
           uniqueItemName=linkArgs.uniqueItemName actionUrl=linkArgs.actionUrl linkType=linkArgs.linkType id=linkArgs.id 
-          style=linkArgs.style name=linkArgs.name height=linkArgs.height width=linkArgs.width text=linkArgs.text imgArgs=linkArgs.imgArgs!{} imgStr=linkArgs.imgStr!""
+          style=linkArgs.style name=linkArgs.name height=linkArgs.height width=linkArgs.width text=linkArgs.text imgArgs=(linkArgs.imgArgs!{}) imgStr=(linkArgs.imgStr!"")
           menuCtxRole=linkArgs.menuCtxRole disabled=linkArgs.disabled selected=linkArgs.selected selectedAncestor=linkArgs.selectedAncestor itemIndex=itemIndex menuInfo=menuInfo/><#t>
     <#elseif linkStr?has_content>
-      ${linkStr}
+      <#-- 2016-09-12: we can now reasonably assume that in this case we intended to render a text string, so delegate this to @renderLink too, which should render it as text-only entry -->
+      <#--${linkStr}-->
+      <@renderLink linkUrl="" parameterList="" targetWindow=""
+          uniqueItemName="" actionUrl="" linkType=linkArgs.linkType id="" 
+          style="" name="" height="" width="" text=linkStr imgArgs={} imgStr=""
+          menuCtxRole=menuCtxRole disabled=disabled selected=selected selectedAncestor=selectedAncestor itemIndex=itemIndex menuInfo=menuInfo/><#t>
     </#if><#t>
     <#if containsNestedMenus>
       <#-- NEW IN SCIPIO: Use recursion to render sub-menu... must be careful... -->
@@ -279,6 +284,7 @@ Only those not marked DEPRECATED should still be used.
   <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
   <#local hasImg = imgArgs?has_content || imgStr?has_content>
   <#local isText = !isLink && !hasImg && text?has_content>
+  <#-- isLink: ${isLink?string} hasImg: ${hasImg?string} isText: ${isText?string} -->
   <#-- Scipio: hack: for screenlet nav menus, always impose buttons if no style specified, 
        because can't centralize these menus easily anywhere else. -->
   <#if menuCtxRole == "screenlet-nav-menu">
@@ -329,11 +335,11 @@ Only those not marked DEPRECATED should still be used.
     <@menuitem_link_markup class=class id=id style="" name=name href=href onClick="" target=targetWindow title="" menuLevel=menuInfo.menuLevel
         attribs={} excludeAttribs=[] disabled=disabled active=active activeTarget=activeTarget itemIndex=itemIndex>${innerContent}</@menuitem_link_markup><#t>
   <#elseif isText>
-    <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item_link"]!styles["menu_default_item_text"]!"")>
+    <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item_text"]!styles["menu_default_item_text"]!"")>
     <@menuitem_text_markup class=class id=id style="" onClick="" title="" menuLevel=menuInfo.menuLevel
         attribs={} excludeAttribs=[] disabled=disabled active=active activeTarget=activeTarget itemIndex=itemIndex>${innerContent}</@menuitem_text_markup><#t>
   <#else>
-    <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item_link"]!styles["menu_default_item_generic"]!"")>
+    <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item_generic"]!styles["menu_default_item_generic"]!"")>
     <@menuitem_generic_markup class=class id=id style="" onClick="" title="" menuLevel=menuInfo.menuLevel
         attribs={} excludeAttribs=[] disabled=disabled active=active activeTarget=activeTarget itemIndex=itemIndex>${innerContent}</@menuitem_generic_markup><#t>
   </#if>

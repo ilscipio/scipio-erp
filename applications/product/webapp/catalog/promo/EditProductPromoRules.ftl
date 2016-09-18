@@ -42,13 +42,14 @@ under the License.
                         <input type="hidden" name="productPromoRuleId" value="_NA_" />
                         <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
-                        <@field type="lookup" formName="createProductPromoCategoryPromotions" name="productCategoryId" id="productCategoryId_03" fieldFormName="LookupProductCategory"/>
-                        <@field type="select" name="productPromoApplEnumId">
+                        <@field type="lookup" formName="createProductPromoCategoryPromotions" name="productCategoryId" id="productCategoryId_03" 
+                            fieldFormName="LookupProductCategory" label=uiLabelMap.ProductCategoryId required=true/>
+                        <@field type="select" name="productPromoApplEnumId" label="Product Promo Appl Enum Id"><#--FIXME: label-->
                           <#list productPromoApplEnums as productPromoApplEnum>
                             <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                           </#list>
                         </@field>
-                        <@field type="select" name="includeSubCategories">
+                        <@field type="select" name="includeSubCategories" label=uiLabelMap.ProductIncludeAllSubCategories>
                           <option value="N">${uiLabelMap.CommonN}</option>
                           <option value="Y">${uiLabelMap.CommonY}</option>
                         </@field>

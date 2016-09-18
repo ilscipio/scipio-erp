@@ -610,7 +610,9 @@ public class FindServices {
         EntityConditionList<EntityCondition> entityConditionList = UtilGenerics.cast(context.get("entityConditionList"));
         List<String> orderByList = checkList(context.get("orderByList"), String.class);
         boolean noConditionFind = "Y".equals(context.get("noConditionFind"));
-        boolean distinct = "Y".equals(context.get("distinct"));
+        // SCIPIO: use versatile to help screens
+        //boolean distinct = "Y".equals(context.get("distinct"));
+        boolean distinct = UtilMisc.booleanValueVersatile(context.get("distinct"), false);
         List<String> fieldList =  UtilGenerics.checkList(context.get("fieldList"));
         Locale locale = (Locale) context.get("locale");
         Set<String> fieldSet = null;

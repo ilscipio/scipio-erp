@@ -824,4 +824,97 @@ public class UtilMisc {
         return new HashMap<K, V>(map);
     }
     
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "true", or
+     * Boolean.FALSE if value is Boolean.FALSE or "false", or null if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static Boolean booleanValue(Object value) {
+        if (value == null || value instanceof Boolean) {
+            return (Boolean) value;
+        } else if ("true".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(value)) {
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns true if value is Boolean.TRUE or "true", or
+     * false if value is Boolean.FALSE or "false", or defaultValue if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static boolean booleanValue(Object value, boolean defaultValue) {
+        Boolean res = booleanValue(value);
+        return res != null ? res : defaultValue;
+    }
+        
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "Y", or
+     * Boolean.FALSE if value is Boolean.FALSE or "N", or null if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static Boolean booleanValueIndicator(Object value) {
+        if (value == null || value instanceof Boolean) {
+            return (Boolean) value;
+        } else if ("Y".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("N".equals(value)) {
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns true if value is Boolean.TRUE or "Y", or
+     * false if value is Boolean.FALSE or "N", or defaultValue if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static boolean booleanValueIndicator(Object value, boolean defaultValue) {
+        Boolean res = booleanValueIndicator(value);
+        return res != null ? res : defaultValue;
+    }
+    
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE, "true" or "Y", or
+     * Boolean.FALSE if value is Boolean.FALSE, "false" or "N", or null if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static Boolean booleanValueVersatile(Object value) {
+        if (value == null || value instanceof Boolean) {
+            return (Boolean) value;
+        } else if ("true".equals(value) || "Y".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(value) || "N".equals(value)) {
+            return Boolean.FALSE;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns true if value is Boolean.TRUE, "true" or "Y", or
+     * false if value is Boolean.FALSE, "false" or "N", or defaultValue if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static boolean booleanValueVersatile(Object value, boolean defaultValue) {
+        Boolean res = booleanValueVersatile(value);
+        return res != null ? res : defaultValue;
+    }
+
 }

@@ -367,6 +367,7 @@ public class FormRenderer {
         Collection<List<ModelFormField>> fieldListsByPosition = this.getFieldListsByPosition(tempFieldList);
         List<Map<String, List<ModelFormField>>> fieldRowsByPosition = new LinkedList<Map<String, List<ModelFormField>>>(); // this list will contain maps, each one containing the list of fields for a position
         for (List<ModelFormField> mainFieldList : fieldListsByPosition) {
+            int numOfColumns = 0;
             List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<ModelFormField>();
             List<ModelFormField> innerFormFields = new LinkedList<ModelFormField>();
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<ModelFormField>();
@@ -455,15 +456,18 @@ public class FormRenderer {
             }
             
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsBegin))
-                maxNumOfColumns += innerDisplayHyperlinkFieldsBegin.size();
+                numOfColumns += innerDisplayHyperlinkFieldsBegin.size();
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
-                maxNumOfColumns += innerDisplayHyperlinkFieldsEnd.size();
+                numOfColumns += innerDisplayHyperlinkFieldsEnd.size();
             // SCIPIO: this is not enough. we must exclude any grouped columns.
             //if (UtilValidate.isNotEmpty(innerFormFields))
-            //    maxNumOfColumns += innerFormFields.size();
-            if (UtilValidate.isNotEmpty(innerFormFields)) 
-                maxNumOfColumns += innerFormFieldsCells;
+            //    numOfColumns += innerFormFields.size();
+            numOfColumns += innerFormFieldsCells;
 
+            if (maxNumOfColumns < numOfColumns) {
+                maxNumOfColumns = numOfColumns;
+            }
+            
             Map<String, List<ModelFormField>> fieldRow = UtilMisc.toMap("displayBefore", innerDisplayHyperlinkFieldsBegin,
                     "inputFields", innerFormFields, "displayAfter", innerDisplayHyperlinkFieldsEnd, "mainFieldList",
                     mainFieldList);
@@ -1228,22 +1232,36 @@ public class FormRenderer {
             }
         }
 
+        /**
+         * SCIPIO: Renders the submit button in the tfoot
+         */
         public void renderTableFooter() throws IOException {
-            // SCIPIO: Renders the submit button in the tfoot
             if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
                 Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                 formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
-                int i = 0;
+                
+                // gather the submit fields that should actually render
+                List<ModelFormField> includedFields = new ArrayList<>(modelForm.getMultiSubmitFields().size());
                 while (submitFields.hasNext()) {
                     ModelFormField submitField = submitFields.next();
                     if (submitField != null && submitField.shouldUse(context)) {
-                        if (modelForm.getUseRowSubmit()) {
-                            formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, numOfColumns - i);
-                            submitField.renderFieldString(writer, context, formStringRenderer);
-                            formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
-                        }
+                        includedFields.add(submitField);
                     }
-                    i++;
+                }
+
+                if (includedFields.isEmpty()) {
+                    formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, null, numOfColumns);
+                    formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, null);
+                } else {
+                    int i = 0;
+                    submitFields = includedFields.iterator();
+                    while (submitFields.hasNext()) {
+                        ModelFormField submitField = submitFields.next();
+                        int positionSpan = (submitFields.hasNext()) ? 1 : (numOfColumns - i);
+                        formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, positionSpan);
+                        submitField.renderFieldString(writer, context, formStringRenderer);
+                        formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
+                    }
                 }
                 formStringRenderer.renderFormatFooterRowClose(writer, context, modelForm);
                 footerRendered = true;

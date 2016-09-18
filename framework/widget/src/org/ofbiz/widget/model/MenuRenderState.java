@@ -20,6 +20,7 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     // some operations will be read-only, to prevent issues
     private final Map<String, Object> readOnlyMap = Collections.unmodifiableMap(internalMap);
 
+    private final ModelMenu modelMenu;
     // NOTE: these are also stored in the map, may change the redundancy later
     private int currentDepth;
     private int maxDepth;
@@ -28,11 +29,12 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     private transient boolean currentSubMenusOnly;
     private transient ModelMenu.MenuAndItem selectedMenuAndItem;
     
-    protected MenuRenderState() {
+    protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
+        this.modelMenu = modelMenu;
         setCurrentDepth(1);
         setMaxDepth(1);
         setSubMenuFilter(null);
-        selectedMenuAndItem = null;
+        this.selectedMenuAndItem = null;
     }
     
     protected Object setArg(String key, Object value) {
@@ -60,8 +62,8 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
         return internalMap.put(key, value);
     }
     
-    public static MenuRenderState create() {
-        return new MenuRenderState();
+    public static MenuRenderState create(Map<String, Object> context, ModelMenu modelMenu) {
+        return new MenuRenderState(context, modelMenu);
     }
     
     public int getCurrentDepth() {
@@ -133,19 +135,23 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     }
 
     /**
-     * Gets selected submenu/item pair from model menu and caches for this render.
+     * Gets selected submenu/item pair from model menu from cache.
      */
-    public ModelMenu.MenuAndItem getSelectedMenuAndItem(ModelMenu modelMenu, Map<String, Object> context) {
+    public ModelMenu.MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
         if (this.selectedMenuAndItem == null) {
-            this.selectedMenuAndItem = modelMenu.getSelected(context);
+            this.selectedMenuAndItem = modelMenu.getSelectedMenuAndItem(context);
         }
         return this.selectedMenuAndItem;
     }
     
+    public void updateSelectedMenuAndItem(Map<String, Object> context) {
+        this.selectedMenuAndItem = modelMenu.getSelectedMenuAndItem(context);
+    }
+    
     // context helper methods
     
-    public static MenuRenderState createAndStore(Map<String, Object> context) {
-        MenuRenderState renderState = create();
+    public static MenuRenderState createAndStore(Map<String, Object> context, ModelMenu modelMenu) {
+        MenuRenderState renderState = create(context, modelMenu);
         store(context, renderState);
         return renderState;
     }

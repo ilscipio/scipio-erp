@@ -1813,6 +1813,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
             
+            ModelMenu modelMenu = getModelMenu(context);
+            
             // SCIPIO: new render state to carry around max depth
             // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
             MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
@@ -1821,14 +1823,13 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     + "a new menu render was started", module);
             }
             
-            MenuRenderState renderState = MenuRenderState.createAndStore(context);
+            MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
             if (menuRenderArgs != null) {
                 renderState.putAll(menuRenderArgs); // keep same names
             }
             renderState.setMaxDepth(getMaxDepth(context));
             renderState.setSubMenuFilter(getSubMenuFilter(context));
             
-            ModelMenu modelMenu = getModelMenu(context);
             modelMenu.renderMenuString(writer, context, menuStringRenderer);
             
             // SCIPIO: restore the previous render state just in case

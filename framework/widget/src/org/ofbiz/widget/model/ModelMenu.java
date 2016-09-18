@@ -1466,7 +1466,7 @@ public class ModelMenu extends ModelWidget {
         return this.selectedMenuContextFieldName.getOriginalName();
     }
     
-    public MenuAndItem getSelected(Map<String, Object> context) {
+    public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
         
         String selItemName;
@@ -1592,6 +1592,8 @@ public class ModelMenu extends ModelWidget {
     public void renderMenuString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
             throws IOException {
         AbstractModelAction.runSubActions(this.actions, context);
+        // SCIPIO: do this now so nothing can mess with the selection
+        MenuRenderState.retrieve(context).updateSelectedMenuAndItem(context);
         if ("simple".equals(this.type)) {
             this.renderSimpleMenuString(writer, context, menuStringRenderer);
         } else {

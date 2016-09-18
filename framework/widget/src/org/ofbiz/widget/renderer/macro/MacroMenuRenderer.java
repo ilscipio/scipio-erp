@@ -224,7 +224,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
         MenuRenderState renderState = MenuRenderState.retrieve(context);
-        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context).getMenuItem();
+        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(context).getMenuItem();
         return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
     }
     
@@ -285,7 +285,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         // Scipio: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
-        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         
         boolean selected = menuItem.isSame(selectedMenuItem);
@@ -398,7 +398,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         // Scipio: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
-        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
         
@@ -562,7 +562,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("inlineEntries", renderState.isInlineEntries());
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
         
-        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(menu, context);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         
         boolean selected = menu.isParentOf(selectedMenuItem);
@@ -596,7 +596,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // Scipio: menu context role
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
 
-        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(subMenu.getTopModelMenu(), context);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         
         boolean selected = subMenu.isSame(selectedMenuAndItem.getSubMenu());
         boolean selectedAncestor = !selected && subMenu.isSameOrAncestorOf(selectedMenuAndItem.getSubMenu());

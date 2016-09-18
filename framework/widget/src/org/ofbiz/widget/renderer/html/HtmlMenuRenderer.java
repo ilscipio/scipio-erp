@@ -353,7 +353,7 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
         MenuRenderState renderState = MenuRenderState.retrieve(context);
-        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context).getMenuItem();
+        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(context).getMenuItem();
         return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
     }
 

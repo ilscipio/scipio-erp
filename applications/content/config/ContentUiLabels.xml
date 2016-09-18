@@ -3696,9 +3696,9 @@
         <value xml:lang="zh_TW">網站內容</value>
     </property>
     <property key="ContentWebSiteGenerateMissingSeoUrl">
-        <value xml:lang="en">Generate missing seo url's</value>
+        <value xml:lang="en">Generate missing SEO URLs</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
-        <value xml:lang="pt">Gerar urls necessárias para SEO</value>
+        <value xml:lang="pt">Gerar URLs necessárias para SEO</value>
         <value xml:lang="vi">Sinh các liên kết URL phục vụ SEO bị thiếu</value>
         <value xml:lang="zh">生成缺失的搜索引擎优化的网址</value>
         <value xml:lang="zh_TW">產生遺缺的搜尋引擎優化的網址</value>
@@ -7632,9 +7632,9 @@
         <value xml:lang="zh_TW">網站內容</value>
     </property>
     <property key="PageTitleWebSiteSEO">
-        <value xml:lang="en">Generate Missing SEO URL's</value>
+        <value xml:lang="en">Generate Missing SEO URLs</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
-        <value xml:lang="pt">Gerar URL's faltantes para SEO</value>
+        <value xml:lang="pt">Gerar URLs faltantes para SEO</value>
         <value xml:lang="vi">Sinh lại các URL dành cho SEO bị thiếu</value>
         <value xml:lang="zh">生成缺失的搜索引擎优化的网址</value>
         <value xml:lang="zh_TW">產生缺失的搜尋引擎優化的網址</value>

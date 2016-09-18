@@ -489,12 +489,6 @@ The submenu's main class may be set as altnested in global styles.
 </#macro>
 
 <#function menuAppendActiveStyle class styleName propBasePrefix active activeTarget>
-  <#local baseStyle = "menu_" + styleName + propBasePrefix>
-  <#local defBaseStyle = "menu_default" + propBasePrefix>
-  <#local activeClass = styles[baseStyle]!styles[defBaseStyle]!(-1)>
-  <#local activeTarClass = styles[baseStyle + "target"]!styles[defBaseStyle + "target"]!(-1)>
-  <#local activeAncClass = styles[baseStyle + "ancestor"]!styles[defBaseStyle + "ancestor"]!(-1)>
-
   <#-- already done by callers
   <#if activeTarget?is_boolean>
     <#if activeTarget>
@@ -506,6 +500,7 @@ The submenu's main class may be set as altnested in global styles.
   </#if>-->
 
   <#if active>
+    <#local baseStyle = "menu_" + styleName + propBasePrefix>
     <#local class = addClassArg(class, styles[baseStyle]!styles["menu_default"+propBasePrefix]!"")>
     <#if activeTarget?is_boolean>
       <#if activeTarget>
@@ -708,8 +703,8 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#if !active?is_boolean>
     <#local active = false>
   </#if>
-  <#local class = menuAppendActiveStyle(class, styleName, "_itemactive", active, activeTarget)>
-  <#local contentClass = menuAppendActiveStyle(contentClass, styleName, "_item_contentactive", active, activeTarget)>
+  <#local class = menuAppendActiveStyle(class, menuStyleName, "_itemactive", active, activeTarget)>
+  <#local contentClass = menuAppendActiveStyle(contentClass, menuStyleName, "_item_contentactive", active, activeTarget)>
 
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 

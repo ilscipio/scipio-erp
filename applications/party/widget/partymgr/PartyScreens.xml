@@ -717,7 +717,7 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PartyCreateNewParty}">
+                                <screenlet navigation-menu-name="create-new-party"><!-- title="${uiLabelMap.PartyCreateNewParty}" -->
                                     <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="create-new-party"/>
                                 </screenlet>
                             </widgets>

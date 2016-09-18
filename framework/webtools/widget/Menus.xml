@@ -590,6 +590,23 @@ under the License.
         <menu-item name="top6" sub-menu-model-scope="full" 
             sub-menu-include="LayoutDemoButtonDropdown" 
             sub-menu-title="Separate sub-menu, as button-dropdown"/>  
+        <!-- Modifies the previous to exclude one of the items and add an extra before -->
+        <menu-item name="top7" sub-menu-model-scope="full" 
+            sub-menu-include="LayoutDemoButtonDropdown" 
+            sub-menu-title="Separate sub-menu, as button-dropdown">
+            <include-menu-items menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
+                <exclude-item name="Enabled"/>
+            </include-menu-items>
+            <!-- extra items -->
+            <include-menu-items menu-name="LayoutDemoTest2" recursive="full"/>
+            <menu-item name="TestTest" title="Extra item">
+                <link target="${demoTargetUrl}" link-type="hidden-form">
+                    <parameter param-name="demoParam1"/>
+                    <parameter param-name="demoParam2"/>
+                    <parameter param-name="demoParam3"/>
+                </link>
+            </menu-item>
+        </menu-item>
     </menu>
     
     <menu name="LayoutDemoButtonDropdown" title="Dropdown button menu" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -609,6 +626,37 @@ under the License.
         </menu-item>
     </menu>
 
+    <menu name="LayoutDemoTest1">
+        <menu-item name="DemoTest1" title="Demo Test 1">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+        <menu-item name="DemoTest2" title="Demo Test 2">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="LayoutDemoTest2">
+        <include-elements menu-name="LayoutDemoTest1" />
+        <menu-item name="DemoTest3" title="Demo Test 3">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
+        <menu-item name="DemoTest4" title="Demo Test 4">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
+    </menu>
+    
     <menu name="WebtoolsInlineSectionMenuDemo">
         <menu-item name="item1" title="Inline-Section Menu Item 1">
             <link target="${demoTargetUrl}">

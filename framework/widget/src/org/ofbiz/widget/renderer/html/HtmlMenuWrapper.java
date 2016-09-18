@@ -100,6 +100,9 @@ public class HtmlMenuWrapper {
         if ("true".equals(parameterMap.get("isError"))) {
             context.put("isError", Boolean.TRUE);
         }
+        
+        // SCIPIO: transfer the screens renderer object (REQUIRED)
+        context.put("screens", request.getAttribute("screens"));
     }
 
     public MenuStringRenderer getMenuRenderer() {

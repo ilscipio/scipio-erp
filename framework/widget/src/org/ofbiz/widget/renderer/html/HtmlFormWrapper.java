@@ -109,6 +109,9 @@ public class HtmlFormWrapper {
         if (UtilValidate.isNotEmpty(delegator) && context.get("delegator") == null) {
             context.put("delegator", delegator);
         }
+        
+        // SCIPIO: transfer the screens renderer object (REQUIRED)
+        context.put("screens", request.getAttribute("screens"));
     }
 
     @SuppressWarnings("unchecked")

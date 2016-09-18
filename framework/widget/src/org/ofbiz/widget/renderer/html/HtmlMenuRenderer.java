@@ -617,4 +617,9 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         // SCIPIO: will not implement this.
         throw new UnsupportedOperationException("Scipio: HtmlMenuRenderer is deprecated");
     }
+
+    @Override
+    public String getRendererName() { // SCIPIO: new
+        return "html";
+    }
 }

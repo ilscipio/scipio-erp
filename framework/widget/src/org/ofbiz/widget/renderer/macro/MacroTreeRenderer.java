@@ -59,26 +59,35 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     public static final String module = MacroTreeRenderer.class.getName();
     private Template macroLibrary;
     
+    // SCIPIO: new
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("tree");
+    private final String rendererName;
     
     /**
+     * Constructor.
+     * <p>
+     * SCIPIO: modified to require name.
+     * <p>
      * SCIPIO: environments now stored in WeakHashMap, same as other macro renderers.
      */
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
 
-    public MacroTreeRenderer(String macroLibraryPath) throws TemplateException, IOException {
+    public MacroTreeRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
         this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
+        this.rendererName = name; // SCIPIO: new
     }
     
     /**
-     * SCIPIO: Old tree renderer constructor.
+     * Old tree renderer constructor.
+     * <p>
+     * SCIPIO: modified to require name.
      * 
      * @deprecated environments now stored in WeakHashMap so writer from individual calls used instead.
      */
     @Deprecated
-    public MacroTreeRenderer(String macroLibraryPath, Appendable writer) throws TemplateException, IOException {
-        this(macroLibraryPath);
+    public MacroTreeRenderer(String name, String macroLibraryPath, Appendable writer) throws TemplateException, IOException {
+        this(name, macroLibraryPath);
     }
     
     /**
@@ -86,6 +95,13 @@ public class MacroTreeRenderer implements TreeStringRenderer {
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
+    }
+    
+    /**
+     * SCIPIO: Returns the renderer name (html, xml, etc.).
+     */
+    public String getRendererName() {
+        return rendererName;
     }
     
     private void executeMacro(Appendable writer, String macro) throws IOException {

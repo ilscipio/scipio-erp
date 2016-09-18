@@ -108,4 +108,9 @@ public interface FormStringRenderer {
      * SCIPIO: handles no-result case for list forms, so a text or other may be displayed instead of empty table.
      */
     public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException;
+    
+    /**
+     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
+     */
+    public String getRendererName();
 }

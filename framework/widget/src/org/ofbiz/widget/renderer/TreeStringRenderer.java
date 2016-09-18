@@ -35,4 +35,9 @@ public interface TreeStringRenderer {
     public void renderImage(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Image image) throws IOException;
     public void renderLastElement(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) throws IOException;
     public ScreenStringRenderer getScreenStringRenderer(Map<String, Object> context);
+    
+    /**
+     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
+     */
+    public String getRendererName();
 }

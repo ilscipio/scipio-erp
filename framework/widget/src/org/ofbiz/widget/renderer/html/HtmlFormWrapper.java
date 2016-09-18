@@ -80,7 +80,7 @@ public class HtmlFormWrapper {
 
         // SCIPIO: 2016-09-15: use macro renderer, now available in request
         this.renderer = (FormStringRenderer) request.getAttribute("formStringRenderer");
-        if (this.renderer == null) { // fallback (shouldn't happen)
+        if (this.renderer == null || !"html".equals(this.renderer.getRendererName())) { // fallback (shouldn't happen)
             this.renderer = new HtmlFormRenderer(request, response);
         }
 

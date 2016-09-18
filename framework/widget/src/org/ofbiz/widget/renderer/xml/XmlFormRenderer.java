@@ -362,4 +362,9 @@ public class XmlFormRenderer implements FormStringRenderer {
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public String getRendererName() { // SCIPIO: new
+        return "xml";
+    }
 }

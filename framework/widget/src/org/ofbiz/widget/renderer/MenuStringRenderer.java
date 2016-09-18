@@ -46,4 +46,8 @@ public interface MenuStringRenderer {
     public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
     public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
 
+    /**
+     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
+     */
+    public String getRendererName();
 }

@@ -224,9 +224,9 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
+                <set field="activeSubMenu" value="configuration"/>
                 <set field="activeSubMenuItem" value="myCertificates"/>
                 <set field="titleProperty" value="WebtoolsCertsX509"/>
-                <set field="configurationSideBar" value="StatsSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -245,9 +245,8 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="entity"/>
+                <set field="activeSubMenu" value="Entity" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="EntitySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -284,9 +283,8 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="service"/>
+                <set field="activeSubMenu" value="service" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="serviceSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -323,10 +321,9 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="importExport"/>
-                
+                <set field="activeSubMenu" value="importExport" />
+
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="importExportSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -363,9 +360,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
+                <set field="activeSubMenu" value="artifact" />
+ 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="artifactSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -402,8 +400,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="labels"/>
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="labelSideBar" />
+                <set field="activeSubMenu" value="label" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -440,10 +437,9 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
-                
+                <set field="activeSubMenu" value="configuration" />
+
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="configurationSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -480,9 +476,9 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="geoManagement"/>
+                <set field="activeSubMenu" value="geoManagement" />
+
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="geoManagementSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -519,9 +515,9 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="demoDataGeneratorServiceList"/>
+                <set field="activeSubMenu" value="Entity" />
+
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="sideBarMenu.name" value="EntitySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -554,29 +550,17 @@ under the License.
         </section>
     </screen>
     
-    <!-- SideBar menu factored implementation -->
+    <!-- SCIPIO: SideBar menu factored implementation -->
     <screen name="SideBarMenu">
         <section>
             <actions>
-                <!-- This is the name of a sub-menu element (<sub-menu name="..."/>). The field name is determined
-                    by selected-menu-context-field-name on the menu def.
-                    When field is empty, it means the top level. 
-                    The name may be virtual and not actually refer to a real menu, but we keep names of the original top-level
-                    menus (as much as possible) to make everything easier. -->
-                <set field="activeMainSubMenu" from-field="sideBarMenu.name" default-value="" />
-
-                <!-- We can simply ignore the location. The sub-menu name alone is expected to be arranged to be unique across
-                    the whole menu. Location is not used to identify the sub-menu.
-                <set field="sideBarMenuLoc" from-field="sideBarMenu.location" default-value="component://webtools/widget/Menus.xml" />-->
-
-                <!-- To highlight the item, we simply transfer activeSubMenuItem to activeMainMenuItem (note scope is protected).
-                    The target activeSubMenuItem value is a leaf and implies which parents get selected. 
-                    We should only use activeMainMenuItem if we were originally rendering the top level menu alone (no submenu referenced). -->
-                <set field="activeMainMenuItem" from-field="activeSubMenuItem" 
-                    default-value="${groovy: ((context.activeMainSubMenu) ? '' : context.activeMainMenuItem)}" />
+                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
+                <set field="sideBarMenu.advLocation" value="component://webtools/widget/Menus.xml"/>
+                <set field="sideBarMenu.advName" value="WebtoolsAppSideBar"/>
+                <set field="sideBarMenu.defLocation" value="component://webtools/widget/Menus.xml"/>
             </actions>
             <widgets>
-                <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsAppSideBar" sub-menus="current"/>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
             </widgets>
         </section>
     </screen>

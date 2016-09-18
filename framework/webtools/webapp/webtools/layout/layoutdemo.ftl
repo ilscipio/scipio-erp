@@ -1492,8 +1492,16 @@
   </@section>
 
   <@section title="Admin plain site-map/tree">
-    <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+  <@row>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+      </@cell>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo3" />
+      </@cell>
+    </@row>
   </@section>
+
 
 </@section>
 </#if>

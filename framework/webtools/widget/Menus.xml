@@ -78,10 +78,13 @@ under the License.
       Calls to it should be wrapped using component://webtools/widget/CommonScreens.xml#SideBarMenu or similar.
       
       NOTES:
-      * menu attribute auto-sub-menu-names="..." has "from-include" as default and it causes sub-menus to get named
-        automatically after their include="..." attribute; but this may not always work; use "off" and specify sub-menu name="..." attribute
-        explicitly to resolve sub-menu name conflicts within the menu. Sub-menu names must be unique within the menu,
-        including all those included through <include-menu-items .../> and extends="..." directives.
+      * In the code below, we are using explicit sub-menu name attributes in all official
+        admin menus (except demo menus). This is clearest and safest and gives best abstraction (only downside is redundancy).
+        * But it's also possible to rely on auto name-generating behavior:
+          The <menu/> attribute auto-sub-menu-names="..." has "from-include" as default, so by default, sub-menus get named
+          automatically after their include="..." attribute; but this may not always work due to conflicts and complex cases, so explicit names
+          are safer. Sub-menu names must be unique within a whole resolved top-level menu,
+          including the names from sub-menus included through <include-menu-items .../> and extends="..." directives.
       * Here you could set default-sub-menu-include-scope="func" or "none" (the default is "full") if you didn't want the included menus
         from using their own default-xxx-style="..." attributes on their menu items (which currently mostly come from CommonSideBarMenu).
         Ultimately there is no right way to organize the styling. 
@@ -91,25 +94,25 @@ under the License.
     <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="WebtoolsAppBar" recursive="full" />
         <menu-item name="server">
-            <sub-menu include="ServerSideBar" />
+            <sub-menu name="Server" include="ServerSideBar"/>
         </menu-item>
         <menu-item name="entity">
-            <sub-menu name="EntitySideBar" include="EntitySideBar" /><!-- NOTE: the sub-menu name may differ from the include reference's name -->
+            <sub-menu name="Entity" include="EntitySideBar" />
         </menu-item>
         <menu-item name="service">
-            <sub-menu include="serviceSideBar" />
+            <sub-menu name="service" include="serviceSideBar"/>
         </menu-item>
         <menu-item name="labels">
-            <sub-menu include="labelSideBar" />
+            <sub-menu name="label" include="labelSideBar"/>
         </menu-item>
         <menu-item name="importExport">
-            <sub-menu include="importExportSideBar" />
+            <sub-menu name="importExport" include="importExportSideBar"/>
         </menu-item>
         <menu-item name="geoManagement">
-            <sub-menu include="geoManagementSideBar" />
+            <sub-menu name="geoManagement" include="geoManagementSideBar"/>
         </menu-item> 
         <menu-item name="LayoutDemo">
-            <sub-menu include="LayoutDemoSideBar" />
+            <sub-menu name="LayoutDemo" include="LayoutDemoSideBar"/>
         </menu-item>
         <menu-item name="solrAdmin"/>
     </menu>
@@ -219,7 +222,7 @@ under the License.
     <menu name="ServerSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ServerTabBar" recursive="includes-only" />
         <menu-item name="stats">
-            <sub-menu include="StatsSideBar"/>
+            <sub-menu name="Stats" include="StatsSideBar"/>
         </menu-item>
     </menu>
 
@@ -735,6 +738,27 @@ under the License.
 
     <menu name="LayoutDemoButton2NoSubMenus" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"><!-- Excludes sub-menus -->
         <include-elements menu-name="LayoutDemoButton2" sub-menus="none"/>
+        <menu-item name="top7">
+            <!-- since we specified this sub-menu manually, it should be left alone by the above filter -->
+            <sub-menu name="LayoutDemoButtonDropdownTest2" include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown, sorted"
+                items-sort-mode="displaytext-ignorecase">
+                <!-- extra items -->
+                <include-elements menu-name="LayoutDemoTest2" recursive="full"/>
+                <!-- This menu-ref overrides the sub-menu include (the "include" attribute
+                    in the "sub-menu" element above) default behavior. Here we exclude an item. -->
+                <include-elements menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
+                    <exclude-item name="Enabled"/>
+                </include-elements>
+                <!-- demoTestVar1 comes from the actions of LayoutDemoTest2/1 -->
+                <menu-item name="TestTest" title="Extra item ${demoTestVar1}">
+                    <link target="${demoTargetUrl}" link-type="hidden-form">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+            </sub-menu>
+        </menu-item>
     </menu>
     
     
@@ -776,8 +800,36 @@ under the License.
     </menu>
     
     <menu name="WebtoolsPlainSiteMapDemo">
-        <!-- To achieve this, we can force the scope of all sub-menus to exclude styling using 'func' or 'none' -->
-        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="func"/>
+        <!-- To achieve this, we can force the scope of all sub-menus to exclude styling using "func" or "none" -->
+        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="none"/>
+    </menu> 
+    
+    <menu name="WebtoolsPlainSiteMapDemo2">
+        <include-menu-items menu-name="WebtoolsAppSideBar"/>
+    </menu> 
+    
+    <!-- alternate way using weird extends -->
+    <menu name="WebtoolsPlainSiteMapDemo3" extends="WebtoolsPlainSiteMapDemo2" force-all-sub-menu-model-scope="none">
+        <menu-item name="extraInsertedItem" title="Extra inserted item">
+            <!-- here, the model style will be ignored because of force-all-sub-menu-model-scope (model effectively useless).
+                to honor its style, use only force-extends-sub-menu-model-scope="none" (or "func") instead-->
+            <sub-menu id="demo-top5-sub-menu" model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" title="Sub-menu, as button-dropdown">
+                <menu-item name="nestednestednested1" title="Nestednestednested1">
+                    <link target="${demoTargetUrl}">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+                <menu-item name="nestednestednested2" title="Nestednestednested2">
+                    <link target="${demoTargetUrl}" link-type="hidden-form">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+            </sub-menu>
+        </menu-item>
     </menu> 
 
     <menu name="WebtoolsInlineSectionMenuDemo">

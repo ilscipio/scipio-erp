@@ -26,7 +26,7 @@ under the License.
                  <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
                     <@fields type="default-compact">
                       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
-                      <@field type="text" label=uiLabelMap.ProductName size="30" name="ruleName" />
+                      <@field type="text" label=uiLabelMap.ProductName size="30" name="ruleName" required=true/>
                       <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}" />
                     </@fields>
                     </form>

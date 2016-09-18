@@ -111,8 +111,16 @@ under the License.
                                 <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <section>
+                                    <actions>
+                                        <set field="activeSubMenu" value="TOP"/>
+                                        <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
+                                
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -182,8 +190,15 @@ under the License.
                                 <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <section>
+                                    <actions>
+                                        <set field="activeSubMenu" value="TOP"/>
+                                        <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -236,6 +251,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ConfigItem" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
@@ -249,7 +265,17 @@ under the License.
                                 <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <section>
+                                    <actions>
+                                        <!-- SCIPIO: FIXME?: this is hard to say what should show here, so we fall back on showing
+                                            product side bar -->
+                                        <set field="activeSubMenu" value="component://product/widget/catalog/CatalogMenus.xml#Product" />
+                                        <set field="activeSubMenuItem" value="EditProductConfigs"/>                                        
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -285,8 +311,8 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Promo" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="promos" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
-                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">

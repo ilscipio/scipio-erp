@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenuItem.ParentItemInfo;
@@ -47,6 +48,7 @@ public class ModelSubMenu extends ModelWidget {
     
     private final List<ModelAction> actions;
     private final List<ModelMenuItem> menuItemList;
+    private final Map<String, ModelMenuItem> menuItemMap;
     private final List<ModelMenuItem> extraMenuItemList;
     private final ModelMenu topModelMenu;
     private final ModelMenuItem parentMenuItem;
@@ -120,8 +122,7 @@ public class ModelSubMenu extends ModelWidget {
             }
         }
         
-        ParentItemInfo childParentItemInfo = new ParentItemInfo(parentMenuItem, 
-                childStyleModelMenu, childLogicModelMenu);
+        ParentItemInfo childParentItemInfo = new ParentItemInfo(childStyleModelMenu, childLogicModelMenu, this);
         
         // support included sub-menu items
         List<Element> preInclElements = null;
@@ -162,6 +163,7 @@ public class ModelSubMenu extends ModelWidget {
 
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
+        this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
         
         this.id = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("id"));
         this.style = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("style"));
@@ -219,12 +221,43 @@ public class ModelSubMenu extends ModelWidget {
         return this.menuItemList;
     }
     
+    public Map<String, ModelMenuItem> getMenuItemMap() {
+        return menuItemMap;
+    }    
+    
     public List<ModelMenuItem> getExtraMenuItemList() {
         return this.extraMenuItemList;
     }
      
     public String getEffectiveName() {
         return this.effectiveName;
+    }
+    
+    public ModelMenuItem getModelMenuItemByName(String name) {
+        return this.menuItemMap.get(name);
+    }
+    
+    public ModelMenuItem getModelMenuItemByNameExt(String[] nameList) {
+        return getModelMenuItemByNameExt(nameList[0], nameList, 1);
+    }
+    
+    public ModelMenuItem getModelMenuItemByNameExt(String name, String[] nameList, int nextNameIndex) {
+        ModelMenuItem currLevelItem = this.menuItemMap.get(name);
+        if (nextNameIndex >= nameList.length) {
+            return currLevelItem;
+        } else if (currLevelItem != null) {
+            return currLevelItem.getModelMenuItemByNameExt(nameList[nextNameIndex], nameList, nextNameIndex + 1);
+        } else {
+            return null;
+        }
+    }
+    
+    public ModelMenuItem getSelectedMenuItem(Map<String, Object> context) {
+        String selectedItemName = getSelectedMenuItemContextFieldName(context);
+        if (UtilValidate.isNotEmpty(selectedItemName)) {
+            return this.menuItemMap.get(selectedItemName);
+        }
+        return null;
     }
     
     /**
@@ -314,6 +347,27 @@ public class ModelSubMenu extends ModelWidget {
         if (protectScope) {
             UtilGenerics.<MapStack<String>>cast(context).pop();
         }
+    }
+    
+    /**
+     * Checks if the submenu is active in the current menu render.
+     * <p>
+     * It is active if one of its menu items is selected or if one of its
+     * descendent sub-menus is active.
+     */
+    public boolean isActive(Map<String, Object> context) {
+        if (getSelectedMenuItem(context) != null) {
+            return true;
+        }
+        
+        // TODO: this is not nearly enough
+        
+        return false;
+    }
+    
+    public String getSelectedMenuItemContextFieldName(Map<String, Object> context) {
+        // TODO: we don't support an selected item key on sub-menu currently
+        return getLogicModelMenu().getSelectedMenuItemContextFieldName(context);
     }
     
     @Override

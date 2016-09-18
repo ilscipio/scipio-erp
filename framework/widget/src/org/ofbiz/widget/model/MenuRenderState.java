@@ -1,5 +1,6 @@
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -10,12 +11,22 @@ public class MenuRenderState {
     
     public static final String CONTEXT_KEY = "menuStringRender_renderState";
     
-    protected int currentDepth;
-    protected int maxDepth;
+    private int currentDepth;
+    private int maxDepth;
+    private String subMenuFilter;
+    private transient boolean noSubMenus;
+    private transient boolean activeSubMenusOnly;
     
     protected MenuRenderState() {
         this.currentDepth = 1;
         this.maxDepth = -1;
+        this.subMenuFilter = null;
+        this.noSubMenus = false;
+        this.activeSubMenusOnly = false;
+    }
+    
+    public static MenuRenderState create() {
+        return new MenuRenderState();
     }
     
     public int getCurrentDepth() {
@@ -42,6 +53,16 @@ public class MenuRenderState {
         }
     }
     
+    public String getSubMenuFilter() {
+        return subMenuFilter;
+    }
+
+    public void setSubMenuFilter(String subMenuFilter) {
+        this.subMenuFilter = subMenuFilter;
+        this.noSubMenus = "none".equals(subMenuFilter);
+        this.activeSubMenusOnly = "active".equals(subMenuFilter);
+    }
+
     public void increaseCurrentDepth() {
         this.currentDepth++;
     }
@@ -51,12 +72,13 @@ public class MenuRenderState {
     }
     
     public boolean hasReachedMaxDepth() {
-        return (maxDepth >= 0) && (currentDepth >= maxDepth);
+        return noSubMenus || ((maxDepth >= 0) && (currentDepth >= maxDepth));
     }
     
-    public static MenuRenderState create() {
-        return new MenuRenderState();
+    public boolean isActiveSubMenusOnly() {
+        return activeSubMenusOnly;
     }
+
     
     // context helper methods
     

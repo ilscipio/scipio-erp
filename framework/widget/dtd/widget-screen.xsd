@@ -595,6 +595,23 @@ Features and Modifications:
                         Default: -1</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="sub-menus">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Special sub-menu rendering inclusion filter.
+                        Possible values:
+                        'none': same as setting max-depth 1
+                        'active': only render sub-menus that have selected/active items
+                        'all': render all sub-menus
+                        Default: all</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="none" />
+                        <xs:enumeration value="active" />
+                        <xs:enumeration value="all" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-screen" substitutionGroup="AllWidgets">

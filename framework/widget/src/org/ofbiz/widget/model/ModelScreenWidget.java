@@ -1780,6 +1780,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander locationExdr;
         private final FlexibleStringExpander shareScopeExdr; // SCIPIO: added share-scope for menus (not in stock ofbiz)
         private final FlexibleStringExpander maxDepthExdr; // SCIPIO: new
+        private final FlexibleStringExpander subMenuFilterExdr; // SCIPIO: new
 
         public Menu(ModelScreen modelScreen, Element menuElement) {
             super(modelScreen, menuElement);
@@ -1787,6 +1788,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.locationExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("location"));
             this.shareScopeExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("share-scope")); // SCIPIO: added
             this.maxDepthExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("max-depth")); // SCIPIO: added
+            this.subMenuFilterExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("sub-menus")); // SCIPIO: added
         }
 
         @Override
@@ -1817,6 +1819,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             
             MenuRenderState renderState = MenuRenderState.createAndStore(context);
             renderState.setMaxDepth(getMaxDepth(context));
+            renderState.setSubMenuFilter(getSubMenuFilter(context));
             
             ModelMenu modelMenu = getModelMenu(context);
             modelMenu.renderMenuString(writer, context, menuStringRenderer);
@@ -1888,6 +1891,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     return null;
                 }
             }
+        }
+
+        public FlexibleStringExpander getSubMenuFilterExdr() {
+            return subMenuFilterExdr;
+        }
+        
+        public String getSubMenuFilter(Map<String, Object> context) {
+            return this.subMenuFilterExdr.expandString(context);
         }
     }
 

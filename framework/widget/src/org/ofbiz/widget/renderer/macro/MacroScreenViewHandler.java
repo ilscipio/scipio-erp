@@ -99,18 +99,23 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             }
         }
         
+        // SCIPIO: 2016-09-15: in addition, dump the renderers into the request attributes,
+        // for some cases where only request is available
         ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(screenRendererName, screenMacroLibraryPath);
         if (!formMacroLibraryPath.isEmpty()) {
             FormStringRenderer formStringRenderer = new MacroFormRenderer(formMacroLibraryPath, request, response);
             context.put("formStringRenderer", formStringRenderer);
+            request.setAttribute("formStringRenderer", formStringRenderer);
         }
         if (!treeMacroLibraryPath.isEmpty()) {
             TreeStringRenderer treeStringRenderer = new MacroTreeRenderer(treeMacroLibraryPath, writer);
             context.put("treeStringRenderer", treeStringRenderer);
+            request.setAttribute("treeStringRenderer", treeStringRenderer);
         }
         if (!menuMacroLibraryPath.isEmpty()) {
             MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(menuMacroLibraryPath, request, response);
             context.put("menuStringRenderer", menuStringRenderer);
+            request.setAttribute("screenStringRenderer", screenStringRenderer);
         }
         return screenStringRenderer;
     }
@@ -140,6 +145,9 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
             ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
             context.put("screens", screens);
+            // SCIPIO: 2016-09-15: in addition, dump the screens renderer into the request attributes,
+            // for some cases where only request is available
+            request.setAttribute("screens", screens);
             context.put("simpleEncoder", UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".encoder")));
             screenStringRenderer.renderScreenBegin(writer, context);
             screens.render(page);

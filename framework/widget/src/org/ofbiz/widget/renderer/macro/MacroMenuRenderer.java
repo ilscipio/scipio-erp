@@ -53,7 +53,6 @@ import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
 import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
-import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.Template;

@@ -476,11 +476,12 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap.ProductStore}: ${parameters.productStoreId} ${extraFunctionName}"/>
                 
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+
+                <set field="title" value="${groovy: context.productStoreId ? (uiLabelMap.ProductStore + ': ' + (context.productStoreId?:uiLabelMap.CommonNA) + ' ' + (context.extraFunctionName?:'')) : uiLabelMap.ProductStores}"/>
 
                 <!-- SCIPIO: session-based browsing aid
                     NOTE: this is generally placed because some fallbacks don't have an accessible points -->

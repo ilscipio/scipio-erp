@@ -302,7 +302,10 @@ public class ModelMenuItem extends ModelWidget {
     // Merge constructor
     private ModelMenuItem(ModelMenuItem existingMenuItem, ModelMenuItem overrideMenuItem) {
         super(existingMenuItem.getName());
-        this.modelMenu = existingMenuItem.modelMenu;
+        // SCIPIO: this is an error; when we retried the modelMenu we want the effective one,
+        // not the original one
+        //this.modelMenu = existingMenuItem.modelMenu;
+        this.modelMenu = overrideMenuItem.modelMenu;
         if (UtilValidate.isNotEmpty(overrideMenuItem.getName())) {
             this.overrideName = overrideMenuItem.getName();
         } else {

@@ -195,7 +195,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         //String idFieldValue = null;
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
         
-        // Scipio patch - from ServiceEventHandler: create the progress listener and add it to the session
+        // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
         FileUploadProgressListener listener = new FileUploadProgressListener();
         fu.setProgressListener(listener);
         request.getSession().setAttribute("uploadProgressListener", listener);

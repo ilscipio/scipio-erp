@@ -268,7 +268,7 @@ public class NotificationServices {
             }
         }
         
-        // Scipio: use this method to also store a baseWebSiteId in the context, so template has knowledge
+        // SCIPIO: use this method to also store a baseWebSiteId in the context, so template has knowledge
         if (!context.containsKey("baseWebSiteId")) {
             context.put("baseWebSiteId", webSiteId);
         }

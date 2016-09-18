@@ -6,7 +6,7 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: Common Freemarker utility methods.
+ * SCIPIO: Common Freemarker utility methods.
  * <p>
  * Most methods should go into specific util classes, unless generic or generic and so common enough
  * that could use a facade here.

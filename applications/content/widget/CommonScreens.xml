@@ -68,7 +68,7 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/cms/CMSMenus.xml#Cms" />
                 <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
-                <set field="activeMainMenuItem" value="CMS"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CMS"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -104,7 +104,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Content" />
-                <set field="activeMainMenuItem" value="Content"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -160,7 +160,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#ContentTop" />
-                <set field="activeMainMenuItem" value="Content"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -199,7 +199,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/DataResourceMenus.xml#DataResource" />
-                <set field="activeMainMenuItem" value="DataResource"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="DataResource"/>
                 <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
@@ -246,7 +246,7 @@ under the License.
     <screen name="CommonCompDocDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="CompDoc"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CompDoc"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -338,8 +338,18 @@ under the License.
     <screen name="CommonWebSiteDecorator">
         <section>
             <actions>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" value="websites"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="websites"/>
+ 
+                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
+                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                <entity-one entity-name="WebSite" value-field="webSite"/>
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -362,12 +372,15 @@ under the License.
                             </condition>
                             <widgets>
                                 <!--<container style="button-bar">
-                                    <link text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
+                                    <link text="${uiLabelMap.ContentNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
                                 </container>-->
                                 <container>
                                     <include-menu name="websiteMenu" location="component://content/widget/content/ContentMenus.xml"/>
                                 </container>
-                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
+                                <!-- SCIPIO: too verbose, redundant with page title
+                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}] ${${extraFunctionName}}"/>
+                                -->
+                                
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -419,7 +432,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="titleProperty" value="ContentMain"/>
             </actions>
@@ -492,8 +505,18 @@ under the License.
     <screen name="CommonWebAnalyticsDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" value="websites"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="websites"/>
+
+                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
+                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                <entity-one entity-name="WebSite" value-field="webSite"/>
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
@@ -515,7 +538,9 @@ under the License.
                                 <container style="button-bar">
                                     <include-menu name="WebAnalyticsConfigButtonBar" location="component://content/widget/content/ContentMenus.xml"/>
                                 </container>
+                                <!-- SCIPIO: too verbose/redundant
                                 <label style="heading" text="${uiLabelMap.CatalogWebAnalytics} ${uiLabelMap.CommonFor} : ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
+                                -->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

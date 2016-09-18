@@ -42,7 +42,7 @@ import org.ofbiz.widget.renderer.TreeStringRenderer;
 /**
  * Widget Library - HTML Tree Renderer implementation
  * <p>
- * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * @deprecated SCIPIO: 2016-08-30: Considered deprecated and
  * will not be maintained. Use macro renderer instead.
  */
 @Deprecated
@@ -237,7 +237,7 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
                 newURL.append(target);
                 writer.append(newURL.toString());
             } else if ("inter-app".equalsIgnoreCase(urlMode) && req != null) {
-                // Scipio: why is this manual? delegate to buildHyperlinkUrl
+                // SCIPIO: why is this manual? delegate to buildHyperlinkUrl
                 /*
                 String externalLoginKey = (String) req.getAttribute("externalLoginKey");
                 if (UtilValidate.isNotEmpty(externalLoginKey)) {
@@ -307,9 +307,9 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
         if (UtilValidate.isNotEmpty(src)) {
             writer.append(" src=\"");
             String urlMode = image.getUrlMode();
-            Boolean fullPath = null; // Scipio: changed from boolean to Boolean
-            Boolean secure = null; // Scipio: changed from boolean to Boolean
-            Boolean encode = false; // Scipio: changed from boolean to Boolean
+            Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
+            Boolean secure = null; // SCIPIO: changed from boolean to Boolean
+            Boolean encode = false; // SCIPIO: changed from boolean to Boolean
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {
@@ -347,5 +347,10 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
             }
         }
         return screenStringRenderer;
+    }
+
+    @Override
+    public String getRendererName() { // SCIPIO: new
+        return "html";
     }
 }

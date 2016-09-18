@@ -21,7 +21,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 /**
- * Scipio: Customized Freemarker library documentation compiler and generator.
+ * SCIPIO: Customized Freemarker library documentation compiler and generator.
  * Transforms a set of source FTL files into HTML documentation files.
  * <p>
  * <strong>REQUIRES FREEMARKER 2.3.22 OR LATER IN CLASSPATH FOR INVOCATION.</strong>

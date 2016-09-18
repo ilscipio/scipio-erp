@@ -148,7 +148,7 @@ public class ShippingEvents {
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, String supplierPartyId, List<Map<String, Object>> itemInfo, BigDecimal shippableWeight, BigDecimal shippableQuantity,
             BigDecimal shippableTotal, String partyId, String productStoreShipMethId) {
-        // Scipio: This message assumes too much about the caller's intentions. Leave out the second part.
+        // SCIPIO: This message assumes too much about the caller's intentions. Leave out the second part.
         //String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         String standardMessage = "A problem occurred calculating shipping.";
         List<String> errorMessageList = FastList.newInstance();

@@ -23,21 +23,22 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindWebSite"/>
-                <set field="activeMainMenuItem" value="websites"/>
                 <set field="labelTitleProperty" value="PageTitleFindWebSite"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleListWebSite}">
+                                <screenlet><!-- title="${uiLabelMap.PageTitleListWebSite}" -->
+                                    <!-- SCIPIO: redundant
                                     <container style="button-bar">
-                                        <link text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
+                                        <link text="${uiLabelMap.ContentNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
                                     </container>
+                                    -->
                                     <include-form name="ListWebSites" location="component://content/widget/website/WebSiteForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -56,9 +57,9 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSite"/>
                 <set field="activeSubMenuItem" value="EditWebSite"/>
-                <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
+                <set field="labelTitleProperty" value="${groovy: (context.webSite || (parameters.webSiteId &amp;&amp; parameters.isCreate != 'true')) ? 'ContentWebSite' : 'ContentNewWebSite' }"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
@@ -81,12 +82,12 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSiteContent"/>
                 <set field="activeSubMenuItem" value="ListWebSiteContent"/>
-                <set field="labelTitleProperty" value="PageTitleEditWebSiteContent"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
                 <entity-and entity-name="WebSiteContent" list="webSiteContent">
                     <field-map field-name="webSiteId" from-field="webSiteId"/>
                 </entity-and>
+                <set field="labelTitleProperty" value="ContentWebSiteContent"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
@@ -115,7 +116,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSiteParties"/>
                 <set field="activeSubMenuItem" value="EditWebSiteParties"/>
-                <set field="labelTitleProperty" value="PageTitleEditWebSiteParties"/>
+                <set field="labelTitleProperty" value="ContentWebSiteParties"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <property-map map-name="uiLabelMap" resource="PartyUiLabels"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
@@ -340,7 +341,8 @@ under the License.
     <screen name="WebSiteAliases">
         <section>
             <actions>
-                <set field="titleProperty" value="ContentPathAlias"/>
+                <set field="titleProperty" value="ContentWebSitePathAlias"/><!-- ContentPathAlias -->
+                <set field="labelTitleProperty" value="ContentWebSitePathAlias"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <set field="activeSubMenuItem" value="PathAlias"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
@@ -376,16 +378,16 @@ under the License.
     <screen name="WebSiteSEO">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleWebSiteSEO"/>
+                <set field="titleProperty" value="ContentWebSiteSEO"/><!-- PageTitleWebSiteSEO -->
                 <set field="activeSubMenuItem" value="WebSiteSEO"/>
-                <set field="labelTitleProperty" value="PageTitleWebSiteSEO"/>
+                <set field="labelTitleProperty" value="ContentWebSiteSEO"/><!-- PageTitleWebSiteSEO -->
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleWebSiteSEO}">
                             <include-form name="CreateWebsiteSEO" location="component://content/widget/website/WebSiteForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -1313,7 +1313,7 @@ public class ProductServices {
 
             List<GenericValue> fileExtension = FastList.newInstance();
             try {
-                fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", EntityOperator.EQUALS, (String) context.get("_uploadedFile_contentType")).queryList();
+                fileExtension = EntityQuery.use(delegator).from("FileExtension").where(EntityCondition.makeCondition("mimeTypeId", EntityOperator.EQUALS, (String) context.get("_uploadedFile_contentType"))).queryList();
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(e.getMessage());

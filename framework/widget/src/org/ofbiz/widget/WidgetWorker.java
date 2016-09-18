@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -36,6 +37,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
@@ -78,7 +80,7 @@ public final class WidgetWorker {
                 externalWriter.append(localRequestName);
             }
         } else if ("inter-app".equals(targetType)) {
-            // Scipio: We want to pass this through encodeURL and smart inter-webapp building logic.
+            // SCIPIO: We want to pass this through encodeURL and smart inter-webapp building logic.
             // NOTE: The use of localWriter and externalWriter here is dodgy, but should work.
             /*
             String fullTarget = localRequestName;
@@ -94,7 +96,7 @@ public final class WidgetWorker {
                 localWriter.append(externalLoginKey);
             }
             */
-            Appendable tempWriter = new StringWriter(); // Scipio: DON'T use localWriter
+            Appendable tempWriter = new StringWriter(); // SCIPIO: DON'T use localWriter
             String fullTarget = localRequestName;
             tempWriter.append(fullTarget);
             String externalLoginKey = (String) request.getAttribute("externalLoginKey");
@@ -108,7 +110,7 @@ public final class WidgetWorker {
                 tempWriter.append(externalLoginKey);
             }
             if (request != null && response != null) {
-                // Scipio: We want to make sure this goes through encodeURL, and we now also want to send this
+                // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this
                 // through makeLinkAuto so it can produce smarter inter-webapp links.
                 // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
                 ServletContext servletContext = request.getSession().getServletContext();
@@ -129,7 +131,7 @@ public final class WidgetWorker {
             String localUrl = localWriter.toString();
             externalWriter.append(localUrl);
             boolean needsAmp = true;
-            // Scipio: This needs to check externalWriter, which already contains localWriter
+            // SCIPIO: This needs to check externalWriter, which already contains localWriter
             //if (localUrl.indexOf('?') == -1) {
             if (externalWriter.toString().indexOf('?') < 0) {
                 externalWriter.append('?');
@@ -329,7 +331,11 @@ public final class WidgetWorker {
         writer.append("</form>");
     }
     
-    // Scipio: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
+    
+    /**
+     * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
+     */
+    @Deprecated
     private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
         List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
         if (rowSubmitFields != null) {
@@ -338,21 +344,35 @@ public final class WidgetWorker {
             writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
             writer.append("\tif (submitForm) {\r\n");
             for (ModelFormField rowSubmitField : rowSubmitFields) {
-                writer.append("\t\tvar submitField = $(\"input[name=" + rowSubmitField.getName() + "]\");\r\n");
+                String submitFieldName = rowSubmitField.getName();
+                String submitFieldId = rowSubmitField.getCurrentContainerId(context);
+                if (UtilValidate.isEmpty(submitFieldId)) {
+                    Debug.logWarning("makeJSForRowSubmit: submit field '" + submitFieldName +
+                            "' of form '" + rowSubmitField.getModelForm().getName() + 
+                            "' was not assigned a unique element ID; unable to build javascript", module);
+                    continue;
+                }
+                writer.append("\t\tvar submitField = $(\"#" + submitFieldId + "\");\r\n");
                 writer.append("\t\t$(submitField).click(function(e) {\r\n");
                 writer.append("\t\te.preventDefault();\r\n");
                 writer.append("\t\tvar checked = false;\r\n");
-                writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction]\").each( function (j, r) {\r\n");
+                
+                // FIXME: flawed lookup required to get around datatables parents lookup broken for datatables
+                writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction], input[type=checkbox][name^=selectAction]\").each( function (j, r) {\r\n");
+                //writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction], input[type=checkbox][name^=selectAction]\").each( function (j, r) {\r\n");
 
                 writer.append("\t\t\tif ($(r).is(\":checked\")) {\r\n");
 
                 writer.append("\t\t\t\tchecked = true;\r\n");
                 makeHiddenFieldsForHiddenForm(writer);
-                writer.append("\t\t\tsubmitForm.submit();\r\n");
                 writer.append("\t\t\t}\r\n");
                 writer.append("\t\t});\r\n");
-                writer.append("\t\tif (!checked)\r\n");
-                writer.append("\t\t\t alert(\"No row selected\");\r\n");
+                writer.append("\t\tif (checked) {\r\n");
+                writer.append("\t\t\tsubmitForm.submit();\r\n");
+                writer.append("\t\t} else {\r\n");
+                String noRowMsg = UtilProperties.getMessage("CommonUiLabels", "CommonNoRowSelected", (Locale) context.get("locale"));
+                writer.append("\t\t\talert(\"" + encode(noRowMsg, context) + "\");\r\n");
+                writer.append("\t\t}\r\n");
                 writer.append("\t\t});\r\n");
             }
             writer.append("\t} else {\r\n");
@@ -363,7 +383,11 @@ public final class WidgetWorker {
         }
     }
     
-    // Scipio: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
+   
+    /**
+     * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
+     */
+    @Deprecated
     private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {        
         List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
         if (rowSubmitFields != null) {
@@ -387,7 +411,10 @@ public final class WidgetWorker {
         }
     }
     
-    // Scipio: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
+    /**
+     * SCIPIO: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
+     */
+    @Deprecated
     public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
             HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
         String hiddenFormName = makeLinkHiddenFormName(context, modelForm,
@@ -422,13 +449,14 @@ public final class WidgetWorker {
                 writer.append("<input name=\"");
                 writer.append(parameter.getKey());
                 writer.append("\" value=\"");
-                writer.append(UtilCodec.getEncoder("html").encode(parameter.getValue()));
+                writer.append(encode(parameter.getValue(), context));
                 writer.append("\" type=\"hidden\"/>");
             }
         }
         writer.append("</form>");
     }
     
+    @Deprecated
     private static void makeHiddenFieldsForHiddenForm(Appendable writer) throws IOException {
         writer.append("\t\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
         writer.append("\t\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n");
@@ -451,7 +479,7 @@ public final class WidgetWorker {
     
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
         ModelForm modelForm = null;
-        // Scipio: make sure model form field not empty
+        // SCIPIO: make sure model form field not empty
         if (UtilValidate.isNotEmpty(modelFormField)) {
             modelForm = modelFormField.getModelForm();
         }
@@ -459,7 +487,7 @@ public final class WidgetWorker {
         String iterateId = "";
         String formUniqueId = "";
         String formName = (String) context.get("formName");
-        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) { // Scipio: make sure modelForm not empty
+        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) { // SCIPIO: make sure modelForm not empty
             formName = modelForm.getName();
         }
         if (UtilValidate.isNotEmpty(context.get("iterateId"))) {
@@ -566,5 +594,20 @@ public final class WidgetWorker {
         return delegator;
     }
 
+    /**
+     * SCIPIO: Encode helper method using encoder in context.
+     */
+    public static String encode(String value, Map<String, Object> context) {
+        if (UtilValidate.isEmpty(value)) {
+            return value;
+        }
+        UtilCodec.SimpleEncoder encoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
+        if (encoder != null) {
+            value = encoder.encode(value);
+        } else {
+            value = UtilCodec.getEncoder("string").encode(value);
+        }
+        return value;
+    }
     
 }

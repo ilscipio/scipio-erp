@@ -490,7 +490,7 @@ public class CommonEvents {
     }
 
     /**
-     * Scipio: Prepares a redirect or forward based on a targetPage request URI passed by the screens.
+     * SCIPIO: Prepares a redirect or forward based on a targetPage request URI passed by the screens.
      * The targetPage is re-saved in request attributes as "targetPage". targetPage must be a controller
      * request URI within current controller that supports direct (public) requests.
      * <p>
@@ -551,7 +551,7 @@ public class CommonEvents {
                     Debug.logError("Scipio: Missing target page for targetPageResponse " + targetPageResponse, module);
                     return "error";
                 } else {
-                    // Scipio: SECURITY CHECK: In case this is not checked anywhere else - at least make sure
+                    // SCIPIO: SECURITY CHECK: In case this is not checked anywhere else - at least make sure
                     // we link within our controller
                     if (RequestHandler.controllerHasRequestUriDirect(request, targetPage)) {
                         request.setAttribute("targetPage", targetPage);

@@ -31,6 +31,11 @@ under the License.
 
 <@section id="EditProductCategory">
     <form action="${formAction}" method="post" name="productCategoryForm">
+    
+      <#if !productCategory?has_content>
+        <input type="hidden" name="isCreate" value="true" />
+      </#if>
+
       <#if productCategory?has_content>
         <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
       </#if>

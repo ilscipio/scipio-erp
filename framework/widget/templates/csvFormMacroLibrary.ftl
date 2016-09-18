@@ -122,3 +122,6 @@ under the License.
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation extraArgs...><@renderField description />,<#rt/></#macro>
 
 <#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns extraArgs...></#macro>
+
+<#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
+<#macro renderSubmitForm extraArgs...></#macro>

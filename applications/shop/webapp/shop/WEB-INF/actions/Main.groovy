@@ -20,7 +20,7 @@
 import org.ofbiz.product.catalog.*;
 
 catalogId = CatalogWorker.getCurrentCatalogId(request);
-// Scipio: This is not necessary anymore and interferes with SideDeepCategory.groovy and Breadcrumbs.groovy
+// SCIPIO: This is not necessary anymore and interferes with SideDeepCategory.groovy and Breadcrumbs.groovy
 //promoCat = CatalogWorker.getCatalogPromotionsCategoryId(request, catalogId);
 //request.setAttribute("productCategoryId", promoCat);
 

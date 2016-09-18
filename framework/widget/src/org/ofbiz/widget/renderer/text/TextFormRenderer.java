@@ -322,4 +322,9 @@ public class TextFormRenderer implements FormStringRenderer {
         
     }
 
+    @Override
+    public String getRendererName() { // SCIPIO: new
+        return "text";
+    }
+
 }

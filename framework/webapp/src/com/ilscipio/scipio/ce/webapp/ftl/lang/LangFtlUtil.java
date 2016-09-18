@@ -38,7 +38,7 @@ import freemarker.template.utility.DeepUnwrap;
 import freemarker.template.utility.RichObjectWrapper;
 
 /**
- * Scipio: Freemarker language utils.
+ * SCIPIO: Freemarker language utils.
  * <p>
  * These should generally not include Ofbiz-specific utils, except in the case
  * where the Ofbiz-specific code is merely a configuration of Freemarker (e.g.
@@ -464,7 +464,7 @@ public abstract class LangFtlUtil {
     }    
     
     /**
-     * Scipio: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * SCIPIO: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns the value as-is.
      * <p>
      * NOTE: The other unwrap methods automatically perform this operation as well.
@@ -477,7 +477,7 @@ public abstract class LangFtlUtil {
     }
     
     /**
-     * Scipio: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * SCIPIO: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns the value as-is.
      * <p>
      * NOTE: The other unwrap methods automatically perform this operation as well.
@@ -490,7 +490,7 @@ public abstract class LangFtlUtil {
     }
 
     /**
-     * Scipio: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * SCIPIO: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns null.
      * <p>
      * NOTE: The other unwrap methods automatically perform this operation as well.
@@ -503,7 +503,7 @@ public abstract class LangFtlUtil {
     }
     
     /**
-     * Scipio: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * SCIPIO: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns null.
      * <p>
      * NOTE: The other unwrap methods automatically perform this operation as well.

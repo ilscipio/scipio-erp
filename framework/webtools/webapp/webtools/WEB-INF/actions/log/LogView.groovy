@@ -23,7 +23,7 @@ List logLines = [];
 try {
     File logFile = FileUtil.getFile(logFileName);
     logFile.eachLine { line ->
-        // Scipio: All of these checks modified to be more strict and precise
+        // SCIPIO: All of these checks modified to be more strict and precise
         // NOTE: updated 2016-06-28
         type = '';
         if (line.contains(" |I| ")) {

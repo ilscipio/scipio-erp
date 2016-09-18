@@ -116,7 +116,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final Map<String, Object> context;
         private final Appendable writer;
         
-        // Scipio feature: ability to render previously-defined sections (from a caller) as if part of these sections.
+        // SCIPIO: feature: ability to render previously-defined sections (from a caller) as if part of these sections.
         // Essentially we mix sections from different decorators therefore different contexts.
         // This is not well encapsulated; SectionsRenderer implements
         // Map and that part is public. but context is private so it should be
@@ -178,7 +178,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         /** This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker */
         public String render(String sectionName) throws GeneralException, IOException {
             if (includePrevSections) {
-                // Scipio: new handling for previous section support
+                // SCIPIO: new handling for previous section support
                 ModelScreenWidget section = localSectionMap.get(sectionName);
                 // if no section by that name, write nothing
                 if (section != null) {
@@ -278,6 +278,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final List<ModelScreenWidget> subWidgets;
         private final List<ModelScreenWidget> failWidgets;
         private final boolean isMainSection;
+        private final FlexibleStringExpander shareScopeExdr;
 
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
@@ -321,6 +322,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 this.failWidgets = Collections.emptyList();
             }
             this.isMainSection = isMainSection;
+            this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
         }
 
         @Override
@@ -330,6 +332,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         @Override
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+            // SCIPIO: share-scope
+            boolean protectScope = !shareScope(context);
+            if (protectScope) {
+                if (!(context instanceof MapStack<?>)) {
+                    context = MapStack.create(context);
+                }
+                UtilGenerics.<MapStack<String>>cast(context).push();
+            }
+            
             // check the condition, if there is one
             boolean condTrue = true;
             if (this.condition != null) {
@@ -371,7 +382,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     throw new RuntimeException(errMsg);
                 }
             }
-
+            
+            // SCIPIO: share-scope
+            if (protectScope) {
+                UtilGenerics.<MapStack<String>>cast(context).pop();
+            }
         }
 
         @Override
@@ -401,6 +416,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public ModelCondition getCondition() {
             return condition;
+        }
+        
+        public boolean shareScope(Map<String, Object> context) {
+            String shareScopeString = this.shareScopeExdr.expandString(context);
+            // defaults to true, so anything but false is true
+            return !"false".equals(shareScopeString);
         }
     }
 
@@ -903,7 +924,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander locationExdr;
         private final Map<String, ModelScreenWidget> sectionMap;
         
-        // Scipio: if true, automatically include sections defined in higher screens
+        // SCIPIO: if true, automatically include sections defined in higher screens
         private final boolean autoDecoratorSectionIncludes;
 
         public DecoratorScreen(ModelScreen modelScreen, Element decoratorScreenElement) {
@@ -926,7 +947,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
 
             SectionsRenderer prevSections = (SectionsRenderer) context.get("sections");
-            // Scipio: filter the sections to render by the new use-when condition and overrides
+            // SCIPIO: filter the sections to render by the new use-when condition and overrides
             Map<String, ModelScreenWidget> filteredSectionMap = new HashMap<String, ModelScreenWidget>();
             for(Map.Entry<String, ModelScreenWidget> entry : this.sectionMap.entrySet()) {
                 ModelScreenWidget section = entry.getValue();
@@ -943,7 +964,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             filteredSectionMap = Collections.unmodifiableMap(filteredSectionMap);
             
-            // Scipio: get previous sections renderer and include if auto-decorator-section-include enabled
+            // SCIPIO: get previous sections renderer and include if auto-decorator-section-include enabled
             // Must not recognize any sections from prev for which this decorator-screen already had a decorator-section in xml
             Map<String, ModelScreenWidget> filteredPrevSectionMap = new HashMap<String, ModelScreenWidget>();
             if (prevSections != null) {
@@ -1035,7 +1056,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public static final String TAG_NAME = "decorator-section";
         private final List<ModelScreenWidget> subWidgets;
         
-        // Scipio feature: conditional section definitions
+        // SCIPIO: feature: conditional section definitions
         private final FlexibleStringExpander useWhen;
         private final boolean fallbackAutoInclude;
         private final boolean overrideByAutoInclude;
@@ -1073,7 +1094,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
         
         /**
-         * Returns true if this section should be used as-is,
+         * SCIPIO: Returns true if this section should be used as-is,
          * based on the decorator-section use-when minilang/EL/bsh/groovy-style condition
          * and current screen context.
          * <p>
@@ -1963,15 +1984,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
             return link.getPrefix(context);
         }
 
-        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+        public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
             return link.getFullPath();
         }
 
-        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+        public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
             return link.getSecure();
         }
 
-        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+        public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
             return link.getEncode();
         }
 
@@ -2263,7 +2284,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                         context.put("prevColumnSeqId", prevColumnSeqId);
                         context.put("nextColumnSeqId", nextColumnSeqId);
                         
-                        // Scipio: make these available to portlets
+                        // SCIPIO: make these available to portlets
                         context.put("columnWidthPercentage", columnValue.getString("columnWidthPercentage"));
                         context.put("columnWidthPixels", columnValue.getString("columnWidthPixels"));
                        

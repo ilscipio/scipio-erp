@@ -26,7 +26,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindCategory"/>
                 <set field="activeMainMenuItem" value="categories"/>
                 <set field="activeSubMenuItem" value="FindCategory"/>
-                <set field="labelTitleProperty" value="ProductCategory"/>
+                <set field="labelTitleProperty" value="PageTitleFindCategory"/><!-- ProductCategory -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
@@ -54,15 +54,13 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeMainMenuItem" value="categories"/>
                 <set field="activeSubMenuItem" value="EditCategory"/>
-                <set field="labelTitleProperty" value="ProductCategory"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
                 <entity-condition entity-name="ProductCategoryType" list="productCategoryTypes">
                     <order-by field-name="description"/>
                 </entity-condition>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategory.groovy"/>
-                
-                <set field="title" default-value="${uiLabelMap.ProductCategory} ${productCategoryId}"/>
+                <set field="labelTitleProperty" value="${groovy: (context.productCategory || (parameters.productCategoryId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductCategory' : 'ProductNewCategory'}"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
@@ -172,7 +170,7 @@ under the License.
                 <get-related value-field="productCategory" relation-name="ProductCategoryContent" list="productCategoryContentList" order-by-list="categoryContentOrderList"/>
                 <entity-condition entity-name="ProductCategoryType" list="productCategoryTypes"/>
                 
-                <set field="title" default-value="${uiLabelMap.ProductCategoryContent} ${productCategoryId}"/>
+                <set field="labelTitleProperty" value="ProductCategoryContent"/>
                 
                 <set field="TabBarName" value="CategoryContentSubTabBar" />
             </actions>
@@ -248,7 +246,7 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="EditCategoryRollup"/>
                 <set field="originalProductCategoryId" value="${parameters.originalProductCategoryId}" default-value="${parameters.productCategoryId}" global="true" />
-                <set field="title" default-value="${uiLabelMap.ProductCategoryAssociations} ${originalProductCategoryId}"/>
+                <set field="labelTitleProperty" value="ProductCategoryAssociations"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
@@ -374,7 +372,8 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryProducts.groovy"/>
                 
                 <set field="TabBarName" value="CategoryProductSubTabBar" />
-                <set field="title" default-value="${uiLabelMap.ProductCategoryProduct} ${productCategoryId}"/>
+                
+                <set field="labelTitleProperty" value="ProductCategoryProduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">

@@ -174,8 +174,9 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListBillingAccountRoles" type="multi" list-name="billingAccountRoleList" target="updateBillingAccountRole?billingAccountId=${billingAccountId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}"
-        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true" use-row-submit="false" paginate-target="EditBillingAccountRoles"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <form name="ListBillingAccountRoles" type="multi" list-name="billingAccountRoleList" target="updateBillingAccountRole?billingAccountId=${billingAccountId}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true" use-row-submit="false" paginate-target="EditBillingAccountRoles"> 
+        <!-- orig: default-table-style=-style="basic-table hover-bar" --><!-- &amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex} -->
         <actions>
             <entity-condition entity-name="BillingAccountRole" list="billingAccountRoleList">
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>

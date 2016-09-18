@@ -214,7 +214,19 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="item-index-separator" default="_o_" />
             <xs:attribute type="xs:string" name="extends" />
             <xs:attribute type="xs:string" name="extends-resource" />
-            <xs:attribute name="separate-columns" default="false">
+            <xs:attribute name="separate-columns"><!-- default="true" ; old/stock default: default="false" -->
+                <xs:annotation>
+                    <xs:documentation>Determines if the editable fields of a list/multi form should group
+                        together or now (false to group, true to keep separate).
+                        SCIPIO: NOTE: This is a STOCK attribute, but its default has been changed from false to true.
+                        It is usually only considered when group-columns is true. It is an "inner" switch
+                        to enable/disable grouping within the form-building logic and is the one
+                        most popularly used in most forms.
+                        Default: true
+                        NOTE: The default in Scipio is changed to true because Scipio's themes can
+                            handle long menus better, and the separated fields are easier to read.
+                    </xs:documentation>
+                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -222,7 +234,17 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="group-columns" default="true">
+            <xs:attribute name="group-columns"><!-- default="true" -->
+                <xs:annotation>
+                    <xs:documentation>Determines if the form should support grouping fields.
+                        SCIPIO: NOTE: This is a STOCK attribute. It is a top-level
+                        "hard" switch to disable all column grouping-based code. If set to false,
+                        it will logically imply separate-columns true but may additionally
+                        prevent some other form behaviors.
+                        Default: true
+                        WARN: Nearly all stock and Scipio-modified forms are built and tested using true for this attribute.
+                            It is safer to change the separate-columns attribute value instead.</xs:documentation>
+                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -236,7 +258,7 @@ Features and Modifications:
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="row-count" />
-            <xs:attribute name="use-row-submit" default="false">
+            <xs:attribute name="use-row-submit"><!-- default="false" -->
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -789,7 +811,13 @@ Features and Modifications:
     <xs:element name="sort-field">
         <xs:complexType>
             <xs:attribute name="name" type="xs:string" use="required" />
-            <xs:attribute name="position" type="xs:positiveInteger" />
+            <xs:attribute name="position" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>Field position in grid.
+                        SCIPIO: This is a STOCK attribute. Currently it is supported for "single" type forms, where it behaves like a real grid.
+                        WARN: Currently this should be avoided for "list"- and "multi"-type forms; behavior may be problematic.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="position-span" type="xs:integer">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>

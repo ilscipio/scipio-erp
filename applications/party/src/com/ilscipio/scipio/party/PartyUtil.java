@@ -6,8 +6,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.base.util.UtilMisc;
 
 /**
- * Scipio - General purpose Party utility functions
- *
+ * SCIPIO: General purpose Party utility functions
  */
 public final class PartyUtil {
 
@@ -16,7 +15,7 @@ public final class PartyUtil {
     
     
     /**
-     * Scipio: Return a person's full name. Defaults to partyId if empty.
+     * SCIPIO: Return a person's full name. Defaults to partyId if empty.
      * 
      * @param delegator
      * @param partyId

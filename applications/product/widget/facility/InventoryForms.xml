@@ -33,26 +33,32 @@ under the License.
                 <field-map field-name="facilityId" from-field="facilityId"/>
             </entity-one>
         </actions>
-        <alt-target use-when="inventoryItemId==null" target="CreateInventoryItem"/>
+        <alt-target use-when="inventoryItem==null" target="CreateInventoryItem"/>
         <auto-fields-service service-name="updateInventoryItem" map-name="inventoryItem"/>        
+
+        <field use-when="inventoryItem==null" name="isCreate"><hidden value="true"/></field><!-- SCIPIO: new -->
 
         <!-- ignored fields -->
         <field name="oldAvailableToPromise"><ignored/></field>
         <field name="oldQuantityOnHand"><ignored/></field>
         
         <!-- custom formatted fields -->
-        <field name="inventoryItemId" tooltip="${uiLabelMap.ProductNotModificationRecrationInventoryItem}"><display/></field>
+        <field name="inventoryItemId" tooltip="${uiLabelMap.ProductNotModificationRecrationInventoryItem}" use-when="inventoryItem!=null"><display/></field>
+        <field name="inventoryItemId" use-when="inventoryItem==null"><ignored/></field>
         <field name="inventoryItemTypeId" title="${uiLabelMap.ProductInventoryItemTypeId}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="InventoryItemType" description="${description}" key-field-name="inventoryItemTypeId"/>
             </drop-down>
         </field>
-        <field name="productId" required-field="true" position="1">
+        <field name="productId" required-field="true" position="1" use-when="productId!=null">
             <lookup target-form-name="LookupProduct">
                 <sub-hyperlink target="/catalog/control/ViewProduct" target-type="inter-app" description="${uiLabelMap.ProductEditProduct} [${productId}]">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </lookup>
+        </field>
+        <field name="productId" required-field="true" position="1" use-when="productId==null">
+            <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="inventoryItem==null">
             <drop-down allow-empty="true">
@@ -108,8 +114,11 @@ under the License.
         </field>
         <field name="unitCost"><text/></field>
 
-        <field name="accountingQuantityTotal">
+        <field name="accountingQuantityTotal" use-when="inventoryItem!=null">
             <display/>
+        </field>
+        <field name="accountingQuantityTotal" use-when="inventoryItem==null">
+            <ignored/>
         </field>
         <field name="totals" use-when="inventoryItem!=null" title="${uiLabelMap.ProductAvailablePromiseQuantityHand}">
             <display description="${inventoryItem.availableToPromiseTotal} / ${inventoryItem.quantityOnHandTotal}"/>
@@ -125,6 +134,8 @@ under the License.
             <sort-field name="inventoryItemId"/>
             <sort-field name="inventoryItemTypeId"/>
             <sort-field name="productId"/>
+            <sort-field name="totals"/>
+            <sort-field name="accountingQuantityTotal"/>
             <sort-field name="partyId"/>
             <sort-field name="ownerPartyId"/>
             <sort-field name="statusId"/>
@@ -138,14 +149,13 @@ under the License.
             <sort-field name="binNumber"/>
             <sort-field name="locationSeqId"/>
             <sort-field name="comments"/>
-            <sort-field name="accountingQuantityTotal"/>
             <sort-field name="serialNumber"/>
             <sort-field name="softIdentifier"/>
             <sort-field name="activationNumber"/>
             <sort-field name="activationValidThru"/>
             <sort-field name="unitCost"/>
             <sort-field name="currencyUomId"/>
-            <sort-field name="totals"/>
+            <sort-field name="fixedAssetId"/>
             <sort-field name="submit"/>
         </sort-order>
     </form>

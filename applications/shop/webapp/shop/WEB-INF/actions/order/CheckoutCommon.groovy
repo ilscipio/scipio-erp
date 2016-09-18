@@ -2,7 +2,7 @@
 
 final module = "CheckoutCommon.groovy";
 
-// Scipio: TODO? Determine these in smarter way, to unify anon and registered checkouts
+// SCIPIO: TODO? Determine these in smarter way, to unify anon and registered checkouts
 
 if (!context.checkoutType) {
     context.checkoutType = "full"

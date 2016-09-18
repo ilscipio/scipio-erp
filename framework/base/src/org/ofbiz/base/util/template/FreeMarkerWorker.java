@@ -87,7 +87,7 @@ public class FreeMarkerWorker {
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
     
     /**
-     * Scipio: A basic object wrapper that produces mainly simple, inline-FTL-like types.
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types.
      */
     private static final ObjectWrapper defaultSimpleTypeWrapper;
     static {
@@ -97,7 +97,7 @@ public class FreeMarkerWorker {
     }
     
     /**
-     * Scipio: A basic object wrapper that produces mainly simple, inline-FTL-like types, as copies.
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, as copies.
      */
     private static final ObjectWrapper defaultSimpleTypeCopyingWrapper;
     static {
@@ -107,7 +107,7 @@ public class FreeMarkerWorker {
     }
     
     /**
-     * Scipio: A copy of the current thread Environment.
+     * SCIPIO: A copy of the current thread Environment.
      * @see #getCurrentEnvironment
      */
     private static final ThreadLocal<Environment> threadEnv = new ThreadLocal<Environment>();
@@ -117,14 +117,14 @@ public class FreeMarkerWorker {
     }
     
     /**
-     * Scipio: Get a Freemarker simple type wrapper.
+     * SCIPIO: Get a Freemarker simple type wrapper.
      */
     public static ObjectWrapper getDefaultSimpleTypeWrapper() {
         return defaultSimpleTypeWrapper;
     }
     
     /**
-     * Scipio: Get a Freemarker simple type copying wrapper.
+     * SCIPIO: Get a Freemarker simple type copying wrapper.
      */
     public static ObjectWrapper getDefaultSimpleTypeCopyingWrapper() {
         return defaultSimpleTypeCopyingWrapper;
@@ -146,7 +146,7 @@ public class FreeMarkerWorker {
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
         newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
         
-        // Scipio: New code for includes and shared vars...
+        // SCIPIO: New code for includes and shared vars...
         Properties includeProperties = UtilProperties.getProperties("freemarkerIncludes");
         Properties sharedVarsProperties = UtilProperties.getProperties("freemarkerSharedVars");
         loadSharedVars(sharedVarsProperties,newConfig);
@@ -205,7 +205,7 @@ public class FreeMarkerWorker {
     }
     
     /**
-     * Scipio: Loads shared vars.
+     * SCIPIO: Loads shared vars.
      */
     protected static void loadSharedVars(Properties props, Configuration config) {
         for (Iterator<Object> i = props.keySet().iterator(); i.hasNext();) {
@@ -314,7 +314,7 @@ public class FreeMarkerWorker {
      * @param outWriter The Writer to render to
      */
     public static Environment renderTemplate(Template template, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
-        // Scipio: 2015-12-15: we want a patch around the processing code to remove our saved copy of
+        // SCIPIO: 2015-12-15: we want a patch around the processing code to remove our saved copy of
         // the FTL environment. within this call we know that FTL will store its own environment and make accessible via
         // Environment.getCurrentEnvironment().
         // ideally we want at most one of the two to be non-null at any given time.
@@ -789,7 +789,7 @@ public class FreeMarkerWorker {
     }
     
     /**
-     * Scipio: Returns the Freemarker environment associated with current thread, or null
+     * SCIPIO: Returns the Freemarker environment associated with current thread, or null
      * if no rendering.
      * <em>All transforms should use this call instead of <code>Environment.getCurrentEnvironment</code> directly!</em>
      * <p>
@@ -822,7 +822,7 @@ public class FreeMarkerWorker {
     }
     
     /**
-     * Scipio: Includes the given template with the given environment.
+     * SCIPIO: Includes the given template with the given environment.
      * <em>All macro renderer template include calls must be wrapped with this method! 
      * See {@link #getCurrentEnvironment}.</em>
      * 

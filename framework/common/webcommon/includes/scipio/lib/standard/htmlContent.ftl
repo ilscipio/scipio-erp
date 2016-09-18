@@ -285,6 +285,9 @@ Defines a table with advanced generating functionality. Analogous to HTML <table
 
 Required wrapper for all @table sub-element macros.
 
+The generated menu ID following a call can be read using: {{{getRequestVar("scipioLastTableInfo").id}}}.
+At current time (2016-09-16), other members of that map should not be relied upon.
+
 TODO?: @table macros were made before push/popRequestStack was fully realized, so may be
     overcomplicated at the moment.
 
@@ -429,31 +432,31 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     </#if>
     <#-- NOTE: there's currently some duplication between scipioCurrentTableInfo and scipioTableStack below; do not confuse
             (this was written before the stack functions were fully written) -->
-    <#local scipioCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
+    <#local tableInfo = {"id":id, "type": type, "styleName": styleName, "autoAltRows": autoAltRows,
       "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
-    <#local dummy = setRequestVar("scipioCurrentTableInfo", scipioCurrentTableInfo)!>
-    <#local scipioCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", scipioCurrentTableSectionInfo)!>
+    <#local dummy = setRequestVar("scipioCurrentTableInfo", tableInfo)>
+    <#local tableSectionInfo = {"type": "body", "cellElem": "td"}>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", tableSectionInfo)>
     <#-- also set in @thead -->
-    <#local dummy = setRequestVar("scipioCurrentTableHasHeader", hasHeader)!>
+    <#local dummy = setRequestVar("scipioCurrentTableHasHeader", hasHeader)>
     <#-- NOTE: scipioCurrentTableRowAltFlag should always be boolean
          NOTE: scipioCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
     <#if firstRowAlt?is_boolean>
-      <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", firstRowAlt)!>
-      <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", firstRowAlt)!>
+      <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", firstRowAlt)>
+      <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", firstRowAlt)>
     <#elseif inheritAltRows>
       <#if prevCurrentRowAlt?is_boolean>
-        <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", prevCurrentRowAlt)!>
+        <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", prevCurrentRowAlt)>
       <#else>
-        <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", false)!>
+        <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", false)>
       </#if>
-      <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
+      <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", prevCurrentRowAlt)>
     <#else>
-      <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", false)!>
-      <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", false)!>
+      <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", false)>
+      <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", false)>
     </#if>
     <#-- NOTE: this var may be empty string (none) -->
-    <#local dummy = setRequestVar("scipioCurrentTableLastRowAlt", prevCurrentRowAlt)!>
+    <#local dummy = setRequestVar("scipioCurrentTableLastRowAlt", prevCurrentRowAlt)>
     <#local style = "">
     <#local useResponsive = ((responsive?is_boolean && responsive == true) || responsiveOptions?has_content || (scrollable?is_boolean && scrollable == true))
       && !(responsive?is_boolean && responsive == false)>
@@ -472,6 +475,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
         "prevRowAltFlag":prevRowAltFlag, 
         "prevCurrentRowAlt":prevCurrentRowAlt, 
         "prevLastRowAlt":prevLastRowAlt, 
+        
+        "tableInfo":tableInfo,
         
         <#-- save parameters (including local changes) -->
         "type":type, 
@@ -508,6 +513,9 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local cellspacing = "">
     <#local useResponsive = false>
     <#local tableIdNum = 0>
+    <#local tableInfo = {}>
+    <#local dummy = setRequestVar("scipioCurrentTableInfo", {})>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", {})>
   </#if>     
   <#-- having this as map simplifies the args the markup has to pass along, much easier -->
   <#local responsiveArgs = {
@@ -527,13 +535,14 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#nested>
   </@table_markup>
   <#if close>
-    <#local dummy = setRequestVar("scipioCurrentTableInfo", prevTableInfo)!>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevSectionInfo)!>
-    <#local dummy = setRequestVar("scipioCurrentTableHasHeader", prevHasHeaderFlag)!>
-    <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", prevRowAltFlag)!>
-    <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
-    <#local dummy = setRequestVar("scipioCurrentTableLastRowAlt", prevLastRowAlt)!>
+    <#local dummy = setRequestVar("scipioCurrentTableInfo", prevTableInfo)>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevSectionInfo)>
+    <#local dummy = setRequestVar("scipioCurrentTableHasHeader", prevHasHeaderFlag)>
+    <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", prevRowAltFlag)>
+    <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", prevCurrentRowAlt)>
+    <#local dummy = setRequestVar("scipioCurrentTableLastRowAlt", prevLastRowAlt)>
   </#if>
+  <#local dummy = setRequestVar("scipioLastTableInfo", tableInfo)>
 </#macro>
 
 <#-- @table main markup - theme override -->
@@ -574,10 +583,10 @@ Defines a table header with advanced generating functionality. Analogous to HTML
   
   <#if open>
     <#-- inform the parent table (and anything else) that this table has a header -->
-    <#local dummy = setRequestVar("scipioCurrentTableHasHeader", true)!>
+    <#local dummy = setRequestVar("scipioCurrentTableHasHeader", true)>
     <#local prevTableSectionInfo = getRequestVar("scipioCurrentTableSectionInfo")!{}>
-    <#local scipioCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", scipioCurrentTableSectionInfo)!>
+    <#local tableSectionInfo = {"type": "head", "cellElem": "th"}>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", tableSectionInfo)>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
       <#local dummy = pushRequestStack("scipioTableHeadStack", {
@@ -600,7 +609,7 @@ Defines a table header with advanced generating functionality. Analogous to HTML
     <#nested>
   </@thead_markup>
   <#if close>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevTableSectionInfo)!>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevTableSectionInfo)>
   </#if>
 </#macro>
 
@@ -632,8 +641,8 @@ Defines a table body with advanced generating functionality. Analogous to HTML <
 
   <#if open>
     <#local prevTableSectionInfo = getRequestVar("scipioCurrentTableSectionInfo")!{}>
-    <#local scipioCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", scipioCurrentTableSectionInfo)!>
+    <#local tableSectionInfo = {"type": "body", "cellElem": "td"}>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", tableSectionInfo)>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
       <#local dummy = pushRequestStack("scipioTableBodyStack", {
@@ -656,7 +665,7 @@ Defines a table body with advanced generating functionality. Analogous to HTML <
     <#nested>
   </@tbody_markup>
   <#if close>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevTableSectionInfo)!>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevTableSectionInfo)>
   </#if>
 </#macro>
 
@@ -688,8 +697,8 @@ Defines a table footer with advanced generating functionality. Analogous to HTML
 
   <#if open>
     <#local prevTableSectionInfo = getRequestVar("scipioCurrentTableSectionInfo")!{}>
-    <#local scipioCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", scipioCurrentTableSectionInfo)!>
+    <#local tableSectionInfo = {"type": "foot", "cellElem": "td"}>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", tableSectionInfo)>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
       <#local dummy = pushRequestStack("scipioTableFootStack", {
@@ -712,7 +721,7 @@ Defines a table footer with advanced generating functionality. Analogous to HTML
     <#nested>
   </@tfoot_markup>
   <#if close>
-    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevTableSectionInfo)!>
+    <#local dummy = setRequestVar("scipioCurrentTableSectionInfo", prevTableSectionInfo)>
   </#if>
 </#macro>
 
@@ -776,28 +785,28 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local scipioCurrentTableInfo = getRequestVar("scipioCurrentTableInfo")!{}>
-  <#local scipioCurrentTableSectionInfo = getRequestVar("scipioCurrentTableSectionInfo")!{}>
+  <#local tableInfo = getRequestVar("scipioCurrentTableInfo")!{}>
+  <#local tableSectionInfo = getRequestVar("scipioCurrentTableSectionInfo")!{}>
   <#local scipioCurrentTableRowAltFlag = getRequestVar("scipioCurrentTableRowAltFlag")!false>
   <#local scipioCurrentTableLastRowAlt = getRequestVar("scipioCurrentTableLastRowAlt")!"">
   <#if open>
-    <#local tableType = (scipioCurrentTableInfo.type)!"generic">
-    <#local tableStyleName = (scipioCurrentTableInfo.styleName)!tableType>
-    <#local sectionType = (scipioCurrentTableSectionInfo.type)!"body">
+    <#local tableType = (tableInfo.type)!"generic">
+    <#local tableStyleName = (tableInfo.styleName)!tableType>
+    <#local sectionType = (tableSectionInfo.type)!"body">
     <#if !type?has_content>
       <#local type = styles["table_" + tableStyleName + "_rowtype"]!styles["table_default_rowtype"]!"generic">
     </#if>
     <#local metaRow = (type == "meta")>
-    <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((scipioCurrentTableInfo.useFootAltRows)!)==true))>
+    <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((tableInfo.useFootAltRows)!)==true))>
     <#if !(useAlt?is_boolean && useAlt == false)>
       <#if !alt?is_boolean>
         <#if groupLast?is_boolean && groupLast == true>
           <#local alt = scipioCurrentTableLastRowAlt!""> <#-- may be empty string (none) -->
         <#elseif groupParent?is_boolean && groupParent == true>
-          <#local alt = (scipioCurrentTableInfo.parentRowAlt)!"">
-        <#elseif (isRegAltRow && ((scipioCurrentTableInfo.autoAltRows)!false) == true)>
-          <#if ((scipioCurrentTableInfo.inheritAltRows)!false) == true>
-            <#local alt = (scipioCurrentTableInfo.parentRowAlt)!"">
+          <#local alt = (tableInfo.parentRowAlt)!"">
+        <#elseif (isRegAltRow && ((tableInfo.autoAltRows)!false) == true)>
+          <#if ((tableInfo.inheritAltRows)!false) == true>
+            <#local alt = (tableInfo.parentRowAlt)!"">
           <#else>
             <#local alt = scipioCurrentTableRowAltFlag!false> <#-- always boolean -->
           </#if>
@@ -809,7 +818,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     </#if>
     <#-- save the "effective" or "real" current row alt -->
     <#local scipioCurrentTableCurrentRowAlt = alt>
-    <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", scipioCurrentTableCurrentRowAlt)!>
+    <#local dummy = setRequestVar("scipioCurrentTableCurrentRowAlt", scipioCurrentTableCurrentRowAlt)>
     <#if alt?is_boolean>
       <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
     </#if>
@@ -846,14 +855,14 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#if close>
     <#if !(useAlt?is_boolean && useAlt == false)>
       <#-- NOTE: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
-      <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((scipioCurrentTableInfo.inheritAltRows)!)==false -->
+      <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((tableInfo.inheritAltRows)!)==false -->
         <#local scipioCurrentTableRowAltFlag = !alt>
-        <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", scipioCurrentTableRowAltFlag)!>
+        <#local dummy = setRequestVar("scipioCurrentTableRowAltFlag", scipioCurrentTableRowAltFlag)>
       </#if>
     </#if>
     <#-- NOTE: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
     <#local scipioCurrentTableLastRowAlt = alt>
-    <#local dummy = setRequestVar("scipioCurrentTableLastRowAlt", scipioCurrentTableLastRowAlt)!>
+    <#local dummy = setRequestVar("scipioCurrentTableLastRowAlt", scipioCurrentTableLastRowAlt)>
   </#if>
 </#macro>
 

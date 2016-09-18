@@ -979,7 +979,7 @@ public class ProductEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String emailType = "PRDS_TELL_FRIEND";
-        // Scipio: now points to shop
+        // SCIPIO: now points to shop
         String defaultScreenLocation = "component://shop/widget/EmailProductScreens.xml#TellFriend";
 
         GenericValue productStore = ProductStoreWorker.getProductStore(request);

@@ -4,7 +4,6 @@
 <p>Debug mode: ON</p>
 </#if>
 
-
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
@@ -1468,7 +1467,6 @@
 
 </@section>
 
-
 <#-- NOTE: keep last -->
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->
@@ -1500,7 +1498,6 @@
       </@cell>
     </@row>
   </@section>
-
 
 </@section>
 </#if>

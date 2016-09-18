@@ -32,9 +32,9 @@ while (productStorePaymentSettingIter.hasNext()) {
 }
 context.put("productStorePaymentMethodTypeIdMap", productStorePaymentMethodTypeIdMap);
 
-context.productStorePaymentSettingList = productStorePaymentSettingList; // Scipio: make available
+context.productStorePaymentSettingList = productStorePaymentSettingList; // SCIPIO: make available
 
-// Scipio: we can put more info than just booleans...
+// SCIPIO: we can put more info than just booleans...
 productStorePaymentMethodSettingByTypeMap = new HashMap();
 for (productStorePaymentSetting in productStorePaymentSettingList) {
     productStorePaymentMethodSettingByTypeMap.put(productStorePaymentSetting.get("paymentMethodTypeId"), productStorePaymentSetting);

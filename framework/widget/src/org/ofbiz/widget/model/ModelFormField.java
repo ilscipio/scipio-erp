@@ -145,7 +145,7 @@ public class ModelFormField implements Serializable {
     private final String parentFormName;
 
     /**
-     * Scipio: string expression representing a json-like map of extra form attributes.
+     * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
@@ -1000,7 +1000,7 @@ public class ModelFormField implements Serializable {
             this.allChecked = FlexibleStringExpander.getInstance("");
         }
         
-        // Scipio: Allow adding options to check fields
+        // SCIPIO: Allow adding options to check fields
         public CheckField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);
             this.allChecked = FlexibleStringExpander.getInstance("");
@@ -1371,7 +1371,7 @@ public class ModelFormField implements Serializable {
                 fieldKey = getModelFormField().fieldName;
 
             Delegator delegator = WidgetWorker.getDelegator(context);
-            // Scipio: only encode after the lookup
+            // SCIPIO: only encode after the lookup
             //String fieldValue = getModelFormField().getEntry(context);
             String fieldValue = getModelFormField().getEntryRaw(context);
             try {
@@ -2343,11 +2343,11 @@ public class ModelFormField implements Serializable {
             return link.getAutoServiceParameters();
         }
 
-        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+        public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+        public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -2403,7 +2403,7 @@ public class ModelFormField implements Serializable {
             return link.getPrefixExdr();
         }
 
-        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+        public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
             return link.getSecure();
         }
 
@@ -3123,7 +3123,7 @@ public class ModelFormField implements Serializable {
             super(original, modelFormField);
         }
         
-        // Scipio: Allow adding options to radio fields
+        // SCIPIO: Allow adding options to radio fields
         public RadioField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);            
         }
@@ -3320,11 +3320,11 @@ public class ModelFormField implements Serializable {
             return link.getAutoServiceParameters();
         }
 
-        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+        public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+        public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -3380,7 +3380,7 @@ public class ModelFormField implements Serializable {
             return link.getPrefixExdr();
         }
 
-        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+        public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
             return link.getSecure();
         }
 

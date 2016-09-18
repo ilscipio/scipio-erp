@@ -1,7 +1,7 @@
 package com.ilscipio.scipio.treeMenu;
 
 /**
- * Scipio: An interface representing a tree item. All tree menu libraries
+ * SCIPIO: An interface representing a tree item. All tree menu libraries
  * integration must implement this as a representation of a data item in order
  * to use the existing services and events available to populate and render tree
  * menus.

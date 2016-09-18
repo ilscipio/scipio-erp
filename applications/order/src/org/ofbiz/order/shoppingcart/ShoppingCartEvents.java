@@ -78,7 +78,7 @@ public class ShoppingCartEvents {
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
-    public static final String product_resource_error = "ProductErrorUiLabels"; // Scipio: new
+    public static final String product_resource_error = "ProductErrorUiLabels"; // SCIPIO: new
     
     private static final String NO_ERROR = "noerror";
     private static final String NON_CRITICAL_ERROR = "noncritical";
@@ -265,7 +265,7 @@ public class ShoppingCartEvents {
                 if (pId != null) {
                     productId = pId;
                 } else {
-                    // Scipio: New error check: I currently don't see any case where we should continue if productId is set but not a valid product
+                    // SCIPIO: New error check: I currently don't see any case where we should continue if productId is set but not a valid product
                     // in the system. If itemType is specified (see above), you probably still shouldn't pass a productId
                     // that does not exist...
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(product_resource_error, "productservices.invalid_productId_passed", locale));
@@ -958,7 +958,7 @@ public class ShoppingCartEvents {
     }
     
     /**
-     * Scipio: Clears the cart, and if it gets destroyed in the process, make sure another is created.
+     * SCIPIO: Clears the cart, and if it gets destroyed in the process, make sure another is created.
      * <p>
      * Helps with template compatibility.
      */
@@ -978,7 +978,7 @@ public class ShoppingCartEvents {
     }
     
     /**
-     * Scipio: Checks if cart empty and valid. If missing or empty, returns cartEmpty. If broken some other way,
+     * SCIPIO: Checks if cart empty and valid. If missing or empty, returns cartEmpty. If broken some other way,
      * returns "error". Otherwise, returns "success".
      * <p>
      * Helps with template compatibility.
@@ -1729,7 +1729,7 @@ public class ShoppingCartEvents {
 
         // set party info
         String partyId = request.getParameter("supplierPartyId");
-        cart.setAttribute("supplierPartyId", partyId);
+        cart.setSupplierPartyId(partyId);
         String originOrderId = request.getParameter("originOrderId");
         cart.setAttribute("originOrderId", originOrderId);
 

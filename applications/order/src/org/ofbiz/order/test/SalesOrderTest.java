@@ -48,7 +48,7 @@ public class SalesOrderTest extends OFBizTestCase {
     }
 
     public void testCreateSalesOrder() throws Exception {
-        // Scipio: new default store
+        // SCIPIO: new default store
         Map<String, Object> ctx = UtilMisc.<String, Object>toMap("partyId", "DemoCustomer", "orderTypeId", "SALES_ORDER", "currencyUom", "USD", "productStoreId", "ScipioShop");
 
         List<GenericValue> orderPaymentInfo = FastList.newInstance();

@@ -32,7 +32,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: VarsPutAllMethod - Freemarker Method for dumping all values in a map
+ * SCIPIO: VarsPutAllMethod - Freemarker Method for dumping all values in a map
  * into FTL current namespace vars.
  */
 public class VarsPutAllMethod implements TemplateMethodModelEx {

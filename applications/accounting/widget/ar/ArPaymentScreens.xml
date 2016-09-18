@@ -24,8 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindArPayments"/>
-                <set field="activeMainMenuItem" value="payments"/>
-                <set field="activeSubMenuItem" value="findPayments"/>
+                <!--<set field="activeSubMenuItem" value="findPayments"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonArPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -56,7 +55,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleDepositPaymentsAndCreateBatch"/>
-                <set field="activeMainMenuItem" value="payments"/>
                 <set field="activeSubMenuItem" value="batchPayments"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
                 <set field="cardType" from-field="parameters.cardType"/>
@@ -97,7 +95,7 @@ under the License.
                 <set field="titleProperty" value="AccountingNewPaymentIncoming"/>
             </actions>
             <widgets>
-               <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+               <decorator-screen name="CommonArPaymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>

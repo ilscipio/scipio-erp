@@ -6,6 +6,10 @@
         <#assign actionLabel>${uiLabelMap.CommonUpdate}</#assign>
     </#if>
         <form method="post" action="<@ofbizUrl>${action}</@ofbizUrl>" name="addProductCategoryMemberForm">        
+            <#if !prodCatalog?has_content>
+              <input type="hidden" name="isCreate" value="true" />
+            </#if>
+
             <@row>
                 <@cell columns=12>
                     <#if prodCatalog?has_content>
@@ -49,7 +53,7 @@
 
             <@row>
                 <@cell columns=12>
-                    <@field type="checkbox" name="useQuickAdd" label=uiLabelMap.ProductUseQuickAdd value="Y" checked=(prodCatalog?has_content && prodCatalog.useQuickAdd == "Y") />
+                    <@field type="checkbox" name="useQuickAdd" label=uiLabelMap.ProductUseQuickAdd value="Y" checked=(prodCatalog?has_content && (prodCatalog.useQuickAdd!) == "Y") />
                 </@cell>
             </@row>
             <@row>

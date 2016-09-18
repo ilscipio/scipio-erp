@@ -36,7 +36,7 @@ import org.ofbiz.widget.model.ModelMenuItem;
 /**
  * Widget Library - HTML Menu Renderer implementation
  * <p>
- * @deprecated SCIPIO(2016-08-30): Considered deprecated and
+ * @deprecated SCIPIO: 2016-08-30: Considered deprecated and
  * will not be maintained. Use macro renderer instead.
  */
 @Deprecated

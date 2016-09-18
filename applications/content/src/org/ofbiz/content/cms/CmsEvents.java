@@ -266,7 +266,8 @@ public class CmsEvents {
                 try {
                     Writer writer = response.getWriter();
                     // TODO: replace "screen" to support dynamic rendering of different output
-                    FormStringRenderer formStringRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.formrenderer", delegator), request, response);
+                    // SCIPIO: modified to pass name
+                    FormStringRenderer formStringRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screen.formrenderer", delegator), request, response);
                     templateMap.put("formStringRenderer", formStringRenderer);
                     
                     // if use web analytics

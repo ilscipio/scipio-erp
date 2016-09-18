@@ -115,7 +115,7 @@ public class CheckOutEvents {
 
         if ("shippingaddress".equals(curPage) == true) {
             // Set the shipping address options
-            // Scipio: Allow inlined address creation
+            // SCIPIO: Allow inlined address creation
             //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
             String shippingContactMechId;
             try {
@@ -195,7 +195,7 @@ public class CheckOutEvents {
             }
         } else if ("payment".equals(curPage) == true) {
             // Set the payment options
-            // Scipio: Handle new error cases
+            // SCIPIO: Handle new error cases
             Map<String, Map<String, Object>> selectedPaymentMethods;
             try {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
@@ -222,7 +222,7 @@ public class CheckOutEvents {
 
             List<String> singleUsePayments = new ArrayList<String>();
 
-            // Scipio: Support single-use for arbitrary pay methods
+            // SCIPIO: Support single-use for arbitrary pay methods
             addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
             
             // check for gift card not on file
@@ -274,7 +274,7 @@ public class CheckOutEvents {
     }
 
     /**
-     * Scipio: Adds the IDs of single use payments from selected methods to the given list.
+     * SCIPIO: Adds the IDs of single use payments from selected methods to the given list.
      */
     static void addSingleUsePayments(HttpServletRequest request, Map<String, Map<String, Object>> selectedPaymentMethods, List<String> singleUsePayments) {
         if (selectedPaymentMethods != null) {
@@ -331,7 +331,7 @@ public class CheckOutEvents {
     }
 
     public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
-        // Scipio: We currently *may* run into additional problems if try to create new records during partial saves.
+        // SCIPIO: We currently *may* run into additional problems if try to create new records during partial saves.
         // Also, note the fixme below is a stock fixme, not by us; it shouldn't be changed with current implementation (which is a "best-effort")...
         request.setAttribute("checkoutUseNewRecords", Boolean.FALSE);
         
@@ -364,7 +364,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Scipio: Alternative event to {@link #checkPaymentMethods} that may be run <i>before</i> payment method
+     * SCIPIO: Alternative event to {@link #checkPaymentMethods} that may be run <i>before</i> payment method
      * selection.
      * <p>
      * TODO?: Currently, this event does nothing. See comments.
@@ -375,7 +375,7 @@ public class CheckOutEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
         
-        // Scipio: TODO?: Currently, in this event we do nothing. This is because checkOutHelper.validatePaymentMethods()
+        // SCIPIO: TODO?: Currently, in this event we do nothing. This is because checkOutHelper.validatePaymentMethods()
         // performs mainly a total amount validation which causes errors when going backward in checkout due
         // to change shipping options which can affect totals and result a negative balance error.
         // This method is thus currently a placeholder.
@@ -394,7 +394,7 @@ public class CheckOutEvents {
         //Locale locale = UtilHttp.getLocale(request);
         Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<String, Map<String, Object>>();
         
-        // Scipio: Allow override via request attribs
+        // SCIPIO: Allow override via request attribs
         String[] paymentMethods;
         if (request.getAttribute("checkOutPaymentId") != null) {
             Object copid = request.getAttribute("checkOutPaymentId");
@@ -421,7 +421,7 @@ public class CheckOutEvents {
             for (int i = 0; i < paymentMethods.length; i++) {
                 Map<String, Object> paymentMethodInfo = FastMap.newInstance();
 
-                // Scipio: Allow inlined address creation
+                // SCIPIO: Allow inlined address creation
                 String paymentMethodId = paymentMethods[i];
                 String origPaymentMethodId = paymentMethods[i];
                 Map<String, Object> payMethResult = checkPaymentMethodIdForNew(request, paymentMethodId, "newCreditCard_", "newEftAccount_");
@@ -446,7 +446,7 @@ public class CheckOutEvents {
                     try {
                         amount = new BigDecimal(amountStr);
                     } catch (NumberFormatException e) {
-                        // Scipio: Let caller handle
+                        // SCIPIO: Let caller handle
                         throw new ServiceErrorException("Invalid amount set for payment method: " + amountStr, ServiceUtil.returnError(
                                 UtilProperties.getMessage(resource_error, "checkevents.invalid_amount_set_for_payment_method", (cart != null ? cart.getLocale() : Locale.getDefault()))));
                         //Debug.logError(e, module);
@@ -457,7 +457,7 @@ public class CheckOutEvents {
                 }
                 paymentMethodInfo.put("amount", amount);
                 
-                // Scipio: Get single-use flag
+                // SCIPIO: Get single-use flag
                 Boolean singleUseBool = null;
                 String singleUseFlag = request.getParameter("singleUsePayment_" + origPaymentMethodId);
                 if ("Y".equals(singleUseFlag)) {
@@ -467,7 +467,7 @@ public class CheckOutEvents {
                 }
                 paymentMethodInfo.put("singleUsePayment", singleUseBool);
                 
-                selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // Scipio: edited
+                selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // SCIPIO: edited
             }
         }
         Debug.logInfo("Selected Payment Methods : " + selectedPaymentMethods, module);
@@ -481,7 +481,7 @@ public class CheckOutEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         // Set the payment options
-        // Scipio: Handle new error cases
+        // SCIPIO: Handle new error cases
         Map<String, Map<String, Object>> selectedPaymentMethods;
         try {
             selectedPaymentMethods = getSelectedPaymentMethods(request);
@@ -515,7 +515,7 @@ public class CheckOutEvents {
 
         String shippingMethod = request.getParameter("shipping_method");
         
-        // Scipio: Allow inlined address creation
+        // SCIPIO: Allow inlined address creation
         //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String shippingContactMechId;
         try {
@@ -548,7 +548,7 @@ public class CheckOutEvents {
 
         List<String> singleUsePayments = new ArrayList<String>();
 
-        // Scipio: Support single-use for arbitrary pay methods
+        // SCIPIO: Support single-use for arbitrary pay methods
         addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
         
         // get a request map of parameters
@@ -1069,7 +1069,7 @@ public class CheckOutEvents {
             Map<String, Object> errorMaps = new HashMap<String, Object>();
 
             // Set the payment options
-            // Scipio: Handle new error cases
+            // SCIPIO: Handle new error cases
             Map<String, Map<String, Object>> selectedPaymentMethods;
             try {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
@@ -1097,7 +1097,7 @@ public class CheckOutEvents {
 
             // If the user has just created a new payment method, add it to the map with a null amount, so that
             //  it becomes the sole payment method for the order.
-            // Scipio: FIXME?: This is stock code and it appears to be deprecated or not work properly.
+            // SCIPIO: FIXME?: This is stock code and it appears to be deprecated or not work properly.
             String newPaymentMethodId = (String) request.getAttribute("paymentMethodId");
             if (! UtilValidate.isEmpty(newPaymentMethodId)) {
                 selectedPaymentMethods.put(newPaymentMethodId, null);
@@ -1385,7 +1385,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Scipio: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
+     * SCIPIO: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
      * params and try to create a new address before returning the new contact mech ID. This allows inlining
      * new ship address forms.
      * <p>
@@ -1457,7 +1457,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Scipio: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_ as prefix, it will check other
+     * SCIPIO: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_ as prefix, it will check other
      * params and try to create new records before returning the new contact mech ID. This allows inlining
      * new ship address forms. NOTE: it can support multiple of each.
      * <p>
@@ -1489,7 +1489,7 @@ public class CheckOutEvents {
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
                 if ("_NEW_".equals(addrContactMechId)) {
-                    // Scipio: NOTE: Unlike stock code elsewhere, here we assume the _NEW_ is accompanied with
+                    // SCIPIO: NOTE: Unlike stock code elsewhere, here we assume the _NEW_ is accompanied with
                     // other inline stuff already (not delayed to another screen)
                     serviceName = "createCreditCardAndAddress";
                     paramValidators = UtilMisc.<MapProcessor>toList(
@@ -1588,7 +1588,7 @@ public class CheckOutEvents {
     
     
     /**
-     * Scipio: Service invocation helper; uses combine req attribs + params.
+     * SCIPIO: Service invocation helper; uses combine req attribs + params.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
@@ -1623,7 +1623,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Scipio: Local util to get request attrib or param of same name. If request attrib is null, falls back
+     * SCIPIO: Local util to get request attrib or param of same name. If request attrib is null, falls back
      * to params.
      * <p>
      * <strong>WARN</strong>: If request attrib is non-null but empty, params are ignored. This is
@@ -1657,9 +1657,9 @@ public class CheckOutEvents {
         return res;
     }
     
-    // Scipio: Alternative pattern meant for integration with setCheckoutError; not yet needed.
+    // SCIPIO: Alternative pattern meant for integration with setCheckoutError; not yet needed.
 //    /**
-//     * Scipio: This creates a note in the request of the type of error we ran into. 
+//     * SCIPIO: This creates a note in the request of the type of error we ran into. 
 //     */
 //    static void registerCheckoutError(HttpServletRequest request, String errorType) {
 //        List<String> errors = getCheckoutErrors(request);
@@ -1668,7 +1668,7 @@ public class CheckOutEvents {
 //    }
 //    
 //    /**
-//     * Scipio: Gets a list of checkout error types recorded during the request so far.
+//     * SCIPIO: Gets a list of checkout error types recorded during the request so far.
 //     */
 //    static List<String> getCheckoutErrors(HttpServletRequest request) {
 //        List<String> errors = UtilGenerics.checkList(request.getAttribute("checkoutErrors"));

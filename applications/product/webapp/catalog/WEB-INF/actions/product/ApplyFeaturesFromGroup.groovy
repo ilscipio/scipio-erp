@@ -41,12 +41,12 @@ if (productFeatureGroupId) {
     // this will not break out the product features by view size
     context.listSize = productFeatures.size();
     context.highIndex = productFeatures.size();
-    // Scipio: lowIndex and (bugfix) add a flag to indicate no pagination happened (TODO? implement pagination),
+    // SCIPIO: lowIndex and (bugfix) add a flag to indicate no pagination happened (TODO? implement pagination),
     // otherwise this breaks pagination 
     context.lowIndex = 0;
     context.productFeaturesPaginated = false;
     
 }
 
-// Scipio: save it in context
+// SCIPIO: save it in context
 context.productFeatureGroupId = productFeatureGroupId

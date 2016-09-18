@@ -350,19 +350,19 @@ under the License.
         </else>
         </if-compare>
 
-        <set field="generateMissingSeoUrlMessage" value="Generate missing seo url's successfully"/>
+        <set field="generateMissingSeoUrlMessage" value="Generated missing SEO urls successfully"/>
         <field-to-list list="successMessageList" field="generateMissingSeoUrlMessage"/>
         <iterate entry="typeGenerate" list="parameters.typeGenerate">
             <if-compare operator="equals" value="category" field="typeGenerate">
-                <set field="categoriesMessage" value="Categories already having seo url's: ${totalCategoriesNotUpdated}, Categories with url added: ${totalCategoriesUpdated}"/>
+                <set field="categoriesMessage" value="Categories already having SEO urls: ${totalCategoriesNotUpdated}, Categories with url added: ${totalCategoriesUpdated}"/>
                 <field-to-list list="successMessageList" field="categoriesMessage"/>
             </if-compare>
             <if-compare operator="equals" value="product" field="typeGenerate">
-                <set field="productMessage" value="Products already having seo url's: ${totalProductsNotUpdated}, Products with url added: ${totalProductsUpdated}"/>
+                <set field="productMessage" value="Products already having SEO urls: ${totalProductsNotUpdated}, Products with url added: ${totalProductsUpdated}"/>
                 <field-to-list list="successMessageList" field="productMessage"/>
             </if-compare>
             <if-compare operator="equals" value="content" field="typeGenerate">
-                <set field="contentMessage" value="Contents already having seo url's: ${totalContentsNotUpdated}, Contents with url added: ${totalContentsUpdated}"/>
+                <set field="contentMessage" value="Contents already having SEO urls: ${totalContentsNotUpdated}, Contents with url added: ${totalContentsUpdated}"/>
                 <field-to-list list="successMessageList" field="contentMessage"/>
             </if-compare>
         </iterate>

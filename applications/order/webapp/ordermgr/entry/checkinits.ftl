@@ -112,7 +112,7 @@ under the License.
         </@field>
         <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_purchase" value=parameters.userLogin.userLoginId formName="poentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
         <@field type="select" label=uiLabelMap.PartySupplier name="supplierPartyId">
-            <option value="">${uiLabelMap.OrderSelectSupplier}</option>
+            <option value=""></option><#-- SCIPIO: confusing/redundant: ${uiLabelMap.OrderSelectSupplier} -->
             <#list suppliers as supplier>
               <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId> selected="selected"</#if>>[${supplier.partyId}] - ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
             </#list>

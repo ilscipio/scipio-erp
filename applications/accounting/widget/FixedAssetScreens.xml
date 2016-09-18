@@ -110,6 +110,7 @@ under the License.
                                             </fail-widgets>
                                         </section>
                                     </widgets>
+                                    <!-- SCIPIO: redundant
                                     <fail-widgets>
                                         <section>
                                             <condition>
@@ -123,6 +124,7 @@ under the License.
                                             </fail-widgets>
                                         </section>
                                     </fail-widgets>
+                                     -->
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>

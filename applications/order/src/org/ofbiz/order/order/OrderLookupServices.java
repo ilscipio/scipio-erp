@@ -674,7 +674,7 @@ public class OrderLookupServices {
         filterInventoryProblems(context, result, orderList, paramList);
 
         // format the param list
-        // Scipio: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
+        // SCIPIO: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
         String paramString = StringUtil.join(paramList, "&amp;");
 
         // SCIPIO: only if not full query

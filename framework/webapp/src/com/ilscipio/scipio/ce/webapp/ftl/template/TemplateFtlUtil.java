@@ -31,7 +31,7 @@ import freemarker.template.TemplateModelException;
 import javolution.util.FastMap;
 
 /**
- * Scipio: Theme- and styling-framework-agnostic templating utilities.
+ * SCIPIO: Theme- and styling-framework-agnostic templating utilities.
  * <p>
  * Any theme- or styling-framework-specific code should be placed in a separate package.
  * 

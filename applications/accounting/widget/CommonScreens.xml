@@ -475,7 +475,6 @@ under the License.
             </widgets>
         </section>
      </screen>
-    
 
     <screen name="creditCardFields">
         <section>
@@ -513,7 +512,9 @@ under the License.
     <screen name="CommonInvoiceDecorator"><!-- used for invoice commission runs -->
         <section>
             <widgets>
+                <!-- FIXME: endless loop?
                 <include-screen name="CommonInvoiceDecorator" location="component://accounting/widget/InvoiceScreens.xml"/>
+                -->
             </widgets>
         </section>
     </screen>

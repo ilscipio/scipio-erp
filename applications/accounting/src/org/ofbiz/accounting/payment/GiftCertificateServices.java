@@ -785,12 +785,12 @@ public class GiftCertificateServices {
                     .orderBy("-responseDate").queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            // Scipio: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
+            // SCIPIO: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
         if (surveyResponse == null) {
-            // Scipio: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
+            // SCIPIO: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
@@ -1019,7 +1019,7 @@ public class GiftCertificateServices {
                     .orderBy("-responseDate").queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            // Scipio: confusing error message: "AccountingGiftCerticateNumberCannotReload"
+            // SCIPIO: confusing error message: "AccountingGiftCerticateNumberCannotReload"
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
                     "AccountingGiftCerticateNumberCannotReloadFromSurveyAnswers", locale));
         }

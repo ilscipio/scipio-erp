@@ -20,104 +20,14 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-
-    <!-- Custom apps can use their own Product Decorator by specifying its
-         location in parameters.productDecoratorLocation -->
-
-    <screen name="CommonProductDecorator">
-        <section>
-            <actions>
-                <set field="activeMainMenuItem" value="products"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productId" from-field="parameters.productId" global="true"/>
-                <entity-one entity-name="Product" value-field="product"/>
-                <set field="product" from-field="product" global="true"/>
-                <set field="showMainExtendedBar" type="Boolean" value="true" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <actions>
-                                <set field="productId" from-field="parameters.productId"/>
-                                <entity-one entity-name="Product" value-field="product"/>
-                            </actions>
-                            <widgets>
-                                <include-menu name="ProductSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
-                                <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
-                            </widgets>
-                            <fail-widgets>
-                                <include-menu name="CatalogAppSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <actions>
-                                <set field="productId" from-field="parameters.productId"/>
-                                <entity-one entity-name="Product" value-field="product"/>
-                            </actions>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="product"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
-                                        </platform-specific>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <condition>
-                                                <or>
-                                                    <if-compare operator="not-equals" value="EditProduct" field="activeSubMenuItem"/>
-                                                </or>
-                                            </condition>
-                                            <widgets>
-                                                <platform-specific>
-                                                    <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
-                                                </platform-specific>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     
     <screen name="FindProduct">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="FindProduct"/><!-- SCIPIO: NOTE: this gets ignored -->
                 <set field="titleProperty" value="PageTitleFindProduct"/>
-                <set field="activeSubMenuItem" value="FindProduct"/>
+                <set field="labelTitleProperty" value="PageTitleFindProduct"/>
+                <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -152,7 +62,12 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="activeSubMenuItem" value="EditProduct"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${groovy: (parameters.productId &amp;&amp; parameters.isCreate != 'true') ? (uiLabelMap.PageTitleEditProduct + ' ' + parameters.productId) : (uiLabelMap.ProductNewProduct) }"/>
+                <!-- FIXME: SHOULD NOT BE GLOBAL! but haas to be to not clash with decorator global lookups! -->
+                <set field="productId" from-field="parameters.productId" global="true"/>
+                <entity-one entity-name="Product" value-field="lookupProduct"/>
+                <set field="product" from-field="lookupProduct" global="true"/>
+                <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
+                <set field="labelTitleProperty" value="${groovy: (context.product || (parameters.productId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductProduct' : 'ProductNewProduct' }"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -206,28 +121,40 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="activeSubMenuItem" value="ViewProduct"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderErrorUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="parameters.bypassIfNoProduct" value="true"/>
-                <set field="title" value="${uiLabelMap.ProductProduct} ${parameters.productId}"/>
+                <set field="labelTitleProperty" value="ProductProduct"/>
+                <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ScipioProductInfo"/>
-                                <include-screen name="ScipioProductCategory"/>
-                                <include-screen name="ScipioProductDates"/>
-                                <include-screen name="ScipioProductRates"/>
-                                <include-screen name="ScipioProductShoppingCart"/>
-                                <include-screen name="ScipioProductMisc"/>
-                            </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ScipioProductInventory"/>
-                                <include-screen name="ScipioProductAmount"/>
-                                <include-screen name="ScipioProductMeasures"/>
-                                <include-screen name="ScipioProductShipping"/>
-                            </container>
-                        </container>
+                        <section>
+                            <condition>
+                                <not><if-empty field="product"/></not>
+                            </condition>
+                            <widgets>
+                                 <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="ScipioProductInfo"/>
+                                        <include-screen name="ScipioProductCategory"/>
+                                        <include-screen name="ScipioProductDates"/>
+                                        <include-screen name="ScipioProductRates"/>
+                                        <include-screen name="ScipioProductShoppingCart"/>
+                                        <include-screen name="ScipioProductMisc"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="ScipioProductInventory"/>
+                                        <include-screen name="ScipioProductAmount"/>
+                                        <include-screen name="ScipioProductMeasures"/>
+                                        <include-screen name="ScipioProductShipping"/>
+                                    </container>
+                                </container>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error" text="${uiLabelMap.OrderProductNotFound} (${productId})"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -330,7 +257,7 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="EditProductCategories"/>
-                <set field="title" value="${uiLabelMap.ProductProductCategories} ${parameters.productId}"/>
+                <set field="labelTitleProperty" value="ProductCategories"/><!-- TODO? <set field="labelTitleProperty" value="ProductProductCategories"/> -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -1037,6 +964,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleEditProductContent"/>
                 <set field="activeSubMenuItem" value="EditProductContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
@@ -1045,7 +973,6 @@ under the License.
                 <entity-one entity-name="ProductContent" value-field="productContent"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContentContent.groovy"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductSEO.groovy"/>
-                <set field="title" value="${uiLabelMap.PageTitleEditProductContent}: ${productTitle}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -1081,6 +1008,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
+                        <label style="common-msg-info-important" text="${uiLabelMap.ProductAttributeShortInstructions}" />
                         <screenlet title="${uiLabelMap.ProductAddProductAttributeNameValueType}">
                             <include-form name="AddProductAttribute" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
@@ -1518,7 +1446,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleProductPricesHistory"/>
                 <set field="activeSubMenuItem" value="EditProductPrices"/>
-                <set field="labelTitleProperty" value="PageTitleProductPricesHistory"/>
+                <set field="labelTitleProperty" value="ProductPricesHistory"/><!-- TODO? PageTitleProductPricesHistory -->
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <entity-and entity-name="ProductPriceChange" list="productPricesChanges">

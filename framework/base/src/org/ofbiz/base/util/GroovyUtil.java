@@ -188,14 +188,14 @@ public class GroovyUtil {
     }
     
     /**
-     * Scipio: Special case of {@link #runScriptAtLocation} where no methodName is specified
+     * SCIPIO: Special case of {@link #runScriptAtLocation} where no methodName is specified
      */
     public static Object runScriptAtLocation(String location, Map<String, Object> context) throws GeneralException {
         return runScriptAtLocation(location,"",context);
     }
     
     /**
-     * Scipio: Special case of {@link #runScriptAtLocation} that uses an empty context and returns the new
+     * SCIPIO: Special case of {@link #runScriptAtLocation} that uses an empty context and returns the new
      * context (instead of script result).
      */
     public static Map<String, Object> runScriptAtLocationNewEmptyContext(String location, String methodName) throws GeneralException {

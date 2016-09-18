@@ -45,7 +45,6 @@ import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
-import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.Template;
@@ -60,33 +59,49 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     public static final String module = MacroTreeRenderer.class.getName();
     private Template macroLibrary;
     
+    // SCIPIO: new
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("tree");
+    private final String rendererName;
     
     /**
-     * Scipio: environments now stored in WeakHashMap, same as other macro renderers.
+     * Constructor.
+     * <p>
+     * SCIPIO: modified to require name.
+     * <p>
+     * SCIPIO: environments now stored in WeakHashMap, same as other macro renderers.
      */
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
 
-    public MacroTreeRenderer(String macroLibraryPath) throws TemplateException, IOException {
+    public MacroTreeRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
         this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
+        this.rendererName = name; // SCIPIO: new
     }
     
     /**
-     * Scipio: Old tree renderer constructor.
+     * Old tree renderer constructor.
+     * <p>
+     * SCIPIO: modified to require name.
      * 
      * @deprecated environments now stored in WeakHashMap so writer from individual calls used instead.
      */
     @Deprecated
-    public MacroTreeRenderer(String macroLibraryPath, Appendable writer) throws TemplateException, IOException {
-        this(macroLibraryPath);
+    public MacroTreeRenderer(String name, String macroLibraryPath, Appendable writer) throws TemplateException, IOException {
+        this(name, macroLibraryPath);
     }
     
     /**
-     * Scipio: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer. 
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
+    }
+    
+    /**
+     * SCIPIO: Returns the renderer name (html, xml, etc.).
+     */
+    public String getRendererName() {
+        return rendererName;
     }
     
     private void executeMacro(Appendable writer, String macro) throws IOException {
@@ -108,7 +123,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            // Scipio: custom render context
+            // SCIPIO: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
@@ -352,9 +367,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         String border = image.getBorder(context);
         String alt = ""; //TODO add alt to tree images image.getAlt(context);
  
-        Boolean fullPath = null; // Scipio: changed from boolean to Boolean
-        Boolean secure = null; // Scipio: changed from boolean to Boolean
-        Boolean encode = false; // Scipio: changed from boolean to Boolean
+        Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
+        Boolean secure = null; // SCIPIO: changed from boolean to Boolean
+        Boolean encode = false; // SCIPIO: changed from boolean to Boolean
         String urlString = "";
         
         if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {

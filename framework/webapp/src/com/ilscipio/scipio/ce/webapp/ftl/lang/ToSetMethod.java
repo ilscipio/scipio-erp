@@ -30,7 +30,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: ToSetMethod - Converts a sequence or collection to bean-wrapped set.
+ * SCIPIO: ToSetMethod - Converts a sequence or collection to bean-wrapped set.
  */
 public class ToSetMethod implements TemplateMethodModelEx {
 

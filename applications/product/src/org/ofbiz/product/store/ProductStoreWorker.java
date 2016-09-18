@@ -703,7 +703,7 @@ public class ProductStoreWorker {
     protected static Map<String, String> defaultProductStoreEmailScreenLocation = FastMap.newInstance();
 
     static {
-        // Scipio: now points to shop
+        // SCIPIO: now points to shop
         defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
         defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
         defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");

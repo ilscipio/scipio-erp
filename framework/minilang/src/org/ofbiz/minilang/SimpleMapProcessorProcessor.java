@@ -11,7 +11,7 @@ import org.ofbiz.base.util.MapProcessor;
 import org.ofbiz.base.util.UtilGenerics;
 
 /**
- * Scipio: A wrapper around simple map processor invocations to fit MapProcessor interface.
+ * SCIPIO: A wrapper around simple map processor invocations to fit MapProcessor interface.
  */
 public class SimpleMapProcessorProcessor implements MapProcessor {
 

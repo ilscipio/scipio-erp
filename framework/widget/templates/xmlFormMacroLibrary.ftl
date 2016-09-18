@@ -117,3 +117,6 @@ under the License.
 <#macro renderAsterisks requiredField requiredStyle extraArgs...></#macro>
 
 <#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns extraArgs...></#macro>
+
+<#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
+<#macro renderSubmitForm extraArgs...></#macro>

@@ -38,9 +38,15 @@ under the License.
                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
                             <widgets>
-                                  <include-menu location="component://accounting/widget/ar/ArMenus.xml" name="ArAppSideBar"/>
+                                <decorator-section-include name="left-column"/>
                             </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/ar/CommonScreens.xml"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
@@ -106,10 +112,14 @@ under the License.
     </screen>
     <screen name="CommonArPaymentDecorator">
         <section>
+            <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#ArPayment" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="ArPaymentSideBar" location="component://accounting/widget/ar/ArMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/ar/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -121,6 +131,7 @@ under the License.
     <screen name="CommonPaymentGroupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
                 <set field="activeMainMenuItem" value="paymentGroups"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
@@ -131,7 +142,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="PaymentGroupSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -169,7 +180,7 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="invoices"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -181,6 +192,57 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: PLACEHOLDER decorators to prevent ${parameters.mainDecoratorLocation} crashes on non-AP/AR-specific requests -->
+    <screen name="CommonAgreementDecorator">
+        <section>
+            <widgets>
+                <include-screen name="CommonAgreementDecorator" location="component://accounting/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonFinAccountDecorator">
+        <section>
+            <widgets>
+                <include-screen name="CommonFinAccountDecorator" location="component://accounting/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonPartyDecorator">
+        <section>
+            <widgets>
+                <include-screen name="CommonPartyDecorator" location="component://accounting/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonOrganizationAccountingReportsDecorator">
+        <section>
+            <widgets>
+                <include-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonAdminChecksDecorator">
+        <section>
+            <widgets>
+                <include-screen name="CommonAdminChecksDecorator" location="component://accounting/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonSettingsDecorator">
+        <section>
+            <widgets>
+                <include-screen name="CommonSettingsDecorator" location="component://accounting/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="GlobalGLSettingsDecorator">
+        <section>
+            <widgets>
+                <include-screen name="GlobalGLSettingsDecorator" location="component://accounting/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>
@@ -235,4 +297,30 @@ under the License.
         </section>
     </screen>
 
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://accounting/widget/ar/ArMenus.xml"/>
+                <set field="menuCfg.name" value="ArAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://accounting/widget/ar/ArMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

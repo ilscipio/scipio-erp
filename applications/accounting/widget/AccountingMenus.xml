@@ -34,7 +34,7 @@
             </condition>
             <link target="FindGatewayResponses" />
         </menu-item>
-        <!-- TODO: Should be moved to a Settings Bar -->
+        <!-- SCIPIO: was moved to Settings Bar -->
        <!--  <menu-item name="PaymentGatewayConfig" title="${uiLabelMap.AccountingPaymentGatewayConfig}">
             <condition>
                 <or>
@@ -69,11 +69,67 @@
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
         </menu-item>
+        <!--
+        <menu-item name="companies">
+        </menu-item>
+        -->
+        <!-- NOTE: this would go either here or under OrganizationSideBar; unclear
+        <menu-item name="partyAdmin">
+        </menu-item>
+        -->
     </menu>
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu"
         extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
+        <menu-item name="invoices">
+            <sub-menu name="Invoice" include="InvoiceSideBar"/>
+        </menu-item>
+        <menu-item name="payments">
+            <sub-menu name="Payment" include="PaymentSideBar"/>
+        </menu-item>
+        <!-- TODO: Should be moved to a Settings Bar -->
+      <!--   <menu-item name="PaymentGroup">
+            <sub-menu name="PaymentGroup" include="PaymentGroupSideBar"/>
+        </menu-item> -->
+        <menu-item name="transaction">
+            <sub-menu name="Transactions" include="TransactionsSideBar"/>
+        </menu-item>
+        <menu-item name="billingaccount">
+            <sub-menu name="BillingAccount" include="BillingAccountSideBar"/>
+        </menu-item>
+        <menu-item name="FindFinAccount">
+            <sub-menu name="FinAccount" include="FinAccountSideBar"/>
+        </menu-item>
+        <!-- TODO: Should be moved to a Settings Bar -->
+      <!--   <menu-item name="TaxAuthorities">
+            <sub-menu name="TaxAuthority" include="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthority"/>
+        </menu-item> -->
+        <menu-item name="agreements">
+            <sub-menu name="Agreement" include="AgreementSideBar"/>
+        </menu-item>
+        <menu-item name="ListFixedAssets">
+            <sub-menu name="FixedAsset" include="FixedAssetSideBar"/>
+        </menu-item>
+        <menu-item name="ListBudgets">
+            <sub-menu name="Budget" include="BudgetSideBar"/>
+        </menu-item>
+        <menu-item name="CostCenters">
+            <sub-menu name="GlobalGLSettings" include="GlobalGLSettingsSideBar"/>
+        </menu-item>
+        <menu-item name="settings">
+            <sub-menu name="Settings" include="SettingsSideBar"/>
+        </menu-item>
+        <!--
+        <menu-item name="companies">
+            <sub-menu name="Organization" include="OrganizationSideBar"/>
+        </menu-item>
+        -->
+        <!-- NOTE: this would go either here or under OrganizationSideBar; unclear
+        <menu-item name="partyAdmin">
+            <sub-menu name="PartyAdmin" include="PartyAdminSideBar"/>
+        </menu-item>
+        -->
     </menu>
 
     <menu name="AgreementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -137,6 +193,7 @@
                 </or>
             </condition>
             <link target="FindPaymentGatewayConfig"/>
+            <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
         </menu-item>
     </menu>
     
@@ -681,7 +738,7 @@
 
     <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
-        <include-elements menu-name="FixedAssetMainTabBar" recursive="includes-only" />
+        <include-elements menu-name="FixedAssetMaintTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="FixedAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -731,6 +788,7 @@
             <link target="ListFixedAssetMaints">
                 <parameter param-name="fixedAssetId" />
             </link>
+            <sub-menu name="FixedAssetMaint" include="FixedAssetMaintSideBar"/>
         </menu-item>
         <menu-item name="EditPartyFixedAssetAssignments" title="${uiLabelMap.AccountingPartyFixedAssetAssignments}">
             <link target="EditPartyFixedAssetAssignments">
@@ -753,8 +811,13 @@
         <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="GlobalGLSettingMenus" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="GlobalGLSettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="chartofaccounts">
+        <!-- SCIPIO: redundant
+        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
+            <link target="CostCenters"/>
+        </menu-item>
+        -->
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
@@ -813,12 +876,14 @@
     </menu>
 
     <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="find" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoices}">
             <condition>
                 <if-empty field="invoice.invoiceId" />
             </condition>
             <link target="findInvoices" />
         </menu-item>
+        -->
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
             <condition>
                 <not>
@@ -916,6 +981,7 @@
     <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="InvoiceTabBar" recursive="includes-only" />
         <!-- Purchase Invoice PDF -->
+        <!-- SCIPIO: FIXME: the link target does not exist or was removed
         <menu-item name="acctgTransEntriesPdf" title="${uiLabelMap.AccountingInvoicePurchase}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <and>
@@ -928,12 +994,13 @@
                     </or>
                 </and>
             </condition>
-            <link target="InvoiceAcctgTransEntriesPdf" target-window="_BLANK">
+            <link target="InvoiceAcctgTransEntriesPdf.pdf" target-window="_BLANK">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
+         -->
         <!-- Invoice -->
-        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur} (${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <and>
                     <not>
@@ -948,7 +1015,8 @@
                 <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
             </link>
         </menu-item>
-        <menu-item name="pdf" title="${uiLabelMap.AccountingInvoice}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+        <!-- SCIPIO: moved to SubTab
+        <menu-item name="pdf" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <not>
                     <if-empty field="invoice.invoiceId" />
@@ -958,6 +1026,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
+         -->
     </menu>
 
     <menu name="InvoiceSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1152,6 +1221,16 @@
                 </and>
             </condition>
             <link target="addtax">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
+        <menu-item name="pdf" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
@@ -1473,9 +1552,11 @@
     </menu>
 
     <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}" sort-mode="off">
             <link target="findPayments" />
         </menu-item>
+        -->
         <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingPaymentTabOverview}">
             <condition>
                 <not>
@@ -1486,13 +1567,15 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
-        <menu-item name="editPayment" title="${uiLabelMap.CommonEdit} ${uiLabelMap.AccountingPayment}">
+        <menu-item name="editPayment" title="${uiLabelMap.AccountingPayment}">
             <condition>
                 <and>
                     <not>
                         <if-empty field="payment.paymentId" />
                     </not>
+                    <!-- SCIPIO: screen must handle this, if omitted here is confusing...
                     <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID" />
+                    -->
                 </and>
             </condition>
             <link target="editPayment">

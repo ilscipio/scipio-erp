@@ -666,6 +666,16 @@ under the License.
                     SCIPIO: TODO: Currently only implemented for certain types of links (hyperlink)</xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="use-when">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: A condition whose result should evaluate to true/false to determine
+                    when the link should be applied. This can be EL (${}) or groovy (with ${groovy:}) anywhere, but 
+                    the common implementation is NOT a Bsh-style condition; Bsh is specific to some other elements that extend link,
+                    such as form widget sub-hyperlink.
+                    Default: undetermined (null) or true, depending on context
+                    NOTE: Currently (2016-09-12), this is only used directly by menu widgets.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     <xs:complexType name="image" mixed="true">
         <xs:attribute type="xs:string" name="src" />

@@ -25,11 +25,12 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="stats"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="StatsSideBar" location="component://webtools/widget/Menus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

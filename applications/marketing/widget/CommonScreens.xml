@@ -53,7 +53,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://marketing/widget/MarketingMenus.xml" name="MarketingAppSideBar"/>
+                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -68,6 +68,7 @@ under the License.
     <screen name="CommonContactListDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/ContactListMenus.xml#ContactList" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="ContactList"/>
                 <set field="activeSubMenuItem" value="ContactList"/>
@@ -85,7 +86,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="ContactListSideBar" location="component://marketing/widget/ContactListMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -170,4 +171,31 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="MainSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.location" value="component://marketing/widget/MarketingMenus.xml"/>
+                <set field="menuCfg.name" value="MarketingAppSideBar"/>
+                <set field="menuCfg.defLocation" value="component://marketing/widget/MarketingMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <screen name="DefMainSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

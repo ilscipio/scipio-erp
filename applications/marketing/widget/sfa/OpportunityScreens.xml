@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="SfaFindOpportunities"/>
-                <set field="activeMainMenuItem" value="Opportunities"/>
+                <set field="activeSubMenuItem" value="Opportunities"/>
             </actions>
             <widgets>
                 <!-- <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}"> --> 

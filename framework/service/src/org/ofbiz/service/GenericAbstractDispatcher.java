@@ -58,7 +58,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     }
 
     /**
-     * Scipio: Modified to accept an eventId
+     * SCIPIO: Modified to accept an eventId
      * 
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long, int)
      */
@@ -116,7 +116,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     }
     
     /**
-     * Scipio: This is now a delegating method
+     * SCIPIO: This is now a delegating method
      */
     @Override
     public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {

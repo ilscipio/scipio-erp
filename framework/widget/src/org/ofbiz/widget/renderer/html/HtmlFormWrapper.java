@@ -43,6 +43,10 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
+ * <p>
+ * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
+ * Use is still discouraged; the context populated by this wrapper
+ * may be incomplete. Other means are available to invoke menu renders from templates.
  */
 public class HtmlFormWrapper {
 
@@ -74,7 +78,11 @@ public class HtmlFormWrapper {
             this.modelForm = FormFactory.getFormFromWebappContext(resourceName, formName, request);
         }
 
-        this.renderer = new HtmlFormRenderer(request, response);
+        // SCIPIO: 2016-09-15: use macro renderer, now available in request
+        this.renderer = (FormStringRenderer) request.getAttribute("formStringRenderer");
+        if (this.renderer == null || !"html".equals(this.renderer.getRendererName())) { // fallback (shouldn't happen)
+            this.renderer = new HtmlFormRenderer(request, response);
+        }
 
         this.context = new HashMap<String, Object>();
         Map<String, Object> parameterMap = UtilHttp.getParameterMap(request);
@@ -105,6 +113,9 @@ public class HtmlFormWrapper {
         if (UtilValidate.isNotEmpty(delegator) && context.get("delegator") == null) {
             context.put("delegator", delegator);
         }
+        
+        // SCIPIO: transfer the screens renderer object (REQUIRED)
+        context.put("screens", request.getAttribute("screens"));
     }
 
     @SuppressWarnings("unchecked")

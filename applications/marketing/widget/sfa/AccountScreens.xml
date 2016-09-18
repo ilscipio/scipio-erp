@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="currentUrl" value="FindAccounts"/>
-                <set field="activeMainMenuItem" value="Accounts"/>
+                <set field="activeSubMenuItem" value="Accounts"/>
                 
                 <set field="setAccountDescription" value="${groovy:session.setAttribute(&quot;accountDescription&quot;,activeMainMenuItem)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
@@ -80,7 +80,7 @@ under the License.
     <screen name="NewAccount">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Accounts"/>
+                <set field="activeSubMenuItem" value="Accounts"/>
                 <set field="titleProperty" value="PageTitleCreateAccount"/>
                 <set field="accountType" from-field="parameters.accountType"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>

@@ -22,7 +22,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.party.contact.ContactMechWorker;
 
-// Scipio: prevent crash on missing userLogin
+// SCIPIO: prevent crash on missing userLogin
 
 paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin?.partyId);
 //returns the following: "paymentMethod", "creditCard", "giftCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
@@ -65,7 +65,7 @@ if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.cred
     context.canNotView = false;
 }
 
-// Scipio: for double-inclusion detection
+// SCIPIO: for double-inclusion detection
 context.editPaymentMethodDataPrepared = true;
 
 

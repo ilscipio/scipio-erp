@@ -1,5 +1,6 @@
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,7 +9,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 
 /**
- * Scipio: Class to represent an extra attribs expression expressed by a JSON-/FTL-like syntax. Immutable.
+ * SCIPIO: Class to represent an extra attribs expression expressed by a JSON-/FTL-like syntax. Immutable.
  * <p>
  * Can be used on most any widget elements, e.g.:
  * <pre>
@@ -17,7 +18,8 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * </code>
  * </pre>
  */
-public class AttribsExpression {
+@SuppressWarnings("serial")
+public class AttribsExpression implements Serializable {
 
     private final FlexibleStringExpander attribsExpr;
 
@@ -27,7 +29,7 @@ public class AttribsExpression {
     }
     
     /**
-     * Scipio: Builds an attrib expression for internal storage.
+     * SCIPIO: Builds an attrib expression for internal storage.
      */
     static AttribsExpression makeAttribsExpr(String attribsExprStr, AttribsExpression parentAttribsExpr) {
         FlexibleStringExpander attribsExpr;
@@ -59,7 +61,7 @@ public class AttribsExpression {
     }
 
     /**
-     * Scipio: Merges otherExpr into this one, producing a new.
+     * SCIPIO: Merges otherExpr into this one, producing a new.
      */
     public AttribsExpression putAll(AttribsExpression otherExpr) {
         String origStr = otherExpr.attribsExpr.getOriginal();

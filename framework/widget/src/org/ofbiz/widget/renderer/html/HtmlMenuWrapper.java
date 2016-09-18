@@ -43,6 +43,10 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
+ * <p>
+ * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
+ * Use is still discouraged; the context populated by this wrapper
+ * may be incomplete. Other means are available to invoke menu renders from templates.
  */
 public class HtmlMenuWrapper {
 
@@ -96,10 +100,18 @@ public class HtmlMenuWrapper {
         if ("true".equals(parameterMap.get("isError"))) {
             context.put("isError", Boolean.TRUE);
         }
+        
+        // SCIPIO: transfer the screens renderer object (REQUIRED)
+        context.put("screens", request.getAttribute("screens"));
     }
 
     public MenuStringRenderer getMenuRenderer() {
-        return new HtmlMenuRenderer(request, response);
+        // SCIPIO: 2016-09-15: use macro renderer, now available in request
+        MenuStringRenderer renderer = (MenuStringRenderer) request.getAttribute("menuStringRenderer");
+        if (renderer == null || !"html".equals(renderer.getRendererName())) { // fallback (shouldn't happen)
+            renderer = new HtmlMenuRenderer(request, response);
+        }
+        return renderer;
     }
 
     public String renderMenuString() throws IOException {

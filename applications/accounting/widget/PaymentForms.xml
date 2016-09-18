@@ -168,8 +168,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" position="2"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
+        <field name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1" required-field="true">
             <drop-down allow-empty="false">
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
             </drop-down>
@@ -184,10 +184,10 @@ under the License.
         </field>
         <field name="paymentRefNum" position="1"><text/></field>
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="amount" title="${uiLabelMap.CommonAmount}" position="1"><text/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
-        <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
+        <field name="finAccountTransTypeId" required-field="true"><hidden value="WITHDRAWAL"/></field>
         <field position="1" name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
@@ -196,7 +196,7 @@ under the License.
         header-row-style="header-row" > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="organizationPartyId" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" parameter-name="partyIdTo" position="2">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
@@ -204,7 +204,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="PaymentType">
                     <entity-constraint name="parentTypeId" value="RECEIPT"/>
@@ -222,7 +222,7 @@ under the License.
         </field>
         <field name="paymentRefNum" position="1"><text/></field>
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="amount" title="${uiLabelMap.CommonAmount}" position="1"><text/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="finAccountId" position="2">
             <drop-down allow-empty="true">

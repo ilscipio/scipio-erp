@@ -10,7 +10,7 @@ import freemarker.template.TemplateModel;
 import javolution.util.FastMap;
 
 /**
- * Scipio - Type descriptions for common FTL object types as seen from templating code.
+ * SCIPIO: Type descriptions for common FTL object types as seen from templating code.
  * <p>
  * Needed because the standard FTL type names don't cover the special cases caused by
  * bean wrapping of the ofbiz screen context vars. Essentially Ofbiz-specific.

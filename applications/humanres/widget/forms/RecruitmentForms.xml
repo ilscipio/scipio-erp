@@ -118,7 +118,7 @@ under the License.
             </drop-down>
         </field>
         <field name="durationMonths"><text/></field>
-        <field name="qualification" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
+        <field name="qualification" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PartyQualType" key-field-name="partyQualTypeId" description="${description}">
                     <entity-constraint name="parentTypeId" operator="equals" value="DEGREE"/>
@@ -229,8 +229,8 @@ under the License.
         <field name="applicationId" use-when="employmentApp==null"><hidden/></field>
         <field name="applicationId" use-when="employmentApp!=null"><display/></field>
         <field name="applyingPartyId"><hidden value="${partyId}"/></field>
-        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="jobRequisitionId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupJobRequisition"/></field>
+        <field name="approverPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="jobRequisitionId" required-field="true"><lookup target-form-name="LookupJobRequisition"/></field>
         <field name="statusId" title="${uiLabelMap.HumanResIJPStatus}"><hidden value="IJP_APPLIED"/></field>
         <field name="emplPositionId"><hidden/></field>
         <field name="employmentAppSourceTypeId"><hidden/></field>
@@ -311,9 +311,9 @@ under the License.
         <auto-fields-service service-name="updateJobInterview" map-name="JobInterview"/>
         <field use-when="JobInterview!=null" name="jobInterviewId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="jobInterviewId" use-when="JobInterview==null"><ignored/></field>
-        <field name="jobIntervieweePartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="jobRequisitionId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupJobRequisition"/></field>
-        <field name="jobInterviewerPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="jobIntervieweePartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="jobRequisitionId" required-field="true"><lookup target-form-name="LookupJobRequisition"/></field>
+        <field name="jobInterviewerPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="gradeSecuredEnumId">
              <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">

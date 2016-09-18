@@ -120,8 +120,8 @@ under the License.
     </form>
 
     <form name="QuickAddLead" type="single" target="quickAddLead" attribs="{'fieldsType':'default-compact'}">
-        <field name="firstName" title="${uiLabelMap.PartyFirstName}*" widget-style="required"><text size="15"/></field>
-        <field name="lastName" title="${uiLabelMap.PartyLastName}*" widget-style="required"><text size="15"/></field>
+        <field name="firstName" title="${uiLabelMap.PartyFirstName}*" required-field="true"><text size="15"/></field>
+        <field name="lastName" title="${uiLabelMap.PartyLastName}*" required-field="true"><text size="15"/></field>
         <field name="groupName" title="${uiLabelMap.CommonGroup}"><text size="15"/></field>
         <field name="emailAddress" title="${uiLabelMap.CommonEmail}"><text size="15"/></field>
         <field name="contactListId" title="${uiLabelMap.MarketingContactList}">

@@ -1274,4 +1274,125 @@ under the License.
         </section>
     </screen>
     
+    <!-- Complex Menu Wrapper
+        Renders a complex menu supporting complex structure such as any number and depth of sub-menus.
+        
+        Each application should wrap this implementation (or a variant: ComplexSideBarMenu, etc.) in its common screen definitions and provide the location
+        of an complex menu in menuCfg.location/name, plus any other needed configuration in the menuCfg map.
+        
+        The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
+        * activeSubMenu (direct argument)
+        * activeSubMenuItem (direct argument)
+        * activeMainMenuItem (fallback argument)
+        (NOTE: These are the default input field names, but they may be changed per-menu using further configuration below)
+        
+        Details:
+        * activeSubMenu - Name of a sub-menu that is part of the complex menu designated by menuCfg.location/name.
+          The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
+          This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
+          but this location is not used in the complex menu lookup.
+          If the field is empty, the special value "TOP", or the name of the top-level menu, it designates the top level (no sub-menu).
+          (Empty may be treated specially in some cases, such as if activeSubMenuItem is missing or if the menu wrapper behavior is changed via menuCfg.allowSubItemTop)
+          If the name is not found within the complex menu as sub-menu, the name and location is instead used to lookup a 
+          simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
+          but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
+          In fallback mode, a suffix (by default "Menu", or "SideBar" if you use ComplexSideBarMenu) is added to the activeSubMenu value before performing the lookup.
+        * activeSubMenuItem - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
+          If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
+          on the menu/sub-menu designated/implied by activeSubMenu.
+        * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
+          specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default). 
+        
+        Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.
+        activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
+        still necessary to designate items in other unrelated menus.
+        
+        The default behavior is based on the usual usage in the standard Scipio screens (based on the Ofbiz pattern).
+        In these screens, the fields activeSubMenu and activeSubMenuItem are used to highlight items in the
+        main side bar menus, with activeMainMenuItem as fallback for the top level.
+        Often, activeSubMenu is by decorators and activeSubMenuItem by individual screens.
+        Additionally, activeMainMenuItem is used in some themes to highlight items in a separate non-complex "main" menu.
+        
+        menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
+        Complex menu location:
+        * location (required) - Complex menu location
+        * name (required) - Complex menu name
+        Complex menu render options:
+        * subMenuFilter - Value for <include-menu sub-menus="..." /> attribute (see widget-screen.xsd)
+        * maxDepth - Value for <include-menu max-depth="..." /> attribute (see widget-screen.xsd)
+        Default locations:  
+        * defLocation (required) - Application's default menu file location for menus
+            This is only used for fallback simple/non-complex menus, when there is no explicit
+            location specified as prefix in activeSubMenu.
+        Complex menu name suffix control:
+        * nameSuffix (default: "Menu") - Complex menu name suffix
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenuItem field, for menu lookup
+            (only appends if not already ends with)
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenuItem field, for menu lookup
+            Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
+              <sub-menu name="Server" include="ServerSideBar"/>
+            In this case it's best to leave cplxStripSuffix true for compatibility.
+            Set cplxStripSuffix to true (default) if you used implicit or reused full names, such as: 
+                <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
+            In this case cplxStripSuffix is ignored (inapplicable).
+        Simple/fallback menu name suffix control:
+        * simpleNameSuffix - Suffix for simple/fallback menu, always added (unless already ends with)         
+        Other:
+        * forceSimple - Override to force rendering simple/fallback menu instead of complex
+        * allowSubItemTop (default: true) - Controls behavior when activeSubMenuItem is set but activeSubMenu is empty,
+            in other words top-level control.
+            If true, when activeSubMenu is empty but activeSubMenuItem is set, uses activeSubMenuItem as top-menu item.
+            In this case, activeMainMenuItem is used only as a fallback.
+            If false, when activeSubMenu is empty but activeSubMenuItem is set, activeSubMenuItem will be squashed by activeMainMenuItem.
+        Client screen field overrides:
+        * activeSubField (default: "activeSubMenu")
+        * activeSubItemField (default: "activeSubMenuItem")
+        * activeMainItemField (default: "activeMainMenuItem")
+    -->
+    <screen name="ComplexMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareComplexMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
+                    </condition>
+                    <widgets>
+                        <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="${smplLoc}" name="${smplName}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Complex SideBar Menu Wrapper - based on ComplexMenu (see ComplexMenu above for available arguments and details)
+        Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
+    <screen name="ComplexSideBarMenu">
+        <section>
+            <actions>
+                <set field="menuCfg.subMenuFilter" from-field="menuCfg.subMenuFilter" default-value="current" />
+                <set field="menuCfg.nameSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" /> 
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareComplexMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
+                    </condition>
+                    <widgets>
+                        <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="${smplLoc}" name="${smplName}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

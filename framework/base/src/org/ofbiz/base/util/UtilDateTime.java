@@ -1276,7 +1276,7 @@ public class UtilDateTime {
     }
     
     /**
-     * Scipio: Returns a map with begin/end timestamp for a given period. Defaults to month.
+     * SCIPIO: Returns a map with begin/end timestamp for a given period. Defaults to month.
      * @param period
      * @param fromDate
      * @param locale
@@ -1358,7 +1358,7 @@ public class UtilDateTime {
     }
     
     /**
-     * Scipio: Enhanced version of getPeriodInterval that returns also a date formatter for a given period.
+     * SCIPIO: Enhanced version of getPeriodInterval that returns also a date formatter for a given period.
      * @param period
      * @param locale
      * @param timezone
@@ -1416,7 +1416,7 @@ public class UtilDateTime {
     }
 
     /**
-     * Scipio: Checks if the interval passed is a valid one
+     * SCIPIO: Checks if the interval passed is a valid one
      *
      * @param interval
      * @return true or false depending on the result of evaluating the given

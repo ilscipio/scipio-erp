@@ -40,7 +40,7 @@ public class UtilCodec {
     private static final XmlEncoder xmlEncoder = new XmlEncoder();
     private static final StringEncoder stringEncoder = new StringEncoder();
     /**
-     * Scipio: Raw/none encoder that returns the original string as-is. Useful as workaround.
+     * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     private static final RawEncoder rawEncoder = new RawEncoder();
     
@@ -120,7 +120,7 @@ public class UtilCodec {
     }
 
     /**
-     * Scipio: Raw/none encoder that returns the original string as-is. Useful as workaround.
+     * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     public static class RawEncoder implements SimpleEncoder {
         public String encode(String original) {
@@ -132,7 +132,7 @@ public class UtilCodec {
     // ================== Begin General Functions ==================
 
     public static SimpleEncoder getEncoder(String type) {
-        // Scipio: Raw/none encoder that returns the original string as-is. Useful as workaround.
+        // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
         if ("raw".equals(type)) {
             return rawEncoder;
         } else if ("url".equals(type)) {

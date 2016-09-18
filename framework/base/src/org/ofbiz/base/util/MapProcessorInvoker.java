@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Scipio: Helper map processor invoker.
+ * SCIPIO: Helper map processor invoker.
  */
 public class MapProcessorInvoker {
 

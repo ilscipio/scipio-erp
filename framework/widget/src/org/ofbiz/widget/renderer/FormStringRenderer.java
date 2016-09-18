@@ -53,7 +53,7 @@ public interface FormStringRenderer {
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     
-    //Scipio: 
+    // SCIPIO: new
     public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
@@ -68,7 +68,7 @@ public interface FormStringRenderer {
     public void renderFormatHeaderRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowFormCellTitleSeparator(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast) throws IOException;
     
-    // Scipio: Table footer
+    // SCIPIO: Table footer
     public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
@@ -105,7 +105,12 @@ public interface FormStringRenderer {
     public void renderFieldGroupClose(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) throws IOException;
     
     /**
-     * Scipio: handles no-result case for list forms, so a text or other may be displayed instead of empty table.
+     * SCIPIO: handles no-result case for list forms, so a text or other may be displayed instead of empty table.
      */
     public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException;
+    
+    /**
+     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
+     */
+    public String getRendererName();
 }

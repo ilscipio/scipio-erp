@@ -1,5 +1,5 @@
 /**
- * Scipio: Returns the visualThemeId for the site or product store for the site, best-effort.
+ * SCIPIO: Returns the visualThemeId for the site or product store for the site, best-effort.
  * <p>
  * For use with WebSite.visualThemeSelectorScript entity field.
  * <p>

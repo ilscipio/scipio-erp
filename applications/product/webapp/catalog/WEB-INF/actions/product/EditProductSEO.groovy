@@ -24,7 +24,7 @@ if (productId) {
         if (productContent.productContentTypeId == "PAGE_TITLE") {
             contentTitle  = from("Content").where("contentId", productContent.contentId).queryOne();
             dataTextTitle  = from("ElectronicText").where("dataResourceId", contentTitle.dataResourceId).queryOne();
-            // Scipio: don't want page title overridden/forced by groovy
+            // SCIPIO: don't want page title overridden/forced by groovy
             //context.title = dataTextTitle.textData;
             context.productTitle = dataTextTitle.textData;
         }

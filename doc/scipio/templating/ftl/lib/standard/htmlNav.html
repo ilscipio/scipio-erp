@@ -535,6 +535,9 @@ second is cleaner to express.        </p>
         <p>
 Note that both macros support arguments passed in a hash (or map) using the &quot;args&quot; argument, so the entire menu definition
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.        </p>
+        <p>
+The generated menu ID following a call can be read using: <code>getRequestVar(&quot;scipioLastMenuInfo&quot;).id</code>.
+At current time (2016-09-16), other members of that map should not be relied upon.        </p>
         <h4>Nested Menus</h4>
         <p>
 Nested menus (sub-menus) will inherit the type of the parent if no type is specified. The macro will automatically
@@ -745,6 +748,20 @@ in case it is needed a nested menu behaves as a top-level menu (by passing false
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>menuLevel</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -empty, automatic-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Override to tell the macro which level it&#39;s on</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+The menu macro will try to figure out automatically if not specified.
+Starts at 1.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>parentMenuType</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -752,6 +769,41 @@ in case it is needed a nested menu behaves as a top-level menu (by passing false
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 This is usually determined automatically, but in esoteric cases may need to specify.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>active</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Indicates it is the parent menu of an active item, either target or ancestor</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+NOTE(2016-08-30): Is currently NOT determined automatically, only in menu widgets
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active&quot; translates to (&quot;selected&quot; OR &quot;selected ancestor&quot;) in menu widget terminology (see CommonMenus.xml).          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>activeTarget</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|, default: -empty/unspecified/unknown-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Indicates it is the parent menu of an active target but not ancestor menu item (current page)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If true, implies active. If explicit false, means active ancestor. If not set, unknown or unspecified by template.
+NOTE(2016-09-01): currently this is NOT determined automatically except for menu widgets.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active target&quot; translates to &quot;selected&quot; item in menu widget terminology (see CommonMenus.xml)          </div>
 </span>
                         </td>
                       </tr>
@@ -1022,7 +1074,30 @@ but other characters should not be manually escaped (apart from URL parameter en
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Whether menu item active (current page)</span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether menu item active, either target or ancestor (current page)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active&quot; translates to (&quot;selected&quot; OR &quot;selected ancestor&quot;) in menu widget terminology (see CommonMenus.xml).          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>activeTarget</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|, default: -empty/unspecified/unknown-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether menu item is the active target but not ancestor (current page)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If true, implies active. If explicit false, means active ancestor. If not set, unknown or unspecified by template.
+NOTE(2016-09-01): currently this is NOT determined automatically.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;active target&quot; translates to &quot;selected&quot; item in menu widget terminology (see CommonMenus.xml)          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -1109,17 +1184,18 @@ If false, the nested content will come before or after (depending on nestedFirst
                             <code>contentWrapElem</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|div|..., default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">For <code>generic</code> type items, controls the extra content wrapper around nested</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|div|..., default: -depends on type-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">For <code>generic</code> and <code>text</code> type items, controls the extra content wrapper around nested</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-If true, a <code>div</code> will be added around nested; if any string, the given string will be used as the element.
+If true, a <code>div</code> (generic) or <code>span</code> (text) will be added around nested; if any string, the given string will be used as the element.
 This wrapper will receive the contentClass and other content attributes normally given to inline elements for the other types.
 If false, no wrapper will be added.
+For generic, the default is false. For text, the default is true.
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-This currently only works for <code>generic</code> type items.          </div>
+This currently only works for <code>generic</code> and <code>text</code> type items.          </div>
 </span>
                         </td>
                       </tr>

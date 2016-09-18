@@ -60,7 +60,7 @@ public final class FlexibleMessage implements Serializable {
         if (messageFse != null) {
             return messageFse.expandString(methodContext.getEnvMap());
         } else {
-            // Scipio: FIXME?: These getMessage calls trim the string, so space delimiter is impossible...
+            // SCIPIO: FIXME?: These getMessage calls trim the string, so space delimiter is impossible...
             // but may not be safe to fix until further testing. Could change to getMessageNoTrim.
             return UtilProperties.getMessage(propertyResource, propertykey, methodContext.getEnvMap(), methodContext.getLocale());
         }

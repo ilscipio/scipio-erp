@@ -24,6 +24,7 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Payment" />
                 <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
@@ -34,7 +35,7 @@ under the License.
                                 <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="PaymentSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -559,17 +560,21 @@ under the License.
                     <field-map field-name="lastNameFirst" value="Y"/>
                 </service>
             </actions>
-            <condition>
-                <not>
-                    <if-empty field="payment"/>
-                </not>
-            </condition>
             <widgets>
-                <screenlet>        
-                    <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/payment/ScipioPaymentInfo.ftl"/></html>
-                    </platform-specific>
-                </screenlet>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="payment"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet>        
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/payment/ScipioPaymentInfo.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -589,19 +594,23 @@ under the License.
                     <order-by field-name="invoiceItemSeqId"/>
                 </entity-condition>
             </actions>
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="parameters.paymentId"/>
-                    </not>
-                </and>
-            </condition>
             <widgets>
-                <screenlet>        
-                    <platform-specific>
-                        <html><html-template location="component://accounting/webapp/accounting/payment/ScipioPaymentAppliedPayment.ftl"/></html>
-                    </platform-specific>
-                </screenlet>
+                <section>
+                    <condition>
+                        <and>
+                            <not>
+                                <if-empty field="parameters.paymentId"/>
+                            </not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <screenlet>        
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/payment/ScipioPaymentAppliedPayment.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -613,8 +622,6 @@ under the License.
                 <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
                 <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
             </actions>
-            <condition>
-            </condition>
             <widgets>
                 <screenlet>        
                     <platform-specific>

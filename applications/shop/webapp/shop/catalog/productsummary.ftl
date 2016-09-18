@@ -43,7 +43,7 @@
     </#assign>
 
 
-    <#if smallImageUrl?trim?has_content>
+    <#if smallImageUrl?has_content>
         <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
     <#else>
         <#assign imgSrc="https://placehold.it/300x100"/>    

@@ -188,7 +188,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local method = "post">
   </#if>
   <#-- showProgress=false progressOptions="" progressSuccessAction=""  -->
-  <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
+  <#-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#-- Scipio: process extra attribs -->
   <#local showProgress = (attribs.showProgress)!false>
   <#if !showProgress?is_boolean>
@@ -202,19 +202,20 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if attribs.fieldsType?has_content>
     <@fields type=attribs.fieldsType open=true close=false />
   </#if>
-  <#local progressOptions = (attribs.progressOptions)!{}> <#-- NOTE: this may be a string repr of a map! -->
+  <#local progressOptions = (attribs.progressOptions)!{}><#-- NOTE: this may be a string repr of a map! -->
   <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
   <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : progressOptions, "progressSuccessAction" : progressSuccessAction, "attribs":attribs}>
   <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
   <form method="${method}" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
-      <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
-        <input type="hidden" name="${viewIndexField}" value="${viewIndex}"/>
-      </#if>
-      <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
-        <input type="hidden" name="${viewSizeField}" value="${viewSize}"/>
-      </#if>
+    </#if>
+    <#-- SCIPIO: moved this OUTSIDE the useRowSubmit check -->
+    <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
+      <input type="hidden" name="${viewIndexField}" value="${viewIndex}"/>
+    </#if>
+    <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
+      <input type="hidden" name="${viewSizeField}" value="${viewSize}"/>
     </#if>
 </#macro>
 <#-- Scipio: WARN: also exists renderMultiFormClose below -->
@@ -282,7 +283,6 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local scrollable = false>
     <#local style = removeStyleNames(style, "non-scrollable")>
   </#if>
-  <#local dummy = pushRequestStack("renderFormatListWrapperStack", {"formName":formName, "style":style, "responsive":responsive, "scrollable":scrollable})>
   <#-- Scipio: use @table macro to open -->
   <#if style?has_content>
     <#-- specified style will replace default class from @table (unless prefixed with "+" in widget defs) -->
@@ -300,11 +300,22 @@ WARN: no code run here or indirectly from here should assume full current contex
     responsive: ${responsive?string} 
     scrollable: ${scrollable?string} -->
   <@table open=true close=false type=tableType class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
+  <#local tableInfo = {
+    "formName":formName, 
+    "style":style, 
+    "responsive":responsive, 
+    "scrollable":scrollable,
+    "tableId":getRequestVar("scipioCurrentTableInfo").id
+  }>
+  <#local dummy = pushRequestStack("renderFormatListWrapperStack", tableInfo)>
 </#macro>
 
 <#macro renderFormatListWrapperClose formName extraArgs...>
   <#local stackValues = popRequestStack("renderFormatListWrapperStack")!{}>
   <@table close=true open=false />
+  <#-- save the table info for post-table stuff -->
+  <#local dummy = setRequestVar("renderFormLastTableInfo", stackValues)>
+  <#-- TABLE ID: ${stackValues.tableId}, ${getRequestVar("scipioLastTableInfo").id} -->
   <#-- Scipio: unset form info, but only if it was the list wrapper that set it -->
   <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>
@@ -735,6 +746,121 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#else>
     <@renderLabelCommon text=text style=className id="" />
   </#if>
+</#macro>
+
+<#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
+<#macro renderSubmitForm hiddenFormName="" formName="" formType="" targetUrl="" targetWindow="" 
+    params={} useRowSubmit=false useMasterSubmitField=false submitEntries=[] extraArgs...>
+  <#-- NOTE: if (useRowSubmit==false && useMasterSubmitField==true), we can basically skip this entire macro,
+    but there's no harm going through this in case we need the hook -->
+  <#--<#if !(!useRowSubmit && useMasterSubmitField)>-->
+  
+  <#-- NOTE: escaping must be done by the macro on this one. is a glimpse of the future. -->
+  <#local tableId = (getRequestVar("renderFormLastTableInfo").tableId)!"_TABLE_ID_NOT_FOUND_">
+  
+  <#if (useRowSubmit || useMasterSubmitField) && submitEntries?has_content>
+    <@script>
+        jQuery(document).ready(function() {
+          <#if useRowSubmit>
+            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+          <#else>
+            var submitForm = $("form[name=${escapePart(formName, 'js')}]");
+          </#if>
+            
+            if (submitForm) {
+              <#list submitEntries as submitEntry>
+                <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
+                <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
+               
+
+                var submitField = $("#${submitFieldIdJs}");
+                $(submitField).click(function(e) {
+                    e.preventDefault();
+                  <#if useRowSubmit>
+                    <#local selectFieldNamePrefixJs = escapePart(submitEntry.selectFieldNamePrefix, 'js')><#-- selectAction -->
+                    var checked = false;
+              
+                    $("#${escapePart(tableId, 'js')}").find("input[type=radio][name^=${selectFieldNamePrefixJs}],"+ 
+                        "input[type=checkbox][name^=${selectFieldNamePrefixJs}]").each(function (j, r) {
+
+                        if ($(r).is(":checked")) {
+                            checked = true;
+                            
+                            <#-- makeHiddenFieldsForHiddenForm -->
+                            $(this).closest("tr").find("input[type=text], input[type=hidden], input[type=radio],"+ 
+                                    "input[type=checkbox], select, textarea").each(function (i, e) {
+                                if ($(submitForm).find("input[name=" + $(e).attr("name") + "]").length <= 0) {
+                                    var hiddenField = $("<input></input>")
+                                    $(hiddenField).attr("type", "hidden");
+                                    $(hiddenField).attr("name", $(e).attr("name"));
+                                    $(hiddenField).attr("value", $(e).val());
+                                    $(submitForm).append($(hiddenField));
+                                }
+                            });  
+                        }
+                    });
+                    if (checked) {
+                        submitForm.submit();
+                    } else {
+                        alert("${escapePart(uiLabelMap.CommonNoRowSelected, 'js')}");
+                    }
+                  <#else>
+                    submitForm.submit();
+                  </#if>
+                });
+              </#list>
+            } else {
+                return false;
+            }
+        });
+    </@script>
+  <#elseif submitEntries?has_content>
+    <@script>
+        jQuery(document).ready(function() {
+            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+            if (submitForm) {
+              <#list submitEntries as submitEntry>
+                <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
+                <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
+   
+                var id = $("[id^=${submitFieldIdJs}]");
+                $(id).click(function(e) {
+                    e.preventDefault();
+                    
+                    <#-- makeHiddenFieldsForHiddenForm -->
+                    $(this).closest("tr").find("input[type=text], input[type=hidden], input[type=radio],"+ 
+                            "input[type=checkbox], select, textarea").each(function (i, e) {
+                        if ($(submitForm).find("input[name=" + $(e).attr("name") + "]").length <= 0) {
+                            var hiddenField = $("<input></input>")
+                            $(hiddenField).attr("type", "hidden");
+                            $(hiddenField).attr("name", $(e).attr("name"));
+                            $(hiddenField).attr("value", $(e).val());
+                            $(submitForm).append($(hiddenField));
+                        }
+                    });
+                        
+                    submitForm.submit();
+                });
+              </#list>
+            } else {
+                return false;
+            }
+        });
+    </@script>
+  </#if>
+  <#if submitEntries?has_content && (useRowSubmit || !useMasterSubmitField)>
+  <#-- TODO: can't use here yet: escapeFullUrl(targetUrl, 'html') because individual params already escaped by renderer, but don't really want that anymore... -->
+  <form method="post" action="${targetUrl}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
+    <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapePart(hiddenFormName, 'html')}">
+    <#list mapKeys(params) as paramName>
+      <input type="hidden" name="${escapePart(paramName, 'html')}" value="${escapePart(params[escapePart(paramName, 'html')], 'html')}" />
+    </#list>
+    <#if useRowSubmit>
+      <input type="hidden" name="_useRowSubmit" value="Y"/>
+    </#if>
+  </form>
+  </#if>
+  <#--</#if>-->
 </#macro>
 
   

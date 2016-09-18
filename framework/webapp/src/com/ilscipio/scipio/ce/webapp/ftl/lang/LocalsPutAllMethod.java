@@ -26,7 +26,7 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: LocalsPutAllMethod - Freemarker Method for dumping all values in a map
+ * SCIPIO: LocalsPutAllMethod - Freemarker Method for dumping all values in a map
  * into FTL locals.
  */
 public class LocalsPutAllMethod extends VarsPutAllMethod {

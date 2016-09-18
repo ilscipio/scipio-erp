@@ -29,7 +29,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: ToSimpleRawMapMethod - Another workaround for BeansWrapper kludge.
+ * SCIPIO: ToSimpleRawMapMethod - Another workaround for BeansWrapper kludge.
  */
 public class ToSimpleMapMethod implements TemplateMethodModelEx {
 

@@ -89,4 +89,9 @@ public interface ModelWidgetVisitor {
     void visit(ModelTree.ModelNode.ModelSubNode modelSubNode) throws Exception;
 
     void visit(ModelScreenWidget.Column column) throws Exception;
+    
+    /**
+     * SCIPIO: Visit the sub-menu.
+     */
+    void visit(ModelSubMenu subMenu) throws Exception;
 }

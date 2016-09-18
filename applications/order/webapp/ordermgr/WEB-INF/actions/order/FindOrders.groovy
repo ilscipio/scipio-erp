@@ -180,7 +180,7 @@ paramList = request.getAttribute("paramList") ?: "";
 context.paramList = paramList;
 
 if (paramList) {
-    // Scipio: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
+    // SCIPIO: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
     paramIds = paramList.split("&amp;");
     context.paramIdList = Arrays.asList(paramIds);
 }

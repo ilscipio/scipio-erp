@@ -855,15 +855,15 @@ public class ModelTree extends ModelWidget {
          * @see <code>widget-tree.xsd</code>
          */
         public static class Link {
-            private final Boolean encode; // Scipio: changed from boolean to Boolean
-            private final Boolean fullPath; // Scipio: changed from boolean to Boolean
+            private final Boolean encode; // SCIPIO: changed from boolean to Boolean
+            private final Boolean fullPath; // SCIPIO: changed from boolean to Boolean
             private final FlexibleStringExpander idExdr;
             private final Image image;
             private final String linkType;
             private final FlexibleStringExpander nameExdr;
             private final List<Parameter> parameterList;
             private final FlexibleStringExpander prefixExdr;
-            private final Boolean secure; // Scipio: changed from boolean to Boolean
+            private final Boolean secure; // SCIPIO: changed from boolean to Boolean
             private final FlexibleStringExpander styleExdr;
             private final FlexibleStringExpander targetExdr;
             private final FlexibleStringExpander targetWindowExdr;
@@ -872,8 +872,8 @@ public class ModelTree extends ModelWidget {
             private final String urlMode;
 
             public Link(Element linkElement) {
-                this.encode = "true".equals(linkElement.getAttribute("encode")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("encode")) ? Boolean.FALSE : null); // Scipio: changed from boolean to Boolean
-                this.fullPath = "true".equals(linkElement.getAttribute("full-path")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("full-path")) ? Boolean.FALSE : null); // Scipio: changed from boolean to Boolean
+                this.encode = "true".equals(linkElement.getAttribute("encode")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("encode")) ? Boolean.FALSE : null); // SCIPIO: changed from boolean to Boolean
+                this.fullPath = "true".equals(linkElement.getAttribute("full-path")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("full-path")) ? Boolean.FALSE : null); // SCIPIO: changed from boolean to Boolean
                 this.idExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("id"));
                 Element imageElement = UtilXml.firstChildElement(linkElement, "image");
                 if (imageElement != null) {
@@ -894,7 +894,7 @@ public class ModelTree extends ModelWidget {
                     this.parameterList = Collections.emptyList();
                 }
                 this.prefixExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("prefix"));
-                this.secure = "true".equals(linkElement.getAttribute("secure")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("secure")) ? Boolean.FALSE : null); // Scipio: changed from boolean to Boolean
+                this.secure = "true".equals(linkElement.getAttribute("secure")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("secure")) ? Boolean.FALSE : null); // SCIPIO: changed from boolean to Boolean
                 this.styleExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("style"));
                 this.targetExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("target"));
                 this.targetWindowExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("target-window"));
@@ -905,15 +905,15 @@ public class ModelTree extends ModelWidget {
 
             // FIXME: Using a widget model in this way is an ugly hack.
             public Link(String style, String target, String text) {
-                this.encode = null; // Scipio: Null default
-                this.fullPath = null; // Scipio: Null default
+                this.encode = null; // SCIPIO: Null default
+                this.fullPath = null; // SCIPIO: Null default
                 this.idExdr = FlexibleStringExpander.getInstance("");
                 this.image = null;
                 this.linkType = "";
                 this.nameExdr = FlexibleStringExpander.getInstance("");
                 this.parameterList = Collections.emptyList();
                 this.prefixExdr = FlexibleStringExpander.getInstance("");
-                this.secure = null; // Scipio: Null default
+                this.secure = null; // SCIPIO: Null default
                 this.styleExdr = FlexibleStringExpander.getInstance(style);
                 this.targetExdr = FlexibleStringExpander.getInstance(target);
                 this.targetWindowExdr = FlexibleStringExpander.getInstance("");
@@ -922,11 +922,11 @@ public class ModelTree extends ModelWidget {
                 this.urlMode = "intra-app";
             }
 
-            public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+            public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
                 return this.encode;
             }
 
-            public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+            public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
                 return this.fullPath;
             }
 
@@ -964,7 +964,7 @@ public class ModelTree extends ModelWidget {
                 return this.prefixExdr.expandString(context);
             }
 
-            public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+            public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
                 return this.secure;
             }
 

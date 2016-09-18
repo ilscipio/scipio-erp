@@ -11,7 +11,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.template.FtlScriptFormatter;
 
 /**
- * Scipio: Generalized helper class to help implement one-shot macros.
+ * SCIPIO: Generalized helper class to help implement one-shot macros.
  * <p>
  * This produces a single macro invocation with the old Ofbiz sub-invocations converted
  * to map arguments, which may then contain further maps within.

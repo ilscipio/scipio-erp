@@ -20,47 +20,17 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="CommonPriceDecorator">
-        <section>
-            <actions>
-                <set field="showMainExtendedBar" type="Boolean" value="true" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->                    
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+
     <screen name="FindProductPriceRule">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleFindProductPriceRule"/>
-                <set field="activeMainMenuItem" value="pricerules"/>
+                <set field="titleProperty" value="PageTitleFindPriceRule"/><!-- PageTitleFindProductPriceRule -->
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPriceDecorator">
+                <decorator-screen name="CommonPriceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductGlobalPriceRules}">
                             <include-form name="FindProductPriceRules" location="component://product/widget/catalog/PriceForms.xml"/>
@@ -78,12 +48,11 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPriceRules"/>
-                <set field="activeMainMenuItem" value="pricerules"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/price/EditProductPriceRules_old.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPriceDecorator">
+                <decorator-screen name="CommonPriceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/price/EditProductPriceRules.ftl"/></html>
@@ -96,17 +65,16 @@ under the License.
     <screen name="EditProductPriceRules">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductPriceRules"/>
-                <set field="activeMainMenuItem" value="pricerules"/>
+                <set field="titleProperty" value="ProductPriceRule"/><!-- PageTitleEditProductPriceRules -->
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/price/EditProductPriceRules.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPriceDecorator">
+                <decorator-screen name="CommonPriceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://product/webapp/catalog/price/setPriceRulesCondEventJs.ftl"/></html></platform-specific>
                         <include-menu name="PriceRulesButtonBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                        <screenlet title="${uiLabelMap.ProductPriceRuleId} [${parameters.productPriceRuleId}]">
+                        <screenlet><!--  title="${uiLabelMap.ProductPriceRuleId} [${parameters.productPriceRuleId}]" -->
                             <label style="heading+4" text="${uiLabelMap.ProductConditionsActionsRemoveBefore}"/>
                             <horizontal-separator/>
                             <include-form name="EditProductPriceRule" location="component://product/widget/catalog/PriceForms.xml"/>

@@ -19,7 +19,7 @@ import org.ofbiz.webapp.website.WebSiteProperties;
 import org.xml.sax.SAXException;
 
 /**
- * Scipio: Request link utilities.
+ * SCIPIO: Request link utilities.
  */
 public abstract class RequestLinkUtil {
 
@@ -106,7 +106,7 @@ public abstract class RequestLinkUtil {
     }
     
     /**
-     * Scipio: Helper method, originally derived from catalog URL links, but needed repeatedly.
+     * SCIPIO: Helper method, originally derived from catalog URL links, but needed repeatedly.
      */
     public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, String url,
             Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {

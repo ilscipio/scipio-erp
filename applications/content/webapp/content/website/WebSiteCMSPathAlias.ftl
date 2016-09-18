@@ -18,13 +18,13 @@
   -->
 
 <#-- cms menu bar -->
-<div id="cmsmenu" style="margin-bottom: 8px;">
+<@menu type="button" id="cmsmenu">
     <#if (content?has_content)>
-        <a href="javascript:void(0);" onclick="javascript:callDocument(true, '${content.contentId}', '', 'ELECTRONIC_TEXT');" class="${styles.link_nav!}">Quick Sub-Content</a>
-        <a href="javascript:void(0);" onclick="javascript:callPathAlias('${content.contentId}');" class="${styles.link_nav!} ${styles.selected!}">Path Alias</a>
-        <a href="javascript:void(0);" onclick="javascript:callMetaInfo('${content.contentId}');" class="${styles.link_nav!}">Meta Tags</a>
+        <@menuitem type="link" href="javascript:void(0);" onClick="javascript:callDocument(true, '${content.contentId}', '', 'ELECTRONIC_TEXT');" class="+${styles.link_nav!}" text="Quick Sub-Content"/>
+        <@menuitem type="link" href="javascript:void(0);" onClick="javascript:callPathAlias('${content.contentId}');" class="+${styles.link_nav!} ${styles.selected!}" text="Path Alias"/>
+        <@menuitem type="link" href="javascript:void(0);" onClick="javascript:callMetaInfo('${content.contentId}');" class="+${styles.link_nav!}" text="Meta Tags"/>
     </#if>
-</div>
+</@menu>
 
 <#if (content?has_content)>
     <div style="margin-bottom: 8px;">

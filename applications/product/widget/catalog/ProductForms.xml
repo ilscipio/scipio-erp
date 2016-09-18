@@ -982,7 +982,7 @@
             not be updatable, so we use use-when to change the behavior of the form if there is a SupplierProduct value available. productId is always 
             hidden (assuming it exists) so this is not an issue -->
         <field name="productId">
-            <hidden value="${productId}" />
+            <display also-hidden="true"/>
         </field>
         <field name="partyId" title="${uiLabelMap.ProductSupplier}" use-when="supplierProduct!=null">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" />
@@ -996,7 +996,13 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="availableFromDate" use-when="supplierProduct==null">
+        <field name="supplierProductId" required-field="true">
+            <text/>
+        </field>
+        <field name="lastPrice" required-field="true">
+            <text />
+        </field>
+        <field name="availableFromDate" use-when="supplierProduct==null" required-field="true">
             <date-time type="date" />
         </field>
         <field name="availableFromDate" use-when="supplierProduct!=null">

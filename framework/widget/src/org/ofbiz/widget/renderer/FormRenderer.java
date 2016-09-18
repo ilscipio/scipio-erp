@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.xmlrpc.util.HttpUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -250,7 +249,7 @@ public class FormRenderer {
 
         
         // find the highest position number to get the max positions used
-        // Scipio: use explicit if set, and also take position-span into account here
+        // SCIPIO: use explicit if set, and also take position-span into account here
         Integer positions = modelForm.getPositions();
         if (positions == null || positions < 1) {
             positions = 1;
@@ -297,6 +296,30 @@ public class FormRenderer {
         }
     }
 
+    /**
+     * SCIPIO: Gets the real/accurate number of inner form field cells, by running through them in advance.
+     */
+    private int getInnerFormFieldCellCount(ModelForm modelForm, List<ModelFormField> innerFormFields) {
+        int innerFormFieldsCells = 0;
+        if (modelForm.getGroupColumns()) {
+            if (innerFormFields.size() > 0) {
+                Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
+                while (innerFormFieldsIt.hasNext()) {
+                    ModelFormField modelFormField = innerFormFieldsIt.next();
+                    if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                        innerFormFieldsCells++;
+                    }
+                }
+                if (innerFormFieldsCells < 1) {
+                    innerFormFieldsCells = 1; // minimum one
+                }
+            }
+        } else {
+            innerFormFieldsCells = innerFormFields.size();
+        }
+        return innerFormFieldsCells;
+    }
+    
     private int renderHeaderRow(Appendable writer, Map<String, Object> context)
             throws IOException {
         int maxNumOfColumns = 0;
@@ -306,8 +329,9 @@ public class FormRenderer {
         // conditions are used or when a form is extended or when the fields are
         // automatically retrieved by a service or entity definition.
         List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
-        tempFieldList.addAll(modelForm.getFieldList());        
-        if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseRowSubmit()) {
+        tempFieldList.addAll(modelForm.getFieldList());    
+        // SCIPIO: NOTE: this addAll added by us
+        if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseMasterSubmitField()) {
             tempFieldList.addAll(modelForm.getMultiSubmitFields());
         }
         for (int j = 0; j < tempFieldList.size(); j++) {
@@ -328,6 +352,7 @@ public class FormRenderer {
         Collection<List<ModelFormField>> fieldListsByPosition = this.getFieldListsByPosition(tempFieldList);
         List<Map<String, List<ModelFormField>>> fieldRowsByPosition = new LinkedList<Map<String, List<ModelFormField>>>(); // this list will contain maps, each one containing the list of fields for a position
         for (List<ModelFormField> mainFieldList : fieldListsByPosition) {
+            int numOfColumns = 0;
             List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<ModelFormField>();
             List<ModelFormField> innerFormFields = new LinkedList<ModelFormField>();
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<ModelFormField>();
@@ -363,6 +388,7 @@ public class FormRenderer {
                     continue;
                 }
 
+                // SCIPIO: added SUBMIT here
                 if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
                         && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
                         && fieldInfo.getFieldType() != FieldInfo.HYPERLINK  
@@ -391,6 +417,7 @@ public class FormRenderer {
                 }
 
                 // skip all of the display/hyperlink fields
+                // SCIPIO: added SUBMIT here
                 if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
                         || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
                         || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
@@ -401,26 +428,31 @@ public class FormRenderer {
                 innerFormFields.add(modelFormField);
             }
 
-            if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsBegin))
-                maxNumOfColumns += innerDisplayHyperlinkFieldsBegin.size();
-            if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
-                maxNumOfColumns += innerDisplayHyperlinkFieldsEnd.size();
-            if (UtilValidate.isNotEmpty(innerFormFields))
-                maxNumOfColumns += innerFormFields.size();
+            // SCIPIO: get real/accurate count of inner field cells
+            int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
             
-            // Scipio: Add an extra column to hold a checkbox or radio button depending on the type of form.
-            if ((modelForm.getType().equals("list") || modelForm.getType().equals("multi")) && modelForm.getUseRowSubmit()) {
-                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-                ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
-                builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setModelForm(modelForm);
-                builder.setTitle("Select");
-                builder.setFieldInfo(displayField);
-                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
-                maxNumOfColumns++;
+            // SCIPIO: Add an extra column to hold a checkbox or radio button depending on the type of form.
+            if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
+                ModelFormField headerItem = modelForm.getRowSubmitHeaderSelectField();
+                if (headerItem != null) {
+                    innerDisplayHyperlinkFieldsEnd.add(headerItem);
+                    mainFieldList.add(headerItem);
+                }
             }
+            
+            if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsBegin))
+                numOfColumns += innerDisplayHyperlinkFieldsBegin.size();
+            if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
+                numOfColumns += innerDisplayHyperlinkFieldsEnd.size();
+            // SCIPIO: this is not enough. we must exclude any grouped columns.
+            //if (UtilValidate.isNotEmpty(innerFormFields))
+            //    numOfColumns += innerFormFields.size();
+            numOfColumns += innerFormFieldsCells;
 
+            if (maxNumOfColumns < numOfColumns) {
+                maxNumOfColumns = numOfColumns;
+            }
+            
             Map<String, List<ModelFormField>> fieldRow = UtilMisc.toMap("displayBefore", innerDisplayHyperlinkFieldsBegin,
                     "inputFields", innerFormFields, "displayAfter", innerDisplayHyperlinkFieldsEnd, "mainFieldList",
                     mainFieldList);
@@ -435,13 +467,16 @@ public class FormRenderer {
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd = listsMap.get("displayAfter");
             List<ModelFormField> mainFieldList = listsMap.get("mainFieldList");
 
+            // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
+            int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
+            
             int numOfCells = innerDisplayHyperlinkFieldsBegin.size() + innerDisplayHyperlinkFieldsEnd.size()
-                    + (innerFormFields.size() > 0 ? 1 : 0);
+                    + innerFormFieldsCells; //+ (innerFormFields.size() > 0 ? 1 : 0);
             int numOfColumnsToSpan = maxNumOfColumns - numOfCells + 1;
             if (numOfColumnsToSpan < 1) {
                 numOfColumnsToSpan = 1;
             }
-
+            
             if (numOfCells > 0) {
                 formStringRenderer.renderFormatHeaderRowOpen(writer, context, modelForm);
 
@@ -460,23 +495,23 @@ public class FormRenderer {
                         formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
                     }
                     if (innerFormFields.size() > 0) {
-                        // TODO: manage colspan
-//                        if (modelForm.getUseRowSubmit())
-//                            formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
-                        Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
+                        // SCIPIO: FIXME?: the renderFormatHeaderRowFormCellOpen calls here always pass position span 1,
+                        // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
                         
-                        // Scipio: There is currently an issue where sometimes the title separator gets printed
+                        // TODO: manage colspan
+                        formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
+                        // SCIPIO: There is currently an issue where sometimes the title separator gets printed
                         // in BETWEEN cell items. I don't know what started causing this, but am adding a sanity
                         // check boolean that will fix at least that specific problem (but there could be others).
-                        boolean cellOpened = false;
+                        boolean cellOpened = true;
+                        Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
                         
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
 
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
-                                formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
-                                cellOpened = true;
-                            } else if (!modelForm.getUseRowSubmit()) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && !cellOpened) {
+                                // SCIPIO: use th element always for this from now on
+                                //formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
                                 formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                                 cellOpened = true;
                             }
@@ -484,10 +519,9 @@ public class FormRenderer {
                             // render title (unless this is a submit or a reset field)
                             formStringRenderer.renderFieldTitle(writer, context, modelFormField);
 
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
-                                formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
-                                cellOpened = false;
-                            } else if (!modelForm.getUseRowSubmit()) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && cellOpened) {
+                                // SCIPIO: use th element always for this from now on
+                                //formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
                                 formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                                 cellOpened = false;
                             }
@@ -495,7 +529,7 @@ public class FormRenderer {
                             if (innerFormFieldsIt.hasNext()) {
                                 // TODO: determine somehow if this is the last one... how?
                                 if (!modelForm.getSeparateColumns() && !modelFormField.getSeparateColumn()) {
-                                    // Scipio: ONLY do this if we know we have an open cell
+                                    // SCIPIO: ONLY do this if we know we have an open cell
                                     if (cellOpened) {
                                         formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
                                             modelFormField, false);
@@ -503,14 +537,18 @@ public class FormRenderer {
                                 }
                             }
                         }
-//                        if (modelForm.getUseRowSubmit())
-//                            formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+                        // SCIPIO: clean this up but only if not already closed (this test fixes ofbiz bug that lets in extra closing </th>)
+                        if (cellOpened) {
+                            formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+                        }
                     }
                     Iterator<ModelFormField> innerDisplayHyperlinkFieldsEndIt = innerDisplayHyperlinkFieldsEnd.iterator();
                     while (innerDisplayHyperlinkFieldsEndIt.hasNext()) {
                         ModelFormField modelFormField = innerDisplayHyperlinkFieldsEndIt.next();
                         // span columns only if this is the last column in the row (not just in this first list)
-                        if (innerDisplayHyperlinkFieldsEndIt.hasNext() || numOfCells > innerDisplayHyperlinkFieldsEnd.size()) {
+                        // SCIPIO: bad check
+                        //if (innerDisplayHyperlinkFieldsEndIt.hasNext() || numOfCells > innerDisplayHyperlinkFieldsEnd.size()) {
+                        if (innerDisplayHyperlinkFieldsEndIt.hasNext()) {
                             formStringRenderer.renderFormatHeaderRowCellOpen(writer, context, modelForm, modelFormField, 1);
                         } else {
                             formStringRenderer.renderFormatHeaderRowCellOpen(writer, context, modelForm, modelFormField,
@@ -519,9 +557,6 @@ public class FormRenderer {
                         formStringRenderer.renderFieldTitle(writer, context, modelFormField);
                         formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
                     }
-                    
-                    
-                    
                 } else {
                     Iterator<ModelFormField> mainFieldListIter = mainFieldList.iterator();
                     while (mainFieldListIter.hasNext()) {
@@ -574,6 +609,8 @@ public class FormRenderer {
         }
     }
 
+
+    
     // The fields in the three lists, usually created in the preprocessing phase
     // of the renderItemRows method are rendered: this will create a visual representation
     // of one row (corresponding to one position).
@@ -582,8 +619,21 @@ public class FormRenderer {
             List<ModelFormField> innerDisplayHyperlinkFieldsBegin, List<ModelFormField> innerFormFields,
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd, List<ModelFormField> mainFieldList, int position,
             int numOfColumns) throws IOException {
+        
+        // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
+        int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
+        
+        // SCIPIO: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
+        if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
+            ModelFormField item = modelForm.getRowSubmitSelectField();
+            if (item != null) {
+                innerDisplayHyperlinkFieldsEnd.add(item);
+                mainFieldList.add(item);
+            }
+        }
+        
         int numOfCells = innerDisplayHyperlinkFieldsBegin.size() + innerDisplayHyperlinkFieldsEnd.size()
-                + (innerFormFields.size() > 0 ? 1 : 0);
+                + innerFormFieldsCells; // + (innerFormFields.size() > 0 ? 1 : 0);
         int numOfColumnsToSpan = numOfColumns - numOfCells + 1;
         if (numOfColumnsToSpan < 1) {
             numOfColumnsToSpan = 1;
@@ -603,33 +653,6 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
-            // Scipio: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
-            if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
-                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-                List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-                optionSources.add(new SingleOption("Y", " ", null));
-                ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
-                builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-                builder.setModelForm(modelForm);
-                builder.setTitle("Select");
-                builder.setFieldInfo(radioField);
-                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
-                numOfColumns++;
-            } else if (modelForm.getType().equals("multi") && modelForm.getUseRowSubmit()) {
-                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-                List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-                optionSources.add(new SingleOption("Y", " ", null));
-                ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
-                builder.setFieldName(UtilHttp.ROW_SUBMIT_PREFIX);                
-                builder.setName(UtilHttp.ROW_SUBMIT_PREFIX);
-                builder.setModelForm(modelForm);
-                builder.setTitle("Select");
-                builder.setFieldInfo(checkField);
-                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
-                numOfColumns++;
-            }
-            
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {
@@ -665,9 +688,12 @@ public class FormRenderer {
 
             // The form cell is rendered only if there is at least an input field
             if (innerFormFields.size() > 0) {
+                // SCIPIO: FIXME?: the renderFormatItemRowCellOpen calls here always pass position span 1,
+                // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
+                
                 // render the "form" cell                
                 formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
-                // Scipio: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
+                // SCIPIO: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
                 boolean cellOpen = true;
 
                 if (formPerItem) {
@@ -756,7 +782,7 @@ public class FormRenderer {
     }
 
     /**
-     * Scipio: callbacks for important render item rows events.
+     * SCIPIO: callbacks for important render item rows events.
      */
     private interface RenderItemRowsEventHandler {
         void notifyHasList() throws IOException;
@@ -947,6 +973,7 @@ public class FormRenderer {
                         }
 
                         // skip all of the display/hyperlink fields
+                        // SCIPIO: added SUBMIT here
                         if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
                                 || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
                                 || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
@@ -973,6 +1000,7 @@ public class FormRenderer {
                         }
 
                         // skip all non-display and non-hyperlink fields
+                        // SCIPIO: added SUBMIT here
                         if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
                                 && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
                                 && fieldInfo.getFieldType() != FieldInfo.HYPERLINK
@@ -989,14 +1017,14 @@ public class FormRenderer {
                         currentPosition = modelFormField.getPosition();
                     }
                           
-                    // Scipio: Adding submit buttons if use-row-submit flag in the form definition is set to false
-                    if ("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) {
+                    // SCIPIO: Adding submit buttons if use-row-submit flag in the form definition is set to false
+                    if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseMasterSubmitField()) {
                         Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                         while (submitFields.hasNext()) {
                             ModelFormField submitField = submitFields.next();
                             if (submitField != null && submitField.shouldUse(context)) {
-                                if (!modelForm.getUseRowSubmit())
-                                    innerDisplayHyperlinkFieldsEnd.add(submitField);
+                                innerDisplayHyperlinkFieldsEnd.add(submitField);
+                                fieldListByPosition.add(submitField);
                             }
                         }
                     }
@@ -1040,7 +1068,7 @@ public class FormRenderer {
     }
 
     /**
-     * Scipio: Helper object to handle renderer the table wrappers, headers, etc.
+     * SCIPIO: Helper object to handle renderer the table wrappers, headers, etc.
      */
     private class RenderListFormHandler implements RenderItemRowsEventHandler {
         
@@ -1054,6 +1082,7 @@ public class FormRenderer {
         private boolean footerRendered = false;
         private boolean alternateTextRendered = false;
         private boolean wrapperClosed = false;
+        private boolean submitFormRendered = false;
         
         private boolean hasList = false;
         private boolean hasResult = false;
@@ -1068,7 +1097,7 @@ public class FormRenderer {
         public void renderInit() throws IOException {
             context.put("formHasList", hasList);
             context.put("formHasListResult", hasResult);   
-            context.put("formHasDisplayResult", hasDisplayResult); 
+            context.put("formHasDisplayResult", hasDisplayResult);
         }
 
         @Override
@@ -1108,7 +1137,7 @@ public class FormRenderer {
             renderAlternateText(false);
             renderTableWrapperClose();
         }
-        
+
         public void renderFinalize() throws IOException {
             context.remove("formHasList");
             context.remove("formHasListResult"); 
@@ -1152,28 +1181,55 @@ public class FormRenderer {
             }
         }
 
+        /**
+         * SCIPIO: Renders the submit button in the tfoot
+         * <p>
+         * never causes a table to appear on its own.
+         */
         public void renderTableFooter() throws IOException {
-            // Scipio: Renders the submit button in the tfoot
-            if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
+            if (!footerRendered && wrapperOpened && hasDisplayResult && !wrapperClosed && UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields())) {
                 Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                 formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
-                int i = 0;
+                
+                // gather the submit fields that should actually render
+                List<ModelFormField> includedFields = new ArrayList<>(modelForm.getMultiSubmitFields().size());
                 while (submitFields.hasNext()) {
                     ModelFormField submitField = submitFields.next();
                     if (submitField != null && submitField.shouldUse(context)) {
-                        if (modelForm.getUseRowSubmit()) {
-                            formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, numOfColumns - i);
-                            submitField.renderFieldString(writer, context, formStringRenderer);
-                            formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
-                        }
+                        includedFields.add(submitField);
                     }
-                    i++;
+                }
+
+                if (includedFields.isEmpty()) {
+                    formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, null, numOfColumns);
+                    formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, null);
+                } else {
+                    int i = 0;
+                    submitFields = includedFields.iterator();
+                    while (submitFields.hasNext()) {
+                        ModelFormField submitField = submitFields.next();
+                        int positionSpan = (submitFields.hasNext()) ? 1 : (numOfColumns - i);
+                        formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, positionSpan);
+                        submitField.renderFieldString(writer, context, formStringRenderer);
+                        formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
+                        i++;
+                    }
                 }
                 formStringRenderer.renderFormatFooterRowClose(writer, context, modelForm);
                 footerRendered = true;
             }
         }
-
+        
+        public void renderSubmitForm() throws IOException {
+            if (!submitFormRendered && wrapperOpened && wrapperClosed && hasDisplayResult) {
+                // in addition, if row-submit, we should have rendered a foot
+                if (footerRendered || !modelForm.getUseRowSubmit()) {
+                    // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.       
+                    formStringRenderer.renderSubmitForm(writer, context, modelForm);
+                    submitFormRendered = true;
+                }
+            }
+        }
     }
     
     private void renderListFormString(Appendable writer, Map<String, Object> context,
@@ -1189,16 +1245,17 @@ public class FormRenderer {
         int numOfColumns = listFormHandler.getNumOfColumns();
         
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, listFormHandler);
+        final boolean formPerItem = true; // SCIPIO: NOTE: the orig stock value was true.
+        // TODO: set formPerItem = false when figure out alternative, because it produces invalid HTML
+        this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
         
-        if (modelForm.getUseRowSubmit())
+        if (modelForm.getUseMasterSubmitField())
             listFormHandler.renderTableFooter();
         
         listFormHandler.renderTableClose();
         
-        // Scipio: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
-        formStringRenderer.renderSubmitForm(writer, context, modelForm);
-        
+        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.       
+        listFormHandler.renderSubmitForm();
        
         listFormHandler.renderFinalize();
     }
@@ -1218,9 +1275,10 @@ public class FormRenderer {
         int numOfColumns = listFormHandler.getNumOfColumns();
         
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns, listFormHandler);
+        final boolean formPerItem = false; // SCIPIO: NOTE: this was always false even in stock ofbiz
+        this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
         
-        if (modelForm.getUseRowSubmit())        
+        if (modelForm.getUseMasterSubmitField())        
             listFormHandler.renderTableFooter(); 
 
         listFormHandler.renderTableClose();
@@ -1228,6 +1286,10 @@ public class FormRenderer {
         if (!modelForm.getSkipEnd()) {
             formStringRenderer.renderMultiFormClose(writer, context, modelForm);
         }
+        
+        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.   
+        // NOTE: this must be OUTSIDE the multi form close because it has its own <form> element
+        listFormHandler.renderSubmitForm();
 
         listFormHandler.renderFinalize();
     }
@@ -1409,7 +1471,7 @@ public class FormRenderer {
             }
 
             Integer nextPositionInRow = null;
-            // Scipio: support a specific position span. note: the value we pass to macro is one less.
+            // SCIPIO: support a specific position span. note: the value we pass to macro is one less.
             Integer fieldPositionSpan = currentFormField.getPositionSpan();
             int positionSpan;
             if (fieldPositionSpan != null && fieldPositionSpan > 0) {
@@ -1439,7 +1501,7 @@ public class FormRenderer {
                 }
             }
 
-            // Scipio: pass these (and unset below)
+            // SCIPIO: pass these (and unset below)
             context.put("formFieldRender_positions", positions);
             
             if (stayingOnRow) {
@@ -1472,7 +1534,7 @@ public class FormRenderer {
             
             context.remove("formFieldRender_positions");
             
-            // Scipio: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
+            // SCIPIO: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
             // This allows delayed render so more info available and fixes ofbiz bug where nextFormField was
             // sometimes a field that was not going to be rendered, giving invalid positions.
             // render form field
@@ -1501,7 +1563,7 @@ public class FormRenderer {
     }
 
     /**
-     * Scipio: Factored out field entry render code
+     * SCIPIO: Factored out field entry render code
      */
     private class RenderFieldEntry {
         private final ModelFormField formField;
@@ -1583,7 +1645,7 @@ public class FormRenderer {
     }
     
     /**
-     * Scipio: renders accumulated field entries all at once (for delayed render).
+     * SCIPIO: renders accumulated field entries all at once (for delayed render).
      */
     private class RenderRowFieldEntrySequencer {
         private List<RenderFieldEntry> fieldEntries = new ArrayList<RenderFieldEntry>();
@@ -1628,7 +1690,7 @@ public class FormRenderer {
                 }
                     
                 Integer nextPositionInRow = null;
-                // Scipio: support a specific position span. note: the value we pass to macro is one less.
+                // SCIPIO: support a specific position span. note: the value we pass to macro is one less.
                 Integer fieldPositionSpan = currentFormField.getPositionSpan();
                 int positionSpan;
                 if (fieldPositionSpan != null && fieldPositionSpan > 0) {

@@ -177,7 +177,7 @@ public class CatalogWorker {
         if (!fromSession) {
             if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId, module);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            // Scipio: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+            // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
             // otherwise may lose work done by servlets and filters
             //CategoryWorker.setTrail(request, FastList.<String>newInstance());
             CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
@@ -419,14 +419,14 @@ public class CatalogWorker {
     
     
     /**
-     * Scipio: Returns the first root best-sell category for the current catalog.
+     * SCIPIO: Returns the first root best-sell category for the current catalog.
      */
     public static String getCatalogBestSellCategoryId(ServletRequest request) {
         return getCatalogPromotionsCategoryId(request, getCurrentCatalogId(request));
     }
 
     /**
-     * Scipio: Returns the first root best-sell category for the current catalog.
+     * SCIPIO: Returns the first root best-sell category for the current catalog.
      */
     public static String getCatalogBestSellCategoryId(ServletRequest request, String prodCatalogId) {
         return getCatalogFirstCategoryId(request, "PCCT_BEST_SELL", prodCatalogId);
@@ -434,14 +434,14 @@ public class CatalogWorker {
     
     
     /**
-     * Scipio: Returns the first root best-sell category for the current catalog.
+     * SCIPIO: Returns the first root best-sell category for the current catalog.
      */
     public static String getCatalogFirstCategoryId(ServletRequest request, String prodCatalogCategoryTypeId) {
         return getCatalogFirstCategoryId(request, prodCatalogCategoryTypeId, getCurrentCatalogId(request));
     }
 
     /**
-     * Scipio: Returns the first root category of the given prodCatalogCategoryTypeId type for the current catalog.
+     * SCIPIO: Returns the first root category of the given prodCatalogCategoryTypeId type for the current catalog.
      */
     public static String getCatalogFirstCategoryId(ServletRequest request, String prodCatalogCategoryTypeId, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;

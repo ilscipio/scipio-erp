@@ -19,6 +19,7 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -80,7 +81,8 @@ import bsh.Interpreter;
  * 
  * @see <code>widget-form.xsd</code>
  */
-public class ModelFormField {
+@SuppressWarnings("serial")
+public class ModelFormField implements Serializable {
 
     /*
      * ----------------------------------------------------------------------- *
@@ -143,7 +145,7 @@ public class ModelFormField {
     private final String parentFormName;
 
     /**
-     * Scipio: string expression representing a json-like map of extra form attributes.
+     * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
@@ -920,7 +922,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class AutoComplete {
+    public static class AutoComplete implements Serializable {
         private final String autoSelect;
         private final String choices;
         private final String frequency;
@@ -979,7 +981,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class CheckField extends FieldInfoWithOptions {
+    public static class CheckField extends FieldInfoWithOptions implements Serializable {
         public final static String ROW_SUBMIT_FIELD_NAME = "_rowSubmit";
         private final FlexibleStringExpander allChecked;
 
@@ -998,7 +1000,7 @@ public class ModelFormField {
             this.allChecked = FlexibleStringExpander.getInstance("");
         }
         
-        // Scipio: Allow adding options to check fields
+        // SCIPIO: Allow adding options to check fields
         public CheckField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);
             this.allChecked = FlexibleStringExpander.getInstance("");
@@ -1043,7 +1045,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class ContainerField extends FieldInfo {
+    public static class ContainerField extends FieldInfo implements Serializable {
 
         private ContainerField(ContainerField original, ModelFormField modelFormField) {
             super(original.getFieldSource(), original.getFieldType(), modelFormField);
@@ -1079,7 +1081,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class DateFindField extends DateTimeField {
+    public static class DateFindField extends DateTimeField implements Serializable {
         private final String defaultOptionFrom;
         private final String defaultOptionThru;
 
@@ -1163,7 +1165,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class DateTimeField extends FieldInfo {
+    public static class DateTimeField extends FieldInfo implements Serializable {
         private final String clock;
         private final FlexibleStringExpander defaultValue;
         private final String inputMethod;
@@ -1297,7 +1299,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class DisplayEntityField extends DisplayField {
+    public static class DisplayEntityField extends DisplayField implements Serializable {
         private final boolean cache;
         private final String entityName;
         private final String keyFieldName;
@@ -1369,7 +1371,7 @@ public class ModelFormField {
                 fieldKey = getModelFormField().fieldName;
 
             Delegator delegator = WidgetWorker.getDelegator(context);
-            // Scipio: only encode after the lookup
+            // SCIPIO: only encode after the lookup
             //String fieldValue = getModelFormField().getEntry(context);
             String fieldValue = getModelFormField().getEntryRaw(context);
             try {
@@ -1426,7 +1428,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class DisplayField extends FieldInfo {
+    public static class DisplayField extends FieldInfo implements Serializable {
         private final boolean alsoHidden;
         private final FlexibleStringExpander currency;
         private final FlexibleStringExpander date;
@@ -1676,7 +1678,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class DropDownField extends FieldInfoWithOptions {
+    public static class DropDownField extends FieldInfoWithOptions implements Serializable {
         private final boolean allowEmpty;
         private final boolean allowMulti;
         private final AutoComplete autoComplete;
@@ -1876,7 +1878,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class EntityOptions extends OptionSource {
+    public static class EntityOptions extends OptionSource implements Serializable {
         private final boolean cache;
         private final List<EntityFinderUtil.ConditionExpr> constraintList;
         private final FlexibleStringExpander description;
@@ -2037,7 +2039,7 @@ public class ModelFormField {
         }
     }
 
-    public static abstract class FieldInfoWithOptions extends FieldInfo {
+    public static abstract class FieldInfoWithOptions extends FieldInfo implements Serializable {
 
         public static String getDescriptionForOptionKey(String key, List<OptionValue> allOptionValues) {
             if (UtilValidate.isEmpty(key))
@@ -2136,7 +2138,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class FileField extends TextField {
+    public static class FileField extends TextField implements Serializable {
 
         public FileField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -2172,7 +2174,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class HiddenField extends FieldInfo {
+    public static class HiddenField extends FieldInfo implements Serializable {
         private final FlexibleStringExpander value;
 
         public HiddenField(Element element, ModelFormField modelFormField) {
@@ -2234,7 +2236,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class HyperlinkField extends FieldInfo {
+    public static class HyperlinkField extends FieldInfo implements Serializable {
 
         private final boolean alsoHidden;
         private final FlexibleStringExpander confirmationMsgExdr;
@@ -2341,11 +2343,11 @@ public class ModelFormField {
             return link.getAutoServiceParameters();
         }
 
-        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+        public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+        public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -2401,7 +2403,7 @@ public class ModelFormField {
             return link.getPrefixExdr();
         }
 
-        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+        public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
             return link.getSecure();
         }
 
@@ -2461,7 +2463,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class IgnoredField extends FieldInfo {
+    public static class IgnoredField extends FieldInfo implements Serializable {
 
         public IgnoredField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -2501,7 +2503,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class ImageField extends FieldInfo {
+    public static class ImageField extends FieldInfo implements Serializable {
         private final FlexibleStringExpander alternate;
         private final FlexibleStringExpander defaultValue;
         private final FlexibleStringExpander description;
@@ -2630,7 +2632,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class InPlaceEditor {
+    public static class InPlaceEditor implements Serializable {
         private final String cancelControl;
         private final String cancelText;
         private final String clickToEditText;
@@ -2811,7 +2813,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class ListOptions extends OptionSource {
+    public static class ListOptions extends OptionSource implements Serializable {
         private final FlexibleStringExpander description;
         private final FlexibleMapAccessor<Object> keyAcsr;
         private final FlexibleMapAccessor<List<? extends Object>> listAcsr;
@@ -2900,7 +2902,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class LookupField extends TextField {
+    public static class LookupField extends TextField implements Serializable {
         private final String descriptionFieldName;
         private final String fadeBackground;
         private final FlexibleStringExpander formName;
@@ -3027,7 +3029,7 @@ public class ModelFormField {
         }
     }
 
-    public static abstract class OptionSource {
+    public static abstract class OptionSource implements Serializable {
 
         private final ModelFormField modelFormField;
 
@@ -3044,7 +3046,7 @@ public class ModelFormField {
         }
     }
 
-    public static class OptionValue {
+    public static class OptionValue implements Serializable {
         private final String description;
         private final String key;
 
@@ -3067,7 +3069,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class PasswordField extends TextField {
+    public static class PasswordField extends TextField implements Serializable {
 
         public PasswordField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -3103,7 +3105,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class RadioField extends FieldInfoWithOptions {
+    public static class RadioField extends FieldInfoWithOptions implements Serializable {
 
         public RadioField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -3121,7 +3123,7 @@ public class ModelFormField {
             super(original, modelFormField);
         }
         
-        // Scipio: Allow adding options to radio fields
+        // SCIPIO: Allow adding options to radio fields
         public RadioField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);            
         }
@@ -3148,7 +3150,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class RangeFindField extends TextField {
+    public static class RangeFindField extends TextField implements Serializable {
         private final String defaultOptionFrom;
         private final String defaultOptionThru;
 
@@ -3200,7 +3202,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class ResetField extends FieldInfo {
+    public static class ResetField extends FieldInfo implements Serializable {
 
         public ResetField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
@@ -3240,7 +3242,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class SingleOption extends OptionSource {
+    public static class SingleOption extends OptionSource implements Serializable {
         private final FlexibleStringExpander description;
         private final FlexibleStringExpander key;
 
@@ -3287,7 +3289,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class SubHyperlink {
+    public static class SubHyperlink implements Serializable {
         private final FlexibleStringExpander description;
         private final FlexibleStringExpander useWhen;
         private final Link link;
@@ -3318,11 +3320,11 @@ public class ModelFormField {
             return link.getAutoServiceParameters();
         }
 
-        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+        public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+        public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -3378,7 +3380,7 @@ public class ModelFormField {
             return link.getPrefixExdr();
         }
 
-        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+        public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
             return link.getSecure();
         }
 
@@ -3454,6 +3456,12 @@ public class ModelFormField {
             boolean shouldUse = true;
             String useWhen = this.getUseWhen(context);
             if (UtilValidate.isNotEmpty(useWhen)) {
+                // SCIPIO: optimization/shortcut: check for pre-evaluated true and false values
+                if ("true".equals(useWhen)) {
+                    return true;
+                } else if ("false".equals(useWhen)) {
+                    return false;
+                }
                 try {
                     Interpreter bsh = (Interpreter) context.get("bshInterpreter");
                     if (bsh == null) {
@@ -3486,7 +3494,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class SubmitField extends FieldInfo {
+    public static class SubmitField extends FieldInfo implements Serializable {
         private final FlexibleStringExpander backgroundSubmitRefreshTargetExdr;
         private final String buttonType;
         private final FlexibleStringExpander confirmationMsgExdr;
@@ -3591,7 +3599,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class TextareaField extends FieldInfo {
+    public static class TextareaField extends FieldInfo implements Serializable {
         private final int cols;
         private final FlexibleStringExpander defaultValue;
         private final boolean readOnly;
@@ -3734,7 +3742,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class TextField extends FieldInfo {
+    public static class TextField extends FieldInfo implements Serializable {
         private final boolean clientAutocompleteField;
         private final FlexibleStringExpander defaultValue;
         private final boolean disabled;
@@ -3904,7 +3912,7 @@ public class ModelFormField {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class TextFindField extends TextField {
+    public static class TextFindField extends TextField implements Serializable {
         private final String defaultOption;
         private final boolean hideIgnoreCase;
         private final boolean hideOptions;

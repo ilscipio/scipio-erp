@@ -4,7 +4,6 @@
 <p>Debug mode: ON</p>
 </#if>
 
-
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
@@ -1468,7 +1467,6 @@
 
 </@section>
 
-
 <#-- NOTE: keep last -->
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->
@@ -1476,15 +1474,28 @@
   <@render resource=ofbizWidgetsLayoutScreenLocation />
 
   <@section title="Direct inclusions">
+    <p>Button Menu</p>
     <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2" />
-    <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
+    <p>Button Menu (sub-menus filtered out)</p>
+    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2NoSubMenus" />
 
-  <#-- TODO: uncomment once demo menus added to branch
+    <p>Test form</p>
+    <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
     <p>Max depth arg test</p>
     <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" />
     <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" maxDepth="1" />
     <@render type="include-menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" subMenus="none" />
-  -->
+  </@section>
+
+  <@section title="Admin plain site-map/tree">
+  <@row>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+      </@cell>
+      <@cell columns=6>
+        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo3" />
+      </@cell>
+    </@row>
   </@section>
 
 </@section>

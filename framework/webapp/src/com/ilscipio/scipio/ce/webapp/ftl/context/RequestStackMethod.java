@@ -32,7 +32,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Scipio: RequestStackMethod - Freemarker Method base class providing support for a stack
+ * SCIPIO: RequestStackMethod - Freemarker Method base class providing support for a stack
  * structure having request scope, with fallback to globals.
  */
 public abstract class RequestStackMethod implements TemplateMethodModelEx {

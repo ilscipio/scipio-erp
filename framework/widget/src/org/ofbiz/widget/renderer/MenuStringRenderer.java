@@ -24,6 +24,7 @@ import java.util.Map;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenuItem;
+import org.ofbiz.widget.model.ModelSubMenu;
 
 
 /**
@@ -38,4 +39,15 @@ public interface MenuStringRenderer {
     public void renderFormatSimpleWrapperRows(Appendable writer, Map<String, Object> context, Object menu) throws IOException ;
     public void renderLink(Appendable writer, Map<String, Object> context, ModelMenuItem.MenuLink link) throws IOException ;
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException ;
+    
+    /**
+     * SCIPIO: New, render sub menu more officially.
+     */
+    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
+    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
+
+    /**
+     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
+     */
+    public String getRendererName();
 }

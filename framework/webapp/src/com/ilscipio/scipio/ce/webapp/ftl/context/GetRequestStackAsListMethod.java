@@ -23,7 +23,7 @@ import java.util.List;
 import freemarker.template.TemplateModelException;
 
 /**
- * Scipio: GetRequestStackAsListMethod - Freemarker Method providing support for a stack
+ * SCIPIO: GetRequestStackAsListMethod - Freemarker Method providing support for a stack
  * structure having request scope, with fallback to globals.
  */
 public class GetRequestStackAsListMethod extends RequestStackMethod {

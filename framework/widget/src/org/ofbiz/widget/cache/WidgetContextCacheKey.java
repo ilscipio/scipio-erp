@@ -77,7 +77,7 @@ public final class WidgetContextCacheKey {
         fieldNamesToSkip.add("visit");
         fieldNamesToSkip.add("visitor");
         
-        // Scipio: additional names to skip (some new, some bugfixes)
+        // SCIPIO: additional names to skip (some new, some bugfixes)
         fieldNamesToSkip.add("rendererVisualThemeResourcesChecked");
         fieldNamesToSkip.add("rendererVisualThemeResources");
         fieldNamesToSkip.add("formStringRenderer"); 

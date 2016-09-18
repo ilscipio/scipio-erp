@@ -26,7 +26,6 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListQuantityBreaks"/>
-                <set field="activeMainMenuItem" value="shipping"/>
                 <set field="activeSubMenuItem" value="ListQuantityBreaks"/>
 
                 <entity-condition entity-name="QuantityBreak" list="quantityBreaks">
@@ -37,7 +36,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonShippingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListQuantityBreaks}">
+                        <screenlet>
                             <include-form name="ListQuantityBreaks" location="component://product/widget/catalog/ShippingForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditQuantityBreaks}">
@@ -52,7 +51,6 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListShipmentMethodTypes"/>
-                <set field="activeMainMenuItem" value="shipping"/>
                 <set field="activeSubMenuItem" value="ListShipmentMethodTypes"/>
 
                 <entity-condition entity-name="ShipmentMethodType" list="shipmentMethodTypes">
@@ -64,7 +62,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonShippingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListShipmentMethodTypes}">
+                        <screenlet>
                             <include-form name="ListShipmentMethodTypes" location="component://product/widget/catalog/ShippingForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditShipmentMethodTypes}">
@@ -80,7 +78,6 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListCarrierShipmentMethods"/>
-                <set field="activeMainMenuItem" value="shipping"/>
                 <set field="activeSubMenuItem" value="ListCarrierShipmentMethods"/>
 
                 <entity-condition entity-name="CarrierShipmentMethod" list="carrierShipmentMethods">
@@ -91,7 +88,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonShippingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListCarrierShipmentMethods}">
+                        <screenlet>
                             <include-form name="ListCarrierShipmentMethods" location="component://product/widget/catalog/ShippingForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditCarrierShipmentMethods}">

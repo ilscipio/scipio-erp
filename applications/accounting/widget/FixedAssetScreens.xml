@@ -76,6 +76,7 @@ under the License.
     <screen name="CommonFixedAssetDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAsset" />
                 <set field="activeMainMenuItem" value="ListFixedAssets"/>
                 <set field="fixedAssetId" from-field="fixedAsset.fixedAssetId" default-value="${parameters.fixedAssetId}"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
@@ -83,7 +84,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true">
-                        <include-menu name="FixedAssetSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                         <!--<decorator-section-include name="pre-body"/>-->
                     </decorator-section>
                     <decorator-section name="body">
@@ -109,6 +110,7 @@ under the License.
                                             </fail-widgets>
                                         </section>
                                     </widgets>
+                                    <!-- SCIPIO: redundant
                                     <fail-widgets>
                                         <section>
                                             <condition>
@@ -122,6 +124,7 @@ under the License.
                                             </fail-widgets>
                                         </section>
                                     </fail-widgets>
+                                     -->
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
@@ -336,12 +339,13 @@ under the License.
     <screen name="CommonFixedAssetMaintDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAssetMaint" />
                 <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true">
-                        <include-menu name="FixedAssetMaintSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>

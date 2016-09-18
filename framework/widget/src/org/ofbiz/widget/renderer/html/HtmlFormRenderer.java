@@ -79,7 +79,11 @@ import freemarker.template.TemplateException;
 
 /**
  * Widget Library - HTML Form Renderer implementation
+ * <p>
+ * @deprecated SCIPIO: 2016-08-30: Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRenderer {
 
     public static final String module = HtmlFormRenderer.class.getName();
@@ -529,7 +533,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) throws IOException {
         String macroLibraryPath = UtilProperties.getPropertyValue("widget", "screen.formrenderer");
         try {
-            MacroFormRenderer macroFormRenderer = new MacroFormRenderer(macroLibraryPath, this.request, this.response);
+            MacroFormRenderer macroFormRenderer = new MacroFormRenderer("html", macroLibraryPath, this.request, this.response);
             macroFormRenderer.renderDateTimeField(writer, context, dateTimeField);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering screen thru ftl macro: renderDateTimeField", module);
@@ -1296,7 +1300,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
         if (this.renderPagination) {
             this.renderNextPrev(writer, context, modelForm);
         }
-        // Scipio: Removed the invalid HTML5 attribute (cellspacing)
+        // SCIPIO: Removed the invalid HTML5 attribute (cellspacing)
         writer.append(" <table class=\"");
         if (UtilValidate.isNotEmpty(modelForm.getDefaultTableStyle())) {
             writer.append(FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context));
@@ -2841,6 +2845,11 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
     public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public String getRendererName() { // SCIPIO: new
+        return "html";
     }
 
 }

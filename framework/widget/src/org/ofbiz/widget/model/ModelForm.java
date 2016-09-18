@@ -19,6 +19,7 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -53,6 +55,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.widget.WidgetWorker;
+import org.ofbiz.widget.model.ModelFormField.OptionSource;
+import org.ofbiz.widget.model.ModelFormField.SingleOption;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
@@ -210,16 +214,26 @@ public abstract class ModelForm extends ModelWidget {
     private final boolean defaultCombineActionFields;
     
     /**
-     * Scipio: string expression representing a json-like map of extra form attributes.
+     * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
     
     
     /**
-     * Scipio: the <form> get or post method! somehow missing from stock defs.
+     * SCIPIO: the <form> get or post method! somehow missing from stock defs.
      */
     private final FlexibleStringExpander method;
+    
+    // SCIPIO: special select fields for when use-row-submit is true
+    // FIXME: currently these are NOT included in the other field lists, but they should be!
+    private final ModelFormField rowSubmitHeaderSelectField;
+    private final ModelFormField rowSubmitSelectField;
+    
+    // SCIPIO: new
+    private final String submitHiddenFormNamePrefix;
+    private final String rowSubmitSelectFieldNamePrefix;
+    private final String rowSubmitSelectFieldParamNamePrefix;
     
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
@@ -364,7 +378,9 @@ public abstract class ModelForm extends ModelWidget {
         if (separateColumns.isEmpty() && parentModel != null) {
             this.separateColumns = parentModel.separateColumns;
         } else {
-            this.separateColumns = "true".equals(separateColumns);
+            // SCIPIO: the default is now true, so invert this
+            //this.separateColumns = "true".equals(separateColumns);
+            this.separateColumns = !"false".equals(separateColumns);
         }
         String groupColumns = formElement.getAttribute("group-columns");
         if (groupColumns.isEmpty() && parentModel != null) {
@@ -459,11 +475,11 @@ public abstract class ModelForm extends ModelWidget {
             this.defaultCombineActionFields = "true".equals(defaultCombineActionFields);
         }
         
-        // Scipio: extra attribs map
+        // SCIPIO: extra attribs map
         String attribsExprStr = formElement.getAttribute("attribs");
         this.attribsExpr = AttribsExpression.makeAttribsExpr(attribsExprStr, (parentModel != null ? parentModel.attribsExpr : null));
         
-        // Scipio: form submit method
+        // SCIPIO: form submit method
         FlexibleStringExpander method = FlexibleStringExpander.getInstance(formElement.getAttribute("method"));
         if (method.isEmpty()) {
             if (parentModel != null) {
@@ -849,6 +865,46 @@ public abstract class ModelForm extends ModelWidget {
             focusFieldName = parentModel.focusFieldName;
         }
         this.focusFieldName = focusFieldName;
+        
+        // SCIPIO: new
+        // TODO: Unhardcode everything below
+        this.submitHiddenFormNamePrefix = "postSubmitForm";
+        this.rowSubmitSelectFieldNamePrefix = "selectAction";
+        if (getType().equals("multi")) {
+            this.rowSubmitSelectFieldParamNamePrefix = UtilHttp.ROW_SUBMIT_PREFIX;
+        } else {
+            this.rowSubmitSelectFieldParamNamePrefix = this.rowSubmitSelectFieldNamePrefix;
+        }
+        String rowSubmitSelectFieldName = makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix);
+        String rowSubmitSelectFieldParamName = this.rowSubmitSelectFieldParamNamePrefix;
+        String rowSubmitSelectFieldTitle = "${uiLabelMap.CommonSelect}";
+        
+        ModelFormField rowSubmitHeaderSelectField = null;
+        ModelFormField rowSubmitSelectField = null;
+        if (getUseRowSubmit()) {
+            if ("list".equals(getType()) || "multi".equals(getType())) {
+                ModelFormFieldBuilder builder;
+                builder = getHeaderFieldBuilder();
+                builder.setName(rowSubmitSelectFieldName); 
+                builder.setFieldName(rowSubmitSelectFieldName);
+                builder.setParameterName(rowSubmitSelectFieldName); // NOTE: SAME as Name, ONLY for header
+                builder.setTitle(rowSubmitSelectFieldTitle);
+                rowSubmitHeaderSelectField = builder.build();
+                
+                if ("list".equals(getType())) {
+                    builder = getRadioFieldBuilder();
+                } else {
+                    builder = getCheckboxFieldBuilder();
+                }
+                builder.setName(rowSubmitSelectFieldName);
+                builder.setFieldName(rowSubmitSelectFieldName);
+                builder.setParameterName(rowSubmitSelectFieldParamName); 
+                builder.setTitle(rowSubmitSelectFieldTitle);
+                rowSubmitSelectField = builder.build();
+            }
+        }
+        this.rowSubmitHeaderSelectField = rowSubmitHeaderSelectField;
+        this.rowSubmitSelectField = rowSubmitSelectField;
     }
 
     private void addAutoFieldsFromEntity(AutoFieldsEntity autoFieldsEntity, ModelReader entityModelReader,
@@ -882,7 +938,7 @@ public abstract class ModelForm extends ModelWidget {
             if (UtilValidate.isNotEmpty(autoFieldsEntity.mapName)) {
                 builder.setMapName(autoFieldsEntity.mapName);
             }
-            // Scipio: add extra default attribs
+            // SCIPIO: add extra default attribs
             builder.setAttribsExpr(autoFieldsEntity.attribsExpr);
             addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
         }
@@ -925,7 +981,7 @@ public abstract class ModelForm extends ModelWidget {
                                     builder.setMapName(autoFieldsService.mapName);
                                 }
                                 builder.setRequiredField(!modelParam.optional);
-                                // Scipio: add extra default attribs
+                                // SCIPIO: add extra default attribs
                                 builder.setAttribsExpr(autoFieldsService.attribsExpr);
                                 addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
                                 // continue to skip creating based on service param
@@ -1690,6 +1746,11 @@ public abstract class ModelForm extends ModelWidget {
     public boolean getUseRowSubmit() {
         return this.useRowSubmit;
     }
+    
+    // SCIPIO: helper check for clarity
+    public boolean getUseMasterSubmitField() {
+        return this.useRowSubmit || "multi".equals(getType());
+    }
 
     public Set<String> getUseWhenFields() {
         return useWhenFields;
@@ -1714,7 +1775,92 @@ public abstract class ModelForm extends ModelWidget {
         return method.expandString(context);
     }
     
-    public static class AltRowStyle {
+    /**
+     * SCIPIO: new
+     */
+    public String getSubmitHiddenFormNamePrefix() {
+        return submitHiddenFormNamePrefix;
+    }
+    
+    /**
+     * SCIPIO: new
+     */
+    public String getSubmitHiddenFormName(String uniquefix) {
+        return getSubmitHiddenFormNamePrefix() + getItemIndexSeparator() + uniquefix;
+    }
+    
+    /**
+     * SCIPIO: Returns row-submit special select field name prefix.
+     */
+    public String getRowSubmitSelectFieldNamePrefix() {
+        return rowSubmitSelectFieldNamePrefix;
+    }
+    
+    /**
+     * SCIPIO: Returns row-submit special select field name prefix.
+     */
+    public String getRowSubmitSelectFieldParamNamePrefix() {
+        return rowSubmitSelectFieldParamNamePrefix;
+    }
+    
+    private String makeRowSubmitSelectFieldName(String prefix) {
+        // FIXME: HARDCODED!
+        return prefix + getItemIndexSeparator() + getName();
+    }
+
+    /**
+     * SCIPIO: Gets row-submit header field.
+     */
+    public ModelFormField getRowSubmitHeaderSelectField() {
+        return rowSubmitHeaderSelectField;
+    }
+    
+    /**
+     * SCIPIO: new
+     */
+    private ModelFormFieldBuilder getHeaderFieldBuilder() {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
+        builder.setModelForm(this);
+        builder.setFieldInfo(displayField);
+        return builder;
+    }
+    
+    /**
+     * SCIPIO: Gets row-submit field (data rows).
+     */
+    public ModelFormField getRowSubmitSelectField() {
+        return rowSubmitSelectField;
+    }
+    
+    /**
+     * SCIPIO: new
+     */
+    private ModelFormFieldBuilder getRadioFieldBuilder() {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        optionSources.add(new SingleOption("Y", " ", null));
+        ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
+        builder.setModelForm(this);
+        builder.setFieldInfo(radioField);
+        return builder; 
+    }
+    
+    /**
+     * SCIPIO: new
+     */
+    private ModelFormFieldBuilder getCheckboxFieldBuilder() {
+        ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        optionSources.add(new SingleOption("Y", " ", null));
+        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
+        builder.setModelForm(this);
+        builder.setFieldInfo(checkField);
+        return builder;
+    }
+    
+    
+    public static class AltRowStyle implements Serializable {
         public final String useWhen;
         public final String style;
 
@@ -1724,7 +1870,7 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static class AltTarget {
+    public static class AltTarget implements Serializable {
         public final String useWhen;
         public final FlexibleStringExpander targetExdr;
 
@@ -1744,7 +1890,7 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static class AutoFieldsEntity {
+    public static class AutoFieldsEntity implements Serializable {
         public final String entityName;
         public final String mapName;
         public final String defaultFieldType;
@@ -1752,7 +1898,7 @@ public abstract class ModelForm extends ModelWidget {
         public final Integer defaultPositionSpan;
         
         /**
-         * Scipio: string expression representing a json-like map of extra form attributes.
+         * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
          */
         private final AttribsExpression attribsExpr;
@@ -1789,7 +1935,7 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static class AutoFieldsService {
+    public static class AutoFieldsService implements Serializable {
         public final String serviceName;
         public final String mapName;
         public final String defaultFieldType;
@@ -1797,7 +1943,7 @@ public abstract class ModelForm extends ModelWidget {
         public final Integer defaultPositionSpan;
         
         /**
-         * Scipio: string expression representing a json-like map of extra form attributes.
+         * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
          */
         private final AttribsExpression attribsExpr;
@@ -1993,10 +2139,10 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static interface FieldGroupBase {
+    public static interface FieldGroupBase extends Serializable {
     }
 
-    public static class SortField {
+    public static class SortField implements Serializable {
         private final String fieldName;
         private final Integer position;
         private final Integer positionSpan;
@@ -2045,7 +2191,7 @@ public abstract class ModelForm extends ModelWidget {
     /** The UpdateArea class implements the <code>&lt;on-event-update-area&gt;</code>
      * elements used in form widgets.
      */
-    public static class UpdateArea {
+    public static class UpdateArea implements Serializable {
         private final String eventType;
         private final String areaId;
         private final String areaTarget;

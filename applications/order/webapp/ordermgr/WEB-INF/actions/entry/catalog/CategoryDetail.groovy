@@ -46,7 +46,7 @@ context.defaultViewSize = defaultViewSize;
 limitView = request.getAttribute("limitView") ?: true;
 context.limitView = limitView;
 
-// Scipio: prevent crash
+// SCIPIO: prevent crash
 if (productCategoryId) {
     // get the product category & members
     andMap = [productCategoryId : productCategoryId,

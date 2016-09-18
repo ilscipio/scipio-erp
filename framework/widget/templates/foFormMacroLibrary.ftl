@@ -157,3 +157,6 @@ under the License.
     </#if>
 </#macro>
 </#escape>
+
+<#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
+<#macro renderSubmitForm extraArgs...></#macro>

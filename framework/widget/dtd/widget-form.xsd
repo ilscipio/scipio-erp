@@ -18,8 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Scipio: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
-modifications to existing elements. Changes are prefixed with the string "Scipio:" in annotations.
+SCIPIO: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
+modifications to existing elements. Changes are prefixed with the string "SCIPIO:" in annotations.
 
 Features and Modifications:
 * In our renderer implementation, the field positions are treated like a true grid of
@@ -214,7 +214,19 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="item-index-separator" default="_o_" />
             <xs:attribute type="xs:string" name="extends" />
             <xs:attribute type="xs:string" name="extends-resource" />
-            <xs:attribute name="separate-columns" default="false">
+            <xs:attribute name="separate-columns"><!-- default="true" ; old/stock default: default="false" -->
+                <xs:annotation>
+                    <xs:documentation>Determines if the editable fields of a list/multi form should group
+                        together or now (false to group, true to keep separate).
+                        SCIPIO: NOTE: This is a STOCK attribute, but its default has been changed from false to true.
+                        It is usually only considered when group-columns is true. It is an "inner" switch
+                        to enable/disable grouping within the form-building logic and is the one
+                        most popularly used in most forms.
+                        Default: true
+                        NOTE: The default in Scipio is changed to true because Scipio's themes can
+                            handle long menus better, and the separated fields are easier to read.
+                    </xs:documentation>
+                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -222,7 +234,17 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="group-columns" default="true">
+            <xs:attribute name="group-columns"><!-- default="true" -->
+                <xs:annotation>
+                    <xs:documentation>Determines if the form should support grouping fields.
+                        SCIPIO: NOTE: This is a STOCK attribute. It is a top-level
+                        "hard" switch to disable all column grouping-based code. If set to false,
+                        it will logically imply separate-columns true but may additionally
+                        prevent some other form behaviors.
+                        Default: true
+                        WARN: Nearly all stock and Scipio-modified forms are built and tested using true for this attribute.
+                            It is safer to change the separate-columns attribute value instead.</xs:documentation>
+                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -236,7 +258,7 @@ Features and Modifications:
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="row-count" />
-            <xs:attribute name="use-row-submit" default="false">
+            <xs:attribute name="use-row-submit"><!-- default="false" -->
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="true" />
@@ -305,45 +327,45 @@ Features and Modifications:
             -->
             <xs:attribute type="xs:string" name="hide-header-when">
                 <xs:annotation>
-                    <xs:documentation>Scipio: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="hide-table-when">
                 <xs:annotation>
-                    <xs:documentation>Scipio: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="use-alternate-text-when">
                 <xs:annotation>
-                    <xs:documentation>Scipio: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="alternate-text">
                 <xs:annotation>
-                    <xs:documentation>Scipio: For list forms, alternate text to show when use-alternate-text-when evaluates to true. Display markup is influenced by hide-header/table-* options. See widget.properties for renderer-specific defaults.</xs:documentation>
+                    <xs:documentation>SCIPIO: For list forms, alternate text to show when use-alternate-text-when evaluates to true. Display markup is influenced by hide-header/table-* options. See widget.properties for renderer-specific defaults.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="alternate-text-style">
                 <xs:annotation>
-                    <xs:documentation>Scipio: For list forms, style of alternate text. See widget.properties for renderer-specific defaults.</xs:documentation>
+                    <xs:documentation>SCIPIO: For list forms, style of alternate text. See widget.properties for renderer-specific defaults.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="positions" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
+                    <xs:documentation>SCIPIO: Explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="default-position-span" type="xs:integer" default="1">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>SCIPIO: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="default-combine-action-fields" default="true">
                 <xs:annotation>
-                    <xs:documentation>Scipio: If true, uses combine-previous on groups of adjacent action-button-like field (submit, reset, hyperlink with no title) so they render together</xs:documentation>
+                    <xs:documentation>SCIPIO: If true, uses combine-previous on groups of adjacent action-button-like field (submit, reset, hyperlink with no title) so they render together</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -354,7 +376,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-form extra attributes passed to the underlying theme implementation (template macros).
+                    <xs:documentation>SCIPIO: A json-/freemarker-like object (map) of per-form extra attributes passed to the underlying theme implementation (template macros).
                       Note that if a parent (extended) form already had extra attribs, only top-level attribs will be merged; sub-maps will replace those from parent (shallow merge).
                       
                       The default Scipio implementation currently recognizes (but is not limited to) these map entries:
@@ -375,7 +397,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="method">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Essential setting to control whether form is a post or get action. 
+                    <xs:documentation>SCIPIO: Essential setting to control whether form is a post or get action. 
                       Implied default is "post".
                       Only meaningful for widget form types with submit forms generated.</xs:documentation>
                 </xs:annotation>
@@ -689,12 +711,12 @@ Features and Modifications:
             <xs:attribute name="default-position" type="xs:positiveInteger" default="1" />
             <xs:attribute name="default-position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>SCIPIO: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
+                    <xs:documentation>SCIPIO: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -716,12 +738,12 @@ Features and Modifications:
             <xs:attribute type="xs:positiveInteger" name="default-position" default="1" />
             <xs:attribute name="default-position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>SCIPIO: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
+                    <xs:documentation>SCIPIO: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros), for every field generated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -789,10 +811,16 @@ Features and Modifications:
     <xs:element name="sort-field">
         <xs:complexType>
             <xs:attribute name="name" type="xs:string" use="required" />
-            <xs:attribute name="position" type="xs:positiveInteger" />
+            <xs:attribute name="position" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>Field position in grid.
+                        SCIPIO: This is a STOCK attribute. Currently it is supported for "single" type forms, where it behaves like a real grid.
+                        WARN: Currently this should be avoided for "list"- and "multi"-type forms; behavior may be problematic.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>SCIPIO: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -930,12 +958,12 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="position-span" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>SCIPIO: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="combine-previous">
                 <xs:annotation>
-                    <xs:documentation>Scipio: If true, the field body will be combined with the previous field</xs:documentation>
+                    <xs:documentation>SCIPIO: If true, the field body will be combined with the previous field</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -1062,7 +1090,7 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
-                    <xs:documentation>Scipio: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros).</xs:documentation>
+                    <xs:documentation>SCIPIO: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros).</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -1742,7 +1770,7 @@ Features and Modifications:
             <xs:attribute type="xs:positiveInteger" name="rows" default="3" />
             <xs:attribute type="xs:positiveInteger" name="maxlength">
                 <xs:annotation>
-                    <xs:documentation>Scipio: Textarea maxlength</xs:documentation>
+                    <xs:documentation>SCIPIO: Textarea maxlength</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="default-value" />
@@ -2115,7 +2143,10 @@ Features and Modifications:
                         <xs:documentation>Specifies the string to display, can use the ${} syntax to insert context values; if empty the value of the field will be printed for a default.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <!-- SCIPIO: NOTE: This is now already defined on the base link.
+                    Note that this version supports Bsh conditions.
                 <xs:attribute type="xs:string" name="use-when" />
+                -->
                 <xs:attribute name="target-type" default="intra-app">
                     <xs:annotation>
                         <xs:documentation>Deprecated - use the url-mode attribute.</xs:documentation>

@@ -30,7 +30,7 @@ context.cart = cart;
 partyId = cart.getPartyId();
 currencyUomId = cart.getCurrency();
 
-// Scipio: Some patches to prevent missing userLogin crash
+// SCIPIO: Some patches to prevent missing userLogin crash
 
 if (!partyId) {
     partyId = userLogin?.partyId;

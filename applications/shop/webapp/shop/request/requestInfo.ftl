@@ -88,7 +88,7 @@ under the License.
             <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
                 <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.ProductProductStore}
+                    &nbsp;${uiLabelMap.ProductStore}
                 </@td>
                 <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">

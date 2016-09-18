@@ -24,6 +24,7 @@ under the License.
     <screen name="CommonGlSetupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PartyAdmin" />
                 <set field="activeSubMenuItemTop" value="Admin"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
@@ -32,7 +33,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.partyDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="PartyAdminSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <!--<include-menu name="PartyAdminTabBar" location="component://accounting/widget/AccountingMenus.xml"/>-->

@@ -70,8 +70,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - HTML Form Renderer implementation
- * @deprecated Use MacroScreenRenderer.
+ * <p>
+ * @deprecated SCIPIO: 2016-08-30: Considered deprecated and
+ * will not be maintained. Use macro renderer instead.
  */
+@Deprecated
 public class HtmlScreenRenderer extends HtmlWidgetRenderer implements ScreenStringRenderer {
 
     public static final String module = HtmlScreenRenderer.class.getName();
@@ -649,9 +652,9 @@ public class HtmlScreenRenderer extends HtmlWidgetRenderer implements ScreenStri
 
         writer.append(" src=\"");
         String urlMode = image.getUrlMode();
-        Boolean fullPath = null; // Scipio: changed from boolean to Boolean
-        Boolean secure = null; // Scipio: changed from boolean to Boolean
-        Boolean encode = false; // Scipio: changed from boolean to Boolean
+        Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
+        Boolean secure = null; // SCIPIO: changed from boolean to Boolean
+        Boolean encode = false; // SCIPIO: changed from boolean to Boolean
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {

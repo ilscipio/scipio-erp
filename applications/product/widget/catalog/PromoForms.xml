@@ -42,7 +42,11 @@ under the License.
         <alt-target use-when="productPromo==null" target="createProductPromo"/>
         <auto-fields-service service-name="updateProductPromo" map-name=""/>
 
-        <field use-when="productPromo!=null" name="productPromoId" title="${uiLabelMap.ProductPromotion}" tooltip=""><display/></field>
+        <field name="isCreate" use-when="productPromo==null"><hidden value="true"/></field><!-- SCIPIO: new -->
+
+        <field name="promoName" required-field="true"><text/></field>
+
+        <field use-when="productPromo!=null" name="productPromoId" title="${uiLabelMap.ProductPromotion}"><display/></field>
         <field use-when="productPromo==null&amp;&amp;productPromoId!=null" name="productPromoId" title="${uiLabelMap.ProductPromotion}" tooltip="${uiLabelMap.ProductCouldNotFindProductPromotion} [${productPromoId}]"><display/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
         <field use-when="productPromo==null&amp;&amp;productPromoId==null" name="productPromoId" title="${uiLabelMap.ProductPromotion}"><ignored/></field>
@@ -74,6 +78,8 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="productPromoCode==null" target="createProductPromoCode"/>
         <auto-fields-service service-name="updateProductPromoCode" map-name=""/>
+
+        <field name="isCreate" use-when="productPromoCode==null"><hidden value="true"/></field><!-- SCIPIO: new -->
 
         <field name="productPromoId">
             <drop-down>
@@ -130,10 +136,10 @@ under the License.
         <field name="productPromoId"><hidden/></field>
         <field use-when="productPromoContent != null" name="contentId"><display/></field>
         <field name="productPromoContentTypeId"><hidden value="ORIGINAL_IMAGE_URL"/></field>
-        <field name="fromDate" use-when="productPromoContent == null" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="fromDate" use-when="productPromoContent == null" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time/></field>
         <field name="fromDate" use-when="productPromoContent != null" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="uploadedFile" title="${uiLabelMap.ProductFile}"><file/></field>
+        <field name="uploadedFile" title="${uiLabelMap.ProductFile}" required-field="true"><file/></field>
         <field use-when="productPromoContent == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field use-when="productPromoContent != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>

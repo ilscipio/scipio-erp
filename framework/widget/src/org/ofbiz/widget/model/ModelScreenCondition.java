@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
@@ -36,7 +37,7 @@ import org.w3c.dom.Element;
  * @see <code>widget-screen.xsd</code>
  */
 @SuppressWarnings("serial")
-public final class ModelScreenCondition {
+public final class ModelScreenCondition implements Serializable {
 
     /*
      * ----------------------------------------------------------------------- *

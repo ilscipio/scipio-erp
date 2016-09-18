@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Scipio: Webapp request descriptor, before any transformation to its logical arguments or
+ * SCIPIO: Webapp request descriptor, before any transformation to its logical arguments or
  * its final web URL form.
  * <p>
  * FIXME: this does not support inter-webapp links or all the new ofbiz URL parameters

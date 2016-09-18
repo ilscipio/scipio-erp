@@ -66,6 +66,7 @@ under the License.
           <#assign label><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></#assign>
           <@field type="generic" label=label>
             <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+              <@tbody>
               <#list shippingContactMechList as shippingContactMech>
                 <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                 <@tr>
@@ -86,6 +87,7 @@ under the License.
                     </@td>
                 </@tr>
               </#list>
+              </@tbody>
             </@table>
           </@field>
         </form>

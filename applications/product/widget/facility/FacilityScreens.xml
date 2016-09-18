@@ -840,8 +840,6 @@ under the License.
                 <set field="displayWithNoFacility" value="Y"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="inventoryItemId" from-field="parameters.inventoryItemId"/>
-                
-                <set field="title" value="${uiLabelMap.PageTitleEditInventoryItem} ${facilityId}"/>
 
                 <entity-one entity-name="Facility" value-field="facility" auto-field-map="true"/>
                 <entity-one entity-name="InventoryItem" value-field="inventoryItem" auto-field-map="true"/>
@@ -852,6 +850,10 @@ under the License.
                     <order-by field-name="reservedDatetime"/>
                 </entity-condition>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
+                
+                <!-- FIXME: inconsistent labels -->
+                <set field="titleProperty" value="${groovy: (context.inventoryItem || (parameters.inventoryItemId &amp;&amp; parameters.isCreate != 'true')) ? 'PageTitleEditInventoryItem':'ProductNewInventoryItem'}"/>
+                <set field="title" value="${uiLabelMap[titleProperty]} ${facilityId}"/>
             </actions>
             <widgets>
                 <section>

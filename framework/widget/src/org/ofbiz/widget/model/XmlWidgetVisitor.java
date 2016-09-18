@@ -286,7 +286,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         visitAttribute("default-cell-width", modelMenu.getDefaultCellWidth());
         visitAttribute("default-hide-if-selected", modelMenu.getDefaultHideIfSelected());
         visitAttribute("default-disabled-title-style", modelMenu.getDefaultDisabledTitleStyle());
-        visitAttribute("selected-menuitem-context-field-name", modelMenu.getSelectedMenuItemContextFieldName());
+        visitAttribute("selected-menuitem-context-field-name", modelMenu.getSelectedMenuItemContextFieldNameExprStr());
         visitAttribute("menu-container-style", modelMenu.getMenuContainerStyleExdr());
         visitAttribute("default-align", modelMenu.getDefaultAlign());
         visitAttribute("default-align-style", modelMenu.getDefaultAlignStyle());
@@ -337,7 +337,10 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         if (modelMenuItem.getLink() != null) {
             visitLink(modelMenuItem.getLink().getLink());
         }
-        for (ModelMenuItem menuItem : modelMenuItem.getMenuItemList()) {
+        
+        // SCIPIO: TODO: print sub-menu elements
+        
+        for (ModelMenuItem menuItem : modelMenuItem.getLegacyMenuItemList()) {
             menuItem.accept(this);
             ;
         }
@@ -662,5 +665,12 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
             visitParameters(updateArea.getParameterList());
             writer.append("</on-event-update-area>");
         }
+    }
+
+    @Override
+    public void visit(ModelSubMenu subMenu) throws Exception {
+        // SCIPIO: new method
+        // TODO: incomplete
+        writer.append("<sub-menu/>");
     }
 }

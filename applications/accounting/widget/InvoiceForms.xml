@@ -260,8 +260,8 @@ under the License.
         </field>
     </form>
 
-   <form name="EditInvoiceItems" type="multi" list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem?invoiceId=${invoiceId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Invoice Items" paginate-target="listInvoiceItems"
-       odd-row-style="alternate-row" group-columns="true" separate-columns="true" use-row-submit="false"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+   <form name="EditInvoiceItems" type="multi" list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem?invoiceId=${invoiceId}" title="Edit Invoice Items" paginate-target="listInvoiceItems"
+       odd-row-style="alternate-row" group-columns="true" separate-columns="true" use-row-submit="false"> <!-- orig: default-table-style=-style="basic-table hover-bar" --><!-- &amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex} -->
        <row-actions>
            <set field="total" value="${groovy: (quantity ?: 1) * (amount ?: 0)}" type="BigDecimal"/>
        </row-actions>

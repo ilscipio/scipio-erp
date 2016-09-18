@@ -27,13 +27,16 @@ import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.base.util.UtilMisc;
 
 def mainAndConds = [];
 def orExprs = [];
 def entityName = context.entityName;
 def searchFields = context.searchFields;
 def displayFields = context.displayFields ?: searchFields;
-def searchDistinct = Boolean.valueOf(context.searchDistinct ?: false);
+// SCIPIO: support multiple types to ease screen writing
+//def searchDistinct = Boolean.valueOf(context.searchDistinct ?: false);
+def searchDistinct = UtilMisc.booleanValueVersatile(context.searchDistinct, false);
 
 def searchValueFieldName = parameters.term;
 def fieldValue = null;

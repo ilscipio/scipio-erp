@@ -25,7 +25,7 @@ context.activeOnly = activeOnly;
 
 paramInMap = [:];
 paramInMap.productCategoryId = UtilFormatOut.checkNull(request.getParameter("productCategoryId"));
-// Scipio: lookup default
+// SCIPIO: lookup default
 paramInMap.defaultViewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
 paramInMap.limitView = true;
 paramInMap.useCacheForMembers = true;

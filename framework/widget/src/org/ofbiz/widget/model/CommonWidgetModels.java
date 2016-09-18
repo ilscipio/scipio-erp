@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -57,7 +58,8 @@ public final class CommonWidgetModels {
     private CommonWidgetModels() {
     }
 
-    public static class AutoEntityParameters {
+    @SuppressWarnings("serial")
+    public static class AutoEntityParameters implements Serializable {
         private String entityName;
         List<String> excludeList = new ArrayList<String>();
         boolean includeNonPk;
@@ -124,7 +126,8 @@ public final class CommonWidgetModels {
         }
     }
 
-    public static class AutoServiceParameters {
+    @SuppressWarnings("serial")
+    public static class AutoServiceParameters implements Serializable {
         List<String> excludeList = new ArrayList<String>();
         boolean includeNonPk;
         boolean includePk;
@@ -191,7 +194,8 @@ public final class CommonWidgetModels {
         }
     }
 
-    public static final class Image {
+    @SuppressWarnings("serial")
+    public static final class Image implements Serializable  {
         private final FlexibleStringExpander alt;
         private final FlexibleStringExpander borderExdr;
         private final FlexibleStringExpander heightExdr;
@@ -309,20 +313,21 @@ public final class CommonWidgetModels {
         }
     }
 
-    public static final class Link {
+    @SuppressWarnings("serial")
+    public static final class Link implements Serializable  {
         // FIXME: This is a bad practice. Client code should not need to "know" what this value is.
         public static final String DEFAULT_URL_MODE = "intra-app";
         private final AutoEntityParameters autoEntityParameters;
         private final AutoServiceParameters autoServiceParameters;
-        private final Boolean encode; // Scipio: changed from boolean to Boolean
-        private final Boolean fullPath; // Scipio: changed from boolean to Boolean
+        private final Boolean encode; // SCIPIO: changed from boolean to Boolean
+        private final Boolean fullPath; // SCIPIO: changed from boolean to Boolean
         private final FlexibleStringExpander idExdr;
         private final Image image;
         private final String linkType; // anchor or hidden form
         private final FlexibleStringExpander nameExdr;
         private final List<Parameter> parameterList;
         private final FlexibleStringExpander prefixExdr;
-        private final Boolean secure; // Scipio: changed from boolean to Boolean
+        private final Boolean secure; // SCIPIO: changed from boolean to Boolean
         private final Integer size;
         private final FlexibleStringExpander styleExdr;
         private final FlexibleStringExpander targetExdr;
@@ -332,6 +337,7 @@ public final class CommonWidgetModels {
         // FIXME: These don't belong in this class (might have been used for image)
         private final String height;
         private final String width;
+        private final FlexibleStringExpander useWhenExdr; // SCIPIO: new
 
         public Link(Element linkElement) {
             this.textExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("text"));
@@ -342,7 +348,7 @@ public final class CommonWidgetModels {
             this.targetWindowExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("target-window"));
             this.prefixExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("prefix"));
             this.urlMode = linkElement.getAttribute("url-mode");
-            // Scipio: changed from boolean to Boolean
+            // SCIPIO: changed from boolean to Boolean
             this.fullPath = "true".equals(linkElement.getAttribute("full-path")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("full-path")) ? Boolean.FALSE : null);
             this.secure = "true".equals(linkElement.getAttribute("secure")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("secure")) ? Boolean.FALSE : null);
             this.encode = "true".equals(linkElement.getAttribute("encode")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("encode")) ? Boolean.FALSE : null);
@@ -389,14 +395,15 @@ public final class CommonWidgetModels {
             this.size = size;
             this.width = linkElement.getAttribute("width");
             this.height = linkElement.getAttribute("height");
+            this.useWhenExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("use-when"));
         }
 
         // Portal constructor
         public Link(GenericValue portalPage, List<Parameter> parameterList, String target, Locale locale) {
             this.autoEntityParameters = null;
             this.autoServiceParameters = null;
-            this.encode = null; // Scipio: Null default
-            this.fullPath = null; // Scipio: Null default
+            this.encode = null; // SCIPIO: Null default
+            this.fullPath = null; // SCIPIO: Null default
             this.idExdr = FlexibleStringExpander.getInstance("");
             this.image = null;
             this.linkType = "";
@@ -412,6 +419,7 @@ public final class CommonWidgetModels {
             this.size = null;
             this.width = "";
             this.height = "";
+            this.useWhenExdr = FlexibleStringExpander.getInstance("");
         }
 
         public AutoEntityParameters getAutoEntityParameters() {
@@ -422,11 +430,11 @@ public final class CommonWidgetModels {
             return autoServiceParameters;
         }
 
-        public Boolean getEncode() { // Scipio: changed from boolean to Boolean
+        public Boolean getEncode() { // SCIPIO: changed from boolean to Boolean
             return this.encode;
         }
 
-        public Boolean getFullPath() { // Scipio: changed from boolean to Boolean
+        public Boolean getFullPath() { // SCIPIO: changed from boolean to Boolean
             return this.fullPath;
         }
 
@@ -502,7 +510,7 @@ public final class CommonWidgetModels {
             return prefixExdr;
         }
 
-        public Boolean getSecure() { // Scipio: changed from boolean to Boolean
+        public Boolean getSecure() { // SCIPIO: changed from boolean to Boolean
             return this.secure;
         }
 
@@ -561,6 +569,21 @@ public final class CommonWidgetModels {
         public String getWidth() {
             return this.width;
         }
+
+        public FlexibleStringExpander getUseWhenExdr() { // SCIPIO: new
+            return useWhenExdr;
+        }
+        
+        public Boolean getUseWhen(Map<String, Object> context) { // SCIPIO: new
+            String useWhenStr = useWhenExdr.expandString(context);
+            if ("true".equals(useWhenStr)) {
+                return Boolean.TRUE;
+            } else if ("false".equals(useWhenStr)) {
+                return Boolean.FALSE;
+            } else {
+                return null;
+            }
+        }
     }
 
     /**
@@ -568,7 +591,8 @@ public final class CommonWidgetModels {
      * 
      * @see <code>widget-form.xsd</code>
      */
-    public static class Parameter {
+    @SuppressWarnings("serial")
+    public static class Parameter implements Serializable  {
         protected FlexibleMapAccessor<Object> fromField;
         protected String name;
         protected FlexibleStringExpander value;

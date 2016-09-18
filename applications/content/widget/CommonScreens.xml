@@ -68,7 +68,7 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/cms/CMSMenus.xml#Cms" />
                 <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
-                <set field="activeMainMenuItem" value="CMS"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CMS"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -104,7 +104,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Content" />
-                <set field="activeMainMenuItem" value="Content"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -160,7 +160,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#ContentTop" />
-                <set field="activeMainMenuItem" value="Content"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -199,7 +199,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/DataResourceMenus.xml#DataResource" />
-                <set field="activeMainMenuItem" value="DataResource"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="DataResource"/>
                 <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
@@ -246,7 +246,7 @@ under the License.
     <screen name="CommonCompDocDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="CompDoc"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CompDoc"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -339,7 +339,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" value="websites"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="websites"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -419,7 +419,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="titleProperty" value="ContentMain"/>
             </actions>
@@ -493,7 +493,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" value="websites"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="websites"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">

@@ -668,9 +668,8 @@ Features and Modifications:
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If set to explicit false, any actions in the submenu will
                         not affect the parent's context. If true, the scope is shared.
-                        Default: true
-                        Also it is less safe, the default is true because menu widgets generally
-                        did not protect scope in Ofbiz.</xs:documentation>
+                        Default: true (NOTE: this is unlike most other share-scope attributes on other
+                            elements, which are usually false by default)</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

@@ -38,7 +38,6 @@ activeSubMenu = context[activeSubField];
 activeSubMenuItem = context[activeSubItemField];
 activeMainMenuItem = context[activeMainItemField];
 
-
 /* 
 activeSubMenu is the location#name of a sub-menu element (<sub-menu name="..."/>).
 If location not specified, a default is used, but generally we will no longer
@@ -97,9 +96,8 @@ if (cplxAddSuffix) {
 }
 
 useCplxMenu = false;
+org.ofbiz.widget.model.ModelMenu cplxMenuModel = null;
 if (!smplForce) {
-    
-    org.ofbiz.widget.model.ModelMenu cplxMenuModel = null;
     try {
         cplxMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
             cplxLoc, cplxName);
@@ -112,9 +110,14 @@ if (!smplForce) {
     }
     
     if (activeSubMenuName) {
+        subInCplx = cplxMenuModel.getModelSubMenuByName(activeSubMenuName);
+        if (subInCplx == null) {
+            Debug.logWarning("Could not find (active) sub menu '" + activeSubMenuName + "'" +
+                " in complex menu '" + cplxLoc + "#" + cplxName + "'", module);
+        }
+        
         // check if the complex menu contains the named submenu.
-        if (activeSubMenuName.equals(cplxMenuModel.getName()) || 
-            cplxMenuModel.getModelSubMenuByName(activeSubMenuName)) {
+        if (activeSubMenuName.equals(cplxMenuModel.getName()) || subInCplx) {
             useCplxMenu = true;
         }
     } else {
@@ -138,6 +141,8 @@ if (!smplForce) {
 cplxSelSubField = cplxSelSubField ?: "activeMainSubMenu";
 cplxSelItemField = cplxSelItemField ?: "activeMainMenuItem";
 
+smplName = null;
+smplLoc = null;
 if (!useCplxMenu) {
     // fallback to simple menu
     
@@ -182,3 +187,31 @@ context.cplxLoc = cplxLoc;
 context.cplxSubFilter = cplxSubFilter;
 context.cplxMaxDepth = cplxMaxDepth;
 
+/*
+if (true) {
+    cplxMenuInfo = [:];
+    cplxMenuInfo.useCplxMenu = useCplxMenu;
+    
+    cplxMenuInfo.cplxName = cplxName;
+    cplxMenuInfo.cplxLoc = cplxLoc;
+    cplxMenuInfo.cplxSubFilter = cplxSubFilter;
+    cplxMenuInfo.cplxMaxDepth = cplxMaxDepth;
+    
+    cplxMenuInfo.cplxSelSubField = cplxSelSubField;
+    cplxMenuInfo.cplxSelItemField = cplxSelItemField;
+    cplxMenuInfo.cplxSuffix = cplxSuffix;
+    cplxMenuInfo.cplxAddSuffix = cplxAddSuffix;
+    cplxMenuInfo.cplxStripSuffix = cplxStripSuffix;
+    cplxMenuInfo.smplSuffix = smplSuffix;
+    cplxMenuInfo.defLoc = defLoc;
+    cplxMenuInfo.smplForce = smplForce;
+    
+    cplxMenuInfo.activeSubMenuName = activeSubMenuName;
+    cplxMenuInfo.activeSubMenuLoc = activeSubMenuLoc;
+    cplxMenuInfo.activeSubMenu = activeSubMenu;
+    cplxMenuInfo.activeSubMenuItem = activeSubMenuItem;
+    cplxMenuInfo.activeMainMenuItem = activeMainMenuItem;
+    
+    Debug.logInfo("COMPLEX MENU INFO: " + cplxMenuInfo, module);
+}
+*/

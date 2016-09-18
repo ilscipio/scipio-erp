@@ -360,6 +360,15 @@ under the License.
                             <condition>
                                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
                             </condition>
+                            <actions>
+                                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global. -->
+                                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                                <entity-one entity-name="WebSite" value-field="webSite"/>
+                                
+                                <set field="labelText" value="${groovy: if (context.webSite) uiLabelMap.ContentWebSite + ': ' + webSite.siteName + ' [' + webSite.webSiteId + ']' else ''}"/>
+                                <set field="labelTextExtra" value="${${extraFunctionName}}"/>
+                                <set field="labelTextFinal" value="${groovy: context.extraFunctionName ? labelText + ' ' + labelTextExtra : labelText}"/>
+                            </actions>
                             <widgets>
                                 <!--<container style="button-bar">
                                     <link text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
@@ -367,7 +376,11 @@ under the License.
                                 <container>
                                     <include-menu name="websiteMenu" location="component://content/widget/content/ContentMenus.xml"/>
                                 </container>
-                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
+                                <!-- SCIPIO: too verbose, redundant with page titles
+                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}] ${${extraFunctionName}}"/>
+                                -->
+                                <label style="heading" text="${labelTextFinal}"/>
+                                
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -511,11 +524,23 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
+                            <actions>
+                                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global. -->
+                                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                                <entity-one entity-name="WebSite" value-field="webSite"/>
+                                
+                                <set field="labelText" value="${groovy: if (context.webSite) uiLabelMap.ContentWebSite + ': ' + webSite.siteName + ' [' + webSite.webSiteId + ']' else ''}"/>
+                                <set field="labelTextExtra" value="${${extraFunctionName}}"/>
+                                <set field="labelTextFinal" value="${groovy: context.extraFunctionName ? labelText + ' ' + labelTextExtra : labelText}"/>
+                            </actions>
                             <widgets>
                                 <container style="button-bar">
                                     <include-menu name="WebAnalyticsConfigButtonBar" location="component://content/widget/content/ContentMenus.xml"/>
                                 </container>
+                                <!-- SCIPIO: too verbose/redundant
                                 <label style="heading" text="${uiLabelMap.CatalogWebAnalytics} ${uiLabelMap.CommonFor} : ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
+                                -->
+                                <label style="heading" text="${labelTextFinal}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

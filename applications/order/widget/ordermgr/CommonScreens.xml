@@ -421,5 +421,28 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="SideBarMenu">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="sideBarMenu.name"/></not>
+                    </condition>
+                    <actions>
+                        <set field="sideBarMenuLoc" from-field="sideBarMenu.location" default-value="component://order/widget/ordermgr/OrderMenus.xml" />
+                    </actions>
+                    <widgets>
+                        <include-menu location="${sideBarMenuLoc}" name="${sideBarMenu.name}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="OrderAppSideBar"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
 </screens>
 

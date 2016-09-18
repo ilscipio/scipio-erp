@@ -45,4 +45,31 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: SideBar menu factored implementation -->
+    <screen name="SideBarMenu">
+        <section>
+            <actions>
+                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
+                <set field="sideBarMenu.advLocation" value="component://demosuite/widget/DemoSuiteMenus.xml"/>
+                <set field="sideBarMenu.advName" value="MainAppSideBar"/>
+                <set field="sideBarMenu.defLocation" value="component://demosuite/widget/DemoSuiteMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DefaultSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="SideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

@@ -52,7 +52,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://assetmaint/widget/AssetmaintMenus.xml" name="AssetMaintAppSideBar"/>
+                                <include-menu name="AssetMaintAppSideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -166,6 +166,32 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: SideBar menu factored implementation -->
+    <screen name="SideBarMenu">
+        <section>
+            <actions>
+                <!--<set field="sideBarMenu" type="NewMap" value=""/>-->
+                <set field="sideBarMenu.advLocation" value="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                <set field="sideBarMenu.advName" value="AssetMaintAppSideBar"/>
+                <set field="sideBarMenu.defLocation" value="component://assetmaint/widget/AssetmaintMenus.xml"/>
+            </actions>
+            <widgets>
+                <include-screen location="component://common/widget/CommonScreens.xml" name="SideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DefaultSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="SideBarMenu"/>
             </widgets>
         </section>
     </screen>

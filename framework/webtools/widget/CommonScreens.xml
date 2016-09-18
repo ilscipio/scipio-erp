@@ -606,4 +606,16 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: Default SideBar menu, with no selected submenu (shows top level) -->
+    <screen name="DefaultSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefaultSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <include-screen name="SideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

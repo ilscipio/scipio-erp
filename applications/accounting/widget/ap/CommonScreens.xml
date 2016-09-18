@@ -136,12 +136,13 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#ApInvoice" />
                 <set field="activeMainMenuItem" value="invoices"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="ApInvoiceSideBar" location="component://accounting/widget/ap/ApMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/ap/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -183,6 +184,7 @@ under the License.
     <screen name="CommonPaymentGroupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
                 <set field="activeMainMenuItem" value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
@@ -193,7 +195,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-columm">
-                        <include-menu name="PaymentGroupSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -241,12 +243,13 @@ under the License.
     <screen name="CommonApReportDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#ApReport" />
                 <set field="activeMainMenuItem" value="reports"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="ApReportSideBar" location="component://accounting/widget/ap/ApMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/ap/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>

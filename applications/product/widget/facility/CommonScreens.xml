@@ -72,6 +72,7 @@ under the License.
     <screen name="CommonFacilityDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#Facility" />
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
@@ -98,7 +99,7 @@ under the License.
                                                 <include-menu name="${facilityMenu}" location="component://product/widget/facility/FacilityMenus.xml"/>
                                             </widgets>
                                             <fail-widgets>
-                                                <include-menu name="FacilitySideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                                <include-screen name="MainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
                                             </fail-widgets>
                                         </section>
                                     </widgets>

@@ -80,6 +80,7 @@
     <screen name="CommonSetupDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://commonext/widget/ofbizsetup/Menus.xml#SetupSub" />
                 <entity-condition entity-name="PartyRole" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
@@ -97,7 +98,7 @@
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="SetupSubSideBar" location="component://commonext/widget/ofbizsetup/Menus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
                             </widgets>
                         </section>
                         <!-- Scipio: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->

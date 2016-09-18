@@ -77,13 +77,20 @@ under the License.
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
+                            <actions>
+                                <!-- SCIPIO: TODO: move these actions outside here using tests in actions instead -->
+                                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" />
+                            </actions>
                             <widgets>
-                                <include-menu name="ComputerHardwareSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                             </widgets>
                         </section>
                         <section>
+                            <actions>
+                                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#FixedAssetSubSideBar" />
+                            </actions>
                             <widgets>
-                                <include-menu name="FixedAssetSubSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -141,17 +148,19 @@ under the License.
     <screen name="CommonComputerSoftwareDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#FixedAssetSub" />
                 <set field="activeMainMenuItem" value="ComputerSoftware"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                <!--
+                    <!--
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true">
-                        <include-menu name="ComputerHardwareSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" />
+                        <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                     </decorator-section>
                      -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="FixedAssetSubSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/ismgr/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

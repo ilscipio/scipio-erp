@@ -52,6 +52,7 @@ under the License.
     <screen name="CommonShipmentDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#Shipment" />
                 <set field="shipmentId" from-field="parameters.shipmentId"/>
                 <entity-one entity-name="Shipment" value-field="shipment"/>
                 <set field="shipmentId" from-field="shipment.shipmentId" global="true"/>
@@ -60,7 +61,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="ShipmentSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

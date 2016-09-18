@@ -67,6 +67,7 @@ under the License.
     <screen name="CommonFacilityDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#Facility" />
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
@@ -74,7 +75,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="FacilitySideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -110,6 +111,7 @@ under the License.
     <screen name="CommonFixedAssetDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAsset" />
                 <set field="activeMainMenuItem" value="ListFixedAssets"/>
                 <set field="fixedAssetId" from-field="fixedAsset.fixedAssetId" default-value="${parameters.fixedAssetId}"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
@@ -117,7 +119,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true"> <!-- Scipio: quick setting lets callers override this section -->
-                        <include-menu name="FixedAssetSideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://assetmaint/widget/CommonScreens.xml"/>
                         <!--<decorator-section-include name="pre-body"/>-->
                     </decorator-section>
                     <decorator-section name="body">

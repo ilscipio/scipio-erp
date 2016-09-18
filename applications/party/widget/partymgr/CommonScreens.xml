@@ -78,6 +78,7 @@ under the License.
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#Profile" />
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
@@ -92,7 +93,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true) and (not empty context.party)}" override-by-auto-include="true">
-                        <include-menu name="ProfileSideBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                        <include-screen name="MainSideBarMenu" location="component://party/widget/partymgr/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true) and (not empty context.party)}">
                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>

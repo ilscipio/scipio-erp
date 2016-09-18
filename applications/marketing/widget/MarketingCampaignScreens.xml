@@ -26,6 +26,7 @@ under the License.
     <screen name="EditMarketingCampaign">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="MarketingCampaign"/>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
                 <set field="title" value="${uiLabelMap.MarketingCampaign} ${marketingCampaignId}" />
@@ -50,6 +51,7 @@ under the License.
     <screen name="FindMarketingCampaign">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="MarketingCampaign"/>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
                 <set field="entityName" value="MarketingCampaign" />

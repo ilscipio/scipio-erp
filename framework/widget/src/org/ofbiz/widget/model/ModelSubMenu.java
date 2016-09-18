@@ -28,7 +28,7 @@ import java.util.Map;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.widget.model.ModelMenuItem.ParentMenuItemInfo;
+import org.ofbiz.widget.model.ModelMenuItem.ParentItemInfo;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Element;
 
@@ -64,7 +64,7 @@ public class ModelSubMenu extends ModelWidget {
     private final FlexibleStringExpander shareScope;
     
     public ModelSubMenu(Element subMenuElement, String effectiveName, ModelMenu topModelMenu, 
-            ParentMenuItemInfo parentItemInfo, List<? extends Element> extraMenuItems) {
+            ParentItemInfo parentItemInfo, List<? extends Element> extraMenuItems) {
         super(subMenuElement);
         this.effectiveName = effectiveName;
         ModelMenuItem parentMenuItem = parentItemInfo.menuItem;
@@ -120,7 +120,7 @@ public class ModelSubMenu extends ModelWidget {
             }
         }
         
-        ParentMenuItemInfo childParentItemInfo = new ParentMenuItemInfo(parentMenuItem, 
+        ParentItemInfo childParentItemInfo = new ParentItemInfo(parentMenuItem, 
                 childStyleModelMenu, childLogicModelMenu);
         
         // support included sub-menu items
@@ -140,7 +140,7 @@ public class ModelSubMenu extends ModelWidget {
         ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
         Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
         topModelMenu.processIncludeMenuItems(subMenuElement, preInclElements, null, menuItemList, menuItemMap, 
-                topModelMenu.getMenuLocation(), true, null, menuElemCache, childParentItemInfo);
+                topModelMenu.getMenuLocation(), true, null, null, menuElemCache, childParentItemInfo);
         
         // extra items: replaces the legacy menu-item load originally in ModelMenuItem constructor
         if (extraMenuItems != null && !extraMenuItems.isEmpty()) {
@@ -149,7 +149,7 @@ public class ModelSubMenu extends ModelWidget {
             Map<String, ModelMenuItem> extraMenuItemMap = new HashMap<String, ModelMenuItem>();
             
             for (Element itemElement : extraMenuItems) {
-                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, topModelMenu, childParentItemInfo);
+                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, topModelMenu, childParentItemInfo, null);
                 topModelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
                 topModelMenu.addUpdateMenuItem(modelMenuItem, extraMenuItemList, extraMenuItemMap);
             }

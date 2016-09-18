@@ -220,6 +220,23 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="sub-menus">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Filter for which sub-menus to include (from menu-items).
+                        Possible values:
+                        'none': no sub-menus are retained whatsoever. This is the highest priority setting.
+                        'all': sub-menus are retained from the target menu-items. Note however recursive includes
+                            marked with 'none' retain priority.
+                        Default: 'all'
+                        Note that currently (2016-08-28) there is no support for sub-menu merging like there is for menu-items.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="none" />
+                        <xs:enumeration value="all" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-actions">
@@ -308,6 +325,18 @@ Features and Modifications:
                         <xs:enumeration value="includes-only" />
                         <xs:enumeration value="extends-only" />
                         <xs:enumeration value="full" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="sub-menus">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Filter for which sub-menus to include (from menu-items).
+                        See include-elements documentation.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="none" />
+                        <xs:enumeration value="all" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

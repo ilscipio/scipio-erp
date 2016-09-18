@@ -73,8 +73,45 @@ under the License.
             <link target="/solr/admin.html" url-mode="plain" target-window="_blank"/>
         </menu-item>
     </menu>
+    <!-- 
+      SCIPIO: This sidebar menu is enhanced to support a complex nested structure.
+      Calls to it should be wrapped using component://webtools/widget/CommonScreens.xml#SideBarMenu or similar.
+      
+      NOTES:
+      * menu attribute auto-sub-menu-names="..." has "from-include" as default and it causes sub-menus to get named
+        automatically after their include="..." attribute; but this may not always work; use "off" and specify sub-menu name="..." attribute
+        explicitly to resolve sub-menu name conflicts within the menu. Sub-menu names must be unique within the menu,
+        including all those included through <include-menu-items .../> and extends="..." directives.
+      * Here you could set default-sub-menu-include-scope="func" or "none" (the default is "full") if you didn't want the included menus
+        from using their own default-xxx-style="..." attributes on their menu items (which currently mostly come from CommonSideBarMenu).
+        Ultimately there is no right way to organize the styling. 
+        NOTE: the setting doesn't apply recursively; only to the sub-menu XML visible under this menu,
+        so the included menus could also need to be given the setting. 
+    -->
     <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="WebtoolsAppBar" recursive="full" />
+        <menu-item name="server">
+            <sub-menu include="ServerSideBar" />
+        </menu-item>
+        <menu-item name="entity">
+            <sub-menu name="EntitySideBar" include="EntitySideBar" /><!-- NOTE: the sub-menu name may differ from the include reference's name -->
+        </menu-item>
+        <menu-item name="service">
+            <sub-menu include="serviceSideBar" />
+        </menu-item>
+        <menu-item name="labels">
+            <sub-menu include="labelSideBar" />
+        </menu-item>
+        <menu-item name="importExport">
+            <sub-menu include="importExportSideBar" />
+        </menu-item>
+        <menu-item name="geoManagement">
+            <sub-menu include="geoManagementSideBar" />
+        </menu-item> 
+        <menu-item name="LayoutDemo">
+            <sub-menu include="LayoutDemoSideBar" />
+        </menu-item>
+        <menu-item name="solrAdmin"/>
     </menu>
 
     <menu name="configurationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -170,7 +207,7 @@ under the License.
             </condition>
             <link target="security"/>
         </menu-item>
-         <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
+        <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
             <link target="StatsSinceStart"/>
         </menu-item>
         <menu-item name="configuration" title="${uiLabelMap.WebtoolsCertsX509}">
@@ -181,6 +218,9 @@ under the License.
     <!-- SCIPIO: new Sidebar menu. Includes LogView, Cache Maintenance, Statistics, Certificates -->
     <menu name="ServerSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ServerTabBar" recursive="includes-only" />
+        <menu-item name="stats">
+            <sub-menu include="StatsSideBar"/>
+        </menu-item>
     </menu>
 
     <!-- ToDo: Remove
@@ -340,10 +380,12 @@ under the License.
             <link target="ForceGarbageCollection"/>
         </menu-item>
     </menu>
+    <!-- SCIPIO: not in use (tab bar only)
     <menu name="FindCacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FindCacheTabBar" recursive="includes-only" />
     </menu>
-
+    -->
+ 
     <menu name="CacheElements" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="back" title="${uiLabelMap.WebtoolsBackToCacheMaintenance}">
             <link target="FindUtilCache"/>
@@ -421,6 +463,7 @@ under the License.
     </menu>
     
     <!-- Scipio: DemoDataGenerator sidebar menu -->
+    <!-- SCIPIO: NOTE: this is not in use -->
     <menu name="DemoDataGeneratorSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ListDemoDataGeneratorServices" title="${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">
             <link target="ListDemoDataGeneratorServices">                
@@ -613,7 +656,7 @@ under the License.
         </menu-item>
         <!-- Modifies the previous to exclude one of the items and add an extra before -->
         <menu-item name="top7">
-            <sub-menu include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown, sorted"
+            <sub-menu name="LayoutDemoButtonDropdownTest2" include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown, sorted"
                 items-sort-mode="displaytext-ignorecase">
                 <!-- extra items -->
                 <include-elements menu-name="LayoutDemoTest2" recursive="full"/>
@@ -634,8 +677,8 @@ under the License.
         </menu-item>
         <!-- RARE CASE: Two submenus. technically supported, but usually best avoided. -->
         <menu-item name="top6"> 
-            <sub-menu style="+two-sub-menu-first" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (1)" />
-            <sub-menu style="+two-sub-menu-second" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (2)" />
+            <sub-menu style="+two-sub-menu-first" name="LayoutDemoButtonDropdownTest3" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (1)" />
+            <sub-menu style="+two-sub-menu-second" name="LayoutDemoButtonDropdownTest4" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (2)" />
         </menu-item>
     </menu>
     
@@ -731,6 +774,11 @@ under the License.
             </sub-menu>
         </menu-item>
     </menu>
+    
+    <menu name="WebtoolsPlainSiteMapDemo">
+        <!-- To achieve this, we can force the scope of all sub-menus to exclude styling using 'func' or 'none' -->
+        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="func"/>
+    </menu> 
 
     <menu name="WebtoolsInlineSectionMenuDemo">
         <menu-item name="item1" title="Inline-Section Menu Item 1">

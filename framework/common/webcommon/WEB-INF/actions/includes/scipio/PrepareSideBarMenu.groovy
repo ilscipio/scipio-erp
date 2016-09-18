@@ -34,10 +34,10 @@ if (activeSubMenu) {
     }
 } 
 
-menuSuffix = context.defMenuNameSuffix;
+origActiveSubMenuName = activeSubMenuName;
 
 def appendSuffix(name, suffix) {
-    if (name) {
+    if (name && suffix) {
         if (!name.endsWith(suffix)) {
             name += suffix;
         }
@@ -45,11 +45,23 @@ def appendSuffix(name, suffix) {
     return name;
 }
 
+def stripSuffix(name, suffix) {
+    if (name && suffix) {
+        if (name.endsWith(suffix)) {
+            name = name.substring(0, name.length() - suffix.length());
+        }
+    }
+    return name;
+}
+
 // append menu name suffix if needed
-appendedSuffix = false;
-if (context.useAdvSuffix) {
-    activeSubMenuName = appendSuffix(activeSubMenuName, menuSuffix);
-    appendedSuffix = true;
+if (context.advAddSuffix) {
+    activeSubMenuName = appendSuffix(activeSubMenuName, context.advSuffix);
+    // ignore advStripSuffix
+} else {
+    if (context.advStripSuffix) {
+        activeSubMenuName = stripSuffix(activeSubMenuName, context.advSuffix);
+    }
 }
 
 useAdvMenu = false;
@@ -97,10 +109,7 @@ if (useAdvMenu) {
     // fallback to simple menu
 
     // always append suffix for simple/fallback
-    if (!appendedSuffix) {
-        activeSubMenuName = appendSuffix(activeSubMenuName, menuSuffix);
-    }
-    context.simpleName = activeSubMenuName;
+    context.simpleName = appendSuffix(origActiveSubMenuName, context.simpleSuffix);
 
     // for location we use the part before # in activeSubMenu, or the configured default location
     context.simpleLoc = activeSubMenuLoc ?: context.defLoc;

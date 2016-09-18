@@ -1295,14 +1295,21 @@ under the License.
                 <set field="advSelSubField" from-field="sideBarMenu.advSelMenuFieldName" default-value="activeMainSubMenu" />
                 <set field="advSelItemField" from-field="sideBarMenu.advSelMenuItemFieldName" default-value="activeMainMenuItem" />
                 
-                <!-- suffix is appended to activeSubMenu as appropriate (always appended for simple, appended
-                    for complex if useAdvSuffix set) -->
-                <set field="defMenuNameSuffix" from-field="sideBarMenu.defMenuNameSuffix" default-value="SideBar" />
-                <!-- set to false if you used explicit names in menu defs, such as: 
-                       <sub-menu name="Server" include="ServerSideBar"/> 
-                     set to true if you used implicit or reused full names, such as: 
-                       <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>  -->
-                <set field="useAdvSuffix" from-field="sideBarMenu.useAdvSuffix" type="Boolean" default-value="false" />
+
+                <!-- Menu name suffix control for complex/advanced menu
+                     set advAddSuffix to false (default) if you used explicit names in menu defs, such as: 
+                       <sub-menu name="Server" include="ServerSideBar"/>
+                       in this case it's best to leave advStripSuffix true for compatibility.
+                     set advAddSuffix to true (default) if you used implicit or reused full names, such as: 
+                       <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
+                       in this case advStripSuffix is ignored (inapplicable).
+                -->
+                <set field="advSuffix" from-field="sideBarMenu.advNameSuffix" type="String" default-value="SideBar" />       
+                <set field="advAddSuffix" from-field="sideBarMenu.advAddNameSuffix" type="Boolean" default-value="false" />
+                <set field="advStripSuffix" from-field="sideBarMenu.advStripNameSuffix" type="Boolean" default-value="true" />
+
+                <!-- Menu name suffix for simple menu (always appended if menu name does not already end up the suffix) -->
+                <set field="simpleSuffix" from-field="sideBarMenu.simpleNameSuffix" default-value="SideBar" />
 
                 <!-- sideBarMenu.defaultLocation is for handling legacy/non-complex menus -->
                 <set field="defLoc" from-field="sideBarMenu.defLocation" default-value="component://common/widget/CommonMenus.xml" />

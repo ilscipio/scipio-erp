@@ -278,6 +278,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final List<ModelScreenWidget> subWidgets;
         private final List<ModelScreenWidget> failWidgets;
         private final boolean isMainSection;
+        private final FlexibleStringExpander shareScopeExdr;
 
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
@@ -321,6 +322,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 this.failWidgets = Collections.emptyList();
             }
             this.isMainSection = isMainSection;
+            this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
         }
 
         @Override
@@ -330,6 +332,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         @Override
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+            // SCIPIO: share-scope
+            boolean protectScope = !shareScope(context);
+            if (protectScope) {
+                if (!(context instanceof MapStack<?>)) {
+                    context = MapStack.create(context);
+                }
+                UtilGenerics.<MapStack<String>>cast(context).push();
+            }
+            
             // check the condition, if there is one
             boolean condTrue = true;
             if (this.condition != null) {
@@ -371,7 +382,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     throw new RuntimeException(errMsg);
                 }
             }
-
+            
+            // SCIPIO: share-scope
+            if (protectScope) {
+                UtilGenerics.<MapStack<String>>cast(context).pop();
+            }
         }
 
         @Override
@@ -401,6 +416,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public ModelCondition getCondition() {
             return condition;
+        }
+        
+        public boolean shareScope(Map<String, Object> context) {
+            String shareScopeString = this.shareScopeExdr.expandString(context);
+            // defaults to true, so anything but false is true
+            return !"false".equals(shareScopeString);
         }
     }
 

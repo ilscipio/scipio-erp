@@ -1274,39 +1274,44 @@ under the License.
         </section>
     </screen>
     
-    <!-- Advanced Menu Wrapper (Generic/Tweakable)
-        Renders an complex menu supporting complex structure such as any number and depth of sub-menus.
+    <!-- Complex Menu Wrapper
+        Renders a complex menu supporting complex structure such as any number and depth of sub-menus.
         
-        Each application should wrap this implementation (or a variant: AdvSideBarMenu, etc.) in its common screen definitions and provide the location
-        of an complex menu in menuCfg.location/name, plus any other wanted configuration in the menuCfg map.
+        Each application should wrap this implementation (or a variant: ComplexSideBarMenu, etc.) in its common screen definitions and provide the location
+        of an complex menu in menuCfg.location/name, plus any other needed configuration in the menuCfg map.
         
         The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
-        * activeSubMenu (required)
-        * activeSubMenuItem (required)
-        * activeMainMenuItem (not strictly required but usually should be set)
-        (NOTE: these are the default input field names, possible to override)
+        * activeSubMenu (direct argument)
+        * activeSubMenuItem (direct argument)
+        * activeMainMenuItem (fallback argument)
+        (NOTE: These are the default input field names, but they may be changed per-menu using further configuration below)
         
         Details:
-        * activeSubMenu (required) - Name of a sub-menu that is part of the complex menu designated by location/name.
-          If the field is empty, it indicates the top level (no sub-menu).
+        * activeSubMenu - Name of a sub-menu that is part of the complex menu designated by menuCfg.location/name.
           The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
           This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
           but this location is not used in the complex menu lookup.
+          If the field is empty, the special value "TOP", or the name of the top-level menu, it designates the top level (no sub-menu).
+          (Empty may be treated specially in some cases, such as if activeSubMenuItem is missing or if the menu wrapper behavior is changed via menuCfg.allowSubItemTop)
           If the name is not found within the complex menu as sub-menu, the name and location is instead used to lookup a 
           simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
           but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
-          In fallback mode, a suffix (by default "Menu", or "SideBar" if you use AdvSideBarMenu) is added to the activeSubMenu value before performing the lookup.
-        * activeSubMenuItem (required) - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
+          In fallback mode, a suffix (by default "Menu", or "SideBar" if you use ComplexSideBarMenu) is added to the activeSubMenu value before performing the lookup.
+        * activeSubMenuItem - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
           on the menu/sub-menu designated/implied by activeSubMenu.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
-          specified, as default behavior or fallback. 
-          WARN (2016-08-31): this behavior is for compatibility and is currently subject to change slightly.
+          specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default). 
         
         Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.
-        Often one will be set by a decorator and the other by a screen.
         activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
         still necessary to designate items in other unrelated menus.
+        
+        The default behavior is based on the usual usage in the standard Scipio screens (based on the Ofbiz pattern).
+        In these screens, the fields activeSubMenu and activeSubMenuItem are used to highlight items in the
+        main side bar menus, with activeMainMenuItem as fallback for the top level.
+        Often, activeSubMenu is by decorators and activeSubMenuItem by individual screens.
+        Additionally, activeMainMenuItem is used in some themes to highlight items in a separate non-complex "main" menu.
         
         menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
         Complex menu location:
@@ -1365,9 +1370,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- Complex SideBar Menu Wrapper - based on ComplexMenu
-        Currently same as ComplexMenu except sets the activeSubMenu suffix to "SideBar".
-        See ComplexMenu for details. -->
+    <!-- Complex SideBar Menu Wrapper - based on ComplexMenu (see ComplexMenu above for available arguments and details)
+        Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
     <screen name="ComplexSideBarMenu">
         <section>
             <actions>

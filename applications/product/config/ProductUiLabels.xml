@@ -31829,4 +31829,33 @@
         <value xml:lang="es">Segmentos de una Tienda de Productos</value>
         <value xml:lang="fr">Segments du centre de profit</value>
     </property>
+    <property key="ProductNewCatalog">
+        <value xml:lang="de">Neuen Katalog</value>
+        <value xml:lang="en">New Catalog</value>
+        <value xml:lang="es">Nuevo Catálogo</value>
+        <value xml:lang="fr">Nouveau catalogue</value>
+        <value xml:lang="it">Nuovo catalogo</value>
+        <value xml:lang="ja">新規カタログを作成</value>
+        <value xml:lang="nl">Nieuwe catalogus</value>
+        <value xml:lang="ro">Nou Catalog</value>
+        <value xml:lang="ru">Новый каталог</value>
+        <value xml:lang="th">สร้างหมวดหมู่ใหม่</value>
+        <value xml:lang="vi">Tạo mới Phân loại Trình diễn</value>
+        <value xml:lang="zh">新建目录</value>
+        <value xml:lang="zh_TW">新建型錄</value>
+    </property>
+    <property key="CatalogWebSiteWebAnalytics"><!-- FIXME: some language inexact -->
+        <value xml:lang="de">Webseite Web Analytik</value>
+        <value xml:lang="en">WebSite Web Analytics</value>
+        <value xml:lang="it">Analisi Web Sito Web</value>
+        <value xml:lang="ja">Web分析</value>
+        <value xml:lang="vi">Trang web phân tích (ví dụ: Google Analytic)</value>
+        <value xml:lang="zh">网站分析</value>
+        <value xml:lang="zh_TW">網站分析</value>
+    </property>
+    <property key="CatalogWebSiteWebAnalyticsConfigs">
+        <value xml:lang="de">Webseite Web Analytik Konfiguration</value>
+        <value xml:lang="en">WebSite Web Analytics Configuration</value>
+        <value xml:lang="it">Configurazione analisi Web Sito Web</value>
+    </property>
 </resource>

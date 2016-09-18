@@ -3403,6 +3403,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         } else {
             postMultiFormWriter = writer;
         }
+        // SCIPIO: TODO: delegate to FTL macro
         WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
     }
 

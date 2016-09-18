@@ -354,7 +354,7 @@ public class ModelMenu extends ModelWidget {
      * SCIPIO: implements include-actions and actions reading (moved here).
      * Also does include-elements.
      */
-    void processIncludeActions(Element parentElement, List<Element> preInclElements, List<Element> postInclElements, List<ModelAction> actions, 
+    void processIncludeActions(Element parentElement, List<? extends Element> preInclElements, List<? extends Element> postInclElements, List<ModelAction> actions, 
             String currResource, boolean processIncludes, Map<String, Element> menuElemCache) {
         // don't think any problems from local cache for actions
         final boolean useCache = true;  
@@ -438,7 +438,7 @@ public class ModelMenu extends ModelWidget {
      * SCIPIO: implements include-menu-items and menu-item reading (moved here).
      * Also does include-elements.
      */
-    void processIncludeMenuItems(Element parentElement, List<Element> preInclElements, List<Element> postInclElements, List<ModelMenuItem> menuItemList,
+    void processIncludeMenuItems(Element parentElement, List<? extends Element> preInclElements, List<? extends Element> postInclElements, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap, String currResource, 
             boolean processIncludes, Set<String> excludeItems, Map<String, Element> menuElemCache,
             ParentMenuItemInfo parentItemInfo) {
@@ -947,8 +947,12 @@ public class ModelMenu extends ModelWidget {
     }
     
     public List<ModelMenuItem> getOrderedMenuItemList(final Map<String, Object> context) {
+        return getOrderedMenuItemList(context, getItemsSortMode(), getMenuItemList());
+    }
+    
+    protected static List<ModelMenuItem> getOrderedMenuItemList(final Map<String, Object> context,
+            String itemsSortMode, List<ModelMenuItem> menuItemList) {
         if (itemsSortMode != null && !"off".equals(itemsSortMode)) {
-            String itemsSortMode = this.itemsSortMode;
             boolean ignoreCase = itemsSortMode.endsWith("-ignorecase");
             if (ignoreCase) {
                 itemsSortMode = itemsSortMode.substring(0, itemsSortMode.length() - "-ignorecase".length());

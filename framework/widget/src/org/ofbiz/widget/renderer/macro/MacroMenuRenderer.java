@@ -47,6 +47,7 @@ import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
+import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
@@ -71,6 +72,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         map.put("renderMenuItemEnd", new OneShotMacro.EndEntry());
         map.put("renderLink", new OneShotMacro.SingleEntry(OneShotMacro.VarType.SINGLE, "linkArgs"));
         map.put("renderImage", new OneShotMacro.SingleEntry(OneShotMacro.VarType.SINGLE, "imgArgs"));
+        map.put("renderSubMenuBegin", new OneShotMacro.BeginEntry(OneShotMacro.VarType.LIST, "subMenuList"));
+        map.put("renderSubMenuEnd", new OneShotMacro.EndEntry());
         renderEntryMacroNameMap = map;
     }
     
@@ -443,7 +446,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             }
         }
         parameters.put("linkStr", linkStr);
-        boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
+        // SCIPIO: we have a better check now
+        //boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
+        boolean containsNestedMenus = menuItem.hasSubMenu();
         parameters.put("containsNestedMenus", containsNestedMenus);
         
         // Scipio: menu context role
@@ -456,15 +461,15 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // Scipio: sub menu style
         // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
         String subMenuStyle = menuItem.getSubMenuStyle(context);
-        parameters.put("subMenuStyle", subMenuStyle);
+        parameters.put("subMenuStyle", subMenuStyle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
         // Scipio: sub menu id
         String subMenuId = menuItem.getSubMenuId(context);
-        parameters.put("subMenuId", subMenuId);
+        parameters.put("subMenuId", subMenuId); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
         // Scipio: sub menu title
         String subMenuTitle = menuItem.getSubMenuTitle(context);
-        parameters.put("subMenuTitle", subMenuTitle);
+        parameters.put("subMenuTitle", subMenuTitle); // SCIPIO: 2016-08-26: NOTE: DEPRECATED
         
         // Scipio: disabled and selected
         parameters.put("selected", selected);
@@ -475,11 +480,19 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         } catch (TemplateException e) {
             throw new IOException(e);
         }
+
         if (containsNestedMenus) {
-            for (ModelMenuItem childMenuItem : menuItem.getMenuItemList()) {
-                childMenuItem.renderMenuItemString(writer, context, this);
+            // SCIPIO: 2016-08-26: This is now obsoleted in favor of explicit sub-menus.
+            // We could have provided compatibility for macros, but all it will do is
+            // significantly slow down the code due to rendering the sub-items twice.
+            //for (ModelMenuItem childMenuItem : menuItem.getMenuItemList()) {
+            //    childMenuItem.renderMenuItemString(writer, context, this);
+            //}
+            for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
+                childSubMenu.renderSubMenuString(writer, context, this);
             }
         }
+ 
         parameters.clear();
         parameters.put("containsNestedMenus", containsNestedMenus);
         
@@ -517,5 +530,54 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             throw new IOException(e);
         }
     }
+
+    @Override
+    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu)
+            throws IOException {
+        // SCIPIO: new method
+        
+        contextHandler.registerContext(writer, context);
+        
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        
+        parameters.put("id", subMenu.getId(context));
+        parameters.put("style", subMenu.getStyle(context));
+        parameters.put("title", subMenu.getTitle(context));
+        parameters.put("effectiveName", subMenu.getEffectiveName());
+        
+        // Scipio: menu context role
+        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+        if (menuCtxRole == null) {
+            menuCtxRole = "";
+        }
+        parameters.put("menuCtxRole", menuCtxRole);
+        
+        try {
+            executeMacro(writer, "renderSubMenuBegin", parameters);
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
+    }
     
+    @Override
+    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu)
+            throws IOException {
+        // SCIPIO: new method
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        
+        // Scipio: menu context role
+        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+        if (menuCtxRole == null) {
+            menuCtxRole = "";
+        }
+        parameters.put("menuCtxRole", menuCtxRole);
+        
+        try {
+            executeMacro(writer, "renderSubMenuEnd", parameters);
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
+    }
+
 }

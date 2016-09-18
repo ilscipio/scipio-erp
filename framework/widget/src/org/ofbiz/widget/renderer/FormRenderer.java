@@ -444,7 +444,7 @@ public class FormRenderer {
             int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
             
             // Scipio: Add an extra column to hold a checkbox or radio button depending on the type of form.
-            if (innerFormFieldsCells > 0 && modelForm.getGroupColumns() && modelForm.getUseRowSubmit()) {
+            if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
                 if (modelForm.getType().equals("list") || modelForm.getType().equals("multi")) {
                     innerDisplayHyperlinkFieldsEnd.add(createRowSubmitHeaderItem(modelForm));
                 }
@@ -656,7 +656,7 @@ public class FormRenderer {
         int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
         
         // Scipio: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
-        if (innerFormFieldsCells > 0 && modelForm.getGroupColumns() && modelForm.getUseRowSubmit()) {
+        if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
             if (modelForm.getType().equals("list")) {
                 innerDisplayHyperlinkFieldsEnd.add(createRowSubmitRadioItem(modelForm));
             } else if (modelForm.getType().equals("multi")) {

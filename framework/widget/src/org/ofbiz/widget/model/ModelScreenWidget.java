@@ -1778,11 +1778,13 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public static final String TAG_NAME = "include-menu";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
+        private final FlexibleStringExpander shareScopeExdr; // SCIPIO: added share-scope for menus (not in stock ofbiz)
 
         public Menu(ModelScreen modelScreen, Element menuElement) {
             super(modelScreen, menuElement);
             this.nameExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("location"));
+            this.shareScopeExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("share-scope")); // SCIPIO: added
         }
 
         @Override
@@ -1793,8 +1795,23 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 Debug.logVerbose("MenuStringRenderer instance not found in rendering context, menu not rendered.", module);
                 return;
             }
+            
+            // SCIPIO: added scope protect
+            boolean protectScope = !shareScope(context);
+            if (protectScope) {
+                if (!(context instanceof MapStack<?>)) {
+                    context = MapStack.create(context);
+                }
+                UtilGenerics.<MapStack<String>>cast(context).push();
+            }
+            
             ModelMenu modelMenu = getModelMenu(context);
             modelMenu.renderMenuString(writer, context, menuStringRenderer);
+            
+            // SCIPIO: added scope protect
+            if (protectScope) {
+                UtilGenerics.<MapStack<String>>cast(context).pop();
+            }
         }
 
         public ModelMenu getModelMenu(Map<String, Object> context) {
@@ -1826,6 +1843,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getLocationExdr() {
             return locationExdr;
+        }
+        
+        public FlexibleStringExpander getShareScopeExdr() { // SCIPIO: added
+            return shareScopeExdr;
+        }
+        
+        public boolean shareScope(Map<String, Object> context) { // SCIPIO: added
+            String shareScopeString = this.shareScopeExdr.expandString(context);
+            // defaults to false, so anything but true is false
+            return "true".equals(shareScopeString);
         }
     }
 

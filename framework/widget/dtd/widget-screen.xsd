@@ -574,6 +574,20 @@ Features and Modifications:
         <xs:complexType>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
+            <xs:attribute name="share-scope" default="false">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Support for share-scope for menu widgets.
+                        NOTE: Because this was missing in stock Ofbiz, we have effectively
+                            changed the default behavior to protecting scope around menu
+                            renders.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-screen" substitutionGroup="AllWidgets">

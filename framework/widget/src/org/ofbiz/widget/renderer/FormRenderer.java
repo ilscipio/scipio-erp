@@ -461,24 +461,22 @@ public class FormRenderer {
                     }
                     if (innerFormFields.size() > 0) {
                         // TODO: manage colspan
-//                        if (modelForm.getUseRowSubmit())
-//                            formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
-                        Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
-                        
+                        formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                         // Scipio: There is currently an issue where sometimes the title separator gets printed
                         // in BETWEEN cell items. I don't know what started causing this, but am adding a sanity
                         // check boolean that will fix at least that specific problem (but there could be others).
-                        boolean cellOpened = false;
+                        boolean cellOpened = true;
+                        Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
                         
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
 
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit() && !cellOpened) {
                                 // SCIPIO: use th element always for this from now on
                                 //formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
                                 formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                                 cellOpened = true;
-                            } else if (!modelForm.getUseRowSubmit()) {
+                            } else if (!modelForm.getUseRowSubmit() && !cellOpened) {
                                 formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                                 cellOpened = true;
                             }
@@ -486,12 +484,12 @@ public class FormRenderer {
                             // render title (unless this is a submit or a reset field)
                             formStringRenderer.renderFieldTitle(writer, context, modelFormField);
 
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit() && cellOpened) {
                                 // SCIPIO: use th element always for this from now on
                                 //formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
                                 formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                                 cellOpened = false;
-                            } else if (!modelForm.getUseRowSubmit()) {
+                            } else if (!modelForm.getUseRowSubmit() && cellOpened) {
                                 formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                                 cellOpened = false;
                             }

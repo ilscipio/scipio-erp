@@ -1779,12 +1779,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final FlexibleStringExpander shareScopeExdr; // SCIPIO: added share-scope for menus (not in stock ofbiz)
+        private final FlexibleStringExpander maxDepthExdr; // SCIPIO: new
 
         public Menu(ModelScreen modelScreen, Element menuElement) {
             super(modelScreen, menuElement);
             this.nameExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("location"));
             this.shareScopeExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("share-scope")); // SCIPIO: added
+            this.maxDepthExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("max-depth")); // SCIPIO: added
         }
 
         @Override
@@ -1805,8 +1807,22 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
             
+            // SCIPIO: new render state to carry around max depth
+            // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
+            MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
+            if (prevRenderState != null) {
+                Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
+                    + "a new menu render was started", module);
+            }
+            
+            MenuRenderState renderState = MenuRenderState.createAndStore(context);
+            renderState.setMaxDepth(getMaxDepth(context));
+            
             ModelMenu modelMenu = getModelMenu(context);
             modelMenu.renderMenuString(writer, context, menuStringRenderer);
+            
+            // SCIPIO: restore the previous render state just in case
+            MenuRenderState.store(context, prevRenderState);
             
             // SCIPIO: added scope protect
             if (protectScope) {
@@ -1853,6 +1869,25 @@ public abstract class ModelScreenWidget extends ModelWidget {
             String shareScopeString = this.shareScopeExdr.expandString(context);
             // defaults to false, so anything but true is false
             return "true".equals(shareScopeString);
+        }
+
+        public FlexibleStringExpander getMaxDepthExdr() {
+            return maxDepthExdr;
+        }
+        
+        public Integer getMaxDepth(Map<String, Object> context) {
+            String maxDepthStr = this.maxDepthExdr.expandString(context);
+            if (UtilValidate.isEmpty(maxDepthStr)) {
+                return null;
+            } else {
+                try {
+                    return Integer.parseInt(maxDepthStr);
+                } catch (NumberFormatException e) {
+                    Debug.logError(e, "Menu max-depth expression '" + this.maxDepthExdr.getOriginal() + "' evaluated to invalid number "
+                            + "(from include-menu element referencing " + this.locationExdr.getOriginal() + "#" + this.nameExdr.getOriginal() + ")", module);
+                    return null;
+                }
+            }
         }
     }
 

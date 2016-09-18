@@ -44,6 +44,7 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
+import org.ofbiz.widget.model.MenuRenderState;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
@@ -449,7 +450,19 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // SCIPIO: we have a better check now
         //boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
         boolean containsNestedMenus = menuItem.hasSubMenu();
+        
+        // SCIPIO: 2016-08-29: max depth check
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        if (renderState == null) {
+            Debug.logWarning("No MenuRenderState present in context; no depth checks possible", module);
+        } else {
+            if (renderState.hasReachedMaxDepth()) {
+                containsNestedMenus = false;
+            }
+        }
+        
         parameters.put("containsNestedMenus", containsNestedMenus);
+        
         
         // Scipio: menu context role
         String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
@@ -488,8 +501,17 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             //for (ModelMenuItem childMenuItem : menuItem.getMenuItemList()) {
             //    childMenuItem.renderMenuItemString(writer, context, this);
             //}
-            for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
-                childSubMenu.renderSubMenuString(writer, context, this);
+            if (renderState != null) {
+                renderState.increaseCurrentDepth();
+            }
+            try {
+                for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
+                    childSubMenu.renderSubMenuString(writer, context, this);
+                }
+            } finally {
+                if (renderState != null) {
+                    renderState.decreaseCurrentDepth();
+                }
             }
         }
  

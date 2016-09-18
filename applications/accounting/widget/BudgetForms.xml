@@ -133,8 +133,8 @@ under the License.
         <field name="reviewDate"><display/></field>
     </form>
     
-    <form name="EditBudgetItems" type="multi" list-name="budgetItems" default-entity-name="BudgetItem" target="updateBudgetItem?budgetId=${budgetId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Budget Items" paginate-target="EditBudgetItems"
-       odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <form name="EditBudgetItems" type="multi" list-name="budgetItems" default-entity-name="BudgetItem" target="updateBudgetItem?budgetId=${budgetId}" title="Edit Budget Items" paginate-target="EditBudgetItems"
+       odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" --><!-- &amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex} -->
        <field name="viewSize"><hidden value="${viewSize}"/></field>
        <field name="viewIndex"><hidden value="${viewIndex}"/></field>
        <field name="budgetId"><hidden/></field>

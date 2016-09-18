@@ -3467,6 +3467,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderSubmitForm");
         sr.append(" hiddenFormName=");
         sr.append(ftlFmt.makeStringLiteral(hiddenFormName));
+        sr.append(" formId=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getContainerId()));
+        sr.append(" formName=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
         sr.append(" formType=");
         sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));
         sr.append(" targetUrl=");
@@ -3477,6 +3481,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeLiteralSQ(parameterMap));
         sr.append(" useRowSubmit=");
         sr.append(modelForm.getUseRowSubmit() ? "true" : "false");
+        sr.append(" useMasterSubmitField=");
+        sr.append(modelForm.getUseMasterSubmitField() ? "true" : "false");
         sr.append(" submitEntries=");
         sr.append(ftlFmt.makeLiteralSQ(submitEntries));
         sr.append(" />");

@@ -1011,6 +1011,7 @@
                 <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
             </link>
         </menu-item>
+        <!-- SCIPIO: moved to SubTab
         <menu-item name="pdf" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <not>
@@ -1021,6 +1022,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
+         -->
     </menu>
 
     <menu name="InvoiceSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

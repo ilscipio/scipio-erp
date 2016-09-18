@@ -208,7 +208,7 @@ public class ProductEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
-        String updateMode = request.getParameter("UPDATE_MODE");
+        String updateMode = request.getParameter("UPDATE_MODE")!=null ? request.getParameter("UPDATE_MODE") : request.getParameter("updateMode"); //SCIPIO: Added backward compatibility
 
         if (updateMode == null || updateMode.length() <= 0) {
             errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
@@ -225,10 +225,10 @@ public class ProductEvents {
             return "error";
         }
 
-        String productId = request.getParameter("PRODUCT_ID");
-        String productIdTo = request.getParameter("PRODUCT_ID_TO");
-        String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
-        String fromDateStr = request.getParameter("FROM_DATE");
+        String productId =  request.getParameter("PRODUCT_ID")!=null ? request.getParameter("PRODUCT_ID") : request.getParameter("productId"); //SCIPIO: Added backward compatibility
+        String productIdTo = request.getParameter("PRODUCT_ID_TO")!=null ? request.getParameter("PRODUCT_ID_TO") : request.getParameter("productIdTo"); //SCIPIO: Added backward compatibility
+        String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID")!=null ? request.getParameter("PRODUCT_ASSOC_TYPE_ID") : request.getParameter("productAssocTypeId"); //SCIPIO: Added backward compatibility
+        String fromDateStr = request.getParameter("FROM_DATE")!=null ? request.getParameter("FROM_DATE") : request.getParameter("fromDate"); //SCIPIO: Added backward compatibility
         Timestamp fromDate = null;
 
         try {
@@ -303,11 +303,11 @@ public class ProductEvents {
             return "success";
         }
 
-        String thruDateStr = request.getParameter("THRU_DATE");
-        String reason = request.getParameter("REASON");
-        String instruction = request.getParameter("INSTRUCTION");
-        String quantityStr = request.getParameter("QUANTITY");
-        String sequenceNumStr = request.getParameter("SEQUENCE_NUM");
+        String thruDateStr = request.getParameter("THRU_DATE")!=null ? request.getParameter("THRU_DATE") : request.getParameter("thruDate"); //SCIPIO: Added backward compatibility
+        String reason = request.getParameter("REASON")!=null ? request.getParameter("REASON") : request.getParameter("reason"); //SCIPIO: Added backward compatibility
+        String instruction = request.getParameter("INSTRUCTION")!=null ? request.getParameter("INSTRUCTION") : request.getParameter("instruction"); //SCIPIO: Added backward compatibility
+        String quantityStr = request.getParameter("QUANTITY")!=null ? request.getParameter("QUANTITY") : request.getParameter("quantity"); //SCIPIO: Added backward compatibility
+        String sequenceNumStr = request.getParameter("SEQUENCE_NUM")!=null ? request.getParameter("SEQUENCE_NUM") : request.getParameter("sequenceNum"); //SCIPIO: Added backward compatibility
         Timestamp thruDate = null;
         BigDecimal quantity = null;
         Long sequenceNum = null;

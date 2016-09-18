@@ -31817,4 +31817,10 @@
         <value xml:lang="de">Shop Einrichtungen</value>
         <value xml:lang="en">Store Facilities</value><!-- orig: "Product Store" -->
     </property>
+    <property key="ProductProductStoreCatalogs">
+        <value xml:lang="de">Shop Produktkataloge</value>
+        <value xml:lang="en">Store Catalogs</value><!-- orig: "Product Store" -->
+        <value xml:lang="es">Catálogos de una Tienda de Productos</value>
+        <value xml:lang="fr">Catalogues du centre de profit</value>
+    </property>
 </resource>

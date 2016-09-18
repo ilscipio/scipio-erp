@@ -28,7 +28,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Product" />
-                <set field="activeMainMenuItem" value="products"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
@@ -50,13 +50,32 @@ under the License.
                                 </or>
                             </condition>
                             <actions>
+                                <!-- SCIPIO: this seems duplicate from above and will clashes with global...
                                 <set field="productId" from-field="parameters.productId"/>
-                                <entity-one entity-name="Product" value-field="product"/>
+                                <entity-one entity-name="Product" value-field="product"/> -->
                             </actions>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                                <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
-                                <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="product"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
+                                        <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
+                                    </widgets>
+                                    <fail-widgets>
+                                        <section>
+                                            <actions>
+                                                <set field="activeSubMenu" value="TOP"/>
+                                                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                                            </actions>
+                                            <widgets>
+                                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                            </widgets>
+                                        </section>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
@@ -74,8 +93,9 @@ under the License.
                                 </or>
                             </condition>
                             <actions>
+                                <!-- SCIPIO: this seems duplicate from above and will clashes with global...
                                 <set field="productId" from-field="parameters.productId"/>
-                                <entity-one entity-name="Product" value-field="product"/>
+                                <entity-one entity-name="Product" value-field="product"/>-->
                             </actions>
                             <widgets>
                                 <section>
@@ -117,8 +137,8 @@ under the License.
     <screen name="FindProduct">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="FindProduct"/><!-- SCIPIO: NOTE: this gets ignored -->
                 <set field="titleProperty" value="PageTitleFindProduct"/>
-                <set field="activeSubMenuItem" value="FindProduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">

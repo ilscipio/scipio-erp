@@ -48,10 +48,10 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu location="component://accounting/widget/TaxAuthorityMenus.xml" name="TaxAuthoritySideBar" />
+                                <include-menu name="TaxAuthoritySideBar" location="component://accounting/widget/TaxAuthorityMenus.xml" />
                             </widgets>
                             <fail-widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

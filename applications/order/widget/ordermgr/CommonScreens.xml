@@ -87,7 +87,7 @@ under the License.
                             <fail-widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -139,7 +139,7 @@ under the License.
                             <fail-widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -181,7 +181,7 @@ under the License.
                             <fail-widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -247,7 +247,7 @@ under the License.
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <widgets>
-                                <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -280,7 +280,7 @@ under the License.
                                 <include-menu name="RequestSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -322,7 +322,7 @@ under the License.
                             <fail-widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -359,7 +359,7 @@ under the License.
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <widgets>
-                                <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -399,7 +399,7 @@ under the License.
                             <fail-widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-screen name="DefaultSideBarMenu" location="component://order/widget/ordermgr/CommonScreens.xml"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>

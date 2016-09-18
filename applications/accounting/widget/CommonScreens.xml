@@ -56,7 +56,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="AccountingAppSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -92,7 +92,7 @@ under the License.
                                 <include-menu name="AgreementSideBar" location="component://accounting/widget/AccountingMenus.xml" />
                             </widgets>
                             <fail-widgets>
-                                <include-menu name="AccountingAppSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -213,7 +213,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="AccountingAppSideBar" location="component://accounting/widget/AccountingMenus.xml"/>                            
+                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -271,7 +271,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu name="AccountingAppSideBar" location="component://accounting/widget/AccountingMenus.xml"/>                            
+                                <include-screen name="DefaultSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>                            
                             </fail-widgets>
                         </section>
                     </decorator-section>

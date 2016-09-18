@@ -60,7 +60,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu location="component://product/widget/facility/FacilityMenus.xml" name="ShipmentSideBar"/>
+                        <include-menu name="ShipmentSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

@@ -255,7 +255,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         contextHandler.registerContext(writer, context);
         List<ModelMenuItem> menuItemList = ((ModelMenu) menu).getOrderedMenuItemList(context);
         for (ModelMenuItem currentMenuItem : menuItemList) {
-            renderMenuItem(writer, context, currentMenuItem);
+            // SCIPIO: this is WRONG, must go through the menu item's method, otherwise missing implementation
+            //renderMenuItem(writer, context, currentMenuItem);
+            currentMenuItem.renderMenuItemString(writer, context, (MenuStringRenderer) context.get("menuStringRenderer"));
         }
     }
 

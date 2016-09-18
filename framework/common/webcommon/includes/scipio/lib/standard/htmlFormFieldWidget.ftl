@@ -272,9 +272,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if title?has_content>
           <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
           <#-- FIXME: as above
-          <#local dateFormatString = "${uiLabelMap.CommonFormat}: ${dateDisplayFormat}">
-          -->
           <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
+          -->
+          <#local dateFormatString = "${uiLabelMap.CommonFormat}: ${dateDisplayFormat}">
           <#if title == "FORMAT">
             <#local title = dateFormatString>
           <#elseif title == "LABEL">

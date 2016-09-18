@@ -306,7 +306,8 @@ public class FormRenderer {
         // conditions are used or when a form is extended or when the fields are
         // automatically retrieved by a service or entity definition.
         List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
-        tempFieldList.addAll(modelForm.getFieldList());        
+        tempFieldList.addAll(modelForm.getFieldList());    
+        // SCIPIO: NOTE: this addAll added by us
         if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseRowSubmit()) {
             tempFieldList.addAll(modelForm.getMultiSubmitFields());
         }
@@ -471,12 +472,9 @@ public class FormRenderer {
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
 
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit() && !cellOpened) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && !cellOpened) {
                                 // SCIPIO: use th element always for this from now on
                                 //formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
-                                formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
-                                cellOpened = true;
-                            } else if (!modelForm.getUseRowSubmit() && !cellOpened) {
                                 formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                                 cellOpened = true;
                             }
@@ -484,12 +482,9 @@ public class FormRenderer {
                             // render title (unless this is a submit or a reset field)
                             formStringRenderer.renderFieldTitle(writer, context, modelFormField);
 
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit() && cellOpened) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && cellOpened) {
                                 // SCIPIO: use th element always for this from now on
                                 //formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
-                                formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
-                                cellOpened = false;
-                            } else if (!modelForm.getUseRowSubmit() && cellOpened) {
                                 formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                                 cellOpened = false;
                             }
@@ -1202,7 +1197,6 @@ public class FormRenderer {
         
         // Scipio: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
         formStringRenderer.renderSubmitForm(writer, context, modelForm);
-        
        
         listFormHandler.renderFinalize();
     }

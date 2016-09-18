@@ -30,7 +30,7 @@ if (smplForce == null) {
 }
 cplxAllowSubItemTop = menuCfg.allowSubItemTop;
 if (cplxAllowSubItemTop == null) {
-    cplxAllowSubItemTop = true;
+    cplxAllowSubItemTop = false;
 }
 
 activeSubField = menuCfg.activeSubField ?: "activeSubMenu";

@@ -590,7 +590,7 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="top5">
-            <sub-menu model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" title="Sub-menu, as button-dropdown">
+            <sub-menu id="demo-top5-sub-menu" model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" title="Sub-menu, as button-dropdown">
                 <menu-item name="nestednestednested1" title="Nestednestednested1">
                     <link target="${demoTargetUrl}">
                         <parameter param-name="demoParam1"/>
@@ -629,6 +629,11 @@ under the License.
                     </link>
                 </menu-item>
             </sub-menu>
+        </menu-item>
+        <!-- RARE CASE: Two submenus. technically supported, but usually best avoided. -->
+        <menu-item name="top6"> 
+            <sub-menu style="+two-sub-menu-first" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (1)" />
+            <sub-menu style="+two-sub-menu-second" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (2)" />
         </menu-item>
     </menu>
     

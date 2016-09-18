@@ -286,7 +286,7 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         visitAttribute("default-cell-width", modelMenu.getDefaultCellWidth());
         visitAttribute("default-hide-if-selected", modelMenu.getDefaultHideIfSelected());
         visitAttribute("default-disabled-title-style", modelMenu.getDefaultDisabledTitleStyle());
-        visitAttribute("selected-menuitem-context-field-name", modelMenu.getSelectedMenuItemContextFieldName());
+        visitAttribute("selected-menuitem-context-field-name", modelMenu.getSelectedMenuItemContextFieldNameExprStr());
         visitAttribute("menu-container-style", modelMenu.getMenuContainerStyleExdr());
         visitAttribute("default-align", modelMenu.getDefaultAlign());
         visitAttribute("default-align-style", modelMenu.getDefaultAlignStyle());

@@ -31934,5 +31934,25 @@
              Diese erscheinen nur im Shop und andere Anwendungen, wenn benutzerdefinierte codiert, oder wenn das Attribut bereits nach Namen nach einer bestimmten Anwendungsfunktion erkannt wird.</value>
         <value xml:lang="en">This page allows you to create, modify and delete generic, low-level Product Attributes, similar to extending the Product entity.
             These only appear in shop and other applications when custom coded, or when the attribute is already recognized by name by a certain application function.</value>
-    </property> 
+    </property>
+    <property key="FacilityShipmentItems">
+        <value xml:lang="de">Lieferpositionen</value>
+        <value xml:lang="en">Shipment Items</value>
+        <value xml:lang="es">Artículos de Envío</value>
+        <value xml:lang="fr">Expéditions</value>
+    </property>
+    <property key="FacilityItemIssuance">
+        <value xml:lang="de">Artikel Ausgabe</value>
+        <value xml:lang="en">Item Issuance</value>
+        <value xml:lang="es">Emisión de ítem</value>
+        <value xml:lang="fr">Prélèvement d'article</value>
+        <value xml:lang="it">Riga Prelievo</value>
+    </property>
+    <property key="FacilityIssuance">
+        <value xml:lang="de">Ausgabe</value>
+        <value xml:lang="en">Issuance</value>
+        <value xml:lang="es">Emisión</value>
+        <value xml:lang="fr">Prélèvement</value>
+        <value xml:lang="it">Prelievo</value>
+    </property>
 </resource>

@@ -105,6 +105,7 @@ context.styles = [
     "menu_generic_type" : "menu-type-generic",  /* specific type style, normally already included in previous entry, but can reference individually */
     "menu_generic_active" : "",
     "menu_generic_activeancestor" : "",
+    "menu_generic_levelprefix" : "menu-level-",
     "menu_generic_item" : "",
     "menu_generic_itemdisabled" : "disabled",
     "menu_generic_itemactive" : "active",
@@ -248,6 +249,7 @@ context.styles = [
     "menu_default_htmlwrap" : true,
     "menu_default_active" : "",
     "menu_default_activeancestor" : "",
+    "menu_default_levelprefix" : "menu-level-",
     "menu_default_item" : "",
     "menu_default_item_htmlwrap" : true,
     "menu_default_itemdisabled" : "disabled",

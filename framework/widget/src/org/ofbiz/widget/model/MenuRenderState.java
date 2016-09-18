@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
+
 /**
  * SCIPIO: a state passed around in context used to record info about the menu
  * render, such as sub-menu depth.
@@ -29,12 +32,15 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     private transient boolean currentSubMenusOnly;
     private transient ModelMenu.MenuAndItem selectedMenuAndItem;
     
+    private transient MenuItemState itemState;
+    
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
         setCurrentDepth(1);
         setMaxDepth(1);
         setSubMenuFilter(null);
         this.selectedMenuAndItem = null;
+        this.itemState = null;
     }
     
     protected Object setArg(String key, Object value) {
@@ -132,6 +138,19 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     public String getMenuCtxRoleOrEmpty() {
         String res = (String) this.get("menuCtxRole");
         return res != null ? res : "";
+    }
+    
+    public MenuItemState getItemState() {
+        return itemState;
+    }
+    
+    public void setItemState(MenuItemState menuItemState) {
+        this.itemState = menuItemState;
+        if (menuItemState != null) {
+            this.put("itemState", Collections.unmodifiableMap(menuItemState.toMap()));
+        } else {
+            this.put("itemState", null);
+        }
     }
 
     /**
@@ -232,5 +251,45 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
         return readOnlyMap.entrySet();
     }
 
+    public static class MenuItemState {
+        private final boolean selected;
+        private final boolean selectedAncestor;
+        
+        public MenuItemState(boolean selected, boolean selectedAncestor) {
+            this.selected = selected;
+            this.selectedAncestor = selectedAncestor;
+        }
+        
+        public static MenuItemState fromCurrent(ModelMenuItem menuItem, Map<String, Object> context) {
+            return fromCurrent(menuItem, context, MenuRenderState.retrieve(context));
+        }
+        
+        public static MenuItemState fromCurrent(ModelMenuItem menuItem, Map<String, Object> context, 
+                MenuRenderState renderState) {
+            MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
+            ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+            ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
+            boolean selected = menuItem.isSame(selectedMenuItem);
+            boolean selectedAncestor = menuItem.isAncestorOf(selectedSubMenu);
+            return new MenuItemState(selected, selectedAncestor);
+        }
+        
+        public boolean isSelected() {
+            return selected;
+        }
+        
+        public boolean isSelectedAncestor() {
+            return selectedAncestor;
+        }
+        
+        public boolean isSelectedOrAncestor() {
+            return  (selected||selectedAncestor);
+        }
+        
+        public Map<String, Object> toMap() {
+            return UtilMisc.toMap("selected", selected, "selectedAncestor", selectedAncestor,
+                    "selectedOrAncestor", isSelectedOrAncestor());
+        }
+    }
 
 }

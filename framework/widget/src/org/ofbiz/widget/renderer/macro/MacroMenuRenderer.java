@@ -45,6 +45,7 @@ import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.MenuRenderState;
+import org.ofbiz.widget.model.MenuRenderState.MenuItemState;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 import org.ofbiz.widget.model.ModelMenuItem;
@@ -223,9 +224,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //Boolean hideIfSelected = menuItem.getHideIfSelected();
         //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-        MenuRenderState renderState = MenuRenderState.retrieve(context);
-        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(context).getMenuItem();
-        return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
+        MenuItemState itemState = MenuRenderState.retrieve(context).getItemState();
+        return (hideIfSelected != null && hideIfSelected.booleanValue() && itemState.isSelected());
     }
     
     /**
@@ -401,10 +401,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         // Scipio: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
-        ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+        //ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
+        MenuItemState menuItemState = renderState.getItemState();
         
-        boolean selected = menuItem.isSame(selectedMenuItem);
+        boolean selected = menuItemState.isSelected();
         boolean selectedAncestor = false;
         if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
@@ -423,7 +424,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
         } else {
             // SCIPIO: support selected-ancestor
-            selectedAncestor = menuItem.isAncestorOf(selectedSubMenu);
+            selectedAncestor = menuItemState.isSelectedAncestor();
             if (selectedAncestor) {
                 String selectedStyle = menuItem.getSelectedAncestorStyle();
                 // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.

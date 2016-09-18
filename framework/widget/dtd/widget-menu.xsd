@@ -270,6 +270,22 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="always-expand-selected-or-ancestor">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If this is true, then for a whole menu render including its sub-menus,
+                        a menu item will always be expanded (condition will always be true) 
+                        if it is the selected one or an ancestor of the selected one.
+                        This can be coded manually in condition elements (see its description) but is easier to
+                        turn on here. 
+                        Default: false</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-elements">
@@ -489,6 +505,15 @@ Features and Modifications:
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="condition" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Menu item condition.
+                            SCIPIO: This is a STOCK attribute. Added in Scipio are available in context for condition testing
+                            the variables:
+                            * currentMenuRenderState.itemState.selected (Boolean)
+                            * currentMenuRenderState.itemState.selectedAncestor (Boolean)
+                            * currentMenuRenderState.itemState.selectedOrAncestor (Boolean)
+                        </xs:documentation>
+                    </xs:annotation>
                     <xs:complexType>
                         <xs:complexContent>
                             <xs:extension base="ConditionRootType">

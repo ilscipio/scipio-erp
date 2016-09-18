@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="activeMainMenuItem" value="MyCommunicationEvents"/>
+                <set field="activeSubMenuItem" value="MyCommunicationEvents"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/services/FindMyCommunication.groovy"/>
             </actions>
             <widgets>
@@ -86,7 +86,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderFindRequests"/>
-                <set field="activeMainMenuItem" value="FindRequest"/>
+                <set field="activeSubMenuItem" value="FindRequest"/>
                 <set field="entityName" value="CustRequest"/>
 
             </actions>
@@ -117,7 +117,7 @@ under the License.
         <section>
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
-                <set field="activeMainMenuItem" value="FindRequest"/>
+                <set field="activeSubMenuItem" value="FindRequest"/>
                 <set field="titleProperty" value="PageTitleViewRequest"/>
                 <set field="showRequestManagementLinks" value="Y"/>
             </actions>
@@ -134,7 +134,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderRequest"/>
-                <set field="activeMainMenuItem" value="FindRequest"/>
+                <set field="activeSubMenuItem" value="FindRequest"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <set field="statusId" from-field="custRequest.statusId"/>

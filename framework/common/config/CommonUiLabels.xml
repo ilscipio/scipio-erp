@@ -16275,4 +16275,8 @@
         <value xml:lang="en">Rename</value>
         <value xml:lang="fr">Renommer</value>
     </property>
+    <property key="CommonNoRowSelected">
+        <value xml:lang="de">Keine Zeile ausgewählt</value>
+        <value xml:lang="en">No row selected</value>
+    </property>
 </resource>

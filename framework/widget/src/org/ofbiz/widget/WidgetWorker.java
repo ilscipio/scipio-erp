@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -36,6 +37,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
@@ -330,6 +332,7 @@ public final class WidgetWorker {
     }
     
     // SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
+    // TODO: should be delegated to FTL
     private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
         List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
         if (rowSubmitFields != null) {
@@ -338,21 +341,33 @@ public final class WidgetWorker {
             writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
             writer.append("\tif (submitForm) {\r\n");
             for (ModelFormField rowSubmitField : rowSubmitFields) {
-                writer.append("\t\tvar submitField = $(\"input[name=" + rowSubmitField.getName() + "]\");\r\n");
+                String submitFieldName = rowSubmitField.getName();
+                String submitFieldId = rowSubmitField.getCurrentContainerId(context);
+                if (UtilValidate.isEmpty(submitFieldId)) {
+                    Debug.logWarning("makeJSForRowSubmit: submit field '" + submitFieldName +
+                            "' of form '" + rowSubmitField.getModelForm().getName() + 
+                            "' was not assigned a unique element ID; unable to build javascript", module);
+                    continue;
+                }
+                writer.append("\t\tvar submitField = $(\"#" + submitFieldId + "\");\r\n");
                 writer.append("\t\t$(submitField).click(function(e) {\r\n");
                 writer.append("\t\te.preventDefault();\r\n");
                 writer.append("\t\tvar checked = false;\r\n");
-                writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction]\").each( function (j, r) {\r\n");
+                // FIXME: parents lookup broken for datatables
+                writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction], input[type=checkbox][name^=selectAction]\").each( function (j, r) {\r\n");
 
                 writer.append("\t\t\tif ($(r).is(\":checked\")) {\r\n");
 
                 writer.append("\t\t\t\tchecked = true;\r\n");
                 makeHiddenFieldsForHiddenForm(writer);
-                writer.append("\t\t\tsubmitForm.submit();\r\n");
                 writer.append("\t\t\t}\r\n");
                 writer.append("\t\t});\r\n");
-                writer.append("\t\tif (!checked)\r\n");
-                writer.append("\t\t\t alert(\"No row selected\");\r\n");
+                writer.append("\t\tif (checked) {\r\n");
+                writer.append("\t\t\tsubmitForm.submit();\r\n");
+                writer.append("\t\t} else {\r\n");
+                String noRowMsg = UtilProperties.getMessage("CommonUiLabels", "CommonNoRowSelected", (Locale) context.get("locale"));
+                writer.append("\t\t\talert(\"" + encode(noRowMsg, context) + "\");\r\n");
+                writer.append("\t\t}\r\n");
                 writer.append("\t\t});\r\n");
             }
             writer.append("\t} else {\r\n");
@@ -422,7 +437,7 @@ public final class WidgetWorker {
                 writer.append("<input name=\"");
                 writer.append(parameter.getKey());
                 writer.append("\" value=\"");
-                writer.append(UtilCodec.getEncoder("html").encode(parameter.getValue()));
+                writer.append(encode(parameter.getValue(), context));
                 writer.append("\" type=\"hidden\"/>");
             }
         }
@@ -430,6 +445,7 @@ public final class WidgetWorker {
     }
     
     private static void makeHiddenFieldsForHiddenForm(Appendable writer) throws IOException {
+        // FIXME: parents lookup broken for datatables
         writer.append("\t\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
         writer.append("\t\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n");
         writer.append("\t\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
@@ -566,5 +582,21 @@ public final class WidgetWorker {
         return delegator;
     }
 
+    
+    /**
+     * SCIPIO: Encode helper method using encoder in context.
+     */
+    public static String encode(String value, Map<String, Object> context) {
+        if (UtilValidate.isEmpty(value)) {
+            return value;
+        }
+        UtilCodec.SimpleEncoder encoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
+        if (encoder != null) {
+            value = encoder.encode(value);
+        } else {
+            value = UtilCodec.getEncoder("string").encode(value);
+        }
+        return value;
+    }
     
 }

@@ -547,7 +547,26 @@ under the License.
         <!-- Scipio: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
             use sub-menu-title instead). sub-menu-model means the default styles will be fetched from the specified menu
             instead of this top-level menu. -->
-        <menu-item name="top3" sub-menu-model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" sub-menu-title="Sub-menu, as button-dropdown">
+        <menu-item name="top3">
+            <sub-menu model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" title="Sub-menu, as button-dropdown">
+                <menu-item name="nestednestednested1" title="Nestednestednested1">
+                    <link target="${demoTargetUrl}">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+                <menu-item name="nestednestednested2" title="Nestednestednested2">
+                    <link target="${demoTargetUrl}" link-type="hidden-form">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+            </sub-menu>
+        </menu-item>
+        <!-- Scipio: DEPRECATED, OLD SYNTAX, DO NOT USE. ALWAYS USE SUB-MENU ELEMENT FROM NOW ON. -->
+        <menu-item name="top3b" sub-menu-model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" sub-menu-title="Sub-menu, as button-dropdown (deprecated)">
             <menu-item name="nestednestednested1" title="Nestednestednested1">
                 <link target="${demoTargetUrl}">
                     <parameter param-name="demoParam1"/>
@@ -570,42 +589,45 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <menu-item name="top5" sub-menu-model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" sub-menu-title="Sub-menu, as button-dropdown">
-            <menu-item name="nestednestednested1" title="Nestednestednested1">
-                <link target="${demoTargetUrl}">
-                    <parameter param-name="demoParam1"/>
-                    <parameter param-name="demoParam2"/>
-                    <parameter param-name="demoParam3"/>
-                </link>
-            </menu-item>
-            <menu-item name="nestednestednested2" title="Nestednestednested2">
-                <link target="${demoTargetUrl}" link-type="hidden-form">
-                    <parameter param-name="demoParam1"/>
-                    <parameter param-name="demoParam2"/>
-                    <parameter param-name="demoParam3"/>
-                </link>
-            </menu-item>
+        <menu-item name="top5">
+            <sub-menu model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" title="Sub-menu, as button-dropdown">
+                <menu-item name="nestednestednested1" title="Nestednestednested1">
+                    <link target="${demoTargetUrl}">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+                <menu-item name="nestednestednested2" title="Nestednestednested2">
+                    <link target="${demoTargetUrl}" link-type="hidden-form">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+            </sub-menu>
         </menu-item>
         <!-- A full menu include. The "full" scope is required to preserve the included menu's style. -->
-        <menu-item name="top6" sub-menu-model-scope="full" 
-            sub-menu-include="LayoutDemoButtonDropdown" 
-            sub-menu-title="Separate sub-menu, as button-dropdown"/>  
+        <menu-item name="top6"> 
+            <sub-menu include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown" />
+        </menu-item>
         <!-- Modifies the previous to exclude one of the items and add an extra before -->
-        <menu-item name="top7" sub-menu-model-scope="full" 
-            sub-menu-include="LayoutDemoButtonDropdown" 
-            sub-menu-title="Separate sub-menu, as button-dropdown">
-            <include-menu-items menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
-                <exclude-item name="Enabled"/>
-            </include-menu-items>
-            <!-- extra items -->
-            <include-menu-items menu-name="LayoutDemoTest2" recursive="full"/>
-            <menu-item name="TestTest" title="Extra item">
-                <link target="${demoTargetUrl}" link-type="hidden-form">
-                    <parameter param-name="demoParam1"/>
-                    <parameter param-name="demoParam2"/>
-                    <parameter param-name="demoParam3"/>
-                </link>
-            </menu-item>
+        <menu-item name="top7">
+            <sub-menu include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown">
+                <!-- extra items -->
+                <include-elements menu-name="LayoutDemoTest2" recursive="full"/>
+                <include-menu-items menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
+                    <exclude-item name="Enabled"/>
+                </include-menu-items>
+                <!-- demoTestVar1 comes from the actions of LayoutDemoTest2/1 -->
+                <menu-item name="TestTest" title="Extra item ${demoTestVar1}">
+                    <link target="${demoTargetUrl}" link-type="hidden-form">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+            </sub-menu>
         </menu-item>
     </menu>
     
@@ -627,6 +649,9 @@ under the License.
     </menu>
 
     <menu name="LayoutDemoTest1">
+        <actions>
+            <set field="demoTestVar1" value="demoTestValue1" />
+        </actions>
         <menu-item name="DemoTest1" title="Demo Test 1">
             <link target="${demoTargetUrl}">
                 <parameter param-name="demoParam1"/>

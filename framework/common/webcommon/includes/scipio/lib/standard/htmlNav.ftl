@@ -610,18 +610,19 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     nestedFirst             = ((boolean), default: false) If true, nested content comes before content elem
     htmlwrap                = (li|span|div, default: -from global styles-, fallback default: li) Wrapping HTML element
     inlineItem              = ((boolean)) If true, generate only items, not menu container
-    contentWrapElem         = ((boolean)|div|..., default: false) For {{{generic}}} type items, controls the extra content wrapper around nested
-                              If true, a {{{div}}} will be added around nested; if any string, the given string will be used as the element.
+    contentWrapElem         = ((boolean)|div|..., default: -depends on type-) For {{{generic}}} and {{{text}}} type items, controls the extra content wrapper around nested
+                              If true, a {{{div}}} (generic) or {{{span}}} (text) will be added around nested; if any string, the given string will be used as the element.
                               This wrapper will receive the contentClass and other content attributes normally given to inline elements for the other types.
                               If false, no wrapper will be added.
-                              NOTE: This currently only works for {{{generic}}} type items. 
+                              For generic, the default is false. For text, the default is true.
+                              NOTE: This currently only works for {{{generic}}} and {{{text}}} type items. 
 -->
 <#assign menuitem_defaultArgs = {
   "type":"generic", "class":"", "contentClass":"", "id":"", "style":"", "attribs":{},
   "contentId":"", "contentStyle":"", "contentName":"", "contentAttribs":"", "text":"", "href":true,
   "onClick":"", "disabled":"", "selected":"", "active":"", "activeTarget":"", "target":"", "title":"",
   "nestedContent":true, "nestedMenu":false, "wrapNested":"", "nestedFirst":false,
-  "htmlwrap":true, "inlineItem":false, "contentWrapElem":false, "isNestedMenu":"", "passArgs":{}
+  "htmlwrap":true, "inlineItem":false, "contentWrapElem":-1, "isNestedMenu":"", "passArgs":{}
 }>
 <#macro menuitem args={} inlineArgs...>
   <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -743,7 +744,10 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
             itemType=type menuType=menuType menuSpecialType=menuSpecialType itemIndex=itemIndex
             origArgs=origArgs passArgs=passArgs><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
     <#elseif type == "text">
-      <#t><@menuitem_text_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs 
+      <#if contentWrapElem?is_number>
+        <#local contentWrapElem = true>
+      </#if>
+      <#t><@menuitem_text_markup contentWrapElem=contentWrapElem class=contentClass id=contentId style=contentStyle attribs=contentAttribs 
             excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled selected=selected active=active activeTarget=activeTarget 
             isNestedMenu=isNestedMenu menuLevel=menuLevel parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType 
             itemType=type menuType=menuType menuSpecialType=menuSpecialType itemIndex=itemIndex
@@ -756,6 +760,9 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
             itemType=type menuType=menuType menuSpecialType=menuSpecialType itemIndex=itemIndex
             origArgs=origArgs passArgs=passArgs><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
     <#else>
+      <#if contentWrapElem?is_number>
+        <#local contentWrapElem = false>
+      </#if>
       <#t><@menuitem_generic_markup contentWrapElem=contentWrapElem class=contentClass id=contentId style=contentStyle 
             attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled 
             selected=selected active=active activeTarget=activeTarget isNestedMenu=isNestedMenu menuLevel=menuLevel parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType
@@ -789,10 +796,13 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 </#macro>
 
 <#-- @menuitem type="text" markup - theme override -->
-<#macro menuitem_text_markup itemType="" menuType="" menuSpecialType="" class="" id="" style="" onClick="" attribs={} excludeAttribs=[] 
+<#macro menuitem_text_markup itemType="" menuType="" menuSpecialType="" contentWrapElem=true class="" id="" style="" onClick="" attribs={} excludeAttribs=[] 
     disabled=false selected=false active=false activeTarget="" isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 
     origArgs={} passArgs={} catchArgs...>
-  <#t><span<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
+  <#if contentWrapElem?is_boolean>
+    <#local contentWrapElem = contentWrapElem?string("span", "")>
+  </#if>
+  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
 </#macro>
 
 <#-- @menuitem type="submit" markup - theme override -->
@@ -803,7 +813,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 </#macro>
 
 <#-- @menuitem type="generic" markup - theme override -->
-<#macro menuitem_generic_markup itemType="" menuType="" menuSpecialType="" contentWrapElem=true class="" id="" style="" onClick="" attribs={} 
+<#macro menuitem_generic_markup itemType="" menuType="" menuSpecialType="" contentWrapElem=false class="" id="" style="" onClick="" attribs={} 
     excludeAttribs=[] disabled=false selected=false active=false activeTarget="" isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 
     origArgs={} passArgs={} catchArgs...>
   <#if contentWrapElem?is_boolean>

@@ -346,7 +346,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="FormFieldTitle_costCenters"/>
-                <set field="activeSubMenuItem" value="CostCenters"/>
+                <!--<set field="activeSubMenuItem" value="CostCenters"/>-->
             </actions>
             <widgets>
                <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">

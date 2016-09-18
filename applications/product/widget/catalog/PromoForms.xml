@@ -44,7 +44,9 @@ under the License.
 
         <field name="isCreate" use-when="productPromo==null"><hidden value="true"/></field><!-- SCIPIO: new -->
 
-        <field use-when="productPromo!=null" name="productPromoId" title="${uiLabelMap.ProductPromotion}" tooltip=""><display/></field>
+        <field name="promoName" required-field="true"><text/></field>
+
+        <field use-when="productPromo!=null" name="productPromoId" title="${uiLabelMap.ProductPromotion}"><display/></field>
         <field use-when="productPromo==null&amp;&amp;productPromoId!=null" name="productPromoId" title="${uiLabelMap.ProductPromotion}" tooltip="${uiLabelMap.ProductCouldNotFindProductPromotion} [${productPromoId}]"><display/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
         <field use-when="productPromo==null&amp;&amp;productPromoId==null" name="productPromoId" title="${uiLabelMap.ProductPromotion}"><ignored/></field>

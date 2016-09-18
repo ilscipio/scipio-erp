@@ -31907,6 +31907,11 @@
         <value xml:lang="zh">查找产品促销</value>
         <value xml:lang="zh_TW">尋找產品促銷</value>
     </property>
+    <property key="ProductNewPromotion">
+        <value xml:lang="de">Neuer Aktion</value>
+        <value xml:lang="en">New Promotion</value>
+        <value xml:lang="fr">Nouvelle promotion</value>
+    </property>
     <property key="ProductPromotionContent">
         <value xml:lang="de">Aktion Inhalt</value>
         <value xml:lang="en">Promotion Content</value>

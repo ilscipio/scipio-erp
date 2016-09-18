@@ -1177,6 +1177,7 @@
         <value xml:lang="zh_TW">新建根複合檔模板</value>
     </property>
     <property key="ContentCreateNewWebSite">
+        <value xml:lang="de">Schaffen neue Webseite</value>
         <value xml:lang="da">Opret ny Webside</value>
         <value xml:lang="en">Create New WebSite</value>
         <value xml:lang="fr">Créer un nouveau Site Web</value>
@@ -7637,5 +7638,52 @@
         <value xml:lang="vi">Sinh lại các URL dành cho SEO bị thiếu</value>
         <value xml:lang="zh">生成缺失的搜索引擎优化的网址</value>
         <value xml:lang="zh_TW">產生缺失的搜尋引擎優化的網址</value>
+    </property>
+    <property key="ContentNewWebSite">
+        <value xml:lang="de">Neue Webseite</value>
+        <value xml:lang="da">Opret ny Webside</value>
+        <value xml:lang="en">New WebSite</value>
+        <value xml:lang="fr">Nouveau Site Web</value>
+        <value xml:lang="it">Nuovo sito web</value>
+        <value xml:lang="ja">新規Webサイトを作成</value>
+        <value xml:lang="nl">Nieuwe website</value>
+        <value xml:lang="pt">Novo site</value>
+        <value xml:lang="vi">Tạo mới trang thông tin</value>
+        <value xml:lang="zh">创建新网站</value>
+        <value xml:lang="zh_TW">新建網站</value>
+    </property>
+    <property key="ContentWebSiteParties"><!-- FIXME: some language inexact -->
+        <value xml:lang="da">Webside parter</value>
+        <value xml:lang="de">Webseite Nutzer</value>
+        <value xml:lang="en">WebSite Parties</value>
+        <value xml:lang="fr">Acteurs du site web</value>
+        <value xml:lang="it">Aggiorna Soggetti Sito Web</value>
+        <value xml:lang="ja">Webサイト取引先を編集</value>
+        <value xml:lang="nl">Website partijen</value>
+        <value xml:lang="pt">Participantes do site</value>
+        <value xml:lang="ro">Actualizeaza Subiecti Sit Web</value>
+        <value xml:lang="th">แก้ไขกลุ่มผู้ใช้ WebSite</value>
+        <value xml:lang="vi">Cập nhật người dùng</value>
+        <value xml:lang="zh">编辑网站会员</value>
+        <value xml:lang="zh_TW">編輯網站團體</value>
+    </property>
+    <property key="ContentWebSitePathAlias"><!-- FIXME: some language inexact -->
+        <value xml:lang="da">Webside sti alias</value>
+        <value xml:lang="de">Webseite pfad Alias</value>
+        <value xml:lang="en">WebSite Path Alias</value>
+        <value xml:lang="fr">Alias de chemin d'accès du site web</value>
+        <value xml:lang="it">Path alias Sito Web</value>
+        <value xml:lang="ja">パス別名</value>
+        <value xml:lang="pt">Alias de caminho</value>
+        <value xml:lang="vi">Đường dẫn thay thế</value>
+        <value xml:lang="zh">路径别名</value>
+        <value xml:lang="zh_TW">路徑別名</value>
+    </property>
+    <property key="ContentWebSiteSEO">
+        <value xml:lang="da">Webside SEO</value>
+        <value xml:lang="de">Webseite SEO</value>
+        <value xml:lang="en">WebSite SEO</value>
+        <value xml:lang="fr">SEO du site web</value>
+        <value xml:lang="it">SEO Sito Web</value>
     </property>
 </resource>

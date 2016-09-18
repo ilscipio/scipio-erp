@@ -78,7 +78,7 @@ public final class WidgetWorker {
                 externalWriter.append(localRequestName);
             }
         } else if ("inter-app".equals(targetType)) {
-            // Scipio: We want to pass this through encodeURL and smart inter-webapp building logic.
+            // SCIPIO: We want to pass this through encodeURL and smart inter-webapp building logic.
             // NOTE: The use of localWriter and externalWriter here is dodgy, but should work.
             /*
             String fullTarget = localRequestName;
@@ -94,7 +94,7 @@ public final class WidgetWorker {
                 localWriter.append(externalLoginKey);
             }
             */
-            Appendable tempWriter = new StringWriter(); // Scipio: DON'T use localWriter
+            Appendable tempWriter = new StringWriter(); // SCIPIO: DON'T use localWriter
             String fullTarget = localRequestName;
             tempWriter.append(fullTarget);
             String externalLoginKey = (String) request.getAttribute("externalLoginKey");
@@ -108,7 +108,7 @@ public final class WidgetWorker {
                 tempWriter.append(externalLoginKey);
             }
             if (request != null && response != null) {
-                // Scipio: We want to make sure this goes through encodeURL, and we now also want to send this
+                // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this
                 // through makeLinkAuto so it can produce smarter inter-webapp links.
                 // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
                 ServletContext servletContext = request.getSession().getServletContext();
@@ -129,7 +129,7 @@ public final class WidgetWorker {
             String localUrl = localWriter.toString();
             externalWriter.append(localUrl);
             boolean needsAmp = true;
-            // Scipio: This needs to check externalWriter, which already contains localWriter
+            // SCIPIO: This needs to check externalWriter, which already contains localWriter
             //if (localUrl.indexOf('?') == -1) {
             if (externalWriter.toString().indexOf('?') < 0) {
                 externalWriter.append('?');
@@ -329,7 +329,7 @@ public final class WidgetWorker {
         writer.append("</form>");
     }
     
-    // Scipio: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
+    // SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
     private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
         List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
         if (rowSubmitFields != null) {
@@ -363,7 +363,7 @@ public final class WidgetWorker {
         }
     }
     
-    // Scipio: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
+    // SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
     private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {        
         List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
         if (rowSubmitFields != null) {
@@ -387,7 +387,7 @@ public final class WidgetWorker {
         }
     }
     
-    // Scipio: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
+    // SCIPIO: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
     public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
             HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
         String hiddenFormName = makeLinkHiddenFormName(context, modelForm,
@@ -451,7 +451,7 @@ public final class WidgetWorker {
     
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
         ModelForm modelForm = null;
-        // Scipio: make sure model form field not empty
+        // SCIPIO: make sure model form field not empty
         if (UtilValidate.isNotEmpty(modelFormField)) {
             modelForm = modelFormField.getModelForm();
         }
@@ -459,7 +459,7 @@ public final class WidgetWorker {
         String iterateId = "";
         String formUniqueId = "";
         String formName = (String) context.get("formName");
-        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) { // Scipio: make sure modelForm not empty
+        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) { // SCIPIO: make sure modelForm not empty
             formName = modelForm.getName();
         }
         if (UtilValidate.isNotEmpty(context.get("iterateId"))) {

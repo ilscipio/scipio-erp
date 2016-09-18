@@ -813,9 +813,11 @@
 
     <menu name="GlobalGLSettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="chartofaccounts">
+        <!-- SCIPIO: redundant
         <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
             <link target="CostCenters"/>
         </menu-item>
+        -->
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
@@ -874,12 +876,14 @@
     </menu>
 
     <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="find" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoices}">
             <condition>
                 <if-empty field="invoice.invoiceId" />
             </condition>
             <link target="findInvoices" />
         </menu-item>
+        -->
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
             <condition>
                 <not>
@@ -1548,9 +1552,11 @@
     </menu>
 
     <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}" sort-mode="off">
             <link target="findPayments" />
         </menu-item>
+        -->
         <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingPaymentTabOverview}">
             <condition>
                 <not>
@@ -1561,13 +1567,15 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
-        <menu-item name="editPayment" title="${uiLabelMap.CommonEdit} ${uiLabelMap.AccountingPayment}">
+        <menu-item name="editPayment" title="${uiLabelMap.AccountingPayment}">
             <condition>
                 <and>
                     <not>
                         <if-empty field="payment.paymentId" />
                     </not>
+                    <!-- SCIPIO: screen must handle this, if omitted here is confusing...
                     <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID" />
+                    -->
                 </and>
             </condition>
             <link target="editPayment">

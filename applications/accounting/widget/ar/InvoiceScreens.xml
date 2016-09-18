@@ -104,7 +104,7 @@ under the License.
                 <set field="titleProperty" value="AccountingCreateNewSalesInvoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewSalesInvoice" location="component://accounting/widget/InvoiceForms.xml"/>

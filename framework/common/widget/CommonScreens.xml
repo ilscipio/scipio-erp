@@ -1274,13 +1274,36 @@ under the License.
         </section>
     </screen>
     
-    <!-- SideBar menu factored implementation 
-        Each component should wrap this implementation in its CommonScreens.xml to
-        provide a sideBarMenu.xxx location and configuration.
-        The individual screens simply need to pass/set:
-        activeSubMenu (name of sub-menu in advanced menu, or the prefix in a XxxSideBar fallback menu name)
-        activeSubMenuItem.
-        This widget must always be called with share-scope="false" (which is the widget-screen.xsd default). -->
+    <!-- SideBar Menu Common Implementation 
+        Each application should wrap this implementation in its CommonScreens.xml and provide the location
+        of an advanced sidebar menu in sideBarMenu.advLocation/advName, plus any other wanted configuration.
+        This advanced menu may have a complex structure with any number and depth of sub-menus.
+        
+        The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
+        
+        * activeSubMenu - Name of a sub-menu that is part of the advanced SideBar menu designated by advLocation/advName.
+          If the field is empty, it indicates the top level (no sub-menu).
+          The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
+          This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
+          but this location is not used in the advanced menu lookup.
+          If the name is not found within the advanced menu as sub-menu, the name and location is instead used to lookup a 
+          simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
+          but is only necessary if the menu location differs from the default location as specified to this widget in sideBarMenu.defLocation.
+          In fallback mode, a suffix (by default "SideBar") is added to the activeSubMenu value before performing the lookup.
+        * activeSubMenuItem - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
+          If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
+          on the menu/sub-menu designated/implied by activeSubMenu.
+        * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
+          specified, as default behavior or fallback. 
+          WARN (2016-08-31): this behavior is for compatibility and is currently subject to change slightly.
+        
+        Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an advanced menu.
+        Often one will be set by a decorator and the other by a screen.
+        activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
+        still necessary to designate items in other non-sidebar menus.
+        
+        NOTES:
+        * This widget must always be called with share-scope="false" (which is the widget-screen.xsd default). -->
     <screen name="SideBarMenu">
         <section>
             <actions>

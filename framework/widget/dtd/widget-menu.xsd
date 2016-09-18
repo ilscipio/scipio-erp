@@ -371,7 +371,7 @@ Features and Modifications:
                         logic and functionality such as determining the active menu item in addition to styling. 
                         If "styling", the model will only be used as model for styling fields.
                         If "logic", the model will only be used as model for logic fields.
-                        Default: styling
+                        Default: "styling" when sub-menu-model is specified.
                         NOTE (2016-08-25): Even when "full", not all attributes may work with sub-menu-model at this time.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
@@ -379,6 +379,7 @@ Features and Modifications:
                         <xs:enumeration value="style" />
                         <xs:enumeration value="logic" />
                         <xs:enumeration value="full" />
+                        <xs:enumeration value="none" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

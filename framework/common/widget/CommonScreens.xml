@@ -1316,6 +1316,7 @@ under the License.
                 
                 <!-- The default selected item field names are appropriate for menus derived from 
                     CommonEmptyAppBarDashboardMenu/CommonAppBarDashboardMenu in component://common/widget/CommonMenus.xml -->
+                <!-- TODO?: could be looked up automatically from menu model -->
                 <set field="cplxSelSubField" from-field="menuCfg.selMenuFieldName" default-value="activeMainSubMenu" />
                 <set field="cplxSelItemField" from-field="menuCfg.selMenuItemFieldName" default-value="activeMainMenuItem" />
                 

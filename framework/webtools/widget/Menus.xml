@@ -802,7 +802,7 @@ under the License.
     
     <menu name="WebtoolsPlainSiteMapDemo">
         <!-- To achieve this, we can force the scope of all sub-menus to exclude styling using "func" or "none" -->
-        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="none"/>
+        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="func"/>
     </menu> 
     
     <menu name="WebtoolsPlainSiteMapDemo2">

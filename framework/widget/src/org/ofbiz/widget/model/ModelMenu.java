@@ -1342,8 +1342,12 @@ public class ModelMenu extends ModelWidget {
         }
     }
     
+    public boolean nameIsTopMenu(String subMenuName) {
+        return (subMenuName == null || subMenuName.isEmpty() || subMenuName.equals(getName()));
+    }
+    
     public ModelMenuItem getModelMenuItemBySubName(String menuItemName, String subMenuName) {
-        if (subMenuName == null || subMenuName.isEmpty() || subMenuName.equals(getName())) {
+        if (nameIsTopMenu(subMenuName)) {
             return getModelMenuItemByName(menuItemName);
         } else {
             ModelSubMenu subMenu = getModelSubMenuByName(subMenuName);
@@ -1462,7 +1466,7 @@ public class ModelMenu extends ModelWidget {
         return this.selectedMenuContextFieldName.getOriginalName();
     }
     
-    public ModelMenuItem getSelectedMenuItem(Map<String, Object> context) {
+    public MenuAndItem getSelected(Map<String, Object> context) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
         
         String selItemName;
@@ -1481,29 +1485,33 @@ public class ModelMenu extends ModelWidget {
             selItemName = null;
         }
         
+        ModelSubMenu subMenu = null;
+        ModelMenuItem menuItem = null;
+
         if (UtilValidate.isNotEmpty(selItemName)) {
-            return getModelMenuItemBySubName(selItemName, selMenuName);
+            menuItem = getModelMenuItemBySubName(selItemName, selMenuName);
+            if (menuItem != null) {
+                subMenu = menuItem.getParentSubMenu();
+            }
         } else {
-            // if there's no item name, we have to do something special to dig up
-            // the default-menu-item-name
-            ModelSubMenu subMenu = null;
             if (UtilValidate.isNotEmpty(selMenuName)) {
                 subMenu = getModelSubMenuByName(selMenuName);
-            } 
+            }
             
+            // if there's no item name, we have to do something special to dig up
+            // the default-menu-item-name
             if (subMenu != null) {
                 // ok, have a sub-menu
                 String defaultMenuItemName = subMenu.getDefaultMenuItemName();
-                return subMenu.getModelMenuItemByName(defaultMenuItemName);
-            } else {
-                // use top menu (us)
+                menuItem = subMenu.getModelMenuItemByName(defaultMenuItemName);
+            } else if (nameIsTopMenu(selMenuName)) {
+                // use top menu (us), though only if it was intended for us
                 if (UtilValidate.isNotEmpty(this.defaultMenuItemName)) {
-                    return getModelMenuItemByName(this.defaultMenuItemName);
-                } else {
-                    return null;
+                    menuItem = getModelMenuItemByName(this.defaultMenuItemName);
                 }
             }
         }
+        return new MenuAndItem(subMenu, menuItem);
     }
     
     public boolean isParentOf(ModelMenuItem menuItem) {
@@ -1683,4 +1691,38 @@ public class ModelMenu extends ModelWidget {
         }
     }
     
+    /**
+     * SCIPIO: sub-menu and item pair. One or both may be null.
+     * Usually when sub-menu is null it means the item is top level.
+     */
+    public static class MenuAndItem {
+        private final ModelSubMenu subMenu;
+        private final ModelMenuItem menuItem;
+        
+        public MenuAndItem(ModelSubMenu subMenu, ModelMenuItem menuItem) {
+            super();
+            this.subMenu = subMenu;
+            this.menuItem = menuItem;
+        }
+        
+        public ModelSubMenu getSubMenu() {
+            return subMenu;
+        }
+        
+        public ModelMenuItem getMenuItem() {
+            return menuItem;
+        }
+        
+        public boolean isItemTopLevel() {
+            return menuItem != null && subMenu == null;
+        }
+        
+        public boolean isSubMenu() {
+            return subMenu != null;
+        }
+        
+        public boolean hasMenuItem() {
+            return menuItem != null;
+        }
+    }
 }

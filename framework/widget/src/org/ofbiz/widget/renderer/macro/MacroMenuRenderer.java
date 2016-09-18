@@ -46,6 +46,7 @@ import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.MenuRenderState;
 import org.ofbiz.widget.model.ModelMenu;
+import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
 import org.ofbiz.widget.model.ModelSubMenu;
@@ -222,7 +223,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //Boolean hideIfSelected = menuItem.getHideIfSelected();
         //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context).getMenuItem();
         return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
     }
     
@@ -280,10 +282,14 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //    target = null;
         //}
         boolean disabled = isDisableIfEmpty(menuItem, context);
+        
         // Scipio: tell macro which selected and disabled
-        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context);
+        ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+        
         boolean selected = menuItem.isSame(selectedMenuItem);
-        boolean selectedAncestor = !selected && menuItem.isSameOrAncestorOf(selectedMenuItem);
+        boolean selectedAncestor = !selected && menuItem.isAncestorOf(selectedMenuAndItem.getSubMenu());
         parameters.put("id", link.getId(context));
         parameters.put("style", link.getStyle(context));
         parameters.put("name", link.getName(context));
@@ -389,8 +395,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             return;
         Map<String, Object> parameters = new HashMap<String, Object>();
         String style = menuItem.getWidgetStyle();
+        
         // Scipio: tell macro which selected and disabled
-        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context);
+        ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+        ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
+        
         boolean selected = menuItem.isSame(selectedMenuItem);
         boolean selectedAncestor = false;
         if (selected) {
@@ -410,7 +421,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
         } else {
             // SCIPIO: support selected-ancestor
-            selectedAncestor = menuItem.isSameOrAncestorOf(selectedMenuItem);
+            selectedAncestor = menuItem.isAncestorOf(selectedSubMenu);
             if (selectedAncestor) {
                 String selectedStyle = menuItem.getSelectedAncestorStyle();
                 // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
@@ -461,14 +472,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean containsNestedMenus = menuItem.hasSubMenu();
         
         // SCIPIO: 2016-08-29: max depth check
-        MenuRenderState renderState = MenuRenderState.retrieve(context);
-        if (renderState == null) {
-            Debug.logWarning("No MenuRenderState present in context; no depth checks possible", module);
-        } else {
-            if (renderState.hasReachedMaxDepth()) {
-                containsNestedMenus = false;
-            }
+        //if (renderState == null) {
+        //    Debug.logWarning("No MenuRenderState present in context; no depth checks possible", module);
+        //} else {
+        if (renderState.hasReachedMaxDepth()) {
+            containsNestedMenus = false;
         }
+        //}
         
         parameters.put("containsNestedMenus", containsNestedMenus);
         
@@ -513,7 +523,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             }
             try {
                 for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
-                    if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isAncestorOf(selectedMenuItem)) {
+                    if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isSameOrAncestorOf(selectedSubMenu)) {
                         childSubMenu.renderSubMenuString(writer, context, this);
                     }
                 }
@@ -545,15 +555,18 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             sb.append(menu.getBoundaryCommentName());
             parameters.put("boundaryComment", sb.toString());
         }
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
         parameters.put("id", menu.getId());
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
-        parameters.put("inlineEntries", MenuRenderState.retrieve(context).isInlineEntries());
-        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
+        parameters.put("inlineEntries", renderState.isInlineEntries());
+        parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
         
-        ModelMenuItem selectedMenuItem = menu.getSelectedMenuItem(context);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(menu, context);
+        ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+        
         boolean selected = menu.isParentOf(selectedMenuItem);
-        boolean selectedAncestor = !selected && selectedMenuItem != null;
+        boolean selectedAncestor = !selected && (selectedMenuItem != null || selectedMenuAndItem.getSubMenu() != null);
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
         
@@ -578,12 +591,15 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("title", subMenu.getTitle(context));
         parameters.put("effectiveName", subMenu.getEffectiveName());
         
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        
         // Scipio: menu context role
-        parameters.put("menuCtxRole", MenuRenderState.retrieve(context).getMenuCtxRoleOrEmpty());
+        parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
 
-        ModelMenuItem selectedMenuItem = subMenu.getTopModelMenu().getSelectedMenuItem(context);
-        boolean selected = subMenu.isParentOf(selectedMenuItem);
-        boolean selectedAncestor = !selected && subMenu.isAncestorOf(selectedMenuItem);
+        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(subMenu.getTopModelMenu(), context);
+        
+        boolean selected = subMenu.isSame(selectedMenuAndItem.getSubMenu());
+        boolean selectedAncestor = !selected && subMenu.isSameOrAncestorOf(selectedMenuAndItem.getSubMenu());
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
         

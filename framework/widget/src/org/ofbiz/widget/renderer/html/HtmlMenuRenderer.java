@@ -38,6 +38,7 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
+import org.ofbiz.widget.model.MenuRenderState;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
@@ -351,7 +352,8 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         //Boolean hideIfSelected = menuItem.getHideIfSelected();
         //return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-        ModelMenuItem selectedMenuItem = menuItem.getModelMenu().getSelectedMenuItem(context);
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        ModelMenuItem selectedMenuItem = renderState.getSelectedMenuAndItem(menuItem.getModelMenu(), context).getMenuItem();
         return (hideIfSelected != null && hideIfSelected.booleanValue() && menuItem.isSame(selectedMenuItem));
     }
 

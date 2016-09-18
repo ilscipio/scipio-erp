@@ -26,11 +26,13 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     private String subMenuFilter;
     private transient boolean noSubMenus;
     private transient boolean currentSubMenusOnly;
+    private transient ModelMenu.MenuAndItem selectedMenuAndItem;
     
     protected MenuRenderState() {
         setCurrentDepth(1);
         setMaxDepth(1);
         setSubMenuFilter(null);
+        selectedMenuAndItem = null;
     }
     
     protected Object setArg(String key, Object value) {
@@ -130,6 +132,15 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
         return res != null ? res : "";
     }
 
+    /**
+     * Gets selected submenu/item pair from model menu and caches for this render.
+     */
+    public ModelMenu.MenuAndItem getSelectedMenuAndItem(ModelMenu modelMenu, Map<String, Object> context) {
+        if (this.selectedMenuAndItem == null) {
+            this.selectedMenuAndItem = modelMenu.getSelected(context);
+        }
+        return this.selectedMenuAndItem;
+    }
     
     // context helper methods
     

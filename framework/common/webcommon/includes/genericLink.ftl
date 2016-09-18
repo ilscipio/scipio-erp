@@ -28,6 +28,6 @@ under the License.
 </#if>
 </#list>
 </#if>
-<a href="javascript:document.${genericLinkName}.submit();" <#if genericLinkStyle??>class="${genericLinkStyle}"</#if>>${genericLinkText}</a>
+<a href="javascript:document.forms['${genericLinkName}'].submit();" <#if genericLinkStyle??>class="${genericLinkStyle}"</#if>>${genericLinkText}</a>
 </form>
 </#if>

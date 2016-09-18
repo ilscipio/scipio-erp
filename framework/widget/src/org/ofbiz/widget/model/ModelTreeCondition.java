@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
+
 import org.w3c.dom.Element;
 
 /**
@@ -25,7 +27,8 @@ import org.w3c.dom.Element;
  * 
  * @see <code>widget-tree.xsd</code>
  */
-public class ModelTreeCondition {
+@SuppressWarnings("serial")
+public class ModelTreeCondition implements Serializable {
     public static final String module = ModelTreeCondition.class.getName();
     private final ModelCondition condition;
 

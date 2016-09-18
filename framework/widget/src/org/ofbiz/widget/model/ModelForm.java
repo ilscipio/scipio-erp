@@ -19,6 +19,7 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1714,7 +1715,7 @@ public abstract class ModelForm extends ModelWidget {
         return method.expandString(context);
     }
     
-    public static class AltRowStyle {
+    public static class AltRowStyle implements Serializable {
         public final String useWhen;
         public final String style;
 
@@ -1724,7 +1725,7 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static class AltTarget {
+    public static class AltTarget implements Serializable {
         public final String useWhen;
         public final FlexibleStringExpander targetExdr;
 
@@ -1744,7 +1745,7 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static class AutoFieldsEntity {
+    public static class AutoFieldsEntity implements Serializable {
         public final String entityName;
         public final String mapName;
         public final String defaultFieldType;
@@ -1789,7 +1790,7 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static class AutoFieldsService {
+    public static class AutoFieldsService implements Serializable {
         public final String serviceName;
         public final String mapName;
         public final String defaultFieldType;
@@ -1993,10 +1994,10 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
-    public static interface FieldGroupBase {
+    public static interface FieldGroupBase extends Serializable {
     }
 
-    public static class SortField {
+    public static class SortField implements Serializable {
         private final String fieldName;
         private final Integer position;
         private final Integer positionSpan;
@@ -2045,7 +2046,7 @@ public abstract class ModelForm extends ModelWidget {
     /** The UpdateArea class implements the <code>&lt;on-event-update-area&gt;</code>
      * elements used in form widgets.
      */
-    public static class UpdateArea {
+    public static class UpdateArea implements Serializable {
         private final String eventType;
         private final String areaId;
         private final String areaTarget;

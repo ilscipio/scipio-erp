@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +44,8 @@ import org.w3c.dom.Element;
 /**
  * Abstract menu action.
  */
-public abstract class ModelMenuAction {
+@SuppressWarnings("serial")
+public abstract class ModelMenuAction implements Serializable {
 
     public static final String module = ModelMenuAction.class.getName();
 

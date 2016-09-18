@@ -1476,9 +1476,13 @@
   <@render resource=ofbizWidgetsLayoutScreenLocation />
 
   <@section title="Direct inclusions">
+    <p>Button Menu</p>
     <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2" />
-    <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
+    <p>Button Menu (sub-menus filtered out)</p>
+    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2NoSubMenus" />
 
+    <p>Test form</p>
+    <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
   <#-- TODO: uncomment once demo menus added to branch
     <p>Max depth arg test</p>
     <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" />

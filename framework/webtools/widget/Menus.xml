@@ -689,7 +689,11 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    
+
+    <menu name="LayoutDemoButton2NoSubMenus" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"><!-- Excludes sub-menus -->
+        <include-elements menu-name="LayoutDemoButton2" sub-menus="none"/>
+    </menu>
+
     <menu name="WebtoolsInlineSectionMenuDemo">
         <menu-item name="item1" title="Inline-Section Menu Item 1">
             <link target="${demoTargetUrl}">

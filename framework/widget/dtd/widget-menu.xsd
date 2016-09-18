@@ -578,6 +578,15 @@ Features and Modifications:
             <xs:attribute type="xs:string" name="associated-content-id" />
             <xs:attribute type="xs:string" name="hide-if-selected" />
             <xs:attribute type="xs:string" name="cell-width" />
+            <xs:attribute type="xs:string" name="disabled">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Boolean disabled attribute, more straightforward alternative to disable-if-empty.
+                        It must evaluate to explicit true or false to take effect. If it does, it takes
+                        precedence over disable-if-empty.
+                        NOTE: some state variables can be used in the expression, such as:
+                        * currentMenuRenderState.itemState.conditionResult (Boolean, if there was one)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="disable-if-empty" />
             <xs:attribute type="xs:string" name="disabled-title-style" />
             <xs:attribute type="xs:string" name="target-window" />

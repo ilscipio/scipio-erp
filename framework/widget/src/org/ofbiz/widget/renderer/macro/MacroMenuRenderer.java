@@ -200,7 +200,17 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         return environment;
     }
 
+    
+    /**
+     * SCIPIO: NOTE: this now also considers the straight "disabled" attribute new in Scipio.
+     */
     private boolean isDisableIfEmpty(ModelMenuItem menuItem, Map<String, Object> context) {
+        // SCIPIO: check the direct attribute first
+        Boolean disabledDirect = menuItem.getDisabled(context);
+        if (disabledDirect != null) {
+            return disabledDirect;
+        }
+        
         boolean disabled = false;
         String disableIfEmpty = menuItem.getDisableIfEmpty();
         if (UtilValidate.isNotEmpty(disableIfEmpty)) {

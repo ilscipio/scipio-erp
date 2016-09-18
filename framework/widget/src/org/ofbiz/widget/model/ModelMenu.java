@@ -270,7 +270,7 @@ public class ModelMenu extends ModelWidget {
         
         // SCIPIO: include-actions and actions
         Map<String, Element> menuElemCache = new HashMap<String, Element>();
-        processIncludeActions(menuElement, actions, menuLocation, true, menuElemCache);
+        processIncludeActions(menuElement, null, null, actions, menuLocation, true, menuElemCache);
         
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
@@ -295,7 +295,7 @@ public class ModelMenu extends ModelWidget {
         this.menuContainerStyleExdr = menuContainerStyleExdr;
         
         // SCIPIO: include-menu-items and menu-item
-        processIncludeMenuItems(menuElement, menuItemList, menuItemMap, 
+        processIncludeMenuItems(menuElement, null, null, menuItemList, menuItemMap, 
                 menuLocation, true, null, menuElemCache, null);
         
         menuItemList.trimToSize();
@@ -351,7 +351,7 @@ public class ModelMenu extends ModelWidget {
      * SCIPIO: implements include-actions and actions reading (moved here).
      * Also does include-elements.
      */
-    void processIncludeActions(Element parentElement, List<ModelAction> actions, 
+    void processIncludeActions(Element parentElement, List<Element> preInclElements, List<Element> postInclElements, List<ModelAction> actions, 
             String currResource, boolean processIncludes, Map<String, Element> menuElemCache) {
         // don't think any problems from local cache for actions
         final boolean useCache = true;  
@@ -359,8 +359,14 @@ public class ModelMenu extends ModelWidget {
 
         if (processIncludes) {
             List<Element> actionInclElements = new ArrayList<Element>();
+            if (preInclElements != null) {
+                actionInclElements.addAll(preInclElements);
+            }
             actionInclElements.addAll(UtilXml.childElementList(parentElement, "include-elements"));
             actionInclElements.addAll(UtilXml.childElementList(parentElement, "include-actions"));
+            if (postInclElements != null) {
+                actionInclElements.addAll(postInclElements);
+            }
             for (Element actionInclElement : getMergedIncludeDirectives(actionInclElements, currResource)) {
                 String inclMenuName = actionInclElement.getAttribute("menu-name");
                 String inclResource = actionInclElement.getAttribute("resource");
@@ -387,7 +393,7 @@ public class ModelMenu extends ModelWidget {
                                 Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, 
                                         inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
                                 if (parentMenuElem != null) {
-                                    processIncludeActions(parentMenuElem, actions, 
+                                    processIncludeActions(parentMenuElem, null, null, actions, 
                                             nextResource, true, menuElemCache);
                                 }
                                 else {
@@ -397,11 +403,11 @@ public class ModelMenu extends ModelWidget {
                         }
                         
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
-                            processIncludeActions(inclMenuElem, actions, 
+                            processIncludeActions(inclMenuElem, null, null, actions, 
                                     nextResource, true, menuElemCache);
                         }
                         else {
-                            processIncludeActions(inclMenuElem, actions, 
+                            processIncludeActions(inclMenuElem, null, null, actions, 
                                     nextResource, false, menuElemCache);
                         }
                     }
@@ -426,7 +432,7 @@ public class ModelMenu extends ModelWidget {
      * SCIPIO: implements include-menu-items and menu-item reading (moved here).
      * Also does include-elements.
      */
-    void processIncludeMenuItems(Element parentElement, List<ModelMenuItem> menuItemList,
+    void processIncludeMenuItems(Element parentElement, List<Element> preInclElements, List<Element> postInclElements, List<ModelMenuItem> menuItemList,
             Map<String, ModelMenuItem> menuItemMap, String currResource, 
             boolean processIncludes, Set<String> excludeItems, Map<String, Element> menuElemCache,
             ParentMenuItemInfo parentItemInfo) {
@@ -443,8 +449,14 @@ public class ModelMenu extends ModelWidget {
         
         if (processIncludes) {
             List<Element> itemInclElements = new ArrayList<Element>();
+            if (preInclElements != null) {
+                itemInclElements.addAll(preInclElements);
+            }
             itemInclElements.addAll(UtilXml.childElementList(parentElement, "include-elements"));
             itemInclElements.addAll(UtilXml.childElementList(parentElement, "include-menu-items"));
+            if (postInclElements != null) {
+                itemInclElements.addAll(postInclElements);
+            }
             for (Element itemInclElement : getMergedIncludeDirectives(itemInclElements, currResource)) {
                 String inclMenuName = itemInclElement.getAttribute("menu-name");
                 String inclResource = itemInclElement.getAttribute("resource");
@@ -481,7 +493,7 @@ public class ModelMenu extends ModelWidget {
                                 Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, 
                                         inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
                                 if (parentMenuElem != null) {
-                                    processIncludeMenuItems(parentMenuElem, menuItemList, menuItemMap, 
+                                    processIncludeMenuItems(parentMenuElem, null, null, menuItemList, menuItemMap, 
                                             nextResource, true, inclExcludeItems, menuElemCache, parentItemInfo);
                                 }
                                 else {
@@ -491,11 +503,11 @@ public class ModelMenu extends ModelWidget {
                         }
                         
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
-                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, 
+                            processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
                                     nextResource, true, inclExcludeItems, menuElemCache, parentItemInfo);
                         }
                         else {
-                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, 
+                            processIncludeMenuItems(inclMenuElem, null, null, menuItemList, menuItemMap, 
                                     nextResource, false, inclExcludeItems, menuElemCache, parentItemInfo);
                         }
                     }

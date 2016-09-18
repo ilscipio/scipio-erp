@@ -52,7 +52,7 @@ public class ModelSubMenu extends ModelWidget {
     private final List<ModelMenuItem> menuItemList;
     private final Map<String, ModelMenuItem> menuItemMap;
     private final List<ModelMenuItem> extraMenuItemList;
-    private volatile ModelMenuItem parentMenuItem; // SCIPIO: WARN: must be fixed-up after construct due to the way the items are merged
+    private final ModelMenuItem parentMenuItem; // SCIPIO: WARN: must be fixed-up after construct due to the way the items are merged
     
     private final FlexibleStringExpander id;
     private final FlexibleStringExpander style;
@@ -72,6 +72,9 @@ public class ModelSubMenu extends ModelWidget {
         ModelMenu topModelMenu = parentMenuItem.getModelMenu();
         List<? extends Element> extraMenuItems = buildArgs.extraMenuItems;
         this.parentMenuItem = parentMenuItem;
+        
+        this.styleModelMenu = null;
+        this.funcModelMenu = null;
         
         ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
         
@@ -110,7 +113,8 @@ public class ModelSubMenu extends ModelWidget {
         
         if (!modelAddress.isEmpty()) {
             ModelLocation menuLoc = ModelLocation.fromAddress(modelAddress);
-            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(), topModelMenu.getMenuLocation(), subMenuElement);
+            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(), topModelMenu.getMenuLocation(), 
+                    subMenuElement, buildArgs.genBuildArgs);
         }
         
         // figure out our name
@@ -170,14 +174,12 @@ public class ModelSubMenu extends ModelWidget {
             ArrayList<ModelMenuItem> extraMenuItemList = new ArrayList<ModelMenuItem>();
             Map<String, ModelMenuItem> extraMenuItemMap = new HashMap<String, ModelMenuItem>();
             
-            ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs,
-                        buildArgs.currResource);
-            itemBuildArgs.forceSubMenuModelScope = buildArgs.forceSubMenuModelScope;
+            ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(buildArgs);
             
             for (Element itemElement : extraMenuItems) {
                 ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this, itemBuildArgs);
-                topModelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
-                topModelMenu.addUpdateMenuItem(modelMenuItem, extraMenuItemList, extraMenuItemMap);
+                topModelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap, itemBuildArgs);
+                topModelMenu.addUpdateMenuItem(modelMenuItem, extraMenuItemList, extraMenuItemMap, itemBuildArgs);
             }
             
             extraMenuItemList.trimToSize();
@@ -198,23 +200,69 @@ public class ModelSubMenu extends ModelWidget {
         this.shareScope = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("share-scope"));
     }
 
+    // SCIPIO: copy constructor
+    private ModelSubMenu(ModelSubMenu existingSubMenu, 
+            ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
+        super(existingSubMenu.getName());
+        this.effectiveName = existingSubMenu.effectiveName;
+        this.parentMenuItem = parentMenuItem != null ? parentMenuItem : existingSubMenu.parentMenuItem;
+        
+        ArrayList<ModelAction> actions = new ArrayList<>(existingSubMenu.actions);
+        actions.trimToSize();
+        this.actions = Collections.unmodifiableList(actions);
+        ArrayList<ModelMenuItem> menuItemList = new ArrayList<>();
+        Map<String, ModelMenuItem> menuItemMap = new HashMap<>();
+        ModelMenuItem.cloneModelMenuItems(existingSubMenu.getMenuItemList(), 
+                menuItemList, menuItemMap, getTopModelMenu(), this,
+                new ModelMenuItem.BuildArgs(buildArgs));
+        menuItemList.trimToSize();
+        this.menuItemList = Collections.unmodifiableList(menuItemList);
+        this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
+        
+        ArrayList<ModelMenuItem> extraMenuItemList = new ArrayList<>();
+        for(ModelMenuItem menuItem : existingSubMenu.extraMenuItemList) {
+            extraMenuItemList.add(menuItemMap.get(menuItem.getName()));
+        }
+        extraMenuItemList.trimToSize();
+        this.extraMenuItemList = Collections.unmodifiableList(extraMenuItemList);
+        
+        this.id = existingSubMenu.id;
+        this.style = existingSubMenu.style;
+        this.title = existingSubMenu.title;
+        this.model = existingSubMenu.model;
+        this.modelScope = UtilValidate.isNotEmpty(buildArgs.forceSubMenuModelScope) ? buildArgs.forceSubMenuModelScope : existingSubMenu.modelScope;
+        this.styleModelMenu = null;
+        this.funcModelMenu = null;
+        
+        this.itemsSortMode = existingSubMenu.itemsSortMode;
+        this.shareScope = existingSubMenu.shareScope;
+    }
+    
     String makeDefaultName(BuildArgs buildArgs) {
         String defaultName;
-        if (buildArgs.indexInParent == 0) {
-            defaultName = "_submenu_default_" + buildArgs.genBuildArgs.totalSubMenuCount;
-        } else {
-            defaultName = "_submenu_" + buildArgs.indexInParent + "_" + buildArgs.genBuildArgs.totalSubMenuCount;
-        }
+        // FIXME: NOT GUARANTEED TO MAKE A UNIQUE NAME
+        // if include a menu with same name from different file, will cause errors
+        defaultName = "_" + this.getTopModelMenu().getName() + "_" + buildArgs.genBuildArgs.totalSubMenuCount;
         return defaultName;
     }
     
     /**
-     * WARN: we are forced to do this due to the way the ModelMenuItem merging works.
-     * After merging we would be pointing back to the wrong menu item instance if we
-     * don't update this.
+     * SCIPIO: Clones item.
+     * <p>
+     * NOTE: if modelMenu/parentMenuItem are null, they are taken from the current item. 
      */
-    void fixupReferences(ModelMenuItem parentMenuItem) {
-        this.parentMenuItem = parentMenuItem;
+    public ModelSubMenu cloneModelSubMenu(ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
+        return new ModelSubMenu(this, modelMenu, parentMenuItem, buildArgs);
+    }
+    
+    public static void cloneModelSubMenus(List<ModelSubMenu> subMenuList, 
+            List<ModelSubMenu> targetList, Map<String, ModelSubMenu> targetMap, 
+            ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
+        for(ModelSubMenu subMenu : subMenuList) {
+            ModelSubMenu clonedSubMenu = subMenu.cloneModelSubMenu(modelMenu, parentMenuItem, buildArgs);
+            targetList.add(clonedSubMenu);
+            targetMap.put(clonedSubMenu.getName(), clonedSubMenu);
+        }
     }
     
     /**
@@ -461,21 +509,29 @@ public class ModelSubMenu extends ModelWidget {
         public final GeneralBuildArgs genBuildArgs;
         public final CurrentMenuDefBuildArgs currentMenuDefBuildArgs;
         public String currResource;
-        public int indexInParent;
-
-        public List<? extends Element> extraMenuItems;
         public String forceSubMenuModelScope;
 
+        public List<? extends Element> extraMenuItems;
+
         public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, 
-                String currResource) {
+                String currResource, String forceSubMenuModelScope) {
             this.genBuildArgs = genBuildArgs;
             this.currentMenuDefBuildArgs = currentMenuDefBuildArgs;
             this.currResource = currResource;
-            this.indexInParent = 0;
+            this.forceSubMenuModelScope = forceSubMenuModelScope;
             this.extraMenuItems = null;
-            this.forceSubMenuModelScope = null;
         }
         
+        /**
+         * preserve-all-essentials constructor
+         */
+        public BuildArgs(ModelMenuItem.BuildArgs itemBuildArgs) {
+            this.genBuildArgs = itemBuildArgs.genBuildArgs;
+            this.currentMenuDefBuildArgs = itemBuildArgs.currentMenuDefBuildArgs;
+            this.currResource = itemBuildArgs.currResource;
+            this.forceSubMenuModelScope = itemBuildArgs.forceSubMenuModelScope;
+            this.extraMenuItems = null;
+        }
     }
     
     

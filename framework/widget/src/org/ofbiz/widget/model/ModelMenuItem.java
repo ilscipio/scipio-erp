@@ -83,7 +83,7 @@ public class ModelMenuItem extends ModelWidget {
     private final MenuLink link;
     //@Deprecated
     //private final List<ModelMenuItem> menuItemList; // SCIPIO: This is replaced by ModelSubMenu. This var doesn't contain the sub-menu menu-item elements.
-    private final ModelMenu modelMenu;
+    private final ModelMenu modelMenu;  
     private final String overrideName;
     //private final ModelMenuItem parentMenuItem; // SCIPIO: must go through parent sub menu now
     private final ModelSubMenu parentSubMenu;   // SCIPIO: new
@@ -226,10 +226,8 @@ public class ModelMenuItem extends ModelWidget {
                     // Add the legacy items as extras to the first sub-menu
                     extraMenuItems = itemElements;
                 }
-                ModelSubMenu.BuildArgs subBuildArgs = new ModelSubMenu.BuildArgs(buildArgs.genBuildArgs, buildArgs.currentMenuDefBuildArgs,
-                            buildArgs.currResource);
+                ModelSubMenu.BuildArgs subBuildArgs = new ModelSubMenu.BuildArgs(buildArgs);
                 subBuildArgs.extraMenuItems = extraMenuItems;
-                subBuildArgs.forceSubMenuModelScope = buildArgs.forceSubMenuModelScope;
                 
                 ModelSubMenu modelSubMenu = new ModelSubMenu(subMenuElement, buildArgs.currResource, 
                         this, subBuildArgs);
@@ -303,13 +301,82 @@ public class ModelMenuItem extends ModelWidget {
         this.subMenuTitle = "";
     }
 
-    // Merge constructor
-    private ModelMenuItem(ModelMenuItem existingMenuItem, ModelMenuItem overrideMenuItem) {
+    // SCIPIO: copy constructor
+    private ModelMenuItem(ModelMenuItem existingMenuItem, 
+            ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
         super(existingMenuItem.getName());
         // SCIPIO: this is an error; when we retried the modelMenu we want the effective one,
         // not the original one
         //this.modelMenu = existingMenuItem.modelMenu;
+        this.modelMenu = (modelMenu != null ? modelMenu : existingMenuItem.modelMenu);
+        this.overrideName = existingMenuItem.getName();
+        this.entityName = existingMenuItem.entityName;
+        this.parentPortalPageId = existingMenuItem.parentPortalPageId;
+        this.title = existingMenuItem.title;
+ 
+        this.tooltip = existingMenuItem.tooltip;
+        this.titleStyle = existingMenuItem.titleStyle;
+        this.selectedStyle = existingMenuItem.selectedStyle;
+
+        this.selectedAncestorStyle = existingMenuItem.selectedAncestorStyle;
+        this.widgetStyle = existingMenuItem.widgetStyle;
+        this.linkStyle = existingMenuItem.linkStyle;
+        this.position = existingMenuItem.position;
+        this.sortMode = existingMenuItem.sortMode;
+        
+        this.subMenuModel = existingMenuItem.subMenuModel;
+        this.subMenuStyle = existingMenuItem.subMenuStyle;
+        this.subMenuTitle = existingMenuItem.subMenuTitle;
+  
+        ArrayList<ModelSubMenu> subMenuList = new ArrayList<>();
+        Map<String, ModelSubMenu> subMenuMap = new HashMap<>();
+        ModelSubMenu.cloneModelSubMenus(existingMenuItem.getSubMenuList(), 
+                subMenuList, subMenuMap, getModelMenu(), this,
+                new ModelSubMenu.BuildArgs(buildArgs));
+        subMenuList.trimToSize();
+        this.subMenuList = Collections.unmodifiableList(subMenuList);
+        this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
+
+        // SCIPIO: some of the assignments below have been changed to take
+        // into account overrideMenuItem.
+        
+        List<ModelAction> actions = new ArrayList<>();
+        actions.addAll(existingMenuItem.actions);
+        this.actions = Collections.unmodifiableList(actions);
+        this.align = existingMenuItem.align;
+
+        this.alignStyle = existingMenuItem.alignStyle;
+        this.associatedContentId = existingMenuItem.associatedContentId;
+        this.cellWidth = existingMenuItem.cellWidth;
+        this.condition = existingMenuItem.condition;
+        this.disabledTitleStyle = existingMenuItem.disabledTitleStyle;
+        this.disableIfEmpty = existingMenuItem.disableIfEmpty;
+        this.hideIfSelected = existingMenuItem.hideIfSelected;
+        
+        //this.menuItemList = existingMenuItem.menuItemList; // SCIPIO: moved to ModelSubMenu
+        // SCIPIO: this should ALWAYS use the overriding parent item
+        //this.parentMenuItem = existingMenuItem.parentMenuItem;
+        // SCIPIO: too problematic, keeping sub menu only instead
+        //this.parentMenuItem = overrideMenuItem.parentMenuItem; 
+        this.parentSubMenu = (parentSubMenu != null) ? parentSubMenu : existingMenuItem.parentSubMenu; // SCIPIO: should always be ours
+        this.subMenu = existingMenuItem.subMenu;
+    
+        this.tooltipStyle = existingMenuItem.tooltipStyle;
+        this.link = existingMenuItem.link;
+ 
+        this.overrideMode = existingMenuItem.overrideMode;
+    }
+    
+    // Merge constructor
+    // SCIPIO: enhanced for inserting new backreferences
+    private ModelMenuItem(ModelMenuItem existingMenuItem, ModelMenuItem overrideMenuItem, 
+            BuildArgs buildArgs) {
+        super(overrideMenuItem.getName());
+        // SCIPIO: this is an error; when we retried the modelMenu we want the effective one,
+        // not the original one
+        //this.modelMenu = existingMenuItem.modelMenu;
         this.modelMenu = overrideMenuItem.modelMenu;
+        this.parentSubMenu = overrideMenuItem.parentSubMenu; // SCIPIO: should always be ours
         if (UtilValidate.isNotEmpty(overrideMenuItem.getName())) {
             this.overrideName = overrideMenuItem.getName();
         } else {
@@ -387,13 +454,23 @@ public class ModelMenuItem extends ModelWidget {
             this.subMenuTitle = existingMenuItem.subMenuTitle;
         }
 
+        List<ModelSubMenu> srcSubMenuList;
         if (overrideMenuItem.hasSubMenu()) {
-            this.subMenuMap = overrideMenuItem.subMenuMap;
-            this.subMenuList = overrideMenuItem.subMenuList;
+            // WARN: this is probably excessive and stupidly slow because overrideMenuItem was just created,
+            // but we need to update all the backreferences to this item in the children (and other things if caller passed), 
+            // so we have no choice
+            srcSubMenuList = overrideMenuItem.getSubMenuList();
         } else {
-            this.subMenuMap = existingMenuItem.subMenuMap;
-            this.subMenuList = existingMenuItem.subMenuList;
+            srcSubMenuList = existingMenuItem.getSubMenuList();
         }
+        ArrayList<ModelSubMenu> subMenuList = new ArrayList<>();
+        Map<String, ModelSubMenu> subMenuMap = new HashMap<>();
+        ModelSubMenu.cloneModelSubMenus(srcSubMenuList, 
+                subMenuList, subMenuMap, getModelMenu(), this,
+                new ModelSubMenu.BuildArgs(buildArgs));
+        subMenuList.trimToSize();
+        this.subMenuList = Collections.unmodifiableList(subMenuList);
+        this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
 
         // SCIPIO: some of the assignments below have been changed to take
         // into account overrideMenuItem.
@@ -447,7 +524,7 @@ public class ModelMenuItem extends ModelWidget {
         //this.parentMenuItem = existingMenuItem.parentMenuItem;
         // SCIPIO: too problematic, keeping sub menu only instead
         //this.parentMenuItem = overrideMenuItem.parentMenuItem; 
-        this.parentSubMenu = overrideMenuItem.parentSubMenu; // SCIPIO: should always be ours
+        
         if (UtilValidate.isNotEmpty(overrideMenuItem.subMenu)) {
             this.subMenu = overrideMenuItem.subMenu;
         } else {
@@ -465,16 +542,17 @@ public class ModelMenuItem extends ModelWidget {
         }
         this.overrideMode = overrideMenuItem.overrideMode;
     }
-
+    
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         visitor.visit(this);
     }
 
+    @SuppressWarnings("unused")
     private void addUpdateMenuItem(ModelMenuItem modelMenuItem, List<ModelMenuItem> menuItemList,
-            Map<String, ModelMenuItem> menuItemMap) {
+            Map<String, ModelMenuItem> menuItemMap, BuildArgs buildArgs) {
         // SCIPIO: this is a copy of the ModelMenu method, so delegate
-        modelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
+        modelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap, buildArgs);
     }
 
     public List<ModelAction> getActions() {
@@ -835,14 +913,34 @@ public class ModelMenuItem extends ModelWidget {
         }
     }
     
-    public ModelMenuItem mergeOverrideModelMenuItem(ModelMenuItem overrideMenuItem) {
-        ModelMenuItem newItem = new ModelMenuItem(this, overrideMenuItem);
-        // SCIPIO: SPECIAL CASE: here we must update the ModelSubMenu back-references to
-        // point to the new instance
-        for(ModelSubMenu subMenu : newItem.getSubMenuList()) {
-            subMenu.fixupReferences(newItem);
+    /**
+     * Merges items.
+     * <p>
+     * SCIPIO: modified for better in-depth cloning.
+     * <p>
+     * NOTE: the backreferences are always taken from overrideMenuItem.
+     */
+    public ModelMenuItem mergeOverrideModelMenuItem(ModelMenuItem overrideMenuItem, BuildArgs buildArgs) {
+        return new ModelMenuItem(this, overrideMenuItem, buildArgs);
+    }
+    
+    /**
+     * SCIPIO: Clones item.
+     * <p>
+     * NOTE: if modelMenu/parentSubMenu are null, they are taken from this item. 
+     */
+    public ModelMenuItem cloneModelMenuItem(ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
+        return new ModelMenuItem(this, modelMenu, parentSubMenu, buildArgs);
+    }
+    
+    public static void cloneModelMenuItems(List<ModelMenuItem> menuItemList, 
+            List<ModelMenuItem> targetList, Map<String, ModelMenuItem> targetMap, 
+            ModelMenu modelMenu, ModelSubMenu parentSubMenu, BuildArgs buildArgs) {
+        for(ModelMenuItem menuItem : menuItemList) {
+            ModelMenuItem clonedItem = menuItem.cloneModelMenuItem(modelMenu, parentSubMenu, buildArgs);
+            targetList.add(clonedItem);
+            targetMap.put(clonedItem.getName(), clonedItem);
         }
-        return newItem;
     }
     
     public boolean isTopMenuItem() {
@@ -1083,17 +1181,28 @@ public class ModelMenuItem extends ModelWidget {
         public final GeneralBuildArgs genBuildArgs;
         public final CurrentMenuDefBuildArgs currentMenuDefBuildArgs;
         public String currResource;
-        
-        public boolean omitSubMenus;
         public String forceSubMenuModelScope;
 
+        public boolean omitSubMenus;
+
         public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs,
-                    String currResource) {
+                    String currResource, String forceSubMenuModelScope) {
             this.genBuildArgs = genBuildArgs;
             this.currentMenuDefBuildArgs = currentMenuDefBuildArgs;
             this.currResource = currResource;
+            this.forceSubMenuModelScope = forceSubMenuModelScope;
             this.omitSubMenus = false;
-            this.forceSubMenuModelScope = null;
+        }
+        
+        /**
+         * preserve-all-essentials constructor
+         */
+        public BuildArgs(ModelSubMenu.BuildArgs subBuildArgs) {
+            this.genBuildArgs = subBuildArgs.genBuildArgs;
+            this.currentMenuDefBuildArgs = subBuildArgs.currentMenuDefBuildArgs;
+            this.currResource = subBuildArgs.currResource;
+            this.forceSubMenuModelScope = subBuildArgs.forceSubMenuModelScope;
+            this.omitSubMenus = false;
         }
     }
 

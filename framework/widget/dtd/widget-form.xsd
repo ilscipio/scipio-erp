@@ -804,7 +804,13 @@ Features and Modifications:
     <xs:element name="sort-field">
         <xs:complexType>
             <xs:attribute name="name" type="xs:string" use="required" />
-            <xs:attribute name="position" type="xs:positiveInteger" />
+            <xs:attribute name="position" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>Field position in grid.
+                        SCIPIO: This is a STOCK attribute. Currently it is supported for "single" type forms, where it behaves like a real grid.
+                        WARN: Currently this should be avoided for "list"- and "multi"-type forms; behavior may be problematic.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="position-span" type="xs:integer">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>

@@ -44,10 +44,10 @@ import org.xml.sax.SAXException;
 /**
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  * <p>
- * @deprecated SCIPIO(2016-08-30): Considered deprecated and
- * will not be maintained. Use macro renderer instead.
+ * SCIPIO: NOTE: 2016-09-15: This now renders using the Macro Freemarker renderer.
+ * Use is still discouraged; the context populated by this wrapper
+ * may be incomplete. Other means are available to invoke menu renders from templates.
  */
-@Deprecated
 public class HtmlMenuWrapper {
 
     public static final String module = HtmlMenuWrapper.class.getName();
@@ -106,7 +106,12 @@ public class HtmlMenuWrapper {
     }
 
     public MenuStringRenderer getMenuRenderer() {
-        return new HtmlMenuRenderer(request, response);
+        // SCIPIO: 2016-09-15: use macro renderer, now available in request
+        MenuStringRenderer renderer = (MenuStringRenderer) request.getAttribute("menuStringRenderer");
+        if (renderer == null) { // fallback (shouldn't happen)
+            renderer = new HtmlMenuRenderer(request, response);
+        }
+        return renderer;
     }
 
     public String renderMenuString() throws IOException {

@@ -262,3 +262,25 @@ $sidebar-width: 200px;
     .top-bar, #content-main-section {margin-left:0px ;}
     } 
 }
+
+.side-nav {
+    /* Nested sidebar menu element */
+    .menu-type-sidebar.nested-sametype {
+        /* NOTE: this will clash with some of the above; best-effort */
+        /* FIXME?: the side-nav-nested was originally supposed to be applied here?... the nested ones...
+          it's what applied the margin-left... but now it's applied to something else... so here is the margin alone...
+        @include side-nav-nested; */
+        margin-left: rem-calc(12);
+        /* extras for metro */
+        padding-top: 0;
+        padding-bottom: 0;
+        /*
+        li {
+            &.active {
+                background: inherit;
+            }
+        }
+        */
+    }
+}
+

@@ -382,28 +382,81 @@ public class ModelMenuItem extends ModelWidget {
         this.styleModelMenu = overrideMenuItem.styleModelMenu;
         this.logicModelMenu = overrideMenuItem.logicModelMenu;
         
-        // SCIPIO: TODO?: Currently not trying to merge sub-menus.
-        // also, we MUST use the overriding menu item sub-menus only,
-        // because otherwise we'll have issues with styleModelMenu/logicModelMenu
-        // FIXME?: change the way styleModelMenu/logicModelMenu is read...?
-        this.subMenuMap = overrideMenuItem.subMenuMap;
-        this.subMenuList = overrideMenuItem.subMenuList;
+        if (overrideMenuItem.hasSubMenu()) {
+            this.subMenuMap = overrideMenuItem.subMenuMap;
+            this.subMenuList = overrideMenuItem.subMenuList;
+        } else {
+            this.subMenuMap = existingMenuItem.subMenuMap;
+            this.subMenuList = existingMenuItem.subMenuList;
+        }
 
-        this.actions = existingMenuItem.actions;
-        this.align = existingMenuItem.align;
-        this.alignStyle = existingMenuItem.alignStyle;
-        this.associatedContentId = existingMenuItem.associatedContentId;
-        this.cellWidth = existingMenuItem.cellWidth;
-        this.condition = existingMenuItem.condition;
-        this.disabledTitleStyle = existingMenuItem.disabledTitleStyle;
-        this.disableIfEmpty = existingMenuItem.disableIfEmpty;
-        this.hideIfSelected = existingMenuItem.hideIfSelected;
+        // SCIPIO: some of the assignments below have been changed to take
+        // into account overrideMenuItem.
+        
+        List<ModelAction> actions = new ArrayList<>();
+        actions.addAll(existingMenuItem.actions);
+        actions.addAll(overrideMenuItem.actions);
+        this.actions = Collections.unmodifiableList(actions);
+        if (UtilValidate.isNotEmpty(overrideMenuItem.align)) {
+            this.align = overrideMenuItem.align;
+        } else {
+            this.align = existingMenuItem.align;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.alignStyle)) {
+            this.alignStyle = overrideMenuItem.alignStyle;
+        } else {
+            this.alignStyle = existingMenuItem.alignStyle;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.associatedContentId.getOriginal())) {
+            this.associatedContentId = overrideMenuItem.associatedContentId;
+        } else {
+            this.associatedContentId = existingMenuItem.associatedContentId;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.cellWidth)) {
+            this.cellWidth = overrideMenuItem.cellWidth;
+        } else {
+            this.cellWidth = existingMenuItem.cellWidth;
+        }
+        if (overrideMenuItem.condition != null) {
+            this.condition = overrideMenuItem.condition;
+        } else {
+            this.condition = existingMenuItem.condition;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.disabledTitleStyle)) {
+            this.disabledTitleStyle = overrideMenuItem.disabledTitleStyle;
+        } else {
+            this.disabledTitleStyle = existingMenuItem.disabledTitleStyle;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.disableIfEmpty)) {
+            this.disableIfEmpty = overrideMenuItem.disableIfEmpty;
+        } else {
+            this.disableIfEmpty = existingMenuItem.disableIfEmpty;
+        }
+        if (overrideMenuItem.hideIfSelected != null) {
+            this.hideIfSelected = overrideMenuItem.hideIfSelected;
+        } else {
+            this.hideIfSelected = existingMenuItem.hideIfSelected;
+        }
         //this.menuItemList = existingMenuItem.menuItemList; // SCIPIO: moved to ModelSubMenu
-        this.parentMenuItem = existingMenuItem.parentMenuItem;
-        this.subMenu = existingMenuItem.subMenu;
-        this.tooltipStyle = existingMenuItem.tooltipStyle;
-        this.link = existingMenuItem.link;
-        this.overrideMode = existingMenuItem.overrideMode;
+        // SCIPIO: this should ALWAYS use the overriding parent item
+        //this.parentMenuItem = existingMenuItem.parentMenuItem;
+        this.parentMenuItem = overrideMenuItem.parentMenuItem;
+        if (UtilValidate.isNotEmpty(overrideMenuItem.subMenu)) {
+            this.subMenu = overrideMenuItem.subMenu;
+        } else {
+            this.subMenu = existingMenuItem.subMenu;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.tooltipStyle)) {
+            this.tooltipStyle = overrideMenuItem.tooltipStyle;
+        } else {
+            this.tooltipStyle = existingMenuItem.tooltipStyle;
+        }
+        if (overrideMenuItem.link != null) {
+            this.link = overrideMenuItem.link;
+        } else {
+            this.link = existingMenuItem.link;
+        }
+        this.overrideMode = overrideMenuItem.overrideMode;
     }
 
     @Override

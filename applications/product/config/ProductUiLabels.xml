@@ -15332,7 +15332,7 @@
     </property>
     <property key="ProductCreateNewProductPromo">
         <value xml:lang="de">Neue Produktaktion erstellen</value>
-        <value xml:lang="en">Create New ProductPromo</value>
+        <value xml:lang="en">Create New Product Promo</value>
         <value xml:lang="es">Crear Nueva Promoción de Productos</value>
         <value xml:lang="fr">Création d'une promotion</value>
         <value xml:lang="it">Creare nuova promozione</value>

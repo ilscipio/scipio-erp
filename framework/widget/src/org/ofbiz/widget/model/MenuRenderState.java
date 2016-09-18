@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.collections.CompositeReadOnlyMap;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 
 /**
@@ -15,14 +16,10 @@ import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
  * render, such as sub-menu depth.
  */
 @SuppressWarnings("serial")
-public class MenuRenderState implements Map<String, Object>, Serializable {
+public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implements Serializable {
     
     public static final String CONTEXT_KEY = "currentMenuRenderState";
     
-    private final Map<String, Object> internalMap = new HashMap<String, Object>();
-    // some operations will be read-only, to prevent issues
-    private final Map<String, Object> readOnlyMap = Collections.unmodifiableMap(internalMap);
-
     private final ModelMenu modelMenu;
     // NOTE: these are also stored in the map, may change the redundancy later
     private int currentDepth;
@@ -146,11 +143,7 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     
     public void setItemState(MenuItemState menuItemState) {
         this.itemState = menuItemState;
-        if (menuItemState != null) {
-            this.put("itemState", Collections.unmodifiableMap(menuItemState.toMap()));
-        } else {
-            this.put("itemState", null);
-        }
+        this.put("itemState", menuItemState);
     }
 
     /**
@@ -192,72 +185,32 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
     }
 
     @Override
-    public int size() {
-        return internalMap.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return internalMap.isEmpty();
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        return internalMap.containsKey(key);
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        return internalMap.containsValue(value);
-    }
-
-    @Override
-    public Object get(Object key) {
-        return internalMap.get(key);
-    }
-
-    @Override
     public Object put(String key, Object value) {
         return setArg(key, value);
     }
-
-    @Override
-    public Object remove(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
+    
     @Override
     public void putAll(Map<? extends String, ? extends Object> m) {
         setArgs(m);
     }
 
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<String> keySet() {
-        return readOnlyMap.keySet();
-    }
-
-    @Override
-    public Collection<Object> values() {
-        return readOnlyMap.values();
-    }
-
-    @Override
-    public Set<java.util.Map.Entry<String, Object>> entrySet() {
-        return readOnlyMap.entrySet();
-    }
-
-    public static class MenuItemState {
-        private final boolean selected;
-        private final boolean selectedAncestor;
+    public static class MenuItemState extends CompositeReadOnlyMap<String, Object> implements Serializable {
+        private boolean selected;
+        private boolean selectedAncestor;
+        private Boolean conditionResult;
         
         public MenuItemState(boolean selected, boolean selectedAncestor) {
+            this(selected, selectedAncestor, null);
+            this.conditionResult = null;
+        }
+        
+        public MenuItemState(boolean selected, boolean selectedAncestor, Boolean conditionResult) {
             this.selected = selected;
             this.selectedAncestor = selectedAncestor;
+            this.conditionResult = conditionResult;
+            this.internalMap.put("selected", selected);
+            this.internalMap.put("selectedAncestor", selectedAncestor);
+            this.internalMap.put("selectedOrAncestor", (selected||selectedAncestor));
         }
         
         public static MenuItemState fromCurrent(ModelMenuItem menuItem, Map<String, Object> context) {
@@ -283,12 +236,16 @@ public class MenuRenderState implements Map<String, Object>, Serializable {
         }
         
         public boolean isSelectedOrAncestor() {
-            return  (selected||selectedAncestor);
+            return (selected||selectedAncestor);
         }
-        
-        public Map<String, Object> toMap() {
-            return UtilMisc.toMap("selected", selected, "selectedAncestor", selectedAncestor,
-                    "selectedOrAncestor", isSelectedOrAncestor());
+
+        public Boolean getConditionResult() {
+            return conditionResult;
+        }
+
+        public void setConditionResult(Boolean conditionResult) {
+            this.conditionResult = conditionResult;
+            this.internalMap.put("conditionResult", conditionResult);
         }
     }
 

@@ -31792,4 +31792,29 @@
         <value xml:lang="de">Produktübersicht</value>
         <value xml:lang="en">Product Overview</value>
     </property>
+    <property key="ProductProductStorePromotions">
+        <value xml:lang="de">Shop Aktionen</value>
+        <value xml:lang="en">Product Store Promotions</value>
+        <value xml:lang="es">Promociones de la tienda de productos</value>
+        <value xml:lang="fr">Promotions du centre de profit</value>
+    </property>
+    <property key="ProductPricesHistory">
+        <value xml:lang="de">Preisentwicklung</value>
+        <value xml:lang="en">Price History</value>
+        <value xml:lang="fr">Historique des prix</value>
+    </property>
+    <!-- SCIPIO: this is a temporary workaround for some labels. It does not work well in all languages. -->
+    <property key="ProductProductQualifiedLabel">
+        <value xml:lang="de">Produkt ${qualifiedLabel}</value>
+        <value xml:lang="en">Product ${qualifiedLabel} </value>
+        <value xml:lang="fr">${qualifiedLabel} de l'article</value>
+    </property>
+    <property key="PageTitleEditProductStoreFacilities">
+        <value xml:lang="de">Shop Einrichtungen bearbeiten</value>
+        <value xml:lang="en">Edit Product Store Facilities</value>
+    </property>
+    <property key="ProductProductStoreFacilities">
+        <value xml:lang="de">Shop Einrichtungen</value>
+        <value xml:lang="en">Product Store Facilities</value>
+    </property>
 </resource>

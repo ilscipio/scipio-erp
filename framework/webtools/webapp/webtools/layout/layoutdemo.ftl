@@ -1491,5 +1491,9 @@
   -->
   </@section>
 
+  <@section title="Admin plain site-map/tree">
+    <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+  </@section>
+
 </@section>
 </#if>

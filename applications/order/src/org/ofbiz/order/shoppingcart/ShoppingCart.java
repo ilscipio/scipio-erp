@@ -469,11 +469,25 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public Timestamp getCartCreatedTime() {
         return this.cartCreatedTs;
     }
+    
+    /**
+     * SCIPIO: reads back the default supplier ID (currently in attributes)
+     */
+    public String getSupplierPartyId() {
+        return getAttribute("supplierPartyId");
+    }
+    
+    /**
+     * SCIPIO: set the default supplier ID (currently in attributes)
+     */
+    public void setSupplierPartyId(String supplierPartyId) {
+        setAttribute("supplierPartyId", supplierPartyId);
+    }
 
     public GenericValue getSupplierProduct(String productId, BigDecimal quantity, LocalDispatcher dispatcher) {
         GenericValue supplierProduct = null;
         Map<String, Object> params = UtilMisc.<String, Object>toMap("productId", productId,
-                                    "partyId", this.getPartyId(),
+                                    "partyId", this.getSupplierPartyId(), // SCIPIO: this was wrong: this.getPartyId()
                                     "currencyUomId", this.getCurrency(),
                                     "quantity", quantity);
         try {

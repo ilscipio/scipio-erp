@@ -92,9 +92,9 @@ under the License.
             </form>
               
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform">
-                <#if orderType=="PURCHASE_ORDER">                        
-                  <#if partyId?has_content>                                               
-                    <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
+                <#if orderType=="PURCHASE_ORDER">
+                  <#if supplierPartyId?has_content><#-- SCIPIO: use supplier not partyId: partId?has_content -->                                               
+                    <#assign fieldFormName="LookupSupplierProduct?partyId=${supplierPartyId}">
                   <#else>
                     <#assign fieldFormName="LookupSupplierProduct">
                   </#if>

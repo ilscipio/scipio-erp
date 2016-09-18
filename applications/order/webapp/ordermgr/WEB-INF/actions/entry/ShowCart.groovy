@@ -123,3 +123,8 @@ context.mktgPkgQOHMap = inventorySummary.mktgPkgQOHMap;
 // get purchase order item types
 purchaseOrderItemTypeList = from("OrderItemType").where("parentTypeId", "PURCHASE_SPECIFIC").cache(true).queryList();
 context.purchaseOrderItemTypeList = purchaseOrderItemTypeList;
+
+// SCIPIO: supplierPartyId
+supplierPartyId = shoppingCart.getSupplierPartyId();
+context.supplierPartyId = supplierPartyId;
+

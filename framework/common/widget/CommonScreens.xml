@@ -1274,4 +1274,58 @@ under the License.
         </section>
     </screen>
     
+    <!-- SideBar menu factored implementation 
+        Each component should wrap this implementation in its CommonScreens.xml to
+        provide a sideBarMenu.xxx location and configuration.
+        The individual screens simply need to pass/set:
+        activeSubMenu (name of sub-menu in advanced menu, or the prefix in a XxxSideBar fallback menu name)
+        activeSubMenuItem.
+        This widget must always be called with share-scope="false" (which is the widget-screen.xsd default). -->
+    <screen name="SideBarMenu">
+        <section>
+            <actions>
+                <!-- advanced menu location -->
+                <set field="advLoc" from-field="sideBarMenu.advLocation" />
+                <set field="advName" from-field="sideBarMenu.advName" />
+                <set field="advSubFilter" from-field="sideBarMenu.advSubMenuFilter" default-value="current" />
+                <set field="advMaxDepth" from-field="sideBarMenu.advMaxDepth" default-value="" />
+                
+                <!-- The default selected item field names are appropriate for menus derived from 
+                    CommonEmptyAppBarDashboardMenu/CommonAppBarDashboardMenu in component://common/widget/CommonMenus.xml -->
+                <set field="advSelSubField" from-field="sideBarMenu.advSelMenuFieldName" default-value="activeMainSubMenu" />
+                <set field="advSelItemField" from-field="sideBarMenu.advSelMenuItemFieldName" default-value="activeMainMenuItem" />
+                
+                <!-- suffix is appended to activeSubMenu as appropriate (always appended for simple, appended
+                    for complex if useAdvSuffix set) -->
+                <set field="defMenuNameSuffix" from-field="sideBarMenu.defMenuNameSuffix" default-value="SideBar" />
+                <!-- set to false if you used explicit names in menu defs, such as: 
+                       <sub-menu name="Server" include="ServerSideBar"/> 
+                     set to true if you used implicit or reused full names, such as: 
+                       <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>  -->
+                <set field="useAdvSuffix" from-field="sideBarMenu.useAdvSuffix" type="Boolean" default-value="false" />
+
+                <!-- sideBarMenu.defaultLocation is for handling legacy/non-complex menus -->
+                <set field="defLoc" from-field="sideBarMenu.defLocation" default-value="component://common/widget/CommonMenus.xml" />
+                
+                <!-- for testing -->
+                <set field="forceSimple" from-field="sideBarMenu.forceSimple" type="Boolean" default-value="false" />
+
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare field="useAdvMenu" operator="equals" type="Boolean" value="true" />
+                    </condition>
+                    <widgets>
+                        <include-menu location="${advLoc}" name="${advName}" sub-menus="${advSubFilter}" max-depth="${advMaxDepth}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <include-menu location="${simpleLoc}" name="${simpleName}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

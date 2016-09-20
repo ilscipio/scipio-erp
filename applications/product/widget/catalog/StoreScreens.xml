@@ -316,7 +316,15 @@ under the License.
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListProductStorePaySetup}">
-                            <include-form name="ListProductStorePaymentSettings" location="component://product/widget/catalog/ProductStoreForms.xml"/>
+                            <section>
+                                <actions>
+                                    <!-- SCIPIO: hack to trigger the "no records found" message -->
+                                    <set field="productStorePaymentSettings" type="NewList" />
+                                </actions>
+                                <widgets>
+                                    <include-form name="ListProductStorePaymentSettings" location="component://product/widget/catalog/ProductStoreForms.xml"/>
+                                </widgets>
+                            </section>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditProductStorePaySetup}">
                             <section>

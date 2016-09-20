@@ -1039,9 +1039,9 @@
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListProductStorePaymentSettings" type="list" odd-row-style="alternate-row" paginate-target="EditProductStorePaySetup"> <!-- orig: default-table-style=-style="basic-table" -->
+    <form name="ListProductStorePaymentSettings" type="list" list-name="productStorePaymentSettings" odd-row-style="alternate-row" paginate-target="EditProductStorePaySetup"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
-            <entity-and entity-name="ProductStorePaymentSetting">
+            <entity-and entity-name="ProductStorePaymentSetting" list="productStorePaymentSettings"><!-- SCIPIO: added list -->
                 <field-map field-name="productStoreId"/>
                 <order-by field-name="paymentMethodTypeId"/>
                 <order-by field-name="paymentServiceTypeEnumId"/>
@@ -1063,24 +1063,24 @@
         </field>
         <field name="paymentPropertiesPath" title="${uiLabelMap.ProductPaymentProps}"><display/></field>
         <field name="applyToAllProducts" title="${uiLabelMap.ProductApplyToAll}"><display/></field>
-        <field name="editAction" title=" " use-when="${bsh:security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_UPDATE&quot;, session);}" widget-style="${styles.link_nav} ${styles.action_update}">
+        <field name="editAction" title=" " use-when="security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_UPDATE&quot;, session)" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditProductStorePaySetup" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="paymentMethodTypeId"/>
                 <parameter param-name="paymentServiceTypeEnumId"/>
             </hyperlink>
         </field>
-        <field name="editAction" title=" " use-when="${bsh:!security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_UPDATE&quot;, session);}">
+        <field name="editAction" title=" " use-when="!security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_UPDATE&quot;, session)">
             <display/>
         </field>
-        <field name="deleteAction" title=" " use-when="${bsh:security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_DELETE&quot;, session);}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " use-when="security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_DELETE&quot;, session)" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="storeRemovePaySetting" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="paymentMethodTypeId"/>
                 <parameter param-name="paymentServiceTypeEnumId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " use-when="${bsh:!security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_DELETE&quot;, session);}">
+        <field name="deleteAction" title=" " use-when="!security.hasEntityPermission(&quot;CATALOG&quot;, &quot;_DELETE&quot;, session)">
             <display/>
         </field>
     </form>

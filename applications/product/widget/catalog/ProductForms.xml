@@ -2794,7 +2794,7 @@
         </field>
         <field name="organizationPartyId" title="${uiLabelMap.CommonOrganisation}">
             <display
-                description="${bsh: org.ofbiz.party.party.PartyHelper.getPartyName(delegator, organizationPartyId, true);} [${organizationPartyId}]" />
+                description="${groovy: org.ofbiz.party.party.PartyHelper.getPartyName(delegator, organizationPartyId, true);} [${organizationPartyId}]" />
         </field>
         <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">

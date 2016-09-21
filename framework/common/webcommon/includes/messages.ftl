@@ -18,6 +18,7 @@ under the License.
 -->
 <#--<#include rawString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
 
+<#assign contentMsgContentClass = "content-message-content"><#-- SCIPIO: especially used by JS, cannot put in global styles unless do same in JS -->
 <div id="content-messages"><#-- SCIPIO: need container always, to locate this via js -->
 <#escape x as x?html>
   <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
@@ -45,7 +46,7 @@ under the License.
   <#-- display the error messages -->
   <#if (errorMessage?has_content || errorMessageList?has_content)>
         <div id="main-${styles.alert_wrap!}">
-            <@alert type="alert">
+            <@alert type="error" class=("+"+contentMsgContentClass)>
       <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
       <#if errorMessage?has_content>
                         ${rawString(errorMessage)}
@@ -63,10 +64,15 @@ under the License.
     </div>
   </#if>
   </#if>
+
+  <#assign hasInfoMsg = (eventMessage?has_content || eventMessageList?has_content) || infoMessage?has_content>
+  <#if hasInfoMsg>
+    <div id="main-info-box">
+  </#if>
+
   <#-- display the event messages -->
   <#if (eventMessage?has_content || eventMessageList?has_content)>
-    <div id="main-info-box">
-        <@alert type="info">
+        <@alert type="info" class=("+"+contentMsgContentClass)>
       <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
       <#if eventMessage?has_content>
                         ${rawString(eventMessage)}
@@ -79,17 +85,31 @@ under the License.
                         </ol>
       </#if>
         </@alert>
-    </div>
   </#if>
 
-    
   <#-- Scipio: only if it is gotten from context and needs to include explicit content only -->
   <#if infoMessage?has_content>
-    <div id="main-info-box">
-        <@alert type="info">
+        <@alert type="info" class=("+"+contentMsgContentClass)>
             <#noescape>${rawString(infoMessage)}</#noescape>
         </@alert>
+  </#if>
+
+  <#if hasInfoMsg>
     </div>
   </#if>
 </#escape>
+
+</div>
+
+<#-- SCIPIO: this alert TEMPLATES for JS. JS can copy their inner markup, insert a message and add elsewhere. -->
+<div id="content-messages-templates" style="display:none;">
+  <div id="content-messages-error-template" content-messages-type-wrapper-id="main-${styles.alert_wrap!}">
+    <@alert type="error" class=("+"+contentMsgContentClass)></@alert>
+  </div>
+  <div id="content-messages-warning-template" content-messages-type-wrapper-id="main-${styles.alert_wrap!}">
+    <@alert type="warning" class=("+"+contentMsgContentClass)></@alert>
+  </div>
+  <div id="content-messages-info-template" content-messages-type-wrapper-id="main-info-box">
+    <@alert type="info" class=("+"+contentMsgContentClass)></@alert>
+  </div>
 </div>

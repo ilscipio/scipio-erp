@@ -142,19 +142,39 @@ under the License.
         <field name="sequenceNum" ><display /></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time" /></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time" /></field>
+        <!-- SCIPIO: forget ajax here, does nothing good
         <field name="submitAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink target="javascript:ajaxUpdateArea('ProductStoreFacilityEditArea', 'editProductStoreFacility', 'productStoreId=${productStoreId}&amp;facilityId=${facilityId}&amp;fromDate=${fromDate}');" 
-                target-type="plain" description="${uiLabelMap.CommonEdit}"/><!-- SCIPIO: image was removed... image-location="/images/mini-edit.png" image-title="${uiLabelMap.CommonEdit}" -->
+                target-type="plain" description="${uiLabelMap.CommonEdit}"/><!- SCIPIO: image was removed... image-location="/images/mini-edit.png" image-title="${uiLabelMap.CommonEdit}" ->
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="javascript:ajaxUpdateArea('PP_ProductStoreFacilityPrdStoreFacilityMgmt00001', 'deleteProductStoreFacility', 'productStoreId=${productStoreId}&amp;facilityId=${facilityId}&amp;fromDate=${fromDate}');"
-               target-type="plain" request-confirmation="true" description="${uiLabelMap.CommonRemove}"><!-- SCIPIO: image was removed... image-location="/images/mini-trash.png" image-title="${uiLabelMap.CommonRemove}" -->
+               target-type="plain" request-confirmation="true" description="${uiLabelMap.CommonRemove}"><!- SCIPIO: image was removed... image-location="/images/mini-trash.png" image-title="${uiLabelMap.CommonRemove}" ->
+            </hyperlink>
+        </field>
+        -->
+        <field name="submitAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
+            <hyperlink target="ProductStoreFacilities" description="${uiLabelMap.CommonEdit}">
+                <parameter param-name="productStoreId" from-field="productStoreId"/>
+                <parameter param-name="facilityId" from-field="facilityId"/>
+                <parameter param-name="fromDate" from-field="fromDate"/>
+            </hyperlink>
+        </field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="deleteProductStoreFacility" description="${uiLabelMap.CommonRemove}" request-confirmation="true" link-type="hidden-form">
+                <parameter param-name="productStoreId" from-field="productStoreId"/>
+                <parameter param-name="facilityId" from-field="facilityId"/>
+                <parameter param-name="fromDate" from-field="fromDate"/>
             </hyperlink>
         </field>
      </form>
 
      <form name="EditProductStoreFacility" type="single" focus-field-name="facilityId"
-               target="addProductStoreFacility" title="" default-map-name="productStoreFacility" >
+               target="addProductStoreFacility" title="" default-map-name="productStoreFacility">
+        <actions>
+            <!-- SCIPIO: prevent us use request parameters in this case -->
+            <set field="useRequestParameters" type="Boolean" value="false"/>
+        </actions>
         <alt-target target="updateProductStoreFacility" use-when="productStoreFacility != null"/>
 
         <field name="productStoreId"><hidden /></field>
@@ -165,13 +185,15 @@ under the License.
             </drop-down>
         </field>
         <field name="sequenceNum" ><text size="3"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="productStoreFacility != null" required-field="true"><display type="date-time"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="productStoreFacility == null" required-field="true"><date-time type="date" input-method="time-dropdown"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date" input-method="time-dropdown"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="productStoreFacility != null" required-field="true"><display type="date-time" also-hidden="true"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="productStoreFacility == null" required-field="true"><date-time /></field><!-- SCIPIO: this only causes problems: type="date" input-method="time-dropdown" -->
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time /></field><!-- SCIPIO: this only causes problems: type="date" input-method="time-dropdown" -->
         <field name="submitAction" title="${groovy: productStoreFacility == null ? uiLabelMap.CommonAdd : uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
+        <!-- SCIPIO: forget ajax here, does nothing good
         <on-event-update-area event-type="submit" area-id="PP_ProductStoreFacilityPrdStoreFacilityMgmt00001" area-target="ListProductStoreFacilityFormOnly?portalPortletId=PrdStoreFacilityMgmt&amp;productStoreId=${parameters.productStoreId}"/>
+         -->
      </form>
 
      <!-- ProductStoreGroup Forms -->

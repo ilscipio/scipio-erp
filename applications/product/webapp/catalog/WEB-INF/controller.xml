@@ -2401,20 +2401,32 @@ under the License.
     <request-map uri="addProductStoreFacility">
         <security https="true" auth="true"/>
         <event type="service" invoke="createProductStoreFacility"/>
+        <!-- SCIPIO: no longer ajax
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
+        -->
+        <response name="success" type="view" value="ProductStoreFacilities"/>
+        <response name="error" type="view" value="ProductStoreFacilities"/>
     </request-map>
     <request-map uri="updateProductStoreFacility">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateProductStoreFacility"/>
+        <!-- SCIPIO: no longer ajax
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
+        -->
+        <response name="success" type="view" value="ProductStoreFacilities"/>
+        <response name="error" type="view" value="ProductStoreFacilities"/>
     </request-map>
     <request-map uri="deleteProductStoreFacility">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteProductStoreFacility"/>
+        <!-- SCIPIO: no longer ajax
         <response name="success" type="view" value="ListProductStoreFacility"/>
         <response name="error" type="view" value="ListProductStoreFacility"/>
+        -->
+        <response name="success" type="view" value="ProductStoreFacilities"/>
+        <response name="error" type="view" value="ProductStoreFacilities"/>
     </request-map>
 
     <!-- ================ Keyword Thesaurus Requests ================= -->

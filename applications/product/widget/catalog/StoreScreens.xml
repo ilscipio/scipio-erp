@@ -561,7 +561,32 @@ under the License.
                         <section>
                             <condition><not><if-empty field="productStore"/></not></condition>
                             <widgets>
-                                <include-portal-page id="ProductStoreFacility"/>
+                                <!-- SCIPIO: this does AJAX stuff that adds NOTHING over standard screens
+                                <include-portal-page id="ProductStoreFacility"/>-->
+                                <screenlet title="${uiLabelMap.ProductStoreFacilityAssocList}" navigation-menu-name="ProductStoreFacility">
+                                    <include-menu name="ProductStoreFacility" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                    <include-form name="ListProductStoreFacility" location="component://product/widget/catalog/StoreForms.xml"/>
+                                </screenlet>
+                                <section share-scope="false">
+                                    <condition>
+                                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                                    </condition>
+                                    <actions>
+                                        <set field="facilityId" from-field="parameters.facilityId"/>
+                                        <set field="fromDate" from-field="parameters.fromDate"/>
+                                        <!-- SCIPIO: if successful update, sabotage the lookup so get add form back again.  -->
+                                        <set field="isSuccessfulUpdate" type="Boolean" value="${groovy: (context.requestMethod=='POST' &amp;&amp; !context.isError)}"/>
+                                        <set field="facilityId" value="${groovy: (isSuccessfulUpdate ? '' : context.facilityId)}"/>
+                                        <set field="fromDate" value="${groovy: (isSuccessfulUpdate ? '' : context.fromDate)}"/>
+                                        <entity-one entity-name="ProductStoreFacility" value-field="productStoreFacility"/>
+                                        <set field="sectionTitleProp" value="${groovy: context.productStoreFacility ? 'ProductEditFacility' : 'ProductAddFacility'}"/>
+                                    </actions>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap[sectionTitleProp]}">
+                                            <include-form name="EditProductStoreFacility" location="component://product/widget/catalog/StoreForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -593,7 +618,7 @@ under the License.
     <screen name="EditProductStoreFacility">
         <section>
             <condition>
-                <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                <if-has-permission permission="CATALOG" action="_UPDATE"/>
             </condition>
             <actions>
                 <entity-one entity-name="ProductStoreFacility" value-field="productStoreFacility"/>

@@ -429,10 +429,12 @@ under the License.
     </menu>
     
     <menu name="ProductStoreFacility" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: got rid of ajax
         <menu-item name="AddProductStoreFacility" title="${uiLabelMap.ProductAddFacility}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="javascript:ajaxUpdateArea('ProductStoreFacilityEditArea', 'editProductStoreFacility', 'productStoreId=${parameters.productStoreId}');"
                   url-mode="plain"/>
         </menu-item>
+        -->
     </menu>
 
     <menu name="PriceRulesButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

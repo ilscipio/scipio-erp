@@ -304,6 +304,19 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#--don't set this stuff here anymore, because fdatepicker has bugs with this and also it's better to factor out the fdatepicker-specific stuff into the script macro:
             data-date="" data-date-format="${dateFormatPicker}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${inputName}"</#if><#if inputId?has_content> id="${inputId}"</#if><#if value?has_content> value="${value}"</#if> />
+      <#-- TODO?: we don't handle this case yet - only show date (renderer already passed dateType="date" for this). but we must submit zero values for the event to pass. -->
+      <#if timeDropdown == "time-dropdown">
+        <#if timeHourName?has_content>
+          <input type="hidden" name="${timeHourName}" value="0"/>
+        </#if>
+        <#if timeMinutesName?has_content>
+          <input type="hidden" name="${timeMinutesName}" value="0"/>
+        </#if>
+      </#if>
+      <#-- NOTE: this is still needed in general (but mostly for timeDropdown). only one value supported by events currenlty (Timestamp). -->
+      <#if compositeType?has_content>
+        <input type="hidden" name="${compositeType}" value="Timestamp"/>
+      </#if>
     </div>
   <#if postfix>
     <div class="${styles.grid_small!}${postfixColumns} ${styles.grid_cell!}">
@@ -311,6 +324,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </div>
   </#if>
   </div>
+  
   <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName 
     dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
 </#macro>

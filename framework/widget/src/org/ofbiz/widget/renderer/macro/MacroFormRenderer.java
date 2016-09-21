@@ -671,12 +671,21 @@ public final class MacroFormRenderer implements FormStringRenderer {
             isTwelveHour = "12".equals(dateTimeField.getClock());
             // set the Calendar to the default time of the form or now()
             Calendar cal = null;
-            try {
-                Timestamp defaultTimestamp = Timestamp.valueOf(contextValue);
-                cal = Calendar.getInstance();
-                cal.setTime(defaultTimestamp);
-            } catch (IllegalArgumentException e) {
-                Debug.logWarning("Form widget field [" + paramName + "] with input-method=\"time-dropdown\" was not able to understand the default time [" + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), module);
+            // SCIPIO: WORKAROUND: the default date may be in short date format; extend if so
+            String timeDropDownValue = contextValue;
+            if (timeDropDownValue != null && timeDropDownValue.length() == 10) {
+                timeDropDownValue += " 00:00:00.000";
+            }
+            // SCIPIO: don't print warn if empty
+            if (UtilValidate.isNotEmpty(timeDropDownValue)){
+                try {
+                    Timestamp defaultTimestamp = Timestamp.valueOf(timeDropDownValue);
+                    cal = Calendar.getInstance();
+                    cal.setTime(defaultTimestamp);
+                } catch (IllegalArgumentException e) {
+                    Debug.logWarning("Form widget field [" + paramName + "] with input-method=\"time-dropdown\" was not able to understand the default time [" + 
+                            timeDropDownValue + "]. The parsing error was: " + e.getMessage(), module);
+                }
             }
             timeHourName = UtilHttp.makeCompositeParam(paramName, "hour");
             if (cal != null) {

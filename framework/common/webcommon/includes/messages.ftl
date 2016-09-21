@@ -18,6 +18,7 @@ under the License.
 -->
 <#--<#include rawString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
 
+<div id="content-messages"><#-- SCIPIO: need container always, to locate this via js -->
 <#escape x as x?html>
   <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
   <#if requestAttributes.eventMessageList?has_content><#assign eventMessageList=requestAttributes.eventMessageList></#if>
@@ -91,3 +92,4 @@ under the License.
     </div>
   </#if>
 </#escape>
+</div>

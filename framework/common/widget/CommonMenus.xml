@@ -101,9 +101,8 @@ Common menus NOTES:
     <menu name="CommonTabBarMenu" extends="CommonEmptyTabBarMenu"/>
     
     <!-- SCIPIO: New menu for sub-tar bars. 
-        NOTE: I'm not sure if activeSubMenuItem is appropriate in all cases, but individual menus can always override... -->
-    <menu name="CommonEmptySubTabBarMenu" type="simple" menu-container-style="+menu-type-tab" 
-        selected-menuitem-context-field-name="activeSubMenuItem"/>
+        NOTE: 2016-09-22: selected-menuitem-context-field-name has been REMOVED from this menu by default because it rarely makes sense in scipio provided screens anymore -->
+    <menu name="CommonEmptySubTabBarMenu" type="simple" menu-container-style="+menu-type-tab" />
     <menu name="CommonSubTabBarMenu" extends="CommonEmptySubTabBarMenu"/>
     
     <!-- SCIPIO: Original stock Ofbiz base button bar menu, modified. 

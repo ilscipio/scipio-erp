@@ -3444,8 +3444,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 modelForm.getSubmitHiddenFormName(Integer.toString(getNextRenderSubmitFormIdNum(writer, context, modelForm)))); 
         
         StringWriter targetUrlSw = new StringWriter();
-        WidgetWorker.buildHyperlinkUrl(targetUrlSw, modelForm.getTarget(context, modelForm.getTargetType()), 
+        String target = modelForm.getTarget(context, modelForm.getTargetType());
+        if (UtilValidate.isNotEmpty(target)) {
+            WidgetWorker.buildHyperlinkUrl(targetUrlSw, target, 
                 modelForm.getTargetType(), null, null, null, null, null, request, response, context);
+        }
         String targetUrl = targetUrlSw.toString();
         
         List<Map<String, Object>> submitEntries = new ArrayList<>();

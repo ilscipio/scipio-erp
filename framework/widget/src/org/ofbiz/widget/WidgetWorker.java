@@ -72,7 +72,7 @@ public final class WidgetWorker {
             if (request != null && response != null) {
                 ServletContext servletContext = request.getSession().getServletContext();
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                externalWriter.append(rh.makeLink(request, response, "/" + localRequestName, fullPath, secure, encode));
+                externalWriter.append(rh.makeLink(request, response, localRequestName, fullPath, secure, encode)); // SCIPIO: doesn't need slash, only makes less clear errors:  "/" + localRequestName
             } else if (prefix != null) {
                 externalWriter.append(prefix);
                 externalWriter.append(localRequestName);

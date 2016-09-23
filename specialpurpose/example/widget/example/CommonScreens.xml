@@ -161,7 +161,7 @@ under the License.
                 <entity-one entity-name="ExampleFeature" value-field="exampleFeature"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${mainDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.exampleFeature}" override-by-auto-include="true">
                         <section>
                             <condition>

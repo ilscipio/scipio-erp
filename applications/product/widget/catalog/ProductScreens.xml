@@ -21,6 +21,16 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     
+    <!-- Custom apps can use their own Product Decorator by specifying its
+         location in parameters.productDecoratorLocation -->
+    <screen name="CommonProductDecorator">
+        <section>
+            <widgets>   
+                <include-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}"/>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="FindProduct">
         <section>
             <actions>
@@ -67,7 +77,8 @@ under the License.
                 <entity-one entity-name="Product" value-field="lookupProduct"/>
                 <set field="product" from-field="lookupProduct" global="true"/>
                 <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
-                <set field="labelTitleProperty" value="${groovy: (context.product || (parameters.productId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductProduct' : 'ProductNewProduct' }"/>
+                <set field="isCreateProduct" type="Boolean" value="${groovy: !(context.product || (parameters.productId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateProduct ? 'ProductNewProduct' : 'ProductProduct'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -840,7 +851,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFeatures"/>
-                <set field="activeMainMenuItem" value="product"/>
                 <set field="activeSubMenuItem" value="EditProductFeatures"/>
                 <set field="labelTitleProperty" value="ProductFeatures"/>
 
@@ -1133,6 +1143,14 @@ under the License.
     </screen>
     <screen name="CreateVirtualWithVariantsForm">
         <section>
+            <actions>
+                <set field="activeSubMenuItem" value="EditProduct"/>
+                <!--<set field="titleProperty" value="PageTitleEditProduct"/>-->
+                <set field="titleProperty" value="PageTitleCreateVirtualWithVariants"/>
+                <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
+                <!--<set field="labelTitleProperty" value="ProductProduct"/>-->
+                <set field="labelTitleProperty" value="PageTitleCreateVirtualWithVariants"/>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
@@ -1150,11 +1168,11 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.PageTitleCreateVirtualWithVariants}">
-                    <platform-specific>
-                        <html><html-template location="component://product/webapp/catalog/product/CreateVirtualWithVariantsForm.ftl"/></html>
-                    </platform-specific>
-                </screenlet>
+                <!--<screenlet title="${uiLabelMap.PageTitleCreateVirtualWithVariants}">-->
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/catalog/product/CreateVirtualWithVariantsForm.ftl"/></html>
+                </platform-specific>
+                <!--</screenlet>-->
             </widgets>
         </section>
     </screen>
@@ -1290,7 +1308,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductParties"/>
-                <set field="activeMainMenuItem" value="product"/>
                 <set field="activeSubMenuItem" value="EditProductParties"/>
                 <set field="labelTitleProperty" value="PartyParties"/>
 

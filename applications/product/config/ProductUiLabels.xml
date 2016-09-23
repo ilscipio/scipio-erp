@@ -31935,6 +31935,57 @@
         <value xml:lang="en">This page allows you to create, modify and delete generic, low-level Product Attributes, similar to extending the Product entity.
             These only appear in shop and other applications when custom coded, or when the attribute is already recognized by name by a certain application function.</value>
     </property>
+    <property key="ProductNewFeature">
+        <value xml:lang="de">Neuer Funktion</value>
+        <value xml:lang="en">New Feature</value>
+        <value xml:lang="fr">Nouvelle caractéristique</value>
+    </property>
+    <property key="ProductFeatureInterActions">
+        <value xml:lang="de">Merkmal Interaktionen</value>
+        <value xml:lang="en">Feature InterActions</value>
+        <value xml:lang="fr">Interactions entre caractéristiques</value>
+    </property>
+    <property key="ProductFeatureCategories">
+        <value xml:lang="de">Merkmal Kategorien</value>
+        <value xml:lang="en">Feature Categories</value>
+        <value xml:lang="fr">Catégories de caractéristiques</value>
+    </property>
+    <property key="ProductFeatureCategoryFeatures">
+        <value xml:lang="de">Merkmalkategorie Merkmale</value>
+        <value xml:lang="en">Feature Category Features</value>
+        <value xml:lang="fr">Modification des caractéristiques de la catégorie</value>
+    </property>
+    <property key="ProductFeatureGroups">
+        <value xml:lang="de">Merkmalgruppen</value>
+        <value xml:lang="en">Feature Groups</value>
+        <value xml:lang="es">Grupos de características</value>
+        <value xml:lang="fr">Groupes de caractériques</value>
+    </property>
+    <property key="ProductAddFeatureInBulk">
+        <value xml:lang="de">Massenhinzufügen von Merkmalen</value>
+        <value xml:lang="en">Adding Features in Bulk</value>
+        <value xml:lang="es">Añadir Características en pila</value>
+        <value xml:lang="fr">Ajout en masse de caractériques</value>
+    </property>
+    <property key="ProductFeatureInterAction">
+        <value xml:lang="de">Merkmalsinteraktion</value>
+        <value xml:lang="en">Feature InterAction</value>
+        <value xml:lang="fr">Interaction entre caractéristiques</value>
+        <value xml:lang="it">Interazione tra caratteristiche</value>
+    </property>
+    <property key="ProductConfigItemContent">
+        <value xml:lang="de">Konfigurationsposition Inhalt</value>
+        <value xml:lang="en">Config Item Content</value>
+        <value xml:lang="es">Contenido de ítem de configuración</value>
+        <value xml:lang="fr">Contenu de l'option de configuration</value>
+    </property>
+    <property key="ProductNewConfigItem">
+        <value xml:lang="de">Neuen Konfigurationsposition</value>
+        <value xml:lang="en">New Config Item</value>
+        <value xml:lang="es">Nuevo Configuración</value>
+        <value xml:lang="fr">Nouvel element de configuration</value>
+        <value xml:lang="it">Nuovo elemento di configurazione</value>
+    </property>
     <property key="FacilityShipmentItems">
         <value xml:lang="de">Lieferpositionen</value>
         <value xml:lang="en">Shipment Items</value>

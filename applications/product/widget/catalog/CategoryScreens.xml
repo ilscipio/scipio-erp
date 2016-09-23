@@ -24,7 +24,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCategory"/>
-                <set field="activeMainMenuItem" value="categories"/>
                 <set field="activeSubMenuItem" value="FindCategory"/>
                 <set field="labelTitleProperty" value="PageTitleFindCategory"/><!-- ProductCategory -->
             </actions>
@@ -52,7 +51,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="activeMainMenuItem" value="categories"/>
                 <set field="activeSubMenuItem" value="EditCategory"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
@@ -60,7 +58,9 @@ under the License.
                     <order-by field-name="description"/>
                 </entity-condition>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategory.groovy"/>
-                <set field="labelTitleProperty" value="${groovy: (context.productCategory || (parameters.productCategoryId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductCategory' : 'ProductNewCategory'}"/>
+
+                <set field="isCreateCategory" type="Boolean" value="${groovy: !(context.productCategory || (parameters.productCategoryId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateCategory ? 'ProductNewCategory' : 'ProductCategory'}"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
@@ -95,7 +95,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
-                <set field="activeMainMenuItem" value="categories"/>
                 <set field="activeSubMenuItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -473,7 +472,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryFeatureCategories"/>
-                <set field="activeMainMenuItem" value="categories"/>
                 <set field="activeSubMenuItem" value="EditCategoryFeatureCats"/>
                 <set field="labelTitleProperty" value="ProductFeatureCategoriesGroups"/>
 
@@ -577,7 +575,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateProductCategoryStart"/>
-                <set field="activeMainMenuItem" value="categories"/>
                 <set field="labelTitleProperty" value="ProductCreateProductInCategory"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>

@@ -51,7 +51,8 @@ under the License.
                 <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <!-- orig: ProductProductStore -->
-                <set field="labelTitleProperty" value="${groovy: (context.productStore || (parameters.productStoreId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductStore' : 'ProductNewProductStore'}"/>
+                <set field="isCreateProductStore" type="Boolean" value="${groovy: !(context.productStore || (parameters.productStoreId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateProductStore ? 'ProductNewProductStore' : 'ProductStore'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
@@ -547,7 +548,6 @@ under the License.
                 <entity-one entity-name="ProductStore" value-field="productStore"/>
                 <set field="activeSubMenuItem" value="EditProductStoreFacilities"/>
                 <set field="labelTitleProperty" value="ProductProductStoreFacilities"/><!-- ProductFacility -->
-                <set field="activeMainMenuItem" value="store"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">

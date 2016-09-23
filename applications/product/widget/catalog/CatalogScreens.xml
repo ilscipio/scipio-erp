@@ -56,7 +56,8 @@ under the License.
                 <set field="activeSubMenuItem" value="ProductCatalog"/>
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>                
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
-                <set field="labelTitleProperty" value="${groovy: (context.prodCatalog || (parameters.prodCatalogId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductCatalog' : 'ProductNewCatalog'}"/>
+                <set field="isCreateProdCatalog" type="Boolean" value="${groovy: !(context.prodCatalog || (parameters.prodCatalogId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateProdCatalog ? 'ProductNewCatalog' : 'ProductCatalog'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">

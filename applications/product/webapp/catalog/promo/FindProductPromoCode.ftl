@@ -87,8 +87,9 @@ under the License.
         <#else>
             <#assign targetUrl = makeOfbizUrl("EditProductPromoCode")>
         </#if>
+      <#if (isCreateProductPromoCode!false) != true>
         <@menuitem type="link" href=targetUrl text="${uiLabelMap.ProductNewPromotionCode}" class="+${styles.action_nav!} ${styles.action_add!}"/>
-
+      </#if>
     </@menu>
 </#macro> 
 <#--

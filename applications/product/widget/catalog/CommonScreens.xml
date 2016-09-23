@@ -1329,6 +1329,10 @@ under the License.
                 <set field="subscriptionId" from-field="parameters.subscriptionId"/>
                 <entity-one entity-name="Subscription" value-field="subscription"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.subscriptionId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -1352,6 +1356,7 @@ under the License.
                                         <container style="button-bar">
                                             <link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
+                                        <!--
                                         <section>
                                             <condition>
                                                 <not><if-empty field="title"/></not>
@@ -1362,7 +1367,7 @@ under the License.
                                             <fail-widgets>
                                                 <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${subscription.description} [${subscriptionId}]</label>
                                             </fail-widgets>
-                                        </section>
+                                        </section>  -->
                                     </widgets>
                                     <fail-widgets>
                                         <section>
@@ -1394,6 +1399,10 @@ under the License.
                 <set field="subscriptionResourceId" from-field="parameters.subscriptionResourceId"/>
                 <entity-one entity-name="SubscriptionResource" value-field="subscriptionResource"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.subscriptionResourceId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -1420,6 +1429,7 @@ under the License.
                                                 <parameter param-name="subscriptionResourceId"/>
                                             </link>
                                         </container>
+                                        <!--
                                         <section>
                                             <condition>
                                                 <not><if-empty field="title"/></not>
@@ -1431,6 +1441,7 @@ under the License.
                                                 <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${subscriptionResource.description}" [${subscriptionResourceId}]</label>
                                             </fail-widgets>
                                         </section>
+                                        -->
                                     </widgets>
                                     <fail-widgets>
                                         <section>

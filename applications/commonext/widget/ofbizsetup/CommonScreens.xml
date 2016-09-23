@@ -80,7 +80,7 @@
     <screen name="CommonSetupDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://commonext/widget/ofbizsetup/Menus.xml#SetupSub" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://commonext/widget/ofbizsetup/Menus.xml#Setup" />
                 <entity-condition entity-name="PartyRole" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
@@ -176,7 +176,7 @@
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>

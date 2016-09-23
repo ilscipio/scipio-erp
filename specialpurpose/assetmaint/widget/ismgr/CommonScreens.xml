@@ -68,12 +68,17 @@ under the License.
     <screen name="CommonFixedAssetDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="ComputerHardware"/>
+                <property-map resource="IsMgrUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ComputerHardware"/>
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${fixedAssetId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
+                        <section share-scope="false">
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
@@ -84,23 +89,26 @@ under the License.
                             <widgets>
                                 <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
-                        </section>
-                        <section>
-                            <actions>
-                                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#FixedAssetSubSideBar" />
-                            </actions>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
+                            <fail-widgets>
+                                <section share-scope="false">
+                                    <actions>
+                                        <set field="activeSubMenu" value="TOP" />
+                                        <set field="activeSubMenuItem" from-field="activeMainMenuItem" />
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
-
                         <section>
                             <condition>
                                 <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
+                                <!-- SCIPIO: handled above
                                 <section>
                                     <condition>
                                         <not><if-empty field="fixedAssetId"/></not>
@@ -132,6 +140,7 @@ under the License.
                                         </section>
                                     </fail-widgets>
                                 </section>
+                                -->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -148,8 +157,17 @@ under the License.
     <screen name="CommonComputerSoftwareDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#FixedAssetSub" />
-                <set field="activeMainMenuItem" value="ComputerSoftware"/>
+                <property-map resource="IsMgrUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ComputerSoftware"/>
+                <!-- SCIPIO: currently no sub-menu:
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerSoftware" />
+                -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem" default-value="" />
+                
+                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${fixedAssetId}"/>
+                <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -168,6 +186,7 @@ under the License.
                                 <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
+                                <!-- 
                                 <section>
                                     <condition>
                                         <not><if-empty field="fixedAssetId"/></not>
@@ -199,6 +218,7 @@ under the License.
                                         </section>
                                     </fail-widgets>
                                 </section>
+                                -->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -211,7 +231,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>

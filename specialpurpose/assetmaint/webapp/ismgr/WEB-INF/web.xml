@@ -51,7 +51,8 @@
     <context-param>
         <description>The location of the CommonFixedAssetMaintDecorator screen to use for this webapp.</description>
         <param-name>fixedAssetMaintDecoratorLocation</param-name>
-        <param-value>component://assetmaint/widget/ismgr/AssetmaintScreens.xml</param-value>
+        <!-- SCIPIO: FIXME: no occurrence under ismgr! -->
+        <param-value>component://assetmaint/widget/AssetmaintScreens.xml</param-value>
     </context-param>
 
     <filter>

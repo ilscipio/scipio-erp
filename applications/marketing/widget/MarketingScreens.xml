@@ -43,11 +43,11 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/sfa/CommonScreens.xml"/>
-                                <include-screen name="DefMainSideBarMenu" location="component://marketing/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

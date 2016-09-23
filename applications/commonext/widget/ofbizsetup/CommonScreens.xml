@@ -57,7 +57,7 @@
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -98,7 +98,7 @@
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                         </section>
                         <!-- Scipio: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->

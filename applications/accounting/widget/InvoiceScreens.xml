@@ -37,7 +37,7 @@ under the License.
                                 <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>

@@ -43,7 +43,7 @@ under the License.
                                 <decorator-section-include name="left-column"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/ap/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -148,7 +148,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/ap/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -201,7 +201,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-columm">
-                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -255,7 +255,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/ap/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>

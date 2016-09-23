@@ -57,7 +57,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -99,12 +99,12 @@ under the License.
                                                 <include-menu name="${facilityMenu}" location="component://product/widget/facility/FacilityMenus.xml"/>
                                             </widgets>
                                             <fail-widgets>
-                                                <include-screen name="MainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
+                                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                             </fail-widgets>
                                         </section>
                                     </widgets>
                                     <fail-widgets>
-                                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
+                                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>

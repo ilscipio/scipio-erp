@@ -57,7 +57,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -95,7 +95,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -158,10 +158,10 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="timesheetId"/></not></condition>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <include-screen name="DefMainSideBarMenu" location="component://workeffort/widget/CommonScreens.xml"/>
+                                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>

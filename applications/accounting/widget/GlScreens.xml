@@ -46,7 +46,7 @@ under the License.
                                 <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationTabBar" />
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

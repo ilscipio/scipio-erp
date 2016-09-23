@@ -69,7 +69,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <!-- provide default column for all others -->
-                                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </widgets>
                                 </section>
                            </fail-widgets>
@@ -113,7 +113,7 @@ under the License.
                                 <not><if-empty field="prodCatalog"/></not>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
                                 <section share-scope="false">
@@ -122,7 +122,7 @@ under the License.
                                         <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                                     </actions>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -196,7 +196,7 @@ under the License.
                                 <not><if-empty field="productCategory"/></not>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
                                 <section share-scope="false">
@@ -205,7 +205,7 @@ under the License.
                                         <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                                     </actions>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -304,7 +304,7 @@ under the License.
                                         <not><if-empty field="product"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                         <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
                                         <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
                                     </widgets>
@@ -315,14 +315,14 @@ under the License.
                                                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                                             </actions>
                                             <widgets>
-                                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                             </widgets>
                                         </section>
                                     </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -403,7 +403,7 @@ under the License.
                                 <not><if-empty field="configItem"/></not>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
                                 <section share-scope="false">
@@ -414,7 +414,7 @@ under the License.
                                         <set field="activeSubMenuItem" value="EditProductConfigs"/>                                        
                                     </actions>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -480,11 +480,11 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>             
@@ -550,7 +550,7 @@ under the License.
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegator to main-decorator -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>                   
                     <decorator-section name="body">
                         <section>
@@ -651,7 +651,7 @@ under the License.
                                     <condition><not><if-empty field="productStore"/></not></condition>
                                     <widgets>
                                         <container>
-                                            <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                            <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
@@ -661,7 +661,7 @@ under the License.
                                                 <set field="activeSubMenuItem" value="store"/>
                                             </actions>
                                             <widgets>
-                                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                             </widgets>
                                         </section>
                                     </fail-widgets>
@@ -727,7 +727,7 @@ under the License.
                             <condition><not><if-empty field="parameters.productStoreGroupId"/></not></condition>
                             <widgets>
                                 <container>
-                                    <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                    <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                 </container>
                             </widgets>
                             <fail-widgets>
@@ -737,7 +737,7 @@ under the License.
                                         <set field="activeSubMenuItem" value="EditProductStoreGroups"/>
                                     </actions>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -795,10 +795,10 @@ under the License.
                                 <if-has-permission permission="CATALOG" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -840,7 +840,7 @@ under the License.
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>-->    
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
@@ -850,11 +850,11 @@ under the License.
                                 <if-has-permission permission="CATALOG" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>                
@@ -914,10 +914,10 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -986,10 +986,10 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -1032,10 +1032,10 @@ under the License.
                                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                             <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -1235,7 +1235,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -1268,7 +1268,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>-->                   
                     <decorator-section name="body">
@@ -1300,7 +1300,7 @@ under the License.
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>-->
                     <decorator-section name="body">
@@ -1338,7 +1338,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>-->                    
                     <decorator-section name="body">
@@ -1408,7 +1408,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>-->
                     <decorator-section name="body">
@@ -1478,7 +1478,7 @@ under the License.
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <!-- Scipio: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>-->                    
                     <decorator-section name="body">

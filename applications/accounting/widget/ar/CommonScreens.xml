@@ -85,10 +85,14 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="payments"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Payment" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ACCOUNTING, _VIEW permission -->
@@ -98,7 +102,7 @@ under the License.
                             <widgets>
                                 <include-menu name="PaymentTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                 <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
+                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}] ${${extraFunctionName}}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -114,7 +118,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#ArPayment" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Payment" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -180,15 +184,41 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Invoice" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                            </condition>
                             <widgets>
+                                <section>
+                                    <condition><not><if-empty field="parameters.invoiceId"/></not></condition>
+                                    <widgets>
+                                        <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                        <!-- <container style="leftclear">
+                                            <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
+                                        </container> -->
+                                    </widgets>
+                                </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>

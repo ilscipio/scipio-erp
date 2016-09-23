@@ -884,6 +884,23 @@
             <link target="findInvoices" />
         </menu-item>
         -->
+        <!-- SCIPIO: this is needed to reach "edit" again -->
+        <menu-item name="editInvoice" title="${uiLabelMap.AccountingInvoice}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="editInvoice">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
             <condition>
                 <not>

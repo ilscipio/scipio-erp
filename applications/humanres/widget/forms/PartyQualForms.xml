@@ -96,7 +96,6 @@ under the License.
                 <auto-parameters-service service-name="deletePartyQual"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="AddPartyQual" type="single" target="createPartyQual"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->

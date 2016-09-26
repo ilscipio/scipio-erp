@@ -61,6 +61,10 @@ public class MenuFactory {
 
                     URL menuFileUrl = servletContext.getResource(resourceName);
                     Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (menuFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(resourceName);
+                    }
                     modelMenuMap = readMenuDocument(menuFileDoc, cacheKey);
                     menuWebappCache.put(cacheKey, modelMenuMap);
                 }
@@ -99,6 +103,10 @@ public class MenuFactory {
                 if (modelMenuMap == null) {
                     URL menuFileUrl = FlexibleLocation.resolveLocation(resourceName);
                     Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (menuFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(resourceName);
+                    }
                     modelMenuMap = readMenuDocument(menuFileDoc, resourceName);
                     menuLocationCache.put(resourceName, modelMenuMap);
                 }

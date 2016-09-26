@@ -41,6 +41,29 @@ under the License.
         </section>
     </screen>
 
+    <screen name="WebtoolsLayoutDemoCommonActions">
+        <section>
+            <actions>
+                <!-- These are included by include-actions directive. -->
+                <set field="commonActionField1" value="This value 1 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
+                <set field="commonActionField2" value="This value 2 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive, but should get overridden by another include. [ERROR]"/>
+                
+                <!-- NEW in Scipio: flexible locations for <script> location -->
+                <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
+                <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemoWidgetTests.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <actions>
+                        <!-- These are NOT included by include-actions directive. -->
+                        <set field="nonCommonActionField4" value="This value 4 was set in WebtoolsLayoutDemoCommonActions outside its top section and should not be included by include-actions. [ERROR]"/>
+                    </actions>
+                    <widgets/>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="WebtoolsLayoutDemo">
         <!-- Demonstrates UI layout best practices and serves as a visual theme test jig.
         For more information:
@@ -122,7 +145,15 @@ under the License.
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
             <actions>
-        
+                <set field="commonActionField1" value="This value should get overridden... [ERROR]"/>
+                <set field="commonActionField2" value="This value should get overridden... [ERROR]"/>
+                <set field="nonCommonActionField4" value="This value should keep its original value from WebtoolsLayoutDemoOfbizWidgets. [SUCCESS]"/>
+                <set field="commonActionField5" value="This value should get overridden... [ERROR]"/>
+                <!-- Scipio directive to easily reuse screen actions -->
+                <include-screen-actions name="WebtoolsLayoutDemoCommonActions"/>
+                <!-- It's even possible to include actions from different widget types! -->
+                <include-form-actions name="LayoutDemoActionsIncludeTest2" location="component://webtools/widget/MiscForms.xml"/>
+                <include-menu-actions name="WebtoolsMenuActionsDemo4" location="component://webtools/widget/Menus.xml"/>
             </actions>
             <widgets>
                 <!-- 
@@ -175,6 +206,19 @@ under the License.
                     </widgets>
                 </section>
                 -->
+                <screenlet title="Widget language tests">
+                    <screenlet title="include-actions directive">
+                        <label text="commonActionField1 value: ${commonActionField1}"/>
+                        <label text="commonActionField2 value: ${commonActionField2}"/>
+                        <label text="commonActionField3 value: ${commonActionField3}"/>
+                        <label text="nonCommonActionField4 value: ${nonCommonActionField4}"/>
+                        <label text="commonActionField5 value: ${commonActionField5}"/>
+                        <label text="commonActionField6 value: ${commonActionField6}"/>
+                        <label text="commonActionField7 value: ${commonActionField7}"/>
+                        <label text="commonActionField8 value: ${commonActionField8}"/>
+                        <label text="commonActionField9 value: ${commonActionField9}"/>
+                    </screenlet>
+                </screenlet>
                 <screenlet title="Screenlets" id="my-widget-screenlet-parent" navigation-menu-name="WebtoolsInlineSectionMenuDemo">
                     <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsInlineSectionMenuDemo"/>
                     <label text="This section/screenlet has a special legacy Ofbiz navigation menu, rendered as section-inline menu type by default."/>

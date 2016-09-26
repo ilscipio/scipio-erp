@@ -119,6 +119,10 @@ public class ScreenFactory {
                         throw new IllegalArgumentException("Could not resolve location to URL: " + resourceName);
                     }
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (screenFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
+                    }
                     modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenLocationCache.put(resourceName, modelScreenMap);
                     double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
@@ -148,6 +152,10 @@ public class ScreenFactory {
 
                     URL screenFileUrl = servletContext.getResource(resourceName);
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (screenFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
+                    }
                     modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenWebappCache.put(cacheKey, modelScreenMap);
                 }

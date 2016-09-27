@@ -44,59 +44,50 @@ under the License.
 
   <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
   <#-- display the error messages -->
-  <#if (errorMessage?has_content || errorMessageList?has_content)>
-        <div id="main-${styles.alert_wrap!}">
-            <@alert type="error" class=("+"+contentMsgContentClass)>
-      <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
-      <#if errorMessage?has_content>
-                        ${rawString(errorMessage)}
+  <div id="main-${styles.alert_wrap!}">
+      <#if (errorMessage?has_content || errorMessageList?has_content)>
+                <@alert type="alert">
+          <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
+          <#if errorMessage?has_content>
+                            ${rawString(errorMessage)}
+          </#if>
+          <#noescape>
+            <#if errorMessageList?has_content>
+                            <ol>
+                <#list errorMessageList as errorMsg>
+                              <li>${rawString(errorMsg)}</li>
+                </#list>
+                            </ol>
+            </#if>
+          </#noescape>
+                </@alert>
       </#if>
-      <#noescape>
-        <#if errorMessageList?has_content>
-                        <ol>
-            <#list errorMessageList as errorMsg>
-                          <li>${rawString(errorMsg)}</li>
+      </#if>
+      <#-- display the event messages -->
+      <#if (eventMessage?has_content || eventMessageList?has_content)>
+            <@alert type="info">
+          <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
+          <#if eventMessage?has_content>
+                            ${rawString(eventMessage)}
+          </#if>
+          <#if eventMessageList?has_content>
+                            <ol>
+            <#list eventMessageList as eventMsg>
+                              <li>${rawString(eventMsg)}</li>
             </#list>
-                        </ol>
-        </#if>
-      </#noescape>
+                            </ol>
+          </#if>
             </@alert>
-    </div>
-  </#if>
-  </#if>
-
-  <#assign hasInfoMsg = (eventMessage?has_content || eventMessageList?has_content) || infoMessage?has_content>
-  <#if hasInfoMsg>
-    <div id="main-info-box">
-  </#if>
-
-  <#-- display the event messages -->
-  <#if (eventMessage?has_content || eventMessageList?has_content)>
-        <@alert type="info" class=("+"+contentMsgContentClass)>
-      <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
-      <#if eventMessage?has_content>
-                        ${rawString(eventMessage)}
       </#if>
-      <#if eventMessageList?has_content>
-                        <ol>
-        <#list eventMessageList as eventMsg>
-                          <li>${rawString(eventMsg)}</li>
-        </#list>
-                        </ol>
+    
+        
+      <#-- Scipio: only if it is gotten from context and needs to include explicit content only -->
+      <#if infoMessage?has_content>
+            <@alert type="info">
+                <#noescape>${rawString(infoMessage)}</#noescape>
+            </@alert>
       </#if>
-        </@alert>
-  </#if>
-
-  <#-- Scipio: only if it is gotten from context and needs to include explicit content only -->
-  <#if infoMessage?has_content>
-        <@alert type="info" class=("+"+contentMsgContentClass)>
-            <#noescape>${rawString(infoMessage)}</#noescape>
-        </@alert>
-  </#if>
-
-  <#if hasInfoMsg>
-    </div>
-  </#if>
+  </div>
 </#escape>
 
 </div>
@@ -109,7 +100,7 @@ under the License.
   <div id="content-messages-warning-template" content-messages-type-wrapper-id="main-${styles.alert_wrap!}">
     <@alert type="warning" class=("+"+contentMsgContentClass)></@alert>
   </div>
-  <div id="content-messages-info-template" content-messages-type-wrapper-id="main-info-box">
+  <div id="content-messages-info-template" content-messages-type-wrapper-id="main-${styles.alert_wrap!}">
     <@alert type="info" class=("+"+contentMsgContentClass)></@alert>
   </div>
 </div>

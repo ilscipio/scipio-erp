@@ -257,7 +257,11 @@ function ShowTab(lname) {
                   </#list>
                 </@table>
               <#else>
-                <@commonMsg type="error">${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</@commonMsg>
+                <@commonMsg type="error">
+                    <#--SCIPIO: this makes no sense
+                    ${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.-->
+                    ${uiLabelMap.WebtoolsSpecifiedEntityValueDoesNotExist} (${entityName})
+                </@commonMsg>
               </#if>
             </@cell>
         </@row>

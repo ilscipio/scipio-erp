@@ -5957,6 +5957,8 @@
     <property key="WebtoolsGeneratedDataFailed">
         <value xml:lang="en">Failed</value>
     </property>
-    
-    
+    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
+        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
+        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
+    </property>
 </resource>

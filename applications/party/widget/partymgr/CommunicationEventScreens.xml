@@ -356,7 +356,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindCommunicationEvents"/>
                 <set field="activeMainMenuItem" value="comm"/>
-                <set field="activeSubMenuItem" value="Find"/>
+                <!--<set field="activeSubMenuItem" value="Find"/>-->
                 <set field="entityName" value="CommunicationEventAndRole"/>
             </actions>
             <widgets>

@@ -93,7 +93,8 @@ under the License.
       * If the menu-items contain many conditions, it may be helpful to set
         <menu always-expand-selected-or-ancestor="true".../> to allow selected items to always display, regardless of conditions.
     -->
-    <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="WebtoolsAppBar" recursive="full" />
         <menu-item name="server">
             <sub-menu name="Server" include="ServerSideBar"/>

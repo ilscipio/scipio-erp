@@ -46,8 +46,21 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="FacilityAppBar" recursive="full" />
+        <menu-item name="facility">
+            <sub-menu name="Facility" include="FacilitySideBar"/>
+        </menu-item>
+        <!--<menu-item name="facilityGroup">
+            <sub-menu name="FacilityGroup" include="FacilityGroupSideBar"/>
+        </menu-item>-->  
+        <menu-item name="ShipmentGatewayConfig">
+            <sub-menu name="ShipmentGatewayConfig" include="ShipmentGatewayConfigSideBar"/>
+        </menu-item>
+        <menu-item name="shipment">
+            <sub-menu name="Shipment" include="ShipmentSideBar"/>
+        </menu-item>
     </menu>
     
     <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -131,6 +144,18 @@ under the License.
     <menu name="FacilitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditFacility">
         <include-elements menu-name="FacilityTabBar" recursive="includes-only" />
+        <menu-item name="settings">
+            <sub-menu name="FacilitySettings" include="FacilitySettingsSideBar"/>
+        </menu-item>
+        <menu-item name="inventory">
+            <sub-menu name="FacilityInventory" include="FacilityInventorySideBar"/>
+        </menu-item>
+        <menu-item name="PicklistOptions">
+            <sub-menu name="FacilityPicking" include="FacilityPickingSideBar"/>
+        </menu-item>
+        <menu-item name="PackOrder">
+            <sub-menu name="FacilityPackOrder" include="FacilityPackOrderSideBar"/>
+        </menu-item>
     </menu>      
     
     <menu name="InventoryItemLabelsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

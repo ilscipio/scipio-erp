@@ -80,7 +80,7 @@
     </menu>
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu"
-        extends-resource="component://common/widget/CommonMenus.xml">
+        extends-resource="component://common/widget/CommonMenus.xml" always-expand-selected-or-ancestor="true">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
         <menu-item name="invoices">
             <sub-menu name="Invoice" include="InvoiceSideBar"/>

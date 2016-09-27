@@ -28,7 +28,8 @@
             <link target="EntityExportAll"/>
         </menu-item>
     </menu>
-    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="SetupAppBar" recursive="full" />
     </menu>
     

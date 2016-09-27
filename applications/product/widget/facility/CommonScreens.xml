@@ -96,7 +96,14 @@ under the License.
                                         <section>
                                             <condition><not><if-empty field="facilityMenu"/></not></condition>
                                             <widgets>
-                                                <include-menu name="${facilityMenu}" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                                <section share-scope="false">
+                                                    <actions>
+                                                        <set field="activeSubMenu" from-field="facilityMenu"/>
+                                                    </actions>
+                                                    <widgets>
+                                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                                                    </widgets>
+                                                </section>
                                             </widgets>
                                             <fail-widgets>
                                                 <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>

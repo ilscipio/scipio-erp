@@ -923,7 +923,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListContent}">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleListContent}"-->
                             <!-- links to same page
                             <container>
                                 <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">

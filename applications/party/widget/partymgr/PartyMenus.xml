@@ -37,8 +37,21 @@
         <menu-item name="partyinv" title="${uiLabelMap.PartyInvitation}"><link target="partyInvitation"/></menu-item>
         <menu-item name="importexport" title="${uiLabelMap.CommonImportExport}"><link target="ImportExport"/></menu-item>
     </menu>
-    <menu name="PartyAppSideBar" title="${uiLabelMap.PartyManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PartyAppSideBar" title="${uiLabelMap.PartyManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="PartyAppBar" recursive="full" />
+        <menu-item name="find">
+            <sub-menu name="Profile" include="ProfileSideBar"/>
+        </menu-item>
+        <menu-item name="comm">
+            <sub-menu name="CommEvent" include="CommEventSideBar"/>
+        </menu-item>
+        <!--<menu-item name="classification">
+            <sub-menu name="PartyClassification" include="PartyClassificationSideBar"/>
+        </menu-item>-->
+        <menu-item name="partyinv">
+            <sub-menu name="PartyInvitation" include="PartyInvitationSideBar"/>
+        </menu-item>
     </menu>
 
     <menu name="ProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -205,6 +218,13 @@
                 <parameter param-name="externalLoginKey"/>
                 <parameter param-name="viewIndex" value="1"/>
                 <parameter param-name="viewSize" value="20"/>
+            </link>
+        </menu-item>
+        <!-- SCIPIO: TODO: REVIEW: ContactList is originally under CommEvent menu in stock but uses find/party decorator,
+            so for now... put it under both (but this is primary) -->
+        <menu-item name="ContactList" title="${uiLabelMap.PartyContactLists}">
+            <link target="ListPartyContactLists">
+                <parameter param-name="partyId"/>
             </link>
         </menu-item>
     </menu>
@@ -598,9 +618,10 @@
     </menu>
     
     <menu name="CommEventTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="Find" title="${uiLabelMap.CommonFind}">
             <link target="FindCommunicationEvents"/>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="OverView" title="${uiLabelMap.CommonOverview}">
             <condition><not><if-empty field="communicationEvent"/></not></condition>
             <link target="ViewCommunicationEvent">
@@ -664,6 +685,9 @@
             </link>
         </menu-item>
         <menu-item name="ContactList" title="${uiLabelMap.PartyContactLists}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
             <link target="ListPartyContactLists">
                 <parameter param-name="partyId"/>
             </link>

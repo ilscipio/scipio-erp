@@ -1112,7 +1112,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitlePickListOptions"/>
                 <set field="activeMainMenuItem" value="facility"/>
-                <set field="activeSubMenuItem" value="PicklistOptions"/>
+                <!--<set field="activeSubMenuItem" value="PicklistOptions"/>-->
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="groupByShippingMethod" from-field="parameters.groupByShippingMethod"/>

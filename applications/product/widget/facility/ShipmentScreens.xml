@@ -409,7 +409,7 @@ under the License.
                 <set field="title" value="${uiLabelMap.ProductPackOrder} ${facilityId}"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PackOrder"/>
-                <set field="facilityMenu" value="FacilityPackOrderSideBar"/>
+                <!-- <set field="facilityMenu" value="FacilityPackOrderSideBar"/>-->
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/PackOrder.groovy"/>
             </actions>
             <widgets>

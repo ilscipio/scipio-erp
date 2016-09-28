@@ -3178,19 +3178,21 @@ NOTE: The result is auto-HTML-escaped (where applicable); use #rawString to prev
   * Related *
     @formattedDate
 -->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function formatDate date dateTimeFormat="" specLocale=true specTimeZone=true dateType="date">
+  <#- old implementation; similar but transform handles nulls/booleans better ->
   <#if specLocale?is_boolean>
     <#if specLocale>
       <#local specLocale = locale!>
     <#else>
-      <#local specLocale = ""> <#-- FIXME: won't work, must emulate null but freemarker sucks here... -->
+      <#local specLocale = ""> <#- FIXME: won't work, must emulate null but freemarker sucks here... ->
     </#if>
   </#if>
   <#if specTimeZone?is_boolean>
     <#if specTimeZone>
       <#local specTimeZone = timeZone!>
     <#else>
-      <#local specTimeZone = ""> <#-- FIXME: won't work, must emulate null but freemarker sucks here... -->
+      <#local specTimeZone = ""> <#- FIXME: won't work, must emulate null but freemarker sucks here... ->
     </#if>
   </#if>
   <#if dateType == "date">
@@ -3202,9 +3204,10 @@ NOTE: The result is auto-HTML-escaped (where applicable); use #rawString to prev
   </#if>
   <#if res?has_content>
     <#return res>
-    <#-- otherwise, return void (for default value operator) -->
+    <#- otherwise, return void (for default value operator) ->
   </#if>
 </#function>
+-->
 
 <#-- 
 *************

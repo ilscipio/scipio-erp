@@ -1383,7 +1383,11 @@ public class ModelMenu extends ModelWidget {
         } else {
             ModelSubMenu subMenu = getModelSubMenuByName(subMenuName);
             if (subMenu != null) {
-                return subMenu.getModelMenuItemByName(menuItemName);
+                if ("PARENT".equals(menuItemName)) {
+                    return subMenu.getParentMenuItem();
+                } else {
+                    return subMenu.getModelMenuItemByName(menuItemName);
+                }
             } else {
                 return null;
             }
@@ -1497,6 +1501,13 @@ public class ModelMenu extends ModelWidget {
         return this.selectedMenuContextFieldName.getOriginalName();
     }
     
+    /**
+     * SCIPIO: returns selected menu and item. The item will be either a child of
+     * the (sub-)menu, the parent item of the sub-menu, or null.
+     * <p>
+     * The (sub-)menu name supports special value "TOP". The item name supports
+     * special values "NONE" (same as null) and "PARENT".
+     */
     public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
         
@@ -1516,17 +1527,21 @@ public class ModelMenu extends ModelWidget {
             selItemName = null;
         }
         
+        if ("NONE".equals(selItemName)) {
+            selItemName = null;
+        }
+        
         ModelSubMenu subMenu = null;
         ModelMenuItem menuItem = null;
 
-        if (UtilValidate.isNotEmpty(selItemName)) {
+        if (UtilValidate.isNotEmpty(selItemName) && !"PARENT".equals(selItemName)) {
             menuItem = getModelMenuItemBySubName(selItemName, selMenuName);
             if (menuItem != null) {
                 subMenu = menuItem.getParentSubMenu();
             } else {
                 // NOTE: if there was a screen coding error, it's possible the selItemName returns nothing.
                 // in this case we'll fall back to the sub-menu-name-only check below so the coder can
-                // better see the error.
+                // better see the error (though the selections will still be wrong - but this is OK because it's a coding error).
                 Debug.logWarning("Menu-item name '" + selItemName + "' was not found within menu "
                         + "or sub-menu ('" + selMenuName + "'), under top menu '" + this.getMenuLocation() + "#" + 
                         this.getName() + "'", module);
@@ -1541,13 +1556,26 @@ public class ModelMenu extends ModelWidget {
             // if there's no item name, we have to do something special to dig up
             // the default-menu-item-name
             if (subMenu != null) {
-                // ok, have a sub-menu
-                String defaultMenuItemName = subMenu.getDefaultMenuItemName();
-                menuItem = subMenu.getModelMenuItemByName(defaultMenuItemName);
+                if (UtilValidate.isEmpty(selItemName)) { // 2016-09-28: ONLY use default if no explicit specified
+                    // ok, have a sub-menu
+                    String defaultMenuItemName = subMenu.getDefaultMenuItemName();
+                    if (UtilValidate.isNotEmpty(defaultMenuItemName)) {
+                        menuItem = subMenu.getModelMenuItemByName(defaultMenuItemName);
+                    } else {
+                        // 2016-09-28: EXTRA FALLBACK: here we will return the parent item of the
+                        // sub-menu as target (same as "PARENT")
+                        menuItem = subMenu.getParentMenuItem();
+                    }
+                } else if ("PARENT".equals(selItemName)) {
+                    // explicit parent wanted
+                    menuItem = subMenu.getParentMenuItem();
+                }
             } else if (isMenuNameTopMenu(selMenuName)) {
-                // use top menu (us), though only if it was intended for us
-                if (UtilValidate.isNotEmpty(this.defaultMenuItemName)) {
-                    menuItem = getModelMenuItemByName(this.defaultMenuItemName);
+                if (UtilValidate.isEmpty(selItemName)) { // 2016-09-28: ONLY use default if no explicit specified
+                    // use top menu (us), though only if it was intended for us
+                    if (UtilValidate.isNotEmpty(this.defaultMenuItemName)) {
+                        menuItem = getModelMenuItemByName(this.defaultMenuItemName);
+                    }
                 }
             }
         }

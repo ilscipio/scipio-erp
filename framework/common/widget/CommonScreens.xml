@@ -1297,9 +1297,13 @@ under the License.
           simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
           but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
           In fallback mode, a suffix (by default "Menu", or "SideBar" if you use ComplexSideBarMenu) is added to the activeSubMenu value before performing the lookup.
-        * activeSubMenuItem - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
+        * activeSubMenuItem - Name of a menu item that is child (or parent) of the menu/sub-menu designated/implied by activeSubMenu.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
-          on the menu/sub-menu designated/implied by activeSubMenu.
+          on the menu/sub-menu designated/implied by activeSubMenu, or otherwise will consider the parent item of the sub-menu as the target.
+          The special value "PARENT" can be used to explicit request that the selected item be the parent of the sub-menu (same effect as empty item when menu has no default).
+          The special value "NONE" can also be used; it is same as empty.
+          NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
+              pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
           specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default). 
         

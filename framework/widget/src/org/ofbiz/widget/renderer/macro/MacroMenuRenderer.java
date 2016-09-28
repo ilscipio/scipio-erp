@@ -429,7 +429,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         MenuItemState menuItemState = renderState.getItemState();
         
         boolean selected = menuItemState.isSelected();
-        boolean selectedAncestor = false;
+        boolean selectedAncestor = menuItemState.isSelectedAncestor();
         if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
             // SCIPIO: Must use new combination logic
@@ -447,7 +447,6 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
         } else {
             // SCIPIO: support selected-ancestor
-            selectedAncestor = menuItemState.isSelectedAncestor();
             if (selectedAncestor) {
                 String selectedStyle = menuItem.getSelectedAncestorStyle();
                 // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
@@ -592,9 +591,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+        ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
         
-        boolean selected = menu.isParentOf(selectedMenuItem);
-        boolean selectedAncestor = !selected && (selectedMenuItem != null || selectedMenuAndItem.getSubMenu() != null);
+        boolean selected = selectedSubMenu == null && menu.isParentOf(selectedMenuItem);
+        boolean selectedAncestor = !selected && (selectedSubMenu != null || (selectedMenuItem != null && !menu.isParentOf(selectedMenuItem)));
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
         

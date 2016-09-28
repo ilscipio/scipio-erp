@@ -223,7 +223,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
             ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
             ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
             boolean selected = menuItem.isSame(selectedMenuItem);
-            boolean selectedAncestor = menuItem.isAncestorOf(selectedSubMenu);
+            boolean selectedAncestor = !selected && menuItem.isAncestorOf(selectedSubMenu);
             return new MenuItemState(selected, selectedAncestor);
         }
         
@@ -236,7 +236,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         }
         
         public boolean isSelectedOrAncestor() {
-            return (selected||selectedAncestor);
+            return (selected || selectedAncestor);
         }
 
         public Boolean getConditionResult() {

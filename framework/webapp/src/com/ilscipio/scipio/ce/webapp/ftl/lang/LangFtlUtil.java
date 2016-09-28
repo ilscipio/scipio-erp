@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -1491,6 +1493,26 @@ public abstract class LangFtlUtil {
                 }
             }
         }
+    }
+    
+    public static Locale getLocale(TemplateModel model) throws TemplateModelException {
+        if (model == null) {
+            return null;
+        }
+        if (!(model instanceof WrapperTemplateModel)) {
+            throw new TemplateModelException("Invalid locale object (not WrapperTemplateModel)");
+        }
+        return (Locale) ((WrapperTemplateModel) model).getWrappedObject();
+    }
+    
+    public static TimeZone getTimeZone(TemplateModel model) throws TemplateModelException {
+        if (model == null) {
+            return null;
+        }
+        if (!(model instanceof WrapperTemplateModel)) {
+            throw new TemplateModelException("Invalid locale object (not WrapperTemplateModel)");
+        }
+        return (TimeZone) ((WrapperTemplateModel) model).getWrappedObject();
     }
     
 }

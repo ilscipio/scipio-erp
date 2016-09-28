@@ -1384,6 +1384,18 @@
   </ul>
 </@section>
 
+<@section title="Date formatting">
+  <#assign testDate = nowTimestamp>
+  <ul>
+    <li>date-time (locale, timeZone from context): ${formatDateTime(testDate)}</li>
+    <li>date (locale, timeZone from context): ${formatDate(testDate)}</li>
+    <li>time (locale, timeZone from context): ${formatTime(testDate)}</li>
+    <li>date-time (locale, timeZone explicit): ${formatDateTime(testDate, "", locale, timeZone)}</li>
+    <li>date (locale, timeZone explicit): ${formatDate(testDate, "", locale, timeZone)}</li>
+    <li>time (locale, timeZone explicit): ${formatTime(testDate, "", locale, timeZone)}</li>
+  </ul>
+</@section>
+
 <@section title="Tree menu">
   <@section title="Multi-level">
     <@treemenu type="lib-basic">

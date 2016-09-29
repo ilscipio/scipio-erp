@@ -534,7 +534,7 @@ The submenu's main class may be set as altnested in global styles.
       <#-- WARN: isNestedMenu check here is flawed, but it's all we need for now -->
       <nav class="${styles.nav_sidenav!""}">
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
-        <#if navigation?has_content><h2>${navigation!}</h2></#if>
+        <#if navigation?has_content><h2>${navigation}</h2></#if>
     <#elseif specialType == "button-dropdown">
       <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false"<@compiledClassAttribStr class=mainButtonClass />>${title}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
@@ -1687,7 +1687,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 ${nestedEvents?trim}
                 <#if events?has_content>
                   <#list mapKeys(events) as eventName>
-                    .on("${rawString(eventName)?js_string}", function (e, data) {
+                    .on("${escapePart(eventName, 'js')}", function (e, data) {
                       ${events[rawString(eventName)]}
                     })
                   </#list>
@@ -1702,12 +1702,12 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                      
                      <#if treeMenuPlugins?has_content>
                         <#list treeMenuPlugins as plugin>
-                            , "${rawString(plugin.pluginName())?js_string}" : <@objectAsScript lang="json" object=plugin />
+                            , "${escapePart(plugin.pluginName(), 'js')}" : <@objectAsScript lang="json" object=plugin />
                         </#list>
                         
                         , "plugins" : [
                             <#list treeMenuPlugins as plugin>
-                                "${rawString(plugin.pluginName())?js_string}"                               
+                                "${escapePart(plugin.pluginName(), 'js')}"                               
                                 <#if plugin_has_next>, </#if> 
                             </#list>
                         ]
@@ -1718,7 +1718,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 jQuery("#${id}")
                 <#if events?has_content>
                   <#list mapKeys(events) as eventName>
-                    .on("${rawString(eventName)?js_string}", function (e, data) {
+                    .on("${escapePart(eventName, 'js')}", function (e, data) {
                       ${events[rawString(eventName)]}
                     })
                   </#list>
@@ -1736,12 +1736,12 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                     
                      <#if treeMenuPlugins?has_content>
                         <#list treeMenuPlugins as plugin>
-                            , "${rawString(plugin.name)?js_string}" : <@objectAsScript lang="json" object=toSimpleMap(plugin.settings!{}) />
+                            , "${escapePart(plugin.name, 'js')}" : <@objectAsScript lang="json" object=toSimpleMap(plugin.settings!{}) />
                         </#list>
                         
                         , "plugins" : [
                             <#list treeMenuPlugins as plugin>
-                                "${rawString(plugin.name)?js_string}"                               
+                                "${escapePart(plugin.name, 'js')}"                               
                                 <#if plugin_has_next>, </#if> 
                             </#list>
                         ]
@@ -1761,7 +1761,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
         <#assign e = event?keep_before(Static["com.ilscipio.scipio.treeMenu.jsTree.JsTreeEvent"].JSTREE_EVENT) />        
 
         <#if validEvents?has_content && validEvents?seq_contains(e)>                       
-            .on("${rawString(event)?js_string}", function (e, data) {
+            .on("${escapePart(event, 'js')}", function (e, data) {
                 <#nested>
             })
         </#if>
@@ -1818,8 +1818,7 @@ Supports nested or flat format for hierarchy.
 <#assign treeitem_defaultArgs = {
   "type":"", "nestedFirst":false, "attribs":{}, 
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false, "nestedFirst":false,
-  "isRoot":"",
-  "passArgs":{}
+  "isRoot":"", "passArgs":{}
 }>
 <#macro treeitem args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.treeitem_defaultArgs)>

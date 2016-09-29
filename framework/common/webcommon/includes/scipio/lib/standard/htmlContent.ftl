@@ -173,7 +173,7 @@ Creates a basic wrapper for code blocks.
 
 <#-- @code main markup - theme override -->
 <#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
-  <pre<@compiledClassAttribStr class=class />><code data-language="${type!}"><#rt>
+  <pre<@compiledClassAttribStr class=class />><code data-language="${type}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>
@@ -1000,7 +1000,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#-- @pul main markup - theme override -->
 <#macro pul_markup title="" origArgs={} passArgs={} catchArgs...>
   <ul class="${styles.pricing_wrap!}">
-    <#if title?has_content><@pli type="title">${title!}</@pli></#if>
+    <#if title?has_content><@pli type="title">${escapePart(title, 'html')}</@pli></#if>
     <#nested>
   </ul>
 </#macro>
@@ -1096,7 +1096,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   
   <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
     xlabel=xlabel ylabel=ylabel label1=label1 label2=label2 labelUom1=labelUom1 labelUom2=labelUom2
-    renderSeqNumber=renderSeqNumber origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
+    renderSeqNumber=(renderSeqNumber!) origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
@@ -1107,11 +1107,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#if nestedContent?has_content>
     <@row>
       <@cell columns=3>
-        <ul data-${type!}-id="chart_${renderSeqNumber!}_${chartIdNum!}" class="${styles.chart_legend!}">
+        <ul data-${type}-id="chart_${renderSeqNumber}_${chartIdNum}" class="${styles.chart_legend!}">
             <#nested/>
         </ul>
       </@cell>
-      <@cell columns=9><div id="chart_${renderSeqNumber!}_${chartIdNum!}" style="height:300px;"></div></@cell>
+      <@cell columns=9><div id="chart_${renderSeqNumber}_${chartIdNum}" style="height:300px;"></div></@cell>
     </@row>
     <#else>
         <#-- Default to chart.js chart for now, as this is capable of rendering an empty chart -->
@@ -1128,7 +1128,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
     <#if (chartDatasets < 1)><#local chartDatasets = 1 /></#if>
     <span class="chart-data">&nbsp;</span>
-    <canvas id="${chartId!}" height="300" width="500"></canvas>
+    <canvas id="${chartId}" height="300" width="500"></canvas>
     <@script>
         $(function(){
             var chartDataEl = $('.chart-data').first();
@@ -1149,10 +1149,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                         var datasetLabel = '';                                  
                                         <#if type=="line" || type=="bar">
                                              datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
-                                             return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom1!, 'js')}';
+                                             return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom1, 'js')}';
                                         <#elseif type="pie">
                                              datasetLabel = data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                             return datasetLabel + ' ${escapePart(labelUom1!, 'js')}';
+                                             return datasetLabel + ' ${escapePart(labelUom1, 'js')}';
                                         <#else>
                                             return datasetLabel;
                                         </#if>
@@ -1161,7 +1161,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 <#if labelUom2?has_content> 
                                     if(tooltipItem.datasetIndex == 1) {
                                         var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom2!, 'js')}';
+                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom2, 'js')}';
                                     }
                                 </#if>
                             }
@@ -1201,7 +1201,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 },
                                 scaleLabel : {
                                     display: chartData.scaleLabelDisplay,
-                                    <#if xlabel?has_content>labelString: '${escapePart(xlabel!, 'js')}',</#if>
+                                    <#if xlabel?has_content>labelString: '${escapePart(xlabel, 'js')}',</#if>
                                     fontColor: chartData.scaleLabelFontColor,
                                     fontFamily: chartData.scaleLabelFontFamily,
                                     fontSize: chartData.scaleLabelFontSize                                
@@ -1219,7 +1219,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             yAxes: [{
                                 scaleLabel : {
                                     display: chartData.scaleLabelDisplay,
-                                    <#if ylabel?has_content>scaleLabel: '${escapePart(xlabel!, 'js')}',</#if>
+                                    <#if ylabel?has_content>scaleLabel: '${escapePart(xlabel, 'js')}',</#if>
                                     fontColor: chartData.scaleLabelFontColor,
                                     fontFamily: chartData.scaleLabelFontFamily,
                                     fontSize: chartData.scaleLabelFontSize
@@ -1240,14 +1240,14 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }            
                     </#if>
                 };
-            var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
+            var ctx_${renderSeqNumber}_${chartIdNum} = $('#${chartId}').get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
                     {
                     
                       <#if type=="line" || type=="bar">
-                      label: '${escapePart(label1!, 'js')}',                      
+                      label: '${escapePart(label1, 'js')}',                      
                       fill: true,
                       backgroundColor: chartData.primaryFillColor,
                       borderColor: chartData.primaryStrokeColor,
@@ -1278,7 +1278,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     <#if (chartDatasets > 1)>
                     ,{
                       <#if (type=="line" || type=="bar")>
-                      label: '${escapePart(label2!, 'js')}',
+                      label: '${escapePart(label2, 'js')}',
                       fill: true,
                       backgroundColor: chartData.secondaryFillColor,
                       borderColor: chartData.secondaryStrokeColor,
@@ -1310,9 +1310,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 data: data,
                 options: options
             };
-            var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!},config);
+            <#-- FIXME: this var is poor because can't even be escaped... -->
+            var ${chartId} = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
             ${nestedContent}
-            ${chartId!}.update();
+            ${chartId}.update();
         });
     </@script>
   </#if>
@@ -1378,14 +1379,14 @@ Chart data entry.
   <#if chartLibrary == "foundation">
     <#if chartType == "line">
       <#global chartDataIndex =  chartDataIndex + 1 />
-      <li data-y="${escapePart(value!, 'html')}" data-x="${chartDataIndex}">${escapePart(title!, 'html')}</li>
+      <li data-y="${escapePart(value, 'html')}" data-x="${chartDataIndex}">${escapePart(title, 'html')}</li>
     <#else>
-      <li data-value="${escapePart(value!, 'html')}">${escapePart(title!, 'html')}</li>
+      <li data-value="${escapePart(value, 'html')}">${escapePart(title, 'html')}</li>
     </#if>
   <#else>
-      config.data.labels.push('${escapePart(title!, 'js')}');
-      <#if value?has_content>config.data.datasets[0].data.push(${escapePart(value!, 'js')});</#if>
-      <#if value2?has_content>config.data.datasets[1].data.push(${escapePart(value2!, 'js')});</#if>
+      config.data.labels.push('${escapePart(title, 'js')}');
+      <#if value?has_content>config.data.datasets[0].data.push(${escapePart(value, 'js')});</#if>
+      <#if value2?has_content>config.data.datasets[1].data.push(${escapePart(value2, 'js')});</#if>
   </#if>
 </#macro>
 
@@ -1415,6 +1416,7 @@ Creates a slider wrapper.
     controls                = ((boolean), default: true) Left / Right navigation
     indicator               = ((boolean), default: true) Bullet indicators
     jsOptions               = (string) Additional js argument, included on js initialization
+                              WARN: As a string, this is currently not escaped by the macro.
     
   * Related *
     @slide
@@ -1427,47 +1429,52 @@ Creates a slider wrapper.
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
 
+  <#local dummy = setRequestVar("scipioSliderLength", sliderLength)>  
   <#local sliderIdNum = getRequestVar("scipioSliderIdNum")!0>
   <#local sliderIdNum = sliderIdNum + 1 />
   <#local dummy = setRequestVar("scipioSliderIdNum", sliderIdNum)>
-  <#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>
-    
-  <@slider_markup sliderId=(id!sliderId) sliderIdNum=sliderIdNum class=class title=title library=library controls=controls indicator=indicator
+  <#--<#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>-->
+  <#local sliderId = id>  
+  <#if !sliderId?has_content>
+    <#local sliderId = "scipio_slider_${sliderIdNum}"/>
+  </#if>
+  <#-- NOTE: sliderId passed for compatibility -->
+  <@slider_markup id=sliderId sliderId=sliderId sliderIdNum=sliderIdNum class=class title=title library=library controls=controls indicator=indicator
         jsOptions=jsOptions origArgs=origArgs passArgs=passArgs><#nested></@slider_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro slider_markup title="" sliderId="" sliderIdNum=0 class="" library="" controls=true indicator=true 
+<#macro slider_markup title="" id="" sliderIdNum=0 class="" library="" controls=true indicator=true 
         jsOptions="" origArgs={} passArgs={} catchArgs...>
-    <#if !sliderId?has_content><#local sliderId = "scipio_slider_${sliderIdNum}"/></#if>
     <#if title?has_content><@heading>${title}</@heading></#if>
     <#switch library>
         <#case "owl">    
-            <div class="owl-carousel" class="${class}" id="${sliderId}">
+            <#local class = addClassArg(class, "owl-carousel")>
+            <div<@compiledClassAttribStr class=class /> id="${id}">
                 <#nested/>
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
-                  $("#${sliderId}").owlCarousel({${jsOptions}});
+                  $("#${id}").owlCarousel({${jsOptions}});
                 });
             </script>
           <#break>
         <#case "slick">
-            <div class="${class}" id="${sliderId}">
+            <div<@compiledClassAttribStr class=class /> id="${id}">
                 <#nested/>
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
-                  $("#${sliderId}").slick({${jsOptions}});
+                  $("#${id}").slick({${jsOptions}});
                 });
             </script>
           <#break>
         <#default>
             <#local dataOptions>
-                <#t>navigation_arrows:${controls?string("true","false")!"true"}; bullets:${indicator?string("true","false")!"true"};slide_number:false;
+                <#t>navigation_arrows:${controls?string("true","false")}; bullets:${indicator?string("true","false")};slide_number:false;
             </#local>
-            
-            <div class="${class} ${styles.slider_container!""}" data-orbit id="${sliderId}"<#if dataOptions?has_content> data-options="${dataOptions}"</#if>>
+            <#local class = addClassArg(class, styles.slider_container!)>
+            <div<@compiledClassAttribStr class=class /> data-orbit id="${id}"<#if dataOptions?has_content> data-options="${dataOptions}"</#if>>
               <#nested/>
             </div>
     </#switch>
@@ -1513,28 +1520,35 @@ Slider data entry - a single slide.
   <#local origArgs = args>
   <#local stylePrefix = "slide_">
   
+  <#-- global slide counter -->
+  <#local slideIdNum = getRequestVar("scipioSlideIdNum")!0>
+  <#local slideIdNum = slideIdNum + 1 />
+  <#local dummy = setRequestVar("scipioSlideIdNum", slideIdNum)>
+  
+  <#-- local slide counter -->
+  <#local sliderLength = getRequestVar("scipioSliderLength")!0>
+  <#local sliderLength = sliderLength + 1 />
+  <#local dummy = setRequestVar("scipioSliderLength", sliderLength)>
+  
   <#if linkTarget?is_boolean && linkTarget == false>
     <#local linkTarget = "">
   <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
-
-  <@slide_markup class=class library=library image=image link=link linkTarget=linkTarget title=title origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
+  <#local id = "slide_${renderSeqNumber}_${slideIdNum}"/>
+  <@slide_markup id=id class=class library=library image=image link=link linkTarget=linkTarget title=title 
+    slideIdNum=slideIdNum sliderLength=sliderLength renderSeqNumber=(renderSeqNumber!) origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
 </#macro>
 
 <#-- @slide main markup - theme override -->
-<#macro slide_markup class="" library="" image="" link="" linkTarget="" title="" origArgs={} passArgs={} catchArgs...>
-    <#local slideIdNum = getRequestVar("scipioSlideIdNum")!0>
-    <#local slideIdNum = slideIdNum + 1 />
-    <#local dummy = setRequestVar("scipioSlideIdNum", slideIdNum)>
-    <#local slideId = "slide_${renderSeqNumber!}_${slideIdNum!}"/>
+<#macro slide_markup id="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" origArgs={} passArgs={} catchArgs...>
     <#if library=="owl" || library=="slick">
-        <div id="${slideId}" class="item">
-            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+        <div id="${id}" class="item">
+            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
             <div>
-            <#if title?has_content><h2>${title!}</h2></#if>
+            <#if title?has_content><h2>${escapePart(title, 'html')}</h2></#if>
             <#if image?has_content>
-            <img src="${image}"/>
+              <img src="${escapeFullUrl(image, 'html')}"/>
             </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
@@ -1542,12 +1556,12 @@ Slider data entry - a single slide.
             <#if link?has_content></a></#if>
         </div>
     <#else>
-        <div data-orbit-slide="${slideId}" class="${styles.slide_container!}">
-            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+        <div data-orbit-slide="${id}" class="${styles.slide_container!}">
+            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
             <div>
-            <#if title?has_content><h2>${title}</h2></#if>
+            <#if title?has_content><h2>${escapePart(title, 'html')}</h2></#if>
               <#if image?has_content>
-                <img src="${image}"/>
+                <img src="${escapeFullUrl(image, 'html')}"/>
               </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
@@ -1625,8 +1639,9 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                 position:relative;
                 ${imgContainer}
             </#local>
-            <div class="scipio-image-container ${class}">
-                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+            <#local class = addClassArg(class, "scipio-image-container")>
+            <div<@compiledClassAttribStr class=class />>
+                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
                     <div style="${imgStyle}" class="scipio-image"></div>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
@@ -1634,9 +1649,10 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
           <#break>
         <#default>
             <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${type};</#local>
-            <div class="scipio-image-container ${class}" style="${imgContainer}" scipioFit="${type}">
-                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
-                    <img src="${src}" class="scipio-image" style="${imgStyle}"/>
+            <#local class = addClassArg(class, "scipio-image-container")>
+            <div<@compiledClassAttribStr class=class /> style="${imgContainer}" scipioFit="${type}">
+                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
+                    <img src="${escapeFullUrl(src, 'html')}" class="scipio-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
             </div>

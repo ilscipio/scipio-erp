@@ -612,7 +612,7 @@ under the License.
                 <include-screen name="ViewQuoteInfo"/>
                 <container style="clear"/>
                 <screenlet title="${uiLabelMap.CommonItems}">
-                    <include-menu location="component://order/widget/QuoteMenus.xml" name="QuoteItemsSubTabBar"/>
+                    <include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="QuoteItemsSubTabBar"/>
                     <include-screen name="ViewQuoteItemInfo"/>
                 </screenlet>
             </widgets>

@@ -40,7 +40,7 @@ under the License.
                                         <not><if-empty field="quote"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="QuoteTabBar" location="component://order/widget/QuoteMenus.xml"/>
+                                        <include-menu name="QuoteTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                                     </widgets>
                                 </section>
                                 <label style="heading">[${uiLabelMap.CommonId}:${quote.quoteId}] ${quote.description}</label>

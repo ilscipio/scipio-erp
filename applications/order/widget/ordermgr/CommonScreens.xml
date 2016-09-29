@@ -66,10 +66,9 @@ under the License.
     <screen name="CommonQuoteDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/QuoteMenus.xml#Quote" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Quote" />
                 <set field="activeMainMenuItem" value="quote"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
-                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -106,7 +105,7 @@ under the License.
                                         <not><if-empty field="quoteId"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="QuoteSubTabBar" location="component://order/widget/QuoteMenus.xml"/>
+                                        <include-menu name="QuoteSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

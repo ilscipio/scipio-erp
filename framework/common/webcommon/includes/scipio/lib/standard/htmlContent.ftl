@@ -1101,6 +1101,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
 <#-- @chart main markup - theme override -->
 <#macro chart_markup type="" chartLibrary="" title="" chartId="" xlabel="" ylabel="" label1="" label2="" labelUom1="" labelUom2="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
+  <#-- WARN/FIXME?: ids and type are not escaped, currently assumed to come from internal only... -->
   <#local nestedContent><#nested /></#local>
   <#if chartLibrary=="foundation">
     <#if nestedContent?has_content>
@@ -1148,10 +1149,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                         var datasetLabel = '';                                  
                                         <#if type=="line" || type=="bar">
                                              datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
-                                             return datasetLabel + ': ' + tooltipItem.yLabel + ' ${labelUom1!}';
+                                             return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom1!, 'js')}';
                                         <#elseif type="pie">
                                              datasetLabel = data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                             return datasetLabel + ' ${labelUom1!}';
+                                             return datasetLabel + ' ${escapePart(labelUom1!, 'js')}';
                                         <#else>
                                             return datasetLabel;
                                         </#if>
@@ -1160,7 +1161,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 <#if labelUom2?has_content> 
                                     if(tooltipItem.datasetIndex == 1) {
                                         var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${labelUom2!}';
+                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom2!, 'js')}';
                                     }
                                 </#if>
                             }
@@ -1179,7 +1180,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     title: {
                         <#if title?has_content>
                             display: true,
-                            text: '${title}',
+                            text: '${escapePart(title, 'js')}',
                         <#else>
                             display: false,
                         </#if>
@@ -1200,7 +1201,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 },
                                 scaleLabel : {
                                     display: chartData.scaleLabelDisplay,
-                                    <#if xlabel?has_content>labelString: '${xlabel!}',</#if>
+                                    <#if xlabel?has_content>labelString: '${escapePart(xlabel!, 'js')}',</#if>
                                     fontColor: chartData.scaleLabelFontColor,
                                     fontFamily: chartData.scaleLabelFontFamily,
                                     fontSize: chartData.scaleLabelFontSize                                
@@ -1218,7 +1219,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             yAxes: [{
                                 scaleLabel : {
                                     display: chartData.scaleLabelDisplay,
-                                    <#if ylabel?has_content>scaleLabel: '${xlabel!}',</#if>
+                                    <#if ylabel?has_content>scaleLabel: '${escapePart(xlabel!, 'js')}',</#if>
                                     fontColor: chartData.scaleLabelFontColor,
                                     fontFamily: chartData.scaleLabelFontFamily,
                                     fontSize: chartData.scaleLabelFontSize
@@ -1246,7 +1247,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     {
                     
                       <#if type=="line" || type=="bar">
-                      label: '${label1!}',                      
+                      label: '${escapePart(label1!, 'js')}',                      
                       fill: true,
                       backgroundColor: chartData.primaryFillColor,
                       borderColor: chartData.primaryStrokeColor,
@@ -1277,7 +1278,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     <#if (chartDatasets > 1)>
                     ,{
                       <#if (type=="line" || type=="bar")>
-                      label: '${label2!}',
+                      label: '${escapePart(label2!, 'js')}',
                       fill: true,
                       backgroundColor: chartData.secondaryFillColor,
                       borderColor: chartData.secondaryStrokeColor,
@@ -1377,14 +1378,14 @@ Chart data entry.
   <#if chartLibrary == "foundation">
     <#if chartType == "line">
       <#global chartDataIndex =  chartDataIndex + 1 />
-      <li data-y="${value!}" data-x="${chartDataIndex}">${title!}</li>
+      <li data-y="${escapePart(value!, 'html')}" data-x="${chartDataIndex}">${escapePart(title!, 'html')}</li>
     <#else>
-      <li data-value="${value!}">${title!}</li>
+      <li data-value="${escapePart(value!, 'html')}">${escapePart(title!, 'html')}</li>
     </#if>
   <#else>
-      config.data.labels.push('${title!}');
-      <#if value?has_content>config.data.datasets[0].data.push(${value!});</#if>
-      <#if value2?has_content>config.data.datasets[1].data.push(${value2!});</#if>
+      config.data.labels.push('${escapePart(title!, 'js')}');
+      <#if value?has_content>config.data.datasets[0].data.push(${escapePart(value!, 'js')});</#if>
+      <#if value2?has_content>config.data.datasets[1].data.push(${escapePart(value2!, 'js')});</#if>
   </#if>
 </#macro>
 

@@ -1388,6 +1388,29 @@ the resulting type into a simple Freemarker string.
 
 <#-- 
 *************
+* toStringIfNot
+************
+Returns the given value as a string but only if not already a string
+
+This intentionally skips calling ?string on existing strings to prevent auto-escaping,
+but still result will be a string.
+
+WARN: this works using FTL's primitive ?is_string test, which may return TRUE for complex 
+    objects that aren't really strings.
+
+  * Parameters *
+    value                   = (required) The value to return as string
+-->
+<#function toStringIfNot value>
+  <#if value?is_string>
+    <#return value>
+  <#else>
+    <#return value?string>
+  </#if>
+</#function>
+
+<#-- 
+*************
 * htmlContentString
 ************
 Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and 
@@ -1948,6 +1971,8 @@ It abstracts the encoder selection.
 
 Currently, it uses Ofbiz's encoder (subject to change).
 
+NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+
   * Parameters *
     str                     = The string to escape
     lang                    = (html|xml|raw) The target language
@@ -1960,7 +1985,7 @@ Currently, it uses Ofbiz's encoder (subject to change).
 -->
 <#function escapeFull str lang>
   <#-- NOTE: Currently we support the same types as Ofbiz, so no need for a switch -->
-  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(rawString(str)))>
+  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(rawString(toStringIfNot(str))))>
 </#function>
 
 <#-- 
@@ -2063,6 +2088,8 @@ Currently, there is no real need to replace occurrences of Freemarker built-ins 
 NOTE: There are a few rare stock Ofbiz templates where this should not be used, on account of the
     #rawString call, where there is a complex mix of javascript and html.
 
+NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+
   * Parameters *
     str                     = The string to escape
     lang                    = (js|jsdq|json|html|url|xml|style|raw) The target language
@@ -2078,7 +2105,7 @@ NOTE: There are a few rare stock Ofbiz templates where this should not be used, 
     #escapeFull
 -->
 <#function escapePart str lang>
-  <#local str = rawString(str)>
+  <#local str = rawString(toStringIfNot(str))>
   <#switch lang?lower_case>
     <#case "json">
       <#return str?json_string>

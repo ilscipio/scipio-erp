@@ -47,9 +47,15 @@ public class ToRawStringMethod implements TemplateMethodModelEx {
         if (arg == null) { // Emulates StringUtil.wrapString
             return null;
         }
-        TemplateScalarModel strModel = (TemplateScalarModel) arg;
-        String str = LangFtlUtil.getAsStringNonEscaping(strModel);
-        return new SimpleScalar(str); // Emulates Freemarker ?string built-in
+        if (arg instanceof TemplateScalarModel) {
+            TemplateScalarModel strModel = (TemplateScalarModel) arg;
+            String str = LangFtlUtil.getAsStringNonEscaping(strModel);
+            return new SimpleScalar(str); // Emulates Freemarker ?string built-in
+        } else {
+            // TODO: coerce non-strings to string for fallback
+            // PROBLEM: no access to ?string built-in...
+            throw new TemplateModelException("rawString currently does not support coercing non-string values");
+        }
     }
     
 }

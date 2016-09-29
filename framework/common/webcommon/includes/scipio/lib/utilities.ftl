@@ -2092,7 +2092,7 @@ NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced
 
   * Parameters *
     str                     = The string to escape
-    lang                    = (js|jsdq|json|html|url|xml|style|raw) The target language
+    lang                    = (js|jsdq|json|html|url|xml|style|js-html|html-js|raw) The target language
                               These are similar to the Freemarker built-in counterparts, but may
                               not produce the exact same results.
                               {{{jsdq}}}: special case of js where it is assumed the value
@@ -2118,6 +2118,12 @@ NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced
       <#break>
     <#case "html">
       <#return str?html>
+      <#break>
+    <#case "js-html">
+      <#return str?js_string?html>
+      <#break>
+    <#case "html-js">
+      <#return str?html?js_string>
       <#break>
     <#case "xml">
       <#return str?xml>

@@ -66,7 +66,9 @@ under the License.
                 </entity-and>
                
                 <!-- Default setup --> 
-                <script location="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy"/>
+                <!-- SCIPIO: NOTE: Scipio now supports parametrized script locations, making the following possible -->
+                <set field="shopSetupScriptLocation" from-field="shopSetupScriptLocation" default-value="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy" />
+                <script location="${shopSetupScriptLocation}"/>
                
                 <!-- Common scripts relevant to any/all screens -->
                 <set field="permChecksSetGlobal" type="Boolean" value="true" />

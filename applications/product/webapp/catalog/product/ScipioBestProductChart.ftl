@@ -12,8 +12,8 @@
                     <#assign currData = bestSellingProducts.get(dateIntervals) />                
                     <#if currData?has_content> 
                         <#if datasets == 1>             
-                            <#list currData as bestSetllingProduct>     
-                                <@chartdata value="${bestSetllingProduct.qtyOrdered!0}" title="${rawString(bestSetllingProduct.productName)!bestSetllingProduct.productId}"/>
+                            <#list currData as bestSellingProduct>     
+                                <@chartdata value="${bestSellingProduct.qtyOrdered!0}" title="${rawString(bestSellingProduct.productName)!bestSellingProduct.productId}"/>
                             </#list>                           
                         </#if>
                     </#if>

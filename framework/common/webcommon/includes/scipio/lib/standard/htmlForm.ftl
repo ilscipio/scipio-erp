@@ -81,7 +81,7 @@ Defines a form. Analogous to <form> HTML element.
 <#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
   <#if open>
     <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-      <#lt><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+      <#lt><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -223,7 +223,7 @@ to a form submit.
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
     <#if explicitId>
-      <#local opts = concatMaps(opts, {"progBarId":"${id}"})>
+      <#local opts = concatMaps(opts, {"progBarId":id})>
     </#if>
     <#-- inlines always override args map -->
     <@progressScript progressOptions=opts htmlwrap=true args=progressArgs passArgs=passArgs />
@@ -235,8 +235,8 @@ to a form submit.
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
   <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if stateClass?has_content> ${stateClass}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
-    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
+    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
+      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value}</#if></span>
     <#if styles.progress_wrap?has_content></div></#if>
   </div>
 </#macro>
@@ -283,14 +283,14 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
     <#if id?has_content>
     <@script htmlwrap=htmlwrap>
     jQuery(document).ready(function() {
-        multiple = jQuery("#${id!}");
+        multiple = jQuery("#${id}");
     
       <#if !(title?is_boolean && title == false)>
         <#if title?is_boolean>
           <#local title = "">
         </#if>
-        // set the dropdown "title" if??
-        multiple.attr('title', '${title}');
+        <#-- set the dropdown "title" if?? -->
+        multiple.attr('title', '${escapePart(title, 'js')}');
       </#if>
       
         <#if asmSelectDefaults>
@@ -409,24 +409,24 @@ A visible fieldset, including the HTML element.
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
     <@row open=true close=false />
       <@cell open=true close=false class=containerClasses id=containerId />
-        <fieldset<#if classes?has_content> class="${classes!}"</#if><#if id?has_content> id="${id}"</#if>>
+        <fieldset<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${escapePart(expandToolTip, 'html')}', '${escapePart(collapseToolTip, 'html')}');">
                     <#else>expanded">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${escapePart(expandToolTip, 'html')}', '${escapePart(collapseToolTip, 'html')}');">
                     </#if>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${title}</#if></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${escapePart(title, 'html')}</#if></a>
           </li>
         </ul>
       <#else>
-        <#if title?has_content>${title}</#if>
+        <#if title?has_content>${escapePart(title, 'html')}</#if>
       </#if><#rt/>
     </div>
-    <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
+    <div id="${collapsibleAreaId}" class="fieldgroup-body"<#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${title}</legend></#if>
+          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapePart(title, 'html')}</legend></#if>
   </#if>
           <#nested>
   <#if close>
@@ -2320,6 +2320,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     WARN: origArgs may be empty -->
 <#macro field_markup_labelarea labelType="" labelPosition="" label="" labelContent=false labelDetail=false fieldType="" fieldsType="" fieldId="" collapse="" 
     required=false labelContentArgs={} norows=false nocells=false container=true origArgs={} passArgs={} catchArgs...>
+  <#-- FIXME: The label SHOULD be escaped but too many places might not do it currently, full review needed
+  <#local label = escapePart(label, 'html')?trim> -->
   <#local label = label?trim>
   <#if !labelContent?is_boolean>
     <@contentArgRender content=labelContent args=labelContentArgs doTrim=true />

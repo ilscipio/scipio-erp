@@ -199,6 +199,7 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
   <#if !active?is_boolean>
     <#local active = false>
   </#if>
+
   <@step_markup class=class icon=icon completed=completed disabled=disabled active=active 
     href=href origArgs=origArgs passArgs=passArgs><#nested></@step_markup>
   <#local dummy = setRequestVar("scipioNavEntryIndex", stepIndex + 1)>
@@ -206,7 +207,14 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
 
 <#-- @step main markup - theme override -->
 <#macro step_markup class="" icon="" completed=false disabled=false active=false href="" origArgs={} passArgs={} catchArgs...>
-  <li class="${styles.nav_step!}<#if active> ${styles.nav_step_active!}</#if><#if disabled> ${styles.nav_step_disabled!}</#if> ${class!""}">
+  <#local class = addClassArg(class, styles.nav_step!)>
+  <#if active> 
+    <#local class = addClassArg(class, styles.nav_step_active!)>
+  </#if>
+  <#if disabled> 
+    <#local class = addClassArg(class, styles.nav_step_disabled!)>
+  </#if>
+  <li<@compiledClassAttribStr class=class />>
     <#local showLink = href?has_content && !disabled><#-- allow link to active for clean page refresh: && !active -->
     <#if showLink>
       <a href="${escapeFullUrl(href, 'html')}">
@@ -529,14 +537,14 @@ The submenu's main class may be set as altnested in global styles.
     <#if specialType == "main">
       <#-- WARN: isNestedMenu check here would not be logical -->
       <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
-        <#if (styles.framework!"") == "bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if (styles.framework!"") == "bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
+        <#if (styles.framework!"") == "bootstrap"> data-toggle="dropdown"</#if>>${escapePart(title, 'html')}<#if (styles.framework!"") == "bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
     <#elseif specialType == "sidebar" && !isNestedMenu>
       <#-- WARN: isNestedMenu check here is flawed, but it's all we need for now -->
       <nav class="${styles.nav_sidenav!""}">
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
-        <#if navigation?has_content><h2>${navigation}</h2></#if>
+        <#if navigation?has_content><h2>${escapePart(navigation, 'html')}</h2></#if>
     <#elseif specialType == "button-dropdown">
-      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false"<@compiledClassAttribStr class=mainButtonClass />>${title}</button><br>
+      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false"<@compiledClassAttribStr class=mainButtonClass />>${escapePart(title, 'html')}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
     <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
@@ -796,7 +804,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 <#macro menuitem_link_markup itemType="" menuType="" menuSpecialType="" class="" id="" style="" href="" name="" onClick="" target="" title="" 
     attribs={} excludeAttribs=[] disabled=false selected=false active=false activeTarget="" isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 
     origArgs={} passArgs={} catchArgs...>
-  <#t><a href="${escapeFullUrl(href, 'html')}"<#if onClick?has_content> onclick="${onClick}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
+  <#t><a href="${escapeFullUrl(href, 'html')}"<#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${escapePart(target, 'html')}"</#if><#if title?has_content> title="${escapePart(title, 'html')}"</#if>><#nested></a>
 </#macro>
 
 <#-- @menuitem type="text" markup - theme override -->
@@ -806,14 +814,14 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#if contentWrapElem?is_boolean>
     <#local contentWrapElem = contentWrapElem?string("span", "")>
   </#if>
-  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
+  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
 </#macro>
 
 <#-- @menuitem type="submit" markup - theme override -->
 <#macro menuitem_submit_markup itemType="" menuType="" menuSpecialType="" class="" id="" style="" text="" onClick="" disabled=false attribs={} 
     excludeAttribs=[] disabled=false selected=false active=false activeTarget="" isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 
     origArgs={} passArgs={} catchArgs...>
-  <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
+  <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if><#if disabled> disabled="disabled"</#if>/><#nested></button>
 </#macro>
 
 <#-- @menuitem type="generic" markup - theme override -->
@@ -823,7 +831,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#if contentWrapElem?is_boolean>
     <#local contentWrapElem = contentWrapElem?string("div", "")>
   </#if>
-  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
+  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
 </#macro>
 
 <#-- 
@@ -1326,7 +1334,7 @@ functionality.
       <#if !listItemsOnly>
         <div class="${styles.grid_row!}">
 
-          <div class="${styles.grid_large!}2 ${styles.grid_cell!}"><#if showCount>${countMsg}</#if></div>
+          <div class="${styles.grid_large!}2 ${styles.grid_cell!}"><#if showCount>${escapePart(countMsg, 'html')}</#if></div>
           <div class="${styles.grid_large!}8 ${styles.grid_cell!}">
             <div<@compiledClassAttribStr class=paginateClass />>
               <ul class="${styles.pagination_list!}">
@@ -1339,9 +1347,9 @@ functionality.
                     currently non-js falls back to GET only, won't always work -->
   
                 <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxFirstUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(firstUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(firstUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${compileClassArg(paginateFirstClass)}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateFirstLabel}</span></#if></li>
+                <li class="${styles.pagination_item!} ${compileClassArg(paginateFirstClass)}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${escapePart(paginateFirstLabel, 'html')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapePart(paginateFirstLabel, 'html')}</span></#if></li>
                 <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPreviousUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(previousUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(previousUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${compileClassArg(paginatePreviousClass)}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginatePreviousLabel}</span></#if></li>
+                <li class="${styles.pagination_item!} ${compileClassArg(paginatePreviousClass)}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${escapePart(paginatePreviousLabel, 'html')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapePart(paginatePreviousLabel, 'html')}</span></#if></li>
             <#local displayDots = true/>
             <#if (listSize > 0)> 
               <#local x=(listSize/viewSize)?ceiling>
@@ -1357,16 +1365,16 @@ functionality.
                       <li><a ${actionStr}>${i}</a></li>
                     </#if>
                   <#else>
-                  <#if displayDots><li>${placeHolder!}</li></#if>
+                  <#if displayDots><li>${escapePart(placeHolder, 'html')}</li></#if>
                   <#local displayDots = false/>
                   </#if>
                 </#list>
             </#if>
             
                 <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxNextUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(nextUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(nextUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${compileClassArg(paginateNextClass)}<#if (highIndex < listSize)>"><a ${actionStr}>${paginateNextLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateNextLabel}</span></#if></li>
+                <li class="${styles.pagination_item!} ${compileClassArg(paginateNextClass)}<#if (highIndex < listSize)>"><a ${actionStr}>${escapePart(paginateNextLabel, 'html')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapePart(paginateNextLabel, 'html')}</span></#if></li>
                 <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxLastUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(lastUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(lastUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${compileClassArg(paginateLastClass)}<#if (highIndex < listSize)>"><a ${actionStr}>${paginateLastLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateLastLabel}</span></#if></li>         
+                <li class="${styles.pagination_item!} ${compileClassArg(paginateLastClass)}<#if (highIndex < listSize)>"><a ${actionStr}>${escapePart(paginateLastLabel, 'html')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapePart(paginateLastLabel, 'html')}</span></#if></li>         
   
       <#if !listItemsOnly>  
               </ul>
@@ -1377,7 +1385,7 @@ functionality.
               <#-- NOTE: duplicated below -->
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPaginateOffUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(paginateOffUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(paginateOffUrl, 'html')}"</#if></#local>
               <#local paginateOffClass = addClassArg(paginateOffClass, styles.pagination_item!)>
-              <span<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${paginateOffLabel}</a></span>       
+              <span<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${escapePart(paginateOffLabel, 'html')}</a></span>       
             </#local>    
           </#if>
           <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
@@ -1386,7 +1394,7 @@ functionality.
                 <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${escapeFullUrl(ajaxSelectSizeUrl, 'js-html')}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(selectSizeUrl, 'js-html')}')</#if>"</#local>
                 <div class="${styles.grid_row!}">
                     <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
-                        <label>${paginateViewSizeLabel}</label>
+                        <label>${escapePart(paginateViewSizeLabel, 'html')}</label>
                     </div>
                     <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
                         <select name="pageSize" size="1" ${actionStr}><#rt/>    
@@ -1425,7 +1433,7 @@ functionality.
     <#if !listItemsOnly>
       <div class="${styles.grid_row!}">
       <#if alwaysShowCount>
-        <div class="${styles.grid_large!}2 ${styles.grid_cell!} ${styles.grid_end!}">${countMsg}</div>
+        <div class="${styles.grid_large!}2 ${styles.grid_cell!} ${styles.grid_end!}">${escapePart(countMsg, 'html')}</div>
         <div class="${styles.grid_large!}8 ${styles.grid_cell!}">&nbsp;</div>
         <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
       <#else>
@@ -1438,11 +1446,11 @@ functionality.
             <#if !paginateOn>
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPaginateOnUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(paginateOnUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(paginateOnUrl, 'html')}"</#if></#local>
               <#local paginateOffClass = addClassArg(paginateOnClass, styles.pagination_item!)>
-              <li<@compiledClassAttribStr class=paginateOnClass />><a ${actionStr}>${paginateOnLabel}</a></li>  
+              <li<@compiledClassAttribStr class=paginateOnClass />><a ${actionStr}>${escapePart(paginateOnLabel, 'html')}</a></li>  
             <#else>
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPaginateOffUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(paginateOffUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(paginateOffUrl, 'html')}"</#if></#local>
               <#local paginateOffClass = addClassArg(paginateOffClass, styles.pagination_item!)>
-              <li<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${paginateOffLabel}</a></li> 
+              <li<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${escapePart(paginateOffLabel, 'html')}</a></li> 
             </#if>
     <#if !listItemsOnly>  
             </ul>
@@ -1453,7 +1461,7 @@ functionality.
   <#elseif alwaysShowCount>
       <#if !listItemsOnly>
         <div class="${styles.grid_row!}">
-          <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.grid_end!}">${countMsg}</div>
+          <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.grid_end!}">${escapePart(countMsg, 'html')}</div>
         </div>
       </#if>
   </#if>

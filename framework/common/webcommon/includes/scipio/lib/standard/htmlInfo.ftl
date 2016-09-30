@@ -98,7 +98,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.alert_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#local typeClass = "alert_type_${type!}"/>
+  <#local typeClass = "alert_type_${type}"/>
   <#if type == "error">
     <#local type = "alert">
   </#if>
@@ -121,7 +121,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
   <#local containerClass = addClassArg(containerClass, styles.grid_row!)>
   <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#if containerStyle?has_content> style="${containerStyle}"</#if>>
     <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
-      <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
+      <div data-alert class="${styles.alert_wrap!} ${styles[rawString(typeClass)]!}">
         <div class="${styles.grid_row!}">
           <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
             <#if closable><a href="#" class="${styles.closable!}" data-dismiss="alert">&times;</a></#if>

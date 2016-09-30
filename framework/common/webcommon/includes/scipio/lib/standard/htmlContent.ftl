@@ -1067,6 +1067,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     library                 = (foundation|chart, default: chart) Uses either chart.js or foundation. 
                                "foundation" is deprecated and requires additional seed data in order to run. 
                                Uncomment "PIZZA AMORE" in component://base-theme/data/BaseThemeData.xml to use
+    id                      = chart ID
     title                   = ((string), default: -empty-) Data Title
     xlabel                  = X-axis label
     ylabel                  = Y-axis label
@@ -1079,7 +1080,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     @chartdata
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"chart", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
+  "type":"pie", "library":"chart", "id":"", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.chart_defaultArgs)>
@@ -1090,28 +1091,32 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#local chartIdNum = getRequestVar("scipioChartIdNum")!0>
   <#local chartIdNum = chartIdNum + 1 />
   <#local dummy = setRequestVar("scipioChartIdNum", chartIdNum)>
-  <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
+  <#global chartId = id>
+  <#if !chartId?has_content>
+    <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum}"/>
+  </#if>
   <#global chartType = type/>
   <#global chartDataIndex = 0/>
   
-  <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
+  <#-- NOTE: chartId parameter is for compatibility -->
+  <@chart_markup type=type id=chartId chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
     xlabel=xlabel ylabel=ylabel label1=label1 label2=label2 labelUom1=labelUom1 labelUom2=labelUom2
     renderSeqNumber=(renderSeqNumber!) origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro chart_markup type="" chartLibrary="" title="" chartId="" xlabel="" ylabel="" label1="" label2="" labelUom1="" labelUom2="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
+<#macro chart_markup type="" chartLibrary="" title="" id="" xlabel="" ylabel="" label1="" label2="" labelUom1="" labelUom2="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
   <#-- WARN/FIXME?: ids and type are not escaped, currently assumed to come from internal only... -->
   <#local nestedContent><#nested /></#local>
   <#if chartLibrary=="foundation">
     <#if nestedContent?has_content>
     <@row>
       <@cell columns=3>
-        <ul data-${type}-id="chart_${renderSeqNumber}_${chartIdNum}" class="${styles.chart_legend!}">
+        <ul data-${type}-id="${id}" class="${styles.chart_legend!}">
             <#nested/>
         </ul>
       </@cell>
-      <@cell columns=9><div id="chart_${renderSeqNumber}_${chartIdNum}" style="height:300px;"></div></@cell>
+      <@cell columns=9><div id="${id}" style="height:300px;"></div></@cell>
     </@row>
     <#else>
         <#-- Default to chart.js chart for now, as this is capable of rendering an empty chart -->
@@ -1128,7 +1133,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
     <#if (chartDatasets < 1)><#local chartDatasets = 1 /></#if>
     <span class="chart-data">&nbsp;</span>
-    <canvas id="${chartId}" height="300" width="500"></canvas>
+    <canvas id="${id}" height="300" width="500"></canvas>
     <@script>
         $(function(){
             var chartDataEl = $('.chart-data').first();
@@ -1240,7 +1245,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }            
                     </#if>
                 };
-            var ctx_${renderSeqNumber}_${chartIdNum} = $('#${chartId}').get(0).getContext("2d");
+            var ctx_${renderSeqNumber}_${chartIdNum} = $('#${id}').get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
@@ -1311,9 +1316,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 options: options
             };
             <#-- FIXME: this var is poor because can't even be escaped... -->
-            var ${chartId} = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
+            var ${id} = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
             ${nestedContent}
-            ${chartId}.update();
+            ${id}.update();
         });
     </@script>
   </#if>
@@ -1434,11 +1439,11 @@ Creates a slider wrapper.
   <#local sliderIdNum = sliderIdNum + 1 />
   <#local dummy = setRequestVar("scipioSliderIdNum", sliderIdNum)>
   <#--<#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>-->
-  <#local sliderId = id>  
+  <#global sliderId = id>  
   <#if !sliderId?has_content>
-    <#local sliderId = "scipio_slider_${sliderIdNum}"/>
+    <#global sliderId = "scipio_slider_${sliderIdNum}"/>
   </#if>
-  <#-- NOTE: sliderId passed for compatibility -->
+  <#-- NOTE: sliderId parameter is for compatibility -->
   <@slider_markup id=sliderId sliderId=sliderId sliderIdNum=sliderIdNum class=class title=title library=library controls=controls indicator=indicator
         jsOptions=jsOptions origArgs=origArgs passArgs=passArgs><#nested></@slider_markup>
 </#macro>
@@ -1497,6 +1502,7 @@ Slider data entry - a single slide.
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    id                      = slide ID
     library                 = (|owl|slick, default: -empty-) Uses either Owl carousel, Slick or foundation orbit. 
                                "owl" & "slick" require additional seed data in order to run. 
     link                    = Link URL around nested content
@@ -1512,7 +1518,7 @@ Slider data entry - a single slide.
     @slider
 -->
 <#assign slide_defaultArgs = {
-  "title":"", "class":"", "library":"","link":"", "linkTarget":false, "image":"", "passArgs":{}
+  "title":"", "class":"", "id":"", "library":"","link":"", "linkTarget":false, "image":"", "passArgs":{}
 }>
 <#macro slide args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.slide_defaultArgs)>
@@ -1535,13 +1541,15 @@ Slider data entry - a single slide.
   <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
-  <#local id = "slide_${renderSeqNumber}_${slideIdNum}"/>
-  <@slide_markup id=id class=class library=library image=image link=link linkTarget=linkTarget title=title 
+  <#if !id?has_content>
+    <#local id = "slide_${renderSeqNumber}_${slideIdNum}"/>
+  </#if>
+  <@slide_markup id=id sliderId=(sliderId!) class=class library=library image=image link=link linkTarget=linkTarget title=title 
     slideIdNum=slideIdNum sliderLength=sliderLength renderSeqNumber=(renderSeqNumber!) origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
 </#macro>
 
 <#-- @slide main markup - theme override -->
-<#macro slide_markup id="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" origArgs={} passArgs={} catchArgs...>
+<#macro slide_markup id="" sliderId="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" origArgs={} passArgs={} catchArgs...>
     <#if library=="owl" || library=="slick">
         <div id="${id}" class="item">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
@@ -1570,7 +1578,6 @@ Slider data entry - a single slide.
         </div>
     </#if>
 </#macro>
-
 
 <#-- 
 *************

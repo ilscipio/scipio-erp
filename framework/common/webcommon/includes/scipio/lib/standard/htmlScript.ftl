@@ -151,7 +151,7 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
 <#-- @script main markup - theme override -->
 <#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} passArgs={} catchArgs...>
   <#if src?has_content>
-    <script type="${type}" src="${src}"></script>
+    <script type="${type}" src="${escapeFullUrl(src, 'html')}"></script>
   <#else>
     <#if htmlwrap>
       <script type="${type}">

@@ -1098,7 +1098,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#if hasTitle>
         <#local titleMarkup>
           <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
-            containerClass=titleHeadingContainerClass passArgs=passArgs>${title}</@heading>
+            containerClass=titleHeadingContainerClass passArgs=passArgs>${escapePart(title, 'html')}</@heading>
         </#local>
       </#if> 
     </#if>

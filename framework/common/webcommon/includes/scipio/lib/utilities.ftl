@@ -1944,15 +1944,44 @@ a raw script value (rather than enclosed in a string).
 *************
 * isRawScript
 ************
-Checks if the object was wrapped with #wrapRawScript.
+Checks if the object was wrapped with #wrapRawScript or #isRawMarkup.
                    
   * Parameters *
-    object                  = the string to wrap
+    object                  = the string to check
     
   * Related *
     @objectAsScript
 -->
 <#function isRawScript object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
+</#function>
+
+<#-- 
+*************
+* wrapRawMarkup
+************
+Wraps a string in a special wrapper that when passed to markup-handling macros gets included as
+a raw markup without escaping.
+                   
+NOTE: This is synonym for #wrapRawScript (semantics).
+
+  * Parameters *
+    object                  = the string to wrap
+-->
+<#function wrapRawMarkup object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(rawString(object))>
+</#function>
+
+<#-- 
+*************
+* isRawMarkup
+************
+Checks if the object was wrapped with #wrapRawMarkup or #wrapRawScript.
+                   
+  * Parameters *
+    object                  = the string to check
+-->
+<#function isRawMarkup object>
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
 </#function>
 
@@ -1984,6 +2013,9 @@ NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced
     #escapePart
 -->
 <#function escapeFull str lang>
+  <#if isRawScript(str)>
+    <#return str?string>
+  </#if>
   <#-- NOTE: Currently we support the same types as Ofbiz, so no need for a switch -->
   <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(rawString(toStringIfNot(str))))>
 </#function>
@@ -2029,6 +2061,9 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
                               FIXME: escaping for {{{style}}}
 -->
 <#function escapeFullUrl str lang>
+  <#if isRawScript(str)>
+    <#return str?string>
+  </#if>
   <#local str = rawString(str)>
   <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
   <#local str = str?replace("&amp;", "&")>
@@ -2105,6 +2140,9 @@ NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced
     #escapeFull
 -->
 <#function escapePart str lang>
+  <#if isRawScript(str)>
+    <#return str?string>
+  </#if>
   <#local str = rawString(toStringIfNot(str))>
   <#switch lang?lower_case>
     <#case "json">

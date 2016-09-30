@@ -139,7 +139,7 @@ under the License.
           <#-- Scipio: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
           <a href="javascript:jQuery('#row_orderitem_cancel_${orderItem.orderItemSeqId}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
           <#--<@modal id="row_orderitem_cancel_${orderItem.orderItemSeqId}" label="[${cancelItemLabel}]">
-            <@section title="${cancelItemLabel}: ${orderItem.itemDescription!}">
+            <@section title="${rawString(cancelItemLabel)}: ${rawString(orderItem.itemDescription!)}">
               <@cancelItemForm />
             </@section>
           </@modal>-->

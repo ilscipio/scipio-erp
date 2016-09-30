@@ -20,7 +20,7 @@ under the License.
 <#if custRequestItem??>
   <@menu type="button">
   <#if quoteId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditQuoteItemForRequest?quoteId=${quoteId}&custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}") text="${uiLabelMap.PageTitleEditQuoteItemForCustRequest} [${quoteId}]" class="+${styles.action_nav!} ${styles.action_update!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditQuoteItemForRequest?quoteId=${quoteId}&custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}") text="${rawString(uiLabelMap.PageTitleEditQuoteItemForCustRequest)} [${rawString(quoteId)}]" class="+${styles.action_nav!} ${styles.action_update!}" />
   <#else>
     <@menuitem type="link" href=makeOfbizUrl("CreateQuoteAndQuoteItemForRequest?custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}") text=uiLabelMap.PageTitleCreateQuoteForCustRequest class="+${styles.action_nav!} ${styles.action_add!}" />
   </#if>

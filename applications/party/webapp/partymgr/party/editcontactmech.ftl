@@ -150,11 +150,11 @@ under the License.
         [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyContactExt}]
     </@field>
   <#elseif "EMAIL_ADDRESS" == (mechMap.contactMechTypeId!)>
-    <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="emailAddress" value=(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!) />
+    <@field type="input" label=(mechMap.contactMechType.get('description',locale)) size="60" maxlength="255" name="emailAddress" value=((mechMap.contactMech.infoString)!(request.getParameter('emailAddress')!)) />
   <#else>
-    <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="infoString" value=((mechMap.contactMech.infoString)!) />
+    <@field type="input" label=(mechMap.contactMechType.get('description',locale)) size="60" maxlength="255" name="infoString" value=((mechMap.contactMech.infoString)!) />
   </#if>
-  <@field type="select" label="${uiLabelMap.PartyContactAllowSolicitation}?" name="allowSolicitation">
+  <@field type="select" label="${rawString(uiLabelMap.PartyContactAllowSolicitation)}?" name="allowSolicitation">
       <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
       <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
       <option></option>

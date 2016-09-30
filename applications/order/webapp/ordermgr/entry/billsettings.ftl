@@ -172,8 +172,8 @@ function makeExpDate() {
             <#assign fieldDisabled = requestParameters.useShipAddr??>
             <@field type="input" label=uiLabelMap.CommonToName size="30" maxlength="60" name="toName" value=toName disabled=fieldDisabled />
             <@field type="input" label=uiLabelMap.CommonAttentionName size="30" maxlength="60" name="attnName" value=(postalFields.attnName!) disabled=fieldDisabled />
-            <@field type="input" label="${uiLabelMap.CommonAddressLine} 1" required=true size="30" maxlength="30" name="address1" value=(postalFields.address1!) disabled=fieldDisabled />
-            <@field type="input" label="${uiLabelMap.CommonAddressLine} 2" size="30" maxlength="30" name="address2" value=(postalFields.address2!) disabled=fieldDisabled />
+            <@field type="input" label="${rawString(uiLabelMap.CommonAddressLine)} 1" required=true size="30" maxlength="30" name="address1" value=(postalFields.address1!) disabled=fieldDisabled />
+            <@field type="input" label="${rawString(uiLabelMap.CommonAddressLine)} 2" size="30" maxlength="30" name="address2" value=(postalFields.address2!) disabled=fieldDisabled />
             <@field type="input" label=uiLabelMap.CommonCity required=true size="30" maxlength="30" name="city" value=(postalFields.city!) disabled=fieldDisabled />
             <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId" disabled=fieldDisabled>
               <#if postalFields.stateProvinceGeoId??>

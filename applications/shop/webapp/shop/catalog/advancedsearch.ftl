@@ -89,7 +89,7 @@ under the License.
 
   <#if searchOptionsHistoryList?has_content>
     
-    <@section title="${uiLabelMap.OrderLastSearches}...">
+    <@section title="${rawString(uiLabelMap.OrderLastSearches)}...">
       <div>
         <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
         ${uiLabelMap.OrderClearSearchHistoryNote}

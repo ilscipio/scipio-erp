@@ -340,7 +340,7 @@ under the License.
                                     <@td>
                                       <@menu type="button">
                                         <#if itemSelectable>
-                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" text="${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" />
+                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" text="${rawString(uiLabelMap.CommonCancel)} ${rawString(uiLabelMap.CommonItem)}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" />
                                         </#if>
                                       </@menu>
                                     </@td>

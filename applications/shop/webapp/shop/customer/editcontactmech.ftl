@@ -31,7 +31,7 @@ under the License.
       <#assign requireCreate = true>
       <@section title=uiLabelMap.PartyCreateNewContactInfo>
         <form method="post" action="<@ofbizUrl>editcontactmechnosave?DONE_PAGE=${donePage}</@ofbizUrl>" name="createcontactmechform">
-            <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
+            <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
               <#list contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
@@ -160,7 +160,7 @@ under the License.
       -->
     <#elseif contactMechTypeId == "EMAIL_ADDRESS">
       <#assign fieldValue><#if tryEntity>${contactMech.infoString!}<#else>${requestParameters.emailAddress!}</#if></#assign>
-      <@field type="input" label="${uiLabelMap.PartyEmailAddress}" required=true size="60" maxlength="255" name="emailAddress" value=fieldValue />
+      <@field type="input" label=uiLabelMap.PartyEmailAddress required=true size="60" maxlength="255" name="emailAddress" value=fieldValue />
     <#else>
       <@field type="input" label=(contactMechType.get("description",locale)!) required=true size="60" maxlength="255" name="infoString" value=(contactMechData.infoString!) />
     </#if>

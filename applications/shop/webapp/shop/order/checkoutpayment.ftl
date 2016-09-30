@@ -130,10 +130,10 @@ jQuery(document).ready(function(){
   <@menu args=menuArgs>
 <#-- Scipio: all deprecated
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-    <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NC', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingCreditCard}" />
+    <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NC', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${rawString(uiLabelMap.CommonAdd)} ${rawString(uiLabelMap.AccountingCreditCard)}" />
   </#if>
   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-    <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NE', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingEFTAccount}" />
+    <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NE', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${rawString(uiLabelMap.CommonAdd)} ${rawString(uiLabelMap.AccountingEFTAccount)}" />
   </#if>
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
   <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
@@ -141,7 +141,7 @@ jQuery(document).ready(function(){
 -->
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent menuLayoutGeneral="bottom"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+<@section title="${rawString(uiLabelMap.OrderHowShallYouPay)}?" menuContent=menuContent menuLayoutGeneral="bottom"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
   <#-- Scipio: allow remember form filled via parameters first, over stored -->
   <#-- NOTE: parameters.checkOutPaymentId may already be a list -->
   <#-- FIXME?: There is no real verification of correctness of exclusivity of the payment methods here... -->
@@ -387,7 +387,7 @@ jQuery(document).ready(function(){
                <#-- Scipio: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
                     cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
                 <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
-                  class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
+                  class="+pay-select-radio pay-select-field" label="${rawString(uiLabelMap.AccountingCreditCard)}: ${rawString(methodShortInfo)}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
               </#if>
               <#if showDetails>
                 <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;"><#--title=uiLabelMap.AccountingCreditCard-->
@@ -407,7 +407,7 @@ jQuery(document).ready(function(){
             <#assign dummy = registerFieldContent({"fieldId":"newCreditCard", "contentId":"content__NEW_CREDIT_CARD"})>
             <@field type="radio" id="newCreditCard" name="checkOutPaymentId" value="_NEW_CREDIT_CARD_" 
               checked=(selectedCheckOutPaymentIdList?seq_contains("_NEW_CREDIT_CARD_")) class="+pay-select-radio pay-select-field" 
-              label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
+              label="${rawString(uiLabelMap.AccountingCreditCard)}: ${rawString(methodShortInfo)}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
           </#if>
           <#if showDetails>
             <@section containerId="content__NEW_CREDIT_CARD" containerClass="+new-item-selection-content pay-meth-content" 
@@ -482,7 +482,7 @@ jQuery(document).ready(function(){
               <#if showSelect>
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"content_${paymentMethod.paymentMethodId}"})>
                 <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=(paymentMethod.paymentMethodId) checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
-                  class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
+                  class="+pay-select-radio pay-select-field" label="${rawString(uiLabelMap.AccountingEFTAccount)}: ${rawString(methodShortInfo)}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
               </#if>
               <#if showDetails>
                 <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;"><#--title=uiLabelMap.AccountingEFTAccount-->
@@ -502,7 +502,7 @@ jQuery(document).ready(function(){
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"newEftAccount", "contentId":"content__NEW_EFT_ACCOUNT_"})>
             <@field type="radio" id="newEftAccount" name="checkOutPaymentId" value="_NEW_EFT_ACCOUNT_" checked=(selectedCheckOutPaymentIdList?seq_contains("_NEW_EFT_ACCOUNT_"))
-              class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
+              class="+pay-select-radio pay-select-field" label="${rawString(uiLabelMap.AccountingEFTAccount)}: ${rawString(methodShortInfo)}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
           </#if>
           <#if showDetails>
             <@section containerId="content__NEW_EFT_ACCOUNT_" containerClass="+new-item-selection-content pay-meth-content" 
@@ -623,7 +623,7 @@ jQuery(document).ready(function(){
                   <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}", "contentId":"content_${paymentMethod.paymentMethodId}${primSupplSuffix}"})>
                   <@field type="checkbox" id="checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}" name="checkOutPaymentId" value=(paymentMethod.paymentMethodId) 
                     class="+pay-select-checkbox pay-select-field" checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
-                    label="${uiLabelMap.AccountingGiftCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("GIFT_CARD")!) -->
+                    label="${rawString(uiLabelMap.AccountingGiftCard)}: ${rawString(methodShortInfo)}" /><#--tooltip=(getPayMethTypeDesc("GIFT_CARD")!) -->
                 </#if>
               </#if>
               <#if showDetails && showSupplemental>

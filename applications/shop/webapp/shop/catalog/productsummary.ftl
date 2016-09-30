@@ -49,7 +49,7 @@
         <#assign imgSrc="https://placehold.it/300x100"/>    
     </#if>
     <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
-    <#assign productImage><@img src=imgSrc!"" type="contain" link=imgLink!"" width="100%" height="100px"/></#assign>
+    <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>
 
     <#assign productDescription>
         <#if solrProduct?? && description??>

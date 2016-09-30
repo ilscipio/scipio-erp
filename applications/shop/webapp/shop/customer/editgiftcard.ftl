@@ -68,10 +68,10 @@ under the License.
         </#if>
       </#if>
     </#if>
-    <@field type="input" label="${uiLabelMap.AccountingCardNumber}" size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
-    <@field type="password" label="${uiLabelMap.AccountingPINNumber}" size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!) />
+    <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
+    <@field type="password" label=uiLabelMap.AccountingPINNumber size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!) />
 
-    <@field type="generic" label="${uiLabelMap.AccountingExpirationDate}">
+    <@field type="generic" label=uiLabelMap.AccountingExpirationDate>
         <#assign expMonth = "">
         <#assign expYear = "">
         <#if giftCardData?? && giftCardData.expireDate??>
@@ -104,7 +104,7 @@ under the License.
           <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
         </@field>
     </@field>
-    <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
+    <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
   </form>  
 </@section>
  

@@ -69,7 +69,7 @@ under the License.
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
                 <#assign productFeature = productFeatureAndTypeData.productFeature>
                 <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
-                <@field type="display" label="${productFeatureType.description}">
+                <@field type="display" label=(productFeatureType.description)>
                     ${productFeature.description}
                     <#if requestParameters["pftsel_" + productFeatureTypeId]??>
                         <input type="hidden" name="pftsel_${productFeatureTypeId}" value="Y"/>

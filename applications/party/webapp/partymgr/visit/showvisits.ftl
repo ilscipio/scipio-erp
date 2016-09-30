@@ -32,7 +32,7 @@ under the License.
   </#if>
   </@menu>
 </#macro>
-<@section title="${sectionTitleParty}&nbsp;${uiLabelMap.PartyVisitListing}" menuContent=menuContent>
+<@section title="${rawString(sectionTitleParty)} ${rawString(uiLabelMap.PartyVisitListing)}" menuContent=menuContent>
   <#if visitList?has_content>
     
     <#assign paramStr = addParamsToStr("", {"sort": sort!, "partyId": partyId!, "showAll": showAll!}, "&amp;", false)>

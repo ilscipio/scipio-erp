@@ -19,7 +19,7 @@ under the License.
 <#include "catalogcommon.ftl">
 
 <#if reorderProducts?has_content>
-<@section title="${uiLabelMap.ProductQuickReorder}..." id="minireorderprods">
+<@section title="${rawString(uiLabelMap.ProductQuickReorder)}..." id="minireorderprods">
         <#list reorderProducts as miniProduct>
           <div>
               <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" reqAttribs={"miniProdQuantity":reorderQuantities.get(miniProduct.productId), "miniProdFormName":"theminireorderprod" + miniProduct_index + "form", "optProductId":miniProduct.productId}/>

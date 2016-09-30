@@ -359,7 +359,7 @@ under the License.
         <#assign packageMap = linesByPackageResultMap.get("packageMap")!>
         <#assign sortedKeys = linesByPackageResultMap.get("sortedKeys")!>
         <#if ((packageMap?has_content) && (sortedKeys?has_content))>
-            <@section title="${uiLabelMap.ProductPackages} : ${sortedKeys.size()!}">
+            <@section title="${rawString(uiLabelMap.ProductPackages)} : ${sortedKeys.size()!}">
                 <#list sortedKeys as key>
                     <#assign packedLines = packageMap.get(key)>
                     <#if packedLines?has_content>

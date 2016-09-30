@@ -28,13 +28,13 @@ under the License.
     </#if>
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-          <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") class="+${styles.action_run_session!} ${styles.action_clear!}" text="${uiLabelMap.CommonClear}" />
+          <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
           <#if (searchOptionsHistoryList?size > maxToShow)>
-            <@menuitem type="link" href=makeOfbizUrl("advancedsearch") class="+${styles.action_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonMore}" />
+            <@menuitem type="link" href=makeOfbizUrl("advancedsearch") class="+${styles.action_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonMore />
           </#if>
         </@menu>
     </#macro>
-    <@section id="minilastproductsearches" title="${uiLabelMap.OrderLastSearches}..." menuContent=menuContent>
+    <@section id="minilastproductsearches" title="${rawString(uiLabelMap.OrderLastSearches)}..." menuContent=menuContent>
       <ul>
         <#list searchOptionsHistoryList[0..limit] as searchOptions>
           <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->

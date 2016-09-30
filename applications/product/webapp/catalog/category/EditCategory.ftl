@@ -112,7 +112,7 @@ under the License.
                 </@cell>
                 <@cell columns=10>
                         <#assign imgUrl><@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl></#assign>
-                        <@img src=imgUrl!"" target="_blank" width="400px"/>
+                        <@img src=imgUrl target="_blank" width="400px"/>
                 </@cell>
             </@row>
         </#if>
@@ -133,7 +133,7 @@ under the License.
                     </@cell>
                     <@cell columns=10>
                             <#assign imgUrl><@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl></#assign>
-                            <@img src=imgUrl!"" target="_blank" width="400px"/>
+                            <@img src=imgUrl target="_blank" width="400px"/>
                     </@cell>
                 </@row>
             </#if>
@@ -154,7 +154,7 @@ under the License.
                     </@cell>
                     <@cell columns=10>
                             <#assign imgUrl><@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl></#assign>
-                            <@img src=imgUrl!"" target="_blank" width="400px"/>
+                            <@img src=imgUrl target="_blank" width="400px"/>
                     </@cell>
                 </@row>
             </#if>

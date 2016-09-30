@@ -33,7 +33,7 @@ under the License.
                 <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
                 <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
                 <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-                <@field type="generic" label="${productFeatureType.description}">
+                <@field type="generic" label=(productFeatureType.description)>
                     <@field type="select" name="pft_${productFeatureTypeId}">
                         <option value="">- ${uiLabelMap.CommonNone} -</option>
                         <#list productFeatures as productFeature>

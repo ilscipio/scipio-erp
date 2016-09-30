@@ -278,7 +278,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
             <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
             <#if pickRows?has_content>
-                <@section title="${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.OrderItems} : ${pickRows.size()!}">
+                <@section title="${rawString(uiLabelMap.ProductVerified)} ${rawString(uiLabelMap.OrderItems)} : ${pickRows.size()!}">
                     <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                         <@thead>
                             <@tr class="header-row">

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.ContentSearchContents}, ${uiLabelMap.ProductSearchFor}:">
+<@section title="${rawString(uiLabelMap.ContentSearchContents)}, ${rawString(uiLabelMap.ProductSearchFor)}:">
     <#list searchConstraintStrings as searchConstraintString>
         <div><a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>

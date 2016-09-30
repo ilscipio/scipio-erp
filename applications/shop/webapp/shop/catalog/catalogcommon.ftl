@@ -34,19 +34,19 @@
         <ul class="clearing-thumbs" data-clearing>
             <#if productAdditionalImage1?has_content>
                 <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage1!}</@ofbizContentUrl></#assign>
-                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover" class=""/></li>
+                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover" class=""/></li>
             </#if>
             <#if productAdditionalImage2?has_content>
                 <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage2!}</@ofbizContentUrl></#assign>
-               <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+               <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage3?has_content>
                 <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage3!}</@ofbizContentUrl></#assign>
-                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage4?has_content>
                 <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage4!}</@ofbizContentUrl></#assign>
-                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
         </ul>
       </div>

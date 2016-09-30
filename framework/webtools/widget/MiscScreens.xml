@@ -101,6 +101,7 @@ under the License.
                 <set field="tableStyle" value="${styles.table_data_list} light-grid"/>
                 <set field="ofbizWidgetsLayoutScreenLocation" value="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemoOfbizWidgets" />
                 <set field="parameters.showLeftColumn" value="Y" />
+                <set field="complexCharString" value="&amp; &lt; &gt; ' &quot; [] () ü ö ä Ä Ü Ö ß"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

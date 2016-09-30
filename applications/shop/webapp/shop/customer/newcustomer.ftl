@@ -143,7 +143,7 @@ under the License.
       </@fields>
     </#macro>
     <@field type="input" name="CUSTOMER_EMAIL" id="CUSTOMER_EMAIL" value=(parameters.CUSTOMER_EMAIL!) 
-        onChange="changeEmail()" onkeyup="changeEmail()" label="${uiLabelMap.PartyEmailAddress}" required=true 
+        onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true 
         postWidgetContent=extraFieldContent/>
 
     <#if getUsername>
@@ -152,7 +152,7 @@ under the License.
           <@fieldErrors fieldName="USERNAME"/>
         </#macro>
         <input type="hidden" name="USERNAME" id="USERNAME" value="${parameters.USERNAME!}"/>
-        <@field type="text" name="showUserName" id="showUserName" value=(parameters.USERNAME!) disabled="disabled" label="${uiLabelMap.CommonUsername}" 
+        <@field type="text" name="showUserName" id="showUserName" value=(parameters.USERNAME!) disabled="disabled" label=uiLabelMap.CommonUsername 
             required=true postWidgetContent=extraFieldContent  />
       <#else>
         <#macro extraFieldContent args={}>
@@ -166,7 +166,7 @@ under the License.
           <#assign fieldStyle = "display:none;">
         </#if>
         <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(parameters.USERNAME!) onFocus="clickUsername();" onchange="changeEmail();" 
-            label="${uiLabelMap.CommonUsername}" required=true postWidgetContent=extraFieldContent />
+            label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
       </#if>
     </#if>
 
@@ -175,19 +175,19 @@ under the License.
         <@fieldErrors fieldName="PASSWORD"/>
       </#macro>
       <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" 
-        label="${uiLabelMap.CommonPassword}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.CommonPassword required=true postWidgetContent=extraFieldContent />
 
       <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
       </#macro>
       <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" 
-        label="${uiLabelMap.PartyRepeatPassword}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.PartyRepeatPassword required=true postWidgetContent=extraFieldContent />
 
       <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="PASSWORD_HINT"/>
       </#macro>
       <@field type="input" name="PASSWORD_HINT" id="PASSWORD_HINT" value=(parameters.PASSWORD_HINT!) 
-        maxlength="100"label="${uiLabelMap.PartyPasswordHint}" postWidgetContent=extraFieldContent/>
+        maxlength="100"label=uiLabelMap.PartyPasswordHint postWidgetContent=extraFieldContent/>
     <#else>
       <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     </#if>
@@ -208,25 +208,25 @@ under the License.
       <@fieldErrors fieldName="USER_FIRST_NAME"/>
     </#macro>
     <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(parameters.USER_FIRST_NAME!) 
-        label="${uiLabelMap.PartyFirstName}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.PartyFirstName required=true postWidgetContent=extraFieldContent />
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
     </#macro>
     <@field type="input" name="USER_MIDDLE_NAME" id="USER_MIDDLE_NAME" value=(parameters.USER_MIDDLE_NAME!) 
-        label="${uiLabelMap.PartyMiddleInitial}" postWidgetContent=extraFieldContent/>
+        label=uiLabelMap.PartyMiddleInitial postWidgetContent=extraFieldContent/>
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_LAST_NAME"/>
     </#macro>
     <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(parameters.USER_LAST_NAME!) 
-        label="${uiLabelMap.PartyLastName}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.PartyLastName required=true postWidgetContent=extraFieldContent />
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_SUFFIX"/>
     </#macro>
     <@field type="input" name="USER_SUFFIX" id="USER_SUFFIX" value=(parameters.USER_SUFFIX!) 
-        label="${uiLabelMap.PartySuffix}" postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"/>
+        label=uiLabelMap.PartySuffix postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"/>
 
   </fieldset>
   </@cell>
@@ -245,25 +245,25 @@ under the License.
       <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
     </#macro>
     <@field type="input" name="CUSTOMER_ADDRESS1" id="CUSTOMER_ADDRESS1" value=(parameters.CUSTOMER_ADDRESS1!) 
-        label="${uiLabelMap.PartyAddressLine1}" required=true postWidgetContent=extraFieldContent/>
+        label=uiLabelMap.PartyAddressLine1 required=true postWidgetContent=extraFieldContent/>
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
     </#macro>
     <@field type="input" name="CUSTOMER_ADDRESS2" id="CUSTOMER_ADDRESS2" value=(parameters.CUSTOMER_ADDRESS2!) 
-        label="${uiLabelMap.PartyAddressLine2}" postWidgetContent=extraFieldContent/>
+        label=uiLabelMap.PartyAddressLine2 postWidgetContent=extraFieldContent/>
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_CITY"/>
     </#macro>
     <@field type="input" name="CUSTOMER_CITY" id="CUSTOMER_CITY" value=(parameters.CUSTOMER_CITY!) 
-        label="${uiLabelMap.PartyCity}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.PartyCity required=true postWidgetContent=extraFieldContent />
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
     </#macro>
     <@field type="input" name="CUSTOMER_POSTAL_CODE" id="CUSTOMER_POSTAL_CODE" value=(parameters.CUSTOMER_POSTAL_CODE!) 
-        label="${uiLabelMap.PartyZipCode}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.PartyZipCode required=true postWidgetContent=extraFieldContent />
   
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>

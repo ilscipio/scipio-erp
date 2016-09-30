@@ -31,9 +31,9 @@ under the License.
     <@cell>
       <@section title=sectionTitle>
           <@menu type="button">
-            <@menuitem type="link" href=makeOfbizUrl("anoncheckoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text="${uiLabelMap.OrderCheckout}" />
+            <@menuitem type="link" href=makeOfbizUrl("anoncheckoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout />
             <#-- Scipio: TODO: Hopefully can remove link to the old one when this is over... -->
-            <@menuitem type="link" href=makeOfbizUrl("setCustomer") class="+${styles.action_run_session!} ${styles.action_continue!}" text="${uiLabelMap.OrderCheckout} (Old - Deprecated)" />
+            <@menuitem type="link" href=makeOfbizUrl("setCustomer") class="+${styles.action_run_session!} ${styles.action_continue!}" text="${rawString(uiLabelMap.OrderCheckout)} (Old - Deprecated)" />
             <#--<@menuitem type="link" href=makeOfbizUrl("quickAnonCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.OrderCheckoutQuick />-->
             <@menuitem type="link" href=makeOfbizUrl("anonOnePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.EcommerceOnePageCheckout />
           </@menu>

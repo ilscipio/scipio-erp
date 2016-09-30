@@ -26,7 +26,7 @@ under the License.
                     <#assign last = true>
                 </#if>
                 <@cell columns=4 last=last>            
-                    <@section title="${payrolGroup.description}">                        
+                    <@section title=payrolGroup.description>                        
                         <@row>
                             <@cell columns=6><strong>Description</strong></@cell>
                             <@cell columns=3><strong>Quantity</strong></@cell>

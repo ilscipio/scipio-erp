@@ -57,7 +57,7 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<@section title="${uiLabelMap.OrderHowShallWeShipIt}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
+<@section title="${rawString(uiLabelMap.OrderHowShallWeShipIt)}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
     <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
         <#--<fieldset>-->
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>
@@ -100,10 +100,10 @@ function submitForm(form, mode, value) {
             <br/>
             <#--<hr />-->
               
-            <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+            <@field type="generic" label="${rawString(uiLabelMap.OrderShipAllAtOnce)}?">
               <@fields inlineItems=false>
-              <@field type="radio" checked=("Y" != (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}."/>
-              <@field type="radio" checked=("Y" == (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}."/>
+              <@field type="radio" checked=("Y" != (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${rawString(uiLabelMap.OrderPleaseWaitUntilBeforeShipping)}."/>
+              <@field type="radio" checked=("Y" == (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${rawString(uiLabelMap.OrderPleaseShipItemsBecomeAvailable)}."/>
               </@fields>
             </@field>
               <#--<hr />-->

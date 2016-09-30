@@ -34,7 +34,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="shippingPanel" title="${uiLabelMap.EcommerceStep} 2: ${uiLabelMap.FacilityShipping}">
+        <@section id="shippingPanel" title="${rawString(uiLabelMap.EcommerceStep)} 2: ${rawString(uiLabelMap.FacilityShipping)}">
           <div id="shippingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel id="shippingCompleted">
@@ -136,7 +136,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="shippingOptionPanel" title="${uiLabelMap.EcommerceStep} 3: ${uiLabelMap.PageTitleShippingOptions}">
+        <@section id="shippingOptionPanel" title="${rawString(uiLabelMap.EcommerceStep)} 3: ${rawString(uiLabelMap.PageTitleShippingOptions)}">
           <div id="shippingOptionSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingOptionPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel class="+completed" id="shippingOptionCompleted">
@@ -169,7 +169,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="billingPanel" title="${uiLabelMap.EcommerceStep} 4: ${uiLabelMap.AccountingBilling}">
+        <@section id="billingPanel" title="${rawString(uiLabelMap.EcommerceStep)} 4: ${rawString(uiLabelMap.AccountingBilling)}">
           <div id="billingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openBillingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel class="+completed" id="billingCompleted">
@@ -302,7 +302,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section title="${uiLabelMap.EcommerceStep} 5: ${uiLabelMap.OrderSubmitOrder}">
+        <@section title="${rawString(uiLabelMap.EcommerceStep)} 5: ${rawString(uiLabelMap.OrderSubmitOrder)}">
           <div id="orderSubmitPanel" style="display: none;">
             <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
                 <#--<fieldset>-->

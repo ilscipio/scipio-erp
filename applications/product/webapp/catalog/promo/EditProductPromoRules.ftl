@@ -53,7 +53,7 @@ under the License.
                           <option value="N">${uiLabelMap.CommonN}</option>
                           <option value="Y">${uiLabelMap.CommonY}</option>
                         </@field>
-                        <@field type="text" label="${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}" required=true size="10" maxlength="20" name="andGroupId" value="_NA_"/>
+                        <@field type="text" label="${rawString(uiLabelMap.CommonAnd)} ${rawString(uiLabelMap.CommonGroup)}" required=true size="10" maxlength="20" name="andGroupId" value="_NA_"/>
                         <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </@fields>
                </form>
@@ -642,7 +642,7 @@ under the License.
 
 
 <#if promoProductPromoCategories?has_content>
-    <@section title="${uiLabelMap.ProductPromotion} ${uiLabelMap.ProductCategories}">
+    <@section title="${rawString(uiLabelMap.ProductPromotion)} ${rawString(uiLabelMap.ProductCategories)}">
       <#-- ======================= Categories ======================== -->
       <#list promoProductPromoCategories as promoProductPromoCategory>
         <#assign promoProductCategory = promoProductPromoCategory.getRelatedOne("ProductCategory", true)>

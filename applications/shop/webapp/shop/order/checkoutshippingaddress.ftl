@@ -119,7 +119,7 @@ function toggleBillingAccount(box) {
     -->
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.OrderWhereShallWeShipIt}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}? -->
+<@section title="${rawString(uiLabelMap.OrderWhereShallWeShipIt)}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}? -->
   <#if (cart.getShipGroupSize() > 1)>
     <@alert type="info">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</@alert>
   </#if>

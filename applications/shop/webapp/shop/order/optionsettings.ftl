@@ -37,11 +37,11 @@ under the License.
           <@field type="radio" inlineItems=false id="shipping_method_${shippingMethod}" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=fieldLabel/>
       </#list>
       <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
-          <@field type="radio" name="shipping_method" value="Default" checked=true label="${uiLabelMap.OrderUseDefault}."/>
+          <@field type="radio" name="shipping_method" value="Default" checked=true label="${rawString(uiLabelMap.OrderUseDefault)}."/>
       </#if>
       </@field>
 
-        <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+        <@field type="generic" label="${rawString(uiLabelMap.OrderShipAllAtOnce)}?">
           <@field type="radio" inlineItems=false id="maySplit_N" checked=((shoppingCart.getMaySplit()!"N") == "N") name="may_split" value="false" label=uiLabelMap.OrderPleaseWaitUntilBeforeShipping />
           <@field type="radio" inlineItems=false id="maySplit_Y" checked=((shoppingCart.getMaySplit()!"N") == "Y") name="may_split" value="true" label=uiLabelMap.OrderPleaseShipItemsBecomeAvailable />
         </@field>

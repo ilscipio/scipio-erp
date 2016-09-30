@@ -22,7 +22,7 @@ under the License.
     <#if (listSize > 0)>
       <@menu type="button">
         <@menuitem type="link" href=makeOfbizUrl("showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}") text=uiLabelMap.CommonPrevious disabled=(!(viewIndex > 0)) class="${styles.action_nav!}" />
-        <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
+        <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${rawString(uiLabelMap.CommonOf)} ${listSize}" />
         <@menuitem type="link" href=makeOfbizUrl("showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}") text=uiLabelMap.CommonNext disabled=(!(listSize > highIndex)) class="${styles.action_nav!}" />
       </@menu>
     </#if>

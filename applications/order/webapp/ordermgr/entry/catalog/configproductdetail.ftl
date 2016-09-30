@@ -334,7 +334,7 @@ function getConfigDetails() {
             <@field type="input" containerId="add_amount" label=uiLabelMap.OrderAmount containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
             <#if !configwrapper.isCompleted()>
               <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
-              <@field type="input" label="${uiLabelMap.ProductQuantity} (${uiLabelMap.OrderUnits})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
+              <@field type="input" label="${rawString(uiLabelMap.ProductQuantity)} (${rawString(uiLabelMap.OrderUnits)})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
             <#else>
               <@field type="input" label=uiLabelMap.ProductQuantity size="5" name="quantity" value="1" />
               <@field type="submit" submitType="link" href="javascript:addItem()" class="+${styles.link_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddToCart />

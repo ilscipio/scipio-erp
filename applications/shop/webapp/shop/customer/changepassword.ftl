@@ -32,10 +32,10 @@ under the License.
     <#-- Scipio: NOTE: view-switch replaced with redirect -->
     <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@ofbizUrl>">
 
-      <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label="${uiLabelMap.PartyOldPassword}"/>
-      <@field type="password" name="newPassword" required=true id="newPassword" maxlength="20" label="${uiLabelMap.PartyNewPassword}"/>
-      <@field type="password" name="newPasswordVerify" required=true id="newPasswordVerify" maxlength="20" label="${uiLabelMap.PartyNewPasswordVerify}"/>
-      <@field type="input" maxlength="100" name="passwordHint" id="passwordHint" value=(userLoginData.passwordHint!) label="${uiLabelMap.PartyPasswordHint}"/>
+      <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label=uiLabelMap.PartyOldPassword/>
+      <@field type="password" name="newPassword" required=true id="newPassword" maxlength="20" label=uiLabelMap.PartyNewPassword/>
+      <@field type="password" name="newPasswordVerify" required=true id="newPasswordVerify" maxlength="20" label=uiLabelMap.PartyNewPasswordVerify/>
+      <@field type="input" maxlength="100" name="passwordHint" id="passwordHint" value=(userLoginData.passwordHint!) label=uiLabelMap.PartyPasswordHint/>
       
     </form>
 </@section>

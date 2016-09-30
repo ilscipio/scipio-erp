@@ -7,7 +7,7 @@
                   <@td class="${styles.grid_large!}2">${uiLabelMap.FormFieldTitle_personalImage}
                   </@td>
                   <#assign imgSrc><@ofbizInterWebappUrl>/content/control/stream?contentId=${pc.contentId!}</@ofbizInterWebappUrl></#assign>
-                  <@td colspan="3"><@img src=imgSrc!"" height="150px" width="100px" type="contain"/></@td>
+                  <@td colspan="3"><@img src=imgSrc height="150px" width="100px" type="contain"/></@td>
                 </@tr>
                 <#break>
             </#list> 
@@ -16,7 +16,7 @@
         <#if lookupGroup?has_content && lookupParty.logoImageUrl?has_content>
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.CommonOrganizationLogo}</@td>
-                  <@td colspan="3"><@img src="${lookupParty.logoImageUrl!}" height="150px" width="100px" type="contain"/></@td>
+                  <@td colspan="3"><@img src=(lookupParty.logoImageUrl!) height="150px" width="100px" type="contain"/></@td>
                 </@tr>
         </#if>
 

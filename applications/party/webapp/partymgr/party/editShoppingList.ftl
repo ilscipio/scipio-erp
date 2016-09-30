@@ -63,7 +63,7 @@ under the License.
       <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text=uiLabelMap.OrderNewOrder class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuContent=menuContent>
+<@section title="${rawString(uiLabelMap.PartyShoppingListDetail)} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
@@ -79,7 +79,7 @@ under the License.
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
               </#list>
         </@field>
-        <@field type="select" label="${uiLabelMap.PartyPublic}?" name="isPublic" disabled=isAutoSave>
+        <@field type="select" label="${rawString(uiLabelMap.PartyPublic)}?" name="isPublic" disabled=isAutoSave>
               <option>${shoppingList.isPublic}</option>
               <option value="${shoppingList.isPublic}">--</option>
               <option>${uiLabelMap.CommonYes}</option>
@@ -111,7 +111,7 @@ under the License.
     <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuContent=menuContent>
+<@section title="${rawString(uiLabelMap.PartyChildShoppingList)} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>
         <@tr class="header-row">
@@ -140,7 +140,7 @@ under the License.
 <#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text=uiLabelMap.PartyAddListToCart class="+${styles.action_run_session!} ${styles.action_add!}" /> -->
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuContent=menuContent>
+<@section title="${rawString(uiLabelMap.PartyListItems)} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
   <#if shoppingListItemDatas?has_content>
 
     <#assign paramStr = "partyId=" + partyId + "&amp;shoppingListId=" + (shoppingListId!)/>

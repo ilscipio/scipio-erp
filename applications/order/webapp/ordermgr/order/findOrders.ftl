@@ -267,9 +267,9 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.OrderScore name="gatewayScoreResult" value=(findParams.gatewayScoreResult!)/>
           
           <@field type="generic" label=uiLabelMap.CommonFilter inlineItems=false> <#-- NOTE: inlineItems setting propagates to child elements here -->
-              <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=((findParams.filterInventoryProblems!"N")=="Y") label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}" /> 
-              <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=((findParams.filterPOsOpenPastTheirETA!"N")=="Y") label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}" /> 
-              <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=((findParams.filterPOsWithRejectedItems!"N")=="Y") label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}" /> 
+              <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=((findParams.filterInventoryProblems!"N")=="Y") label="${rawString(uiLabelMap.OrderFilterOn)} ${rawString(uiLabelMap.OrderFilterInventoryProblems)}" /> 
+              <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=((findParams.filterPOsOpenPastTheirETA!"N")=="Y") label="${rawString(uiLabelMap.OrderFilterOn)} ${rawString(uiLabelMap.OrderFilterPOs)} ${rawString(uiLabelMap.OrderFilterPOsOpenPastTheirETA)}" /> 
+              <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=((findParams.filterPOsWithRejectedItems!"N")=="Y") label="${rawString(uiLabelMap.OrderFilterOn)} ${rawString(uiLabelMap.OrderFilterPOs)} ${rawString(uiLabelMap.OrderFilterPOsWithRejectedItems)}" /> 
           </@field>
 
           <@field type="select" label=uiLabelMap.OrderShipToCountry name="countryGeoId">

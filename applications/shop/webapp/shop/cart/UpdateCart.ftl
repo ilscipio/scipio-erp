@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
-  <@section title="${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}">
+  <@section title="${rawString(uiLabelMap.EcommerceStep)} 1: ${rawString(uiLabelMap.PageTitleShoppingCart)}">
   <div id="cartSummaryPanel" style="display: none;">
     <a href="javascript:void(0);" id="openCartPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
     <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->

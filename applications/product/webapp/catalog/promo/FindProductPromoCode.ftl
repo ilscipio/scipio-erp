@@ -20,7 +20,7 @@ under the License.
                      
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("FindProductPromoCode") text="${uiLabelMap.CommonShowAll}" class="+${styles.action_nav!} ${styles.action_find!}"/>
+        <@menuitem type="link" href=makeOfbizUrl("FindProductPromoCode") text=uiLabelMap.CommonShowAll class="+${styles.action_nav!} ${styles.action_find!}"/>
 
         <@menuitem type="generic">
             <@modal id="modal_new_importcodeset_${productPromoId!}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
@@ -88,7 +88,7 @@ under the License.
             <#assign targetUrl = makeOfbizUrl("EditProductPromoCode")>
         </#if>
       <#if (isCreateProductPromoCode!false) != true>
-        <@menuitem type="link" href=targetUrl text="${uiLabelMap.ProductNewPromotionCode}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+        <@menuitem type="link" href=targetUrl text=uiLabelMap.ProductNewPromotionCode class="+${styles.action_nav!} ${styles.action_add!}"/>
       </#if>
     </@menu>
 </#macro> 

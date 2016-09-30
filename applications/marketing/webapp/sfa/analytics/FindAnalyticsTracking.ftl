@@ -2,7 +2,7 @@
     <form name="TrackingCodeReportOptions" action="<@ofbizUrl>AnalyticsTracking</@ofbizUrl>" method="POST">
         <@field name="fromDate" type="datetime" value="" label=uiLabelMap.CommonFrom />
         <@field name="thruDate" type="datetime" value="" label=uiLabelMap.CommonThru />
-        <@field type="select" name="intervalScope" label="${uiLabelMap.CommonIntervalScope}">
+        <@field type="select" name="intervalScope" label=uiLabelMap.CommonIntervalScope>
             <#assign intervals = Static["org.ofbiz.base.util.UtilDateTime"].TIME_INTERVALS />
             <option value=""></option>
             <#list intervals as interval>

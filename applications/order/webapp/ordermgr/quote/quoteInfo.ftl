@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.OrderOrderQuoteId}&nbsp;${quote.quoteId}&nbsp;${uiLabelMap.CommonInformation}">
+<@section title="${rawString(uiLabelMap.OrderOrderQuoteId)} ${rawString(quote.quoteId)} ${rawString(uiLabelMap.CommonInformation)}">
         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <#-- quote header information -->
             <@tr>

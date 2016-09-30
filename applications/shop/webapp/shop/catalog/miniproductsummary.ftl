@@ -34,7 +34,7 @@ under the License.
         <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/></#assign>
 
     <#assign productImage>
-            <@img src=imgSrc!"https://placehold.it/300x100" type="contain" link=imgLink!"" width="100%" height="100px"/>
+            <@img src=(imgSrc!"https://placehold.it/300x100") type="contain" link=imgLink!"" width="100%" height="100px"/>
     </#assign>
     <@pul>
         <#if priceResult.isSale?? && priceResult.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>

@@ -5,7 +5,7 @@
 
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
-        <@section title="${uiLabelMap.ProductReceiptPurchaseOrder} ${purchaseOrder.orderId}">
+        <@section title="${rawString(uiLabelMap.ProductReceiptPurchaseOrder)} ${rawString(purchaseOrder.orderId)}">
             <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@thead>
                     <@tr class="header-row">
@@ -285,7 +285,7 @@
                                             <input type="hidden" name="productId_o_${orderItem_index}" value="${product.productId}"/>                                                            
                                             <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a>                                                            
                                         <#else>
-                                            <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${orderItemType.get('description',locale)} ${orderItem.itemDescription!}">
+                                            <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${rawString(orderItemType.get('description',locale))} ${rawString(orderItem.itemDescription!)}">
                                                 <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                                             </@field>
                                         </#if>

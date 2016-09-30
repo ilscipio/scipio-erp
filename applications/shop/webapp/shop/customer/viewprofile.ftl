@@ -101,7 +101,7 @@ under the License.
                 <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
             </@menu>
         </#macro>
-        <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}" -->
+        <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${rawString(uiLabelMap.CommonUsername)} & ${rawString(uiLabelMap.CommonPassword)}" -->
             <#-- Scipio: This was a table, not illogical but will look better as fields -->
               
               <@field type="display" label=uiLabelMap.AccountingAccountType>

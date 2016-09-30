@@ -25,7 +25,7 @@ under the License.
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="month"/>
 </#macro>
-<@section title="${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)}"
+<@section title=Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)
     menuContent=menuContent menuLayoutTitle="inline-title"> <#--${uiLabelMap.WorkEffortMonthView}: -->
 
 <#if periods?has_content>

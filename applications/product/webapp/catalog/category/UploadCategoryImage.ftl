@@ -33,7 +33,7 @@
                     </@cell>
                 </@row>
             </div>
-            <@field type="file" name="uploadedFile" label="${uiLabelMap.ProductCategoryImage}" required=true class="+error" />            
+            <@field type="file" name="uploadedFile" label=uiLabelMap.ProductCategoryImage required=true class="+error" />            
             <#-- SCIPIO: category link images are deprecated -->
             <@field type="select" label=uiLabelMap.ProductCategoryImageType name="upload_file_type" onChange="deprecatedValidation(this);">
                 <option value="category" selected=selected>${uiLabelMap.ProductCategoryImageUrl}</option>

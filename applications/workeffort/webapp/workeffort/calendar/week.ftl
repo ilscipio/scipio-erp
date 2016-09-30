@@ -21,7 +21,7 @@ under the License.
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="week"/>
 </#macro>
-<@section title="${uiLabelMap.CommonWeek} ${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'w', timeZone, locale)}"
+<@section title="${rawString(uiLabelMap.CommonWeek)} ${rawString(Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'w', timeZone, locale))}"
     menuContent=menuContent menuLayoutTitle="inline-title"><#--${uiLabelMap.WorkEffortWeekView}: -->
 
 <#if periods?has_content>

@@ -1,4 +1,4 @@
-<@section title="${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">     
+<@section title=uiLabelMap.WebtoolsDemoDataGeneratorServiceList>     
       <@table type="data-list" autoAltRows=true scrollable=true> 
         <@thead>
         <@tr class="header-row">

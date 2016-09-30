@@ -42,7 +42,7 @@ under the License.
       <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <@field type="select" label="${(productFeatureType.get('description',locale))!}" name="pft_${productFeatureTypeId}">
+      <@field type="select" label=((productFeatureType.get('description',locale))!) name="pft_${productFeatureTypeId}">
           <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
         <#list productFeatures as productFeature>
           <option value="${productFeature.productFeatureId}">${productFeature.get("description",locale)?default(productFeature.productFeatureId)}</option>
@@ -88,7 +88,7 @@ under the License.
   <#if searchOptionsHistoryList?has_content>
     <hr />
 
-    <@section title="${uiLabelMap.OrderLastSearches}...">
+    <@section title="${rawString(uiLabelMap.OrderLastSearches)}...">
 
     <div>
       <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>

@@ -60,7 +60,7 @@ under the License.
             <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny/>
             <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.ProductFeatureCategory} ${uiLabelMap.CommonIds}">
+        <@field type="generic" label="${rawString(uiLabelMap.ProductFeatureCategory)} ${rawString(uiLabelMap.CommonIds)}">
             <div>
               <@field type="input" name="SEARCH_PROD_FEAT_CAT1" size="15" value=(requestParameters.SEARCH_PROD_FEAT_CAT1!)/>&nbsp;
               <@field type="radio" name="SEARCH_PROD_FEAT_CAT_EXC1" value="" checked=true label=uiLabelMap.CommonInclude/>
@@ -80,7 +80,7 @@ under the License.
               <@field type="radio" name="SEARCH_PROD_FEAT_CAT_EXC3" value="N" label=uiLabelMap.CommonAlwaysInclude/>
             </div>
         </@field>
-        <@field type="generic" label="${uiLabelMap.ProductFeatureGroup} ${uiLabelMap.CommonIds}">
+        <@field type="generic" label="${rawString(uiLabelMap.ProductFeatureGroup)} ${rawString(uiLabelMap.CommonIds)}">
             <div>
               <@field type="input" name="SEARCH_PROD_FEAT_GRP1" size="15" value=(requestParameters.SEARCH_PROD_FEAT_GRP1!)/>&nbsp;
               <@field type="radio" name="SEARCH_PROD_FEAT_GRP_EXC1" value="" checked=true label=uiLabelMap.CommonInclude/>
@@ -101,7 +101,7 @@ under the License.
             </div>
         </@field>
 
-        <@field type="generic" label="${uiLabelMap.ProductFeatures} ${uiLabelMap.CommonIds}">
+        <@field type="generic" label="${rawString(uiLabelMap.ProductFeatures)} ${rawString(uiLabelMap.CommonIds)}">
             <div>
               <@field type="input" name="SEARCH_FEAT1" size="15" value=(requestParameters.SEARCH_FEAT1!)/>&nbsp;
               <@field type="radio" name="SEARCH_FEAT_EXC1" value="" checked=true label=uiLabelMap.CommonInclude/>
@@ -129,7 +129,7 @@ under the License.
           <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
           <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
           <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-          <@field type="select" label="${(productFeatureType.get('description',locale))!}" name="pft_${productFeatureTypeId}">
+          <@field type="select" label=((productFeatureType.get('description',locale))!) name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("${uiLabelMap.ProductNoDescription}")} [${productFeature.productFeatureId}]</option>

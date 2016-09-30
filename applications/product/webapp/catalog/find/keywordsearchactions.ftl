@@ -24,7 +24,7 @@ under the License.
 
     <@render resource="component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsFormInclude" />
 
-    <@section title="${uiLabelMap.ProductRemoveResultsFrom} ${uiLabelMap.ProductCategory}">
+    <@section title="${rawString(uiLabelMap.ProductRemoveResultsFrom)} ${rawString(uiLabelMap.ProductCategory)}">
         <form method="post" action="<@ofbizUrl>searchRemoveFromCategory</@ofbizUrl>" name="searchRemoveFromCategory">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label=uiLabelMap.ProductCategory formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
@@ -32,7 +32,7 @@ under the License.
         </form>
     </@section>
 
-    <@section title="${uiLabelMap.ProductExpireResultsFrom} ${uiLabelMap.ProductCategory}">
+    <@section title="${rawString(uiLabelMap.ProductExpireResultsFrom)} ${rawString(uiLabelMap.ProductCategory)}">
         <form method="post" action="<@ofbizUrl>searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label=uiLabelMap.ProductCategory formName="searchExpireFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
@@ -41,7 +41,7 @@ under the License.
         </form>
     </@section>
 
-    <@section title="${uiLabelMap.ProductAddResultsTo} ${uiLabelMap.ProductCategory}">
+    <@section title="${rawString(uiLabelMap.ProductAddResultsTo)} ${rawString(uiLabelMap.ProductCategory)}">
         <form method="post" action="<@ofbizUrl>searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label=uiLabelMap.ProductCategory formName="searchAddToCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>

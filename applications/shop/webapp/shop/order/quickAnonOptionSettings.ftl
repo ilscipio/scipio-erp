@@ -107,7 +107,7 @@ function onClickShippingMethod(e) {
 
   <@row>
     <@cell columns=6>
-      <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+      <@field type="generic" label="${rawString(uiLabelMap.OrderShipAllAtOnce)}?">
         <@field type="radio" checked=((shoppingCart.getMaySplit()!"N") == "N") name="may_split" value="false" label=uiLabelMap.OrderPleaseWaitUntilBeforeShipping />
         <@field type="radio" checked=((shoppingCart.getMaySplit()!"N") == "Y") name="may_split" value="true" label=uiLabelMap.OrderPleaseShipItemsBecomeAvailable />
       </@field>

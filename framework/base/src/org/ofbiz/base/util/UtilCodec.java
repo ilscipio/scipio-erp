@@ -132,7 +132,7 @@ public class UtilCodec {
     // ================== Begin General Functions ==================
 
     public static SimpleEncoder getEncoder(String type) {
-        // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
+        // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
         if ("raw".equals(type)) {
             return rawEncoder;
         } else if ("url".equals(type)) {
@@ -147,6 +147,51 @@ public class UtilCodec {
             return null;
         }
     }
+    
+    /**
+     * SCIPIO: Returns raw/dummy encoder (quick method).
+     * <p>
+     * NOTE: Generic SimpleEncoder type is returned as opposed to RawEncoder in order to 
+     * preserve the abstraction provided by {@link #getEncoder(String)}.
+     */
+    public static SimpleEncoder getRawEncoder() {
+        return rawEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns html encoder (quick method).
+     */
+    public static SimpleEncoder getHtmlEncoder() {
+        return htmlEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns xml encoder (quick method).
+     */
+    public static SimpleEncoder getXmlEncoder() {
+        return xmlEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns url encoder (quick method).
+     */
+    public static SimpleEncoder getUrlEncoder() {
+        return urlCodec;
+    }
+    
+    /**
+     * SCIPIO: Checks if encoder is raw encoder (abstraction).
+     */
+    public static boolean isRawEncoder(SimpleEncoder encoder) {
+        return (encoder instanceof RawEncoder);
+    }
+    
+    /**
+     * SCIPIO: Checks if encoder is null or raw encoder (abstraction).
+     */
+    public static boolean isRawOrNullEncoder(SimpleEncoder encoder) {
+        return (encoder == null) || (encoder instanceof RawEncoder);
+    }
 
     public static SimpleDecoder getDecoder(String type) {
         if ("url".equals(type)) {
@@ -154,6 +199,13 @@ public class UtilCodec {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * SCIPIO: Returns url decoder (quick method).
+     */
+    public static SimpleDecoder getUrlDecoder() {
+        return urlCodec;
     }
 
     public static String canonicalize(String value) throws IntrusionException {

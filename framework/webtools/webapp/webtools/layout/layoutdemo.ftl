@@ -1384,6 +1384,14 @@
   </ul>
 </@section>
 
+<@section title="Escaping">
+  <ul>
+    <li>complexCharString (screen auto-escaping): ${complexCharString}</li>
+    <li>complexCharString (escapePart): ${escapePart(complexCharString, 'html')}</li>
+    <li>complexCharString (double-escaping failure): ${complexCharString?html}</li>
+  </ul>
+</@section>
+
 <@section title="Date formatting">
   <#assign testDate = nowTimestamp>
   <ul>

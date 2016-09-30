@@ -72,12 +72,12 @@ under the License.
                        <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
                        <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
                        <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
-                       <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=wrapRawMarkup(labelUsername)/>
-                       <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=wrapRawMarkup(labelPassword)/>
+                       <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=wrapAsRaw(labelUsername, 'html')/>
+                       <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=wrapAsRaw(labelPassword, 'html')/>
                 
                           <#if ("Y" == useMultitenant) >
                               <#if !requestAttributes.userTenantId??>
-                              <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=wrapRawMarkup(labelTenant)/>
+                              <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=wrapAsRaw(labelTenant, 'html')/>
                               <#else>
                                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
                               </#if>

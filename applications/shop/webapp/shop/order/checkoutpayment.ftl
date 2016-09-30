@@ -481,7 +481,7 @@ jQuery(document).ready(function(){
               <#assign methodShortInfo><@formattedEftAccountShort eftAccount=eftAccount paymentMethod=paymentMethod /></#assign>
               <#if showSelect>
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"content_${paymentMethod.paymentMethodId}"})>
-                <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
+                <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=(paymentMethod.paymentMethodId) checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
                   class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
               </#if>
               <#if showDetails>
@@ -621,7 +621,7 @@ jQuery(document).ready(function(){
               <#if showSupplemental>
                 <#if showSelect>
                   <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}", "contentId":"content_${paymentMethod.paymentMethodId}${primSupplSuffix}"})>
-                  <@field type="checkbox" id="checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" 
+                  <@field type="checkbox" id="checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}" name="checkOutPaymentId" value=(paymentMethod.paymentMethodId) 
                     class="+pay-select-checkbox pay-select-field" checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
                     label="${uiLabelMap.AccountingGiftCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("GIFT_CARD")!) -->
                 </#if>

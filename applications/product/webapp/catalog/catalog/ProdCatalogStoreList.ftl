@@ -39,10 +39,10 @@
                             </@td>
                             <@td>${prodCatalogStore.fromDate?string('yyyy-MM-dd')}</@td>
                             <@td>
-                                <@field type="datetime" name="thruDate_o_${prodCatalogStore_index}" value="${prodCatalogStore.thruDate!}" size=13 />
+                                <@field type="datetime" name="thruDate_o_${prodCatalogStore_index}" value=(prodCatalogStore.thruDate!) size=13 />
                             </@td>
                             <@td>
-                                <@field type="input" name="sequenceNum_o_${prodCatalogStore_index}" value="${prodCatalogStore.sequenceNum!}" size=10 maxlength=20 />
+                                <@field type="input" name="sequenceNum_o_${prodCatalogStore_index}" value=(prodCatalogStore.sequenceNum!) size=10 maxlength=20 />
                             </@td>
                             <@td>
                                 <@field type="submit" submitType="link" href="javascript:document.forms['UpdateProdCatalogToStore'].elements['_rowSubmit_o_${prodCatalogStore_index}'].value = 'Y';document.UpdateProdCatalogToStore.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>                                                                                           

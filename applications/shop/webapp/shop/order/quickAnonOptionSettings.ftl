@@ -79,7 +79,7 @@ function onClickShippingMethod(e) {
            <#assign fieldLabel><#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}<#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign>
            
            <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value="${shippingMethod}" checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=fieldLabel/>
+           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=fieldLabel/>
         </#list>
         <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value="Default" checked=true label=uiLabelMap.OrderUseDefault />
@@ -89,7 +89,7 @@ function onClickShippingMethod(e) {
     <@cell columns=6>
         <@field type="textarea" label=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</@field>
         <#--<hr />-->
-        <@field type="input" label=uiLabelMap.OrderPoNumber name="correspondingPoId" size="15" value="${shoppingCart.getPoNumber()!}"/>
+        <@field type="input" label=uiLabelMap.OrderPoNumber name="correspondingPoId" size="15" value=(shoppingCart.getPoNumber()!)/>
 
       <#if (productStore.showCheckoutGiftOptions!) != "N">
         <#--<hr />-->

@@ -244,13 +244,13 @@ function submitFindForm(val){
           <@field type="select" label=uiLabelMap.OrderSelectShippingMethod name="shipmentMethod">
               <#if currentCarrierShipmentMethod?has_content>
                 <#assign currentShipmentMethodType = currentCarrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
-                <@field type="option" value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">---</@field>
+                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
+                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">---</@field>
               </#if>
               <@field type="option" value="">${uiLabelMap.OrderSelectShippingMethod}</@field>
               <#list carrierShipmentMethods as carrierShipmentMethod>
                 <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${carrierShipmentMethod.partyId}@${carrierShipmentMethod.shipmentMethodTypeId}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
+                <@field type="option" value="${rawString(carrierShipmentMethod.partyId)}@${rawString(carrierShipmentMethod.shipmentMethodTypeId)}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
               </#list>
           </@field>
           <@field type="select" label=uiLabelMap.OrderViewed name="isViewed">

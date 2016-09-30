@@ -19,7 +19,7 @@
             <#assign shipmentType = delegator.findOne("ShipmentType", {"shipmentTypeId":shipment.shipmentTypeId}, true)!/>
             <@field type="display" name="shipmentTypeId" label=uiLabelMap.ProductShipmentTypeId value=shipmentType.description />
         </#if>
-        <@field type="text" name="primaryShipGroupSeqId" value="${(shipment.primaryShipGroupSeqId)!}" label=uiLabelMap.ProductPrimaryShipGroupSeqId />        
+        <@field type="text" name="primaryShipGroupSeqId" value=((shipment.primaryShipGroupSeqId)!) label=uiLabelMap.ProductPrimaryShipGroupSeqId />        
         <@field type="select" name="statusId" label=uiLabelMap.ProductStatusId>
             <#if currentStatus?has_content>
                 <option value="${currentStatus.statusId}" selected="selected">${currentStatus.description}</option>

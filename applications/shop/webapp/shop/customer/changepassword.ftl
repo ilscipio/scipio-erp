@@ -35,7 +35,7 @@ under the License.
       <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label="${uiLabelMap.PartyOldPassword}"/>
       <@field type="password" name="newPassword" required=true id="newPassword" maxlength="20" label="${uiLabelMap.PartyNewPassword}"/>
       <@field type="password" name="newPasswordVerify" required=true id="newPasswordVerify" maxlength="20" label="${uiLabelMap.PartyNewPasswordVerify}"/>
-      <@field type="input" maxlength="100" name="passwordHint" id="passwordHint" value="${userLoginData.passwordHint!}" label="${uiLabelMap.PartyPasswordHint}"/>
+      <@field type="input" maxlength="100" name="passwordHint" id="passwordHint" value=(userLoginData.passwordHint!) label="${uiLabelMap.PartyPasswordHint}"/>
       
     </form>
 </@section>

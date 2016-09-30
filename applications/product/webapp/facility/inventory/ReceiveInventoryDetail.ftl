@@ -364,7 +364,7 @@
                                         <@field type="input" name="quantityOrdered" value=orderItem.quantity size="6" maxlength="20" disabled="disabled"/>
                                     </@td>
                                     <@td>
-                                        <@field type="input" name="ownerPartyId_o_${orderItem_index}" size="20" maxlength="20" value="${facility.ownerPartyId}"/>
+                                        <@field type="input" name="ownerPartyId_o_${orderItem_index}" size="20" maxlength="20" value=(facility.ownerPartyId)/>
                                     </@td>
                                     <@td>
                                         <#-- FIXME: Scipio: Let's see how to handle this -->

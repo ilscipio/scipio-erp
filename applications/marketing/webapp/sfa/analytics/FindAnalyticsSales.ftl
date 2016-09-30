@@ -1,7 +1,7 @@
 <@section>
     <form name="SaleOrdersByChannel" action="<@ofbizUrl>AnalyticsSales</@ofbizUrl>" method="POST">
-        <@field name="fromDate" type="datetime" value="${parameters.fromDate!}" label=uiLabelMap.CommonFrom />
-        <@field name="thruDate" type="datetime" value="${parameters.thruDate!}" label=uiLabelMap.CommonThru />
+        <@field name="fromDate" type="datetime" value=(parameters.fromDate!) label=uiLabelMap.CommonFrom />
+        <@field name="thruDate" type="datetime" value=(parameters.thruDate!) label=uiLabelMap.CommonThru />
         <@field type="select" name="intervalScope" label="${uiLabelMap.CommonIntervalScope}">
             <#assign intervals = Static["org.ofbiz.base.util.UtilDateTime"].TIME_INTERVALS />
             <option value=""></option>

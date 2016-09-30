@@ -98,7 +98,7 @@ function toggleBillingAccount(box) {
                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
             </#assign>
             <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
-               <@field type="radio" widgetOnly=true name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
+               <@field type="radio" widgetOnly=true name="shipping_contact_mech_id" value=(shippingAddress.contactMechId) checked=checkThisAddress />
             </@checkoutInvField>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
          </#list>

@@ -100,7 +100,7 @@ function setAlternateGwp(field) {
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
-                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value="${uiLabelMap.CommonY}" onClick="javascript:toggleAll(this, 'cartform', 'selectedItem');" /></@th>
+                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value=(uiLabelMap.CommonY) onClick="javascript:toggleAll(this, 'cartform', 'selectedItem');" /></@th>
                 </@tr>
             </@thead>
             <@tbody>
@@ -230,10 +230,10 @@ function setAlternateGwp(field) {
                                           postfix=false datePostfix=false/><#-- FIXME: not enough space for postfix right now -->
                                         <@field type="input" name="reservLength_${cartLineIndex}"  label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
                                         <@field type="input" name="reservPersons_${cartLineIndex}" label=uiLabelMap.CommonPersons value=(cartLine.getReservPersons()?string.number) />
-                                        <@field type="input" name="update_${cartLineIndex}" label=uiLabelMap.CommonQuantity value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
+                                        <@field type="input" name="update_${cartLineIndex}" label=uiLabelMap.CommonQuantity value=(cartLine.getQuantity()?string.number) onChange="javascript:this.form.submit();"/> 
                                       </@fields>
                                     <#else>
-                                      <@field type="input" widgetOnly=true name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
+                                      <@field type="input" widgetOnly=true name="update_${cartLineIndex}" value=(cartLine.getQuantity()?string.number) onChange="javascript:this.form.submit();"/> 
                                     </#if>
                                 <#else><#-- fixedAssetExist -->
                                     <@field type="select" widgetOnly=true name="update_${cartLineIndex}" onChange="javascript:this.form.submit();">
@@ -243,7 +243,7 @@ function setAlternateGwp(field) {
                                             <#else>
                                                 <#assign selected = false/>
                                             </#if>
-                                            <@field type="option" value="${x}" selected=selected>${x}</@field>
+                                            <@field type="option" value=(x) selected=selected>${x}</@field>
                                         </#list>
                                     </@field>
                                 </#if>
@@ -252,7 +252,7 @@ function setAlternateGwp(field) {
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
-                        <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value="${cartLineIndex}" onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
+                        <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value=(cartLineIndex) onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
                     </@tr>
                 </#list>
             <#--Scipio: styling issues: 

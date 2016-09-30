@@ -73,17 +73,17 @@ under the License.
           </@field>
           <@field type="generic" label="${uiLabelMap.PartyHomePhone}" required=true preWidgetContent=fieldErrorsMultiInvoker prePostContentArgs={"fieldName1":"homeCountryCode", "fieldName2":"homeAreaCode", "fieldName3":"homeContactNumber", "fieldName4":"homeExt"}>
                 <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>
-                <@field type="input" inline=true required=true name="homeCountryCode" value="${parameters.homeCountryCode!}" size="4" maxlength="10"/>
-                -&nbsp;<@field type="input" inline=true required=true name="homeAreaCode" value="${parameters.homeAreaCode!}" size="4" maxlength="10"/>
-                -&nbsp;<@field type="input" inline=true required=true name="homeContactNumber" value="${parameters.homeContactNumber!}" size="15" maxlength="15"/>
-                -&nbsp;<@field type="input" inline=true name="homeExt" value="${parameters.homeExt!}" size="6" maxlength="10"/>
+                <@field type="input" inline=true required=true name="homeCountryCode" value=(parameters.homeCountryCode!) size="4" maxlength="10"/>
+                -&nbsp;<@field type="input" inline=true required=true name="homeAreaCode" value=(parameters.homeAreaCode!) size="4" maxlength="10"/>
+                -&nbsp;<@field type="input" inline=true required=true name="homeContactNumber" value=(parameters.homeContactNumber!) size="15" maxlength="15"/>
+                -&nbsp;<@field type="input" inline=true name="homeExt" value=(parameters.homeExt!) size="6" maxlength="10"/>
           </@field>
           <@field type="generic" label="${uiLabelMap.PartyBusinessPhone}">
               <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
-              <@field type="input" inline=true name="workCountryCode" value="${parameters.workCountryCode!}" size="4" maxlength="10"/>
-              -&nbsp;<@field type="input" inline=true name="workAreaCode" value="${parameters.workAreaCode!}" size="4" maxlength="10"/>
-              -&nbsp;<@field type="input" inline=true name="workContactNumber" value="${parameters.workContactNumber!}" size="15" maxlength="15"/>
-              -&nbsp;<@field type="input" inline=true name="workExt" value="${parameters.workExt!}" size="6" maxlength="10"/>
+              <@field type="input" inline=true name="workCountryCode" value=(parameters.workCountryCode!) size="4" maxlength="10"/>
+              -&nbsp;<@field type="input" inline=true name="workAreaCode" value=(parameters.workAreaCode!) size="4" maxlength="10"/>
+              -&nbsp;<@field type="input" inline=true name="workContactNumber" value=(parameters.workContactNumber!) size="15" maxlength="15"/>
+              -&nbsp;<@field type="input" inline=true name="workExt" value=(parameters.workExt!) size="6" maxlength="10"/>
           </@field>
           <input type="hidden" name="emailContactMechId" value="${parameters.emailContactMechId!}"/>
           <@field type="input" label="${uiLabelMap.PartyEmailAddress}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"emailAddress"}

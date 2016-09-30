@@ -3,7 +3,7 @@
     <#if parameters.addExistingContent?has_content>
         <@modal id="addExistingContent" label="">
             <form id="AddCategoryContentAssoc" name="AddCategoryContentAssoc" method="post" action="<@ofbizUrl>addContentToCategory</@ofbizUrl>">
-                <@field type="hidden" name="productCategoryId" value="${productCategoryId!}" />               
+                <@field type="hidden" name="productCategoryId" value=(productCategoryId!) />               
                 <@field type="hidden" name="searchType" value="STARTS_WITH" />
                 <@row>
                     <@cell columns=12>                        
@@ -17,7 +17,7 @@
                         <#if prodCatContentTypeId?has_content>
                             <#assign selectedKey = prodCatContentTypeId>                               
                         </#if>                           
-                        <option <#if selectedKey == (productCategoryContentType.prodCatContentTypeId!)> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
+                        <option<#if selectedKey == (productCategoryContentType.prodCatContentTypeId!)> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
                     </#list>
                 </@field>
                 <@row>
@@ -67,7 +67,7 @@
 
     <#if !prodCatContentTypeId?has_content>
         <form id="PrepareAddCategoryContentAssoc" name="PrepareAddCategoryContentAssoc" method="post" action="<@ofbizUrl>EditCategoryContent</@ofbizUrl>">
-            <@field type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+            <@field type="hidden" name="productCategoryId" value=(productCategoryId!) />
             <@field type="select" label=uiLabelMap.ProductSelectProductCategoryContentTypeId name="prodCatContentTypeId" size="1" required=true>
                 <option value="">--</option>
                 <#assign selectedKey = "">
@@ -75,7 +75,7 @@
                     <#if prodCatContentTypeId?has_content>
                         <#assign selectedKey = prodCatContentTypeId>                               
                     </#if>                           
-                    <option <#if selectedKey == (productCategoryContentType.prodCatContentTypeId!)> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
+                    <option<#if selectedKey == (productCategoryContentType.prodCatContentTypeId!)> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
                 </#list>
             </@field>
             <@field type="submit" value=uiLabelMap.CommonCreate />        
@@ -111,10 +111,10 @@
         </#if>
 
         <form id="${contentFormName}" name="${contentFormName}" method="post" <#if contentFormName == "EditCategoryContentDownload">enctype="multipart/form-data"</#if> action="<@ofbizUrl>${contentFormAction}</@ofbizUrl>">
-            <@field type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-            <@field type="hidden" name="prodCatContentTypeId" value="${prodCatContentTypeId!}" />
+            <@field type="hidden" name="productCategoryId" value=(productCategoryId!) />
+            <@field type="hidden" name="prodCatContentTypeId" value=(prodCatContentTypeId!) />
             <#if content?has_content>
-                <@field type="hidden" name="dataResourceId" value="${content.dataResourceId!}" />
+                <@field type="hidden" name="dataResourceId" value=(content.dataResourceId!) />
             </#if>          
             <@row>
                 <@cell columns=12>
@@ -282,10 +282,10 @@
                         <@field type="file" required=true label=uiLabelMap.ProductFile name="imageData" id="imageData" placeholder=((contentDataResourceView.drDataResourceName)!)/>                            
                         
                         <#if contentDataResourceView?has_content>
-                            <@field type="hidden" name="dataResourceTypeId" value="${contentDataResourceView.drDataResourceTypeId!}" />                        
-                            <@field type="hidden" name="fileDataResourceId" value="${contentDataResourceView.dataResourceId!}" />
+                            <@field type="hidden" name="dataResourceTypeId" value=(contentDataResourceView.drDataResourceTypeId!) />                        
+                            <@field type="hidden" name="fileDataResourceId" value=(contentDataResourceView.dataResourceId!) />
                             <a href="<@ofbizInterWebappUrl>/content/control/ViewBinaryDataResource?dataResourceId=${contentDataResourceView.dataResourceId!}</@ofbizInterWebappUrl>">
-                                <@field type="display" value="${contentDataResourceView.drDataResourceName!}" />
+                                <@field type="display" value=(contentDataResourceView.drDataResourceName!) />
                             </a>
                         </#if>
                     </@cell>

@@ -248,7 +248,7 @@ under the License.
                                     <#else>
                                         <#assign selected = false/>
                                     </#if>
-                                    <@field type="option" value="${x}" selected=selected>${x}</@field>
+                                    <@field type="option" value=(x) selected=selected>${x}</@field>
                                 </#list>
                             </@field>
                             <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>

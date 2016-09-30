@@ -1938,9 +1938,10 @@ NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUti
 
   * Parameters *
     object                  = the string to wrap
+    lang                    = (html|js|json|...|, default: -empty/unspecific-) the specific language toward which this should be considered "raw"
 -->
-<#function wrapAsRaw object>
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(rawString(object))>
+<#function wrapAsRaw object lang="">
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object?string, lang)>
 </#function>
 
 <#-- 
@@ -1970,12 +1971,13 @@ Alias for #wrapAsRaw, but easier to remember in relation to @objectAsScript.
                    
   * Parameters *
     object                  = the string to wrap
-    
+    lang                    = (html|js|json|...|, default: -empty/unspecific-) the specific language toward which this should be considered "raw"
+
   * Related *
     @objectAsScript
 -->
-<#function wrapRawScript object>
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(rawString(object))>
+<#function wrapRawScript object lang="">
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object?string, lang)>
 </#function>
 
 <#-- 
@@ -1992,32 +1994,6 @@ Alias for #isRawWrapper, but easier to remember in relation to @objectAsScript.
     @objectAsScript
 -->
 <#function isRawScript object>
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
-</#function>
-
-<#-- 
-*************
-* wrapRawMarkup
-************
-Alias for #wrapAsRaw.
-
-  * Parameters *
-    object                  = the string to wrap
--->
-<#function wrapRawMarkup object>
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(rawString(object))>
-</#function>
-
-<#-- 
-*************
-* isRawMarkup
-************
-Alias for #isRawWrapper.
-                   
-  * Parameters *
-    object                  = the string to check
--->
-<#function isRawMarkup object>
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
 </#function>
 

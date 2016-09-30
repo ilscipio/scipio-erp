@@ -1,5 +1,9 @@
 package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,7 +14,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.ftl.EscapingModel;
@@ -28,7 +34,9 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.ObjectWrapperAndUnwrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
+import freemarker.template.Template;
 import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
@@ -55,6 +63,11 @@ import freemarker.template.utility.RichObjectWrapper;
 public abstract class LangFtlUtil {
 
     public static final String module = LangFtlUtil.class.getName();
+    
+    // NOTE: there's no _real_ need to synchronize on these. if two templates are built for one builtin its not big deal.
+    private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
+    private static final Map<String, Template> functionCalls = new ConcurrentHashMap<>();
+    
     
     /**
      * Used for TemplateModel <-> unwrapped/raw value conversions.
@@ -1515,4 +1528,98 @@ public abstract class LangFtlUtil {
         return (TimeZone) ((WrapperTemplateModel) model).getWrappedObject();
     }
     
+
+    public static Template makeFtlCodeTemplate(String ftlCode) throws TemplateModelException {
+        Reader templateReader = new StringReader(ftlCode);
+        try {
+            return new Template(new UID().toString(), templateReader, FreeMarkerWorker.getDefaultOfbizConfig());
+        } catch (IOException e) {
+            throw new TemplateModelException(e);
+        } finally {
+            try {
+                templateReader.close();
+            } catch (IOException e) {
+                Debug.logError(e, module); // don't propagate
+            }
+        }
+    }
+    
+    public static void execFtlCode(Template ftlCode, Environment env) throws TemplateModelException {
+        try {
+            FreeMarkerWorker.includeTemplate(ftlCode, env);
+        } catch (TemplateException e) {
+            throw new TemplateModelException(e);
+        } catch (IOException e) {
+            throw new TemplateModelException(e);
+        }
+    }
+    
+    /**
+     * WARN: extremely slow, should be avoided! decompose into makeTemplate + executeFtlCode and cache the template instead.
+     */
+    public static void execFtlCode(String ftlCode, Environment env) throws TemplateModelException {
+        execFtlCode(makeFtlCodeTemplate(ftlCode), env);
+    }
+ 
+    /**
+     * Executes an arbitrary FTL built-in.
+     */
+    public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, TemplateModel[] builtInArgs, Environment env) throws TemplateModelException {
+        final int argCount = (builtInArgs != null) ? builtInArgs.length : 0;
+        final String cacheKey = builtInName + ":" + argCount;
+        Template builtInCall = builtInCalls.get(cacheKey);
+        if (builtInCall == null) {
+            // NOTE: there's no _real_ need to synchronize on this. if two templates are built for one builtin its ok, temporary only.
+            if (argCount > 0) {
+                String argVarsStr = "";
+                for(int i=0; i < argCount; i++) {
+                    argVarsStr += ",_scpEbiArg"+i;
+                }
+                builtInCall = makeFtlCodeTemplate("<#assign _scpEbiRes = _scpEbiVal?" + builtInName + "(" + argVarsStr.substring(1) + ")>");
+            } else {
+                builtInCall = makeFtlCodeTemplate("<#assign _scpEbiRes = _scpEbiVal?" + builtInName + ">");
+            }
+            builtInCalls.put(cacheKey, builtInCall);
+        }
+        env.setVariable("_scpEbiVal", value);
+        for(int i=0; i < argCount; i++) {
+            env.setVariable("_scpEbiArg"+i, builtInArgs[i]);
+        }
+        execFtlCode(builtInCall, env);
+        return env.getVariable("_scpEbiRes");
+    }
+    
+    public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, Environment env) throws TemplateModelException {
+        return execBuiltIn(builtInName, value, null, env);
+    }
+    
+    public static TemplateScalarModel execStringBuiltIn(TemplateModel value, Environment env) throws TemplateModelException {
+        return (TemplateScalarModel) execBuiltIn("string", value, null, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL function.
+     */
+    public static TemplateModel execFunction(String functionName, TemplateModel[] args, Environment env) throws TemplateModelException {
+        final int argCount = (args != null) ? args.length : 0;
+        final String cacheKey = functionName + ":" + argCount;
+        Template functionCall = functionCalls.get(cacheKey);
+        if (functionCall == null) {
+            String argVarsStr = "";
+            for(int i=0; i < argCount; i++) {
+                argVarsStr += ",_scpEfnArg"+i;
+            }
+            if (argCount > 0) {
+                argVarsStr = argVarsStr.substring(1);
+            }
+            functionCall = makeFtlCodeTemplate("<#assign _scpEfnRes = " + functionName + "(" + argVarsStr.substring(1) + ")>");
+            functionCalls.put(cacheKey, functionCall);
+        }
+        for(int i=0; i < argCount; i++) {
+            env.setVariable("_scpEfnArg"+i, args[i]);
+        }
+        execFtlCode(functionCall, env);
+        return env.getVariable("_scpEfnRes");
+    }
+
 }

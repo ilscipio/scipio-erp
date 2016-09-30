@@ -2320,9 +2320,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     WARN: origArgs may be empty -->
 <#macro field_markup_labelarea labelType="" labelPosition="" label="" labelContent=false labelDetail=false fieldType="" fieldsType="" fieldId="" collapse="" 
     required=false labelContentArgs={} norows=false nocells=false container=true origArgs={} passArgs={} catchArgs...>
-  <#-- FIXME: The label SHOULD be escaped but too many places might not do it currently, full review needed
-  <#local label = escapePart(label, 'html')?trim> -->
-  <#local label = label?trim>
+  <#-- the label must be escaped by default. caller can prevent using #wrapAsRaw
+  <#local label = label?trim>-->
+  <#local label = escapePart(label, 'html')?trim>
   <#if !labelContent?is_boolean>
     <@contentArgRender content=labelContent args=labelContentArgs doTrim=true />
     <#-- don't show this here, let macro handle it

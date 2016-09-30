@@ -1376,6 +1376,8 @@ Alias for #toRawString (common operation).
 This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
+NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+
   * Parameters *
     str                     = ((string), required) The string to return raw.
 -->
@@ -1925,10 +1927,46 @@ TODO: doesn't handle dates (ambiguous?)
 
 <#-- 
 *************
+* wrapAsRaw
+************
+Wraps a string in a special string wrapper that when passed to markup- or script-handling macros gets included as
+a raw string bypassing html, js or other language escaping. 
+This include @objectAsScript and macros that escape values using #escapePart or #escapeFull.
+
+NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUtil.wrapString}}} or #rawString);
+    its scope is unrelated to Ofbiz's screen auto-escaping.
+
+  * Parameters *
+    object                  = the string to wrap
+-->
+<#function wrapAsRaw object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(rawString(object))>
+</#function>
+
+<#-- 
+*************
+* isWrappedAsRaw
+************
+Checks if the object was wrapped with #wrapAsRaw.
+
+NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUtil.wrapString}}} or #rawString)
+    and will not detect any such wrappers.
+
+  * Parameters *
+    object                  = the object to check
+    
+  * Related *
+    #wrapAsRaw
+-->
+<#function isWrappedAsRaw object>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
+</#function>
+
+<#-- 
+*************
 * wrapRawScript
 ************
-Wraps a string in a special wrapper that when passed to script-handling macros (such as @objectAsScript) gets included as
-a raw script value (rather than enclosed in a string).
+Alias for #wrapAsRaw, but easier to remember in relation to @objectAsScript.
                    
   * Parameters *
     object                  = the string to wrap
@@ -1944,12 +1982,13 @@ a raw script value (rather than enclosed in a string).
 *************
 * isRawScript
 ************
-Checks if the object was wrapped with #wrapRawScript or #isRawMarkup.
+Alias for #isRawWrapper, but easier to remember in relation to @objectAsScript.
                    
   * Parameters *
     object                  = the string to check
     
   * Related *
+    #wrapRawScript
     @objectAsScript
 -->
 <#function isRawScript object>
@@ -1960,10 +1999,7 @@ Checks if the object was wrapped with #wrapRawScript or #isRawMarkup.
 *************
 * wrapRawMarkup
 ************
-Wraps a string in a special wrapper that when passed to markup-handling macros gets included as
-a raw markup without escaping.
-                   
-NOTE: This is synonym for #wrapRawScript (semantics).
+Alias for #wrapAsRaw.
 
   * Parameters *
     object                  = the string to wrap
@@ -1976,7 +2012,7 @@ NOTE: This is synonym for #wrapRawScript (semantics).
 *************
 * isRawMarkup
 ************
-Checks if the object was wrapped with #wrapRawMarkup or #wrapRawScript.
+Alias for #isRawWrapper.
                    
   * Parameters *
     object                  = the string to check
@@ -2000,7 +2036,7 @@ It abstracts the encoder selection.
 
 Currently, it uses Ofbiz's encoder (subject to change).
 
-NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
 
   * Parameters *
     str                     = The string to escape
@@ -2123,7 +2159,7 @@ Currently, there is no real need to replace occurrences of Freemarker built-ins 
 NOTE: There are a few rare stock Ofbiz templates where this should not be used, on account of the
     #rawString call, where there is a complex mix of javascript and html.
 
-NOTE: 2016-08-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
 
   * Parameters *
     str                     = The string to escape
@@ -3111,6 +3147,8 @@ NOTE: This is a very generic function; for common implementation, see @commonEle
 
 NOTE: If a context map is passed containing strings, they will not be auto-HTML-escaped by the renderer.
 
+NOTE: 2016-09-30: This now automatically HTML-escapes attribute values by default; see {{{escapeLang}}} parameter.
+
 TODO: implement as transform.
 
   * Parameters *
@@ -3130,12 +3168,14 @@ TODO: implement as transform.
     camelCaseToDashLowerNames   = ((boolean)) If true converts attrib names from camelCase to camel-case at the very end
     emptyValToken               = ((string)) When this value encountered, will include an empty attrib
     noValToken                  = ((string)) When this value encountered, will include an attrib with no value
+    escapeLang                  = (html|...|none, default: 'html') Language to escape each attribute (passed to #escapePart)
+                                  Callers may bypass escaping by wrapping their values using #wrapAsRaw.
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
-  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false>
+  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false escapeLang="html">
   <#if isObjectType("map", attribs)>
     <#t>${rawString(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
-      emptyValToken, noValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames))}<#t>
+      emptyValToken, noValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames, escapeLang))}<#t>
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
   </#if>

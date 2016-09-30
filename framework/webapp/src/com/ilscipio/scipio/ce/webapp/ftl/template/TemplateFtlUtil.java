@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.ftl.template;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.control.RequestHandler;
 
 import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
@@ -27,7 +29,11 @@ import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.SimpleScalar;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 import javolution.util.FastMap;
 
 /**
@@ -43,6 +49,8 @@ public abstract class TemplateFtlUtil {
     
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
+    
+    private static Template escapePartCall = null;
     
     /**
      * Keep this private, implied unmodifiable.
@@ -308,11 +316,27 @@ public abstract class TemplateFtlUtil {
      * noValToken is similar but prevents values altogether.
      * <p>
      * NOTE (2016-08-30):  emptyValToken and noValToken should be avoided in favor of {@link com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue}.
+     * @throws IOException 
+     * @throws TemplateException 
      */
     public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, String noValToken,
             Collection<String> exclude, String attribNamePrefix, boolean alwaysAddPrefix,
-            String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes, boolean camelCaseToDashLowerNames) {
+            String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes, boolean camelCaseToDashLowerNames, String escapeLang) throws TemplateModelException {
         StringBuilder sb = new StringBuilder();
+        
+        Environment env = null;
+        if (escapeLang != null && !escapeLang.isEmpty() && !"none".equals(escapeLang)) {
+            if (escapePartCall == null) {
+                synchronized(TemplateFtlUtil.class) {
+                    if (escapePartCall == null) {
+                        escapePartCall = LangFtlUtil.makeFtlCodeTemplate("<#assign _scpMeasEscRes = escapePart(_scpMeasEscVal, _scpMeasEscLang)>");
+                    }
+                }
+            }
+            env = FreeMarkerWorker.getCurrentEnvironment();
+        } else {
+            escapeLang = null;
+        }
         
         if (emptyValToken == null) {
             emptyValToken = "";
@@ -375,6 +399,12 @@ public abstract class TemplateFtlUtil {
                     if (!AttribSpecialValue.isNoneValue(val) && (noValToken == null || !noValToken.equals(valStr))) {
                         sb.append("=\"");
                         if (!valStr.equals(emptyValToken)) {
+                            if (escapeLang != null && env != null && !RawScript.isRawScript(val)) {
+                                env.setVariable("_scpMeasEscVal", new SimpleScalar(valStr));
+                                env.setVariable("_scpMeasEscLang", new SimpleScalar(escapeLang));
+                                LangFtlUtil.execFtlCode(escapePartCall, env);
+                                valStr = ((TemplateScalarModel) env.getVariable("_scpMeasEscRes")).getAsString();
+                            }
                             sb.append(valStr);
                         }
                         sb.append("\"");

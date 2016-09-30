@@ -20,6 +20,8 @@ package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
 import java.util.List;
 
+import org.ofbiz.base.util.template.FreeMarkerWorker;
+
 import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
@@ -52,9 +54,7 @@ public class ToRawStringMethod implements TemplateMethodModelEx {
             String str = LangFtlUtil.getAsStringNonEscaping(strModel);
             return new SimpleScalar(str); // Emulates Freemarker ?string built-in
         } else {
-            // TODO: coerce non-strings to string for fallback
-            // PROBLEM: no access to ?string built-in...
-            throw new TemplateModelException("rawString currently does not support coercing non-string values");
+            return LangFtlUtil.execStringBuiltIn((TemplateModel) arg, FreeMarkerWorker.getCurrentEnvironment());
         }
     }
     

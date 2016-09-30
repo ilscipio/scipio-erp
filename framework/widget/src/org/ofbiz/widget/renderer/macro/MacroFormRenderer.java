@@ -135,7 +135,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         this.rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         this.javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
-        internalEncoder = UtilCodec.getEncoder("string");
+        // SCIPIO: don't want pitiful string encoder. fallback should be none.
+        //internalEncoder = UtilCodec.getEncoder("string");
+        internalEncoder = UtilCodec.getEncoder("raw");
         this.rendererName = name; // SCIPIO: new
     }
 

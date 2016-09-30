@@ -170,7 +170,9 @@ public final class WidgetWorker {
                 if (simpleEncoder != null && parameterValue != null) {
                     externalWriter.append(simpleEncoder.encode(URLEncoder.encode(parameterValue, Charset.forName("UTF-8").displayName())));
                 } else {
-                    externalWriter.append(parameterValue);
+                    // SCIPIO: even if HTML encoding disabled, the link param should be URL-encoded; they're two different layers
+                    //externalWriter.append(parameterValue);
+                    externalWriter.append(URLEncoder.encode(parameterValue, Charset.forName("UTF-8").displayName()));
                 }
             }
         } else {
@@ -604,8 +606,9 @@ public final class WidgetWorker {
         UtilCodec.SimpleEncoder encoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
         if (encoder != null) {
             value = encoder.encode(value);
-        } else {
-            value = UtilCodec.getEncoder("string").encode(value);
+        // string encoder is weird. don't use it.
+        //} else {
+        //    value = UtilCodec.getEncoder("string").encode(value);
         }
         return value;
     }

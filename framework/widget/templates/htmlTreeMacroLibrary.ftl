@@ -45,7 +45,7 @@ not "current" context (too intrusive in current renderer design). still relies o
  
 <#macro renderLabel id style labelText extraArgs...>
 <span<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>><#rt/>
-<#if id?has_content>{labelText}</#if><#rt/>
+<#if labelText?has_content>${escapePart(labelText, 'html')}</#if><#rt/>
 </span>    
 </#macro>
 
@@ -56,15 +56,15 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderLink id style name title targetWindow linkUrl linkText imgStr extraArgs...>
 <a<#if id?has_content> id="${id}"</#if><#rt/>
 <#if style?has_content> class="${style}"</#if><#rt/>
-<#if name?has_content> name="${name}"</#if><#rt/>
-<#if title?has_content> title="${title}"</#if><#rt/>
-<#if targetWindow?has_content> target="${targetWindow}</#if><#if linkUrl?has_content> href="${linkUrl}"<#else> href="javascript:void(0);"</#if>><#rt/>
-<#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${linkText}<#else>&nbsp;</#if></a><#rt/>
+<#if name?has_content> name="${escapePart(name, 'html')}"</#if><#rt/>
+<#if title?has_content> title="${escapePart(title, 'html')}"</#if><#rt/>
+<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}</#if><#if linkUrl?has_content> href="${escapeFullUrl(linkUrl, 'html')}"<#else> href="javascript:void(0);"</#if>><#rt/>
+<#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${escapePart(linkText, 'html')}<#else>&nbsp;</#if></a><#rt/>
 </#macro>
 
 <#macro renderImage src id style wid hgt border alt urlString extraArgs...>
 <#if src?has_content>
-<img <#if id?has_content>id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${border}"</#if> alt="<#if alt?has_content>${alt}</#if>" src="${urlString}" /><#rt/>
+<img<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${border}"</#if> alt="<#if alt?has_content>${escapePart(alt, 'html')}</#if>" src="${escapeFullUrl(urlString, 'html')}" /><#rt/>
 </#if>
 </#macro>
  

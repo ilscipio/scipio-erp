@@ -294,9 +294,9 @@ Only those not marked DEPRECATED should still be used.
   </#if>
   <#if linkType?has_content && "hidden-form" == linkType>
     <#local hiddenFormContent>
-      <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}" class="menu-widget-action-form"><#t>
+      <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapePart(uniqueItemName, 'html')}" class="menu-widget-action-form"><#t>
         <#list parameterList as parameter>
-          <input name="${parameter.name}" value="${parameter.value}" type="hidden"/><#t>
+          <input name="${escapePart(parameter.name, 'html')}" value="${escapePart(parameter.value, 'html')}" type="hidden"/><#t>
         </#list>
       </form><#t>
     </#local>
@@ -311,7 +311,7 @@ Only those not marked DEPRECATED should still be used.
       ${imgStr}<#t>
     </#if>
     <#if text?has_content>
-      ${text}<#t>
+      ${escapePart(text, 'html')}<#t>
     </#if>
   </#local>
 
@@ -321,7 +321,11 @@ Only those not marked DEPRECATED should still be used.
   </#if>
   
   <#if isLink>
-    <#local href><#if linkType == "hidden-form">javascript:document.forms['${uniqueItemName}'].submit()<#else>${linkUrl}</#if></#local>
+    <#if linkType == "hidden-form">
+        <#local href>javascript:document.forms['${escapePart(uniqueItemName, 'js')}'].submit()</#local>
+    <#else>
+        <#local href = linkUrl>
+    </#if>
     <#if disabled>
       <#-- FIXME: this static method of disabling links means the link loses information and not easily toggleable! -->
       <#local href = styles.menu_link_href_default!"">

@@ -51,20 +51,20 @@ Scipio: Common HTML macro library code
 
           <#-- Scipio: generic text container types -->
           <#if elemType=="div" || elemType=="p" || elemType=="span">
-            <${elemType}${idText}<@compiledClassAttribStr class=class />>${text}</${elemType}>
+            <${elemType}${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'html')}</${elemType}>
           <#-- Scipio: common-message handling -->
           <#elseif elemType?starts_with("common-msg-")>
-            <@commonMsg type=elemType["common-msg-"?length..] class=class id=id>${text}</@commonMsg>
+            <@commonMsg type=elemType["common-msg-"?length..] class=class id=id>${escapePart(text, 'html')}</@commonMsg>
           <#elseif elemType=="generic">
             <#-- Scipio: special case to force stock generic case (in case default style string is not empty) -->
-            <span${idText}<@compiledClassAttribStr class=class />>${text}</span>
+            <span${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'html')}</span>
           <#else>
             <#-- Scipio: default markup and stock Ofbiz case (note: uses original style arg) -->
-            <span${idText}<@compiledClassAttribStr class=style />>${text}</span>
+            <span${idText}<@compiledClassAttribStr class=style />>${escapePart(text, 'html')}</span>
           </#if>
       </#if>
     <#else>
-      <span${idText}>${text}</span>
+      <span${idText}>${escapePart(text, 'html')}</span>
     </#if>
   </#if>
 </#macro>

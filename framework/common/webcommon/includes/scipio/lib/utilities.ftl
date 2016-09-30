@@ -2044,16 +2044,20 @@ NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced
                               NOTE: This does not currently support js/json because it does not
                                   usually make sense to escape anything but single value strings.
                                   It also does not encode URLs; see #escapeFullUrl.
-                              
+    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
+                              If true, escaping is always applied unconditionally.
+                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                              mainly to mitigate screen auto-escaping and early escaping.
+                    
   * Related*
     #escapePart
 -->
-<#function escapeFull str lang>
+<#function escapeFull str lang strict=false>
   <#if isRawScript(str)>
     <#return str?string>
   </#if>
   <#-- NOTE: Currently we support the same types as Ofbiz, so no need for a switch -->
-  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(rawString(toStringIfNot(str))))>
+  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(rawString(str)))>
 </#function>
 
 <#-- 
@@ -2095,14 +2099,20 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
                                 don't need to be escaped.
                               WARN: {{{style}}} is not properly implemented!
                               FIXME: escaping for {{{style}}}
+    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
+                              If true, escaping is always applied unconditionally.
+                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                              mainly to mitigate screen auto-escaping and early escaping.
 -->
-<#function escapeFullUrl str lang>
+<#function escapeFullUrl str lang strict=false>
   <#if isRawScript(str)>
     <#return str?string>
   </#if>
   <#local str = rawString(str)>
-  <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
-  <#local str = str?replace("&amp;", "&")>
+  <#if !strict>
+    <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
+    <#local str = str?replace("&amp;", "&")>
+  </#if>
   <#switch lang?lower_case>
     <#case "json">
       <#return str?json_string>
@@ -2171,15 +2181,19 @@ NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced
                                 don't need to be escaped.
                               WARN: {{{style}}} is not properly implemented!
                               FIXME: escaping for {{{style}}}
+    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
+                              If true, escaping is always applied unconditionally.
+                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                              mainly to mitigate screen auto-escaping and early escaping.
                     
   * Related*
     #escapeFull
 -->
-<#function escapePart str lang>
+<#function escapePart str lang strict=false>
   <#if isRawScript(str)>
     <#return str?string>
   </#if>
-  <#local str = rawString(toStringIfNot(str))>
+  <#local str = rawString(str)>
   <#switch lang?lower_case>
     <#case "json">
       <#return str?json_string>

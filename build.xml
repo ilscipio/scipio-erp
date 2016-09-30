@@ -1985,9 +1985,10 @@ under the License.
         <copy file="${basedir}/framework/resources/templates/index.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/index.jsp" encoding="iso-8859-1">
             <filterset refid="replacePlaceholders"/>
         </copy>
+        <!-- SCIPIO: gone
         <copy file="${basedir}/framework/resources/templates/error.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error/error.jsp" encoding="iso-8859-1">
             <filterset refid="replacePlaceholders"/>
-        </copy>
+        </copy>-->
         <copy file="${basedir}/framework/resources/templates/controller.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/controller.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>

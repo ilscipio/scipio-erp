@@ -47,6 +47,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.widget.WidgetFactory;
+import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.AutoEntityParameters;
 import org.ofbiz.widget.model.CommonWidgetModels.AutoServiceParameters;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
@@ -740,10 +741,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public String getTitle(Map<String, Object> context) {
             String title = this.titleExdr.expandString(context);
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                title = simpleEncoder.encode(title);
-            }
+            title = WidgetWorker.getEarlyEncoder(context).encode(title); // SCIPIO: simplified
             return title;
         }
         
@@ -1226,10 +1224,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public String getText(Map<String, Object> context) {
             String text = this.textExdr.expandString(context);
             // FIXME: Encoding should be done by the renderer, not by the model.
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                text = simpleEncoder.encode(text);
-            }
+            text = WidgetWorker.getEarlyEncoder(context).encode(text); // SCIPIO: simplified
             return text;
         }
 

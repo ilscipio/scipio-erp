@@ -488,10 +488,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             linkStr = sw.toString();
         } else {
             linkStr = menuItem.getTitle(context);
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                linkStr = simpleEncoder.encode(linkStr);
-            }
+            linkStr = WidgetWorker.getEarlyEncoder(context).encode(linkStr); // SCIPIO: simplified
         }
         parameters.put("linkStr", linkStr);
         // SCIPIO: we have a better check now

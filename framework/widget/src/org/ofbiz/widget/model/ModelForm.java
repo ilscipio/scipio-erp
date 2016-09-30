@@ -1686,11 +1686,7 @@ public abstract class ModelForm extends ModelWidget {
      * @return The target for this Form
      */
     public String getTarget(Map<String, Object> context, String targetType) {
-        Map<String, Object> expanderContext = context;
-        UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-        if (simpleEncoder != null) {
-            expanderContext = UtilCodec.HtmlEncodingMapWrapper.getHtmlEncodingMapWrapper(context, simpleEncoder);
-        }
+        Map<String, Object> expanderContext = UtilCodec.EncodingMapWrapper.getEncodingMapWrapper(context, WidgetWorker.getEarlyEncoder(context)); // SCIPIO: simplified
         try {
             // use the same Interpreter (ie with the same context setup) for all evals
             Interpreter bsh = this.getBshInterpreter(context);

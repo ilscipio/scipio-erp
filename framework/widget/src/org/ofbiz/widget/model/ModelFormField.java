@@ -365,9 +365,7 @@ public class ModelFormField implements Serializable {
         }
 
         if (allowEncode && this.getEncodeOutput() && returnValue != null) {
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null)
-                returnValue = simpleEncoder.encode(returnValue);
+            returnValue = WidgetWorker.getEarlyEncoder(context).encode(returnValue); // SCIPIO: simplified
         }
         return returnValue;
     }
@@ -677,9 +675,7 @@ public class ModelFormField implements Serializable {
         if (UtilValidate.isNotEmpty(tooltip))
             tooltipString = tooltip.expandString(context);
         if (this.getEncodeOutput()) {
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null)
-                tooltipString = simpleEncoder.encode(tooltipString);
+            tooltipString = WidgetWorker.getEarlyEncoder(context).encode(tooltipString); // SCIPIO: simplified
         }
         return tooltipString;
     }
@@ -1402,10 +1398,7 @@ public class ModelFormField implements Serializable {
             if (UtilValidate.isEmpty(retVal)) {
                 retVal = "";
             } else if (this.getModelFormField().getEncodeOutput()) {
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null) {
-                    retVal = simpleEncoder.encode(retVal);
-                }
+                retVal = WidgetWorker.getEarlyEncoder(context).encode(retVal); // SCIPIO: simplified
             }
             return retVal;
         }
@@ -1636,10 +1629,7 @@ public class ModelFormField implements Serializable {
                 }
             }
             if (UtilValidate.isNotEmpty(this.description) && retVal != null && this.getModelFormField().getEncodeOutput()) {
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null) {
-                    retVal = simpleEncoder.encode(retVal);
-                }
+                retVal = WidgetWorker.getEarlyEncoder(context).encode(retVal); // SCIPIO: simplified
             }
             return retVal;
         }
@@ -2214,10 +2204,7 @@ public class ModelFormField implements Serializable {
         public String getValue(Map<String, Object> context) {
             if (UtilValidate.isNotEmpty(this.value)) {
                 String valueEnc = this.value.expandString(context);
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null) {
-                    valueEnc = simpleEncoder.encode(valueEnc);
-                }
+                valueEnc = WidgetWorker.getEarlyEncoder(context).encode(valueEnc); // SCIPIO: simplified
                 return valueEnc;
             } else {
                 return getModelFormField().getEntry(context);

@@ -86,7 +86,11 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 
             // this is the object used to render forms from their definitions
             screens.getContext().put("formStringRenderer", formStringRenderer);
-            screens.getContext().put("simpleEncoder", UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".encoder", delegator)));
+            // SCIPIO: new early encoder
+            UtilCodec.SimpleEncoder simpleEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".encoder", delegator));
+            screens.getContext().put("simpleEncoder", simpleEncoder);
+            UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder", delegator));
+            screens.getContext().put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
             screens.render(page);
         } catch (Exception e) {
             renderError("Problems with the response writer/output stream", e, "[Not Yet Rendered]", request, response);

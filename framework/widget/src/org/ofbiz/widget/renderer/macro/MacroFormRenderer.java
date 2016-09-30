@@ -110,7 +110,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public static final String module = MacroFormRenderer.class.getName();
     private final Template macroLibrary;
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
-    private final UtilCodec.SimpleEncoder internalEncoder;
+    //private final UtilCodec.SimpleEncoder internalEncoder; // SCIPIO: better off without this
     private final RequestHandler rh;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
@@ -135,9 +135,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         this.rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         this.javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
-        // SCIPIO: don't want pitiful string encoder. fallback should be none.
+        // SCIPIO: better off without this
         //internalEncoder = UtilCodec.getEncoder("string");
-        internalEncoder = UtilCodec.getEncoder("raw");
         this.rendererName = name; // SCIPIO: new
     }
 
@@ -202,11 +201,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isEmpty(value)) {
             return value;
         }
-        UtilCodec.SimpleEncoder encoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-        if (modelFormField.getEncodeOutput() && encoder != null) {
+        // SCIPIO: simplified
+        // NOTE: 2016-08-30: this and most other calls have been changed to use early encoder, which can then be disabled in widget.properties.
+        UtilCodec.SimpleEncoder encoder = WidgetWorker.getEarlyEncoder(context);
+        if (modelFormField.getEncodeOutput()) { // && encoder != null
             value = encoder.encode(value);
-        } else {
-            value = internalEncoder.encode(value);
+        //} else {
+        //    value = internalEncoder.encode(value);
         }
         return value;
     }
@@ -632,10 +633,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 value = value.substring(0, maxlength);
             }
             // SCIPIO: NOW do escaping TODO: review encoding in general
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                value = simpleEncoder.encode(value);
-            }
+            value = WidgetWorker.getEarlyEncoder(context).encode(value); // SCIPIO: simplified
         }
         
         String id = modelFormField.getCurrentContainerId(context);
@@ -3349,7 +3347,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             parameters.append("{'name':");
             parameters.append(ftlFmt.makeStringLiteralSQ(parameter.getName()));
             parameters.append(",'value':");
-            parameters.append(ftlFmt.makeStringLiteralSQ(UtilCodec.getEncoder("html").encode(parameter.getValue(context))));
+            parameters.append(ftlFmt.makeStringLiteralSQ(encode(parameter.getValue(context), modelFormField, context))); // SCIPIO: unhardcoded html encode call here
             parameters.append("}");
         }
         parameters.append("]");

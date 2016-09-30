@@ -148,7 +148,11 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             // SCIPIO: 2016-09-15: in addition, dump the screens renderer into the request attributes,
             // for some cases where only request is available
             request.setAttribute("screens", screens);
-            context.put("simpleEncoder", UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".encoder")));
+            // SCIPIO: new early encoder
+            UtilCodec.SimpleEncoder simpleEncoder = UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".encoder"));
+            context.put("simpleEncoder", simpleEncoder);
+            UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder"));
+            context.put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
             screenStringRenderer.renderScreenBegin(writer, context);
             screens.render(page);
             screenStringRenderer.renderScreenEnd(writer, context);

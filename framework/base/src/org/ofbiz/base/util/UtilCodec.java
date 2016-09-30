@@ -330,19 +330,21 @@ public class UtilCodec {
 
     /**
      * A simple Map wrapper class that will do HTML encoding. To be used for passing a Map to something that will expand Strings with it as a context, etc.
+     * <p>
+     * SCIPIO: changed from HtmlEncodingMapWrapper to EncodingMapWrapper to remove bias.
      */
-    public static class HtmlEncodingMapWrapper<K> implements Map<K, Object> {
-        public static <K> HtmlEncodingMapWrapper<K> getHtmlEncodingMapWrapper(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
+    public static class EncodingMapWrapper<K> implements Map<K, Object> {
+        public static <K> EncodingMapWrapper<K> getEncodingMapWrapper(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
             if (mapToWrap == null) return null;
 
-            HtmlEncodingMapWrapper<K> mapWrapper = new HtmlEncodingMapWrapper<K>();
+            EncodingMapWrapper<K> mapWrapper = new EncodingMapWrapper<K>();
             mapWrapper.setup(mapToWrap, encoder);
             return mapWrapper;
         }
 
         protected Map<K, Object> internalMap = null;
         protected SimpleEncoder encoder = null;
-        protected HtmlEncodingMapWrapper() { }
+        protected EncodingMapWrapper() { }
 
         public void setup(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
             this.internalMap = mapToWrap;
@@ -363,10 +365,12 @@ public class UtilCodec {
                 if (this.encoder != null) {
                     return encoder.encode((String) theObject);
                 } else {
-                    return UtilCodec.getEncoder("html").encode((String) theObject);
+                    // SCIPIO: removed HTML bias
+                    //return UtilCodec.getEncoder("html").encode((String) theObject);
+                    return (String) theObject;
                 }
             } else if (theObject instanceof Map<?, ?>) {
-                return HtmlEncodingMapWrapper.getHtmlEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
+                return EncodingMapWrapper.getEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
             }
             return theObject;
         }
@@ -379,6 +383,35 @@ public class UtilCodec {
         public Set<Map.Entry<K, Object>> entrySet() { return this.internalMap.entrySet(); }
         @Override
         public String toString() { return this.internalMap.toString(); }
+    }
+    
+    /**
+     * SCIPIO: the original HtmlEncodingMapWrapper, as a specialization.
+     */
+    public static class HtmlEncodingMapWrapper<K> extends EncodingMapWrapper<K> {
+        public static <K> HtmlEncodingMapWrapper<K> getHtmlEncodingMapWrapper(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
+            if (mapToWrap == null) return null;
+
+            HtmlEncodingMapWrapper<K> mapWrapper = new HtmlEncodingMapWrapper<K>();
+            mapWrapper.setup(mapToWrap, encoder);
+            return mapWrapper;
+        }
+
+        public Object get(Object key) {
+            Object theObject = this.internalMap.get(key);
+            if (theObject instanceof String) {
+                if (this.encoder != null) {
+                    return encoder.encode((String) theObject);
+                } else {
+                    // SCIPIO: go direct
+                    //return UtilCodec.getEncoder("html").encode((String) theObject);
+                    return UtilCodec.getHtmlEncoder().encode((String) theObject);
+                }
+            } else if (theObject instanceof Map<?, ?>) {
+                return HtmlEncodingMapWrapper.getHtmlEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
+            }
+            return theObject;
+        }
     }
 
 }

@@ -81,6 +81,7 @@ under the License.
     <!-- demo data: example/test records and history -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderTestData.xml"/>
     
+    <!-- SCIPIO: SHOPDE: IN-PLACE EDIT (FIXME): give this mount-point to shopde 
     <webapp name="shop"
         title="SCIPIO Commerce"
         server="default-server"
@@ -89,6 +90,7 @@ under the License.
         app-bar-display="true"
         menu-name="secondary"
         />
+    -->
     <!-- Scipio: Legacy mount-point redirect -->
     <webapp name="ecommerce"
         title="SCIPIO Commerce"

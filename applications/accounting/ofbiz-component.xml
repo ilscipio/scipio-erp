@@ -96,26 +96,29 @@ under the License.
     <test-suite loader="main" location="testdef/invoicetests.xml"/>
     <test-suite loader="main" location="testdef/fixedassettests.xml"/>
 
+    <!-- SCIPIO: SHOPDE: IN-PLACE EDIT (FIXME): give this mount-point to accountingde 
     <webapp name="accounting"
         title="Accounting"
         server="default-server"
         location="webapp/accounting"
         base-permission="OFBTOOLS,ACCOUNTING"
-        mount-point="/accounting"/>
+        mount-point="/accounting"/>-->
 
+    <!-- SCIPIO: SHOPDE: IN-PLACE EDIT (FIXME): give this mount-point to accountingde 
     <webapp name="ar"
         title="Accounting - AR"
         server="default-server"
         location="webapp/ar"
         base-permission="OFBTOOLS,ACCOUNTING"
         mount-point="/ar"
-        app-bar-display="false"/> <!-- Scipio: don't display in main menu; shown under accounting menu instead -->
+        app-bar-display="false"/>--> <!-- Scipio: don't display in main menu; shown under accounting menu instead -->
 
+    <!-- SCIPIO: SHOPDE: IN-PLACE EDIT (FIXME): give this mount-point to accountingde 
     <webapp name="ap"
         title="Accounting - AP"
         server="default-server"
         location="webapp/ap"
         base-permission="OFBTOOLS,ACCOUNTING"
         mount-point="/ap"
-        app-bar-display="false"/> <!-- Scipio: don't display in main menu; shown under accounting menu instead -->
+        app-bar-display="false"/>--> <!-- Scipio: don't display in main menu; shown under accounting menu instead -->
 </ofbiz-component>

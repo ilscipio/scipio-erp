@@ -55,6 +55,20 @@ under the License.
     </xs:element>
     <xs:attributeGroup name="attlist.include">
         <xs:attribute type="xs:string" name="location" use="required"/>
+        <xs:attribute name="recursive" default="full">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: controls the scope of the include. The default and original stock
+                    behavior is 'full' include, but now possible to specify 'no' disable recursion past one level.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="no"/>
+                    <xs:enumeration value="full"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="description" type="xs:string"/>
     <xs:element name="owner" type="xs:string"/>

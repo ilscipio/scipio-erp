@@ -196,7 +196,7 @@ public class ModelMenu extends ModelWidget {
         String parentResource = menuElement.getAttribute("extends-resource");
         String parentMenu = menuElement.getAttribute("extends");
         if (!parentMenu.isEmpty()) {
-            parent = getMenuDefinition(parentResource, parentMenu, menuLocation, menuElement, genBuildArgs);
+            parent = getMenuDefinition(parentResource, parentMenu, menuElement, genBuildArgs); // SCIPIO: this is now gotten from menuElement in safer way: menuLocation
             if (parent != null) {
                 type = parent.type;
                 itemsSortMode = parent.itemsSortMode;
@@ -408,9 +408,19 @@ public class ModelMenu extends ModelWidget {
 
     /**
      * SCIPIO: Menu loading factored out of main constructor and modified for reuse.
+     * <p>
+     * NOTE: 2016-09-30: the menuLocation argument was removed and replaced with more physical check
+     * using the anyMenuElement (via WidgetDocumentInfo).
      */
-    static ModelMenu getMenuDefinition(String resource, String name, String menuLocation, Element anyMenuElement, GeneralBuildArgs genBuildArgs) {
+    static ModelMenu getMenuDefinition(String resource, String name, Element anyMenuElement, GeneralBuildArgs genBuildArgs) {
         ModelMenu modelMenu = null;
+        
+        // SCIPIO: 2016-09-30: OVERRIDE this completely now
+        String menuLocation = WidgetDocumentInfo.retrieveAlways(anyMenuElement).getResourceLocation();
+        if (UtilValidate.isEmpty(menuLocation)) {
+            // important to know when this fails now
+            throw new IllegalStateException("Unable to get menu widget file original location. Error in code somewhere...");
+        }
         
         final String fullLoc;
         if (resource != null && !resource.isEmpty()) {
@@ -497,7 +507,7 @@ public class ModelMenu extends ModelWidget {
 
                     // WARN: we're forced to load this menu model even though we were support to avoid it
                     // because we need some resolved attributes off it
-                    ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, currResource, parentElement, genBuildArgs);
+                    ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, parentElement, genBuildArgs); // currResource
                     CurrentMenuDefBuildArgs includedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(includedMenuModel != null ? includedMenuModel : this);
                     
                     if (includedMenuElem != null) {
@@ -511,7 +521,7 @@ public class ModelMenu extends ModelWidget {
                                         includedMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                                 if (extendedMenuElem != null) {
                                     
-                                    ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, nextResource, includedMenuElem, genBuildArgs);
+                                    ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, includedMenuElem, genBuildArgs); // nextResource
                                     CurrentMenuDefBuildArgs extendedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(extendedMenuModel != null ? extendedMenuModel : this);
                                     
                                     processIncludeActions(extendedMenuElem, null, null, actions, 
@@ -630,7 +640,7 @@ public class ModelMenu extends ModelWidget {
                         // WARN: we're forced to load this menu model even though we were support to avoid it
                         // because we need some resolved attributes off it
                         // NOTE: this is not meant to be used for any backreferences; we want them all to point to 'this' menu
-                        ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, currResource, parentElement, genBuildArgs);
+                        ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, parentElement, genBuildArgs); // currResource
                         CurrentMenuDefBuildArgs includedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(includedMenuModel != null ? includedMenuModel : this);
                         
                         String includedForceSubMenuModelScope = forceSubMenuModelScope;
@@ -647,7 +657,7 @@ public class ModelMenu extends ModelWidget {
                                 Element extendedMenuElem = loadIncludedMenu(extendedMenuName, extendedResource, 
                                         includedMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                                 
-                                ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, nextResource, includedMenuElem, genBuildArgs);
+                                ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, includedMenuElem, genBuildArgs); // nextResource
                                 CurrentMenuDefBuildArgs extendedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(extendedMenuModel != null ? extendedMenuModel : this);
                                 
                                 String extendedForceSubMenuModelScope = includedForceSubMenuModelScope;
@@ -836,6 +846,10 @@ public class ModelMenu extends ModelWidget {
                 try {
                     URL menuFileUrl = FlexibleLocation.resolveLocation(targetResource);
                     Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (menuFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(targetResource);
+                    }
                     inclRootElem = menuFileDoc.getDocumentElement();
                 } catch (Exception e) {
                     Debug.logError(e, "Failed to load include-menu-items resource: " + resource, module);

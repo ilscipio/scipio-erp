@@ -113,8 +113,8 @@ public class ModelSubMenu extends ModelWidget {
         
         if (!modelAddress.isEmpty()) {
             ModelLocation menuLoc = ModelLocation.fromAddress(modelAddress);
-            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(), topModelMenu.getMenuLocation(), 
-                    subMenuElement, buildArgs.genBuildArgs);
+            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(), 
+                    subMenuElement, buildArgs.genBuildArgs); // topModelMenu.getMenuLocation()
         }
         
         // figure out our name

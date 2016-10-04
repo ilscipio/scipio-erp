@@ -2120,19 +2120,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#else>
           <#local displayType = valueType>
         </#if>
-        <#if !value?has_content>
-          <#local value><#nested></#local>
-        </#if>
-        <#if displayType == "image">
-          <#local imageLocation = value>
-          <#local desc = "">
-        <#else>
-          <#local imageLocation = "">
-          <#local desc = value>
-        </#if>
-        <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
+        <@field_display_widget type=displayType value=value idName="" 
           title=title class=class id=id alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" style=style 
-          imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel passArgs=passArgs/>
+          imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel passArgs=passArgs><#nested></@field_display_widget>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>

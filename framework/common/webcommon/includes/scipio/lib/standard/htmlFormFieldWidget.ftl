@@ -1668,25 +1668,57 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <input type="hidden" name="${escapePart(name, 'html')}"<#if value?has_content> value="${escapePart(value, 'html')}"</#if><#if id?has_content> id="${id}"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if>/>
 </#macro>
 
-<#-- migrated from @renderDisplayField form widget macro -->
+<#-- migrated from @renderDisplayField form widget macro 
+  2016-10-03: this now accept either value or description/imageLocation combo; handles both 
+      behavior depends on whether value was part of the arguments or not -->
 <#assign field_display_widget_defaultArgs = {
-  "type":"", "imageLocation":"", "idName":"", "description":"", "style":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
+  "type":"", "value":"", "imageLocation":"", "idName":"", "description":"", "style":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
   "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, 
   "formatText":"", "passArgs":{}
 }>
 <#macro field_display_widget args={} inlineArgs...>
+  <#local valuePresent = args.value?? || inlineArgs.value??>
+  <#local descPresent = args.description?? || inlineArgs.description??>
+  <#local imageLocPresent = args.imageLocation?? || inlineArgs.imageLocation??>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_display_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#if !formatText?is_boolean>
     <#local formatText = true>
   </#if>
-  <@field_display_markup_widget type=type imageLocation=imageLocation id=id style=style idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
+  <#if valuePresent>
+    <#if type == "image">
+      <#if !imageLocPresent>
+        <#local imageLocation = value>
+      </#if>
+      <#local description = "">
+    <#else>
+      <#local imageLocation = "">
+      <#if !descPresent>
+        <#local description = value>
+      </#if>
+    </#if>
+  <#else>
+    <#-- reverse logic -->
+    <#if type == "image">
+      <#if imageLocPresent>
+        <#local value = imageLocation>
+      </#if>
+    <#else>
+      <#if descPresent>
+        <#local value = description>
+      </#if>
+    </#if>
+  </#if>
+  <@field_display_markup_widget type=type imageLocation=imageLocation id=id style=style idName=idName description=description value=value title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
     inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel formatText=formatText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
 </#macro>
 
-<#-- field markup - theme override -->
-<#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
+<#-- field markup - theme override 
+    NOTE: for legacy reasons, #nested is passed both as #nested and captured the description attributed, on top of nestedContent param. nestedContent must not be escaped.
+    NOTE: value is only meaningful for non-image, and will be same as description. 
+    This is contrived due to being based on the original ofbiz display widget. -->
+<#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" value="" nestedContent="" title="" class="" alert="" inPlaceEditorUrl="" 
     inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false formatText=true origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
@@ -1699,7 +1731,11 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#if hasWrapper>
     <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${escapePart(title, 'html')}"</#if><#if style?has_content> style="${style}"</#if>><#rt/>
   </#if>
+  <#local nestedContent><#nested></#local>
   <#if type?has_content && type == "image">
+    <#if !imageLocation?has_content>
+      <#local imageLocation = nestedContent><#-- wrapAsRaw(nestedContent) - no? because is attribute... -->
+    </#if>
     <img src="${escapeFullUrl(imageLocation, 'html')}" alt="${escapePart(imageAlt, 'html')}"/><#lt/>
   <#else>
     <#--
@@ -1712,6 +1748,12 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         ${escapePart(description, 'html')?replace("\n", "<br />")}<#t/>
       <#else>
         ${escapePart(description, 'html')}<#t/>
+      </#if>
+    <#elseif nestedContent?has_content>
+      <#if formatText>
+        ${nestedContent?replace("\n", "<br />")}<#t/>
+      <#else>
+        ${nestedContent}<#t/>
       </#if>
     <#else>
       &nbsp;<#t/>

@@ -233,7 +233,7 @@ ${virtualJavaScript!}
                           <div>
                           <#assign inlineCounter = counter+ "_" +optionCounter + "_"+componentCounter>
                             <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if> <span id="variant_price_display${inlineCounter}"> </span></#assign>
-                            <@field type="radio" name="${counter}" id="${counter}_${optionCounter}" value=optionCounter?string
+                            <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter?string
                                 onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
                             
                           <@fields type="default">

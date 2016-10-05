@@ -30,7 +30,7 @@ under the License.
                 <@field type="textarea" label=uiLabelMap.ProductLongDescription name="longDescription" cols="60" rows="7">${(productCategory.longDescription)!}</@field>
                 <#assign fieldValue><#if productCategory?has_content>${productCategory.detailScreen!}</#if></#assign>
                 <#-- Scipio: Now points to shop -->
-                <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue tooltip="${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://shop/widget/CatalogScreens.xml#categorydetail&quot;" />
+                <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue tooltip="${rawString(uiLabelMap.ProductDefaultsTo)} \"categorydetail\", ${rawString(uiLabelMap.ProductDetailScreenMessage)}: \"component://shop/widget/CatalogScreens.xml#categorydetail\"" />
                 <@field type="submit" name="Update" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />
         </form>
 </@section>

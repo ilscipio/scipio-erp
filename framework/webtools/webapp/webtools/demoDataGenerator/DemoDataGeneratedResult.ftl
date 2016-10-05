@@ -40,7 +40,7 @@
                                 <#assign totalFailed = totalFailed + {statKeys[i] : stat[statKeys[i]].failed}>
                             </#if>    
                             <@td>                                 
-                                <@modal id="displayRecords_${statKeys[i]}_${stat_index}" label="${uiLabelMap.WebtoolsGeneratedDataStored}: ${stat[statKeys[i]].stored}">
+                                <@modal id="displayRecords_${statKeys[i]}_${stat_index}" label="${rawString(uiLabelMap.WebtoolsGeneratedDataStored)}: ${rawString(stat[statKeys[i]].stored)}">
                                     <@heading level=1>${uiLabelMap.CommonIteration} #${stat_index + 1}</@heading>
                                     <@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
                                         <@thead>

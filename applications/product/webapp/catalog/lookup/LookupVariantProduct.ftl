@@ -26,7 +26,7 @@ under the License.
   <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
-            <@field type="select" name="${searchFeature.featureType}" label=(searchFeature.featureType)>
+            <@field type="select" name=searchFeature.featureType label=(searchFeature.featureType)>
                 <#assign features = searchFeature.features>
                 <option value=""></option>
                 <#list features as feature>

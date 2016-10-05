@@ -292,8 +292,8 @@ under the License.
           <li class="divider"></li>
           <@render resource="component://shop/widget/CartScreens.xml#microcart" ctxVars={"microCartMenuItem":true}/>
           <#--
-          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>  
+          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${rawString(helpTopic!)}&amp;portalPageId=${rawString(parameters.portalPageId!)}</@ofbizUrl></#assign>
+          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=helpLink></@modal></li></#if>  
           <#-- language select
           <li>
             <div id="lang-select">

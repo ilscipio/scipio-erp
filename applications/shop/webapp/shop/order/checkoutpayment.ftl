@@ -260,7 +260,7 @@ jQuery(document).ready(function(){
       </#assign>
       <#-- Scipio: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
           Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-      <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="${id}" name="${name}" value=fieldValue 
+      <@field type="input" label=uiLabelMap.AccountingAmount size="5" id=id name=name value=fieldValue 
         tooltip=realCurPayAmountFullStr postfix=true collapsePostfix=false postfixColumns=9 postfixContent=postfixContent />  
     </#macro>
 

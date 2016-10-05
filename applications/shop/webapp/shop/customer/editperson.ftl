@@ -56,7 +56,7 @@ under the License.
       <option value="M">${uiLabelMap.CommonMale}</option>
       <option value="F">${uiLabelMap.CommonFemale}</option>
     </@field>
-    <@field type="input" label=uiLabelMap.PartyBirthDate size="11" maxlength="20" name="birthDate" value=((personData.birthDate.toString())!) tooltip="${uiLabelMap.CommonFormatDate}"/>
+    <@field type="input" label=uiLabelMap.PartyBirthDate size="11" maxlength="20" name="birthDate" value=((personData.birthDate.toString())!) tooltip=uiLabelMap.CommonFormatDate/>
     <@field type="input" label=uiLabelMap.PartyHeight size="30" maxlength="60" name="height" value=(personData.height!)/>
     <@field type="input" label=uiLabelMap.PartyWeight size="30" maxlength="60" name="weight" value=(personData.weight!)/>
 
@@ -79,7 +79,7 @@ under the License.
     <@field type="input" label=uiLabelMap.PartySocialSecurityNumber size="30" maxlength="60" name="socialSecurityNumber" value=(personData.socialSecurityNumber!)/>
 
     <@field type="input" label=uiLabelMap.PartyPassportNumber size="30" maxlength="60" name="passportNumber" value=(personData.passportNumber!)/>
-    <@field type="input" label=uiLabelMap.PartyPassportExpireDate size="11" maxlength="20" name="passportExpireDate" value=(personData.passportExpireDate!) tooltip="${uiLabelMap.CommonFormatDate}"/>
+    <@field type="input" label=uiLabelMap.PartyPassportExpireDate size="11" maxlength="20" name="passportExpireDate" value=(personData.passportExpireDate!) tooltip=uiLabelMap.CommonFormatDate/>
     <@field type="input" label=uiLabelMap.PartyTotalYearsWorkExperience size="30" maxlength="60" name="totalYearsWorkExperience" value=(personData.totalYearsWorkExperience!)/>
     <@field type="input" label=uiLabelMap.CommonComment size="30" maxlength="60" name="comments" value=(personData.comments!)/>
   </form>

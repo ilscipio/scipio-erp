@@ -38,7 +38,7 @@ under the License.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
       <@td colspan="3">
          
-        <@modal id="${orderId}_info" label="${currentStatus.get('description',locale)}">
+        <@modal id="${orderId}_info" label=currentStatus.get('description',locale)>
         <#if orderHeaderStatuses?has_content>
           <ul class="no-bullet">
             <#list orderHeaderStatuses as orderHeaderStatus>
@@ -165,7 +165,7 @@ under the License.
                 <#default>${uiLabelMap.CommonNormal}
             </#switch>
          </#assign>
-         <@modal id="${orderId}_priority" label="${priorityLabel!}">
+         <@modal id="${orderId}_priority" label=priorityLabel!>
              <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
              <input type="hidden" name="orderId" value="${orderId}"/>
             <@row>
@@ -195,7 +195,7 @@ under the License.
                 <#default>${uiLabelMap.CommonYes!}
             </#switch>
          </#assign>
-         <@modal id="${orderId}_invoicePerShipment" label="${invoicePerShipmentLabel!}">
+         <@modal id="${orderId}_invoicePerShipment" label=invoicePerShipmentLabel!>
              <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <@row>

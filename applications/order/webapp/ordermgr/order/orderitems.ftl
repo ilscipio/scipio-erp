@@ -125,7 +125,7 @@ under the License.
                                         </#if>
                                     </#assign>
                                     <#if productItemStatus?has_content>
-                                        <@modal id="${productId}_st" label="${currentItemStatus.get('description',locale)!(currentItemStatus.statusId)}">${productItemStatus!}</@modal>
+                                        <@modal id="${productId}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
                                     <#else>
                                         ${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}
                                     </#if>
@@ -166,7 +166,7 @@ under the License.
                                                             <#assign shortfalledQuantity = shortfalledQuantity + orderItemShipGrpInvRes.quantityNotAvailable/>
                                                         </#if>
                                                     </#list>
-                                        <@modal id="${productId}_q" label="${(orderItem.quantity!0)?string.number}">    
+                                        <@modal id="${productId}_q" label=(orderItem.quantity!0)?string.number>    
                                             <@table type="data-complex"> <#-- orig: class="" -->
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>

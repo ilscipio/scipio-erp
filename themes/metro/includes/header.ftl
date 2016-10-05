@@ -73,8 +73,8 @@ under the License.
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
             <#include "component://common/webcommon/includes/helplink.ftl" />
         <#else>
-            <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-            <#if helpLink?has_content><li><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>
+            <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${rawString(helpTopic!)}&amp;portalPageId=${rawString(parameters.portalPageId!)}</@ofbizUrl></#assign>
+            <#if helpLink?has_content><li><@modal label=uiLabelMap.CommonHelp id="help" href=helpLink></@modal></li></#if>
     </#if>
     <#if userLogin??>
         <li class="divider"></li>
@@ -344,8 +344,8 @@ under the License.
                     <aside class="right-off-canvas-menu">
                         <ul class="off-canvas-list">
                           <@generalMenu />
-                          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-                          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>   
+                          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${rawString(helpTopic!)}&amp;portalPageId=${rawString(parameters.portalPageId!)}</@ofbizUrl></#assign>
+                          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=helpLink></@modal></li></#if>   
                         </ul>
                     </aside>
                     

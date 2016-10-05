@@ -29,7 +29,7 @@ under the License.
       </#list>
     </@field>
     <#macro imageField name>
-      <@field type="file" size="20" name="${name}"/>
+      <@field type="file" size="20" name=name/>
     </#macro>
     <#assign namePrefix = "additionalImage">
     <@imageField name=namePrefix + "One" />

@@ -654,7 +654,7 @@ ${virtualJavaScript!}
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</@heading>
+    <@heading>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</@heading>
 
     <div class="productsummary-container">
     <#list assocProducts as productAssoc>

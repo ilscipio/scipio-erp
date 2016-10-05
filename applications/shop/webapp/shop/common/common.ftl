@@ -342,10 +342,10 @@ jQuery(document).ready(function() {
   <#local contactNumberName = fieldNamePrefix + (args.contactNumberName)!"contactNumber">
   <#local extensionName = fieldNamePrefix + (args.extensionName)!"extension">
   <@field type="generic" label=label tooltip=tooltip required=required args=args>
-      <@field type="input" inline=true size="1" maxlength="10" name="${countryCodeName}" value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name="${areaCodeName}" value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name="${contactNumberName}" value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
-      <#if showExt>&nbsp;<span style="white-space: nowrap;">${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="${extensionName}" 
+      <@field type="input" inline=true size="1" maxlength="10" name=countryCodeName value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name=areaCodeName value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name=contactNumberName value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
+      <#if showExt>&nbsp;<span style="white-space: nowrap;">${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="4" maxlength="10" name=extensionName 
         value=((params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension /></span></#if>
     <#nested>
   </@field>

@@ -36,7 +36,7 @@
                         </#if>
                     </#assign>
                     <#if partyNameHistoryList?has_content>
-                        <@modal id="modal_info_${parameters.partyId!}" label="${partyName!}">
+                        <@modal id="modal_info_${parameters.partyId!}" label=partyName!>
                             <#if partyNameHistoryList?has_content>
                               <@heading>${uiLabelMap.PartyHistoryWas}</@heading>
                               <ul class="no-bullet">
@@ -116,13 +116,13 @@
               </@td>
               <@td colspan="3">
                   <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
-                      <@modal id="modal_avsstring_${parameters.partyId}" label="${(avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal}">
+                      <@modal id="modal_avsstring_${parameters.partyId}" label=((avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal)>
                          <@heading>${uiLabelMap.PartyAvsOver}</@heading>
                          <form name="updateAvsOverride" method="post" action="<@ofbizUrl>updateAvsOverride</@ofbizUrl>">
                          <input type="hidden" name="partyId" value="${parameters.partyId}"/>
                         <@row>
                             <@cell columns=6>
-                                <@field type="input" name="avsDeclineString" title="${uiLabelMap.PartyAvsString}" size="60" maxlength="250"/>
+                                <@field type="input" name="avsDeclineString" title=uiLabelMap.PartyAvsString size="60" maxlength="250"/>
                             </@cell>
                             <@cell columns=6>
                                 <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonSave}"/>

@@ -6,7 +6,7 @@
       <@tr>
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
           <@td colspan="3">
-            <@modal id="modal_${invoiceId}_info" label="${currentStatus.get('description',locale)}">
+            <@modal id="modal_${invoiceId}_info" label=currentStatus.get('description',locale)>
             <#if invoiceStatus?has_content>
               <ul class="no-bullet">
                 <#list invoiceStatus as iStatus>

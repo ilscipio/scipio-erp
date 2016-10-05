@@ -39,7 +39,7 @@ under the License.
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonDay}</@th>
-    <@th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</@th>
+    <@th colspan=maxConcurrentEntries>${uiLabelMap.WorkEffortCalendarEntries}</@th>
   </@tr>
   </@thead>
   <#list periods as period>

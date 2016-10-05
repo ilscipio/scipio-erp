@@ -210,7 +210,7 @@ function setAlternateGwp(field) {
                             <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                                 <#if fixedAssetExist == true && cartLine.getReservStart()??>
                                   <#-- Scipio: NOTE: stock bugfixes applied here -->
-                                  <@modal id="${cartLine.productId}_q" label="${cartLine.getQuantity()?string.number}">   
+                                  <@modal id="${rawString(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>   
                                     <@fields type="default-compact"> 
                                       <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
                                       <@field type="display" label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />

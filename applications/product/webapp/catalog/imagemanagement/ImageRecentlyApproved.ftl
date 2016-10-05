@@ -34,7 +34,7 @@ under the License.
           <#assign targetLink><@ofbizUrl>ListImageRecentlyApproved?productId=${show.productId}&date1=${productContentEntry.timeStampDate1}&date2=${productContentEntry.timeStampDate2}&showDate=${productContentEntry.date}</@ofbizUrl></#assign>
           <#-- Scipio: NOTE: the productContentEntry.date used to be in a wrapper around the entries (outside
                <#list productContentEntry.approved as show>). but we'll just integrate it into the tiles as title. -->
-          <@tile size="normal" image=thumbSrc title="${productContentEntry.date} - ${show.productId}" link=targetLink>
+          <@tile size="normal" image=thumbSrc title="${productContentEntry.date} - ${rawString(show.productId)}" link=targetLink>
             <#--link whole tile instead and put product ID in title
             <a href="${targetLink}" class="${styles.link_nav_info_id!}">${show.productId}</a> - ${productContentEntry.time[show_index]}-->
             ${productContentEntry.time[show_index]}

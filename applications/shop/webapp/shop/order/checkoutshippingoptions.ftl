@@ -57,7 +57,7 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<@section title="${rawString(uiLabelMap.OrderHowShallWeShipIt)}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
+<@section title="${rawString(uiLabelMap.OrderHowShallWeShipIt)}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2) ${uiLabelMap.OrderHowShallWeShipIt}? -->
     <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
         <#--<fieldset>-->
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>

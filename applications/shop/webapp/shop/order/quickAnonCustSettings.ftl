@@ -168,7 +168,7 @@ under the License.
       </@cell>
     </@row>
 
-    <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text="${uiLabelMap.CommonContinue}"/>
+    <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue/>
 
   </form>
 </@section>

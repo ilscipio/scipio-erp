@@ -544,7 +544,7 @@ under the License.
     </#if>
   </@section>
 
-  <@section class="${uiLabelMap.EcommerceShoppingListPriceTotals} - ${shoppingList.listName}">
+  <@section title="${rawString(uiLabelMap.EcommerceShoppingListPriceTotals)} - ${rawString(shoppingList.listName)}">
       <@table type="fields"> <#-- orig: width="100%" border="0" cellspacing="1" cellpadding="1" -->
         <@tr>
           <@td width="5%" nowrap="nowrap">${uiLabelMap.EcommerceChildListTotalPrice}

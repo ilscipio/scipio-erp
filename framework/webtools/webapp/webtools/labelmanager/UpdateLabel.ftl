@@ -98,7 +98,7 @@ under the License.
                             <#if "ar.iw"?contains(langAttr?substring(0, 2))>
                                 <#assign langDir = "rtl">
                             </#if>
-                            <@td lang="${langAttr}" dir="${langDir}">
+                            <@td lang=langAttr dir=langDir>
                                 ${locale.getDisplayName(locale)}
                             </@td>
                         <#else>

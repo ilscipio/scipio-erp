@@ -80,7 +80,7 @@ Defines a form. Analogous to <form> HTML element.
 <#-- @form main markup - theme override -->
 <#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
       <#lt><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
@@ -234,7 +234,7 @@ to a form submit.
 <#macro progress_markup value=0 id="" class="" showValue=false containerClass="" stateClass="" origArgs={} passArgs={} catchArgs...>
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
-  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if stateClass?has_content> ${stateClass}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
+  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if stateClass?has_content> ${stateClass}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${escapePart(id, 'html')}"</#if>>
     <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
       <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value}</#if></span>
     <#if styles.progress_wrap?has_content></div></#if>
@@ -283,7 +283,7 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
     <#if id?has_content>
     <@script htmlwrap=htmlwrap>
     jQuery(document).ready(function() {
-        multiple = jQuery("#${id}");
+        multiple = jQuery("#${escapePart(id, 'js')}");
     
       <#if !(title?is_boolean && title == false)>
         <#if title?is_boolean>
@@ -313,12 +313,12 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
         // on initial focus (focus-field-name must be relatedFieldId) or if the field value changes, select related multi values. 
         typeValue = jQuery('#${relatedTypeFieldId}').val();
         jQuery("#${relatedFieldId}").one('focus', function() {
-          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${escapePart(id, 'js')}', '${relatedTypeName}', typeValue, '${responseName}');
         });
         jQuery("#${relatedFieldId}").change(function() {
-          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${escapePart(id, 'js')}', '${relatedTypeName}', typeValue, '${responseName}');
         });
-        selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${escapePart(id, 'js')}', '${relatedTypeName}', typeValue, '${responseName}');
       </#if>
       });  
     </@script>
@@ -376,7 +376,7 @@ A visible fieldset, including the HTML element.
   <#local origArgs = args>
 
   <#if id?has_content>
-    <#local containerId = "${id}_container">
+    <#local containerId = rawString(id) + "_container">
   <#else>
     <#local containerId = "">
   </#if>
@@ -409,7 +409,7 @@ A visible fieldset, including the HTML element.
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
     <@row open=true close=false />
       <@cell open=true close=false class=containerClasses id=containerId />
-        <fieldset<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>>
+        <fieldset<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">

@@ -65,7 +65,7 @@ to this one.
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
+    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -142,7 +142,7 @@ Creates a grid row.
 <#macro row_markup open=true close=true class="" collapse=false id="" style="" alt="" selected="" 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
         <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
   </#if>
       <#nested />
@@ -267,7 +267,7 @@ Creates a grid cell.
 <#macro cell_markup open=true close=true class="" id="" style="" last=false collapse=false 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
         <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
   </#if>
       <#nested><#t>
@@ -450,12 +450,12 @@ Since this is very foundation specific, this function may be dropped in future i
   </@container>
   <@script>
    $(function() {
-      $('#${id}').freetile({
+      $('#${escapePart(id, 'js')}').freetile({
           selector: '.${styles.tile_wrap!}'
       });
       <#--
       Alternative implementation of gridster.js
-      $('#${id}').gridster({
+      $('#${escapePart(id, 'js')}').gridster({
           widget_selector: '.${styles.tile_wrap!}',
           min_cols:${columns},
           autogenerate_stylesheet:false
@@ -1097,8 +1097,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       
       <#if hasTitle>
         <#local titleMarkup>
-          <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
-            containerClass=titleHeadingContainerClass passArgs=passArgs>${escapePart(title, 'html')}</@heading>
+          <@heading level=hLevel title=title elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
+            containerClass=titleHeadingContainerClass passArgs=passArgs />
         </#local>
       </#if> 
     </#if>

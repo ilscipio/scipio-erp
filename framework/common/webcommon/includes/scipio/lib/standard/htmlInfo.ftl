@@ -58,8 +58,8 @@ FIXME: Needs parameter to control injection and location of hidden modal content
 
 <#-- @modal main markup - theme override -->
 <#macro modal_markup id="" label="" href="" class="" icon="" origArgs={} passArgs={} catchArgs...>
-  <a href="#" data-reveal-id="modal_${id}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${icon!}"></i> </#if>${escapePart(label, 'html')}</a>
-  <div id="modal_${id}" class="${styles.modal_wrap!}" data-reveal>
+  <a href="#" data-reveal-id="modal_${escapePart(id, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${icon!}"></i> </#if>${escapePart(label, 'html')}</a>
+  <div id="modal_${escapePart(id, 'html')}" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>
   </div>
@@ -123,7 +123,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
     <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
       <div data-alert class="${styles.alert_wrap!} ${styles[rawString(typeClass)]!}">
         <div class="${styles.grid_row!}">
-          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
+          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${style}"</#if>>
             <#if closable><a href="#" class="${styles.closable!}" data-dismiss="alert">&times;</a></#if>
             <#nested>
           </div>
@@ -176,7 +176,7 @@ Creates a panel box.
     topContent=false topContentArgs={}  bottomContent=false bottomContentArgs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.panel_wrap!"")>
   <#local class = addClassArg(class, type)>
-  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
+  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${style}"</#if>>
     <#if !topContent?is_boolean><@contentArgRender content=topContent args=topContentArgs /></#if>
     <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${escapePart(title, 'html')}</h5></#if></div>
     <div<@compiledClassAttribStr class=(styles.panel_body!)/>><#nested></div>
@@ -265,7 +265,7 @@ translates to:
     <#if !nestedContent?has_content>
       <#local nestedContent = uiLabelMap[styles.commonmsg_result_norecord_prop!"CommonNoRecordFoundSentence"]>
     </#if>
-    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>${nestedContent}</p>
+    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if>>${nestedContent}</p>
   <#elseif type == "error" || type?starts_with("error-")>
     <#-- NOTE: here we must resolve class arg before passing to @alert and make additive only -->
     <@alert type="error" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
@@ -276,7 +276,7 @@ translates to:
   <#elseif type == "info-important">
     <@alert type="info" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
   <#else>
-    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
+    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if>><#nested></p>
   </#if>
 </#macro>
 

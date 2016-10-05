@@ -35,6 +35,8 @@ An HTML heading (title).
     elemType                = (heading|h|p|span|div|raw|(boolean), default: heading) Element type
                               boolean true means use default; false means none (same as "raw").
                               NOTE: Do not specify h1-h6 here; use level argument instead.
+    title                   = (string) alternative to nested content
+                              NOTE: unlike nested, this will be explicitly html-escaped by the macro                        
     level                   = ((int), default: -current global heading level-) Specific heading level
                               If not specified, current heading level returned by #getCurrentHeadingLevel function is used. 
                               NOTE: Does not consume a level.
@@ -61,7 +63,7 @@ An HTML heading (title).
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign heading_defaultArgs = {
-  "elemType":true, "level":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
+  "elemType":true, "level":"", "title":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
   "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}, "passArgs":{}
 }>
 <#macro heading args={} inlineArgs...>
@@ -116,7 +118,7 @@ An HTML heading (title).
   <#else>
     <#local cElem = containerElemType> 
   </#if>
-  <@heading_markup level=level elem=hElem class=class id=id attribs=attribs
+  <@heading_markup level=level title=title elem=hElem class=class id=id attribs=attribs
     containerElem=cElem containerClass=containerClass containerId=containerId origArgs=origArgs passArgs=passArgs><#nested></@heading_markup>
 </#macro>
 
@@ -124,7 +126,7 @@ An HTML heading (title).
      This may be overridden by themes to change markup without changing logic.
      Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "catchArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
-<#macro heading_markup level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" origArgs={} passArgs={} catchArgs...>
+<#macro heading_markup level=1 title="" elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" origArgs={} passArgs={} catchArgs...>
   <#local elemLevel = level>
   <#if (elemLevel > 6)>
     <#local elemLevel = 6>
@@ -133,10 +135,10 @@ An HTML heading (title).
     <#local elem = "h" + elemLevel?string>
   </#if>
   <#if containerElem?has_content>
-    <${containerElem}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if>>
+    <${containerElem}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if>>
   </#if>
-  <#if elem?has_content><${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-    <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#nested><#if elem?has_content></${elem}></#if>
+  <#if elem?has_content><${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
+    <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#if title?has_content>${escapePart(title, 'html')}<#else><#nested></#if><#if elem?has_content></${elem}></#if>
   <#if containerElem?has_content>
     </${containerElem}>
   </#if>
@@ -173,7 +175,7 @@ Creates a basic wrapper for code blocks.
 
 <#-- @code main markup - theme override -->
 <#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
-  <pre<@compiledClassAttribStr class=class />><code data-language="${type}"><#rt>
+  <pre<@compiledClassAttribStr class=class />><code data-language="${escapePart(type, 'html')}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>
@@ -270,7 +272,7 @@ Creates a responsive tables script (script only - no markup).
       
       <@script htmlwrap=htmlwrap>
         $(document).ready(function() {
-            $('#${tableId}').DataTable(<@objectAsScript lang="js" object=respOpts />);
+            $('#${escapePart(tableId, 'js')}').DataTable(<@objectAsScript lang="js" object=respOpts />);
         } );
       </@script>
     </#if>
@@ -549,7 +551,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 <#macro table_markup open=true close=true type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
   autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false tableIdNum=0 attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+    <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if> width="100%">  
   </#if>
       <#nested>
@@ -616,7 +618,7 @@ Defines a table header with advanced generating functionality. Analogous to HTML
 <#-- @thead main markup - theme override -->
 <#macro thead_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -672,7 +674,7 @@ Defines a table body with advanced generating functionality. Analogous to HTML <
 <#-- @tbody main markup - theme override -->
 <#macro tbody_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -728,7 +730,7 @@ Defines a table footer with advanced generating functionality. Analogous to HTML
 <#-- @tfoot main markup - theme override -->
 <#macro tfoot_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -869,7 +871,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 <#-- @tr main markup - theme override -->
 <#macro tr_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -908,7 +910,7 @@ Defines a table header cell. Analogous to <th> HTML element.
 
 <#-- @th main markup - theme override -->
 <#macro th_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
-  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
+  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#-- 
@@ -934,7 +936,7 @@ Defines a table body cell. Analogous to <td> HTML element.
 
 <#-- @td main markup - theme override -->
 <#macro td_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
-  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></td></#if>
+  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
 <#-- 
@@ -1112,11 +1114,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#if nestedContent?has_content>
     <@row>
       <@cell columns=3>
-        <ul data-${type}-id="${id}" class="${styles.chart_legend!}">
+        <ul data-${escapePart(type, 'html')}-id="${escapePart(id, 'html')}" class="${styles.chart_legend!}">
             <#nested/>
         </ul>
       </@cell>
-      <@cell columns=9><div id="${id}" style="height:300px;"></div></@cell>
+      <@cell columns=9><div id="${escapePart(id, 'html')}" style="height:300px;"></div></@cell>
     </@row>
     <#else>
         <#-- Default to chart.js chart for now, as this is capable of rendering an empty chart -->
@@ -1133,7 +1135,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
     <#if (chartDatasets < 1)><#local chartDatasets = 1 /></#if>
     <span class="chart-data">&nbsp;</span>
-    <canvas id="${id}" height="300" width="500"></canvas>
+    <canvas id="${escapePart(id, 'html')}" height="300" width="500"></canvas>
     <@script>
         $(function(){
             var chartDataEl = $('.chart-data').first();
@@ -1245,7 +1247,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }            
                     </#if>
                 };
-            var ctx_${renderSeqNumber}_${chartIdNum} = $('#${id}').get(0).getContext("2d");
+            var ctx_${renderSeqNumber}_${chartIdNum} = $('#${escapePart(id, 'js')}').get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
@@ -1316,9 +1318,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 options: options
             };
             <#-- FIXME: this var is poor because can't even be escaped... -->
-            var ${id} = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
+            var ${escapePart(id, 'js')} = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
             ${nestedContent}
-            ${id}.update();
+            ${escapePart(id, 'js')}.update();
         });
     </@script>
   </#if>
@@ -1451,26 +1453,26 @@ Creates a slider wrapper.
 <#-- @chart main markup - theme override -->
 <#macro slider_markup title="" id="" sliderIdNum=0 class="" library="" controls=true indicator=true 
         jsOptions="" origArgs={} passArgs={} catchArgs...>
-    <#if title?has_content><@heading>${title}</@heading></#if>
+    <#if title?has_content><@heading title=title/></#if>
     <#switch library>
         <#case "owl">    
             <#local class = addClassArg(class, "owl-carousel")>
-            <div<@compiledClassAttribStr class=class /> id="${id}">
+            <div<@compiledClassAttribStr class=class /> id="${escapePart(id, 'html')}">
                 <#nested/>
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
-                  $("#${id}").owlCarousel({${jsOptions}});
+                  $("#${escapePart(id, 'js')}").owlCarousel({${jsOptions}});
                 });
             </script>
           <#break>
         <#case "slick">
-            <div<@compiledClassAttribStr class=class /> id="${id}">
+            <div<@compiledClassAttribStr class=class /> id="${escapePart(id, 'html')}">
                 <#nested/>
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
-                  $("#${id}").slick({${jsOptions}});
+                  $("#${escapePart(id, 'js')}").slick({${jsOptions}});
                 });
             </script>
           <#break>
@@ -1479,7 +1481,7 @@ Creates a slider wrapper.
                 <#t>navigation_arrows:${controls?string("true","false")}; bullets:${indicator?string("true","false")};slide_number:false;
             </#local>
             <#local class = addClassArg(class, styles.slider_container!)>
-            <div<@compiledClassAttribStr class=class /> data-orbit id="${id}"<#if dataOptions?has_content> data-options="${dataOptions}"</#if>>
+            <div<@compiledClassAttribStr class=class /> data-orbit id="${escapePart(id, 'html')}"<#if dataOptions?has_content> data-options="${dataOptions}"</#if>>
               <#nested/>
             </div>
     </#switch>
@@ -1551,7 +1553,7 @@ Slider data entry - a single slide.
 <#-- @slide main markup - theme override -->
 <#macro slide_markup id="" sliderId="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" origArgs={} passArgs={} catchArgs...>
     <#if library=="owl" || library=="slick">
-        <div id="${id}" class="item">
+        <div id="${escapePart(id, 'html')}" class="item">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
             <div>
             <#if title?has_content><h2>${escapePart(title, 'html')}</h2></#if>
@@ -1564,7 +1566,7 @@ Slider data entry - a single slide.
             <#if link?has_content></a></#if>
         </div>
     <#else>
-        <div data-orbit-slide="${id}" class="${styles.slide_container!}">
+        <div data-orbit-slide="${escapePart(id, 'html')}" class="${styles.slide_container!}">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
             <div>
             <#if title?has_content><h2>${escapePart(title, 'html')}</h2></#if>
@@ -1655,9 +1657,9 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             </div>
           <#break>
         <#default>
-            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${type};</#local>
+            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapePart(type, 'style')};</#local>
             <#local class = addClassArg(class, "scipio-image-container")>
-            <div<@compiledClassAttribStr class=class /> style="${imgContainer}" scipioFit="${type}">
+            <div<@compiledClassAttribStr class=class /> style="${imgContainer}" scipioFit="${escapePart(type, 'html')}">
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
                     <img src="${escapeFullUrl(src, 'html')}" class="scipio-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>

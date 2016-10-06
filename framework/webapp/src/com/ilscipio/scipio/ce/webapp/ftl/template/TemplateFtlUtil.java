@@ -32,6 +32,7 @@ import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import javolution.util.FastMap;
@@ -49,8 +50,9 @@ public abstract class TemplateFtlUtil {
     
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
-    
-    private static Template escapePartCall = null;
+
+    private static Template escapePart2ArgFunctionCall = null;
+    private static Template escapePart3ArgFunctionCall = null;
     
     /**
      * Keep this private, implied unmodifiable.
@@ -326,13 +328,6 @@ public abstract class TemplateFtlUtil {
         
         Environment env = null;
         if (escapeLang != null && !escapeLang.isEmpty() && !"none".equals(escapeLang)) {
-            if (escapePartCall == null) {
-                synchronized(TemplateFtlUtil.class) {
-                    if (escapePartCall == null) {
-                        escapePartCall = LangFtlUtil.makeFtlCodeTemplate("<#assign _scpMeasEscRes = escapePart(_scpMeasEscVal, _scpMeasEscLang)>");
-                    }
-                }
-            }
             env = FreeMarkerWorker.getCurrentEnvironment();
         } else {
             escapeLang = null;
@@ -400,10 +395,7 @@ public abstract class TemplateFtlUtil {
                         sb.append("=\"");
                         if (!valStr.equals(emptyValToken)) {
                             if (escapeLang != null && env != null && !RawScript.isRawScript(val)) {
-                                env.setVariable("_scpMeasEscVal", new SimpleScalar(valStr));
-                                env.setVariable("_scpMeasEscLang", new SimpleScalar(escapeLang));
-                                LangFtlUtil.execFtlCode(escapePartCall, env);
-                                valStr = ((TemplateScalarModel) env.getVariable("_scpMeasEscRes")).getAsString();
+                                valStr = execEscapePartFunction(new SimpleScalar(valStr), new SimpleScalar(escapeLang), env).getAsString();
                             }
                             sb.append(valStr);
                         }
@@ -531,5 +523,21 @@ public abstract class TemplateFtlUtil {
         else {
             return "";
         }
+    }
+    
+    public static TemplateScalarModel execEscapePartFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
+        if (escapePart2ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapePart2ArgFunctionCall = LangFtlUtil.getFunctionCall("escapePart", 2, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapePart2ArgFunctionCall, new TemplateModel[] { arg1, arg2}, env);
+    }
+
+    public static TemplateScalarModel execEscapePartFunction(TemplateModel arg1, TemplateModel arg2, TemplateModel arg3, Environment env) throws TemplateModelException {
+        if (escapePart3ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapePart3ArgFunctionCall = LangFtlUtil.getFunctionCall("escapePart", 3, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapePart3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
     }
 }

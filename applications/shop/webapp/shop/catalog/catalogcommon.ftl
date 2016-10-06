@@ -140,7 +140,7 @@
         <#assign targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
-        <#assign assocTitle>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</#assign>
+        <#assign assocTitle>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</#assign>
         <@section title=assocTitle>
             <@grid columns=5>
                 <#list assocProducts as productAssoc>

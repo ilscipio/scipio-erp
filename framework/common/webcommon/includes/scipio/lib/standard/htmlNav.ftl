@@ -65,7 +65,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro nav_markup type="" id="" class="" style="" activeElem="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "magellan">
-      <div data-magellan-expedition="fixed"<#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
+      <div data-magellan-expedition="fixed"<#if id?has_content> id="${escapePart(id, 'html')}</#if><#if style?has_content> style="${escapePart(style, 'html')}</#if>>
         <#local class = addClassArg(class, styles.nav_subnav!)>
         <dl<@compiledClassAttribStr class=class />>
           <#nested>
@@ -74,19 +74,19 @@ Since this is very foundation specific, this function may be dropped in future i
     <#break>
     <#case "breadcrumbs">
       <#local class = addClassArg(class, styles.nav_breadcrumbs!)>
-      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
+      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}</#if><#if style?has_content> style="${escapePart(style, 'html')}</#if>>
         <#nested>
       </ul>
     <#break>
     <#case "steps">
       <#local class = addClassArg(class, styles.nav_steps!)>
-      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
+      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}</#if><#if style?has_content> style="${escapePart(style, 'html')}</#if>>
         <#nested>
       </ul>
     <#break>
     <#default>
       <#local class = addClassArg(class, styles.list_inline! + " " + styles.nav_subnav!)>
-      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
+      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}</#if><#if style?has_content> style="${escapePart(style, 'html')}</#if>>
         <#nested>
       </ul>
     <#break>
@@ -111,7 +111,7 @@ Creates a magellan-destination link.
 
 <#-- @mli main markup - theme override -->
 <#macro mli_markup arrival="" origArgs={} passArgs={} catchArgs...>
-  <dd data-magellan-arrival="${arrival}"><#nested></dd>
+  <dd data-magellan-arrival="${escapePart(arrival, 'html')}"><#nested></dd>
 </#macro>
 
 <#-- 
@@ -121,7 +121,7 @@ Creates a magellan-destination link.
 Creates an magellan-destination attribute string.
 -->
 <#function mtarget id>
-  <#local returnValue="data-magellan-destination=\"${id}\""/>
+  <#local returnValue="data-magellan-destination=\"${escapePart(id, 'html')}\""/>
   <#return returnValue>
 </#function>
 
@@ -219,7 +219,7 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
     <#if showLink>
       <a href="${escapeFullUrl(href, 'html')}">
     </#if>
-    <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!}<#else>${icon}</#if>"></i></#if>
+    <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!}<#else>${escapePart(icon, 'html')}</#if>"></i></#if>
     <#nested>
     <#if showLink>
       </a>
@@ -544,10 +544,10 @@ The submenu's main class may be set as altnested in global styles.
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
         <#if navigation?has_content><h2>${escapePart(navigation, 'html')}</h2></#if>
     <#elseif specialType == "button-dropdown">
-      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false"<@compiledClassAttribStr class=mainButtonClass />>${escapePart(title, 'html')}</button><br>
+      <button href="#" data-dropdown="${escapePart(id, 'html')}" aria-controls="${escapePart(id, 'html')}" aria-expanded="false"<@compiledClassAttribStr class=mainButtonClass />>${escapePart(title, 'html')}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
-    <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
+    <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
   </#if>
       <#nested>
   <#if !inlineItems && htmlwrap?has_content>
@@ -792,7 +792,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     excludeAttribs=[] inlineItem=false htmlwrap="li" disabled=false selected=false active=false activeTarget=""
     isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 origArgs={} passArgs={} catchArgs...>
   <#if !inlineItem && htmlwrap?has_content>
-    <${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
+    <${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if !inlineItem && htmlwrap?has_content>
@@ -804,7 +804,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 <#macro menuitem_link_markup itemType="" menuType="" menuSpecialType="" class="" id="" style="" href="" name="" onClick="" target="" title="" 
     attribs={} excludeAttribs=[] disabled=false selected=false active=false activeTarget="" isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 
     origArgs={} passArgs={} catchArgs...>
-  <#t><a href="${escapeFullUrl(href, 'html')}"<#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${escapePart(target, 'html')}"</#if><#if title?has_content> title="${escapePart(title, 'html')}"</#if>><#nested></a>
+  <#t><a href="${escapeFullUrl(href, 'html')}"<#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if name?has_content> name="${name}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${escapePart(target, 'html')}"</#if><#if title?has_content> title="${escapePart(title, 'html')}"</#if>><#nested></a>
 </#macro>
 
 <#-- @menuitem type="text" markup - theme override -->
@@ -814,14 +814,14 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#if contentWrapElem?is_boolean>
     <#local contentWrapElem = contentWrapElem?string("span", "")>
   </#if>
-  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
+  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
 </#macro>
 
 <#-- @menuitem type="submit" markup - theme override -->
 <#macro menuitem_submit_markup itemType="" menuType="" menuSpecialType="" class="" id="" style="" text="" onClick="" disabled=false attribs={} 
     excludeAttribs=[] disabled=false selected=false active=false activeTarget="" isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 
     origArgs={} passArgs={} catchArgs...>
-  <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if><#if disabled> disabled="disabled"</#if>/><#nested></button>
+  <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if><#if disabled> disabled="disabled"</#if>/><#nested></button>
 </#macro>
 
 <#-- @menuitem type="generic" markup - theme override -->
@@ -831,7 +831,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#if contentWrapElem?is_boolean>
     <#local contentWrapElem = contentWrapElem?string("div", "")>
   </#if>
-  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
+  <#t><#if contentWrapElem?has_content><${contentWrapElem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${escapePart(onClick, 'html')}"</#if>></#if><#nested><#if contentWrapElem?has_content></${contentWrapElem}></#if>
 </#macro>
 
 <#-- 
@@ -1684,14 +1684,14 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
 <#-- @treemenu main markup - theme override -->
 <#macro treemenu_markup type="" items=[] events={} treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
     <#if treeMenuLibrary == "jstree">     
-        <div id="${id}"></div>
+        <div id="${escapePart(id, 'html')}"></div>
         <script type="text/javascript"> 
             jQuery(document).ready(function() {
               <#if type == "lib-model">   
                 <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>
                 <#local nestedEvents><#nested></#local>
             
-                jQuery("#${id}")
+                jQuery("#${escapePart(id, 'js')}")
                 ${nestedEvents?trim}
                 <#if events?has_content>
                   <#list mapKeys(events) as eventName>
@@ -1723,7 +1723,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
 
                 });
               <#elseif type == "lib-basic">
-                jQuery("#${id}")
+                jQuery("#${escapePart(id, 'js')}")
                 <#if events?has_content>
                   <#list mapKeys(events) as eventName>
                     .on("${escapePart(eventName, 'js')}", function (e, data) {

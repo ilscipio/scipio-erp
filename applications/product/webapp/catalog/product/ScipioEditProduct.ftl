@@ -179,7 +179,7 @@ under the License.
             <#-- Inventory -->
             <@heading>${uiLabelMap.CommonInventory}</@heading>
             <@field type="checkbox" name="salesDiscWhenNotAvail" label=uiLabelMap.ProductSalesDiscontinuationNotAvailable currentValue=(productParams.salesDiscWhenNotAvail!product.salesDiscWhenNotAvail!'N') value="Y" altValue="N"/>
-            <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory currentValue=(productParams.requireInventory!product.requireInventory!'N') value="Y" altValue="N" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}"/>
+            <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory currentValue=(productParams.requireInventory!product.requireInventory!'N') value="Y" altValue="N" tooltip=uiLabelMap.ProductInventoryRequiredProduct/>
             <@field type="select" label=uiLabelMap.ProductRequirementMethodEnumId name="requirementMethodEnumId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_REQ_METHOD"},["description ASC"], true)/>
@@ -394,9 +394,9 @@ under the License.
     <@row>
         <@cell>
             <#if product?has_content>
-                <@field type="submit" text="${uiLabelMap.ProductUpdateProduct}" class="+${styles.link_run_sys!} ${productActionClass!}"/>
+                <@field type="submit" text=uiLabelMap.ProductUpdateProduct class="+${styles.link_run_sys!} ${productActionClass!}"/>
             <#else>
-                <@field type="submit" text="${uiLabelMap.ProductCreateProduct}" class="+${styles.link_run_sys!} ${productActionClass!}"/>
+                <@field type="submit" text=uiLabelMap.ProductCreateProduct class="+${styles.link_run_sys!} ${productActionClass!}"/>
             </#if>
         </@cell>
     </@row>

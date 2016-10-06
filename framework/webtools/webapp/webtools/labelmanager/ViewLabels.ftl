@@ -56,7 +56,7 @@ under the License.
             <#if "ar.iw"?contains(langAttr?substring(0, 2))>
               <#assign langDir = "rtl">
             </#if>
-            <@th lang="${langAttr}" dir="${langDir}">
+            <@th lang=langAttr dir=langDir>
               ${locale.getDisplayName(locale)}
             </@th>
           <#else>
@@ -70,7 +70,7 @@ under the License.
     <@tfoot>
           <@tr class="header-row">
             <@th></@th>
-            <@th colspan="${localesFound?length+2}">
+            <@th colspan=(localesFound?length+2)>
               ${uiLabelMap.WebtoolsLabelStatsMissing}: ${existingLabels!}<br/>
               ${uiLabelMap.WebtoolsLabelStatsExist}: ${missingLabels!}<br/>
               ${uiLabelMap.WebtoolsLabelStatsTotal}: ${totalLabels}

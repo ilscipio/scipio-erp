@@ -249,7 +249,7 @@ under the License.
     </@td>
 -->
     <#if !period_has_next && indexMod7 != 6>
-    <@td colspan="${6 - (indexMod7)}">&nbsp;</@td>
+    <@td colspan=(6 - indexMod7)>&nbsp;</@td>
     </#if>
   <#if indexMod7 == 6 || !period_has_next>
   <#-- Scipio: FIXME: don't want open/close -->

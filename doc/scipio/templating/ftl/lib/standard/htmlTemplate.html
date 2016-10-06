@@ -81,6 +81,11 @@ Alongside this master include exists a global variables and styles definition fi
         <span>
 Currently targeted toward Foundation CSS.        </span>
       </li>
+      <li>
+        <span>
+2016-10-05: Value escaping/encoding behavior has changed and is now generally performed by macros
+at point-of-use, consistently. See the related section below.        </span>
+      </li>
   </ul>
           </div>
           <div class="lib-text-note">
@@ -204,6 +209,48 @@ always add new members to it instead. e.g.          </div>
 <pre>&lt;@somemacro passArgs=(passArgs + {&quot;myParam&quot;:&quot;myValue&quot;)&gt;</pre>      </li>
   </ul>
 </div>
+      </li>
+  </ul>
+</div>
+        <p>
+<strong>Value escaping/encoding</strong> (2016-10-05)        </p>
+        <p>
+Macros now generally implement html escaping, javascript string value escaping, and other escaping
+for strings at point-of-use in their markup implementations, across the board. Callers can expect that string
+parameters will be escaped for HTML by macros and, when, applicable, determinable and possible by the macro, javascript.
+This does <em>not</em> apply to nested content which receives no extra escaping (usually nested content escaping is handled by screen auto-escaping,
+or templates can perform manually), nor to parameters that contain whole blocks of javascript code (read below).
+        </p>
+        <div>  <ul>
+      <li>
+        <span>
+Values affected by screen context variable auto-escaping (from stock Ofbiz) can be passed as-is to macros, and the
+macros will prevent double-escaping automatically.
+So the following (majority of cases) is okay (where <code>screenVar1</code> came from a groovy script or screen field assignment):
+        </span>
+<pre>&lt;@somemacro value=screenVar1/&gt;</pre>        <span>
+<em>However</em>, if a screen context variable is composed or coerced to string before being passed to the macro, such as
+        </span>
+<pre>&lt;@somemacro value=&quot;${screenVar1}: ${screenVar2}&quot;/&gt;
+&lt;@somemacro value=screenVar1?string/&gt;</pre>        <span>
+then double-escaping will occur because the coercion causes escaping to happen before the macro receives the value.
+The caller must prevent this using <a href="../utilities.html#entry-rawString">#rawString</a> or equivalent:
+        </span>
+<pre>&lt;@somemacro value=&quot;${rawString(screenVar1)}: ${rawString(screenVar2)}&quot;/&gt;
+&lt;@somemacro value=rawString(screenVar1)?string/&gt; &lt;#- this is completely redundant; for demonstration only -&gt;</pre>      </li>
+      <li>
+        <span>
+<code>attribs/inlineAttribs</code>: Macros that accept extra arbitrary attribs will automatically escape the values for HTML.
+<em>However</em>, if the attribs contain any javascript, the macros cannot be aware of this, and the caller must escape the javascript.
+        </span>
+<pre>&lt;@somemacro attribs={&quot;somejsattrib&quot;: &quot;javascript:someFunction(&#39;${escapePart(screenVar1, &#39;js&#39;)}&#39;);&quot;}/&gt; &lt;#- (recommended) -&gt;
+&lt;@somemacro attribs={&quot;somejsattrib&quot;: &quot;javascript:someFunction(&#39;${rawString(screenVar1)?js_string}&#39;);&quot;}/&gt; &lt;#- (also works, but not recommended) -&gt;</pre>      </li>
+      <li>
+        <span>
+Note that escaping javascript typically means escaping the values inserted as string literals, and never the whole javascript attribute.
+Arbitrary javascript code cannot be escaped; only strings and things within string literals.
+Therefore, macros which accept entire pieces of javascript code cannot escape it and
+the caller is responsible for escaping the strings inserted within it (using <a href="../utilities.html#entry-escapePart">#escapePart</a> or <code>?js_string</code>).        </span>
       </li>
   </ul>
 </div>

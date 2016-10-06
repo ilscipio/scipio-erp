@@ -13,6 +13,8 @@
 *
 * NOTES:
 * * Currently targeted toward Foundation CSS.
+* * 2016-10-05: Value escaping/encoding behavior has changed and is now generally performed by macros
+*   at point-of-use, consistently. See the related section below.
 *
 * IMPLEMENTATION NOTES: 
 * * Macros should almost never use "request" object directly - use setRequestVar/getRequestVar/other.
@@ -97,6 +99,33 @@
 *     IMPL NOTE: Overriding macros should avoid overriding this map; 
 *         always add new members to it instead. e.g. 
 *       <@somemacro passArgs=(passArgs + {"myParam":"myValue")>
+*
+* '''Value escaping/encoding''' (2016-10-05)
+*
+* Macros now generally implement html escaping, javascript string value escaping, and other escaping
+* for strings at point-of-use in their markup implementations, across the board. Callers can expect that string
+* parameters will be escaped for HTML by macros and, when, applicable, determinable and possible by the macro, javascript.
+* This does ''not'' apply to nested content which receives no extra escaping (usually nested content escaping is handled by screen auto-escaping, 
+* or templates can perform manually), nor to parameters that contain whole blocks of javascript code (read below).
+* * Values affected by screen context variable auto-escaping (from stock Ofbiz) can be passed as-is to macros, and the
+*   macros will prevent double-escaping automatically. 
+*   So the following (majority of cases) is okay (where {{{screenVar1}}} came from a groovy script or screen field assignment):
+*     <@somemacro value=screenVar1/>
+*   ''However'', if a screen context variable is composed or coerced to string before being passed to the macro, such as 
+*     <@somemacro value="${screenVar1}: ${screenVar2}"/>
+*     <@somemacro value=screenVar1?string/>
+*   then double-escaping will occur because the coercion causes escaping to happen before the macro receives the value. 
+*   The caller must prevent this using #rawString or equivalent:
+*     <@somemacro value="${rawString(screenVar1)}: ${rawString(screenVar2)}"/>
+*     <@somemacro value=rawString(screenVar1)?string/> <#- this is completely redundant; for demonstration only ->
+* * {{{attribs/inlineAttribs}}}: Macros that accept extra arbitrary attribs will automatically escape the values for HTML.
+*   ''However'', if the attribs contain any javascript, the macros cannot be aware of this, and the caller must escape the javascript.
+*     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${escapePart(screenVar1, 'js')}');"}/> <#- (recommended) ->
+*     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${rawString(screenVar1)?js_string}');"}/> <#- (also works, but not recommended) ->
+* * Note that escaping javascript typically means escaping the values inserted as string literals, and never the whole javascript attribute.
+*   Arbitrary javascript code cannot be escaped; only strings and things within string literals. 
+*   Therefore, macros which accept entire pieces of javascript code cannot escape it and 
+*   the caller is responsible for escaping the strings inserted within it (using #escapePart or {{{?js_string}}}).
 *
 * '''Markup macros (theme overrides):'''
 * * These macros such as @row_markup, @heading_markup, etc. containing

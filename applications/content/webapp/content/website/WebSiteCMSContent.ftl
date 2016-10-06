@@ -344,7 +344,7 @@
               <@td></@td>
               <@td>
                 <#if ((content.contentId)?has_content)>
-                    <@renderContentAsText contentId="${content.contentId}" ignoreTemplate="true"/>
+                    <@renderContentAsText contentId=content.contentId ignoreTemplate="true"/>
                 </#if>
               </@td>
             </@tr>

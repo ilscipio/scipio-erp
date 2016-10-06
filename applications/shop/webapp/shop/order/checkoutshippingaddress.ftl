@@ -119,7 +119,7 @@ function toggleBillingAccount(box) {
     -->
   </@menu>
 </#macro>
-<@section title="${rawString(uiLabelMap.OrderWhereShallWeShipIt)}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}? -->
+<@section title="${rawString(uiLabelMap.OrderWhereShallWeShipIt)}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1) ${uiLabelMap.OrderWhereShallWeShipIt}? -->
   <#if (cart.getShipGroupSize() > 1)>
     <@alert type="info">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</@alert>
   </#if>
@@ -145,7 +145,7 @@ function toggleBillingAccount(box) {
             <#assign labelContent>
               <@formattedAddress usePanel=true address=shippingAddress updateLink="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" emphasis=true />
             </#assign>
-            <@checkAddressInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
+            <@checkAddressInvField type="radio" name="shipping_contact_mech_id" value=shippingAddress.contactMechId checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
             </@addressEntry>
           </#list>
 

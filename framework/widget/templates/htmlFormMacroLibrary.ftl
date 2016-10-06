@@ -18,9 +18,13 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+SCIPIO: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
+
+NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
+    As a result all macros here must take care to html-escape as well as js-escape values.
+    Use escapePart/escapeFullUrl for this.
 -->
 <#macro renderField text extraArgs...>
   <#-- delegate to scipio libs -->
@@ -172,7 +176,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderFieldTitle style title id fieldHelpText="" for="" extraArgs...>
 <#if (renderFormatFieldRowTitleCellOpened!false) != true>
-  <#-- <label<#if for?has_content> for="${for}"</#if><#if fieldHelpText?has_content> title="${escapePart(fieldHelpText, 'html')}"</#if><#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>><#t/> -->
+  <#-- <label<#if for?has_content> for="${escapePart(for, 'html')}"</#if><#if fieldHelpText?has_content> title="${escapePart(fieldHelpText, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if>><#t/> -->
     ${escapePart(title, 'html')}<#t/>
   <#-- </label><#t/> -->
 </#if>
@@ -206,7 +210,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
   <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : progressOptions, "progressSuccessAction" : progressSuccessAction, "attribs":attribs}>
   <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
-  <form method="${escapePart(method, 'html')}" action="${escapeFullUrl(linkUrl, 'html')}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${escapePart(autocomplete, 'html')}"</#if> name="${escapePart(name, 'html')}"><#lt/>
+  <form method="${escapePart(method, 'html')}" action="${escapeFullUrl(linkUrl, 'html')}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if> class=<#if containerStyle?has_content>"${escapePart(containerStyle, 'html')}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${escapePart(autocomplete, 'html')}"</#if> name="${escapePart(name, 'html')}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
     </#if>
@@ -228,7 +232,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if focusFieldName?has_content>
     <@script>
       var form = document.forms["${escapePart(formName, 'js')}"];
-      form.${focusFieldName}.focus();
+      form["${escapePart(focusFieldName, 'js')}"].focus();
       <#-- enable the validation plugin for all generated forms
       only enable the validation if min one field is marked as 'required' -->
       if (jQuery(form).find(".required").size() > 0) {
@@ -238,7 +242,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   </#if>
   <#if containerId?has_content && hasRequiredField?has_content>
     <@script>
-      jQuery("#${containerId}").validate({
+      jQuery("#${escapePart(containerId, 'js')}").validate({
         submitHandler:
           function(form) {
             form.submit();
@@ -327,7 +331,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 <#-- Scipio: TODO: translate all thead/td/th/td/etc to @thead open/close
      I've done @thead because required by responsive tables at the moment -->
   <@thead open=true close=false />
-    <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
+    <tr class="<#if style?has_content>${escapePart(style, 'html')}<#else>header-row</#if>">
 </#macro>
 <#macro renderFormatHeaderRowClose extraArgs...>
     </tr>
@@ -335,7 +339,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...>
   <#global renderFormatHeaderRowCellOpened = true>
-  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
+  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose extraArgs...>
   </th>
@@ -343,19 +347,19 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderFormatHeaderRowFormCellOpen style extraArgs...>
-  <th<#if style?has_content> class="${style}"</#if>>
+  <th<#if style?has_content> class="${escapePart(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowFormCellClose extraArgs...>
   </th>
 </#macro>
 <#macro renderFormatHeaderRowFormCellTitleSeparator style isLast extraArgs...>
-  <#if style?has_content><span class="${style}"></#if> - <#if style?has_content></span></#if>
+  <#if style?has_content><span class="${escapePart(style, 'html')}"></#if> - <#if style?has_content></span></#if>
 </#macro>
 
 <#macro renderFormatFooterRowOpen style extraArgs...>
 <#-- Scipio: TODO: translate all tfoot/td/th/td/etc to @thead open/close -->
 <tfoot>
-  <tr class="<#if style?has_content>${style}<#else>footer-row</#if>">
+  <tr class="<#if style?has_content>${escapePart(style, 'html')}<#else>footer-row</#if>">
 </#macro>
 <#macro renderFormatFooterRowClose extraArgs...>
   </tr>
@@ -370,26 +374,26 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local oddRowStyle = (styles.row_alt! + " " + remOddRowStyles)?trim>
     <#local evenRowStyle = (styles.row_reg! + " " + removeStyleNames(evenRowStyle, "even-row"))?trim>
   </#if>
-  <tr<#if itemIndex?has_content><#if (itemIndex%2 == 0)><#if evenRowStyle?has_content> class="${evenRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if><#else><#if oddRowStyle?has_content> class="${oddRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if></#if></#if>>
+  <tr<#if itemIndex?has_content><#if (itemIndex%2 == 0)><#if evenRowStyle?has_content> class="${escapePart(evenRowStyle, 'html')}<#if altRowStyles?has_content> ${escapePart(altRowStyles, 'html')}</#if>"<#elseif altRowStyles?has_content> class="${escapePart(altRowStyles, 'html')}"</#if><#else><#if oddRowStyle?has_content> class="${escapePart(oddRowStyle, 'html')}<#if altRowStyles?has_content> ${escapePart(altRowStyles, 'html')}</#if>"<#elseif altRowStyles?has_content> class="${escapePart(altRowStyles, 'html')}"</#if></#if></#if>>
 </#macro>
 <#macro renderFormatItemRowClose formName extraArgs...>
   </tr>
 </#macro>
 <#macro renderFormatItemRowCellOpen fieldName style positionSpan extraArgs...>
-  <td<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
+  <td<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatItemRowCellClose fieldName extraArgs...>
   </td>
 </#macro>
 <#macro renderFormatItemRowFormCellOpen style="" extraArgs...>
-  <td<#if style?has_content> class="${style}"</#if>>
+  <td<#if style?has_content> class="${escapePart(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatItemRowFormCellClose extraArgs...>
   </td>
 </#macro>
 
 <#macro renderFormatSingleWrapperOpen formName style="" extraArgs...>
-  <#--<table cellspacing="0"<#if style?has_content> class="${style}"</#if>>-->
+  <#--<table cellspacing="0"<#if style?has_content> class="${escapePart(style, 'html')}"</#if>>-->
 </#macro>
 <#macro renderFormatSingleWrapperClose formName extraArgs...>
   <#--</table>-->
@@ -473,7 +477,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   
   <#local fieldEntryTypeClass = "field-entry-type-" + mapOfbizFieldTypeToStyleName(fieldType)>
   <#local outerClassDefault>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#local>
-  <#local outerClass = "">  <#-- can't specify for now -->
+  <#local outerClass = ""><#-- can't specify for now -->
   <#if markLast> 
     <#local outerClass = addClassArg(outerClass, styles.grid_end!)>
   </#if>
@@ -528,13 +532,13 @@ WARN: no code run here or indirectly from here should assume full current contex
       <@cell open=true close=false class=compileClassArgExplicit(innerClass, innerClassDefault) />
         <#if extraContainerStyles?has_content>
           <#list extraContainerStyles as containerEntry>
-            <#local parts = containerEntry?trim?split(":")>
+            <#local parts = rawString(containerEntry)?trim?split(":")>
             <#local elem = parts[0]?trim>
             <#if elem?has_content>
               <#if elem == "container">
                 <#local elem = "div">
               </#if>
-              <${elem}<#if (parts?size > 1) && parts[1]?trim?has_content> class="${parts[1]?trim}"</#if>>
+              <${elem}<#if (parts?size > 1) && parts[1]?trim?has_content> class="${escapePart(parts[1]?trim, 'html')}"</#if>>
             </#if>
           </#list>
         </#if>
@@ -645,20 +649,20 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <@field_password_widget class=className alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 <#macro renderImageField value description alternate style event action title="" fieldType="" fieldTitleBlank=false extraArgs...>
-  <img<#if value?has_content> src="${escapeFullUrl(value, 'html')}"</#if><#if description?has_content> title="${escapePart(description, 'html')}"</#if> alt="<#if alternate?has_content>${escapePart(alternate, 'html')}"</#if><#if style?has_content> class="${style}"</#if><#if event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}" </#if>/>
+  <img<#if value?has_content> src="${escapeFullUrl(value, 'html')}"</#if><#if description?has_content> title="${escapePart(description, 'html')}"</#if> alt="<#if alternate?has_content>${escapePart(alternate, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if><#if event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}" </#if>/>
 </#macro>
 
 <#macro renderBanner style leftStyle rightStyle leftText text rightText extraArgs...>
   <table width="100%">
     <tr><#rt/>
-      <#if leftText?has_content><td align="left"><#if leftStyle?has_content><div class="${leftStyle}"></#if>${escapePart(leftText, 'html')}<#if leftStyle?has_content></div></#if></td><#rt/></#if>
-      <#if text?has_content><td align="center"><#if style?has_content><div class="${style}"></#if>${escapePart(text, 'html')}<#if style?has_content></div></#if></td><#rt/></#if>
-      <#if rightText?has_content><td align="right"><#if rightStyle?has_content><div class="${rightStyle}"></#if>${escapePart(rightText, 'html')}<#if rightStyle?has_content></div></#if></td><#rt/></#if>
+      <#if leftText?has_content><td align="left"><#if leftStyle?has_content><div class="${escapePart(leftStyle, 'html')}"></#if>${escapePart(leftText, 'html')}<#if leftStyle?has_content></div></#if></td><#rt/></#if>
+      <#if text?has_content><td align="center"><#if style?has_content><div class="${escapePart(style, 'html')}"></#if>${escapePart(text, 'html')}<#if style?has_content></div></#if></td><#rt/></#if>
+      <#if rightText?has_content><td align="right"><#if rightStyle?has_content><div class="${escapePart(rightStyle, 'html')}"></#if>${escapePart(rightText, 'html')}<#if rightStyle?has_content></div></#if></td><#rt/></#if>
     </tr>
   </table>
 </#macro>
 
-<#macro renderContainerField id className extraArgs...><div id="${id}" class="${className}"></div></#macro>
+<#macro renderContainerField id className extraArgs...><div id="${escapePart(id, 'html')}" class="${escapePart(className, 'html')}"></div></#macro>
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible extraArgs...>
     <#-- delegate to scipio libs -->
@@ -685,17 +689,17 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderSortField style title linkUrl ajaxEnabled tooltip="" extraArgs...>
-  <a<#if style?has_content> class="${style}"</#if> href="<#if ajaxEnabled?has_content && ajaxEnabled>javascript:ajaxUpdateAreas('${escapeFullUrl(linkUrl, 'js-html')}')<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"<#if tooltip?has_content> title="${escapePart(tooltip, 'html')}"</#if>>${escapePart(title, 'html')}</a>
+  <a<#if style?has_content> class="${escapePart(style, 'html')}"</#if> href="<#if ajaxEnabled?has_content && ajaxEnabled>javascript:ajaxUpdateAreas('${escapeFullUrl(linkUrl, 'js-html')}')<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"<#if tooltip?has_content> title="${escapePart(tooltip, 'html')}"</#if>>${escapePart(title, 'html')}</a>
 </#macro>
 
-<#macro formatBoundaryComment boundaryType widgetType widgetName><!-- ${boundaryType}  ${widgetType}  ${widgetName} --></#macro>
+<#macro formatBoundaryComment boundaryType widgetType widgetName><!-- ${escapePart(boundaryType, 'html')}  ${escapePart(widgetType, 'html')}  ${escapePart(widgetName, 'html')} --></#macro>
 
 <#macro renderTooltip tooltip tooltipStyle extraArgs...>
-  <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${tooltipStyle}<#else>tooltip</#if>">${escapePart(tooltip, 'html')}</span><#rt/></#if>
+  <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${escapePart(tooltipStyle, 'html')}<#else>tooltip</#if>">${escapePart(tooltip, 'html')}</span><#rt/></#if>
 </#macro>
 
 <#macro renderClass className alert="false" extraArgs...>
-  <#if className?has_content || alert?string == "true"> class="${className!}<#if alert?string == "true"> alert</#if>" </#if>
+  <#if className?has_content || alert?string == "true"> class="${escapePart(className, 'html')}<#if alert?string == "true"> alert</#if>" </#if>
 </#macro>
 
 <#-- Scipio: new macro to isolate this code -->
@@ -721,13 +725,13 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   </form>
 </#macro>
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description confirmation>
-  <a<#if linkStyle?has_content> class="${linkStyle}"</#if> href="javascript:document.forms["${escapePart(hiddenFormName, 'js-html')}"].submit()"
+  <a<#if linkStyle?has_content> class="${escapePart(linkStyle, 'html')}"</#if> href="javascript:document.forms["${escapePart(hiddenFormName, 'js-html')}"].submit()"
     <#if action?has_content && event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}"</#if>
     <#if confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}')"</#if>>
       <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt=""/></#if>${escapePart(description, 'html')}</a>
 </#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation>
-    <a<#if linkStyle?has_content> class="${linkStyle}"</#if> 
+    <a<#if linkStyle?has_content> class="${escapePart(linkStyle, 'html')}"</#if> 
       href="${escapeFullUrl(linkUrl, 'html')}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if>
       <#if action?has_content && event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}"</#if>
       <#if confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}')"</#if>
@@ -849,8 +853,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </@script>
   </#if>
   <#if submitEntries?has_content && (useRowSubmit || !useMasterSubmitField)>
-  <#-- TODO: can't use here yet: escapeFullUrl(targetUrl, 'html') because individual params already escaped by renderer, but don't really want that anymore... -->
-  <form method="post" action="${targetUrl}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
+  <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
     <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapePart(hiddenFormName, 'html')}">
     <#list mapKeys(params) as paramName>
       <input type="hidden" name="${escapePart(paramName, 'html')}" value="${escapePart(params[escapePart(paramName, 'html')], 'html')}" />

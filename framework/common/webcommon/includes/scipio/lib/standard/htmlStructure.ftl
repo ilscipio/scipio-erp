@@ -37,8 +37,10 @@ to this one.
     id                      = Container ID
     attribs                 = ((map)) Other attributes for div 
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra attributes for div
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign container_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "elem":"", "attribs":{}, "passArgs":{}
@@ -65,7 +67,7 @@ to this one.
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
+    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -97,8 +99,10 @@ Creates a grid row.
     selected                = ((boolean), default: false) If true row is marked selected
     attribs                 = ((map)) Extra  attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra  attributes
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign row_defaultArgs = {
   "class":"", "id":"", "style":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true, 
@@ -142,8 +146,8 @@ Creates a grid row.
 <#macro row_markup open=true close=true class="" collapse=false id="" style="" alt="" selected="" 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
   </#if>
       <#nested />
   <#if close>
@@ -202,8 +206,10 @@ Creates a grid cell.
                               NOTE: This is often optional in CSS frameworks; affects float alignment.
     attribs                 = ((map)) Extra  attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra  attributes
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign cell_defaultArgs = {
   "columns":-1, "small":-1, "medium":-1, "large":-1, "offset":-1, "smallOffset":-1, "mediumOffset":-1, 
@@ -267,8 +273,8 @@ Creates a grid cell.
 <#macro cell_markup open=true close=true class="" id="" style="" last=false collapse=false 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -450,12 +456,12 @@ Since this is very foundation specific, this function may be dropped in future i
   </@container>
   <@script>
    $(function() {
-      $('#${id}').freetile({
+      $('#${escapePart(id, 'js')}').freetile({
           selector: '.${styles.tile_wrap!}'
       });
       <#--
       Alternative implementation of gridster.js
-      $('#${id}').gridster({
+      $('#${escapePart(id, 'js')}').gridster({
           widget_selector: '.${styles.tile_wrap!}',
           min_cols:${columns},
           autogenerate_stylesheet:false
@@ -675,13 +681,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <div class="${styles.tile_content!}">
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
-        <div class="${imageClass}<#if imageBgColorClass?has_content> ${imageBgColorClass}</#if>" style="background-image: url(${escapeFullUrl(image, 'style')});"></div>
+        <div class="${escapePart(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapePart(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'style')});"></div>
       </#if>
       <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
-      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
+      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapePart(icon, 'html')}"></i></span></#if>
       <#local nestedContent><#nested></#local>
-      <#if nestedContent?has_content><span class="${overlayClass}<#if overlayBgColorClass?has_content> ${overlayBgColorClass}</#if>">${nestedContent}</span></#if>
-      <#if title?has_content><span class="${titleClass}<#if titleBgColorClass?has_content> ${titleBgColorClass}</#if>">${escapePart(title, 'html')}</span></#if>
+      <#if nestedContent?has_content><span class="${escapePart(overlayClass, 'html')}<#if overlayBgColorClass?has_content> ${escapePart(overlayBgColorClass, 'html')}</#if>">${nestedContent}</span></#if>
+      <#if title?has_content><span class="${escapePart(titleClass, 'html')}<#if titleBgColorClass?has_content> ${escapePart(titleBgColorClass, 'html')}</#if>">${escapePart(title, 'html')}</span></#if>
       <#if link?has_content></a></#if>
     </div>
   </@container>
@@ -1097,8 +1103,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       
       <#if hasTitle>
         <#local titleMarkup>
-          <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
-            containerClass=titleHeadingContainerClass passArgs=passArgs>${escapePart(title, 'html')}</@heading>
+          <@heading level=hLevel title=title elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
+            containerClass=titleHeadingContainerClass passArgs=passArgs />
         </#local>
       </#if> 
     </#if>
@@ -1227,8 +1233,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"<#elseif containerStyle?has_content> style="${containerStyle}"</#if><#rt>
+    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"<#elseif containerStyle?has_content> style="${escapePart(containerStyle, 'html')}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
       <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
@@ -1244,7 +1250,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
           <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
           <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
           <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
-          <div<#if contentId?has_content> id="${contentId}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${contentStyle}"</#if><#rt>
+          <div<#if contentId?has_content> id="${escapePart(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapePart(contentStyle, 'html')}"</#if><#rt>
           <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>>
   </#if>
             <#nested>

@@ -18,12 +18,16 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+SCIPIO: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
+
+NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
+    As a result all macros here must take care to html-escape as well as js-escape values.
+    Use escapePart/escapeFullUrl for this.
 -->
 <#macro renderScreenBegin extraArgs...>
-<#-- Scipio: NOTE: HTML head open is now in scipio template macros. 
+<#-- SCIPIO: NOTE: HTML head open is now in scipio template macros. 
      In OOTB ofbiz no context is passed here (locale, etc.) so did not belong here and cleaner if in scipio macros. -->
 <!DOCTYPE html>
 </#macro>
@@ -45,7 +49,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval extraArgs...>
   <#if autoUpdateLink?has_content>
-    <@script>ajaxUpdateAreaPeriodic('${id}', '${escapeFullUrl(autoUpdateLink, 'js')}', '', '${autoUpdateInterval}');</@script>
+    <@script>ajaxUpdateAreaPeriodic('${escapePart(id, 'js')}', '${escapeFullUrl(autoUpdateLink, 'js')}', '', '${autoUpdateInterval}');</@script>
   </#if>
   <#-- Scipio: now support a few more containers -->
   <#local elem = "">
@@ -65,7 +69,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <@container close=true open=false />
 </#macro>
 
-<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...><#if editRequest?has_content && enableEditValue == "true"><div class=${editContainerStyle}></#if></#macro>
+<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...><#if editRequest?has_content && enableEditValue == "true"><div class=${escapePart(editContainerStyle, 'html')}></#if></#macro>
 
 <#macro renderContentBody extraArgs...></#macro>
 
@@ -77,7 +81,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#if>
 </#macro>
 
-<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue extraArgs...><#if editRequest?exists && enableEditValue == "true"><div class="${editContainerStyle}"></#if></#macro>
+<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue extraArgs...><#if editRequest?exists && enableEditValue == "true"><div class="${escapePart(editContainerStyle, 'html')}"></#if></#macro>
 
 <#macro renderSubContentBody extraArgs...></#macro>
 
@@ -88,7 +92,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#if>
 </#macro>
 
-<#macro renderHorizontalSeparator id style extraArgs...><hr<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>/></#macro>
+<#macro renderHorizontalSeparator id style extraArgs...><hr<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if>/></#macro>
 
 <#macro renderLabel text id style extraArgs...>
   <@renderLabelCommon text=text id=id style=style />
@@ -104,8 +108,8 @@ WARN: no code run here or indirectly from here should assume full current contex
             </form><#rt/>
         </#if>
         <a 
-            <#if id?has_content>id="${id}"</#if> 
-            <#if style?has_content>class="${style}"</#if> 
+            <#if id?has_content>id="${escapePart(id, 'html')}"</#if> 
+            <#if style?has_content>class="${escapePart(style, 'html')}"</#if> 
             <#if name?has_content>name="${escapePart(name, 'html')}"</#if> 
             <#if targetWindow?has_content>target="${escapePart(targetWindow, 'html')}"</#if> 
             <#-- FIXME: dangerous lookup -->
@@ -115,7 +119,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#else>
         <div id="${escapePart(uniqueItemName, 'html')}"></div>
         <a href="javascript:void(0);" id="${escapePart(uniqueItemName, 'html')}_link" 
-        <#if style?has_content>class="${style}"</#if>>
+        <#if style?has_content>class="${escapePart(style, 'html')}"</#if>>
         <#if text?has_content>${escapePart(text, 'html')}</#if></a>
         <@script>
             function getRequestData() {
@@ -152,11 +156,11 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderImage src id style wid hgt border alt urlString extraArgs...>
 <#if src?has_content>
-<img<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${border}"</#if> alt="<#if alt?has_content>${escapePart(alt, 'html')}</#if>" src="${escapeFullUrl(urlString, 'html')}" />
+<img<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${escapePart(border, 'html')}"</#if> alt="<#if alt?has_content>${escapePart(alt, 'html')}</#if>" src="${escapeFullUrl(urlString, 'html')}" />
 </#if>
 </#macro>
 
-<#macro renderContentFrame fullUrl width height border extraArgs...><iframe src="${escapeFullUrl(fullUrl, 'html')}" width="${width}" height="${height}"<#if border?has_content> border="${border}"</#if> /></#macro>
+<#macro renderContentFrame fullUrl width height border extraArgs...><iframe src="${escapeFullUrl(fullUrl, 'html')}" width="${width}" height="${height}"<#if border?has_content> border="${escapePart(border, 'html')}"</#if> /></#macro>
 
 <#-- Scipio: new params: menuRole, titleStyle -->
 <#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="" extraArgs...>
@@ -175,20 +179,20 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl extraArgs...>
-    <li class="${paginateFirstStyle!"nav-first"}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${escapeFullUrl(firstLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateFirstLabel, 'html')}</a></#if></li>
-    <li class="${paginatePreviousStyle!"nav-previous"}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${escapeFullUrl(previousLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${paginatePreviousLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginatePreviousLabel, 'html')}</a></#if></li>
+    <li class="${escapePart(paginateFirstStyle, 'html')}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${escapeFullUrl(firstLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateFirstLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateFirstLabel, 'html')}</a></#if></li>
+    <li class="${escapePart(paginatePreviousStyle, 'html')}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${escapeFullUrl(previousLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginatePreviousLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginatePreviousLabel, 'html')}</a></#if></li>
     <#if (listSize?number > 0)><li><span class="text-entry">${lowIndex?number + 1} - ${lowIndex?number + actualPageSize?number} ${escapePart(ofLabel, 'html')} ${listSize}</span></li><#rt/></#if>
-    <li class="${paginateNextStyle}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${escapeFullUrl(nextLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'html')}</a></#if></li>
-    <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${escapeFullUrl(lastLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'html')}</a></#if></li>
+    <li class="${escapePart(paginateNextStyle, 'html')}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${escapeFullUrl(nextLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'html')}</a></#if></li>
+    <li class="${escapePart(paginateLastStyle, 'html')}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${escapeFullUrl(lastLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'html')}</a></#if></li>
 </#macro>
 
 <#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal" columnCount=1 extraArgs...>
   <#global portalPageGridUsed = 0>
   <#--
   <#if confMode == "true">
-    <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
-    <form method="post" action="addPortalPageColumn" name="addColumn_${portalPageId}">
-      <input name="portalPageId" value="${portalPageId}" type="hidden"/>
+    <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.addColumn_${escapePart(portalPageId, 'js-html')}.submit()" title="${escapePart(addColumnHint, 'html')}">${escapePart(addColumnLabel, 'html')}</a> <b>PortalPageId: ${escapePart(portalPageId, 'html')}</b>
+    <form method="post" action="addPortalPageColumn" name="addColumn_${escapePart(portalPageId, 'html')}">
+      <input name="portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
     </form>
   </#if>
   -->
@@ -257,13 +261,13 @@ WARN: no code run here or indirectly from here should assume full current contex
   <@script>
     if (typeof SORTABLE_COLUMN_LIST != "undefined") {
       if (SORTABLE_COLUMN_LIST == null) {
-        SORTABLE_COLUMN_LIST = "#portalColumn_${columnSeqId}";
+        SORTABLE_COLUMN_LIST = "#portalColumn_${escapePart(columnSeqId, 'js')}";
       } else {
-        SORTABLE_COLUMN_LIST += ", #portalColumn_${columnSeqId}";
+        SORTABLE_COLUMN_LIST += ", #portalColumn_${escapePart(columnSeqId, 'js')}";
       }
     }
   </@script>
-  <td class="portal-column<#if confMode == "true">-config</#if> connectedSortable" style="vertical-align: top; <#if width?has_content> width:${width};</#if>" id="portalColumn_${columnSeqId}">
+  <td class="portal-column<#if confMode == "true">-config</#if> connectedSortable" style="vertical-align: top; <#if width?has_content> width:${width};</#if>" id="portalColumn_${escapePart(columnSeqId, 'html')}">
   -->
     
     <#-- if it's the last column and didn't fill full gridSize, add 'end' class so doesn't float right and look weird -->
@@ -279,22 +283,22 @@ WARN: no code run here or indirectly from here should assume full current contex
       <div class="portal-column-config-title-bar">
         <ul>
           <li>
-            <form method="post" action="deletePortalPageColumn" name="delColumn_${columnKey}">
-              ${columnKeyFields!}
+            <form method="post" action="deletePortalPageColumn" name="delColumn_${escapePart(columnKey, 'html')}">
+              ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:document.delColumn_${columnKey}.submit()" title="${escapePart(delColumnHint, 'html')}">${escapePart(delColumnLabel, 'html')}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:document.delColumn_${escapePart(columnKey, 'js-html')}.submit()" title="${escapePart(delColumnHint, 'html')}">${escapePart(delColumnLabel, 'html')}</a>
           </li>
           <li>
-            <form method="post" action="addPortlet" name="addPortlet_${columnKey}">
-              ${columnKeyFields!}
+            <form method="post" action="addPortlet" name="addPortlet_${escapePart(columnKey, 'html')}">
+              ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.addPortlet_${columnKey}.submit()" title="${escapePart(addPortletHint, 'html')}">${escapePart(addPortletLabel, 'html')}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.addPortlet_${escapePart(columnKey, 'js-html')}.submit()" title="${escapePart(addPortletHint, 'html')}">${escapePart(addPortletLabel, 'html')}</a>
           </li>
           <li>
-            <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${columnKey}">
-              ${columnKeyFields!}
+            <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${escapePart(columnKey, 'html')}">
+              ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${escapePart(setColumnSizeHint, 'html')}">${escapePart(colWidthLabel, 'html')}: ${width}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document.setColumnSize_${escapePart(columnKey, 'js-html')}.submit()" title="${escapePart(setColumnSizeHint, 'html')}">${escapePart(colWidthLabel, 'html')}: ${width}</a>
           </li>
         </ul>
       </div>
@@ -310,73 +314,73 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local portletKey = portalPageId+portalPortletId+portletSeqId>
   <#local portletKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="portalPortletId" value="' + portalPortletId + '" type="hidden"/><input name="portletSeqId" value="' + portletSeqId  + '" type="hidden"/>'>
   
-  <div id="PP_${portletKey}" name="portalPortlet" class="noClass" portalPageId="${portalPageId}" portalPortletId="${portalPortletId}" columnSeqId="${columnSeqId}" portletSeqId="${portletSeqId}">
+  <div id="PP_${escapePart(portletKey, 'html')}" name="portalPortlet" class="noClass" portalPageId="${escapePart(portalPageId, 'html')}" portalPortletId="${escapePart(portalPortletId, 'html')}" columnSeqId="${escapePart(columnSeqId, 'html')}" portletSeqId="${escapePart(portletSeqId, 'html')}">
     <#if confMode == "true">
-      <div class="portlet-config" id="PPCFG_${portletKey}">
+      <div class="portlet-config" id="PPCFG_${escapePart(portletKey, 'html')}">
         <div class="portlet-config-title-bar">
           <ul>
-            <li class="title">Portlet : [${portalPortletId}]</li>
+            <li class="title">Portlet : [${escapePart(portalPortletId, 'html')}]</li>
             <li class="remove">
-              <form method="post" action="deletePortalPagePortlet" name="delPortlet_${portletKey}">
+              <form method="post" action="deletePortalPagePortlet" name="delPortlet_${escapePart(portletKey, 'html')}">
                 ${portletKeyFields}
               </form>
-              <a href="javascript:document.delPortlet_${portletKey}.submit()" title="${escapePart(delPortletHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
+              <a href="javascript:document.delPortlet_${escapePart(portletKey, 'js-html')}.submit()" title="${escapePart(delPortletHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
             </li>
             <#if editAttribute == "true">
               <li class="edit">
-                <form method="post" action="editPortalPortletAttributes" name="editPortlet_${portletKey}">
+                <form method="post" action="editPortalPortletAttributes" name="editPortlet_${escapePart(portletKey, 'html')}">
                   ${portletKeyFields}
                 </form>
-                <a href="javascript:document.editPortlet_${portletKey}.submit()" title="${escapePart(editAttributeHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
+                <a href="javascript:document.editPortlet_${escapePart(portletKey, 'js-html')}.submit()" title="${escapePart(editAttributeHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
               </li>
             </#if>
             <#if prevColumnSeqId?has_content>
               <li class="move-left">
-                <form method="post" action="updatePortletSeqDragDrop" name="movePortletLeft_${portletKey}">
-                  <input name="o_portalPageId" value="${portalPageId}" type="hidden"/>
-                  <input name="o_portalPortletId" value="${portalPortletId}" type="hidden"/>
-                  <input name="o_portletSeqId" value="${portletSeqId}" type="hidden"/>
-                  <input name="destinationColumn" value="${prevColumnSeqId}" type="hidden"/>
+                <form method="post" action="updatePortletSeqDragDrop" name="movePortletLeft_${escapePart(portletKey, 'html')}">
+                  <input name="o_portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
+                  <input name="o_portalPortletId" value="${escapePart(portalPortletId, 'html')}" type="hidden"/>
+                  <input name="o_portletSeqId" value="${escapePart(portletSeqId, 'html')}" type="hidden"/>
+                  <input name="destinationColumn" value="${escapePart(prevColumnSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPBOTTOM" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletLeft_${portletKey}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document.movePortletLeft_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
             <#if nextColumnSeqId?has_content>
               <li class="move-right">
-                <form method="post" action="updatePortletSeqDragDrop" name="movePortletRight_${portletKey}">
-                  <input name="o_portalPageId" value="${portalPageId}" type="hidden"/>
-                  <input name="o_portalPortletId" value="${portalPortletId}" type="hidden"/>
-                  <input name="o_portletSeqId" value="${portletSeqId}" type="hidden"/>
-                  <input name="destinationColumn" value="${nextColumnSeqId}" type="hidden"/>
+                <form method="post" action="updatePortletSeqDragDrop" name="movePortletRight_${escapePart(portletKey, 'html')}">
+                  <input name="o_portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
+                  <input name="o_portalPortletId" value="${escapePart(portalPortletId, 'html')}" type="hidden"/>
+                  <input name="o_portletSeqId" value="${escapePart(portletSeqId, 'html')}" type="hidden"/>
+                  <input name="destinationColumn" value="${escapePart(nextColumnSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPBOTTOM" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletRight_${portletKey}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document.movePortletRight_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
             <#if prevPortletId?has_content>
               <li class="move-up">
-                <form method="post" action="updatePortletSeqDragDrop" name="movePortletUp_${portletKey}">
-                  <input name="o_portalPageId" value="${portalPageId}" type="hidden"/>
-                  <input name="o_portalPortletId" value="${portalPortletId}" type="hidden"/>
-                  <input name="o_portletSeqId" value="${portletSeqId}" type="hidden"/>
-                  <input name="d_portalPageId" value="${portalPageId}" type="hidden"/>
-                  <input name="d_portalPortletId" value="${prevPortletId}" type="hidden"/>
-                  <input name="d_portletSeqId" value="${prevPortletSeqId}" type="hidden"/>
+                <form method="post" action="updatePortletSeqDragDrop" name="movePortletUp_${escapePart(portletKey, 'html')}">
+                  <input name="o_portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
+                  <input name="o_portalPortletId" value="${escapePart(portalPortletId, 'html')}" type="hidden"/>
+                  <input name="o_portletSeqId" value="${escapePart(portletSeqId, 'html')}" type="hidden"/>
+                  <input name="d_portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
+                  <input name="d_portalPortletId" value="${escapePart(prevPortletId, 'html')}" type="hidden"/>
+                  <input name="d_portletSeqId" value="${escapePart(prevPortletSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPBEFORE" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletUp_${portletKey}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document.movePortletUp_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
             <#if nextPortletId?has_content>
               <li class="move-down">
-                <form method="post" action="updatePortletSeqDragDrop" name="movePortletDown_${portletKey}">
-                  <input name="o_portalPageId" value="${portalPageId}" type="hidden"/>
-                  <input name="o_portalPortletId" value="${portalPortletId}" type="hidden"/>
-                  <input name="o_portletSeqId" value="${portletSeqId}" type="hidden"/>
-                  <input name="d_portalPageId" value="${portalPageId}" type="hidden"/>
-                  <input name="d_portalPortletId" value="${nextPortletId}" type="hidden"/>
-                  <input name="d_portletSeqId" value="${nextPortletSeqId}" type="hidden"/>
+                <form method="post" action="updatePortletSeqDragDrop" name="movePortletDown_${escapePart(portletKey, 'html')}">
+                  <input name="o_portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
+                  <input name="o_portalPortletId" value="${escapePart(portalPortletId, 'html')}" type="hidden"/>
+                  <input name="o_portletSeqId" value="${escapePart(portletSeqId, 'html')}" type="hidden"/>
+                  <input name="d_portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
+                  <input name="d_portalPortletId" value="${escapePart(nextPortletId, 'html')}" type="hidden"/>
+                  <input name="d_portletSeqId" value="${escapePart(nextPortletSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPAFTER" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletDown_${portletKey}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document.movePortletDown_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
           </ul>
           <br class="clear"/>
@@ -392,7 +396,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderColumnContainerBegin id style extraArgs...>
-  <table cellspacing="0"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>>
+  <table cellspacing="0"<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if>>
   <tr>
 </#macro>
 
@@ -402,7 +406,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderColumnBegin id style extraArgs...>
-  <td<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>>
+  <td<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if>>
 </#macro>
 
 <#macro renderColumnEnd extraArgs...>

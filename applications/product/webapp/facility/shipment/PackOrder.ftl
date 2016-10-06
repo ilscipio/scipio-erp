@@ -270,7 +270,7 @@ under the License.
                                     <@tr>
                                         <@td colspan="12">
                                             <@field type="submitarea">                                            
-                                                <@field type="submit" text="${uiLabelMap.CommonClear} (${uiLabelMap.CommonAll})" onClick="javascript:document.clearPackForm.submit();"/>
+                                                <@field type="submit" text="${rawString(uiLabelMap.CommonClear)} (${rawString(uiLabelMap.CommonAll)})" onClick="javascript:document.clearPackForm.submit();"/>
                                             </@field>
                                         </@td>
                                     </@tr>
@@ -340,10 +340,10 @@ under the License.
                                         </@td>
                                         <@td>
                                             <#assign buttonName = "${uiLabelMap.ProductComplete}">
-                                            <#if forceComplete?default("false") == "true">
+                                            <#if (forceComplete!"false") == "true">
                                                 <#assign buttonName = "${uiLabelMap.ProductCompleteForce}">
                                             </#if>
-                                            <@field type="submit" text="${buttonName}" onClick="javascript:document.completePackForm.submit();"/>
+                                            <@field type="submit" text=buttonName onClick="javascript:document.completePackForm.submit();"/>
                                         </@td>
                                     </@tr>
                                 </#list>

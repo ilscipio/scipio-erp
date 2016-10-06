@@ -45,8 +45,10 @@ Defines a form. Analogous to <form> HTML element.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
     attribs                 = ((map)) Extra attributes for HTML <form> element 
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra attributes for HTML <form> element
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign form_defaultArgs = {
   "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, 
@@ -80,7 +82,7 @@ Defines a form. Analogous to <form> HTML element.
 <#-- @form main markup - theme override -->
 <#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
       <#lt><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
@@ -234,9 +236,9 @@ to a form submit.
 <#macro progress_markup value=0 id="" class="" showValue=false containerClass="" stateClass="" origArgs={} passArgs={} catchArgs...>
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
-  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if stateClass?has_content> ${stateClass}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
-    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
-      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value}</#if></span>
+  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${escapePart(classes, 'html')}</#if><#if stateClass?has_content> ${escapePart(stateClass, 'html')}</#if><#if containerClasses?has_content> ${escapePart(containerClasses, 'html')}</#if>"<#if id?has_content> id="${escapePart(id, 'html')}"</#if>>
+    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${escapePart(classes, 'html')}</#if>"<#if id?has_content> id="${escapePart(id, 'html')}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
+      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${escapePart(id, 'html')}_meter"</#if></#if>><#if showValue>${value}</#if></span>
     <#if styles.progress_wrap?has_content></div></#if>
   </div>
 </#macro>
@@ -283,7 +285,7 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
     <#if id?has_content>
     <@script htmlwrap=htmlwrap>
     jQuery(document).ready(function() {
-        multiple = jQuery("#${id}");
+        multiple = jQuery("#${escapePart(id, 'js')}");
     
       <#if !(title?is_boolean && title == false)>
         <#if title?is_boolean>
@@ -311,14 +313,14 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
       <#if relatedFieldId?has_content> <#-- can be used without related field -->
         // track possible relatedField changes
         // on initial focus (focus-field-name must be relatedFieldId) or if the field value changes, select related multi values. 
-        typeValue = jQuery('#${relatedTypeFieldId}').val();
-        jQuery("#${relatedFieldId}").one('focus', function() {
-          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        typeValue = jQuery('#${escapePart(relatedTypeFieldId, 'js')}').val();
+        jQuery("#${escapePart(relatedFieldId, 'js')}").one('focus', function() {
+          selectMultipleRelatedValues('${escapePart(requestName, 'js')}', '${escapePart(paramKey, 'js')}', '${escapePart(relatedFieldId, 'js')}', '${escapePart(id, 'js')}', '${escapePart(relatedTypeName, 'js')}', typeValue, '${escapePart(responseName, 'js')}');
         });
-        jQuery("#${relatedFieldId}").change(function() {
-          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        jQuery("#${escapePart(relatedFieldId, 'js')}").change(function() {
+          selectMultipleRelatedValues('${escapePart(requestName, 'js')}', '${escapePart(paramKey, 'js')}', '${escapePart(relatedFieldId, 'js')}', '${escapePart(id, 'js')}', '${escapePart(relatedTypeName, 'js')}', typeValue, '${escapePart(responseName, 'js')}');
         });
-        selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        selectMultipleRelatedValues('${escapePart(requestName, 'js')}', '${escapePart(paramKey, 'js')}', '${escapePart(relatedFieldId, 'js')}', '${escapePart(id, 'js')}', '${escapePart(relatedTypeName, 'js')}', typeValue, '${escapePart(responseName, 'js')}');
       </#if>
       });  
     </@script>
@@ -376,7 +378,7 @@ A visible fieldset, including the HTML element.
   <#local origArgs = args>
 
   <#if id?has_content>
-    <#local containerId = "${id}_container">
+    <#local containerId = rawString(id) + "_container">
   <#else>
     <#local containerId = "">
   </#if>
@@ -409,13 +411,13 @@ A visible fieldset, including the HTML element.
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
     <@row open=true close=false />
       <@cell open=true close=false class=containerClasses id=containerId />
-        <fieldset<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>>
+        <fieldset<#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${escapePart(expandToolTip, 'html')}', '${escapePart(collapseToolTip, 'html')}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapePart(collapsibleAreaId, 'js-html')}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');">
                     <#else>expanded">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${escapePart(expandToolTip, 'html')}', '${escapePart(collapseToolTip, 'html')}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapePart(collapsibleAreaId, 'js-html')}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');">
                     </#if>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${escapePart(title, 'html')}</#if></a>
           </li>
@@ -424,7 +426,7 @@ A visible fieldset, including the HTML element.
         <#if title?has_content>${escapePart(title, 'html')}</#if>
       </#if><#rt/>
     </div>
-    <div id="${collapsibleAreaId}" class="fieldgroup-body"<#if collapsed && collapsible> style="display: none;"</#if>>
+    <div id="${escapePart(collapsibleAreaId, 'html')}" class="fieldgroup-body"<#if collapsed && collapsible> style="display: none;"</#if>>
     -->
           <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapePart(title, 'html')}</legend></#if>
   </#if>
@@ -2321,7 +2323,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#if collapse>
       <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
     <#else>
-      <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
+      <label class="form-field-label"<#if fieldId?has_content> for="${escapePart(fieldId, 'html')}"</#if>>${label}<#if required> *</#if></label>
     </#if>
   <#-- only show this if there's a label, otherwise affects inline fields too in ugly way, and there are other indications anyhow
   <#else>

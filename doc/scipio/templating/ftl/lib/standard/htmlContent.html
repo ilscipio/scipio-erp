@@ -188,6 +188,20 @@ Do not specify h1-h6 here; use level argument instead.          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">alternative to nested content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+unlike nested, this will be explicitly html-escaped by the macro          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>level</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -322,7 +336,11 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                             <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-Needed for names containing dashes.        </span>
+Needed for names containing dashes.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
 </span>
                         </td>
                       </tr>
@@ -337,6 +355,9 @@ Needed for names containing dashes.        </span>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
 </span>
                         </td>
                       </tr>
@@ -920,7 +941,11 @@ Should be avoided in modern templates.        </span>
                             <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-Needed for names containing dashes.        </span>
+Needed for names containing dashes.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
 </span>
                         </td>
                       </tr>
@@ -935,6 +960,9 @@ Needed for names containing dashes.        </span>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
 </span>
                         </td>
                       </tr>
@@ -1419,7 +1447,11 @@ Sets alt to exact same as parent row.        </span>
                             <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;tr&gt; attributes</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-Needed for names containing dashes.        </span>
+Needed for names containing dashes.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
 </span>
                         </td>
                       </tr>
@@ -1429,7 +1461,12 @@ Needed for names containing dashes.        </span>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;tr&gt; attributes and values</span>
+                            <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;tr&gt; attributes and values</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -1533,7 +1570,11 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                             <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;th&gt; and &lt;td&gt; attributes</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-Needed for names containing dashes.        </span>
+Needed for names containing dashes.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
 </span>
                         </td>
                       </tr>
@@ -1543,7 +1584,12 @@ Needed for names containing dashes.        </span>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;th&gt; and &lt;td&gt; attributes and values</span>
+                            <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;th&gt; and &lt;td&gt; attributes and values</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -1957,6 +2003,14 @@ Chart.js: <a href="http://www.chartjs.org/docs/">http://www.chartjs.org/docs/</a
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">chart ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>title</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -2286,7 +2340,12 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Additional js argument, included on js initialization</span>
+                            <span class="lib-entry-param-desc-shortdesc">Additional js argument, included on js initialization</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+As a string, this is currently not escaped by the macro.          </div>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -2387,6 +2446,14 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">slide ID</span>
                         </td>
                       </tr>
                       <tr>

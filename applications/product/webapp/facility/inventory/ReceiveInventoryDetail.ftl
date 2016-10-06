@@ -146,7 +146,7 @@
                         <#else>
                             <#assign LookupFacilityLocationView="LookupFacilityLocation">
                         </#if>
-                        <@field type="lookup" formName="selectAllForm" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
+                        <@field type="lookup" formName="selectAllForm" name="locationSeqId" id="locationSeqId" fieldFormName=LookupFacilityLocationView/>
                     </#if>
                 </@field>
                 <@field type="select" label=uiLabelMap.ProductRejectedReason name="rejectionId" size="1">
@@ -309,7 +309,7 @@
                                             <#else>
                                                 <#assign LookupFacilityLocationView="LookupFacilityLocation">
                                             </#if>
-                                            <@field type="lookup" formName="receiveMultiPO" name="locationSeqId_o_${orderItem_index}" id="locationSeqId_o_${orderItem_index}" fieldFormName="${LookupFacilityLocationView}"/>
+                                            <@field type="lookup" formName="receiveMultiPO" name="locationSeqId_o_${orderItem_index}" id="locationSeqId_o_${orderItem_index}" fieldFormName=LookupFacilityLocationView/>
                                         </#if>        
                                     </@td>                                                
                                     <@td>          

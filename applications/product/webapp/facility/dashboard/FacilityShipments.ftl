@@ -1,7 +1,7 @@
 <@section title=sectionTitle>
     <#if shipmentList?has_content>
             <@paginate mode="content" url=makeOfbizUrl("main") viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1 layout="bottom">
-                <@table type="data-list" role="grid" autoAltRows=true id="${currentShipmentType.shipmentTypeId}_shipmments">
+                <@table type="data-list" role="grid" autoAltRows=true id="${rawString(currentShipmentType.shipmentTypeId)}_shipments">
                     <@thead>
                         <@tr valign="bottom" class="header-row">
                             <@th>${uiLabelMap.CommonId}</@th>
@@ -31,7 +31,7 @@
                 </@table>
                 <script>
                     $(document).ready(function() {        
-                        var table = $('#${currentShipmentType.shipmentTypeId}_shipmments').DataTable();
+                        var table = $('#${escapePart(currentShipmentType.shipmentTypeId, 'js')}_shipments').DataTable();
                         //table.order( [[ 5, 'desc' ]] ).draw();
                     } );
                 </script>

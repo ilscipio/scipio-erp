@@ -151,27 +151,27 @@ function ShowTab(lname) {
                         <@td>
                           <#if entityField.fieldType == 'DateTime'>
                             <#-- Scipio: NOTE: when using default-manual, there is no label area, and label="xxx" arg won't turn on label area. label="xxx" is specified so it gets picked up by title/tooltip. -->
-                            <@field type="datetime" label=(entityField.name) name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                            <@field type="datetime" label=(entityField.name) name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                           <#elseif entityField.fieldType == 'Date'>
-                            <@field type="datetime" label=(entityField.name) dateType="date" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                            <@field type="datetime" label=(entityField.name) dateType="date" name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                           <#elseif entityField.fieldType == 'Time'>
-                            <@field type="datetime" label=(entityField.name) dateType="time" name="${entityField.name}" size="6" maxlength="10" value=entityField.value />
+                            <@field type="datetime" label=(entityField.name) dateType="time" name=entityField.name size="6" maxlength="10" value=entityField.value />
                           <#elseif entityField.fieldType == 'Integer'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Long'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Double'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Float'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'StringOneRow'>
-                            <@field type="input" size="${entityField.stringLength}" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size=entityField.stringLength maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'String'>
-                            <@field type="input" size="80" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="80" maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Textarea'>
-                            <@field type="textarea" cols="60" rows="3" maxlength="${entityField.stringLength}" name="${entityField.name}">${entityField.value}</@field>
+                            <@field type="textarea" cols="60" rows="3" maxlength=entityField.stringLength name=entityField.name>${entityField.value}</@field>
                           <#else>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           </#if>
                         </@td>
                       </@tr>
@@ -189,27 +189,27 @@ function ShowTab(lname) {
                       <@td>${entityField.name}</@td>
                       <@td>
                         <#if entityField.fieldType == 'DateTime'>
-                          <@field type="datetime" label=(entityField.name) name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                          <@field type="datetime" label=(entityField.name) name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                         <#elseif entityField.fieldType == 'Date'>
-                          <@field type="datetime" label=(entityField.name) dateType="date" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                          <@field type="datetime" label=(entityField.name) dateType="date" name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                         <#elseif entityField.fieldType == 'Time'>
-                          <@field type="datetime" label=(entityField.name) dateType="time" size="6" maxlength="10" name="${entityField.name}" value=entityField.value />
+                          <@field type="datetime" label=(entityField.name) dateType="time" size="6" maxlength="10" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Integer'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Long'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Double'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Float'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'StringOneRow'>
-                          <@field type="input" size="${entityField.stringLength}" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size=entityField.stringLength maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'String'>
-                          <@field type="input" size="80" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="80" maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Textarea'>
-                          <@field type="textarea" cols="60" rows="3" maxlength="${entityField.stringLength}" name="${entityField.name}">${entityField.value}</@field>
+                          <@field type="textarea" cols="60" rows="3" maxlength=entityField.stringLength name=entityField.name>${entityField.value}</@field>
                         <#else>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         </#if>
                       </@td>
                     </@tr>

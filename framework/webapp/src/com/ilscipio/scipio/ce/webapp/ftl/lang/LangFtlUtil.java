@@ -66,8 +66,8 @@ public abstract class LangFtlUtil {
     
     // NOTE: there's no _real_ need to synchronize on these. if two templates are built for one builtin its not big deal.
     private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
+    private static Template stringBuiltInCall = null;
     private static final Map<String, Template> functionCalls = new ConcurrentHashMap<>();
-    
     
     /**
      * Used for TemplateModel <-> unwrapped/raw value conversions.
@@ -1566,6 +1566,20 @@ public abstract class LangFtlUtil {
      */
     public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, TemplateModel[] builtInArgs, Environment env) throws TemplateModelException {
         final int argCount = (builtInArgs != null) ? builtInArgs.length : 0;
+        return execBuiltIn(getBuiltInCall(builtInName, argCount, env), value, builtInArgs, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL built-in.
+     */
+    public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, Environment env) throws TemplateModelException {
+        return execBuiltIn(builtInName, value, null, env);
+    }
+    
+    /**
+     * Gets an arbitrary FTL built-in call - non-abstracted version (for optimization only!).
+     */
+    public static Template getBuiltInCall(String builtInName, int argCount, Environment env) throws TemplateModelException {
         final String cacheKey = builtInName + ":" + argCount;
         Template builtInCall = builtInCalls.get(cacheKey);
         if (builtInCall == null) {
@@ -1581,6 +1595,14 @@ public abstract class LangFtlUtil {
             }
             builtInCalls.put(cacheKey, builtInCall);
         }
+        return builtInCall;
+    }
+    
+    /**
+     * Executes an arbitrary FTL built-in - non-abstracted version (for optimization only!).
+     */
+    public static TemplateModel execBuiltIn(Template builtInCall, TemplateModel value, TemplateModel[] builtInArgs, Environment env) throws TemplateModelException {
+        final int argCount = (builtInArgs != null) ? builtInArgs.length : 0;
         env.setVariable("_scpEbiVal", value);
         for(int i=0; i < argCount; i++) {
             env.setVariable("_scpEbiArg"+i, builtInArgs[i]);
@@ -1589,12 +1611,12 @@ public abstract class LangFtlUtil {
         return env.getVariable("_scpEbiRes");
     }
     
-    public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, Environment env) throws TemplateModelException {
-        return execBuiltIn(builtInName, value, null, env);
-    }
-    
     public static TemplateScalarModel execStringBuiltIn(TemplateModel value, Environment env) throws TemplateModelException {
-        return (TemplateScalarModel) execBuiltIn("string", value, null, env);
+        if (stringBuiltInCall == null) {
+            // NOTE: no real need for synchronize here
+            stringBuiltInCall = getBuiltInCall("string", 0, env);
+        }
+        return (TemplateScalarModel) execBuiltIn(stringBuiltInCall, value, null, env);
     }
     
     /**
@@ -1602,6 +1624,20 @@ public abstract class LangFtlUtil {
      */
     public static TemplateModel execFunction(String functionName, TemplateModel[] args, Environment env) throws TemplateModelException {
         final int argCount = (args != null) ? args.length : 0;
+        return execFunction(getFunctionCall(functionName, argCount, env), args, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL function.
+     */
+    public static TemplateModel execFunction(String functionName, Environment env) throws TemplateModelException {
+        return execFunction(getFunctionCall(functionName, 0, env), null, env);
+    }
+    
+    /**
+     * Gets an arbitrary FTL function call - non-abstracted version (for optimization only!).
+     */
+    public static Template getFunctionCall(String functionName, int argCount, Environment env) throws TemplateModelException {
         final String cacheKey = functionName + ":" + argCount;
         Template functionCall = functionCalls.get(cacheKey);
         if (functionCall == null) {
@@ -1612,14 +1648,29 @@ public abstract class LangFtlUtil {
             if (argCount > 0) {
                 argVarsStr = argVarsStr.substring(1);
             }
-            functionCall = makeFtlCodeTemplate("<#assign _scpEfnRes = " + functionName + "(" + argVarsStr.substring(1) + ")>");
+            functionCall = makeFtlCodeTemplate("<#assign _scpEfnRes = " + functionName + "(" + argVarsStr + ")>");
             functionCalls.put(cacheKey, functionCall);
         }
+        return functionCall;
+    }
+    
+    /**
+     * Executes an arbitrary FTL function - non-abstracted version (for optimization only!).
+     */
+    public static TemplateModel execFunction(Template functionCall, TemplateModel[] args, Environment env) throws TemplateModelException {
+        final int argCount = (args != null) ? args.length : 0;
         for(int i=0; i < argCount; i++) {
             env.setVariable("_scpEfnArg"+i, args[i]);
         }
         execFtlCode(functionCall, env);
         return env.getVariable("_scpEfnRes");
     }
-
+    
+    /**
+     * Executes an arbitrary FTL function - non-abstracted version (for optimization only!).
+     */
+    public static TemplateModel execFunction(Template functionCall, Environment env) throws TemplateModelException {
+        return execFunction(functionCall, null, env);
+    }
+    
 }

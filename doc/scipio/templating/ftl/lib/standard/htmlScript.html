@@ -521,6 +521,12 @@ which if missing from controller may give a lot or other error.        </span>
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Prints a string of JS events as HTML element attributes for common macro HTML elements.
 Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-09-28: The attributes are now automatically HTML-escaped, but NOT javascript-escaped;
+caller must identify and escape the JS parts as needed (not trivial).          </div>
+                      </div>
                   </div>
             
               
@@ -536,6 +542,13 @@ Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Map of event names to actions</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>escapeLang</code>
+                        </td>
+                        <td class="entry-paramdesc">
                         </td>
                       </tr>
               </table>
@@ -564,10 +577,14 @@ Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
                       <p class="lib-entry-shortdesc">Prints a string of element attributes for common macro HTML elements.
 This is nearly the same as elemAttribStr but with different defaults and with more versatile attribs map.</p>
                       <div class="lib-entry-extradesc">
-        <p>
-NOTE (2016-08-30): The special token values <code>_EMPTY_VALUE_</code> and <code>_NO_VALUE_</code> are now considered deprecated;
-        </p>
-<pre>use #attribSpecialVal instead.</pre>                      </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-08-30: The special token values <code>_EMPTY_VALUE_</code> and <code>_NO_VALUE_</code> are now considered deprecated;
+use <a href="../utilities.html#entry-attribSpecialVal">#attribSpecialVal</a> instead.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-09-30: This now automatically HTML-escapes attribute values by default; see <code>escapeLang</code> parameter.          </div>
+                      </div>
                   </div>
             
               
@@ -666,6 +683,14 @@ See function getAttribMapAllExcludes for implementation details.        </span>
                       <tr>
                         <td class="entry-paramname">
                             <code>camelCaseToDashLowerNames</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="../utilities.html#entry-elemAttribStr">@elemAttribStr</a>; mostly same parameters but with different defaults.</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>escapeLang</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">See <a href="../utilities.html#entry-elemAttribStr">@elemAttribStr</a>; mostly same parameters but with different defaults.</span>

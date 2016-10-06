@@ -69,7 +69,7 @@ function toggleBillingAccount(box) {
     <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
   </@menu>
 </#macro>
-<@section title="${rawString(uiLabelMap.OrderWhereShallWeShipIt)}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}? -->
+<@section title="${rawString(uiLabelMap.OrderWhereShallWeShipIt)}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1) ${uiLabelMap.OrderWhereShallWeShipIt}? -->
   <#if (cart.getShipGroupSize() > 1)>
     <@alert type="info">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</@alert>
   </#if>

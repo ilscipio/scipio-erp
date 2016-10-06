@@ -18,9 +18,13 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+SCIPIO: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
+
+NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
+    As a result all macros here must take care to html-escape as well as js-escape values.
+    Use escapePart/escapeFullUrl for this.
 -->
 
 <#-- 
@@ -275,7 +279,7 @@ Only those not marked DEPRECATED should still be used.
 -->
 
 <#macro renderImage src id style width height border menuCtxRole="" extraArgs...>
-  <img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
+  <img src="${escapeFullUrl(src, 'html')}"<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${escapePart(border, 'html')}"</#if> />
 </#macro>
 
 <#-- Scipio: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->

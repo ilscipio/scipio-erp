@@ -126,7 +126,7 @@ under the License.
                               <#-- now show status details per line item -->
                               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
                               <@td class="${styles.text_right!}">
-                                  <@modal id="${productId}_st" label="${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}">
+                                  <@modal id="${productId}_st" label=currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)>
                                    
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                                 
@@ -179,7 +179,7 @@ under the License.
                                 <#else>
                                   <#assign remainingQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - shippedQuantity?double)>
                                 </#if>
-                                <@modal id="${productId}_q" label="${orderItem.quantity?default(0)?string.number}">    
+                                <@modal id="${productId}_q" label=orderItem.quantity?default(0)?string.number>    
                                             <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                                                 <@tr valign="top">
                                                     
@@ -340,7 +340,7 @@ under the License.
                                     <@td>
                                       <@menu type="button">
                                         <#if itemSelectable>
-                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" text="${rawString(uiLabelMap.CommonCancel)} ${rawString(uiLabelMap.CommonItem)}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" />
+                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${escapeFullUrl(makeOfbizUrl('cancelOrderItem'), 'js')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" text="${rawString(uiLabelMap.CommonCancel)} ${rawString(uiLabelMap.CommonItem)}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" />
                                         </#if>
                                       </@menu>
                                     </@td>

@@ -127,8 +127,8 @@ under the License.
                 </fieldset>
                 <#--<fieldset>-->
                   <@field type="submitarea">
-                    <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${uiLabelMap.EcommerceContinueToStep} 3"/>
-                    <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                    <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 3"/>
+                    <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
                   </@field>
                 <#--</fieldset>-->
             </form>
@@ -160,8 +160,8 @@ under the License.
               </fieldset>
               <#--<fieldset>-->
                 <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${uiLabelMap.EcommerceContinueToStep} 4"/>
-                  <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 4"/>
+                  <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
                 </@field>
               <#--</fieldset>-->
             </form>
@@ -293,8 +293,8 @@ under the License.
               </fieldset>
               <#--<fieldset>-->
                 <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${uiLabelMap.EcommerceContinueToStep} 5"/>
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 5"/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
                 </@field>
               <#--</fieldset>-->
             </form>

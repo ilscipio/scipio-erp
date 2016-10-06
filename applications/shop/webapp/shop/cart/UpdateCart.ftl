@@ -341,8 +341,8 @@ under the License.
       <#--</fieldset>-->
       <#--<fieldset>-->
         <@field type="submitarea">
-          <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${uiLabelMap.EcommerceContinueToStep} 2"/>
-          <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${uiLabelMap.EcommercePleaseWait}..."/>
+          <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 2"/>
+          <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
         </@field>
       <#--</fieldset>-->
     </form>

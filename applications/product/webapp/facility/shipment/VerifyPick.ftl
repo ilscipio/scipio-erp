@@ -35,7 +35,7 @@ under the License.
             <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
                 <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=(picklistBinId!)/>
             </@field>
-            <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
+            <@field type="submit" text="${rawString(uiLabelMap.ProductVerify)} ${rawString(uiLabelMap.OrderOrder)}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
         </form>
         <form name="clearPickForm" method="post" action="<@ofbizUrl>cancelAllRows</@ofbizUrl>">
             <input type="hidden" name="orderId" value="${orderId!}"/>

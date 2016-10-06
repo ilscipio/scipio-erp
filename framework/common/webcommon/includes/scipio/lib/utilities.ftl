@@ -2625,7 +2625,7 @@ with leading space.
 -->
 <#macro compiledClassAttribStr class defaultVal="">
   <#local classes = compileClassArg(class, defaultVal)>
-  <#if classes?has_content> class="${classes}"</#if><#t>
+  <#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#t>
 </#macro>
 
 <#-- 
@@ -2636,7 +2636,7 @@ Explicit version of #compiledClassAttribStr.
 -->
 <#macro compiledClassAttribStrExplicit class defaultVal="">
   <#local classes = compileClassArgExplicit(class, defaultVal)>
-  <#if classes?has_content> class="${classes}"</#if><#t>
+  <#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#t>
 </#macro>
 
 <#-- 

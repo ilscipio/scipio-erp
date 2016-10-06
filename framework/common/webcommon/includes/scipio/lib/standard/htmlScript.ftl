@@ -151,10 +151,10 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
 <#-- @script main markup - theme override -->
 <#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} passArgs={} catchArgs...>
   <#if src?has_content>
-    <script type="${type}" src="${escapeFullUrl(src, 'html')}"></script>
+    <script type="${escapePart(type, 'html')}" src="${escapeFullUrl(src, 'html')}"></script>
   <#else>
     <#if htmlwrap>
-      <script type="${type}">
+      <script type="${escapePart(type, 'html')}">
       <#if cdata>//<![CDATA[</#if>
     </#if>
         <#nested>
@@ -207,7 +207,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
               var commonOfbizUrls = {};
           }
           </#if>
-          commonOfbizUrls["${uri?js_string}"] = "${makeOfbizUrl(uri)?js_string}";
+          commonOfbizUrls["${escapePart(rawString(uri), 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
           
         </@script>
       <#else>
@@ -232,7 +232,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${uri?js_string}"] = "${makeOfbizUrl(uri)?js_string}";
+      commonOfbizUrls["${escapePart(rawString(uri), 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
       </#list>
 
     </@script>

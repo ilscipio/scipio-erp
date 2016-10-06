@@ -143,7 +143,7 @@ Creates a grid row.
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
+        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
   </#if>
       <#nested />
   <#if close>
@@ -268,7 +268,7 @@ Creates a grid cell.
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
+        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -675,13 +675,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <div class="${styles.tile_content!}">
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
-        <div class="${imageClass}<#if imageBgColorClass?has_content> ${imageBgColorClass}</#if>" style="background-image: url(${escapeFullUrl(image, 'style')});"></div>
+        <div class="${escapePart(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapePart(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'style')});"></div>
       </#if>
       <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
-      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
+      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapePart(icon, 'html')}"></i></span></#if>
       <#local nestedContent><#nested></#local>
-      <#if nestedContent?has_content><span class="${overlayClass}<#if overlayBgColorClass?has_content> ${overlayBgColorClass}</#if>">${nestedContent}</span></#if>
-      <#if title?has_content><span class="${titleClass}<#if titleBgColorClass?has_content> ${titleBgColorClass}</#if>">${escapePart(title, 'html')}</span></#if>
+      <#if nestedContent?has_content><span class="${escapePart(overlayClass, 'html')}<#if overlayBgColorClass?has_content> ${escapePart(overlayBgColorClass, 'html')}</#if>">${nestedContent}</span></#if>
+      <#if title?has_content><span class="${escapePart(titleClass, 'html')}<#if titleBgColorClass?has_content> ${escapePart(titleBgColorClass, 'html')}</#if>">${escapePart(title, 'html')}</span></#if>
       <#if link?has_content></a></#if>
     </div>
   </@container>
@@ -1227,8 +1227,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"<#elseif containerStyle?has_content> style="${containerStyle}"</#if><#rt>
+    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"<#elseif containerStyle?has_content> style="${escapePart(containerStyle, 'html')}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
       <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
@@ -1244,7 +1244,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
           <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
           <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
           <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
-          <div<#if contentId?has_content> id="${contentId}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${contentStyle}"</#if><#rt>
+          <div<#if contentId?has_content> id="${escapePart(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapePart(contentStyle, 'html')}"</#if><#rt>
           <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>>
   </#if>
             <#nested>

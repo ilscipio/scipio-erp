@@ -119,11 +119,11 @@ NOTE: Should avoid using this for regular, common inlined message results such a
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
   <#local containerClass = addClassArg(containerClass, styles.grid_row!)>
-  <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#if containerStyle?has_content> style="${containerStyle}"</#if>>
+  <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if><#if containerStyle?has_content> style="${escapePart(containerStyle, 'html')}"</#if>>
     <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
       <div data-alert class="${styles.alert_wrap!} ${styles[rawString(typeClass)]!}">
         <div class="${styles.grid_row!}">
-          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${style}"</#if>>
+          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if>>
             <#if closable><a href="#" class="${styles.closable!}" data-dismiss="alert">&times;</a></#if>
             <#nested>
           </div>
@@ -176,7 +176,7 @@ Creates a panel box.
     topContent=false topContentArgs={}  bottomContent=false bottomContentArgs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.panel_wrap!"")>
   <#local class = addClassArg(class, type)>
-  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${style}"</#if>>
+  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if>>
     <#if !topContent?is_boolean><@contentArgRender content=topContent args=topContentArgs /></#if>
     <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${escapePart(title, 'html')}</h5></#if></div>
     <div<@compiledClassAttribStr class=(styles.panel_body!)/>><#nested></div>

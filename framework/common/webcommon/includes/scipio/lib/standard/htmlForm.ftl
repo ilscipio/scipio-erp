@@ -45,8 +45,10 @@ Defines a form. Analogous to <form> HTML element.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
     attribs                 = ((map)) Extra attributes for HTML <form> element 
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra attributes for HTML <form> element
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign form_defaultArgs = {
   "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, 

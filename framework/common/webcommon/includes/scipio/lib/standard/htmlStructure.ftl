@@ -37,8 +37,10 @@ to this one.
     id                      = Container ID
     attribs                 = ((map)) Other attributes for div 
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra attributes for div
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign container_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "elem":"", "attribs":{}, "passArgs":{}
@@ -97,8 +99,10 @@ Creates a grid row.
     selected                = ((boolean), default: false) If true row is marked selected
     attribs                 = ((map)) Extra  attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra  attributes
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign row_defaultArgs = {
   "class":"", "id":"", "style":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true, 
@@ -202,8 +206,10 @@ Creates a grid cell.
                               NOTE: This is often optional in CSS frameworks; affects float alignment.
     attribs                 = ((map)) Extra  attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra  attributes
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign cell_defaultArgs = {
   "columns":-1, "small":-1, "medium":-1, "large":-1, "offset":-1, "smallOffset":-1, "mediumOffset":-1, 

@@ -59,8 +59,10 @@ An HTML heading (title).
     containerId             = Container ID  
     attribs                 = ((map)) Extra legacy h1-h6 attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra legacy h1-h6 attributes
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign heading_defaultArgs = {
   "elemType":true, "level":"", "title":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
@@ -359,9 +361,11 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Other legacy <table> attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Other legacy <table> attributes and values
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
-    
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
+                              
     * Responsive Tables *
     responsive, 
     responsiveOptions,
@@ -775,7 +779,9 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Other legacy <tr> attributes 
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Other legacy <tr> attributes and values
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign tr_defaultArgs = {
   "type":"", "class":"", "id":"", "useAlt":"", "alt":"", "groupLast":"", "groupParent":"", "selected":"", 
@@ -894,7 +900,9 @@ Defines a table header cell. Analogous to <th> HTML element.
     open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Other legacy <th> and <td> attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Other legacy <th> and <td> attributes and values
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign th_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
@@ -1317,10 +1325,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 data: data,
                 options: options
             };
-            <#-- FIXME: this var is poor because can't even be escaped... -->
-            var ${escapePart(id, 'js')} = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
+            var newChart = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
             ${nestedContent}
-            ${escapePart(id, 'js')}.update();
+            newChart.update();
         });
     </@script>
   </#if>

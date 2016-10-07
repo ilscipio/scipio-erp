@@ -58,7 +58,7 @@ FIXME: Needs parameter to control injection and location of hidden modal content
 
 <#-- @modal main markup - theme override -->
 <#macro modal_markup id="" label="" href="" class="" icon="" origArgs={} passArgs={} catchArgs...>
-  <a href="#" data-reveal-id="modal_${escapePart(id, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${icon!}"></i> </#if>${escapePart(label, 'html')}</a>
+  <a href="#" data-reveal-id="modal_${escapePart(id, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${escapePart(icon, 'html')}"></i> </#if>${escapePart(label, 'html')}</a>
   <div id="modal_${escapePart(id, 'html')}" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>
@@ -98,7 +98,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.alert_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#local typeClass = "alert_type_${type}"/>
+  <#local typeClass = "alert_type_" + rawString(type)/>
   <#if type == "error">
     <#local type = "alert">
   </#if>
@@ -254,14 +254,14 @@ translates to:
   <#local styleNamePrefix = "commonmsg_" + type?replace("-", "_")>
   <#local defaultClass = styles[styleNamePrefix]!styles["commonmsg_default"]>
   <#local class = addClassArgDefault(class, defaultClass)>
-  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id closable=closable origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${text}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
+  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id closable=closable origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${escapePart(text, 'html')}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
 </#macro>
 
 <#-- @commonMsg main markup - theme override -->
 <#macro commonMsg_markup type="" styleNamePrefix="" class="" id="" closable="" origArgs={} passArgs={} catchArgs...>
   <#if type == "result" || type?starts_with("result-") || type == "info">
     <#local nestedContent><#nested></#local>
-    <#local nestedContent = nestedContent?trim> <#-- helpful in widgets -->
+    <#local nestedContent = nestedContent?trim><#-- helpful in widgets -->
     <#if !nestedContent?has_content>
       <#local nestedContent = uiLabelMap[styles.commonmsg_result_norecord_prop!"CommonNoRecordFoundSentence"]>
     </#if>

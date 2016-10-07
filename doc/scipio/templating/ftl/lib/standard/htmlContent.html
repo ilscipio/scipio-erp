@@ -2344,7 +2344,8 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>WARN: </strong>
-As a string, this is currently not escaped by the macro.          </div>
+As a string, because this contains whole javascript code, this is not currently js-escaped by the macro.
+Caller is responsible for escaping this param!          </div>
 </span>
                         </td>
                       </tr>

@@ -111,6 +111,7 @@ for getFileUploadProgressStatus controller AJAX calls.
                                 * {{{validate}}}: Use jquery validate
                                 * {{{none}}}: Caller does manually 
                               * {{{validateObjScript}}}: If submitHook is "validate", add this script text to jquery validate({...}) object body
+                                WARN: this is NOT js-escaped by the macro - caller is responsible for escaping.
                               See ScipioUploadProgress javascript class for available options.
     htmlwrap                = ((boolean), default: true) If true, wrap in @script
 -->
@@ -138,7 +139,7 @@ for getFileUploadProgressStatus controller AJAX calls.
               });
               
             <#if (progressOptions.submitHook!) == "validate">
-              jQuery("${progressOptions.formSel}").validate({
+              jQuery("${escapePart(progressOptions.formSel, 'js')}").validate({
                   submitHandler: function(form) {
                       var goodToGo = uploadProgress.initUpload();
                       if (goodToGo) {
@@ -148,7 +149,7 @@ for getFileUploadProgressStatus controller AJAX calls.
                   ${progressOptions.validateObjScript!""}
               });
             <#elseif (progressOptions.submitHook!) != "none" >
-              jQuery("${progressOptions.formSel}").submit(function(event) {
+              jQuery("${escapePart(progressOptions.formSel, 'js')}").submit(function(event) {
                   var goodToGo = uploadProgress.initUpload();
                   if (!goodToGo) {
                       event.preventDefault();
@@ -238,7 +239,7 @@ to a form submit.
   <#local containerClasses = compileClassArg(containerClass)>
   <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${escapePart(classes, 'html')}</#if><#if stateClass?has_content> ${escapePart(stateClass, 'html')}</#if><#if containerClasses?has_content> ${escapePart(containerClasses, 'html')}</#if>"<#if id?has_content> id="${escapePart(id, 'html')}"</#if>>
     <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${escapePart(classes, 'html')}</#if>"<#if id?has_content> id="${escapePart(id, 'html')}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
-      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${escapePart(id, 'html')}_meter"</#if></#if>><#if showValue>${value}</#if></span>
+      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value}%"<#if id?has_content> id="${escapePart(id, 'html')}_meter"</#if></#if>><#if showValue>${value}</#if></span>
     <#if styles.progress_wrap?has_content></div></#if>
   </div>
 </#macro>
@@ -1848,7 +1849,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               inlineLabel=effInlineLabel
                               maxlength=maxlength
                               wrap=wrap
-                              passArgs=passArgs>${text}${value}<#nested></@field_textarea_widget>
+                              passArgs=passArgs>${escapePart(text, 'html')}${escapePart(value, 'html')}<#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date" || dateType == "time" || dateType == "month">

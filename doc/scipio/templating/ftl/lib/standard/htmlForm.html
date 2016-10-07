@@ -366,7 +366,11 @@ In addition, supports:
       </li>
       <li>
         <span>
-<code>validateObjScript</code>: If submitHook is &quot;validate&quot;, add this script text to jquery validate({...}) object body        </span>
+<code>validateObjScript</code>: If submitHook is &quot;validate&quot;, add this script text to jquery validate({...}) object body
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+this is NOT js-escaped by the macro - caller is responsible for escaping.          </div>
       </li>
   </ul>
 </div>

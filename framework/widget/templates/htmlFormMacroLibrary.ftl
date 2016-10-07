@@ -88,12 +88,12 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#list items as item>
     <div class="switch small">
     <span <@renderClass className alert />><#rt/>
-      <input type="checkbox"<#if (item_index == 0)> id="${id}"</#if><#rt/>
-        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+      <input type="checkbox"<#if (item_index == 0)> id="${escapePart(id, 'html')}"</#if><#rt/>
+        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${escapePart(tooltip, 'html')}"</#if><#rt/>
         <#if allChecked?has_content && allChecked> checked="checked" <#elseif allChecked?has_content && !allChecked>
           <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if> 
-          name="${(name!"")?html}" value="${(item.value!"")?html}" <#if item.event?has_content> ${item.event}="${item.action!}"<#elseif event?has_content> ${event}="${action}"</#if>/><#rt/>
-          <label for="${id!}"></label>
+          name="${escapePart(name, 'html')}" value="${escapePart(item.value!"", 'html')}" <#if item.event?has_content> ${escapePart(item.event, 'html')}="${escapePart(item.action!, 'html')}"<#elseif event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}"</#if>/><#rt/>
+          <label for="${escapePart(id, 'html')}"></label>
     </span>
     </div>
   </#list>
@@ -116,11 +116,11 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#if !(showProgress?is_boolean && showProgress == false) && 
      ((showProgress?is_boolean && showProgress == true) ||
       ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
-    <#local baseId = htmlFormRenderFormInfo.name!"" + "_scipiouplprogform">       
+    <#local baseId = rawString(htmlFormRenderFormInfo.name!"") + "_scipiouplprogform">       
     <#local progressOptions = {
-      "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
-      "progBarId" : "${baseId}_progbar",
-      "progTextBoxId" : "${baseId}_textbox",
+      "formSel" : "form[name=${rawString(htmlFormRenderFormInfo.name)}]",<#-- NOTE: escaped later -->
+      "progBarId" : "${rawString(baseId)}_progbar",
+      "progTextBoxId" : "${rawString(baseId)}_textbox",
       
       "expectedResultContainerSel" : "#main-content",
       "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
@@ -216,10 +216,10 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     </#if>
     <#-- SCIPIO: moved this OUTSIDE the useRowSubmit check -->
     <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
-      <input type="hidden" name="${viewIndexField}" value="${viewIndex}"/>
+      <input type="hidden" name="${escapePart(viewIndexField, 'html')}" value="${viewIndex}"/>
     </#if>
     <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
-      <input type="hidden" name="${viewSizeField}" value="${viewSize}"/>
+      <input type="hidden" name="${escapePart(viewSizeField, 'html')}" value="${viewSize}"/>
     </#if>
 </#macro>
 <#-- Scipio: WARN: also exists renderMultiFormClose below -->
@@ -231,7 +231,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   </#if>
   <#if focusFieldName?has_content>
     <@script>
-      var form = document.forms["${escapePart(formName, 'js')}"];
+      var form = document['${escapePart(formName, 'js')}'];
       form["${escapePart(focusFieldName, 'js')}"].focus();
       <#-- enable the validation plugin for all generated forms
       only enable the validation if min one field is marked as 'required' -->
@@ -300,7 +300,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local class = addClassArg(class, styles.table_formwidget_type!)>
   <#local tableType = mapOfbizFormTypeToTableType(formType)>
   <#-- table:
-    type: ${tableType}
+    type: ${escapePart(tableType, 'html')}
     responsive: ${responsive?string} 
     scrollable: ${scrollable?string} -->
   <@table open=true close=false type=tableType class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
@@ -319,7 +319,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <@table close=true open=false />
   <#-- save the table info for post-table stuff -->
   <#local dummy = setRequestVar("renderFormLastTableInfo", stackValues)>
-  <#-- TABLE ID: ${stackValues.tableId}, ${getRequestVar("scipioLastTableInfo").id} -->
+  <#-- TABLE ID: ${escapePart(stackValues.tableId, 'html')}, ${escapePart(getRequestVar("scipioLastTableInfo").id, 'html')} -->
   <#-- Scipio: unset form info, but only if it was the list wrapper that set it -->
   <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>
@@ -436,7 +436,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
-  <#--positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
+  <#--positions: ${positions} position: ${position} positionSpan: ${positionSpan} nextPositionInRow: ${nextPositionInRow} lastPositionInRow: ${lastPositionInRow} -->
   <#local gridSize = 12>
   <#local markLast = false>
   <#local fieldEntryOffset = 0>
@@ -460,10 +460,10 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   </#if>
   
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
-  <#-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} posSpan: ${posSpan!} markLast: ${markLast!?string}
+  <#-- positions: ${positions} position: ${position} positionSpan: ${positionSpan} nextPositionInRow: ${nextPositionInRow} lastPositionInRow: ${lastPositionInRow} posSpan: ${posSpan} markLast: ${markLast?string}
        fieldEntryOffset: ${fieldEntryOffset}
        renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
-       fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
+       fieldEntrySize: ${fieldEntrySize} gridSize: ${gridSize} -->
   
   <#-- Scipio: widget-area-style now supports a more complex syntax similar to @heading, mainly to be able to add extra containers 
       e.g. widget-area-style="area-class;container:sub-div-class" -->
@@ -487,7 +487,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#-- Scipio: TODO: form widgets currently only support left-position grid-like label arrangement; @field supports much more;
       not currently sure if easy way to reuse the stuff in @field here -->
   <@cell open=true close=false class=outerClasses />
-    <@row open=true close=false class="+form-field-entry ${fieldEntryTypeClass}" />
+    <@row open=true close=false class=("+form-field-entry " + rawString(fieldEntryTypeClass)) />
     
   <#-- Scipio: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
@@ -504,7 +504,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
-      <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}")>
+      <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${rawString(fieldEntryTypeClass)}")>
       <#local titleAreaClassDefault = defaultGridStyles.labelArea>
       <#-- NOTE: using explicit version for compatibility! -->
       <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
@@ -520,7 +520,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       </div>
   </#if>
   <#local innerClass = style>
-  <#local innerClass = addClassArg(innerClass, "field-entry-widget ${fieldEntryTypeClass}")>
+  <#local innerClass = addClassArg(innerClass, "field-entry-widget ${rawString(fieldEntryTypeClass)}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local innerClassDefault = defaultGridStyles.widgetPostfixArea>
@@ -725,7 +725,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   </form>
 </#macro>
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description confirmation>
-  <a<#if linkStyle?has_content> class="${escapePart(linkStyle, 'html')}"</#if> href="javascript:document.forms["${escapePart(hiddenFormName, 'js-html')}"].submit()"
+  <a<#if linkStyle?has_content> class="${escapePart(linkStyle, 'html')}"</#if> href="javascript:document['${escapePart(hiddenFormName, 'js-html')}'].submit()"
     <#if action?has_content && event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}"</#if>
     <#if confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}')"</#if>>
       <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt=""/></#if>${escapePart(description, 'html')}</a>
@@ -766,9 +766,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     <@script>
         jQuery(document).ready(function() {
           <#if useRowSubmit>
-            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+            var submitForm = $('form[name="${escapePart(hiddenFormName, 'js')}"]');
           <#else>
-            var submitForm = $("form[name=${escapePart(formName, 'js')}]");
+            var submitForm = $('form[name="${escapePart(formName, 'js')}"]');
           </#if>
             
             if (submitForm) {
@@ -776,7 +776,6 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
                 <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
                 <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
                
-
                 var submitField = $("#${submitFieldIdJs}");
                 $(submitField).click(function(e) {
                     e.preventDefault();
@@ -821,7 +820,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#elseif submitEntries?has_content>
     <@script>
         jQuery(document).ready(function() {
-            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+            var submitForm = $('form[name="${escapePart(hiddenFormName, 'js')}"]');
             if (submitForm) {
               <#list submitEntries as submitEntry>
                 <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>

@@ -54,8 +54,8 @@ IMPL NOTE: Beware of whitespace.
 
 <#-- @htmlHeadOpen main markup - theme override -->
 <#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} passArgs={} catchArgs...>
-<!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
-<html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
+<!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${escapePart(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapePart(langDir, 'html')}"</#if>><![endif]-->
+<html class="no-js"<#if docLangAttr?has_content> lang="${escapePart(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapePart(langDir, 'html')}"</#if>>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -207,7 +207,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
               var commonOfbizUrls = {};
           }
           </#if>
-          commonOfbizUrls["${escapePart(rawString(uri), 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
+          commonOfbizUrls["${escapePart(uri, 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
           
         </@script>
       <#else>
@@ -232,7 +232,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${escapePart(rawString(uri), 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
+      commonOfbizUrls["${escapePart(uri, 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
       </#list>
 
     </@script>

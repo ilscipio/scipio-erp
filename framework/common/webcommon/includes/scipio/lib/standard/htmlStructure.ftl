@@ -598,10 +598,10 @@ It is loosely based on http://metroui.org.ua/tiles.html
 
   <#-- lookup styles -->
   <#local class = addClassArg(class, styles.tile_wrap!)>
-  <#local class = addClassArg(class, "${styles.tile_wrap!}-${size!}")>
+  <#local class = addClassArg(class, "${styles.tile_wrap!}-${size}")>
   <#local color = color?string>
   <#if color?has_content && color != "none">
-    <#local colorClass = "${styles.tile_color_prefix!}${color!}">
+    <#local colorClass = "${styles.tile_color_prefix!}${color}">
   <#else>
     <#local colorClass = "">
   </#if>
@@ -616,7 +616,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#local overlayClass = addClassArg(overlayClass, styles.tile_overlay!)>
   <#local overlayBgColor = overlayBgColor?string>
   <#if overlayBgColor?has_content && overlayBgColor != "none">
-    <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor!}">
+    <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor}">
   <#else>
     <#local overlayBgColorClass = "">
   </#if>
@@ -628,7 +628,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#local imageClass = addClassArg(imageClass, styles.tile_image!)>
   <#local imageBgColor = imageBgColor?string>
   <#if imageBgColor?has_content && imageBgColor != "none">
-    <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor!}">
+    <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor}">
   <#else>
     <#local imageBgColorClass = "">
   </#if>
@@ -640,7 +640,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#local titleClass = addClassArg(titleClass, styles.tile_title!)>
   <#local titleBgColor = titleBgColor?string>
   <#if titleBgColor?has_content && titleBgColor != "none">
-    <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor!}">
+    <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor}">
   <#else>
     <#local titleBgColorClass = "">
   </#if>
@@ -681,7 +681,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <div class="${styles.tile_content!}">
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
-        <div class="${escapePart(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapePart(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'style')});"></div>
+        <#-- WARN/FIXME: style escaping may be incomplete! -->
+        <div class="${escapePart(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapePart(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'style-html')});"></div>
       </#if>
       <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
       <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapePart(icon, 'html')}"></i></span></#if>
@@ -1207,9 +1208,9 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#if collapsible>
     <li class="<#rt/>
     <#if collapsed>
-    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${contentId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
+    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapePart(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if expandToolTip?has_content> title="${escapePart(expandToolTip, 'js-html')}"</#if>
     <#else>
-    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${contentId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
+    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapePart(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if collapseToolTip?has_content> title="${escapePart(collapseToolTip, 'js-html')}"</#if>
     </#if>
     >&nbsp;</a></li>
     </#if>
@@ -1237,7 +1238,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
         <#lt><#if style?has_content> style="${escapePart(style, 'html')}"<#elseif containerStyle?has_content> style="${escapePart(containerStyle, 'html')}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
-      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
+      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapePart(title, 'html')}</p></#if>
       -->
       <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>

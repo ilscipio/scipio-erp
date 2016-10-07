@@ -464,7 +464,7 @@ The following URI forms are currently interpreted and transformed:
     <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromUriStringRepr(request!, response!, uri)>
     <#if uriDesc.getType() == "ofbizUrl">
       <#-- NOTE: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
-      <#local res><@ofbizUrl fullPath=(uriDesc.getFullPath()!"") secure=(uriDesc.getSecure()!"") encode=(uriDesc.getEncode()!"")>${uriDesc.getBaseUriString()}</@ofbizUrl></#local>
+      <#local res><@ofbizUrl fullPath=(uriDesc.getFullPath()!"") secure=(uriDesc.getSecure()!"") encode=(uriDesc.getEncode()!"")>${rawString(uriDesc.getBaseUriString())}</@ofbizUrl></#local>
       <#return res>
     <#else>
       <#return uri>
@@ -1997,6 +1997,107 @@ Alias for #isRawWrapper, but easier to remember in relation to @objectAsScript.
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)>
 </#function>
 
+
+<#-- 
+*************
+* escapePart
+************
+Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
+Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
+and encode in the requested language.
+
+Essentially this is a wrapper around #rawString and encoders.
+It abstracts the encoder selection. 
+NOTE: At current time (2016-10-05), this uses Freemarker built-ins (subject to change).
+   Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.
+
+This ONLY works to escape individual values of the given language. For example, "url"
+can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.
+To encode a full URL, you must use #escapeFullUrl. 
+
+For Javascript and JSON ("js", "json"), this can ONLY encode strings between {{{""}}} or {{{''}}}.
+There is no #escapeFull implementation for these because safely escaping full javascript code is impossible (see OWASP).
+
+For HTML: You should use this on HTML attributes. For full HTML texts, in theory you should use #escapeFull, but currently 
+#escapePart works generally and is better defined.
+NOTE: In practice #escapePart will work on full HTML bodies/texts anyway, and at current time (2016-10-05)
+    many macros are using this indiscriminately.
+
+WARN: CSS/STYLE escaping may not be fully implemented at this time!
+
+For Javascript strings placed within HTML attributes (onchange, etc.), typically "js-html" is needed; however 
+when invoking macros, most macros will already escape the "html" part and the templates only need
+to escape for "js".
+
+NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+
+  * Parameters *
+    str                     = The string to escape
+    lang                    = (js|jsdq|json|html|url|xml|style|js-html|html-js|style-html|html-style|raw) The target language
+                              These are similar to the Freemarker built-in counterparts, but may
+                              not produce the exact same results.
+                              {{{jsdq}}}: special case of js where it is assumed the value
+                                will be contained in double quotes, such that single quotes
+                                don't need to be escaped.
+                              WARN: {{{style}}} is not properly implemented!
+                              FIXME: escaping for {{{style}}}
+    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
+                              If true, escaping is always applied unconditionally.
+                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                              mainly to mitigate screen auto-escaping and early escaping.
+                    
+  * Related*
+    #escapeFull
+-->
+<#function escapePart str lang strict=false>
+  <#if isRawScript(str)>
+    <#return str?string>
+  </#if>
+  <#local str = rawString(str)><#-- performs coercion to string if needed -->
+  <#switch lang?lower_case>
+    <#case "json">
+      <#return str?json_string>
+      <#break>
+    <#case "js">
+      <#return str?js_string>
+      <#break>
+    <#case "jsdq">
+      <#return str?js_string?replace("\\'", "\'")>
+      <#break>
+    <#case "html">
+      <#return str?html>
+      <#break>
+    <#case "js-html">
+      <#return str?js_string?html>
+      <#break>
+    <#case "html-js">
+      <#return str?html?js_string>
+      <#break>
+    <#case "xml">
+      <#return str?xml>
+      <#break>
+    <#case "url">
+      <#return str?url>
+      <#break>
+    <#case "style">
+      <#-- TODO: FIXME: IMPLEMENT -->
+      <#return str>
+      <#break>
+    <#case "style-html">
+      <#-- TODO: FIXME: IMPLEMENT -->
+      <#return str?html>
+      <#break>
+    <#case "html-style">
+      <#-- TODO: FIXME: IMPLEMENT -->
+      <#return str?html>
+      <#break>
+    <#case "raw">
+    <#default>
+      <#return str>
+      <#break>
+  </#switch>
+</#function>
+
 <#-- 
 *************
 * escapeFull
@@ -2005,12 +2106,16 @@ Encodes/escapes a COMPLETE text string for a given language, recognizing and spa
 Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
 and encode in the requested language.
 
+WARN: Not currently fully/properly implemented! In most cases should currently use #escapePart and #escapeFullUrl.
+
 This can be used on full HTML snippets, etc.
 
 This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
 It abstracts the encoder selection. 
 
 Currently, it uses Ofbiz's encoder (subject to change).
+
+WARN: implementation subject to change. Currently produces different (but all safe) results compared to #escapePart for HTML.
 
 NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
 
@@ -2110,90 +2215,6 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
       <#break>
     <#case "xml">
       <#return str?xml>
-      <#break>
-    <#case "style">
-      <#-- TODO: FIXME: IMPLEMENT -->
-      <#return str>
-      <#break>
-    <#case "raw">
-    <#default>
-      <#return str>
-      <#break>
-  </#switch>
-</#function>
-
-<#-- 
-*************
-* escapePart
-************
-Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
-Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
-and encode in the requested language.
-
-This ONLY works to escape individual values of the given language. For example, "url"
-can only encode individual parameters in a URL, not the full URL; it will encoding delimiters. 
-To encode a full URL, you must use #escapeFullUrl. You can use this on HTML attributes, but for full HTML texts,
-you should use #escapeFull.
-
-Essentially this is a wrapping around #rawString and the encoders.
-It abstracts the encoder selection. 
-
-Currently, it uses Freemarker built-ins (subject to change).
-
-Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.
-
-NOTE: There are a few rare stock Ofbiz templates where this should not be used, on account of the
-    #rawString call, where there is a complex mix of javascript and html.
-
-NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
-
-  * Parameters *
-    str                     = The string to escape
-    lang                    = (js|jsdq|json|html|url|xml|style|js-html|html-js|raw) The target language
-                              These are similar to the Freemarker built-in counterparts, but may
-                              not produce the exact same results.
-                              {{{jsdq}}}: special case of js where it is assumed the value
-                                will be contained in double quotes, such that single quotes
-                                don't need to be escaped.
-                              WARN: {{{style}}} is not properly implemented!
-                              FIXME: escaping for {{{style}}}
-    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
-                              If true, escaping is always applied unconditionally.
-                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
-                              mainly to mitigate screen auto-escaping and early escaping.
-                    
-  * Related*
-    #escapeFull
--->
-<#function escapePart str lang strict=false>
-  <#if isRawScript(str)>
-    <#return str?string>
-  </#if>
-  <#local str = rawString(str)>
-  <#switch lang?lower_case>
-    <#case "json">
-      <#return str?json_string>
-      <#break>
-    <#case "js">
-      <#return str?js_string>
-      <#break>
-    <#case "jsdq">
-      <#return str?js_string?replace("\\'", "\'")>
-      <#break>
-    <#case "html">
-      <#return str?html>
-      <#break>
-    <#case "js-html">
-      <#return str?js_string?html>
-      <#break>
-    <#case "html-js">
-      <#return str?html?js_string>
-      <#break>
-    <#case "xml">
-      <#return str?xml>
-      <#break>
-    <#case "url">
-      <#return str?url>
       <#break>
     <#case "style">
       <#-- TODO: FIXME: IMPLEMENT -->
@@ -3819,9 +3840,9 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
     <table>
     <#list mapKeys(var) as key>
       <tr>
-        <td style="width:200px; vertical-align:top">${key}</td>
+        <td style="width:200px; vertical-align:top">${escapePart(key, 'html')}</td>
         <td>
-          <@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=2/>
+          <@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=2/>
         </td>
       </tr>
     </#list>
@@ -3836,7 +3857,7 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
       <#-- WARN: ?is_ tests may not work as expected on widget context variables (BeanModel)
           see @objectAsScript -->
       <#if isObjectType("string", var)>
-        ${var?string}
+        ${escapePart(var, 'html')}
       <#elseif var?is_boolean>
         ${var?c}
       <#elseif var?is_date>
@@ -3856,13 +3877,13 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
           <#-- takes too much space 
           <table>
           <#list mapKeys(var)?sort as key>
-            <tr><td>${key}</td><td><@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
+            <tr><td>${escapePart(key, 'html')}</td><td><@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
           </#list>
           </table>-->
           <@objectAsScript lang="json" escape=false object=var maxDepth=maxDepth currDepth=currDepth />
         </#if>
       <#elseif var?is_string>
-        ${var?string}
+        ${escapePart(var, 'html')}
       </#if>
     <#recover>
       <span style="color:red"><strong>${(.error)!"(generic)"}</strong></span>

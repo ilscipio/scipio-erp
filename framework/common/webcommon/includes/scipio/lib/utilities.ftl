@@ -2009,7 +2009,8 @@ and encode in the requested language.
 Essentially this is a wrapper around #rawString and encoders.
 It abstracts the encoder selection. 
 NOTE: At current time (2016-10-05), this uses Freemarker built-ins (subject to change).
-   Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.
+    Although freemarker built-ins can still be used, use of this function is preferred to centralize
+    the escaping logic and automatically prevent some double-escaping.
 
 This ONLY works to escape individual values of the given language. For example, "url"
 can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.

@@ -18,16 +18,16 @@ under the License.
 -->
 
 <#if requestParameters?? && genericLinkName?? && genericLinkTarget?? && genericLinkText??>
-<form name="${genericLinkName}" <#if genericLinkWindow??>target="${genericLinkWindow}"</#if> action="<@ofbizUrl>${genericLinkTarget}</@ofbizUrl>" method="post">
+<form name="${escapePart(genericLinkName, 'html')}"<#if genericLinkWindow??> target="${escapePart(genericLinkWindow, 'html')}"</#if> action="${escapePart(makeOfbizUrl(genericLinkTarget), 'html')}" method="post">
 <#if (!excludeParameters?? || excludeParameters != "N") && requestParameters??>
 <#assign requestParameterKeys = requestParameters.keySet().iterator()>
 <#list requestParameterKeys as requestParameterKey>
-<#assign requestParameterValue = requestParameters.get(requestParameterKey)>
-<#if requestParameterValue?? && requestParameterValue?has_content>
-<input type="hidden" name="${requestParameterKey}" value="${requestParameterValue}"/>
+<#assign requestParameterValue = requestParameters.get(requestParameterKey)!>
+<#if requestParameterValue?has_content>
+<input type="hidden" name="${escapePart(requestParameterKey, 'html')}" value="${escapePart(requestParameterValue, 'html')}"/>
 </#if>
 </#list>
 </#if>
-<a href="javascript:document.forms['${genericLinkName}'].submit();" <#if genericLinkStyle??>class="${genericLinkStyle}"</#if>>${genericLinkText}</a>
+<a href="javascript:document['${escapePart(genericLinkName, 'js-html')}'].submit();"<#if genericLinkStyle??> class="${escapePart(genericLinkStyle, 'html')}"</#if>>${escapePart(genericLinkText, 'html')}</a>
 </form>
 </#if>

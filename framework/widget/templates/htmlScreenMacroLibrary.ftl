@@ -69,7 +69,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <@container close=true open=false />
 </#macro>
 
-<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...><#if editRequest?has_content && enableEditValue == "true"><div class=${escapePart(editContainerStyle, 'html')}></#if></#macro>
+<#macro renderContentBegin editRequest enableEditValue editContainerStyle extraArgs...><#if editRequest?has_content && enableEditValue == "true"><div class="${escapePart(editContainerStyle, 'html')}"></#if></#macro>
 
 <#macro renderContentBody extraArgs...></#macro>
 
@@ -113,7 +113,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
             <#if name?has_content>name="${escapePart(name, 'html')}"</#if> 
             <#if targetWindow?has_content>target="${escapePart(targetWindow, 'html')}"</#if> 
             <#-- FIXME: dangerous lookup -->
-            href="<#if "hidden-form"==linkType>javascript:document.${escapePart(uniqueItemName, 'js-html')}.submit()<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"><#rt/>
+            href="<#if "hidden-form"==linkType>javascript:document['${escapePart(uniqueItemName, 'js-html')}'].submit()<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"><#rt/>
             <#if imgStr?has_content>${imgStr}</#if><#if text?has_content>${escapePart(text, 'html')}</#if>
         </a>
     <#else>
@@ -190,7 +190,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#global portalPageGridUsed = 0>
   <#--
   <#if confMode == "true">
-    <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.addColumn_${escapePart(portalPageId, 'js-html')}.submit()" title="${escapePart(addColumnHint, 'html')}">${escapePart(addColumnLabel, 'html')}</a> <b>PortalPageId: ${escapePart(portalPageId, 'html')}</b>
+    <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document['addColumn_${escapePart(portalPageId, 'js-html')}'].submit()" title="${escapePart(addColumnHint, 'html')}">${escapePart(addColumnLabel, 'html')}</a> <b>PortalPageId: ${escapePart(portalPageId, 'html')}</b>
     <form method="post" action="addPortalPageColumn" name="addColumn_${escapePart(portalPageId, 'html')}">
       <input name="portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
     </form>
@@ -277,7 +277,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     </#if>
     
     <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
-    <#local portalPageClasses = "${styles.grid_large!}${columnSize}${endClassStr}">
+    <#local portalPageClasses = "${styles.grid_large!}${columnSize}${rawString(endClassStr)}">
     <@cell open=true close=false class=portalPageClasses />
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
@@ -286,19 +286,19 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
             <form method="post" action="deletePortalPageColumn" name="delColumn_${escapePart(columnKey, 'html')}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:document.delColumn_${escapePart(columnKey, 'js-html')}.submit()" title="${escapePart(delColumnHint, 'html')}">${escapePart(delColumnLabel, 'html')}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:document['delColumn_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(delColumnHint, 'html')}">${escapePart(delColumnLabel, 'html')}</a>
           </li>
           <li>
             <form method="post" action="addPortlet" name="addPortlet_${escapePart(columnKey, 'html')}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.addPortlet_${escapePart(columnKey, 'js-html')}.submit()" title="${escapePart(addPortletHint, 'html')}">${escapePart(addPortletLabel, 'html')}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document['addPortlet_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(addPortletHint, 'html')}">${escapePart(addPortletLabel, 'html')}</a>
           </li>
           <li>
             <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${escapePart(columnKey, 'html')}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document.setColumnSize_${escapePart(columnKey, 'js-html')}.submit()" title="${escapePart(setColumnSizeHint, 'html')}">${escapePart(colWidthLabel, 'html')}: ${width}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document['setColumnSize_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(setColumnSizeHint, 'html')}">${escapePart(colWidthLabel, 'html')}: ${width}</a>
           </li>
         </ul>
       </div>
@@ -324,14 +324,14 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
               <form method="post" action="deletePortalPagePortlet" name="delPortlet_${escapePart(portletKey, 'html')}">
                 ${portletKeyFields}
               </form>
-              <a href="javascript:document.delPortlet_${escapePart(portletKey, 'js-html')}.submit()" title="${escapePart(delPortletHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
+              <a href="javascript:document['delPortlet_${escapePart(portletKey, 'js-html')}'].submit()" title="${escapePart(delPortletHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
             </li>
             <#if editAttribute == "true">
               <li class="edit">
                 <form method="post" action="editPortalPortletAttributes" name="editPortlet_${escapePart(portletKey, 'html')}">
                   ${portletKeyFields}
                 </form>
-                <a href="javascript:document.editPortlet_${escapePart(portletKey, 'js-html')}.submit()" title="${escapePart(editAttributeHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
+                <a href="javascript:document['editPortlet_${escapePart(portletKey, 'js-html')}'].submit()" title="${escapePart(editAttributeHint, 'html')}">&nbsp;&nbsp;&nbsp;</a>
               </li>
             </#if>
             <#if prevColumnSeqId?has_content>
@@ -343,7 +343,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
                   <input name="destinationColumn" value="${escapePart(prevColumnSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPBOTTOM" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletLeft_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document['movePortletLeft_${escapePart(portletKey, 'js-html')}'].submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
             <#if nextColumnSeqId?has_content>
               <li class="move-right">
@@ -354,7 +354,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
                   <input name="destinationColumn" value="${escapePart(nextColumnSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPBOTTOM" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletRight_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document['movePortletRight_${escapePart(portletKey, 'js-html')}'].submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
             <#if prevPortletId?has_content>
               <li class="move-up">
@@ -367,7 +367,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
                   <input name="d_portletSeqId" value="${escapePart(prevPortletSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPBEFORE" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletUp_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document['movePortletUp_${escapePart(portletKey, 'js-html')}'].submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
             <#if nextPortletId?has_content>
               <li class="move-down">
@@ -380,7 +380,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
                   <input name="d_portletSeqId" value="${escapePart(nextPortletSeqId, 'html')}" type="hidden"/>
                   <input name="mode" value="DRAGDROPAFTER" type="hidden"/>
                 </form>
-                <a href="javascript:document.movePortletDown_${escapePart(portletKey, 'js-html')}.submit()">&nbsp;&nbsp;&nbsp;</a></li>
+                <a href="javascript:document['movePortletDown_${escapePart(portletKey, 'js-html')}'].submit()">&nbsp;&nbsp;&nbsp;</a></li>
             </#if>
           </ul>
           <br class="clear"/>

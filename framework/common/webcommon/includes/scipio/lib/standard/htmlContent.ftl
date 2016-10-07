@@ -1430,7 +1430,8 @@ Creates a slider wrapper.
     controls                = ((boolean), default: true) Left / Right navigation
     indicator               = ((boolean), default: true) Bullet indicators
     jsOptions               = (string) Additional js argument, included on js initialization
-                              WARN: As a string, this is currently not escaped by the macro.
+                              WARN: As a string, because this contains whole javascript code, this is not currently js-escaped by the macro.
+                                  Caller is responsible for escaping this param!
     
   * Related *
     @slide
@@ -1488,7 +1489,7 @@ Creates a slider wrapper.
                 <#t>navigation_arrows:${controls?string("true","false")}; bullets:${indicator?string("true","false")};slide_number:false;
             </#local>
             <#local class = addClassArg(class, styles.slider_container!)>
-            <div<@compiledClassAttribStr class=class /> data-orbit id="${escapePart(id, 'html')}"<#if dataOptions?has_content> data-options="${dataOptions}"</#if>>
+            <div<@compiledClassAttribStr class=class /> data-orbit id="${escapePart(id, 'html')}"<#if dataOptions?has_content> data-options="${escapePart(dataOptions, 'html')}"</#if>>
               <#nested/>
             </div>
     </#switch>

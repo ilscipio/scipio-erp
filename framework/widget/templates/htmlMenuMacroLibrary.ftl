@@ -326,7 +326,8 @@ Only those not marked DEPRECATED should still be used.
   
   <#if isLink>
     <#if linkType == "hidden-form">
-        <#local href>javascript:document.forms['${escapePart(uniqueItemName, 'js')}'].submit()</#local>
+        <#-- SCIPIO: NOTE: only JS escaped here; macro markup does the html part -->
+        <#local href>javascript:document['${escapePart(uniqueItemName, 'js')}'].submit()</#local>
     <#else>
         <#local href = linkUrl>
     </#if>

@@ -89,9 +89,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local title = tooltip>
     <#local attribs = attribs + styles.field_input_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
-  <#if mask?has_content && mask>
+  <#if mask?has_content && !(mask?is_boolean)>
     <@script>
-      jQuery(function($){jQuery("#${escapePart(id, 'js')}").mask("${mask}");});<#-- FIXME: something wrong here -->
+      jQuery(function($){jQuery("#${escapePart(id, 'js')}").mask("${escapePart(mask, 'js')}");});<#-- FIXME: something wrong here -->
     </@script>
   </#if>
   <input type="text" name="${escapePart(name, 'html')}"<#t/>
@@ -167,18 +167,18 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#if visualEditorEnable?has_content>
     <@script src="/images/jquery/plugins/elrte-1.3/js/elrte.min.js" /><#rt/>
     <#if language?has_content && language != "en">
-      <@script src="/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language}.js" /><#rt/>
+      <@script src="/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${escapePart(language, 'html')}.js" /><#rt/>
     </#if>
     <link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
     <@script>
       var opts = {
          cssClass : 'el-rte',
-         lang     : '${language}',
-         toolbar  : '${buttons}',
+         lang     : '${escapePart(language, 'js')}',
+         toolbar  : '${escapePart(buttons, 'js')}',
          doctype  : '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">', //'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">',
          cssfiles : ['/images/jquery/plugins/elrte-1.3/css/elrte-inner.css']
       }
-      jQuery('#${id}').elrte(opts);
+      jQuery('#${escapePart(id, 'js')}').elrte(opts);
     </@script>
   </#if>
   -->
@@ -274,14 +274,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#-- FIXME: as above
           <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
           -->
-          <#local dateFormatString = "${uiLabelMap.CommonFormat}: ${dateDisplayFormat}">
+          <#local dateFormatString = rawString(uiLabelMap.CommonFormat) + ": " + rawString(dateDisplayFormat)>
           <#if title == "FORMAT">
             <#local title = dateFormatString>
           <#elseif title == "LABEL">
             <#local title = origLabel>
           <#elseif title == "LABEL+FORMAT">
             <#if origLabel?has_content>
-              <#local title = origLabel + " (" + dateFormatString + ")">
+              <#local title = rawString(origLabel) + " (" + rawString(dateFormatString) + ")">
             <#else>
               <#local title = dateFormatString>
             </#if>
@@ -302,7 +302,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if !manualInput> readonly="readonly"</#if><#t/>
         <#if displayInputId?has_content> id="${escapePart(displayInputId, 'html')}"</#if><#t/>
         <#--don't set this stuff here anymore, because fdatepicker has bugs with this and also it's better to factor out the fdatepicker-specific stuff into the script macro:
-            data-date="" data-date-format="${dateFormatPicker}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
+            data-date="" data-date-format="${escapePart(dateFormatPicker, 'html')}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${escapePart(inputName, 'html')}"</#if><#if inputId?has_content> id="${escapePart(inputId, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if> />
       <#-- TODO?: we don't handle this case yet - only show date (renderer already passed dateType="date" for this). but we must submit zero values for the event to pass. -->
       <#if timeDropdown == "time-dropdown">
@@ -390,7 +390,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             This triggers onFDateChange which may transform the date and put it back in id_i18n.
             This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
         $("#${escapePart(displayInputId, 'js')}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
-        <#-- Cannot use name, must use ID, this is invalid (will break multiple forms per page): $("input[name='${displayInputName}']")-->
+        <#-- Cannot use name, must use ID, this is invalid (will break multiple forms per page): $("input[name='${escapePart(displayInputName, 'js')}']")-->
 
       </#if>
     });
@@ -581,7 +581,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if id?has_content> id="${escapePart(id, 'html')}"</#if><#t/>
     <#if multiple> multiple="multiple"</#if><#t/>
     <#-- FIXME: this onchange may conflict with the other events -->
-    <#if (otherFieldSize > 0)> onchange="process_choice(this, document.forms["${escapePart(formName, 'html-js')}"]["${escapePart(otherFieldName, 'html-js')}"])"</#if><#t/>
+    <#if (otherFieldSize > 0)> onchange="process_choice(this, document['${escapePart(formName, 'js-html')}']['${escapePart(otherFieldName, 'js-html')}'])"</#if><#t/>
     <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
     <#--<#if size?has_content> size="${size}"</#if>-->
     <#if title?has_content> title="${escapePart(title, 'html')}"</#if><#t/>
@@ -615,12 +615,12 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <noscript><input type="text" name="${escapePart(otherFieldName, 'html')}" /></noscript>
     <@script>
       disa = ' disabled';
-      if(other_choice(document.forms["${escapePart(formName, 'js')}"]["${escapePart(fieldName, 'js')}"])) {
+      if(other_choice(document['${escapePart(formName, 'js')}']['${escapePart(fieldName, 'js')}'])) {
         disa = '';
       }
-      document.write('<input type="text" name="${escapePart(otherFieldName, 'html-js')}" value="${escapePart(otherValue, 'html-js')}" size="${escapePart(otherFieldSize, 'html-js')}"'+disa+' onfocus="check_choice(document.forms["${escapePart(formName, 'html-js')}"]["${escapePart(fieldName, 'html-js')}"])" />');
+      document.write('<input type="text" name="${escapePart(otherFieldName, 'html-js')}" value="${escapePart(otherValue, 'html-js')}" size="${escapePart(otherFieldSize, 'html-js')}"'+disa+' onfocus="check_choice(document['${escapePart(formName, 'html-js')}']['${escapePart(fieldName, 'html-js')}'])" />');
       if(disa && document.styleSheets) {
-        document.forms["${escapePart(formName, 'js')}"]["${escapePart(otherFieldName, 'js')}"].styles.visibility  = 'hidden';
+        document['${escapePart(formName, 'js')}']['${escapePart(otherFieldName, 'js')}'].styles.visibility  = 'hidden';
       }
     </@script>
   </#if>
@@ -739,19 +739,19 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if title?has_content> title="${escapePart(title, 'html')}"</#if>/></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
       <#-- FIXME: dangerous form lookups -->
-      <a href="javascript:call_fieldlookup3(document.forms["${escapePart(formName, 'js-html')}"]["${escapePart(name, 'js-html')}"], <#rt/>
-          document.forms["${escapePart(formName, 'js-html')}"]["${escapePart(descriptionFieldName, 'js-html')}"],'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#t/>
+      <a href="javascript:call_fieldlookup3(document['${escapePart(formName, 'js-html')}']['${escapePart(name, 'js-html')}'], <#rt/>
+          document['${escapePart(formName, 'js-html')}']['${escapePart(descriptionFieldName, 'js-html')}'], '${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#t/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.forms["${escapePart(formName, 'js-html')}"]["${escapePart(item, 'js-html')}"].value <#t/>
+          ,document['${escapePart(formName, 'js-html')}']['${escapePart(item, 'js-html')}'].value <#t/>
         </#list>
       </#if>
       );"></a><#rt/>
     <#elseif presentation?has_content && presentation == "window">
-      <a href="javascript:call_fieldlookup2(document.forms["${escapePart(formName, 'js-html')}"]["${escapePart(name, 'js-html')}"],'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#rt/>
+      <a href="javascript:call_fieldlookup2(document['${escapePart(formName, 'js-html')}']['${escapePart(name, 'js-html')}'], '${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#rt/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.forms["${escapePart(formName, 'js-html')}"]["${escapePart(item, 'js-html')}"].value<#t/>
+          ,document['${escapePart(formName, 'js-html')}']['${escapePart(item, 'js-html')}'].value<#t/>
         </#list>
       </#if>
       );"></a><#rt/>
@@ -773,8 +773,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           var options = {
             requestUrl : "${escapePart(fieldFormName, 'js')}",
             inputFieldId : "${escapePart(id, 'js')}",
-            dialogTarget : document.forms["${escapePart(formName, 'js')}"]["${escapePart(name, 'js')}"],
-            dialogOptionalTarget : <#if descriptionFieldName?has_content>document.forms["${escapePart(formName, 'js')}"]["${escapePart(descriptionFieldName, 'js')}"]<#else>null</#if>,
+            dialogTarget : document['${escapePart(formName, 'js')}']['${escapePart(name, 'js')}'],
+            dialogOptionalTarget : <#if descriptionFieldName?has_content>document['${escapePart(formName, 'js')}']['${escapePart(descriptionFieldName, 'js')}']<#else>null</#if>,
             formName : "${escapePart(formName, 'js')}",
             width : "${width}",
             height : "${height}",
@@ -791,10 +791,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
                   [<#t/>
                   <#list targetParameterIter as item>
                     <#if isFirst>
-                      document.forms["${escapePart(formName, 'js')}"]["${escapePart(item, 'js')}"]<#t/>
+                      document['${escapePart(formName, 'js')}']['${escapePart(item, 'js')}']<#t/>
                       <#local isFirst = false>
                     <#else>
-                      ,document.forms["${escapePart(formName, 'js')}"]["${escapePart(item, 'js')}"}"]<#t/>
+                      ,document['${escapePart(formName, 'js')}']['${escapePart(item, 'js')}']<#t/>
                     </#if>
                   </#list>
                   ]<#t/>
@@ -810,9 +810,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         style="background:none;margin-left:5px;margin-right:15px;" 
         class="clearField" 
         href="javascript:void(0);" 
-        onclick="javascript:document.forms["${escapePart(formName, 'js-html')}"]["${escapePart(name, 'js-html')}"].value='';
+        onclick="javascript:document['${escapePart(formName, 'js-html')}']['${escapePart(name, 'js-html')}'].value='';
           jQuery('#' + jQuery('#${escapePart(id, 'js-html')}_clear').next().attr('id').replace('_button','') + '_${escapePart(id, 'js-html')}_lookupDescription').html('');
-          <#if descriptionFieldName?has_content>document.forms["${escapePart(formName, 'js-html')}"]["${escapePart(descriptionFieldName, 'js-html')}"].value='';</#if>">
+          <#if descriptionFieldName?has_content>document['${escapePart(formName, 'js-html')}']['${escapePart(descriptionFieldName, 'js-html')}'].value='';</#if>">
           <#if clearText?has_content>${escapePart(clearText, 'html')}<#else>${escapePart(uiLabelMap.CommonClear, 'html')}</#if>
       </a>
     </#if>
@@ -1018,7 +1018,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             and templates rely on the traditional HTML behavior.
         
             UPDATE: 2016-08-03: Re-removed this because it is not generic enough solution. see auto value functions.
-        <input type="hidden" name="${name?html}_submitted" value="Y"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
+        <input type="hidden" name="${escapePart(name, 'html')}_submitted" value="Y"<#if currentId?has_content> id="${escapePart(currentId, 'html')}_hidden"</#if> />
         -->
       </#if>
       <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
@@ -1319,13 +1319,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#local text = getTextLabelFromExpr(styles.field_submit_default_text!"")>
         </#if>
         <a<@fieldClassAttribStr class=class alert=alert /> <#rt>
-          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:document.forms['${escapePart(formName, 'js-html')}'].submit()<#else>javascript:void(0)</#if>"<#t/>
+          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:document['${escapePart(formName, 'js-html')}'].submit()<#else>javascript:void(0)</#if>"<#t/>
           <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}');"</#if></#if><#t/>
           <#if id?has_content> id="${escapePart(id, 'html')}"</#if><#t/>
           <#if style?has_content> style="${escapePart(style, 'html')}"</#if><#t/>
           <#lt>><#if text?has_content>${escapePart(text, 'html')}</#if></a>
       <#elseif buttonType == "image">
-        <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${escapeFullUrl(imgSrc, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
+        <input type="<#if inputType?has_content>${escapePart(inputType, 'html')}<#else>image</#if>" src="${escapeFullUrl(imgSrc, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
         <#if description?has_content> alt="${escapePart(description, 'html')}"</#if><#t/>
         <#if disabled> disabled="disabled"<#else><#t/>
           <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}');"</#if><#t/>

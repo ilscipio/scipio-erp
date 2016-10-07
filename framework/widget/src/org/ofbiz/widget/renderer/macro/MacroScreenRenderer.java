@@ -67,6 +67,9 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlScreenRenderer.ScreenletMenuRenderer;
 import org.xml.sax.SAXException;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+
 import freemarker.core.Environment;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -236,6 +239,25 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         executeMacro(writer, "renderHorizontalSeparator", parameters);
     }
 
+    /**
+     * SCIPIO: uniqueItemName in links is NOT globally unique in stock ofbiz, but this number will make it so.
+     */
+    public static int getNextUniqueItemNameIdNum(Map<String, Object> context) {
+        // SCIPIO: the item name above is NOT globally unique, and we need to make it so to prevent doubled hidden form names
+        try {
+            Integer renderLinkUniqueItemIdNum = (Integer) LangFtlUtil.unwrapOrNull(ContextFtlUtil.getRequestVar("renderLinkUniqueItemIdNum", (HttpServletRequest) context.get("request"), context));
+            if (renderLinkUniqueItemIdNum == null) {
+                renderLinkUniqueItemIdNum = 0;
+            }
+            renderLinkUniqueItemIdNum++;
+            ContextFtlUtil.setRequestVar("renderLinkUniqueItemIdNum", renderLinkUniqueItemIdNum, (HttpServletRequest) context.get("request"), context);
+            return renderLinkUniqueItemIdNum;
+        } catch (Exception e) {
+            Debug.logError(e, module);
+            return 0;
+        }
+    }
+    
     public void renderLink(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenLink link) throws IOException {
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
@@ -244,7 +266,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String target = link.getTarget(context);
 
         String uniqueItemName = link.getModelScreen().getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "screenUniqueItemIndex", BigDecimal.ONE);
-
+        // SCIPIO: make uniqueItemName actually globally unique; is NOT unique in stock ofbiz!
+        uniqueItemName += "_" + MacroScreenRenderer.getNextUniqueItemNameIdNum(context);
+        
         String linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
         String linkUrl = "";
         String actionUrl = "";

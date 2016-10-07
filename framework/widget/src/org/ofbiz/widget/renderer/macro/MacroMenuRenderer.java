@@ -54,9 +54,13 @@ import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+
 import freemarker.core.Environment;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
 
 public class MacroMenuRenderer implements MenuStringRenderer {
 
@@ -324,6 +328,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if(menuItem.getModelMenu().getExtraIndex(context) != null){
             uniqueItemName += "_" + menuItem.getModelMenu().getExtraIndex(context);
         }
+        // SCIPIO: make uniqueItemName actually globally unique; is NOT unique in stock ofbiz!
+        uniqueItemName += "_" + MacroScreenRenderer.getNextUniqueItemNameIdNum(context);
         parameters.put("uniqueItemName", uniqueItemName);
         String linkType = "";
         if (UtilValidate.isNotEmpty(target)) {

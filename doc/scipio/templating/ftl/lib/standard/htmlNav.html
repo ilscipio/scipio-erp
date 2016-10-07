@@ -1788,6 +1788,11 @@ macro calls or by passing item lists of maps.        </p>
 For <code>settings</code> and <code>plugins</code> map arguments, child map elements which should not
 be interpreted as string but rather as script (such as javascript functions) can be wrapped
 using <a href="../utilities.html#entry-wrapRawScript">#wrapRawScript</a>.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The parameters which contain full javascript code (not just string values/within-literals)
+are not and cannot be escaped by the macro; caller is responsible for escaping them!
+Use <a href="../utilities.html#entry-escapePart">#escapePart</a> (preferred) or <code>?js_string</code>.          </div>
                       </div>
                   </div>
             

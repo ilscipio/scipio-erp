@@ -5063,6 +5063,125 @@ and will not detect any such wrappers.          </div>
           
           
           <hr />
+          <a name="entry-escapePart"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">escapePart</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>escapePart</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
+Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
+and encode in the requested language.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Essentially this is a wrapper around #rawString and encoders.
+It abstracts the encoder selection.
+        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+At current time (2016-10-05), this uses Freemarker built-ins (subject to change).
+Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.          </div>
+        <p>
+This ONLY works to escape individual values of the given language. For example, &quot;url&quot;
+can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.
+To encode a full URL, you must use <a href="#entry-escapeFullUrl">#escapeFullUrl</a>.        </p>
+        <p>
+For Javascript and JSON (&quot;js&quot;, &quot;json&quot;), this can ONLY encode strings between <code>&quot;&quot;</code> or <code>&#39;&#39;</code>.
+There is no <a href="#entry-escapeFull">#escapeFull</a> implementation for these because safely escaping full javascript code is impossible (see OWASP).        </p>
+        <p>
+For        </p>
+          <span class="lib-text-note">
+            <strong>HTML: </strong>
+You should use this on HTML attributes. For full HTML texts, in theory you should use #escapeFull, but currently          </span>
+        <p>
+<a href="#entry-escapePart">#escapePart</a> works generally and is better defined.
+        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+In practice #escapePart will work on full HTML bodies/texts anyway, and at current time (2016-10-05)
+many macros are using this indiscriminately.          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+CSS/STYLE escaping may not be fully implemented at this time!          </div>
+        <p>
+For Javascript strings placed within HTML attributes (onchange, etc.), typically &quot;js-html&quot; is needed; however
+when invoking macros, most macros will already escape the &quot;html&quot; part and the templates only need
+to escape for &quot;js&quot;.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>str</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">The string to escape</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>lang</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(js|jsdq|json|html|url|xml|style|js-html|html-js|style-html|html-style|raw)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">The target language</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+These are similar to the Freemarker built-in counterparts, but may
+not produce the exact same results.
+<code>jsdq</code>: special case of js where it is assumed the value
+        </span>
+<pre>will be contained in double quotes, such that single quotes
+don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
+            <strong>WARN: </strong>
+<code>style</code> is not properly implemented!          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>strict</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether should always escape unconditionally/strictly, or allow heuristics</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If true, escaping is always applied unconditionally.
+If false, the function <em>may</em> attempt heuristics to prevent double-escaping issues (not always desirable),
+mainly to mitigate screen auto-escaping and early escaping.
+
+        </span>
+        <h4>Related</h4>
+<pre>#escapeFull</pre></span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-escapeFull"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -5079,6 +5198,9 @@ and will not detect any such wrappers.          </div>
 Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
 and encode in the requested language.</p>
                       <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Not currently fully/properly implemented! In most cases should currently use <a href="#entry-escapePart">#escapePart</a> and <a href="#entry-escapeFullUrl">#escapeFullUrl</a>.          </div>
         <p>
 This can be used on full HTML snippets, etc.        </p>
         <p>
@@ -5086,6 +5208,9 @@ This is a convenience wrapper around #rawString and the Ofbiz and Freemarker enc
 It abstracts the encoder selection.        </p>
         <p>
 Currently, it uses Ofbiz&#39;s encoder (subject to change).        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+implementation subject to change. Currently produces different (but all safe) results compared to #escapePart for HTML.          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
@@ -5240,107 +5365,6 @@ If true, escaping is always applied unconditionally.
 If false, the function <em>may</em> attempt heuristics to prevent double-escaping issues (not always desirable),
 mainly to mitigate screen auto-escaping and early escaping.        </span>
 </span>
-                        </td>
-                      </tr>
-              </table>
-                      </div>
-
-                  </div>
-            
-
-            
-          </div>
-          
-          
-          <hr />
-          <a name="entry-escapePart"></a>
-          <div class="lib-entry lib-entry-type-function">
-
-            <h3 class="lib-entry-title">escapePart</h3>
-            
-            <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>escapePart</code></span>
-                  </h4>
-            </div>
-            
-              
-                  <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
-Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
-and encode in the requested language.</p>
-                      <div class="lib-entry-extradesc">
-        <p>
-This ONLY works to escape individual values of the given language. For example, &quot;url&quot;
-can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.
-To encode a full URL, you must use <a href="#entry-escapeFullUrl">#escapeFullUrl</a>. You can use this on HTML attributes, but for full HTML texts,
-you should use <a href="#entry-escapeFull">#escapeFull</a>.        </p>
-        <p>
-Essentially this is a wrapping around #rawString and the encoders.
-It abstracts the encoder selection.        </p>
-        <p>
-Currently, it uses Freemarker built-ins (subject to change).        </p>
-        <p>
-Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.        </p>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-There are a few rare stock Ofbiz templates where this should not be used, on account of the
-#rawString call, where there is a complex mix of javascript and html.          </div>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
-                      </div>
-                  </div>
-            
-              
-                  <div class="lib-entry-section-params">
-                    <h4>Parameters</h4>
-                    
-                      <div class="lib-entry-params-doc">
-              <table class="entry-parameters">
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>str</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">The string to escape</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>lang</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(js|jsdq|json|html|url|xml|style|js-html|html-js|raw)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">The target language</span>
-                            <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
-These are similar to the Freemarker built-in counterparts, but may
-not produce the exact same results.
-<code>jsdq</code>: special case of js where it is assumed the value
-        </span>
-<pre>will be contained in double quotes, such that single quotes
-don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
-            <strong>WARN: </strong>
-<code>style</code> is not properly implemented!          </div>
-</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>strict</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">Whether should always escape unconditionally/strictly, or allow heuristics</span>
-                            <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
-If true, escaping is always applied unconditionally.
-If false, the function <em>may</em> attempt heuristics to prevent double-escaping issues (not always desirable),
-mainly to mitigate screen auto-escaping and early escaping.
-
-        </span>
-        <h4>Related</h4>
-<pre>#escapeFull</pre></span>
                         </td>
                       </tr>
               </table>

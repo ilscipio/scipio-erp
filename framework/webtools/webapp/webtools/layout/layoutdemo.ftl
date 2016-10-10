@@ -785,7 +785,7 @@
         with 
         newlines
       </@field>
-      <@field type="display" label="Display Field 1" formatText=false>
+      <@field type="display" label="Display Field 2" formatText=false>
         This 
         is 
         text 
@@ -793,10 +793,10 @@
         no
         newlines
       </@field>
-      <@field type="display" label="Display Field 1">
+      <@field type="display" label="Display Field 3">
         Text with <b>markup</b>
       </@field>
-      <@field type="display" label="Display Field 1" value="This text <b>should be</b> html-escaped"/>
+      <@field type="display" label="Display Field 4" value="This text <b>should be</b> html-escaped"/>
      
       <@field type="generic" label="Generic 1" tooltip="This is a tooltip text">
         This is <p>random text</p> and 
@@ -807,7 +807,7 @@
             There is also a tooltip on the whole generic field.
         </div>
       </@field>
-      <@field type="generic" label="Generic 1" value="This text <b>should be</b> html-escaped"/>
+      <@field type="generic" label="Generic 2" value="This text <b>should be</b> html-escaped"/>
 
       <@field type="submit" submitType="submit" text="Submit" onClick="alert('submitted!'); return false;" />
     </@fields>

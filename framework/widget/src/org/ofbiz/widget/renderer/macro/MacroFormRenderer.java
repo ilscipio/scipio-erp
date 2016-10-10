@@ -1329,7 +1329,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
                 String requiredStyle = modelFormField.getRequiredFieldStyle();
                 if (UtilValidate.isNotEmpty(requiredStyle)) {
-                    style = requiredStyle;
+                    // SCIPIO: add, don't replace
+                    //style = requiredStyle;
+                    if (UtilValidate.isEmpty(style))
+                        style = requiredStyle;
+                    else
+                        style = requiredStyle + " " + style;
                 }
             }
             StringWriter sr = new StringWriter();

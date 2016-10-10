@@ -49,7 +49,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_input_widget_defaultArgs = {
   "name":"", "class":"", "style":"", "alert":"", "value":"", "textSize":"", "maxlength":"", "id":"", "events":{}, "disabled":false, "ajaxUrl":"", 
   "ajaxEnabled":false, "mask":false, "clientAutocomplete":"", "placeholder":"", "tooltip":"", "title":"", "collapse":false, "readonly":false, 
-  "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "fieldTitleBlank":false, "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_input_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_input_widget_defaultArgs)>
@@ -77,12 +77,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
   </#if>
   <@field_input_markup_widget name=name class=class style=style alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
-    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip title=title collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_input_markup_widget>
+    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip title=title collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_input_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_input_markup_widget name="" class="" style="" alert="" value="" textSize="" maxlength="" id="" events={} disabled=false ajaxUrl="" ajaxEnabled=false 
-    mask=false clientAutocomplete=true placeholder="" tooltip="" title="" collapse=false readonly=false fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    mask=false clientAutocomplete=true placeholder="" tooltip="" title="" collapse=false readonly=false required=false fieldTitleBlank=false inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_input_tooltip!styles.field_default_tooltip!"")>
@@ -108,6 +110,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if !clientAutocomplete> autocomplete="off"</#if><#t/>
     <#if style?has_content> style="${escapePart(style, 'html')}"</#if><#t/>
     <#if placeholder?has_content> placeholder="${escapePart(placeholder, 'html')}"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   /><#t/>
   <#if ajaxUrl?has_content>
     <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
@@ -121,7 +124,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "name":"", "class":"", "style":"", "alert":"", "cols":"", "rows":"", "id":"", "readonly":"", "value":"", "visualEditorEnable":true, 
   "buttons":"", "language":"", "placeholder":"", "tooltip":"", "title":"", "fieldTitleBlank":false, "collapse":false, 
   "maxlength":"",
-  "inlineLabel":false, "wrap":"", "passArgs":{}
+  "inlineLabel":false, "wrap":"", "required":false, "passArgs":{}
 }>
 <#macro field_textarea_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_textarea_widget_defaultArgs)>
@@ -135,12 +138,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
   </#if>
   <@field_textarea_markup_widget name=name class=class style=style alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
-    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title maxlength=maxlength fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
+    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title maxlength=maxlength fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textarea_markup_widget name="" class="" style="" alert="" cols="" rows="" id="" readonly=false value="" visualEditorEnable=true 
-    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" maxlength="" origArgs={} passArgs={} catchArgs...>
+    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" maxlength="" 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textarea_tooltip!styles.field_default_tooltip!"")>
@@ -159,6 +164,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if wrap?has_content> wrap="${wrap}"</#if><#t/>
     <#if style?has_content> style="${escapePart(style, 'html')}"</#if><#t/>
     <#if placeholder?has_content> placeholder="${escapePart(placeholder, 'html')}"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   ><#t/>
     <#if value?has_content>${escapePart(value, 'html')}<#else><#nested></#if><#t/>
   </textarea><#lt/>
@@ -191,7 +197,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":"", "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
   "collapse":false, "fieldTitleBlank":false, "origLabel":"", "postfix":"", "postfixColumns":"", 
-  "manualInput":"", "inlineLabel":false, "passArgs":{}
+  "manualInput":"", "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_datetime_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datetime_widget_defaultArgs)>
@@ -215,14 +221,15 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
     alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel postfix=postfix 
-    postfixColumns=postfixColumns manualInput=manualInput origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
+    postfixColumns=postfixColumns manualInput=manualInput required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datetime_markup_widget name="" class="" style="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
@@ -301,6 +308,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
         <#if !manualInput> readonly="readonly"</#if><#t/>
         <#if displayInputId?has_content> id="${escapePart(displayInputId, 'html')}"</#if><#t/>
+        <#if required> required="required"</#if><#t/>
         <#--don't set this stuff here anymore, because fdatepicker has bugs with this and also it's better to factor out the fdatepicker-specific stuff into the script macro:
             data-date="" data-date-format="${escapePart(dateFormatPicker, 'html')}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${escapePart(inputName, 'html')}"</#if><#if inputId?has_content> id="${escapePart(inputId, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if> />
@@ -326,11 +334,11 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </div>
   
   <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName 
-    dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
+    dateType=dateType dateDisplayType=dateDisplayType required=required origArgs=origArgs passArgs=passArgs />
 </#macro>
 
 <#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" 
-    dateDisplayType="" dateFormatPicker="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
+    dateDisplayType="" dateFormatPicker="" htmlwrap=true required=false origArgs={} passArgs={} catchArgs...>
   <#if !dateFormatPicker?has_content>
     <#local dateFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
   </#if>
@@ -403,7 +411,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleClass":"", "defaultOptionFrom":"", 
   "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"",
   "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", 
-  "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "passArgs":{}
+  "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "required":false, "passArgs":{}
 }>
 <#macro field_datefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datefind_widget_defaultArgs)>
@@ -448,14 +456,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleClass defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
     opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty 
-    title=title tooltip=tooltip inlineLabel=inlineLabel origLabel=origLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
+    title=title tooltip=tooltip inlineLabel=inlineLabel origLabel=origLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datefind_markup_widget id="" class="" style="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
-    title="" tooltip="" inlineLabel=false origLabel=origLabel origArgs={} passArgs={} catchArgs...>
+    title="" tooltip="" inlineLabel=false origLabel=origLabel required=false origArgs={} passArgs={} catchArgs...>
   <#-- NOTE: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local displayInputId = "">
@@ -478,7 +486,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
       <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
       <input type="text"<#if displayInputId?has_content> id="${escapePart(displayInputId, 'html')}"</#if><#if displayInputName?has_content> name="${escapePart(displayInputName, 'html')}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt/>
-        <#if localizedInputTitle?has_content> title="${escapePart(localizedInputTitle, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#lt/>
+        <#if localizedInputTitle?has_content> title="${escapePart(localizedInputTitle, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>/><#lt/>
       <input type="hidden"<#if inputId?has_content> id="${escapePart(inputId, 'html')}"</#if><#if inputName?has_content> name="${escapePart(inputName, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if>/>
     </div>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
@@ -493,7 +501,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       </select>
     </div>
   </div>
-  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />  
+  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType 
+    required=required origArgs=origArgs passArgs=passArgs />  
 </#macro>
 
 <#-- migrated from @renderDropDownField form widget macro -->
@@ -503,7 +512,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "otherValue":"", "otherFieldSize":"", "dDFCurrent":"", "defaultValue":"", "ajaxOptions":"", "frequency":"", "minChars":"",
   "choices":"", "autoSelect":"", "partialSearch":"", "partialChars":"", "ignoreCase":"", "fullSearch":"", "events":{}, 
   "ajaxEnabled":false, "title":"", "tooltip":"", "description":"", "manualItems":false, "manualItemsOnly":false, "collapse":false, 
-  "fieldTitleBlank":false, "inlineSelected":true, "disabled":false, "asmSelectArgs":{}, "inlineLabel":false, "passArgs":{}
+  "fieldTitleBlank":false, "inlineSelected":true, "disabled":false, "required":false, "asmSelectArgs":{}, "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_select_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_select_widget_defaultArgs)>
@@ -561,7 +570,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent defaultValue=defaultValue ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
-    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel disabled=disabled origArgs=origArgs passArgs=passArgs><#nested></@field_select_markup_widget>
+    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel disabled=disabled required=required origArgs=origArgs passArgs=passArgs><#nested></@field_select_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -569,7 +578,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" events={} ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false inlineSelected=true disabled=false asmSelectArgs={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    collapse=false fieldTitleBlank=false inlineSelected=true disabled=false asmSelectArgs={} inlineLabel=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_select_tooltip!styles.field_default_tooltip!"")>
@@ -587,6 +596,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if title?has_content> title="${escapePart(title, 'html')}"</#if><#t/>
     <#if style?has_content> style="${escapePart(style, 'html')}"</#if><#t/>
     <#if disabled> disabled="disabled"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   ><#lt/>
   <#if !manualItemsOnly>  
     <#if currentFirst && currentValue?has_content && !multiple>
@@ -673,7 +683,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
   "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
-  "inlineLabel":false, "tooltip":"", "passArgs":{}
+  "inlineLabel":false, "tooltip":"", "required":false, "passArgs":{}
 }>
 <#macro field_lookup_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_lookup_widget_defaultArgs)>
@@ -690,7 +700,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
     height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed 
-    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel tooltip=tooltip origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
+    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel tooltip=tooltip required=required origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -698,7 +708,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     maxlength="" id="" events={} readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=false presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
-    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false tooltip="" origArgs={} passArgs={} catchArgs...>
+    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false tooltip="" required=false origArgs={} passArgs={} catchArgs...>
   <#--<#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   </#if>-->
   <#local attribs = {}>
@@ -735,8 +745,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#rt/>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#t/>
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
-        <#if autocomplete?has_content> autocomplete="off"</#if><#rt/>
-        <#if title?has_content> title="${escapePart(title, 'html')}"</#if>/></#if><#t/>
+        <#if autocomplete?has_content> autocomplete="off"</#if><#t/>
+        <#if title?has_content> title="${escapePart(title, 'html')}"</#if><#t/>
+        <#if required> required="required"</#if><#t/>
+        /></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
       <#-- FIXME: dangerous form lookups -->
       <a href="javascript:call_fieldlookup3(document['${escapePart(formName, 'js-html')}']['${escapePart(name, 'js-html')}'], <#rt/>
@@ -829,7 +841,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
   "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
-  "value":"", "altValue":"", "useHidden":"",
+  "value":"", "altValue":"", "useHidden":"", "required":false, 
   "readonly":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
@@ -885,7 +897,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
     labelType=labelType labelPosition=labelPosition readonly=readonly 
-    value=value altValue=altValue origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    value=value altValue=altValue required=required origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
@@ -894,7 +906,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
      NOTE: "value", "altValue" and "useHidden" are only fallbacks/common/defaults; the ones in items maps have priority -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" readonly="" value="" altValue="" useHidden="" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" value="" altValue="" useHidden="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -1027,7 +1039,11 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if currentId?has_content> id="${escapePart(currentId, 'html')}"</#if><#t/>
         <#if itemReadonly> readonly="readonly"</#if><#t/>
         <#if inputChecked> checked="checked"</#if><#t/>
-        <#if name?has_content> name="${escapePart(name, 'html')}<#if itemUseHidden>_visible</#if>"</#if> value="${escapePart(itemValue, 'html')}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#lt/>
+        <#if name?has_content> name="${escapePart(name, 'html')}<#if itemUseHidden>_visible</#if>"</#if><#t/>
+        <#t/> value="${escapePart(itemValue, 'html')}"
+        <@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) /><#t/>
+        <#if required> required="required"</#if><#t/>
+        /><#lt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
       <#-- FIXME: Should really have a better way to do this -->
       <#-- NOTE: Currently, the br must be inside the span, as long as this is not fixed -->
@@ -1063,7 +1079,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
   "items":"", "id":"", "class":"", "style":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
-  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "readonly":"", "passArgs":{}
+  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "required":false, "type":"", "readonly":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_radio_widget_defaultArgs)>
@@ -1089,14 +1105,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <@field_radio_markup_widget items=items id=id class=class style=style alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     events=events tooltip=tooltip title=title multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
     type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition readonly=readonly
-    origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
     FIXME: this markup macro is too overloaded with logic -->
 <#macro field_radio_markup_widget items="" id="" class="" style="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
-    labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -1172,8 +1188,12 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
         <#if inputTitle?has_content> title="${escapePart(inputTitle, 'html')}"</#if><#t/>
         <#if currentId?has_content> id="${escapePart(currentId, 'html')}"</#if><#t/>
-        <#if inputChecked> checked="checked"</#if><#t/>
-        name="${escapePart(name, 'html')}" value="${escapePart(itemValue!"", 'html')}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#rt/>
+        <#if inputChecked> checked="checked"</#if> <#t/>
+        <#t/> name="${escapePart(name, 'html')}"
+        <#t/> value="${escapePart(itemValue!"", 'html')}"
+        <@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) /><#t/>
+        <#if required> required="required"</#if><#t/>
+        /><#t/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">
@@ -1192,19 +1212,22 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#-- migrated from @renderFileField form widget macro -->
 <#assign field_file_widget_defaultArgs = {
   "class":"", "alert":"", "name":"", "value":"", "size":"", "style":"", "maxlength":"", "autocomplete":"", "id":"", "title":"", 
-  "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "fieldTitleBlank":false, "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_file_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_file_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_file_markup_widget class=class alert=alert name=name style=style value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_file_markup_widget>
+  <@field_file_markup_widget class=class alert=alert name=name style=style value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank 
+    inlineLabel=inlineLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_file_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#rt/>
-    <#lt/><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    <#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if value?has_content> value="${escapePart(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#t/>
+    <#if required> required="required"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#t/>
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
@@ -1216,11 +1239,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_password_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_password_markup_widget class=class alert=alert name=name value=value style=style size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_password_markup_widget>
+  <@field_password_markup_widget class=class alert=alert name=name value=value style=style size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank 
+    tooltip=tooltip inlineLabel=inlineLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_password_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_password_markup_widget class="" alert="" style="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_password_markup_widget class="" alert="" style="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false 
+    tooltip="" inlineLabel=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_password_tooltip!styles.field_default_tooltip!"")>
@@ -1233,6 +1258,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <@fieldElemAttribStr attribs=attribs /><#t/>
     <#if style?has_content> style="${escapePart(style, 'html')}"</#if><#t/>
     <#if title?has_content> title="${escapePart(title, 'html')}"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   /><#t/>
 </#macro>
 
@@ -1244,7 +1270,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_reset_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_reset_markup_widget class=class alert=alert name=name id=id style=style text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs/>
+  <@field_reset_markup_widget class=class alert=alert name=name id=id style=style text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
+    origArgs=origArgs passArgs=passArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -1427,7 +1454,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_textfind_widget_defaultArgs = {
   "name":"", "formName":"", "value":"", "defaultOption":"", "opEquals":"", "opBeginsWith":"", "opContains":"", "opIsEmpty":"", "opNotEqual":"", "opLike":"",
   "class":"", "id":"", "style":"", "alert":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "hideIgnoreCase":false, "ignoreCase":"", 
-  "ignoreCaseMsg":"", "title":"", "tooltip":"", "fieldTitleBlank":false, "hideOptions":false, "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
+  "ignoreCaseMsg":"", "title":"", "tooltip":"", "fieldTitleBlank":false, "hideOptions":false, "required":false, "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
 }>
 <#macro field_textfind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_textfind_widget_defaultArgs)>
@@ -1467,13 +1494,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <@field_textfind_markup_widget name=name formName=formName value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains 
     opIsEmpty=opIsEmpty opNotEqual=opNotEqual opLike=opLike class=class id=id style=style alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleClass 
     hideIgnoreCase=hideIgnoreCase ignoreCase=ignoreCase ignoreCaseMsg=ignoreCaseMsg title=title tooltip=tooltip fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions 
-    inlineLabel=inlineLabel origLabel=origLabel collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@field_textfind_markup_widget>
+    inlineLabel=inlineLabel origLabel=origLabel collapse=collapse required=required origArgs=origArgs passArgs=passArgs><#nested></@field_textfind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textfind_markup_widget name="" formName="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
     opIsEmpty="" opNotEqual="" opLike="" class="" id="" style="" alert="" size="" maxlength="" autocomplete=true titleClass="" 
-    hideIgnoreCase="" ignoreCase=false ignoreCaseMsg="" title="" tooltip="" fieldTitleBlank=false hideOptions=false inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
+    hideIgnoreCase="" ignoreCase=false ignoreCaseMsg="" title="" tooltip="" fieldTitleBlank=false hideOptions=false inlineLabel=false 
+    origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textfind_tooltip!styles.field_default_tooltip!"")>
@@ -1557,7 +1585,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_rangefind_widget_defaultArgs = {
   "class":"", "id":"", "style":"", "alert":"", "name":"", "formName":"", "value":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "defaultOptionFrom":"", 
   "opEquals":"", "opGreaterThan":"", "opGreaterThanEquals":"", "opLessThan":"", "opLessThanEquals":"", "opIsEmpty":"", "value2":"", 
-  "defaultOptionThru":"", "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
+  "defaultOptionThru":"", "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "required":false, "collapse":false, "passArgs":{}
 }>
 <#macro field_rangefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_rangefind_widget_defaultArgs)>
@@ -1592,13 +1620,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       autocomplete=autocomplete titleClass=titleClass defaultOptionFrom=defaultOptionFrom opEquals=opEquals 
       opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals opIsEmpty=opIsEmpty
       value2=value2 defaultOptionThru=defaultOptionThru title=title tooltip=tooltip
-      inlineLabel=inlineLabel origLabel=origLabel collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@field_rangefind_markup_widget>
+      inlineLabel=inlineLabel origLabel=origLabel collapse=collapse required=required origArgs=origArgs passArgs=passArgs><#nested></@field_rangefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_rangefind_markup_widget class="" id="" style="" alert="" name="" formName="" value="" size="" maxlength="" autocomplete=true titleClass="" 
     defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" opIsEmpty="" value2="" 
-    defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
+    defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_rangefind_tooltip!styles.field_default_tooltip!"")>
@@ -1674,7 +1702,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_display_widget_defaultArgs = {
   "type":"", "value":"", "imageLocation":"", "idName":"", "description":"", "style":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
   "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, 
-  "formatText":"", "passArgs":{}
+  "formatText":"", "required":false, "passArgs":{}
 }>
 <#macro field_display_widget args={} inlineArgs...>
   <#local valuePresent = args.value?? || inlineArgs.value??>
@@ -1711,7 +1739,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
   </#if>
   <@field_display_markup_widget type=type imageLocation=imageLocation id=id style=style idName=idName description=description value=value title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
-    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel formatText=formatText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
+    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel formatText=formatText required=required 
+    origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
@@ -1719,7 +1748,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     NOTE: value is only meaningful for non-image, and will be same as description. 
     This is contrived due to being based on the original ofbiz display widget. -->
 <#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" value="" nestedContent="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false formatText=true origArgs={} passArgs={} catchArgs...>
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false formatText=true required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_display_tooltip!styles.field_default_tooltip!"")>
@@ -1773,17 +1802,19 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- migrated from @renderField form widget macro -->
 <#assign field_generic_widget_defaultArgs = {
-  "text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "passArgs":{}
+  "text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_generic_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_generic_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_generic_markup_widget text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
+  <@field_generic_markup_widget text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_generic_tooltip!styles.field_default_tooltip!"")>

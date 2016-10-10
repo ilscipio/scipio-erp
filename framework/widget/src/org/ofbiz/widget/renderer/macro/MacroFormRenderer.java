@@ -337,6 +337,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             inPlaceEditorParams.append("}");
             sr.append(ftlFmt.makeStringLiteral(inPlaceEditorParams.toString()));
         }
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         if (displayField instanceof DisplayEntityField) {
@@ -443,6 +444,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(placeholder));
         sr.append(" tooltip="); // SCIPIO: new arg
         sr.append(ftlFmt.makeStringLiteral(tooltip));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = textField.getSubHyperlink();
@@ -528,6 +530,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // SCIPIO: maxlength added
         sr.append(" maxlength=");
         sr.append(ftlFmt.makeStringLiteral(maxlength));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -793,6 +796,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(formName));
         sr.append(" mask=");
         sr.append(ftlFmt.makeStringLiteral(formattedMask));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -1022,6 +1026,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(ignoreCase));
         sr.append(" fullSearch=");
         sr.append(ftlFmt.makeStringLiteral(fullSearch));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = dropDownField.getSubHyperlink();
@@ -1083,6 +1088,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -1137,6 +1143,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -1952,6 +1959,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // SCIPIO: new args
         sr.append(" hideOptions=");
         sr.append(Boolean.toString(hideOptions));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -2031,6 +2039,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(value2));
         sr.append(" defaultOptionThru=");
         sr.append(ftlFmt.makeStringLiteral(defaultOptionThru));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -2170,6 +2179,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(opUpThruDay));
         sr.append(" opIsEmpty=");
         sr.append(ftlFmt.makeStringLiteral(opIsEmpty));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -2359,6 +2369,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(lastViewName));
         sr.append(" tooltip=");
         sr.append(ftlFmt.makeStringLiteral(tooltip)); // SCIPIO: new arg
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -2694,6 +2705,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(maxlength));
         sr.append(" autocomplete=");
         sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.makeHyperlinkString(writer, textField.getSubHyperlink(), context);
@@ -2757,6 +2769,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(id));
         sr.append(" autocomplete=");
         sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -3542,4 +3555,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         executeMacro(writer, sr.toString());
     }
     
+    /**
+     * SCIPIO: helper to append requiredField param.
+     * @throws IOException 
+     */
+    protected void appendRequiredFieldParam(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
+        sr.append(" requiredField=" + (modelFormField.getRequiredField() ? "\"true\"" : "\"false\""));
+    }
 }

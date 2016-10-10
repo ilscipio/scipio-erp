@@ -440,6 +440,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local gridSize = 12>
   <#local markLast = false>
   <#local fieldEntryOffset = 0>
+  <#local required = renderFieldIsRequired(requiredField, requiredStyle)>
   <#if positions?has_content && positionSpan?has_content && position?has_content>
     <#-- note: positionSpan is one less than you'd expect -->
     <#local posSpan = positionSpan + 1>
@@ -512,7 +513,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
           renderFieldTitleCurrentFieldHelpText
         -->
         <@field_markup_labelarea label=renderFieldTitleCurrentTitle!"" labelDetail=renderFieldTitleCurrentTitleDetail!"" 
-          required=renderFieldIsRequired(requiredField, requiredStyle) 
+          required=required 
           collapse=false fieldId=renderFieldTitleCurrentForId!""
           labelType="horizontal" labelPosition="left" 
           fieldType=mapOfbizFieldTypeToScipioFieldType(fieldType)
@@ -704,7 +705,10 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#-- SCIPIO: new macro to isolate this code -->
 <#macro renderAsterisksCommon requiredField requiredStyle extraArgs...>
+  <#-- SCIPIO: 2016-10-10: the asterix logic is delegated to Scipio macros, so this is counterproductive
   <#if requiredField?string == "true"><#if !requiredStyle?has_content><span class="form-field-input-asterisk">*</span></#if></#if>
+  -->
+  <#if requiredField?string == "true"><span class="form-field-input-asterisk">*</span></#if>
 </#macro>
 
 <#-- SCIPIO: function to isolate this if-required logic -->

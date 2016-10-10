@@ -51,7 +51,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${escapePart(id, 'js')}', '${escapeFullUrl(autoUpdateLink, 'js')}', '', '${autoUpdateInterval}');</@script>
   </#if>
-  <#-- Scipio: now support a few more containers -->
+  <#-- SCIPIO: now support a few more containers -->
   <#local elem = "">
   <#if ["div", "span", "p"]?seq_contains(style)>
     <#local elem = style>
@@ -61,7 +61,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     <#local elem = parts[0]>
     <#local style = parts[1]>
   </#if>
-  <#-- Scipio: delegate to scipio libs -->
+  <#-- SCIPIO: delegate to scipio libs -->
   <@container open=true close=false class=style id=id elem=elem />
 </#macro>
 
@@ -162,7 +162,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
 <#macro renderContentFrame fullUrl width height border extraArgs...><iframe src="${escapeFullUrl(fullUrl, 'html')}" width="${width}" height="${height}"<#if border?has_content> border="${escapePart(border, 'html')}"</#if> /></#macro>
 
-<#-- Scipio: new params: menuRole, titleStyle -->
+<#-- SCIPIO: new params: menuRole, titleStyle -->
 <#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="" extraArgs...>
     <#-- now delegates to Scipio implementation. -->
     <#-- NOTE (2016-09-09): We NO LONGER pass collapsibleAreaId - there is no explicit attribute in screen widgets, 
@@ -250,7 +250,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local firstColumn = (columnIndex <= 0)>
   <#local lastColumn = (columnIndex >= (columnCount - 1))>
   
-  <#-- Scipio: calc and adapt width to possible grid widths + record grid used so far in global var -->
+  <#-- SCIPIO: calc and adapt width to possible grid widths + record grid used so far in global var -->
   <#local columnSize = calcPortalPageColumnGridSize(columnCount, columnIndex, gridSize, portalPageGridUsed, width)>
   <#global portalPageGridUsed = portalPageGridUsed + columnSize>
   

@@ -27,7 +27,12 @@ public abstract class RawScript {
     }
     
     public static RawScript wrap(Map<String, Object> langValueMap) {
-        return new MultiLangRawScript(langValueMap);
+        if (langValueMap.size() == 1) { // optimization
+            Map.Entry<String, Object> entry = langValueMap.entrySet().iterator().next();
+            return new SingleLangRawScript(entry.getValue(), entry.getKey());
+        } else {
+            return new MultiLangRawScript(langValueMap);
+        }
     }
     
     @Override

@@ -118,6 +118,10 @@
 *   The caller must prevent this using #rawString or equivalent:
 *     <@somemacro value="${rawString(screenVar1)}: ${rawString(screenVar2)}"/>
 *     <@somemacro value=rawString(screenVar1)?string/> <#- this is completely redundant; for demonstration only ->
+*   If the caller has no way around passing preformed HTML (or other), then {{{#wrapAsRaw(xxx, 'html')}}} can be used:
+*     <@somemacro value=wrapAsRaw("<strong>${screenVar1}</strong>: <em>${screenVar2}</em>", 'html')/>
+*   NOTE: Using #rawString is better than #wrapAsRaw, but both will be safe as long as #wrapAsRaw specifies the language escaped.
+*   TODO: Document multi-language alternative here
 * * {{{attribs/inlineAttribs}}}: Macros that accept extra arbitrary attribs will automatically escape the values for HTML.
 *   ''However'', if the attribs contain any javascript, the macros cannot be aware of this, and the caller must escape the javascript.
 *     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${escapePart(screenVar1, 'js')}');"}/> <#- (recommended) ->

@@ -22,20 +22,12 @@ public abstract class RawScript {
 
     private static Map<String, Set<String>> langParts = Collections.unmodifiableMap(new HashMap<String, Set<String>>());
     
-    public static RawScript wrap(String value, String lang) {
+    public static RawScript wrap(Object value, String lang) {
         return new SingleLangRawScript(value, lang);
     }
     
     public static RawScript wrap(Map<String, Object> langValueMap) {
         return new MultiLangRawScript(langValueMap);
-    }
-    
-    /**
-     * WARN: DANGEROUS
-     */
-    @Deprecated
-    public static RawScript wrap(String value) {
-        return new SingleLangRawScript(value);
     }
     
     @Override
@@ -63,7 +55,7 @@ public abstract class RawScript {
     }
     
     public static boolean isRawScript(Object object, String lang) {
-        if (isRawScript(object)) {
+        if ((object != null) && (object instanceof RawScript)) {
             if (lang == null || lang.isEmpty()) {
                 return true;
             } else {
@@ -98,15 +90,6 @@ public abstract class RawScript {
             this.value = value;
             this.lang = (lang != null && !lang.isEmpty()) ? lang : null; // && !"none".equals(lang)
         }
-        
-        /**
-         * WARN: DANGEROUS
-         */
-        @Deprecated
-        public SingleLangRawScript(Object value) {
-            this.value = value;
-            this.lang = null;
-        }
 
         public Object getValue() {
             return value;
@@ -117,7 +100,7 @@ public abstract class RawScript {
         }
         
         @Override
-        public String toString() {
+        public String toString() { // NOTE: avoid using this... use resolveScriptForLang...
             return (value != null) ? value.toString() : "";
         }
 
@@ -164,7 +147,7 @@ public abstract class RawScript {
             this.langValueMap = langValueMap;
         }
 
-        public Object getDefaultObject() {
+        public Object getDefaultObject() { // NOTE: avoid using this... use resolveScriptForLang...
             // TODO: review: this is for fallback cases
             if (langValueMap.containsKey("raw")) {
                 return langValueMap.get("raw");
@@ -175,7 +158,7 @@ public abstract class RawScript {
             }
         }
 
-        public String getDefaultLang() {
+        public String getDefaultLang() { // NOTE: avoid using this... use resolveScriptForLang...
             // TODO: review: this is for fallback cases
             if (langValueMap.containsKey("raw")) {
                 return "raw";
@@ -187,7 +170,7 @@ public abstract class RawScript {
         }
         
         @Override
-        public String toString() {
+        public String toString() { // NOTE: avoid using this... use resolveScriptForLang...
             Object object = getDefaultObject();
             return (object != null) ? object.toString() : "";
         }

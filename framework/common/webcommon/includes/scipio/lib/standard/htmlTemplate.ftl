@@ -118,10 +118,18 @@
 *   The caller must prevent this using #rawString or equivalent:
 *     <@somemacro value="${rawString(screenVar1)}: ${rawString(screenVar2)}"/>
 *     <@somemacro value=rawString(screenVar1)?string/> <#- this is completely redundant; for demonstration only ->
-*   If the caller has no way around passing preformed HTML (or other), then {{{#wrapAsRaw(xxx, 'html')}}} can be used:
+*   Note that none of these constructs will allow passing html markup; it is all escaped even with #rawString.
+* * If the caller absolutely needs to pass preformed HTML, then #wrapAsRaw can be used:
 *     <@somemacro value=wrapAsRaw("<strong>${screenVar1}</strong>: <em>${screenVar2}</em>", 'html')/>
-*   NOTE: Using #rawString is better than #wrapAsRaw, but both will be safe as long as #wrapAsRaw specifies the language escaped.
-*   TODO: Document multi-language alternative here
+*   However, this limits the macro by force-feeding it HTML markup. A better way is to specify ''both'' raw and html 
+*   so that the macro can select the most appropriate variant as needed, which future-proofs it:
+*     <@somemacro value=wrapAsRaw({
+*       "html": "<strong>${screenVar1}</strong>: <em>${screenVar2}</em>",
+*       "raw": "${rawString(screenVar1)}: ${rawString(screenVar2)}"
+*     })/>
+*   NOTE: Using #rawString alone is simpler and so preferable to #wrapAsRaw when possible (no markup needed), but both will be safe as long 
+*       as #wrapAsRaw specifies the language(s) escaped. When #wrapAsRaw contains a "raw" alternative, it is as good
+*       as #rawString; but omitting "raw" can hurt the future compatibility of templates with macros.
 * * {{{attribs/inlineAttribs}}}: Macros that accept extra arbitrary attribs will automatically escape the values for HTML.
 *   ''However'', if the attribs contain any javascript, the macros cannot be aware of this, and the caller must escape the javascript.
 *     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${escapePart(screenVar1, 'js')}');"}/> <#- (recommended) ->

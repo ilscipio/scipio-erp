@@ -1415,6 +1415,25 @@
         <li>Normal js-html escaping: ${escapePart('<em>text, not emphasized because html-escaped, plus "apostrophes" are js-escaped</em>', 'js-html')}</li>
         <li>Partial bypass js in js-html escaping: ${escapePart(wrapAsRaw('<em>text, not emphasized because html-escaped, plus "apostrophes" not escaped because of js bypass</em>', 'js'), 'js-html')}</li>
         <li>Failed bypass (wrong language): ${escapePart(wrapAsRaw('<em>text, not emphasized because html-escaped, because we accidentally wrapped as js</em>', 'js'), 'html')}</li>
+        <li>Multi-bypass (only js and html specified):<br/>
+            <#assign value = wrapAsRaw({'html':'<em>html text with em tags</em>', 'js':'js text with "apostrophes"'})>
+            <ul>
+              <li>html (emphasized): ${escapePart(value, 'html')}</li>
+              <li>js (unescaped apostrophes): ${escapePart(value, 'js')}</li>
+              <li>js-html (here the js is selected because meant to be applied first): ${escapePart(value, 'js-html')}</li>
+              <li>html-js (here the html is selected because meant to be applied first): ${escapePart(value, 'html-js')}</em></li>
+              <li>raw (arbitrary text selected here): ${escapePart(value, 'raw')}</li>
+            </ul>     
+        </li>
+        <li>Multi-bypass (only html and raw specified):<br/>
+            <#assign value = wrapAsRaw({'html':'<em>html text with em tags</em>', 'raw':'this is the "raw" text, as if no wrapAsRaw used'})>
+            <ul>
+              <li>html (emphasized): ${escapePart(value, 'html')}</li>
+              <li>js (escaped apostrophes): ${escapePart(value, 'js')}</li>
+              <li>js-html (here raw text is used when available, to prevent issues, and escaped): ${escapePart(value, 'js-html')}</em></li>
+              <li>raw (just prints the raw text): ${escapePart(value, 'raw')}</li>
+            </ul>     
+        </li>
       </ul>
   </@section>
 </@section>

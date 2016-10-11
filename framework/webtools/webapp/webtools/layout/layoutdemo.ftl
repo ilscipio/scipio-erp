@@ -1390,11 +1390,33 @@
 </@section>
 
 <@section title="Escaping">
-  <ul>
-    <li>complexCharString (screen auto-escaping): ${complexCharString}</li>
-    <li>complexCharString (escapePart): ${escapePart(complexCharString, 'html')}</li>
-    <li>complexCharString (double-escaping failure): ${complexCharString?html}</li>
-  </ul>
+  <@section title="Common escaping">
+      <ul>
+        <li>complexCharString (screen auto-escaping): ${complexCharString}</li>
+        <li>complexCharString (escapePart): ${escapePart(complexCharString, 'html')}</li>
+        <li>complexCharString (double-escaping failure): ${complexCharString?html}</li>
+      </ul>
+  </@section>
+  <@section title="objectAsScript">
+      <ul>
+        <li>objectAsScript (js-escaped, with bypass): <@objectAsScript lang="js" object={
+            "map key 1, with \"apostrophe\", escaped" : "map value with \"apostrophe\", escaped, enclosed in quotes",
+            "map key 2, with \"apostrophe\", escaped" : wrapRawScript("map value with \"apostrophe\" and no enclosing quotes (invalid js), escape bypass")
+        }/></li>
+      </ul>
+  </@section>
+  <@section title="Pre-escaping and escaping bypass">
+      <ul>
+        <li>Normal html escaping: ${escapePart('<em>text, not emphasized because html-escaped</em>', 'html')}</li>
+        <li>Bypass html escaping: ${escapePart(wrapAsRaw('<em>text emphasized with html</em>', 'html'), 'html')}</li>
+        <li>Normal js escaping: ${escapePart('These "apostrophes" are js-escaped', 'js')}</li>
+        <li>Bypass js escaping: ${escapePart(wrapAsRaw('These "apostrophes" are not js-escaped', 'js'), 'js')}</li>
+        <li>Partial bypass html in js-html escaping (may seem strange here TODO: better test): ${escapePart(wrapAsRaw('<em>text emphasized with html</em>', 'html'), 'js-html')}</em><#-- manual close the em, this is normal --></li>
+        <li>Normal js-html escaping: ${escapePart('<em>text, not emphasized because html-escaped, plus "apostrophes" are js-escaped</em>', 'js-html')}</li>
+        <li>Partial bypass js in js-html escaping: ${escapePart(wrapAsRaw('<em>text, not emphasized because html-escaped, plus "apostrophes" not escaped because of js bypass</em>', 'js'), 'js-html')}</li>
+        <li>Failed bypass (wrong language): ${escapePart(wrapAsRaw('<em>text, not emphasized because html-escaped, because we accidentally wrapped as js</em>', 'js'), 'html')}</li>
+      </ul>
+  </@section>
 </@section>
 
 <@section title="Date formatting">

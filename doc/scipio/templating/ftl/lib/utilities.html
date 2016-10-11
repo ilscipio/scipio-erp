@@ -4863,6 +4863,9 @@ a raw string bypassing html, js or other language escaping.
 This include <a href="#entry-objectAsScript">@objectAsScript</a> and macros that escape values using <a href="#entry-escapePart">#escapePart</a> or <a href="#entry-escapeFull">#escapeFull</a>.</p>
                       <div class="lib-entry-extradesc">
           <div class="lib-text-note">
+            <strong>WARN: </strong>
+This will only be safe if an explicit language(s) is/are passed!          </div>
+          <div class="lib-text-note">
             <strong>NOTE: </strong>
 This has no functional relationship to Ofbiz&#39;s StringWrapper (<code>StringUtil.wrapString</code> or <a href="#entry-rawString">#rawString</a>);
 its scope is unrelated to Ofbiz&#39;s screen auto-escaping.          </div>
@@ -4880,7 +4883,19 @@ its scope is unrelated to Ofbiz&#39;s screen auto-escaping.          </div>
                             <code>object</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">the string to wrap</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string)|(map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">the string to wrap OR map of languages to strings</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If this is a string, <code>lang</code> parameter should always be specified.
+If this is a map, it is a map of languages to strings, for example:
+        </span>
+<pre>{&quot;html&quot;:&quot;&lt;em&gt;my title&lt;/em&gt;&quot;, &quot;raw&quot;:&quot;my title&quot;}</pre>        <span>
+The supported map languages are the same as the single <code>lang</code> parameter, except
+that &quot;script&quot; has no meaning in this case and should not be used, and in most cases,
+at least &quot;raw&quot; should be specified.
+The map version allows templates to specify alternate markup for different languages        </span>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -4888,8 +4903,28 @@ its scope is unrelated to Ofbiz&#39;s screen auto-escaping.          </div>
                             <code>lang</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|json|...|, default: -empty/unspecific-)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> the specific language toward which this should be considered &quot;raw&quot;</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|json|script|...|, default: -empty/unspecific-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">the specific language toward which this should be considered &quot;raw&quot;</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+This accepts dash-separated string of names.
+Special values:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>script</code>: for use with <a href="#entry-objectAsScript">@objectAsScript</a>: prevents both escaping and enclosing string literals        </span>
+      </li>
+  </ul>
+</div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If <code>object</code> is a string (not map), this argument is usually <strong>required</strong> for safety and correctness.          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Leaving empty with string object will prevent macro escaping for any language! In virtually all cases you should specify
+a specific language. The unspecific mode is for rare workarounds only.          </div>
+</span>
                         </td>
                       </tr>
               </table>
@@ -4938,6 +4973,15 @@ and will not detect any such wrappers.          </div>
                             <span class="lib-entry-param-desc-shortdesc">the object to check</span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>lang</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|json|script|...|, default: -empty/unspecific-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> the specific language toward which this should be considered &quot;raw&quot;</span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -4969,7 +5013,7 @@ and will not detect any such wrappers.          </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Alias for <a href="#entry-wrapAsRaw">#wrapAsRaw</a>, but easier to remember in relation to <a href="#entry-objectAsScript">@objectAsScript</a>.</p>
+                      <p class="lib-entry-shortdesc">Alias for <a href="#entry-wrapAsRaw">#wrapAsRaw</a>(object, &quot;script&quot;), and easier to remember in relation to <a href="#entry-objectAsScript">@objectAsScript</a>.</p>
                   </div>
             
               
@@ -4984,15 +5028,6 @@ and will not detect any such wrappers.          </div>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">the string to wrap</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>lang</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|json|...|, default: -empty/unspecific-)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> the specific language toward which this should be considered &quot;raw&quot;</span>
                         </td>
                       </tr>
               </table>
@@ -5026,7 +5061,7 @@ and will not detect any such wrappers.          </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Alias for #isRawWrapper, but easier to remember in relation to <a href="#entry-objectAsScript">@objectAsScript</a>.</p>
+                      <p class="lib-entry-shortdesc">Checks if the value was wrapped using <a href="#entry-wrapAsRaw">#wrapAsRaw</a>(object, &quot;script&quot;).</p>
                   </div>
             
               
@@ -5040,7 +5075,7 @@ and will not detect any such wrappers.          </div>
                             <code>object</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">the string to check</span>
+                            <span class="lib-entry-param-desc-shortdesc">the value to check</span>
                         </td>
                       </tr>
               </table>
@@ -5086,7 +5121,8 @@ It abstracts the encoder selection.
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 At current time (2016-10-05), this uses Freemarker built-ins (subject to change).
-Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.          </div>
+Although freemarker built-ins can still be used, use of this function is preferred to centralize
+the escaping logic and automatically prevent some double-escaping.          </div>
         <p>
 This ONLY works to escape individual values of the given language. For example, &quot;url&quot;
 can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.
@@ -5116,6 +5152,11 @@ to escape for &quot;js&quot;.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-05: Supports <a href="#entry-wrapAsRaw">#wrapAsRaw</a> values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
+escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value&#39;s language matches or is a prefix of the language
+passed to this function.          </div>
                       </div>
                   </div>
             
@@ -5130,7 +5171,7 @@ to escape for &quot;js&quot;.        </p>
                             <code>str</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">The string to escape</span>
+                            <span class="lib-entry-param-desc-shortdesc">The string or string-like value to escape</span>
                         </td>
                       </tr>
                       <tr>
@@ -5214,6 +5255,11 @@ implementation subject to change. Currently produces different (but all safe) re
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-05: Supports <a href="#entry-wrapAsRaw">#wrapAsRaw</a> values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
+escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value&#39;s language matches or is a prefix of the language
+passed to this function.          </div>
                       </div>
                   </div>
             
@@ -5306,6 +5352,11 @@ suited to handling URLs.        </p>
 In addition to the above, for compability reaons, this function will currently accept param delimiters
 in either the escaped <code>&amp;amp;</code> form or unescaped <code>&amp;</code> form.
 Ideally, we should not receive escaped delimiters here, but Ofbiz frequently escapes early.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-05: Supports <a href="#entry-wrapAsRaw">#wrapAsRaw</a> values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
+escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value&#39;s language matches or is a prefix of the language
+passed to this function.          </div>
                       </div>
                   </div>
             

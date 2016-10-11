@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.util.StringUtils;
-
 /**
  * Wrapper for strings that get passed to objectAsScript FTL macro to prevent
  * enclosing.

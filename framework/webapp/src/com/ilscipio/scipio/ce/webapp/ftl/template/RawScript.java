@@ -1,5 +1,11 @@
 package com.ilscipio.scipio.ce.webapp.ftl.template;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.util.StringUtils;
+
 /**
  * Wrapper for strings that get passed to objectAsScript FTL macro to prevent
  * enclosing.
@@ -39,8 +45,24 @@ public class RawScript {
         return lang;
     }
     
+    /**
+     * WARN: in most cases you want {@link #isRawScript(Object, Object)}
+     */
     public static boolean isRawScript(Object object) {
-        return (object != null) && (object instanceof RawScript);
+        return ((object != null) && (object instanceof RawScript));
+    }
+    
+    public static boolean isRawScript(Object object, String lang) {
+        if ((object != null) && (object instanceof RawScript)) {
+            if (lang == null || lang.isEmpty()) {
+                return true;
+            } else {
+                // TODO: this should recognize complex lang expressions...
+                return lang.equals(((RawScript) object).lang);
+            }
+        } else {
+            return false;
+        }
     }
     
     public static String getLang(Object object) {

@@ -1508,8 +1508,13 @@ public abstract class LangFtlUtil {
         }
     }
     
+    public static boolean isNullOrEmptyString(TemplateModel model) throws TemplateModelException {
+        // this doesn't work out: TemplateScalarModel.EMPTY_STRING.equals(model)
+        return (model == null || (model instanceof TemplateScalarModel && ((TemplateScalarModel) model).getAsString().isEmpty()));
+    }
+    
     public static Locale getLocale(TemplateModel model) throws TemplateModelException {
-        if (model == null) {
+        if (isNullOrEmptyString(model)) {
             return null;
         }
         if (!(model instanceof WrapperTemplateModel)) {
@@ -1519,7 +1524,7 @@ public abstract class LangFtlUtil {
     }
     
     public static TimeZone getTimeZone(TemplateModel model) throws TemplateModelException {
-        if (model == null) {
+        if (isNullOrEmptyString(model)) {
             return null;
         }
         if (!(model instanceof WrapperTemplateModel)) {

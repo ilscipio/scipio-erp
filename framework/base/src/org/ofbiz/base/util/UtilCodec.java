@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import org.owasp.esapi.codecs.CSSCodec;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.HTMLEntityCodec;
 import org.owasp.esapi.codecs.PercentCodec;
@@ -39,6 +40,10 @@ public class UtilCodec {
     private static final HtmlEncoder htmlEncoder = new HtmlEncoder();
     private static final XmlEncoder xmlEncoder = new XmlEncoder();
     private static final StringEncoder stringEncoder = new StringEncoder();
+    /**
+     * SCIPIO: Css encoder (new).
+     */
+    private static final CssEncoder cssEncoder = new CssEncoder();
     /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
@@ -120,6 +125,20 @@ public class UtilCodec {
     }
 
     /**
+     * SCIPIO: CSS part encoder.
+     */
+    public static class CssEncoder implements SimpleEncoder {
+        private static final char[] IMMUNE_CSS = {',', '.', '-', '_', ' '};
+        private CSSCodec cssCodec = new CSSCodec();
+        public String encode(String original) {
+            if (original == null) {
+                return null;
+            }
+            return cssCodec.encode(IMMUNE_CSS, original);
+        }
+    }
+    
+    /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     public static class RawEncoder implements SimpleEncoder {
@@ -141,6 +160,8 @@ public class UtilCodec {
             return xmlEncoder;
         } else if ("html".equals(type)) {
             return htmlEncoder;
+        } else if ("css".equals(type)) { // SCIPIO: new
+            return cssEncoder;
         } else if ("string".equals(type)) {
             return stringEncoder;
         } else {
@@ -177,6 +198,13 @@ public class UtilCodec {
      */
     public static SimpleEncoder getUrlEncoder() {
         return urlCodec;
+    }
+    
+    /**
+     * SCIPIO: Returns css encoder (quick method).
+     */
+    public static SimpleEncoder getCssEncoder() {
+        return cssEncoder;
     }
     
     /**

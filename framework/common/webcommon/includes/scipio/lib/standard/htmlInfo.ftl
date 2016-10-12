@@ -154,8 +154,10 @@ Creates a panel box.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     style                   = Legacy HTML style attribute for outermost container (for compatibility)
     topContent              = ((directive)|(string)) Additional content directly inside panel container at top (before title)
+                              NOTE: Not escaped by macro.
     topContentArgs          = ((map)) Additional args for topContent
     bottomContent           = ((directive)|(string)) Additional content directly inside panel container at bottom (after body)
+                              NOTE: Not escaped by macro.
     bottomContentArgs       = ((map)) Additional args for bottomContent
 -->
 <#assign panel_defaultArgs = {

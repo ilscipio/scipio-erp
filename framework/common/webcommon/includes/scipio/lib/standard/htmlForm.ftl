@@ -936,9 +936,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               WARN: Currently (2016-04-12), unlike the {{{label}}} arg, {{{labelContent}}} will not follow any label inlining logic and
                                   is only used by the label area markup. 
                               FIXME?: May want to have labelContent follow label more closely.
-    labelDetail             = ((string)|(macro)) Extra content (HTML) inserted with label (normally after label, but theme may decide)
+                              NOTE: Not escaped by macro.
+    labelDetail             = ((string)|(macro)) Extra content markup inserted with label (normally after label, but theme may decide)
                               2016-04-12: This may also be a macro used to generate the label, which must accept a single {{{args}}} map parameter.
                               NOTE: If need to guarantee post-markup label content, may also use {{{postLabelContent}}} (lower-level control).
+                              NOTE: Not escaped by macro.
     labelContentArgs        = ((map)) Optional map of args to be passed to {{{labelContent}}} and {{{labelDetail}}} in cases where they are macros
                               NOTE: In addition to these values, all the parameters of the theme-implementing @field_markup_labelarea macros
                                   are also passed.
@@ -1056,26 +1058,33 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     postfixColumns          = ((int), default: 1) Manual postfix size, in (large) grid columns
     postfixContent          = ((string)|(macro)) Manual postfix markup/content - set to boolean false to prevent any content (but not area container)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Not escaped by macro.
     postfixContentArgs      = ((map)) Optional map of arguments to pass to {{{postfixContent}}} macro, if macro
     preWidgetContent        = ((string)|(macro)) Text or text-generating macro that will be inserted in the widget area before widget content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     postWidgetContent       = ((string)|(macro)) Text or text-generating macro that will be inserted in the widget area after widget content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     preLabelContent         = ((string)|(macro)) Text or text-generating macro that will be inserted in the label area before label content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     postLabelContent        = ((string)|(macro)) Text or text-generating macro that will be inserted in the label area after label content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
                               NOTE: This is almost the same as labelDetail, except postLabelContent is lower level and will always occur at the specified position.
+                              NOTE: Not escaped by macro.
     prePostfixContent       = ((string)|(macro)) Text or text-generating macro that will be inserted in the postfix area before postfix content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     postPostfixContent      = ((string)|(macro)) Text or text-generating macro that will be inserted in the postfix area after postfix content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     prePostContentArgs      = ((map)) Optional map of extra user-supplied args to be passed to the {{{prePostXxx}}} content macros as the {{{args}}} parameter.
     inverted                = ((boolean), default: false) If true, invert the widget and label area content and user-supplied and identifying classes
                               If this is set to true, the widget area content is swapped with the label area content and the user-supplied

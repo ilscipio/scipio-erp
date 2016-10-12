@@ -615,6 +615,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               NOTE: Currently this is not used much. It would be used for marking an item as preselected.
     nestedContent           = Macro arg alternative to macro nested content
                               This may be passed in @menu items list.
+                              NOTE: Not escaped by macro.
     nestedMenu              = ((map)) Map of @menu arguments, alternative to nestedContent arg and macro nested content
                               For menu to use as sub-menu.
     wrapNested              = ((boolean), default: -true for type generic, false for all other types-) If true, nested content is wrapped within the content element (link, span, etc.) 

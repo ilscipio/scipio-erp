@@ -770,6 +770,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
                               * {{{string}}} (HTML markup): Should be <li> elements only, generated manually or using <@menu type="section" ... inlineItems=true>.
                                 WARN: if using @menu to pre-generate the menu as string/html, the menu arguments such as "type" are lost and 
                                     assumed to be "section" or "section-inline".
+                              NOTE: Not escaped by macro.
     menuLayoutTitle         = (post-title|pre-title|inline-title, default: -from global styles-, fallback default: post-title) 
                               This is a low-level control; avoid where possible.   
     menuLayoutGeneral       = (top|bottom|top-bottom, default: -from global styles-, fallback default: top)  

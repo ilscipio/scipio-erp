@@ -88,6 +88,13 @@ public class PartyContentWrapper implements ContentWrapper {
     public StringUtil.StringWrapper get(String contentTypeId, String encoderType) {
         return StringUtil.makeStringWrapper(get(contentTypeId, true, encoderType));
     }
+    
+    /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
+     */
+    public String get(String contentTypeId) {
+        return get(contentTypeId, true, "raw");
+    }
 
     public String getId(String contentTypeId) {
         GenericValue partyContent = getFirstPartyContentByType(null, party, contentTypeId, party.getDelegator());

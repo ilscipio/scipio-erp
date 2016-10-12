@@ -308,7 +308,7 @@ under the License.
                                 <#list packageSeqIds as packageSeqId>
                                     <@tr>
                                         <@td>
-                                            <#assign packageWeightLabel>${uiLabelMap.ProductPackage} ${packageSeqId}</#assign>
+                                            <#assign packageWeightLabel>${rawString(uiLabelMap.ProductPackage)} ${rawString(packageSeqId)}</#assign>
                                             <@field type="input" size="7" name="packageWeight_${packageSeqId}" value=(packingSession.getPackageWeight(packageSeqId?int)!) label=packageWeightLabel/>
                                             <#if orderItemShipGroup?has_content>
                                                 <input type="hidden" name="shippingContactMechId" value="${orderItemShipGroup.contactMechId!}"/>

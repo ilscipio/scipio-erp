@@ -516,7 +516,7 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
-                        <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
+                        <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'html') />
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
@@ -530,12 +530,12 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                           <#assign fieldLabel>
-                            ${option.description}&nbsp;
+                            ${option.description!}&nbsp;
                             <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
                             <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
                             <#if !option.isAvailable()> (*)</#if>
                           </#assign>
-                          <@field type="radio" name=counter?string value=optionCounter checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())) label=fieldLabel />
+                          <@field type="radio" name=counter?string value=optionCounter checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())) label=wrapAsRaw(fieldLabel, 'html') />
                         </@cell>
                       </@row>
                     </#if>
@@ -583,7 +583,7 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
-                        <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
+                        <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'html') />
 
                         <#assign components = option.getComponents()>
                         <#list components as component>
@@ -596,7 +596,7 @@ function getConfigDetails() {
                       </@row>
                     <#else>
                       <#assign fieldLabel>${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if></#assign>
-                      <@field type="checkbox" name=counter?string value=optionCounter checked=option.isSelected() label=fieldLabel />
+                      <@field type="checkbox" name=counter?string value=optionCounter checked=option.isSelected() label=wrapAsRaw(fieldLabel, 'html') />
                     </#if>
                     <@field type="input" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value=(option.comments!) label=uiLabelMap.CommonComments/>
                   <#assign optionCounter = optionCounter + 1>
@@ -625,7 +625,7 @@ function getConfigDetails() {
   <#if assocProducts?has_content>
   <@row><@cell>&nbsp;</@cell></@row>
   <#assign title>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</#assign>
-  <@section title=title>
+  <@section title=wrapAsRaw(title, 'html')>
     <hr />
     <#list assocProducts as productAssoc>
       <@row>

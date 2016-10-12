@@ -92,6 +92,13 @@ public class WorkEffortContentWrapper implements ContentWrapper {
     }
 
     /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
+     */
+    public String get(String contentTypeId) {
+        return get(contentTypeId, true, "raw");
+    }
+    
+    /**
      * Get the ID from the most current content data by the defined type
      * @param contentTypeId Type of content to return
      * @return String containing the contentId

@@ -87,6 +87,17 @@ public class ProductContentWrapper implements ContentWrapper {
         }
         return StringUtil.makeStringWrapper(getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, encoderType));
     }
+    
+    /**
+     * SCIPIO: get overload that does no encoding. The templates should do the encoding, and screens have auto-escaping.
+     */
+    public String get(String productContentTypeId) {
+        if (this.product == null) {
+            Debug.logWarning("Tried to get ProductContent for type [" + productContentTypeId + "] but the product field in the ProductContentWrapper is null", module);
+            return null;
+        }
+        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, "raw");
+    }
 
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, HttpServletRequest request, String encoderType) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

@@ -1871,7 +1871,7 @@ TODO: doesn't handle dates (ambiguous?)
       </#list>
       <#if wrap>}</#if><#rt>
     <#else>{}</#if>
-  <#elseif Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object)><#-- NOTE: this is done at the end for performance reasons only (it really belongs beside rawVal test) -->
+  <#elseif isRawScript(object)><#-- NOTE: this is done at the end for performance reasons only (it really belongs beside rawVal test) -->
       ${object?string}<#t>
   <#elseif object?is_string> 
     <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
@@ -1933,24 +1933,34 @@ Wraps a string in a special string wrapper that when passed to markup- or script
 a raw string bypassing html, js or other language escaping. 
 This include @objectAsScript and macros that escape values using #escapePart or #escapeFull.
 
-WARN: This will only be safe if an explicit lang parameter is passed!
+WARN: This will only be safe if an explicit language(s) is/are passed!
 
 NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUtil.wrapString}}} or #rawString);
     its scope is unrelated to Ofbiz's screen auto-escaping.
 
   * Parameters *
-    object                  = the string to wrap
+    object                  = ((string)|(map)) the string to wrap OR map of languages to strings
+                              If this is a string, {{{lang}}} parameter should always be specified.
+                              If this is a map, it is a map of languages to strings, for example:
+                                {"html":"<em>my title</em>", "raw":"my title"}
+                              The supported map languages are the same as the single {{{lang}}} parameter, except 
+                              that "script" has no meaning in this case and should not be used, and in most cases,
+                              at least "raw" should be specified.
+                              The map version allows templates to specify alternate markup for different languages
     lang                    = (html|js|json|script|...|, default: -empty/unspecific-) the specific language toward which this should be considered "raw"
                               This accepts dash-separated string of names.
                               Special values:
-                              * {{{script}}}: this will escape any script language recognized by @objectAsScript,
-                                meaning json and javascript.
-                              NOTE: This argument is usually '''required''' for safety and correctness.
-                              WARN: Leaving empty will prevent macro escaping for any language! In virtually all cases you should specify
+                              * {{{script}}}: for use with @objectAsScript: prevents both escaping and enclosing string literals
+                              NOTE: If {{{object}}} is a string (not map), this argument is usually '''required''' for safety and correctness.
+                              WARN: Leaving empty with string object will prevent macro escaping for any language! In virtually all cases you should specify
                                   a specific language. The unspecific mode is for rare workarounds only.
 -->
 <#function wrapAsRaw object lang="">
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object?string, lang)>
+  <#if isObjectType("map", object)>
+    <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object)>
+  <#else>
+    <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object?string, lang)>
+  </#if>
 </#function>
 
 <#-- 
@@ -1971,6 +1981,28 @@ NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUti
 -->
 <#function isWrappedAsRaw object lang="">
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object, lang)>
+</#function>
+
+<#-- 
+*************
+* getRawWrappedForLang
+************
+Gets the raw wrapped value for the given language, as string.
+
+If not applicable, returns void (use default operator, {{{!}}}).
+
+  * Parameters *
+    object                  = the object wrapped with #wrapAsRaw
+    lang                    = (html|js|json|script|...|, default: -empty/unspecific-) the specific language to get
+    
+  * Related *
+    #wrapAsRaw
+-->
+<#function getRawWrappedForLang object lang="">
+  <#local res = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].getValueForLang(object, lang)!false>
+  <#if !res?is_boolean>
+    <#return rawString(res)>
+  </#if>
 </#function>
 
 <#-- 
@@ -2041,8 +2073,12 @@ to escape for "js".
 
 NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
 
+NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
+    escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value's language matches or is a prefix of the language
+    passed to this function.
+
   * Parameters *
-    str                     = The string to escape
+    str                     = The string or string-like value to escape
     lang                    = (js|jsdq|json|html|url|xml|style|js-html|html-js|style-html|html-style|raw) The target language
                               These are similar to the Freemarker built-in counterparts, but may
                               not produce the exact same results.
@@ -2060,10 +2096,13 @@ NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced
     #escapeFull
 -->
 <#function escapePart str lang strict=false>
-  <#if isWrappedAsRaw(str)><#-- FIXME: UNSAFE! MUST SPECIALIZE BY LANG! -->
-    <#return str?string>
+  <#if isWrappedAsRaw(str)>
+    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(str, lang)>
+    <#local str = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local lang = resolved.lang>
+  <#else>
+    <#local str = rawString(str)><#-- performs coercion to string if needed -->
   </#if>
-  <#local str = rawString(str)><#-- performs coercion to string if needed -->
   <#switch lang?lower_case>
     <#case "json">
       <#return str?json_string>
@@ -2129,6 +2168,10 @@ WARN: implementation subject to change. Currently produces different (but all sa
 
 NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
 
+NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
+    escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value's language matches or is a prefix of the language
+    passed to this function.
+    
   * Parameters *
     str                     = The string to escape
     lang                    = (html|xml|raw) The target language
@@ -2144,11 +2187,15 @@ NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced
     #escapePart
 -->
 <#function escapeFull str lang strict=false>
-  <#if isWrappedAsRaw(str)><#-- FIXME: UNSAFE! MUST SPECIALIZE BY LANG! -->
-    <#return str?string>
+  <#if isWrappedAsRaw(str)>
+    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(str, lang)>
+    <#local str = rawString(resolved.value)>
+    <#local lang = resolved.lang>
+  <#else>
+    <#local str = rawString(str)><#-- performs coercion to string if needed -->
   </#if>
   <#-- NOTE: Currently we support the same types as Ofbiz, so no need for a switch -->
-  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(rawString(str)))>
+  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(str))>
 </#function>
 
 <#-- 
@@ -2174,6 +2221,10 @@ NOTE: In addition to the above, for compability reaons, this function will curre
 
 DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe way to process URLs.
 
+NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
+    escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value's language matches or is a prefix of the language
+    passed to this function.
+
   * Usage Examples *
   
     <a href="${escapeFullUrl('http://www.ilscipio.com/test?param1=val1&param2=val2;jsessionid=fake', 'html')}">Link</a>
@@ -2196,10 +2247,13 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
                               mainly to mitigate screen auto-escaping and early escaping.
 -->
 <#function escapeFullUrl str lang strict=false>
-  <#if isWrappedAsRaw(str)><#-- FIXME: UNSAFE! MUST SPECIALIZE BY LANG! -->
-    <#return str?string>
+  <#if isWrappedAsRaw(str)>
+    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(str, lang)>
+    <#local str = rawString(resolved.value)>
+    <#local lang = resolved.lang>
+  <#else>
+    <#local str = rawString(str)><#-- performs coercion to string if needed -->
   </#if>
-  <#local str = rawString(str)>
   <#if !strict>
     <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
     <#local str = str?replace("&amp;", "&")>
@@ -2220,8 +2274,14 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
     <#case "js-html">
       <#return str?js_string?html>
       <#break>
+    <#case "html-js">
+      <#return str?html?js_string>
+      <#break>
     <#case "jsdq-html">
       <#return str?js_string?replace("\\'", "\'")?html>
+      <#break>
+    <#case "html-jsdq">
+      <#return str?html?js_string?replace("\\'", "\'")>
       <#break>
     <#case "xml">
       <#return str?xml>

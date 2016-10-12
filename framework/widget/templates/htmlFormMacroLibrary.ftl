@@ -513,7 +513,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
         <#-- TODO: currently not making use of:
           renderFieldTitleCurrentFieldHelpText
         -->
-        <@field_markup_labelarea label=renderFieldTitleCurrentTitle!"" labelDetail=renderFieldTitleCurrentTitleDetail!"" 
+        <@field_markup_labelarea label=(renderFieldTitleCurrentTitle!"") labelDetail=(renderFieldTitleCurrentTitleDetail!"") 
           required=required 
           collapse=false fieldId=renderFieldTitleCurrentForId!""
           labelType="horizontal" labelPosition="left" 

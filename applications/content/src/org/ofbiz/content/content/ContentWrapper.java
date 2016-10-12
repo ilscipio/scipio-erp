@@ -28,4 +28,10 @@ public interface ContentWrapper {
 
     public StringUtil.StringWrapper get(String contentTypeId, String encoderType); 
 
+    /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding,
+     * which includes screen auto-escaping.
+     */
+    public String get(String contentTypeId); 
+
 }

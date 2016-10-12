@@ -80,6 +80,13 @@ public class OrderContentWrapper implements ContentWrapper {
         return StringUtil.makeStringWrapper(getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, encoderType));
     }
 
+    /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
+     */
+    public String get(String orderContentTypeId) {
+        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, "raw");
+    }
+    
     public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, HttpServletRequest request, String encoderType) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         return getOrderContentAsText(order, orderContentTypeId, UtilHttp.getLocale(request), "text/html", order.getDelegator(), dispatcher, encoderType);

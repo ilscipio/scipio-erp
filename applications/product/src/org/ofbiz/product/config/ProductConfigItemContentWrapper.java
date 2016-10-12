@@ -94,6 +94,13 @@ public class ProductConfigItemContentWrapper implements ContentWrapper, Serializ
         return StringUtil.makeStringWrapper(getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), encoderType));
     }
 
+    /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
+     */
+    public String get(String confItemContentTypeId) {
+        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), "raw");
+    }
+    
     public Delegator getDelegator() {
         if (delegator == null) {
             delegator = DelegatorFactory.getDelegator(delegatorName);

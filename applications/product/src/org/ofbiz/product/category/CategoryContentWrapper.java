@@ -80,6 +80,13 @@ public class CategoryContentWrapper implements ContentWrapper {
     public StringUtil.StringWrapper get(String prodCatContentTypeId, String encoderType) {
         return StringUtil.makeStringWrapper(getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, encoderType));
     }
+    
+    /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
+     */
+    public String get(String prodCatContentTypeId) {
+        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, "raw");
+    }
 
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, HttpServletRequest request, String encoderType) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

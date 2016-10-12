@@ -36,7 +36,7 @@
                         </#if>
                     </#assign>
                     <#if partyNameHistoryList?has_content>
-                        <@modal id="modal_info_${parameters.partyId!}" label=partyName!>
+                        <@modal id="modal_info_${parameters.partyId!}" label=wrapAsRaw(partyName, 'html')>
                             <#if partyNameHistoryList?has_content>
                               <@heading>${uiLabelMap.PartyHistoryWas}</@heading>
                               <ul class="no-bullet">
@@ -57,7 +57,7 @@
                             </#if>
                         </@modal>
                     <#else>
-                        ${partyName!}
+                        ${partyName}
                     </#if>
                 </@td>
         </@tr>

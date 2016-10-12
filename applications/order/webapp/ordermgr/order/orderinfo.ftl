@@ -159,13 +159,13 @@ under the License.
          
          <#assign priorityLabel>
             <#switch orderHeader.priority!>
-                <#case "1">${uiLabelMap.CommonHigh}<#break>
-                <#case "2">${uiLabelMap.CommonNormal}<#break>
-                <#case "3">${uiLabelMap.CommonLow}<#break>
-                <#default>${uiLabelMap.CommonNormal}
+                <#case "1">${rawString(uiLabelMap.CommonHigh)}<#break>
+                <#case "2">${rawString(uiLabelMap.CommonNormal)}<#break>
+                <#case "3">${rawString(uiLabelMap.CommonLow)}<#break>
+                <#default>${rawString(uiLabelMap.CommonNormal)}
             </#switch>
          </#assign>
-         <@modal id="${orderId}_priority" label=priorityLabel!>
+         <@modal id="${orderId}_priority" label=priorityLabel>
              <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
              <input type="hidden" name="orderId" value="${orderId}"/>
             <@row>
@@ -190,17 +190,16 @@ under the License.
       <@td colspan="3">
          <#assign invoicePerShipmentLabel>
              <#switch orderHeader.invoicePerShipment!>
-                <#case "Y">${uiLabelMap.CommonYes!}<#break>
-                <#case "N">${uiLabelMap.CommonNo!}<#break>
-                <#default>${uiLabelMap.CommonYes!}
+                <#case "Y">${rawString(uiLabelMap.CommonYes)}<#break>
+                <#case "N">${rawString(uiLabelMap.CommonNo)}<#break>
+                <#default>${rawString(uiLabelMap.CommonYes)}
             </#switch>
          </#assign>
-         <@modal id="${orderId}_invoicePerShipment" label=invoicePerShipmentLabel!>
+         <@modal id="${orderId}_invoicePerShipment" label=invoicePerShipmentLabel>
              <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <@row>
                     <@cell columns=6>
-        
                         <select name="invoicePerShipment">
                           <option value="Y" <#if ((orderHeader.invoicePerShipment)!) == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
                           <option value="N" <#if ((orderHeader.invoicePerShipment)!) == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>

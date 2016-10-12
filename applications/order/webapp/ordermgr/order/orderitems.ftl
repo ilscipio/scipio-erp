@@ -300,8 +300,8 @@ under the License.
                                     / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/>
                                 </@td>
                                 <@td class="${styles.text_right!}" valign="top" nowrap="nowrap">
-                                    <#assign modallabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
-                                    <@modal id="${productId}_adj" label=modallabel>
+                                    <#assign modalLabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
+                                    <@modal id="${productId}_adj" label=modalLabel>
                                         <@table type="data-complex" class="+grid"> <#-- orig: class="grid" -->
                                             <@thead>
                                                 <@tr>

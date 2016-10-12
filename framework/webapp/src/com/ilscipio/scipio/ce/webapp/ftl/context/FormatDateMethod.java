@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 
 import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
@@ -87,6 +88,19 @@ public class FormatDateMethod implements TemplateMethodModelEx {
             }
         } else {
             timeZone = LangFtlUtil.getTimeZone(specTimeZoneModel);
+        }
+        
+        // NOTE: 2016-10-12: CANNOT pass null locale or timeZone because it causes crash.
+        // warn when missing.
+        if (locale == null) {
+            locale = Locale.getDefault();
+            Debug.logWarning("Scipio: formatDate(Time) transform received null/empty locale; using"
+                    + " system default", module);
+        }
+        if (timeZone == null) {
+            timeZone = TimeZone.getDefault();
+            Debug.logWarning("Scipio: formatDate(Time) transform received null/empty time zone; using"
+                    + " system default", module);
         }
         
         Object res;

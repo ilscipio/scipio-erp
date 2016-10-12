@@ -128,7 +128,7 @@ public class UtilCodec {
      * SCIPIO: CSS part encoder.
      */
     public static class CssEncoder implements SimpleEncoder {
-        private static final char[] IMMUNE_CSS = {',', '.', '-', '_', ' '};
+        private static final char[] IMMUNE_CSS = {',', '.', '-', '_', ' ', '%'};
         private CSSCodec cssCodec = new CSSCodec();
         public String encode(String original) {
             if (original == null) {

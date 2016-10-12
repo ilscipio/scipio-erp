@@ -182,7 +182,7 @@ under the License.
                 </#assign>
 
 
-                <@modal id="modal_rule_condition_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=ruleLabel>
+                <@modal id="modal_rule_condition_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(ruleLabel, 'html')>
                     <@heading>${uiLabelMap.ProductCondition} ${(productPromoCond.productPromoCondSeqId)!}</@heading>
                     <@table type="data-complex" autoAltRows=false>
                         <#assign maxCondSeqId = 1>
@@ -407,7 +407,7 @@ under the License.
                 </#assign>
 
 
-                <@modal id="modal_rule_action_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=actionLabel>
+                <@modal id="modal_rule_action_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(actionLabel, 'html')>
                     <@heading>${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!}</@heading>
                     <@table type="data-complex" autoAltRows=false>
                         <#assign actionClass = "2">

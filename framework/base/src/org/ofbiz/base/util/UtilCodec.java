@@ -235,6 +235,21 @@ public class UtilCodec {
     public static SimpleDecoder getUrlDecoder() {
         return urlCodec;
     }
+    
+    
+    /**
+     * SCIPIO: Quick encoding method.
+     */
+    public static String encode(String lang, String value) {
+        return getEncoder(lang).encode(value);
+    }
+    
+    /**
+     * SCIPIO: Quick decoding method.
+     */
+    public static String decode(String lang, String value) {
+        return getDecoder(lang).decode(value);
+    }
 
     public static String canonicalize(String value) throws IntrusionException {
         return canonicalize(value, false, false);

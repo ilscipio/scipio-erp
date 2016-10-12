@@ -59,13 +59,17 @@ under the License.
     <#if cart.getOrderType() != "PURCHASE_ORDER">
       <@field type="input" label=uiLabelMap.OrderPONumber name="correspondingPoId" size="15" />
     </#if>
-
-      <#assign label><#if agreements??>${uiLabelMap.OrderSelectCurrencyOr}<#else>${uiLabelMap.OrderSelectCurrency}</#if></#assign>
-      <@field type="select" label=label name="currencyUomId">
-              <option value=""></option>
-              <#list currencies as currency>
-              <option value="${currency.uomId}" <#if currencyUomId?default('') == currency.uomId>selected="selected"</#if> >${currency.uomId}</option>
-              </#list>
+      
+      <#if agreements??>
+        <#assign fieldLabel = uiLabelMap.OrderSelectCurrencyOr>
+      <#else>
+        <#assign fieldLabel = uiLabelMap.OrderSelectCurrency>
+      </#if>
+      <@field type="select" label=fieldLabel name="currencyUomId">
+          <option value=""></option>
+          <#list currencies as currency>
+          <option value="${currency.uomId}" <#if currencyUomId?default('') == currency.uomId>selected="selected"</#if> >${currency.uomId}</option>
+          </#list>
       </@field>
 
     <#if catalogCol?has_content>

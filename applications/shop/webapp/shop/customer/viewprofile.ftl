@@ -344,7 +344,7 @@ under the License.
               <#list carrierShipMethods as shipMeth>
                 <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId!) + "@" + rawString(shipMeth.partyId) />
                 <#assign shippingMethodLabel><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description", locale)!}</#assign>
-                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=shippingMethodLabel />
+                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'html') />
               </#list>
               <@field type="submit" text=uiLabelMap.EcommerceSetDefault />
             <#else>

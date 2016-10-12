@@ -337,7 +337,7 @@
                         <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
                             <input type="hidden" name="add_product_id" id="add_product_id" value="${product.productId}" />
                             <#list featureLists as featureList>
-                                <@field type="select" id="FT_${featureList.productFeatureTypeId}" name="FT${featureList.productFeatureTypeId}" label=featureList.description!"">
+                                <@field type="select" id="FT_${featureList.productFeatureTypeId}" name="FT${featureList.productFeatureTypeId}" label=(featureList.description!"")>
                                     <option value="">${uiLabelMap.EcommerceSelectOption}</option>
                                     <#list featureList.features as feature>
                                         <option value="${feature.productFeatureId}">${feature.description} <#if feature.price??>(+ <@ofbizCurrency amount=feature.price?string isoCode=feature.currencyUomId />)</#if></option>
@@ -365,14 +365,14 @@
                             <#if variantTree?? && (variantTree.size() > 0)>
                                 <#list featureSet as currentType>
                                     <#if currentType_index == 0>
-                                        <@field type="select" id="FT_${currentType}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});">
+                                        <@field type="select" id="FT_${currentType}" name="FT${currentType}" label=(featureTypes.get(currentType)!"") onChange="javascript:updateVariants(this.name,this.value,${currentType_index});">
                                             <option value="">${uiLabelMap.EcommerceSelectOption}</option>
                                             <#list variantTree.keySet() as variant>
                                                 <option value="${variant}">${variant}</option>
                                             </#list>
                                         </@field>
                                     <#else>
-                                        <@field type="select" id="FT_${currentType}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});" disabled=true />
+                                        <@field type="select" id="FT_${currentType}" name="FT${currentType}" label=(featureTypes.get(currentType)!"") onChange="javascript:updateVariants(this.name,this.value,${currentType_index});" disabled=true />
                                     </#if>
                                 </#list>
                                 <input type="hidden" name="add_product_id" id="add_product_id" value="NULL"/>

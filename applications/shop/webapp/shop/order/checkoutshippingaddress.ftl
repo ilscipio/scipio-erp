@@ -267,7 +267,8 @@ function toggleBillingAccount(box) {
                         ${agreement.description!}
                     </@modal>
                   </#assign>
-                  <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=fieldLabel />
+                  <#-- FIXME?: wrapAsRaw is not ideal -->
+                  <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=wrapAsRaw(fieldLabel, 'html') />
                 </#list>
             <#--
             </@field>-->

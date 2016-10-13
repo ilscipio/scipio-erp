@@ -356,20 +356,6 @@ under the License.
     </div>
 </div>
 
-
-<#-- ============================================================= -->
-<#-- Scipio: TODO?
-<@section title=uiLabelMap.PartyTaxIdentification>
-    <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
-      <div>
-      <input type="hidden" name="partyId" value="${party.partyId}"/>
-      <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" />
-      <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-      </div>
-    </form>
-</@section>
--->
-
 <#-- ============================================================= -->
 <#-- Scipio: TODO?
 <@section title=uiLabelMap.EcommerceFileManager>

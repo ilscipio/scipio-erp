@@ -1678,4 +1678,40 @@ public abstract class LangFtlUtil {
         return execFunction(functionCall, null, env);
     }
     
+    
+    /**
+     * Gets a var from main namespace with fallback on globals/data-model, or null if doesn't exit or null.
+     * <p>
+     * Avoids local variables and emulates a simple Freemarker var read in the main namespace.
+     * <p>
+     * Similar to {@link freemarker.core.Environment.getVariable(String)} but skips local
+     * variables and always main namespace instead of current namespace.
+     * <p>
+     * NOTE: This probably makes the most sense to call from transforms as a means to read
+     * "context/global" variables (using term loosely, while providing possibility for
+     * templates to override using both #assign and #global directives.
+     */
+    public static TemplateModel getMainNsOrGlobalVar(String name, Environment env) throws TemplateModelException {
+        TemplateModel result = env.getMainNamespace().get(name);
+        if (result == null) {
+            result = env.getGlobalVariable(name);
+        }
+        return result;
+    }
+    
+    /**
+     * Gets a var from current namespace with fallback on globals/data-model, or null if doesn't exit or null.
+     * <p>
+     * Avoids local variables and emulates a simple Freemarker var read in the current namespace.
+     * <p>
+     * Similar to {@link freemarker.core.Environment.getVariable(String)} but skips local
+     * variables.
+     */
+    public static TemplateModel getCurrentNsOrGlobalVar(String name, Environment env) throws TemplateModelException {
+        TemplateModel result = env.getCurrentNamespace().get(name);
+        if (result == null) {
+            result = env.getGlobalVariable(name);
+        }
+        return result;
+    }
 }

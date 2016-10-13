@@ -5,7 +5,7 @@
 
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
-        <@section title="${rawString(uiLabelMap.ProductReceiptPurchaseOrder)} ${rawString(purchaseOrder.orderId)}">
+        <@section title="${rawLabel('ProductReceiptPurchaseOrder')} ${rawString(purchaseOrder.orderId)}">
             <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@thead>
                     <@tr class="header-row">

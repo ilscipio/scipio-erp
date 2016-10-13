@@ -61,7 +61,7 @@ under the License.
                       <option value="${type.surveyApplTypeId}">${type.get("description",locale)}</option>
                     </#list>
               </@field>
-              <@field type="input" label="${rawString(uiLabelMap.CommonGroup)} ${rawString(uiLabelMap.CommonName)}" size="20" name="groupName" />
+              <@field type="input" label="${rawLabel('CommonGroup')} ${rawLabel('CommonName')}" size="20" name="groupName" />
               <@field type="select" label=uiLabelMap.CommonSurveys name="surveyId">
                     <#list surveys as survey>
                       <option value="${survey.surveyId}">${survey.description?default("[" + survey.surveyId + "]")}</option>

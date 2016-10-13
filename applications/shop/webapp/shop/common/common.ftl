@@ -356,7 +356,7 @@ jQuery(document).ready(function() {
     <#local params = parameters>
   </#if>
   <#local args = inlineArgs>
-  <@field type="select" label="${rawString(uiLabelMap.PartyAllowSolicitation)}?" name=name args=args>
+  <@field type="select" label="${rawLabel('PartyAllowSolicitation')}?" name=name args=args>
     <option></option><#-- NOTE: Empty must be allowed? -->
     <option value="Y"<#if (params[name]!(args.allowSolicitation)!) == "Y"> selected="selected"</#if>>${uiLabelMap.CommonYes}</option>
     <option value="N"<#if (params[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>

@@ -94,7 +94,7 @@ var issuerId = "";
  
 <#assign cart = shoppingCart! />
 
-<@section title="${rawString(uiLabelMap.OrderHowShallYouPay)}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+<@section title="${rawLabel('OrderHowShallYouPay')}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
 
     <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
         <input type="hidden" name="checkoutpage" value="payment" />

@@ -119,7 +119,7 @@ function toggleBillingAccount(box) {
     -->
   </@menu>
 </#macro>
-<@section title="${rawString(uiLabelMap.OrderWhereShallWeShipIt)}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1) ${uiLabelMap.OrderWhereShallWeShipIt}? -->
+<@section title="${rawLabel('OrderWhereShallWeShipIt')}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1) ${uiLabelMap.OrderWhereShallWeShipIt}? -->
   <#if (cart.getShipGroupSize() > 1)>
     <@alert type="info">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</@alert>
   </#if>
@@ -268,7 +268,7 @@ function toggleBillingAccount(box) {
                     </@modal>
                   </#assign>
                   <#-- FIXME?: wrapAsRaw is not ideal -->
-                  <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=wrapAsRaw(fieldLabel, 'html') />
+                  <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                 </#list>
             <#--
             </@field>-->

@@ -101,7 +101,7 @@ under the License.
                 <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
             </@menu>
         </#macro>
-        <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${rawString(uiLabelMap.CommonUsername)} & ${rawString(uiLabelMap.CommonPassword)}" -->
+        <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${rawLabel('CommonUsername')} & ${rawLabel('CommonPassword')}" -->
             <#-- Scipio: This was a table, not illogical but will look better as fields -->
               
               <@field type="display" label=uiLabelMap.AccountingAccountType>
@@ -344,7 +344,7 @@ under the License.
               <#list carrierShipMethods as shipMeth>
                 <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId!) + "@" + rawString(shipMeth.partyId) />
                 <#assign shippingMethodLabel><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description", locale)!}</#assign>
-                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'html') />
+                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'htmlmarkup') />
               </#list>
               <@field type="submit" text=uiLabelMap.EcommerceSetDefault />
             <#else>

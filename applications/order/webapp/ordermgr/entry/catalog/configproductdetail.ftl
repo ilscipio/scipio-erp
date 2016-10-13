@@ -334,7 +334,7 @@ function getConfigDetails() {
             <@field type="input" containerId="add_amount" label=uiLabelMap.OrderAmount containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
             <#if !configwrapper.isCompleted()>
               <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
-              <@field type="input" label="${rawString(uiLabelMap.ProductQuantity)} (${rawString(uiLabelMap.OrderUnits)})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
+              <@field type="input" label="${rawLabel('ProductQuantity')} (${rawLabel('OrderUnits')})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
             <#else>
               <@field type="input" label=uiLabelMap.ProductQuantity size="5" name="quantity" value="1" />
               <@field type="submit" submitType="link" href="javascript:addItem()" class="+${styles.link_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddToCart />
@@ -516,7 +516,7 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
-                        <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'html') />
+                        <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
@@ -535,7 +535,7 @@ function getConfigDetails() {
                             <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
                             <#if !option.isAvailable()> (*)</#if>
                           </#assign>
-                          <@field type="radio" name=counter?string value=optionCounter checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())) label=wrapAsRaw(fieldLabel, 'html') />
+                          <@field type="radio" name=counter?string value=optionCounter checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())) label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                         </@cell>
                       </@row>
                     </#if>
@@ -583,7 +583,7 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
-                        <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'html') />
+                        <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
 
                         <#assign components = option.getComponents()>
                         <#list components as component>
@@ -596,7 +596,7 @@ function getConfigDetails() {
                       </@row>
                     <#else>
                       <#assign fieldLabel>${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if></#assign>
-                      <@field type="checkbox" name=counter?string value=optionCounter checked=option.isSelected() label=wrapAsRaw(fieldLabel, 'html') />
+                      <@field type="checkbox" name=counter?string value=optionCounter checked=option.isSelected() label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                     </#if>
                     <@field type="input" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value=(option.comments!) label=uiLabelMap.CommonComments/>
                   <#assign optionCounter = optionCounter + 1>
@@ -625,7 +625,7 @@ function getConfigDetails() {
   <#if assocProducts?has_content>
   <@row><@cell>&nbsp;</@cell></@row>
   <#assign title>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</#assign>
-  <@section title=wrapAsRaw(title, 'html')>
+  <@section title=wrapAsRaw(title, 'htmlmarkup')><#-- FIXME: currently needed due to productContentWrapper escaping -->
     <hr />
     <#list assocProducts as productAssoc>
       <@row>

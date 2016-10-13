@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
-  <@section title="${rawString(uiLabelMap.EcommerceStep)} 1: ${rawString(uiLabelMap.PageTitleShoppingCart)}">
+  <@section title="${rawLabel('EcommerceStep')} 1: ${rawLabel('PageTitleShoppingCart')}">
   <div id="cartSummaryPanel" style="display: none;">
     <a href="javascript:void(0);" id="openCartPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
     <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->
@@ -341,8 +341,8 @@ under the License.
       <#--</fieldset>-->
       <#--<fieldset>-->
         <@field type="submitarea">
-          <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 2"/>
-          <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
+          <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${rawLabel('EcommerceContinueToStep')} 2"/>
+          <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${rawLabel('EcommercePleaseWait')}..."/>
         </@field>
       <#--</fieldset>-->
     </form>

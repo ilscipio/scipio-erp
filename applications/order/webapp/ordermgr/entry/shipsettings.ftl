@@ -46,7 +46,7 @@ under the License.
 
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
-    <@section title="${rawString(uiLabelMap.OrderShipGroup)} ${rawString(uiLabelMap.CommonNbr)} ${currIndex}">
+    <@section title="${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}">
         <@row>
             <@cell columns=6>
             <@table type="data-complex"> <#-- orig: class="basic-table" -->
@@ -163,7 +163,7 @@ under the License.
             </#if>
             
     <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${rawString(uiLabelMap.CommonNew)} ${rawString(uiLabelMap.OrderShipGroup)}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${rawLabel('CommonNew')} ${rawLabel('OrderShipGroup')}" class="+${styles.action_run_session!} ${styles.action_add!}" />
         <@menuitem type="link" href=makeOfbizUrl("EditShipAddress") text=uiLabelMap.OrderCreateShippingAddress class="+${styles.action_nav!} ${styles.action_add!}" />
     </@menu> 
     
@@ -173,7 +173,7 @@ under the License.
 <#assign currShipContactMechId = cart.getShippingContactMechId(shipGroupIndex)!>
 <#assign supplierPartyId = cart.getSupplierPartyId(shipGroupIndex)!>
 <#assign facilityId = cart.getShipGroupFacilityId(shipGroupIndex)!>
-    <@section title="${rawString(uiLabelMap.OrderShipGroup)} ${rawString(uiLabelMap.CommonNbr)} ${currIndex}">
+    <@section title="${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}">
         <@row>
         <@cell columns=6>
             <@table type="data-complex"> <#-- orig: class="basic-table" -->

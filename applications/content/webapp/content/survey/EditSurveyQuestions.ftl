@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${rawString(uiLabelMap.PageTitleEditSurveyQuestions)} ${rawString(uiLabelMap.ContentSurveySurveyId)} ${rawString(surveyId)}">
+<@section title="${rawLabel('PageTitleEditSurveyQuestions')} ${rawLabel('ContentSurveySurveyId')} ${rawString(surveyId)}">
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
         <@thead>
         <@tr class="header-row">
@@ -128,7 +128,7 @@ under the License.
 </@section>
 <#-- apply question from category -->
 <#if surveyQuestionCategory?has_content>
-    <@section title="${rawString(uiLabelMap.ContentSurveyApplyQuestionFromCategory)} - ${rawString(surveyQuestionCategory.description!)} [${rawString(surveyQuestionCategory.surveyQuestionCategoryId)}]">
+    <@section title="${rawLabel('ContentSurveyApplyQuestionFromCategory')} - ${rawString(surveyQuestionCategory.description!)} [${rawString(surveyQuestionCategory.surveyQuestionCategoryId)}]">
         <a name="appl">
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
           <@thead>
@@ -210,7 +210,7 @@ under the License.
     <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionCategory}</#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>  
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawString(uiLabelMap.CommonNew)} ${rawString(uiLabelMap.ContentSurveyQuestion)}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </@menu>
     </#macro>
   <#else>
@@ -218,7 +218,7 @@ under the License.
       <#assign sectionTitle>${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</#assign>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>  
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawString(uiLabelMap.CommonNew)} ${rawString(uiLabelMap.ContentSurveyQuestion)}" class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
         </@menu>
       </#macro>
     <#else>
@@ -232,7 +232,7 @@ under the License.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         ${menuContent}
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y") text="${rawString(uiLabelMap.CommonNew)} ${rawString(uiLabelMap.ContentSurveyQuestion)} ${rawString(uiLabelMap.ContentSurveryCategory)}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')} ${rawLabel('ContentSurveryCategory')}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </@menu>
     </#macro>
   </#if>
@@ -245,7 +245,7 @@ under the License.
 </@section>
 
 <#if (surveyQuestion?has_content && (surveyQuestion.surveyQuestionTypeId!"") == "OPTION")>
-  <@section title="${rawString(uiLabelMap.ContentSurveyOptions)} - ${rawString(uiLabelMap.CommonId)}) ${rawString(surveyQuestion.surveyQuestionId!)}">
+  <@section title="${rawLabel('ContentSurveyOptions')} - ${rawLabel('CommonId')}) ${rawString(surveyQuestion.surveyQuestionId!)}">
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
      <@thead>
       <@tr class="header-row">

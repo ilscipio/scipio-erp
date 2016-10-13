@@ -63,7 +63,7 @@ function ShowTab(lname) {
     </@menu>
 </#macro>
 
-<@section menuContent=menuContent><#-- redundant:  title="${rawString(uiLabelMap.WebtoolsViewValue)} ${rawString(uiLabelMap.WebtoolsForEntity)} ${rawString(entityName)}" -->
+<@section menuContent=menuContent><#-- redundant:  title="${rawLabel('WebtoolsViewValue')} ${rawLabel('WebtoolsForEntity')} ${rawString(entityName)}" -->
 
     <@nav type="magellan">
         <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>

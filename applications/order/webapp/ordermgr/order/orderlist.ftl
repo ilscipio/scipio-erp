@@ -62,7 +62,7 @@ under the License.
             <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=(state.hasFilter('filterInventoryProblems')) label=uiLabelMap.OrderFilterInventoryProblems/>
             <@field type="checkbox" name="filterAuthProblems" value="Y" checked=(state.hasFilter('filterAuthProblems')) label=uiLabelMap.OrderFilterAuthProblems/>
         </@field>
-        <@field type="generic" label="${rawString(uiLabelMap.CommonFilter)} (${rawString(uiLabelMap.OrderFilterPOs)})">
+        <@field type="generic" label="${rawLabel('CommonFilter')} (${rawLabel('OrderFilterPOs')})">
             <@field type="checkbox" name="filterPartiallyReceivedPOs" value="Y" checked=(state.hasFilter('filterPartiallyReceivedPOs')) label=uiLabelMap.OrderFilterPartiallyReceivedPOs/>
             <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=(state.hasFilter('filterPOsOpenPastTheirETA')) label=uiLabelMap.OrderFilterPOsOpenPastTheirETA/>
             <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=(state.hasFilter('filterPOsWithRejectedItems')) label=uiLabelMap.OrderFilterPOsWithRejectedItems/>

@@ -26,14 +26,14 @@ under the License.
 <#if selectedServiceMap??>
 
   <#if showWsdl?? && showWsdl == true>
-    <@section title="${rawString(uiLabelMap.WebtoolsServiceWSDL)} - ${rawString(uiLabelMap.WebtoolsService)} ${rawString(selectedServiceMap.serviceName)}">
+    <@section title="${rawLabel('WebtoolsServiceWSDL')} - ${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
         <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
         <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
     </@section>
 
   <#else>
-    <@section title="${rawString(uiLabelMap.WebtoolsService)} ${rawString(selectedServiceMap.serviceName)}">
+    <@section title="${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
         <@menu type="button">
           <@menuitem type="link" href=makeOfbizUrl("${url}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
           <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />

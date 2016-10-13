@@ -386,7 +386,7 @@ function setAlternateGwp(field) {
 </@section>
 
 <#if associatedProducts?has_content>
-  <@section title="${rawString(uiLabelMap.EcommerceYouMightAlsoIntrested)}:">
+  <@section title="${rawLabel('EcommerceYouMightAlsoIntrested')}:">
     <@grid columns=5>
         <#list associatedProducts as assocProduct>
             <li>

@@ -40,7 +40,7 @@ under the License.
   </#if>
 </@menu>
 
-<@section title="${rawString(uiLabelMap.CommonCreate)} ${rawString(uiLabelMap.OrderOrder)}">
+<@section title="${rawLabel('CommonCreate')} ${rawLabel('OrderOrder')}">
       <#if shoppingCart.getOrderType() == "SALES_ORDER">
           <#if quantityOnHandTotal?? && availableToPromiseTotal?? && (productId)??>
             <@row>

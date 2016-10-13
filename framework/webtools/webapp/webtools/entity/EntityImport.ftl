@@ -36,7 +36,7 @@ under the License.
     <@field type="submit" text=uiLabelMap.WebtoolsImportText class="+${styles.link_run_sys!} ${styles.action_import!}"/>
   </form>
   <#if messages??>
-    <@section title="${rawString(uiLabelMap.WebtoolsResults)}:">
+    <@section title="${rawLabel('WebtoolsResults')}:">
       <#list messages as message>
           <p>${message}</p>
       </#list>

@@ -57,7 +57,7 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<@section title="${rawString(uiLabelMap.OrderHowShallWeShipIt)}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2) ${uiLabelMap.OrderHowShallWeShipIt}? -->
+<@section title="${rawLabel('OrderHowShallWeShipIt')}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2) ${uiLabelMap.OrderHowShallWeShipIt}? -->
     <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
         <#--<fieldset>-->
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>
@@ -66,7 +66,7 @@ function submitForm(form, mode, value) {
                 everything else on this form and with some other pages -->
             <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
             <#-- FIXME?: wrapAsRaw is not ideal -->
-            <@field type="generic" label=wrapAsRaw("<strong>${uiLabelMap.OrderShippingMethod}</strong>", 'html') required=true>
+            <@field type="generic" label=wrapAsRaw("<strong>${uiLabelMap.OrderShippingMethod}</strong>", 'htmlmarkup') required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
                 <#-- Scipio: For shop, will not show ship methods whose shipping estimates returned an error.
@@ -86,7 +86,7 @@ function submitForm(form, mode, value) {
                   </#assign>
                   <#--<@commonInvField type="generic" labelContent=labelContent>-->
                   <#-- FIXME?: wrapAsRaw is not ideal -->
-                  <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=wrapAsRaw(labelContent, 'html') /><#--inline=true -->
+                  <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=wrapAsRaw(labelContent, 'htmlmarkup') /><#--inline=true -->
                   <#--</@commonInvField>-->
                 </#if>
               </#list>
@@ -94,7 +94,7 @@ function submitForm(form, mode, value) {
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
                 <#--<@commonInvField type="generic" labelContent=labelContent>-->
                 <#-- FIXME?: wrapAsRaw is not ideal -->
-                <@field type="radio" name="shipping_method" value="Default" checked=true label=wrapAsRaw(labelContent, 'html')/><#--inline=true -->
+                <@field type="radio" name="shipping_method" value="Default" checked=true label=wrapAsRaw(labelContent, 'htmlmarkup')/><#--inline=true -->
                 <#--</@commonInvField>-->
               </#if>
             </@fields>
@@ -103,10 +103,10 @@ function submitForm(form, mode, value) {
             <br/>
             <#--<hr />-->
               
-            <@field type="generic" label="${rawString(uiLabelMap.OrderShipAllAtOnce)}?">
+            <@field type="generic" label="${rawLabel('OrderShipAllAtOnce')}?">
               <@fields inlineItems=false>
-              <@field type="radio" checked=("Y" != (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${rawString(uiLabelMap.OrderPleaseWaitUntilBeforeShipping)}."/>
-              <@field type="radio" checked=("Y" == (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${rawString(uiLabelMap.OrderPleaseShipItemsBecomeAvailable)}."/>
+              <@field type="radio" checked=("Y" != (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${rawLabel('OrderPleaseWaitUntilBeforeShipping')}."/>
+              <@field type="radio" checked=("Y" == (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${rawLabel('OrderPleaseShipItemsBecomeAvailable')}."/>
               </@fields>
             </@field>
               <#--<hr />-->

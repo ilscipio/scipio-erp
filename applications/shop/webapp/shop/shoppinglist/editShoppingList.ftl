@@ -131,7 +131,7 @@ under the License.
       <@menuitem type="link" href="javascript:document.updateList.submit();" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
     </@menu>
   </#macro>
-  <@section title="${rawString(uiLabelMap.EcommerceShoppingListDetail)} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceShoppingListDetail')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
         <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
             <input type="hidden" name="partyId" value="${shoppingList.partyId!}"/>
@@ -377,7 +377,7 @@ under the License.
       <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddChildListsToCart />
     </@menu>
   </#macro>
-  <@section title="${rawString(uiLabelMap.EcommerceChildShoppingList)} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
       <@tr>
         <@td><b>${uiLabelMap.EcommerceListName}</b></@td>
@@ -418,7 +418,7 @@ under the License.
       <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddListToCart />
     </@menu>
   </#macro>
-  <@section title="${rawString(uiLabelMap.EcommerceListItems)} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceListItems')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->
         <@paginationControls/>
@@ -544,7 +544,7 @@ under the License.
     </#if>
   </@section>
 
-  <@section title="${rawString(uiLabelMap.EcommerceShoppingListPriceTotals)} - ${rawString(shoppingList.listName)}">
+  <@section title="${rawLabel('EcommerceShoppingListPriceTotals')} - ${rawString(shoppingList.listName)}">
       <@table type="fields"> <#-- orig: width="100%" border="0" cellspacing="1" cellpadding="1" -->
         <@tr>
           <@td width="5%" nowrap="nowrap">${uiLabelMap.EcommerceChildListTotalPrice}

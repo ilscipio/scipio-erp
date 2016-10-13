@@ -2160,6 +2160,7 @@ NOTE: From template perspective, macros generally escape html by default, so tem
                                 used to allow callers to insert html markup using #wrapAsRaw in the right places (not in attributes!).
                                 NOTE: by default this safely escapes any html; it is the caller overrides that can make this unsafe for attributes.
                               WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
+                              NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
     strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
                               If true, escaping is always applied unconditionally.
                               If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
@@ -2172,15 +2173,15 @@ NOTE: From template perspective, macros generally escape html by default, so tem
     #wrapAsRaw
 -->
 <#function escapePart value lang strict=false>
-  <#if lang == "style"><#-- DEPRECATED -->
-    <#local lang = "css">
+  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
+    <#local lang = lang?replace("style", "css")>
   </#if>
-  <#if isWrappedAsRaw(value)>
-    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)>
+  <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
+  <#if resolved?is_boolean>
+    <#local value = rawString(value)><#-- performs coercion to string if needed -->
+  <#else>
     <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
-  <#else>
-    <#local value = rawString(value)><#-- performs coercion to string if needed -->
   </#if>
   <#switch lang?lower_case>
     <#case "json">
@@ -2257,15 +2258,15 @@ WARN: 2016-10-10: Not currently properly implemented! Please use #escapePart or 
     #escapePart
 -->
 <#function escapeFull value lang strict=false>
-  <#if lang == "style"><#-- DEPRECATED -->
-    <#local lang = "css">
+  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
+    <#local lang = lang?replace("style", "css")>
   </#if>
-  <#if isWrappedAsRaw(value)>
-    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)>
-    <#local value = rawString(resolved.value)>
-    <#local lang = resolved.lang>
-  <#else>
+  <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
+  <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
+  <#else>
+    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local lang = resolved.lang>
   </#if>
   <#if lang == "htmlmarkup">
     <#local lang = "html">
@@ -2319,6 +2320,7 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
                               WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
+                              NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
                               WARN: Inserting URLs into CSS (using {{{url()}}}) is known to be unsafe even with escaping.
     strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
                               If true, escaping is always applied unconditionally.
@@ -2327,15 +2329,15 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                               DEV NOTE: may want to eliminate need for boolean later
 -->
 <#function escapeFullUrl value lang strict=false>
-  <#if lang == "style"><#-- DEPRECATED -->
-    <#local lang = "css">
+  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
+    <#local lang = lang?replace("style", "css")>
   </#if>
-  <#if isWrappedAsRaw(value)>
-    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)>
-    <#local value = rawString(resolved.value)>
-    <#local lang = resolved.lang>
-  <#else>
+  <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
+  <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
+  <#else>
+    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local lang = resolved.lang>
   </#if>
   <#if !strict>
     <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->

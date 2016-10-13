@@ -85,7 +85,21 @@ public abstract class RawScript {
         }
     }
     
+    /**
+     * Resolves value/lang or returns null if not RawScript.
+     */
     public static SingleLangRawScript resolveScriptForLang(Object object, String targetLang) {
+        if (object == null || !(object instanceof RawScript)) {
+            return null;
+        } else {
+            return ((RawScript) object).resolveScriptForLang(targetLang);
+        }
+    }
+    
+    /**
+     * Resolves value/lang or returns a SingleLangRawScript if not RawScript.
+     */
+    public static SingleLangRawScript resolveScriptForLangAlways(Object object, String targetLang) {
         if (object == null || !(object instanceof RawScript)) {
             return new SingleLangRawScript(object, targetLang);
         } else {

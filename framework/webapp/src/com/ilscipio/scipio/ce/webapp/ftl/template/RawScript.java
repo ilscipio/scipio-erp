@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,19 @@ import org.apache.commons.lang.StringUtils;
 public abstract class RawScript {
 
     private static Map<String, Set<String>> langParts = Collections.unmodifiableMap(new HashMap<String, Set<String>>());
+    
+    /**
+     * Maps target langs to list of langs that can be used in place of it.
+     */
+    private static final Map<String, Set<String>> substituteLangsMap;
+    static {
+        Map<String, Set<String>> map = new HashMap<>();
+        
+        // Any html-attribute-escaped code can also be used in markup body (but NOT vice-versa!)
+        map.put("htmlmarkup", new HashSet<String>(Arrays.asList(new String[]{ "html" })));
+        
+        substituteLangsMap = map;
+    }
     
     public static RawScript wrap(Object value, String lang) {
         return new SingleLangRawScript(value, lang);
@@ -129,12 +143,20 @@ public abstract class RawScript {
                 return new SingleLangRawScript(this.value, "raw");
             } else if ("raw".equals(this.lang)) { // raw case: we escaped nothing so far
                 return new SingleLangRawScript(this.value, targetLang);
+            } else if ("htmlmarkup".equals(targetLang) && "html".equals(this.lang)) { // special case: "html" can fill in for "htmlmarkup"
+                return new SingleLangRawScript(this.value, "raw");
             } else {
                 // complex case: we may be a prefix of targetLang
                 if (targetLang.startsWith(this.lang) && (targetLang.charAt(this.lang.length()) == '-')) {
                     return new SingleLangRawScript(this.value, targetLang.substring(this.lang.length() + 1));
-                } else { // failure case: wrong language: we have re-escape to prevent security holes
-                    return new SingleLangRawScript(this.value, targetLang);
+                } else {
+                    // special case for html filling in for htmlmarkup
+                    String replTargetLang = targetLang.replaceAll("htmlmarkup", "html");
+                    if (replTargetLang.startsWith(this.lang) && (replTargetLang.charAt(this.lang.length()) == '-')) {
+                        return new SingleLangRawScript(this.value, replTargetLang.substring(this.lang.length() + 1));
+                    } else { // failure case: wrong language: we have re-escape to prevent security holes
+                        return new SingleLangRawScript(this.value, targetLang);
+                    }
                 }
             }
         }
@@ -156,8 +178,8 @@ public abstract class RawScript {
             // TODO: review: this is for fallback cases
             if (langValueMap.containsKey("raw")) {
                 return langValueMap.get("raw");
-            } else if (langValueMap.containsKey("html")) {
-                return langValueMap.get("html");
+            //} else if (langValueMap.containsKey("html")) {
+            //    return langValueMap.get("html");
             } else {
                 return langValueMap.entrySet().iterator().next().getValue();
             }
@@ -167,8 +189,8 @@ public abstract class RawScript {
             // TODO: review: this is for fallback cases
             if (langValueMap.containsKey("raw")) {
                 return "raw";
-            } else if (langValueMap.containsKey("html")) {
-                return "html";
+            //} else if (langValueMap.containsKey("html")) {
+            //    return "html";
             } else {
                 return langValueMap.entrySet().iterator().next().getKey();
             }
@@ -190,22 +212,44 @@ public abstract class RawScript {
             // best-possible case: we contain the requested language directly
             if (langValueMap.containsKey(targetLang)) { // best-possible case: we already escaped everything
                 return new SingleLangRawScript(langValueMap.get(targetLang), "raw");
+            } else if ("htmlmarkup".equals(targetLang) && langValueMap.containsKey("html")) { // special case: html can fill in for htmlmarkup
+                return new SingleLangRawScript(langValueMap.get("html"), "raw");
             } else {
-                Map.Entry<String, Object> bestEntry = null;
                 // complex case: one of our langs may be a prefix of targetLang. find the longest prefix.
+                String bestLang = null;
+                Object bestValue = null;
+                String bestTargetLang = null;
+                
                 for(Map.Entry<String, Object> entry : langValueMap.entrySet()) {
                     String lang = entry.getKey();
-                    if (targetLang.startsWith(lang) && (targetLang.charAt(lang.length()) == '-')) {
-                        if (bestEntry == null || (lang.length() > bestEntry.getKey().length())) {
-                            bestEntry = entry;
+                    if (bestLang == null || (lang.length() > bestLang.length())) { // IMPORTANT: always keep the first if same length.
+                        if (targetLang.startsWith(lang) && (targetLang.charAt(lang.length()) == '-')) {
+                            bestLang = lang;
+                            bestValue = entry.getValue();
+                            bestTargetLang = targetLang;
                         }
                     }
                 }
-                if (bestEntry != null) {
-                    return new SingleLangRawScript(bestEntry.getValue(), 
-                            targetLang.substring(bestEntry.getKey().length() + 1));
+                
+                // special case: html can substitute for htmlmarkup
+                if (targetLang.contains("htmlmarkup")) {
+                    String replTargetLang = targetLang.replaceAll("htmlmarkup", "html");
+                    for(Map.Entry<String, Object> entry : langValueMap.entrySet()) {
+                        String lang = entry.getKey();
+                        if (bestLang == null || (lang.length() > bestLang.length())) { // IMPORTANT: always keep the first if same length.
+                            if (replTargetLang.startsWith(lang) && (replTargetLang.charAt(lang.length()) == '-')) {
+                                bestLang = lang;
+                                bestValue = entry.getValue();
+                                bestTargetLang = replTargetLang;
+                            }
+                        }
+                    }
+                }
+
+                if (bestLang != null) {
+                    return new SingleLangRawScript(bestValue, bestTargetLang.substring(bestLang.length() + 1));
                 } else {
-                    if (langValueMap.containsKey("raw")) { // raw case
+                    if (langValueMap.containsKey("raw")) { // raw case, had nothing better.
                         return new SingleLangRawScript(langValueMap.get("raw"), targetLang);
                     } else {
                         // failure case: wrong language(s): we have to re-escape to prevent security holes; use arbitrary value

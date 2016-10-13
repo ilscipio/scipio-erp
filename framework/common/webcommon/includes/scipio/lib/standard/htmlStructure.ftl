@@ -526,6 +526,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
                               * {{{none}}}: Prevents color class.
     icon                    = Icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image                   = Background image URL (icon won't be shown if not empty)
+                              WARN: 2016-10-10: '''Do not pass''' any unsafe input in this link at this time!
+                                  Escaping protection is only partial (html but not css).
     imageType               = (|default|..., default: default) Image type for styling
                               Scipio standard supported types (extensible by theme):
                               * {{{cover}}}: This is currently the default. fills tile.
@@ -682,13 +684,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
         <#-- WARN/FIXME: style escaping may be incomplete! -->
-        <div class="${escapePart(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapePart(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'style-html')});"></div>
+        <div class="${escapePart(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapePart(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'css-html')});"></div>
       </#if>
       <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
       <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapePart(icon, 'html')}"></i></span></#if>
       <#local nestedContent><#nested></#local>
       <#if nestedContent?has_content><span class="${escapePart(overlayClass, 'html')}<#if overlayBgColorClass?has_content> ${escapePart(overlayBgColorClass, 'html')}</#if>">${nestedContent}</span></#if>
-      <#if title?has_content><span class="${escapePart(titleClass, 'html')}<#if titleBgColorClass?has_content> ${escapePart(titleBgColorClass, 'html')}</#if>">${escapePart(title, 'html')}</span></#if>
+      <#if title?has_content><span class="${escapePart(titleClass, 'html')}<#if titleBgColorClass?has_content> ${escapePart(titleBgColorClass, 'html')}</#if>">${escapePart(title, 'htmlmarkup')}</span></#if>
       <#if link?has_content></a></#if>
     </div>
   </@container>
@@ -1239,7 +1241,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
         <#lt><#if style?has_content> style="${escapePart(style, 'html')}"<#elseif containerStyle?has_content> style="${escapePart(containerStyle, 'html')}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
-      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapePart(title, 'html')}</p></#if>
+      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapePart(title, 'htmlmarkup')}</p></#if>
       -->
       <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>

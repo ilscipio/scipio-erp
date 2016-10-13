@@ -420,16 +420,16 @@ A visible fieldset, including the HTML element.
                     <#else>expanded">
                       <a onclick="javascript:toggleCollapsiblePanel(this, '${escapePart(collapsibleAreaId, 'js-html')}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');">
                     </#if>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${escapePart(title, 'html')}</#if></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${escapePart(title, 'htmlmarkup')}</#if></a>
           </li>
         </ul>
       <#else>
-        <#if title?has_content>${escapePart(title, 'html')}</#if>
+        <#if title?has_content>${escapePart(title, 'htmlmarkup')}</#if>
       </#if><#rt/>
     </div>
     <div id="${escapePart(collapsibleAreaId, 'html')}" class="fieldgroup-body"<#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapePart(title, 'html')}</legend></#if>
+          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapePart(title, 'htmlmarkup')}</legend></#if>
   </#if>
           <#nested>
   <#if close>
@@ -1860,7 +1860,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               maxlength=maxlength
                               wrap=wrap
                               required=required
-                              passArgs=passArgs>${escapePart(text, 'html')}${escapePart(value, 'html')}<#nested></@field_textarea_widget>
+                              passArgs=passArgs>${escapePart(text, 'htmlmarkup')}${escapePart(value, 'htmlmarkup')}<#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date" || dateType == "time" || dateType == "month">
@@ -2331,7 +2331,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     required=false labelContentArgs={} norows=false nocells=false container=true origArgs={} passArgs={} catchArgs...>
   <#-- the label must be escaped by default. caller can prevent using #wrapAsRaw
   <#local label = label?trim>-->
-  <#local label = escapePart(label, 'html')?trim>
+  <#local label = escapePart(label, 'htmlmarkup')?trim>
   <#if !labelContent?is_boolean>
     <@contentArgRender content=labelContent args=labelContentArgs doTrim=true />
     <#-- don't show this here, let macro handle it

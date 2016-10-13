@@ -712,14 +712,20 @@ to indicate the value null.
 *************
 * getLabel
 ************
-Returns empty string if no label is found
+Returns label from global label map or resource, or empty string if no label is found.
+
+NOTE: The result is automatically html-escaped by the screen renderer during regular freemarker template rendering.
 
   * Parameters *
     name                    = (required) Label name
     resource                = (optional) Resource name
                               If label not found in uiLabelMap (preferred), falls back to lookup in this 
                               resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
-                              a whole file for one label. 
+                              a whole file for one label.
+  
+  * Related *
+    #rawLabel
+    #getPropertyMsg
 -->
 <#function getLabel name resource="">
   <#if name?has_content>
@@ -734,6 +740,30 @@ Returns empty string if no label is found
   <#else>
     <#return ""> 
   </#if>
+</#function>
+
+<#-- 
+*************
+* rawLabel
+************
+Returns label from global label map or resource, or empty string if no label is found,
+and prevents automatic html-escaping on the result.
+
+Shorthand for {{{rawString(getLabel(...))}}}.
+
+  * Parameters *
+    name                    = (required) Label name
+    resource                = (optional) Resource name
+                              If label not found in uiLabelMap (preferred), falls back to lookup in this 
+                              resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
+                              a whole file for one label. 
+                              
+  * Related *
+    #getLabel
+    #rawString
+-->
+<#function rawLabel name resource="">
+  <#return rawString(getLabel(name, resource))>
 </#function>
 
 <#-- 
@@ -1351,18 +1381,23 @@ NOTES:
 *************
 * toRawString
 ************
-Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
+Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
 
 This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
+NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
+
   * Parameters *
-    str                     = ((string), required) The string to return raw.
+    value                   = ((string), required) The value to return without screen escaping
+    
+  * Related *
+    #rawString
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function toRawString str>
+<#function toRawString value>
   <#- ?string turns it into a basic FTL string ->
-  <#return StringUtil.wrapString(str)?string> 
+  <#return StringUtil.wrapString(value)?string> 
 </#function>
 -->
 
@@ -1370,21 +1405,21 @@ the resulting type into a simple Freemarker string.
 *************
 * rawString
 ************
-Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
+Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
 Alias for #toRawString (common operation).
 
 This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
-NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
 
   * Parameters *
-    str                     = ((string), required) The string to return raw.
+    value                       = ((string), required) The value to return without screen escaping
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rawString str>
+<#function rawString value>
   <#- ?string turns it into a basic FTL string ->
-  <#return StringUtil.wrapString(str)?string> 
+  <#return StringUtil.wrapString(value)?string> 
 </#function>
 -->
 
@@ -1929,37 +1964,56 @@ TODO: doesn't handle dates (ambiguous?)
 *************
 * wrapAsRaw
 ************
-Wraps a string in a special string wrapper that when passed to markup- or script-handling macros gets included as
+Wraps pre-escaped values for specific languages in a special wrapper object. 
+When passed to markup- or script-handling macros which normally escape values in these languages,
+the values are used as-is with no additional escape.
+
+These wrapper objects are automatically recognized by #escapePart and #escapeFullUrl.
+
+gets included as
 a raw string bypassing html, js or other language escaping. 
 This include @objectAsScript and macros that escape values using #escapePart or #escapeFull.
 
-WARN: This will only be safe if an explicit language(s) is/are passed!
+WARN: This is only safe to use if an explicit language is passed and the pre-escaping performed
+    is adequate for that language.
 
 NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUtil.wrapString}}} or #rawString);
-    its scope is unrelated to Ofbiz's screen auto-escaping.
+    its working scope is unrelated to Ofbiz's screen auto-escaping. It is primarily intended
+    for Scipio macros and templates that use #escapePart or equivalents.
+
+For more information about escaping in general, see >>>standard/htmlTemplate.ftl<<<.
 
   * Parameters *
-    object                  = ((string)|(map)) the string to wrap OR map of languages to strings
+    value                   = ((string)|(map)) The value to wrap OR a map of languages to strings
                               If this is a string, {{{lang}}} parameter should always be specified.
                               If this is a map, it is a map of languages to strings, for example:
-                                {"html":"<em>my title</em>", "raw":"my title"}
+                                {"htmlmarkup":"<em>my title</em>", "raw":"my title"}
+                                {"htmlmarkup":"<em>${getLabel('CommonYes')}</em>", "raw":rawLabel('CommonYes')}
                               The supported map languages are the same as the single {{{lang}}} parameter, except 
                               that "script" has no meaning in this case and should not be used, and in most cases,
-                              at least "raw" should be specified.
-                              The map version allows templates to specify alternate markup for different languages
-    lang                    = (html|js|json|script|...|, default: -empty/unspecific-) the specific language toward which this should be considered "raw"
+                              at least {{{raw}}} should be specified.
+                              This map version allows templates to specify alternate markup for different languages.
+    lang                    = (html|js|json|script|...|, default: -empty/unspecific-) The specific language toward which this should be considered "raw"
                               This accepts dash-separated string of names.
-                              Special values:
+                              Values (and special values):
                               * {{{script}}}: for use with @objectAsScript: prevents both escaping and enclosing string literals
+                              * {{{htmlmarkup}}}: html destined for markup only. This may contain html markup
+                                as it will never be used within html attributes.
+                              * {{{html}}}: html destined for html attributes or markup. This must NOT contain
+                                html markup (elements) because this may get inserted into html attributes.
                               NOTE: If {{{object}}} is a string (not map), this argument is usually '''required''' for safety and correctness.
                               WARN: Leaving empty with string object will prevent macro escaping for any language! In virtually all cases you should specify
                                   a specific language. The unspecific mode is for rare workarounds only.
+
+  * Related *
+    #escapePart
+    #escapeFullUrl                          
 -->
-<#function wrapAsRaw object lang="">
-  <#if isObjectType("map", object)>
-    <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object)>
+<#function wrapAsRaw value lang="">
+  <#if isObjectType("map", value)>
+    <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(value)>
   <#else>
-    <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object?string, lang)>
+    <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(value?string, lang)>
   </#if>
 </#function>
 
@@ -2009,26 +2063,31 @@ If not applicable, returns void (use default operator, {{{!}}}).
 *************
 * wrapRawScript
 ************
-Alias for #wrapAsRaw(object, "script"), and easier to remember in relation to @objectAsScript.
+Wraps a script value in a special wrapper that marks it as raw script code. 
+When passed to @objectAsScript will cause the script string to be included as-is, instead of
+being interpreted as a value to escape.
+
+Alias for {{{#wrapAsRaw(value, "script")}}}, and easier to remember in relation to @objectAsScript.
                    
   * Parameters *
     object                  = the string to wrap
 
   * Related *
     @objectAsScript
+    #wrapAsRaw
 -->
-<#function wrapRawScript object>
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(object?string, "script")>
+<#function wrapRawScript value>
+  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(value?string, "script")>
 </#function>
 
 <#-- 
 *************
 * isRawScript
 ************
-Checks if the value was wrapped using #wrapAsRaw(object, "script").
+Checks if the value was wrapped using {{{#wrapAsRaw(object, "script")}}}.
                                       
   * Parameters *
-    object                  = the value to check
+    object                  = the object to check
     
   * Related *
     #wrapRawScript
@@ -2043,106 +2102,131 @@ Checks if the value was wrapped using #wrapAsRaw(object, "script").
 *************
 * escapePart
 ************
-Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
-Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
-and encode in the requested language.
+Escapes an individual value or code "part" for a given language, ignoring and crushing delimiters.
 
-Essentially this is a wrapper around #rawString and encoders.
-It abstracts the encoder selection. 
-NOTE: At current time (2016-10-05), this uses Freemarker built-ins (subject to change).
-    Although freemarker built-ins can still be used, use of this function is preferred to centralize
-    the escaping logic and automatically prevent some double-escaping.
+WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
 
-This ONLY works to escape individual values of the given language. For example, "url"
-can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.
-To encode a full URL, you must use #escapeFullUrl. 
+Essentially this is a wrapper around #rawString and language encoders. It abstracts the encoder selection.
+It first performs a #rawString call to bypass the screen auto-escaping on the value.
 
-For Javascript and JSON ("js", "json"), this can ONLY encode strings between {{{""}}} or {{{''}}}.
-There is no #escapeFull implementation for these because safely escaping full javascript code is impossible (see OWASP).
+In addition, this function accepts values produced by #wrapAsRaw. These can be used to bypass the escaping in part or in full.
+If the value was wrapped using the same language as specified in this call, the wrapped value will be used as-is.
 
-For HTML: You should use this on HTML attributes. For full HTML texts, in theory you should use #escapeFull, but currently 
-#escapePart works generally and is better defined.
-NOTE: In practice #escapePart will work on full HTML bodies/texts anyway, and at current time (2016-10-05)
-    many macros are using this indiscriminately.
+NOTES: 
+* 2016-10-05: Currently, this is mostly implemented using Freemarker built-ins such as {{{?html}}}, {{{?js}}}, etc. but is subject to change.
+  Although Freemarker built-ins can still be used directly in templates and client macros, use of this function 
+  is recommended to centralize the escaping logic, automatically prevent some forms of double-escaping, create better versatility,
+  and help hasten resolution of security issues.
+  IMPL NOTE: All Scipio standard API implementations, however, should strictly use this function.
 
-WARN: CSS/STYLE escaping may not be fully implemented at this time!
+For more information about escaping in general, see >>>standard/htmlTemplate.ftl<<<.
 
-For Javascript strings placed within HTML attributes (onchange, etc.), typically "js-html" is needed; however 
-when invoking macros, most macros will already escape the "html" part and the templates only need
-to escape for "js".
+'''Single languages'''
 
-NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
+''HTML'': Two language identifiers are supported: "html" and "htmlmarkup". 
+Callers of #escapePart should usually use "html" on html attributes, and "htmlmarkup" on text placed within element body.
+By default, this function escapes all markup delimiters for ''both''.
+The difference is that callers upstream using #wrapAsRaw will then able to override markup specifically using:
+  #wrapAsRaw(xxx, 'htmlmarkup')
+or for all html ('''only''' if careful to escape for attributes safely) using:
+  #wrapAsRaw(xxx, 'html')
+"html" is also a special case because it also fills in for "htmlmarkup" (if not included in the #wrapAsRaw call),
+but not vice-versa since markup cannot be used in attributes.
+NOTE: Callers upstream using #wrapAsRaw should usually use "htmlmarkup" in most cases.
 
-NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
-    escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value's language matches or is a prefix of the language
-    passed to this function.
+''Javascript, JSON'': Only simple single string parts are supported via "js" and "json" (and some variants).
+This can ONLY encode strings between {{{""}}} or {{{''}}}.
+It is impossible to safely encode javascript outside string literals (see OWASP).
+
+'''Composed languages'''
+
+''Javascript and HTML'': For Javascript strings placed within HTML attributes (e.g. events such as {{{onchange}}}), 
+typically "js-html" is needed. 
+NOTE: From template perspective, macros generally escape html by default, so templates only need to escape the javascript part.
 
   * Parameters *
-    str                     = The string or string-like value to escape
-    lang                    = (js|jsdq|json|html|url|xml|style|js-html|html-js|style-html|html-style|raw) The target language
-                              These are similar to the Freemarker built-in counterparts, but may
-                              not produce the exact same results.
-                              {{{jsdq}}}: special case of js where it is assumed the value
-                                will be contained in double quotes, such that single quotes
-                                don't need to be escaped.
-                              WARN: {{{style}}} is not properly implemented!
-                              FIXME: escaping for {{{style}}}
+    value                   = The string or string-like value to escape
+                              2016-09-29: This now automatically coerces non-strings to string, for convenience.
+    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|css-html|html-css|raw) The target language for escaping
+                              These are analogous to the Freemarker built-in counterparts of same names, but
+                              with implementation details subject to change.
+                              In composed types, the order is meaningful, such that "js-html" performs like {{{?js?html}}}
+                              and "html-js" like {{{?html?js}}}.
+                              Values and special values:
+                              * {{{jsdq}}}: special case of {{{js}}} where it is assumed the value will be contained in double quotes, 
+                                such that single quotes don't need to be escaped.
+                              * {{{html}}}: safely escapes ''any'' html, but primarily attribute content
+                              * {{{htmlmarkup}}: safely escapes only ''markup'' html, but not (necessarily) attributes. Must be
+                                used to allow callers to insert html markup using #wrapAsRaw in the right places (not in attributes!).
+                                NOTE: by default this safely escapes any html; it is the caller overrides that can make this unsafe for attributes.
+                              WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
     strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
                               If true, escaping is always applied unconditionally.
                               If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
                               mainly to mitigate screen auto-escaping and early escaping.
-                    
-  * Related*
-    #escapeFull
+                              DEV NOTE: may want to eliminate need for boolean later
+
+  * Related *
+    #escapeFullUrl
+    #rawString
+    #wrapAsRaw
 -->
-<#function escapePart str lang strict=false>
-  <#if isWrappedAsRaw(str)>
-    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(str, lang)>
-    <#local str = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+<#function escapePart value lang strict=false>
+  <#if lang == "style"><#-- DEPRECATED -->
+    <#local lang = "css">
+  </#if>
+  <#if isWrappedAsRaw(value)>
+    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)>
+    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   <#else>
-    <#local str = rawString(str)><#-- performs coercion to string if needed -->
+    <#local value = rawString(value)><#-- performs coercion to string if needed -->
   </#if>
   <#switch lang?lower_case>
     <#case "json">
-      <#return str?json_string>
+      <#return value?json_string>
       <#break>
     <#case "js">
-      <#return str?js_string>
+      <#return value?js_string>
       <#break>
     <#case "jsdq">
-      <#return str?js_string?replace("\\'", "\'")>
+      <#return value?js_string?replace("\\'", "\'")>
       <#break>
     <#case "html">
-      <#return str?html>
+    <#case "htmlmarkup">
+      <#return value?html>
       <#break>
     <#case "js-html">
-      <#return str?js_string?html>
+      <#return value?js_string?html>
       <#break>
     <#case "html-js">
-      <#return str?html?js_string>
+    <#case "htmlmarkup-js">
+      <#return value?html?js_string>
       <#break>
     <#case "xml">
-      <#return str?xml>
+      <#return value?xml>
       <#break>
     <#case "url">
-      <#return str?url>
+      <#return value?url>
       <#break>
-    <#case "style">
-      <#-- TODO: FIXME: IMPLEMENT -->
-      <#return str>
+    <#case "css">
+      <#-- FIXME: too aggressive
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
+      <#return value>
       <#break>
-    <#case "style-html">
-      <#-- TODO: FIXME: IMPLEMENT -->
-      <#return str?html>
+    <#case "css-html">
+      <#-- FIXME: too aggressive
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
+      <#return value?html>
       <#break>
-    <#case "html-style">
-      <#-- TODO: FIXME: IMPLEMENT -->
-      <#return str?html>
+    <#case "html-css">
+      <#-- FIXME: too aggressive
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
+      <#return value?html>
       <#break>
     <#case "raw">
     <#default>
-      <#return str>
+      <#return value>
       <#break>
   </#switch>
 </#function>
@@ -2151,30 +2235,15 @@ NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped us
 *************
 * escapeFull
 ************
-Encodes/escapes a COMPLETE text string for a given language, recognizing and sparing the language's delimiters.
+Encodes/escapes a complete code sequence for a given language, recognizing and sparing the language's delimiters.
 Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
 and encode in the requested language.
 
-WARN: Not currently fully/properly implemented! In most cases should currently use #escapePart and #escapeFullUrl.
-
-This can be used on full HTML snippets, etc.
-
-This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
-It abstracts the encoder selection. 
-
-Currently, it uses Ofbiz's encoder (subject to change).
-
-WARN: implementation subject to change. Currently produces different (but all safe) results compared to #escapePart for HTML.
-
-NOTE: 2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.
-
-NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
-    escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value's language matches or is a prefix of the language
-    passed to this function.
+WARN: 2016-10-10: Not currently properly implemented! Please use #escapePart or #escapeFullUrl.
     
   * Parameters *
-    str                     = The string to escape
-    lang                    = (html|xml|raw) The target language
+    value                   = The string or string-like value to escape
+    lang                    = (html|htmlmarkup|xml|raw) The target language
                               NOTE: This does not currently support js/json because it does not
                                   usually make sense to escape anything but single value strings.
                                   It also does not encode URLs; see #escapeFullUrl.
@@ -2182,48 +2251,58 @@ NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped us
                               If true, escaping is always applied unconditionally.
                               If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
                               mainly to mitigate screen auto-escaping and early escaping.
+                              DEV NOTE: may want to eliminate need for boolean later
                     
   * Related*
     #escapePart
 -->
-<#function escapeFull str lang strict=false>
-  <#if isWrappedAsRaw(str)>
-    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(str, lang)>
-    <#local str = rawString(resolved.value)>
+<#function escapeFull value lang strict=false>
+  <#if lang == "style"><#-- DEPRECATED -->
+    <#local lang = "css">
+  </#if>
+  <#if isWrappedAsRaw(value)>
+    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)>
+    <#local value = rawString(resolved.value)>
     <#local lang = resolved.lang>
   <#else>
-    <#local str = rawString(str)><#-- performs coercion to string if needed -->
+    <#local value = rawString(value)><#-- performs coercion to string if needed -->
   </#if>
-  <#-- NOTE: Currently we support the same types as Ofbiz, so no need for a switch -->
-  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(str))>
+  <#if lang == "htmlmarkup">
+    <#local lang = "html">
+  </#if>
+  <#-- FIXME -->
+  <#-- NOTE: Currently we support almost the same types as Ofbiz, so no need for a switch -->
+  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(lang, value))>
 </#function>
 
 <#-- 
 *************
 * escapeFullUrl
 ************
-Encodes/escapes a COMPLETE URL for a given language.
-Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
-and encode in the requested language.
+Escapes a complete URL for safe insertion in code of a given language.
 
-This is meant to be used to encode full URLs so they can be safely included in HTML attributes,
-javascript strings, etc.
+WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
 
-This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
-It abstracts the encoder selection. 
+Essentially this is a wrapper around #rawString and language encoders. It abstracts the encoder selection.
+It first performs a #rawString call to bypass the screen auto-escaping on the value.
 
-Currently, it uses Freemarker built-ins (subject to change); the Ofbiz encoders do not appear
-suited to handling URLs.
+For compability reasons, this function when not in strict mode (default is not strict) accepts param delimiters 
+in either the escaped {{{&amp;}}} form or unescaped {{{&}}} form.
+Ideally, such escaped delimiters would not be received, but they are very prevalent in Ofbiz due
+to early escaping.
 
-NOTE: In addition to the above, for compability reaons, this function will currently accept param delimiters 
-    in either the escaped {{{&amp;}}} form or unescaped {{{&}}} form.
-    Ideally, we should not receive escaped delimiters here, but Ofbiz frequently escapes early.
+In addition, this function accepts values produced by #wrapAsRaw. These can be used to bypass the escaping in part or in full.
+If the value was wrapped using the same language as specified in this call, the wrapped value will be used as-is.
+Note that most times, this is not nearly as useful as it is for #escapePart.
 
-DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe way to process URLs.
+NOTES: 
+* 2016-10-05: Currently, this is mostly implemented using Freemarker built-ins such as {{{?html}}}, {{{?js}}}, etc. but is subject to change.
+  Although Freemarker built-ins can still be used directly in templates and client macros, use of this function 
+  is recommended to centralize the escaping logic, automatically prevent some forms of double-escaping, create better versatility,
+  and help hasten resolution of security issues.
+  IMPL NOTE: All Scipio standard API implementations, however, should strictly use this function.
 
-NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
-    escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value's language matches or is a prefix of the language
-    passed to this function.
+For more information about escaping in general, see >>>standard/htmlTemplate.ftl<<<.
 
   * Usage Examples *
   
@@ -2234,65 +2313,83 @@ NOTE: 2016-10-05: Supports #wrapAsRaw values: Values passed that were wrapped us
     </@script>
 
   * Parameters *
-    str                     = The string to escape
-    lang                    = (html|js|jsdq|json|js-html|jsdq-html|xml|style|raw) The target language
-                              {{{jsdq}}}: special case of js where it is assumed the value
+    value                   = The string or string-like value to escape
+    lang                    = (html|js|jsdq|json|js-html|jsdq-html|xml|css|raw) The target language
+                              * {{{jsdq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
-                              WARN: {{{style}}} is not properly implemented!
-                              FIXME: escaping for {{{style}}}
+                              WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
+                              WARN: Inserting URLs into CSS (using {{{url()}}}) is known to be unsafe even with escaping.
     strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
                               If true, escaping is always applied unconditionally.
                               If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
                               mainly to mitigate screen auto-escaping and early escaping.
+                              DEV NOTE: may want to eliminate need for boolean later
 -->
-<#function escapeFullUrl str lang strict=false>
-  <#if isWrappedAsRaw(str)>
-    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(str, lang)>
-    <#local str = rawString(resolved.value)>
+<#function escapeFullUrl value lang strict=false>
+  <#if lang == "style"><#-- DEPRECATED -->
+    <#local lang = "css">
+  </#if>
+  <#if isWrappedAsRaw(value)>
+    <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)>
+    <#local value = rawString(resolved.value)>
     <#local lang = resolved.lang>
   <#else>
-    <#local str = rawString(str)><#-- performs coercion to string if needed -->
+    <#local value = rawString(value)><#-- performs coercion to string if needed -->
   </#if>
   <#if !strict>
     <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
-    <#local str = str?replace("&amp;", "&")>
+    <#local value = value?replace("&amp;", "&")>
   </#if>
   <#switch lang?lower_case>
     <#case "json">
-      <#return str?json_string>
+      <#return value?json_string>
       <#break>
     <#case "js">
-      <#return str?js_string>
+      <#return value?js_string>
       <#break>
     <#case "jsdq">
-      <#return str?js_string?replace("\\'", "\'")>
+      <#return value?js_string?replace("\\'", "\'")>
       <#break>
     <#case "html">
-      <#return str?html>
+    <#case "htmlmarkup">
+      <#return value?html>
       <#break>
     <#case "js-html">
-      <#return str?js_string?html>
+      <#return value?js_string?html>
       <#break>
     <#case "html-js">
-      <#return str?html?js_string>
+    <#case "htmlmarkup-js">
+      <#return value?html?js_string>
       <#break>
     <#case "jsdq-html">
-      <#return str?js_string?replace("\\'", "\'")?html>
+      <#return value?js_string?replace("\\'", "\'")?html>
       <#break>
     <#case "html-jsdq">
-      <#return str?html?js_string?replace("\\'", "\'")>
+    <#case "htmlmarkup-jsdq">
+      <#return value?html?js_string?replace("\\'", "\'")>
       <#break>
     <#case "xml">
-      <#return str?xml>
+      <#return value?xml>
       <#break>
-    <#case "style">
-      <#-- TODO: FIXME: IMPLEMENT -->
-      <#return str>
+    <#case "css">
+      <#-- FIXME: too aggressive
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
+      <#return value>
+      <#break>
+    <#case "css-html">
+      <#-- FIXME: too aggressive
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
+      <#return value?html>
+      <#break>
+    <#case "html-css">
+      <#-- FIXME: too aggressive
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
+      <#return value?html>
       <#break>
     <#case "raw">
     <#default>
-      <#return str>
+      <#return value>
       <#break>
   </#switch>
 </#function>

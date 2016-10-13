@@ -28,6 +28,6 @@ under the License.
 </#if>
 </#list>
 </#if>
-<a href="javascript:document['${escapePart(genericLinkName, 'js-html')}'].submit();"<#if genericLinkStyle??> class="${escapePart(genericLinkStyle, 'html')}"</#if>>${escapePart(genericLinkText, 'html')}</a>
+<a href="javascript:document['${escapePart(genericLinkName, 'js-html')}'].submit();"<#if genericLinkStyle??> class="${escapePart(genericLinkStyle, 'html')}"</#if>>${escapePart(genericLinkText, 'htmlmarkup')}</a>
 </form>
 </#if>

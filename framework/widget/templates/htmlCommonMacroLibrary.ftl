@@ -55,20 +55,20 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
           <#-- SCIPIO: generic text container types -->
           <#if elemType=="div" || elemType=="p" || elemType=="span">
-            <${elemType}${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'html')}</${elemType}>
+            <${elemType}${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'htmlmarkup')}</${elemType}>
           <#-- SCIPIO: common-message handling -->
           <#elseif elemType?starts_with("common-msg-")>
-            <@commonMsg type=elemType["common-msg-"?length..] class=class id=id>${escapePart(text, 'html')}</@commonMsg>
+            <@commonMsg type=elemType["common-msg-"?length..] class=class id=id>${escapePart(text, 'htmlmarkup')}</@commonMsg>
           <#elseif elemType=="generic">
             <#-- SCIPIO: special case to force stock generic case (in case default style string is not empty) -->
-            <span${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'html')}</span>
+            <span${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'htmlmarkup')}</span>
           <#else>
             <#-- SCIPIO: default markup and stock Ofbiz case (note: uses original style arg) -->
-            <span${idText}<@compiledClassAttribStr class=style />>${escapePart(text, 'html')}</span>
+            <span${idText}<@compiledClassAttribStr class=style />>${escapePart(text, 'htmlmarkup')}</span>
           </#if>
       </#if>
     <#else>
-      <span${idText}>${escapePart(text, 'html')}</span>
+      <span${idText}>${escapePart(text, 'htmlmarkup')}</span>
     </#if>
   </#if>
 </#macro>

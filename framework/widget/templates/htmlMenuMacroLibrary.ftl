@@ -315,7 +315,7 @@ Only those not marked DEPRECATED should still be used.
       ${imgStr}<#t>
     </#if>
     <#if text?has_content>
-      ${escapePart(text, 'html')}<#t>
+      ${escapePart(text, 'htmlmarkup')}<#t>
     </#if>
   </#local>
 

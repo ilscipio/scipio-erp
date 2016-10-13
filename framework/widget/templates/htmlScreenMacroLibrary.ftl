@@ -76,7 +76,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...>
 
 <#if editRequest?exists && enableEditValue == "true">
-<#if urlString?exists><a href="${escapeFullUrl(urlString, 'html')}">${escapePart(editMode, 'html')}</a><#rt/></#if>
+<#if urlString?exists><a href="${escapeFullUrl(urlString, 'html')}">${escapePart(editMode, 'htmlmarkup')}</a><#rt/></#if>
 <#if editContainerStyle?exists></div><#rt/></#if>
 </#if>
 </#macro>
@@ -87,7 +87,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
 <#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue extraArgs...>
 <#if editRequest?exists && enableEditValue == "true">
-<#if urlString?exists><a href="${escapeFullUrl(urlString, 'html')}">${escapePart(editMode, 'html')}</a><#rt/></#if>
+<#if urlString?exists><a href="${escapeFullUrl(urlString, 'html')}">${escapePart(editMode, 'htmlmarkup')}</a><#rt/></#if>
 <#if editContainerStyle?exists></div><#rt/></#if>
 </#if>
 </#macro>
@@ -114,13 +114,13 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
             <#if targetWindow?has_content>target="${escapePart(targetWindow, 'html')}"</#if> 
             <#-- FIXME: dangerous lookup -->
             href="<#if "hidden-form"==linkType>javascript:document['${escapePart(uniqueItemName, 'js-html')}'].submit()<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"><#rt/>
-            <#if imgStr?has_content>${imgStr}</#if><#if text?has_content>${escapePart(text, 'html')}</#if>
+            <#if imgStr?has_content>${imgStr}</#if><#if text?has_content>${escapePart(text, 'htmlmarkup')}</#if>
         </a>
     <#else>
         <div id="${escapePart(uniqueItemName, 'html')}"></div>
         <a href="javascript:void(0);" id="${escapePart(uniqueItemName, 'html')}_link" 
         <#if style?has_content>class="${escapePart(style, 'html')}"</#if>>
-        <#if text?has_content>${escapePart(text, 'html')}</#if></a>
+        <#if text?has_content>${escapePart(text, 'htmlmarkup')}</#if></a>
         <@script>
             function getRequestData() {
                 var data = {
@@ -179,18 +179,18 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl extraArgs...>
-    <li class="${escapePart(paginateFirstStyle, 'html')}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${escapeFullUrl(firstLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateFirstLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateFirstLabel, 'html')}</a></#if></li>
-    <li class="${escapePart(paginatePreviousStyle, 'html')}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${escapeFullUrl(previousLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginatePreviousLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginatePreviousLabel, 'html')}</a></#if></li>
-    <#if (listSize?number > 0)><li><span class="text-entry">${lowIndex?number + 1} - ${lowIndex?number + actualPageSize?number} ${escapePart(ofLabel, 'html')} ${listSize}</span></li><#rt/></#if>
-    <li class="${escapePart(paginateNextStyle, 'html')}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${escapeFullUrl(nextLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'html')}</a></#if></li>
-    <li class="${escapePart(paginateLastStyle, 'html')}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${escapeFullUrl(lastLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'html')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'html')}</a></#if></li>
+    <li class="${escapePart(paginateFirstStyle, 'html')}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${escapeFullUrl(firstLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateFirstLabel, 'htmlmarkup')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateFirstLabel, 'htmlmarkup')}</a></#if></li>
+    <li class="${escapePart(paginatePreviousStyle, 'html')}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${escapeFullUrl(previousLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginatePreviousLabel, 'htmlmarkup')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginatePreviousLabel, 'htmlmarkup')}</a></#if></li>
+    <#if (listSize?number > 0)><li><span class="text-entry">${lowIndex?number + 1} - ${lowIndex?number + actualPageSize?number} ${escapePart(ofLabel, 'htmlmarkup')} ${listSize}</span></li><#rt/></#if>
+    <li class="${escapePart(paginateNextStyle, 'html')}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${escapeFullUrl(nextLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'htmlmarkup')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateNextLabel, 'htmlmarkup')}</a></#if></li>
+    <li class="${escapePart(paginateLastStyle, 'html')}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${escapeFullUrl(lastLinkUrl, 'html')}" class="${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'htmlmarkup')}</a><#else><a href="javascript:void(0);" class="disabled ${styles.menu_section_item_link!}">${escapePart(paginateLastLabel, 'htmlmarkup')}</a></#if></li>
 </#macro>
 
 <#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal" columnCount=1 extraArgs...>
   <#global portalPageGridUsed = 0>
   <#--
   <#if confMode == "true">
-    <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document['addColumn_${escapePart(portalPageId, 'js-html')}'].submit()" title="${escapePart(addColumnHint, 'html')}">${escapePart(addColumnLabel, 'html')}</a> <b>PortalPageId: ${escapePart(portalPageId, 'html')}</b>
+    <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document['addColumn_${escapePart(portalPageId, 'js-html')}'].submit()" title="${escapePart(addColumnHint, 'html')}">${escapePart(addColumnLabel, 'htmlmarkup')}</a> <b>PortalPageId: ${escapePart(portalPageId, 'html')}</b>
     <form method="post" action="addPortalPageColumn" name="addColumn_${escapePart(portalPageId, 'html')}">
       <input name="portalPageId" value="${escapePart(portalPageId, 'html')}" type="hidden"/>
     </form>
@@ -286,19 +286,19 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
             <form method="post" action="deletePortalPageColumn" name="delColumn_${escapePart(columnKey, 'html')}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:document['delColumn_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(delColumnHint, 'html')}">${escapePart(delColumnLabel, 'html')}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:document['delColumn_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(delColumnHint, 'html')}">${escapePart(delColumnLabel, 'htmlmarkup')}</a>
           </li>
           <li>
             <form method="post" action="addPortlet" name="addPortlet_${escapePart(columnKey, 'html')}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document['addPortlet_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(addPortletHint, 'html')}">${escapePart(addPortletLabel, 'html')}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document['addPortlet_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(addPortletHint, 'html')}">${escapePart(addPortletLabel, 'htmlmarkup')}</a>
           </li>
           <li>
             <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${escapePart(columnKey, 'html')}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document['setColumnSize_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(setColumnSizeHint, 'html')}">${escapePart(colWidthLabel, 'html')}: ${width}</a>
+            <a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document['setColumnSize_${escapePart(columnKey, 'js-html')}'].submit()" title="${escapePart(setColumnSizeHint, 'html')}">${escapePart(colWidthLabel, 'htmlmarkup')}: ${width}</a>
           </li>
         </ul>
       </div>

@@ -144,6 +144,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getPropertyMsg">getPropertyMsg</a>, 
                   <a href="#entry-getPropertyMsgFromLocExpr">getPropertyMsgFromLocExpr</a>, 
                   <a href="#entry-getPropertyValue">getPropertyValue</a>, 
+                  <a href="#entry-getRawWrappedForLang">getRawWrappedForLang</a>, 
                   <a href="#entry-getRequestNextElemIndex">getRequestNextElemIndex</a>, 
                   <a href="#entry-getStyleNamesByPrefix">getStyleNamesByPrefix</a>, 
                   <a href="#entry-getTextLabelFromExpr">getTextLabelFromExpr</a>, 
@@ -164,6 +165,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-ofbizInterWebappUrl">ofbizInterWebappUrl</a>, 
                   <a href="#entry-ofbizUrl">ofbizUrl</a>, 
                   <a href="#entry-ofbizWebappUrl">ofbizWebappUrl</a>, 
+                  <a href="#entry-rawLabel">rawLabel</a>, 
                   <a href="#entry-rawString">rawString</a>, 
                   <a href="#entry-removeStyleNames">removeStyleNames</a>, 
                   <a href="#entry-render">render</a>, 
@@ -330,6 +332,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-getPropertyMsg">getPropertyMsg</a>, 
         <a href="#entry-getPropertyMsgFromLocExpr">getPropertyMsgFromLocExpr</a>, 
         <a href="#entry-getPropertyValue">getPropertyValue</a>, 
+        <a href="#entry-getRawWrappedForLang">getRawWrappedForLang</a>, 
         <a href="#entry-getRenderContextType">getRenderContextType</a>, 
         <a href="#entry-getRenderPlatformType">getRenderPlatformType</a>, 
         <a href="#entry-getRequestNextElemIndex">getRequestNextElemIndex</a>, 
@@ -370,6 +373,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-popRequestStack">popRequestStack</a>, 
         <a href="#entry-printVars">printVars</a>, 
         <a href="#entry-pushRequestStack">pushRequestStack</a>, 
+        <a href="#entry-rawLabel">rawLabel</a>, 
         <a href="#entry-rawString">rawString</a>, 
         <a href="#entry-readRequestStack">readRequestStack</a>, 
         <a href="#entry-removeStyleNames">removeStyleNames</a>, 
@@ -2113,7 +2117,12 @@ object found in the global <code>scipioNullObject</code> variable.          </di
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns empty string if no label is found</p>
+                      <p class="lib-entry-shortdesc">Returns label from global label map or resource, or empty string if no label is found.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The result is automatically html-escaped by the screen renderer during regular freemarker template rendering.          </div>
+                      </div>
                   </div>
             
               
@@ -2150,6 +2159,85 @@ a whole file for one label.        </span>
                       </div>
 
                   </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-rawLabel">#rawLabel</a>, 
+                       <a href="#entry-getPropertyMsg">#getPropertyMsg</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-rawLabel"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">rawLabel</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>rawLabel</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns label from global label map or resource, or empty string if no label is found,
+and prevents automatic html-escaping on the result.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Shorthand for <code>rawString(getLabel(...))</code>.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>name</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Label name</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>resource</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(optional)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Resource name</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If label not found in uiLabelMap (preferred), falls back to lookup in this
+resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
+a whole file for one label.        </span>
+</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-getLabel">#getLabel</a>, 
+                       <a href="#entry-rawString">#rawString</a>
+                     </p>
+                  </div>  
             
 
             
@@ -3652,11 +3740,14 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.</p>
+                      <p class="lib-entry-shortdesc">Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.</p>
                       <div class="lib-entry-extradesc">
         <p>
 This is the same as the Ofbiz-provided function, <code>StringUtil.wrapString</code>, but further simplifies
 the resulting type into a simple Freemarker string.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.          </div>
                       </div>
                   </div>
             
@@ -3668,17 +3759,25 @@ the resulting type into a simple Freemarker string.        </p>
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
-                            <code>str</code>
+                            <code>value</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> The string to return raw.</span>
+                            <span class="lib-entry-param-desc-shortdesc"> The value to return without screen escaping</span>
                         </td>
                       </tr>
               </table>
                       </div>
 
                   </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-rawString">#rawString</a>
+                     </p>
+                  </div>  
             
 
               <div class="lib-entry-details">
@@ -3703,7 +3802,7 @@ the resulting type into a simple Freemarker string.        </p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
+                      <p class="lib-entry-shortdesc">Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
 Alias for <a href="#entry-toRawString">#toRawString</a> (common operation).</p>
                       <div class="lib-entry-extradesc">
         <p>
@@ -3711,7 +3810,7 @@ This is the same as the Ofbiz-provided function, <code>StringUtil.wrapString</co
 the resulting type into a simple Freemarker string.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
+2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.          </div>
                       </div>
                   </div>
             
@@ -3723,11 +3822,11 @@ the resulting type into a simple Freemarker string.        </p>
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
-                            <code>str</code>
+                            <code>value</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> The string to return raw.</span>
+                            <span class="lib-entry-param-desc-shortdesc"> The value to return without screen escaping</span>
                         </td>
                       </tr>
               </table>
@@ -4858,17 +4957,27 @@ this is kept separate from the object for security reasons.          </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Wraps a string in a special string wrapper that when passed to markup- or script-handling macros gets included as
-a raw string bypassing html, js or other language escaping.
-This include <a href="#entry-objectAsScript">@objectAsScript</a> and macros that escape values using <a href="#entry-escapePart">#escapePart</a> or <a href="#entry-escapeFull">#escapeFull</a>.</p>
+                      <p class="lib-entry-shortdesc">Wraps pre-escaped values for specific languages in a special wrapper object.
+When passed to markup- or script-handling macros which normally escape values in these languages,
+the values are used as-is with no additional escape.</p>
                       <div class="lib-entry-extradesc">
+        <p>
+These wrapper objects are automatically recognized by <a href="#entry-escapePart">#escapePart</a> and <a href="#entry-escapeFullUrl">#escapeFullUrl</a>.        </p>
+        <p>
+gets included as
+a raw string bypassing html, js or other language escaping.
+This include <a href="#entry-objectAsScript">@objectAsScript</a> and macros that escape values using #escapePart or <a href="#entry-escapeFull">#escapeFull</a>.        </p>
           <div class="lib-text-note">
             <strong>WARN: </strong>
-This will only be safe if an explicit language(s) is/are passed!          </div>
+This is only safe to use if an explicit language is passed and the pre-escaping performed
+is adequate for that language.          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 This has no functional relationship to Ofbiz&#39;s StringWrapper (<code>StringUtil.wrapString</code> or <a href="#entry-rawString">#rawString</a>);
-its scope is unrelated to Ofbiz&#39;s screen auto-escaping.          </div>
+its working scope is unrelated to Ofbiz&#39;s screen auto-escaping. It is primarily intended
+for Scipio macros and templates that use #escapePart or equivalents.          </div>
+        <p>
+For more information about escaping in general, see <a href="standard/htmlTemplate.html">standard/htmlTemplate.ftl</a>.        </p>
                       </div>
                   </div>
             
@@ -4880,21 +4989,22 @@ its scope is unrelated to Ofbiz&#39;s screen auto-escaping.          </div>
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
-                            <code>object</code>
+                            <code>value</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((string)|(map))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">the string to wrap OR map of languages to strings</span>
+                            <span class="lib-entry-param-desc-shortdesc">The value to wrap OR a map of languages to strings</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 If this is a string, <code>lang</code> parameter should always be specified.
 If this is a map, it is a map of languages to strings, for example:
         </span>
-<pre>{&quot;html&quot;:&quot;&lt;em&gt;my title&lt;/em&gt;&quot;, &quot;raw&quot;:&quot;my title&quot;}</pre>        <span>
+<pre>{&quot;htmlmarkup&quot;:&quot;&lt;em&gt;my title&lt;/em&gt;&quot;, &quot;raw&quot;:&quot;my title&quot;}
+{&quot;htmlmarkup&quot;:&quot;&lt;em&gt;${getLabel(&#39;CommonYes&#39;)}&lt;/em&gt;&quot;, &quot;raw&quot;:rawLabel(&#39;CommonYes&#39;)}</pre>        <span>
 The supported map languages are the same as the single <code>lang</code> parameter, except
 that &quot;script&quot; has no meaning in this case and should not be used, and in most cases,
-at least &quot;raw&quot; should be specified.
-The map version allows templates to specify alternate markup for different languages        </span>
+at least <code>raw</code> should be specified.
+This map version allows templates to specify alternate markup for different languages.        </span>
 </span>
                         </td>
                       </tr>
@@ -4904,16 +5014,26 @@ The map version allows templates to specify alternate markup for different langu
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>(html|js|json|script|...|, default: -empty/unspecific-)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">the specific language toward which this should be considered &quot;raw&quot;</span>
+                            <span class="lib-entry-param-desc-shortdesc">The specific language toward which this should be considered &quot;raw&quot;</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 This accepts dash-separated string of names.
-Special values:
+Values (and special values):
         </span>
         <div>  <ul>
       <li>
         <span>
 <code>script</code>: for use with <a href="#entry-objectAsScript">@objectAsScript</a>: prevents both escaping and enclosing string literals        </span>
+      </li>
+      <li>
+        <span>
+<code>htmlmarkup</code>: html destined for markup only. This may contain html markup
+as it will never be used within html attributes.        </span>
+      </li>
+      <li>
+        <span>
+<code>html</code>: html destined for html attributes or markup. This must NOT contain
+html markup (elements) because this may get inserted into html attributes.        </span>
       </li>
   </ul>
 </div>
@@ -4931,6 +5051,15 @@ a specific language. The unspecific mode is for rare workarounds only.          
                       </div>
 
                   </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-escapePart">#escapePart</a>, 
+                       <a href="#entry-escapeFullUrl">#escapeFullUrl</a>
+                     </p>
+                  </div>  
             
 
             
@@ -5001,6 +5130,67 @@ and will not detect any such wrappers.          </div>
           
           
           <hr />
+          <a name="entry-getRawWrappedForLang"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">getRawWrappedForLang</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRawWrappedForLang</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Gets the raw wrapped value for the given language, as string.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+If not applicable, returns void (use default operator, <code>!</code>).        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>object</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">the object wrapped with <a href="#entry-wrapAsRaw">#wrapAsRaw</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>lang</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|json|script|...|, default: -empty/unspecific-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> the specific language to get</span>
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-wrapAsRaw">#wrapAsRaw</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-wrapRawScript"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -5013,7 +5203,13 @@ and will not detect any such wrappers.          </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Alias for <a href="#entry-wrapAsRaw">#wrapAsRaw</a>(object, &quot;script&quot;), and easier to remember in relation to <a href="#entry-objectAsScript">@objectAsScript</a>.</p>
+                      <p class="lib-entry-shortdesc">Wraps a script value in a special wrapper that marks it as raw script code.
+When passed to <a href="#entry-objectAsScript">@objectAsScript</a> will cause the script string to be included as-is, instead of
+being interpreted as a value to escape.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Alias for <code>#wrapAsRaw(value, &quot;script&quot;)</code>, and easier to remember in relation to @objectAsScript.        </p>
+                      </div>
                   </div>
             
               
@@ -5022,6 +5218,13 @@ and will not detect any such wrappers.          </div>
                     
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>value</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
                       <tr>
                         <td class="entry-paramname">
                             <code>object</code>
@@ -5039,7 +5242,8 @@ and will not detect any such wrappers.          </div>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                       <a href="#entry-objectAsScript">@objectAsScript</a>
+                       <a href="#entry-objectAsScript">@objectAsScript</a>, 
+                       <a href="#entry-wrapAsRaw">#wrapAsRaw</a>
                      </p>
                   </div>  
             
@@ -5061,7 +5265,7 @@ and will not detect any such wrappers.          </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Checks if the value was wrapped using <a href="#entry-wrapAsRaw">#wrapAsRaw</a>(object, &quot;script&quot;).</p>
+                      <p class="lib-entry-shortdesc">Checks if the value was wrapped using <code>#wrapAsRaw(object, &quot;script&quot;)</code>.</p>
                   </div>
             
               
@@ -5075,7 +5279,7 @@ and will not detect any such wrappers.          </div>
                             <code>object</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">the value to check</span>
+                            <span class="lib-entry-param-desc-shortdesc">the object to check</span>
                         </td>
                       </tr>
               </table>
@@ -5110,53 +5314,66 @@ and will not detect any such wrappers.          </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
-Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
-and encode in the requested language.</p>
+                      <p class="lib-entry-shortdesc">Escapes an individual value or code &quot;part&quot; for a given language, ignoring and crushing delimiters.</p>
                       <div class="lib-entry-extradesc">
-        <p>
-Essentially this is a wrapper around #rawString and encoders.
-It abstracts the encoder selection.
-        </p>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-At current time (2016-10-05), this uses Freemarker built-ins (subject to change).
-Although freemarker built-ins can still be used, use of this function is preferred to centralize
-the escaping logic and automatically prevent some double-escaping.          </div>
-        <p>
-This ONLY works to escape individual values of the given language. For example, &quot;url&quot;
-can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.
-To encode a full URL, you must use <a href="#entry-escapeFullUrl">#escapeFullUrl</a>.        </p>
-        <p>
-For Javascript and JSON (&quot;js&quot;, &quot;json&quot;), this can ONLY encode strings between <code>&quot;&quot;</code> or <code>&#39;&#39;</code>.
-There is no <a href="#entry-escapeFull">#escapeFull</a> implementation for these because safely escaping full javascript code is impossible (see OWASP).        </p>
-        <p>
-For        </p>
-          <span class="lib-text-note">
-            <strong>HTML: </strong>
-You should use this on HTML attributes. For full HTML texts, in theory you should use #escapeFull, but currently          </span>
-        <p>
-<a href="#entry-escapePart">#escapePart</a> works generally and is better defined.
-        </p>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-In practice #escapePart will work on full HTML bodies/texts anyway, and at current time (2016-10-05)
-many macros are using this indiscriminately.          </div>
           <div class="lib-text-note">
             <strong>WARN: </strong>
-CSS/STYLE escaping may not be fully implemented at this time!          </div>
+2016-10-10: <code>css</code> not currently implemented. <strong>Do not pass</strong> input of unsafe origin for CSS to this method at this time!          </div>
         <p>
-For Javascript strings placed within HTML attributes (onchange, etc.), typically &quot;js-html&quot; is needed; however
-when invoking macros, most macros will already escape the &quot;html&quot; part and the templates only need
-to escape for &quot;js&quot;.        </p>
+Essentially this is a wrapper around <a href="#entry-rawString">#rawString</a> and language encoders. It abstracts the encoder selection.
+It first performs a #rawString call to bypass the screen auto-escaping on the value.        </p>
+        <p>
+In addition, this function accepts values produced by <a href="#entry-wrapAsRaw">#wrapAsRaw</a>. These can be used to bypass the escaping in part or in full.
+If the value was wrapped using the same language as specified in this call, the wrapped value will be used as-is.        </p>
+          <div class="lib-text-note">
+            <strong>NOTES: </strong>
+  <ul>
+      <li>
+        <span>
+2016-10-05: Currently, this is mostly implemented using Freemarker built-ins such as <code>?html</code>, <code>?js</code>, etc. but is subject to change.
+Although Freemarker built-ins can still be used directly in templates and client macros, use of this function
+is recommended to centralize the escaping logic, automatically prevent some forms of double-escaping, create better versatility,
+and help hasten resolution of security issues.
+        </span>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+All Scipio standard API implementations, however, should strictly use this function.          </div>
+      </li>
+  </ul>
+          </div>
+        <p>
+For more information about escaping in general, see <a href="standard/htmlTemplate.html">standard/htmlTemplate.ftl</a>.        </p>
+        <p>
+<strong>Single languages</strong>        </p>
+        <p>
+<em>HTML</em>: Two language identifiers are supported: &quot;html&quot; and &quot;htmlmarkup&quot;.
+Callers of <a href="#entry-escapePart">#escapePart</a> should usually use &quot;html&quot; on html attributes, and &quot;htmlmarkup&quot; on text placed within element body.
+By default, this function escapes all markup delimiters for <em>both</em>.
+The difference is that callers upstream using #wrapAsRaw will then able to override markup specifically using:
+        </p>
+<pre>#wrapAsRaw(xxx, &#39;htmlmarkup&#39;)</pre>        <p>
+or for all html (<strong>only</strong> if careful to escape for attributes safely) using:
+        </p>
+<pre>#wrapAsRaw(xxx, &#39;html&#39;)</pre>        <p>
+&quot;html&quot; is also a special case because it also fills in for &quot;htmlmarkup&quot; (if not included in the #wrapAsRaw call),
+but not vice-versa since markup cannot be used in attributes.
+        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
+Callers upstream using #wrapAsRaw should usually use &quot;htmlmarkup&quot; in most cases.          </div>
+        <p>
+<em>Javascript, JSON</em>: Only simple single string parts are supported via &quot;js&quot; and &quot;json&quot; (and some variants).
+This can ONLY encode strings between <code>&quot;&quot;</code> or <code>&#39;&#39;</code>.
+It is impossible to safely encode javascript outside string literals (see OWASP).        </p>
+        <p>
+<strong>Composed languages</strong>        </p>
+        <p>
+<em>Javascript and HTML</em>: For Javascript strings placed within HTML attributes (e.g. events such as <code>onchange</code>),
+typically &quot;js-html&quot; is needed.
+        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-2016-10-05: Supports <a href="#entry-wrapAsRaw">#wrapAsRaw</a> values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
-escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value&#39;s language matches or is a prefix of the language
-passed to this function.          </div>
+From template perspective, macros generally escape html by default, so templates only need to escape the javascript part.          </div>
                       </div>
                   </div>
             
@@ -5168,10 +5385,14 @@ passed to this function.          </div>
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
-                            <code>str</code>
+                            <code>value</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">The string or string-like value to escape</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+2016-09-29: This now automatically coerces non-strings to string, for convenience.        </span>
+</span>
                         </td>
                       </tr>
                       <tr>
@@ -5179,18 +5400,40 @@ passed to this function.          </div>
                             <code>lang</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(js|jsdq|json|html|url|xml|style|js-html|html-js|style-html|html-style|raw)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">The target language</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|css-html|html-css|raw)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">The target language for escaping</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-These are similar to the Freemarker built-in counterparts, but may
-not produce the exact same results.
-<code>jsdq</code>: special case of js where it is assumed the value
+These are analogous to the Freemarker built-in counterparts of same names, but
+with implementation details subject to change.
+In composed types, the order is meaningful, such that &quot;js-html&quot; performs like <code>?js?html</code>
+and &quot;html-js&quot; like <code>?html?js</code>.
+Values and special values:
         </span>
-<pre>will be contained in double quotes, such that single quotes
-don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
+        <div>  <ul>
+      <li>
+        <span>
+<code>jsdq</code>: special case of <code>js</code> where it is assumed the value will be contained in double quotes,
+such that single quotes don&#39;t need to be escaped.        </span>
+      </li>
+      <li>
+        <span>
+<code>html</code>: safely escapes <em>any</em> html, but primarily attribute content        </span>
+      </li>
+      <li>
+        <span>
+<code>htmlmarkup}}: safely escapes only <em>markup</em> html, but not (necessarily) attributes. Must be
+used to allow callers to insert html markup using <a href="#entry-wrapAsRaw">#wrapAsRaw</a> in the right places (not in attributes!).
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+by default this safely escapes any html; it is the caller overrides that can make this unsafe for attributes.          </div>
+      </li>
+  </ul>
+</div>
+          <div class="lib-text-note">
             <strong>WARN: </strong>
-<code>style</code> is not properly implemented!          </div>
+2016-10-10: <code>css</code> not currently implemented. <strong>Do not pass</strong> input of unsafe origin for CSS to this method at this time!          </div>
 </span>
                         </td>
                       </tr>
@@ -5206,16 +5449,24 @@ don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
 If true, escaping is always applied unconditionally.
 If false, the function <em>may</em> attempt heuristics to prevent double-escaping issues (not always desirable),
 mainly to mitigate screen auto-escaping and early escaping.
-
         </span>
-        <h4>Related</h4>
-<pre>#escapeFull</pre></span>
+</span>
                         </td>
                       </tr>
               </table>
                       </div>
 
                   </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-escapeFullUrl">#escapeFullUrl</a>, 
+                       <a href="#entry-rawString">#rawString</a>, 
+                       <a href="#entry-wrapAsRaw">#wrapAsRaw</a>
+                     </p>
+                  </div>  
             
 
             
@@ -5235,31 +5486,13 @@ mainly to mitigate screen auto-escaping and early escaping.
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Encodes/escapes a COMPLETE text string for a given language, recognizing and sparing the language&#39;s delimiters.
+                      <p class="lib-entry-shortdesc">Encodes/escapes a complete code sequence for a given language, recognizing and sparing the language&#39;s delimiters.
 Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
 and encode in the requested language.</p>
                       <div class="lib-entry-extradesc">
           <div class="lib-text-note">
             <strong>WARN: </strong>
-Not currently fully/properly implemented! In most cases should currently use <a href="#entry-escapePart">#escapePart</a> and <a href="#entry-escapeFullUrl">#escapeFullUrl</a>.          </div>
-        <p>
-This can be used on full HTML snippets, etc.        </p>
-        <p>
-This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
-It abstracts the encoder selection.        </p>
-        <p>
-Currently, it uses Ofbiz&#39;s encoder (subject to change).        </p>
-          <div class="lib-text-note">
-            <strong>WARN: </strong>
-implementation subject to change. Currently produces different (but all safe) results compared to #escapePart for HTML.          </div>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-2016-09-29: This will now also tolerate non-strings, which will be coerced to strings using ?string operator.          </div>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-2016-10-05: Supports <a href="#entry-wrapAsRaw">#wrapAsRaw</a> values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
-escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value&#39;s language matches or is a prefix of the language
-passed to this function.          </div>
+2016-10-10: Not currently properly implemented! Please use <a href="#entry-escapePart">#escapePart</a> or <a href="#entry-escapeFullUrl">#escapeFullUrl</a>.          </div>
                       </div>
                   </div>
             
@@ -5271,10 +5504,10 @@ passed to this function.          </div>
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
-                            <code>str</code>
+                            <code>value</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">The string to escape</span>
+                            <span class="lib-entry-param-desc-shortdesc">The string or string-like value to escape</span>
                         </td>
                       </tr>
                       <tr>
@@ -5282,7 +5515,7 @@ passed to this function.          </div>
                             <code>lang</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(html|xml|raw)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|htmlmarkup|xml|raw)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">The target language</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
@@ -5305,6 +5538,8 @@ It also does not encode URLs; see <a href="#entry-escapeFullUrl">#escapeFullUrl<
 If true, escaping is always applied unconditionally.
 If false, the function <em>may</em> attempt heuristics to prevent double-escaping issues (not always desirable),
 mainly to mitigate screen auto-escaping and early escaping.
+        </span>
+        <span>
 
         </span>
         <h4>Related</h4>
@@ -5334,29 +5569,41 @@ mainly to mitigate screen auto-escaping and early escaping.
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Encodes/escapes a COMPLETE URL for a given language.
-Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
-and encode in the requested language.</p>
+                      <p class="lib-entry-shortdesc">Escapes a complete URL for safe insertion in code of a given language.</p>
                       <div class="lib-entry-extradesc">
-        <p>
-This is meant to be used to encode full URLs so they can be safely included in HTML attributes,
-javascript strings, etc.        </p>
-        <p>
-This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
-It abstracts the encoder selection.        </p>
-        <p>
-Currently, it uses Freemarker built-ins (subject to change); the Ofbiz encoders do not appear
-suited to handling URLs.        </p>
           <div class="lib-text-note">
-            <strong>NOTE: </strong>
-In addition to the above, for compability reaons, this function will currently accept param delimiters
+            <strong>WARN: </strong>
+2016-10-10: <code>css</code> not currently implemented. <strong>Do not pass</strong> input of unsafe origin for CSS to this method at this time!          </div>
+        <p>
+Essentially this is a wrapper around <a href="#entry-rawString">#rawString</a> and language encoders. It abstracts the encoder selection.
+It first performs a #rawString call to bypass the screen auto-escaping on the value.        </p>
+        <p>
+For compability reasons, this function when not in strict mode (default is not strict) accepts param delimiters
 in either the escaped <code>&amp;amp;</code> form or unescaped <code>&amp;</code> form.
-Ideally, we should not receive escaped delimiters here, but Ofbiz frequently escapes early.          </div>
+Ideally, such escaped delimiters would not be received, but they are very prevalent in Ofbiz due
+to early escaping.        </p>
+        <p>
+In addition, this function accepts values produced by <a href="#entry-wrapAsRaw">#wrapAsRaw</a>. These can be used to bypass the escaping in part or in full.
+If the value was wrapped using the same language as specified in this call, the wrapped value will be used as-is.
+Note that most times, this is not nearly as useful as it is for <a href="#entry-escapePart">#escapePart</a>.        </p>
           <div class="lib-text-note">
-            <strong>NOTE: </strong>
-2016-10-05: Supports <a href="#entry-wrapAsRaw">#wrapAsRaw</a> values: Values passed that were wrapped using #wrapAsRaw will be treated intelligently and when possible, previously-done
-escaping (as specified by the #wrapAsRaw caller) will be reused when the wrapped value&#39;s language matches or is a prefix of the language
-passed to this function.          </div>
+            <strong>NOTES: </strong>
+  <ul>
+      <li>
+        <span>
+2016-10-05: Currently, this is mostly implemented using Freemarker built-ins such as <code>?html</code>, <code>?js</code>, etc. but is subject to change.
+Although Freemarker built-ins can still be used directly in templates and client macros, use of this function
+is recommended to centralize the escaping logic, automatically prevent some forms of double-escaping, create better versatility,
+and help hasten resolution of security issues.
+        </span>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+All Scipio standard API implementations, however, should strictly use this function.          </div>
+      </li>
+  </ul>
+          </div>
+        <p>
+For more information about escaping in general, see <a href="standard/htmlTemplate.html">standard/htmlTemplate.ftl</a>.        </p>
                       </div>
                   </div>
             
@@ -5379,10 +5626,10 @@ passed to this function.          </div>
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
-                            <code>str</code>
+                            <code>value</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-shortdesc">The string to escape</span>
+                            <span class="lib-entry-param-desc-shortdesc">The string or string-like value to escape</span>
                         </td>
                       </tr>
                       <tr>
@@ -5390,16 +5637,24 @@ passed to this function.          </div>
                             <code>lang</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|jsdq|json|js-html|jsdq-html|xml|style|raw)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|jsdq|json|js-html|jsdq-html|xml|css|raw)</code></span>
                             <span class="lib-entry-param-desc-shortdesc">The target language</span>
                             <br/>
-                            <span class="lib-entry-param-desc-extradesc">        <span>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
 <code>jsdq</code>: special case of js where it is assumed the value
-        </span>
-<pre>will be contained in double quotes, such that single quotes
-don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
+will be contained in double quotes, such that single quotes
+don&#39;t need to be escaped.        </span>
+      </li>
+  </ul>
+</div>
+          <div class="lib-text-note">
             <strong>WARN: </strong>
-<code>style</code> is not properly implemented!          </div>
+2016-10-10: <code>css</code> not currently implemented. <strong>Do not pass</strong> input of unsafe origin for CSS to this method at this time!          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Inserting URLs into CSS (using <code>url()</code>) is known to be unsafe even with escaping.          </div>
 </span>
                         </td>
                       </tr>
@@ -5414,7 +5669,8 @@ don&#39;t need to be escaped.</pre>          <div class="lib-text-note">
                             <span class="lib-entry-param-desc-extradesc">        <span>
 If true, escaping is always applied unconditionally.
 If false, the function <em>may</em> attempt heuristics to prevent double-escaping issues (not always desirable),
-mainly to mitigate screen auto-escaping and early escaping.        </span>
+mainly to mitigate screen auto-escaping and early escaping.
+        </span>
 </span>
                         </td>
                       </tr>

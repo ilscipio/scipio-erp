@@ -1649,6 +1649,9 @@ label area behavior may also be influenced by containing macros such as @fields 
             <strong>WARN: </strong>
 Currently (2016-04-12), unlike the <code>label</code> arg, <code>labelContent</code> will not follow any label inlining logic and
 is only used by the label area markup.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -1658,7 +1661,7 @@ is only used by the label area markup.          </div>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((string)|(macro))</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">Extra content (HTML) inserted with label (normally after label, but theme may decide)</span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra content markup inserted with label (normally after label, but theme may decide)</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 2016-04-12: This may also be a macro used to generate the label, which must accept a single <code>args</code> map parameter.
@@ -1666,6 +1669,9 @@ is only used by the label area markup.          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 If need to guarantee post-markup label content, may also use <code>postLabelContent</code> (lower-level control).          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -2360,7 +2366,11 @@ for this, can prefix with &quot;#LABEL:&quot; string which indicates to take the
                             <span class="lib-entry-param-desc-shortdesc">Manual postfix markup/content - set to boolean false to prevent any content (but not area container)</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-If macro, the macro must accept a single argument, <code>args</code>, a map of arguments.        </span>
+If macro, the macro must accept a single argument, <code>args</code>, a map of arguments.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -2387,6 +2397,9 @@ If macro, the macro must accept a single argument, <code>args</code>, a map of a
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, the <code>args</code> map will be empty by default - pass using <code>prePostContentArgs</code>.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -2404,6 +2417,9 @@ If macro, the macro must accept a single argument, <code>args</code>, a map of a
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, the <code>args</code> map will be empty by default - pass using <code>prePostContentArgs</code>.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -2421,6 +2437,9 @@ If macro, the macro must accept a single argument, <code>args</code>, a map of a
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, the <code>args</code> map will be empty by default - pass using <code>prePostContentArgs</code>.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -2441,6 +2460,9 @@ Currently, the <code>args</code> map will be empty by default - pass using <code
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 This is almost the same as labelDetail, except postLabelContent is lower level and will always occur at the specified position.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -2458,6 +2480,9 @@ If macro, the macro must accept a single argument, <code>args</code>, a map of a
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, the <code>args</code> map will be empty by default - pass using <code>prePostContentArgs</code>.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>
@@ -2475,6 +2500,9 @@ If macro, the macro must accept a single argument, <code>args</code>, a map of a
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently, the <code>args</code> map will be empty by default by default - pass using <code>prePostContentArgs</code>.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not escaped by macro.          </div>
 </span>
                         </td>
                       </tr>

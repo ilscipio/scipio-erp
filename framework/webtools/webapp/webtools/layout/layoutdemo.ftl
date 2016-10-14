@@ -1473,6 +1473,43 @@
   </ul>
 </@section>
 
+<@section title="Label functions">
+  <p><em>NOTE: For uiLabelMap and getLabel, label arguments </em></p>
+  <ul>
+    <li>Locale stored in uiLabelMap: ${(uiLabelMap.getInitialLocale())!"(missing)"}</li>
+    <li>getLabel (resource exists in uiLabelMap): "${getLabel("CommonYes")}"</li>
+    <li>getLabel (resource not present in uiLabelMap; uses getPropertyMsg): "${getLabel("ContactListType.description.ANNOUNCEMENT", "MarketingEntityLabels")}"</li>
+
+    <li>uiLabelMap: "${uiLabelMap.CommonDatabaseProblem}"</li>
+    <li>getLabel: "${getLabel("CommonDatabaseProblem")}"</li>
+    <li>getLabel: "${getLabel("CommonDatabaseProblem", "CommonUiLabels")}"</li>
+    <li>getPropertyMsg (no args): "${getPropertyMsg("CommonUiLabels", "CommonDatabaseProblem")}"</li>
+    <li>getPropertyMsg (crush locale): "${getPropertyMsg("CommonUiLabels", "CommonDatabaseProblem", false, false)}"</li>
+    <li>getPropertyMsg (map args): "${getPropertyMsg("CommonUiLabels", "CommonDatabaseProblem", {"errMessage":"INSERTED-ERRMESSAGE"})}"</li>
+    <#assign errMessage = "MAINNS-ERRMESSAGE">
+    <li>getPropertyMsg (namespace as args): "${getPropertyMsg("CommonUiLabels", "CommonDatabaseProblem", .namespace)}"</li>
+
+    <#-- NOTE: only globalContext works here because the uiLabelMap's context is not the same as our context -->
+
+    <#assign dummy = setGlobalContextField("errMessage", "GLOBALCONTEXT-ERRMESSAGE")>
+    <li>uiLabelMap (with arg in context): "${uiLabelMap.CommonDatabaseProblem}"</li>
+    <li>getLabel (with arg in context): "${getLabel("CommonDatabaseProblem")}"</li>
+    <li>getLabel (with arg in context): "${getLabel("CommonDatabaseProblem", "CommonUiLabels")}"</li>
+    <#assign dummy = setGlobalContextField("errMessage", "")>
+    <li>getLabel (args explicit off): "${getLabel("CommonDatabaseProblem", "", false)}"</li>
+    <li>getLabel (explicit args): "${getLabel("CommonDatabaseProblem", "", {"errMessage":"INSERTED-ERRMESSAGE"})}"</li>
+
+    <#assign prevPartyId = globalContext.partyId!"">
+    <#assign dummy = setGlobalContextField("partyId", "GLOBALCONTEXT-PARTYID")>
+    <#assign dummy = setGlobalContextField("paymentMethodId", "GLOBALCONTEXT-PAYMENTMETHODID")>
+    <li>getLabel (resource not present in uiLabelMap + global args): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels")}"</li>
+    <#assign dummy = setGlobalContextField("partyId", prevPartyId)><#-- try not to break demo... -->
+    <#assign dummy = setGlobalContextField("paymentMethodId", "")>
+    <li>getLabel (resource not present in uiLabelMap + args explicit off): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels", false)}"</li>
+    <li>getLabel (resource not present in uiLabelMap + explicit args): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels", {"partyId":"INSERTED-PARTYID", "paymentMethodId":"INSERTED-PAYMENTMETHODID"})}"</li>
+  </ul>
+</@section>
+
 <@section title="Tree menu">
   <@section title="Multi-level">
     <@treemenu type="lib-basic">

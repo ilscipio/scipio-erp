@@ -1607,9 +1607,9 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
-    type                    = (none|fill|cover|contain|scale-down|bg-cover, default: cover) 
-                              * fill|cover|contain|scale-down = css3 object-fit
-                              * bgcover = css background cover
+    type                    = (none|fill|cover|contain|scale-down|bg-cover|basic, default: cover) 
+                              * {{{fill|cover|contain|scale-down}}}: css3 object-fit
+                              * {{{bgcover}}}: css background cover
     link                    = Link URL around nested content
                               WARN: 2016-10-10: '''Do not pass''' any unsafe input in this link at this time!
                                   Escaping protection is only partial (html but not css).

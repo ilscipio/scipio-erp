@@ -106,7 +106,9 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         if (o instanceof TemplateScalarModel) {
             TemplateScalarModel s = (TemplateScalarModel) o;
             try {
-                return s.getAsString();
+                // SCIPIO: 2016-10-14: this must bypass screen auto-escaping!
+                return LangFtlUtil.getAsStringNonEscaping(s);
+                //return s.getAsString();
             } catch (TemplateModelException e) {
                 Debug.logError(e, "Invalid uri arg for ofbizUrl", module);
             }

@@ -733,21 +733,31 @@ The locale is determined by uiLabelMap. If you must
 DEV NOTE: It is not possible to add custom locale here; already loaded into the {{{uiLabelMap}}}.
 
   * Parameters *
-    name                    = (required) Label name
-    resource                = (optional) Resource name
-                              If label not found in uiLabelMap (preferred), falls back to lookup in this 
-                              resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
+    name                    = ((string), required) Label name
+    resource                = ((string)) Resource name for fallback
+                              If label not found in {{{uiLabelMap}}} (preferred), falls back to lookup in this 
+                              resource. Usually {{{uiLabelMap}}} is preferred for templates, but sometimes not worth importing
                               a whole file for one label.
+                              NOTE: If a map is passed as second parameter instead of string, it is interpreted
+                                  as {{{msgArgs}}} instead of a resource and {{{resource}}} is interpreted as empty.
     msgArgs                 = ((map)|(boolean), default: -true / use uiLabelMap's context-) Message arguments
                               If boolean: if true, uses uiLabelMap's default/arbitrary context; if false,
                               prevents any context from being used.
-    
+                              NOTE: For convenience, {{{msgArgs}}} can be specified as the 
+                                  second parameter instead of third (like a java function overload), by
+                                  passing a map type to the second parameter.
+                                  So {{{getLabel("xxx", {})}}} is the same as {{{getLabel("xxx", "", {})}}}.
+
   * Related *
     #rawLabel
     #getPropertyMsg
 -->
 <#function getLabel name resource="" msgArgs=true>
   <#if name?has_content>
+    <#if isObjectType("map", resource)><#-- msgArgs can be passed as 2nd param -->
+      <#local msgArgs = resource>
+      <#local resource = "">
+    </#if>
     <#if msgArgs?is_boolean>
       <#if msgArgs>
         <#local var=(uiLabelMap[name])!false />
@@ -760,16 +770,16 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
     <#if (!var?is_boolean) && var != name>
       <#return var>
     <#elseif resource?has_content>
-      <#-- 2016-10-13: getPropertyMsg must uses the exact same arguments that uiLabelMap is using,
+      <#-- 2016-10-13: getPropertyMsg must use the exact same arguments that uiLabelMap is using,
           meaning same context for args and same locale -->
       <#if msgArgs?is_boolean>
         <#if msgArgs>
-          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getInitialLocale())!true)>
+          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getLocale())!true)>
         <#else>
-          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getInitialLocale())!true)>
+          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getLocale())!true)>
         </#if>
       <#else>
-        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getInitialLocale())!true)>
+        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getLocale())!true)>
       </#if>
     <#else>
       <#return "">
@@ -790,15 +800,21 @@ This is a higher-level, abstracted function for fetching labels.
 Shorthand for {{{rawString(getLabel(...))}}}.
 
   * Parameters *
-    name                    = (required) Label name
-    resource                = (optional) Resource name
-                              If label not found in uiLabelMap (preferred), falls back to lookup in this 
-                              resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
+    name                    = ((string), required) Label name
+    resource                = ((string)) Resource name for fallback
+                              If label not found in {{{uiLabelMap}}} (preferred), falls back to lookup in this 
+                              resource. Usually {{{uiLabelMap}}} is preferred for templates, but sometimes not worth importing
                               a whole file for one label.
+                              NOTE: If a map is passed as second parameter instead of string, it is interpreted
+                                  as {{{msgArgs}}} instead of a resource and {{{resource}}} is interpreted as empty.
     msgArgs                 = ((map)|(boolean), default: -true / use uiLabelMap's context-) Message arguments
                               If boolean: if true, uses uiLabelMap's default/arbitrary context; if false,
                               prevents any context from being used.
-                              
+                              NOTE: For convenience, {{{msgArgs}}} can be specified as the 
+                                  second parameter instead of third (like a java function overload), by
+                                  passing a map type to the second parameter.
+                                  So {{{rawLabel("xxx", {})}}} is the same as {{{rawLabel("xxx", "", {})}}}.
+
   * Related *
     #getLabel
     #rawString

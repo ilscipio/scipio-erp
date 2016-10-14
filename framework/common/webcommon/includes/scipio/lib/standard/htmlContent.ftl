@@ -1255,12 +1255,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }            
                     </#if>
                 };
-            var ctx_${renderSeqNumber}_${chartIdNum} = $('#${escapePart(id, 'js')}').get(0).getContext("2d");
+            var ctx = $('#${escapePart(id, 'js')}').get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
                     {
-                    
                       <#if type=="line" || type=="bar">
                       label: '${escapePart(label1, 'js')}',                      
                       fill: true,
@@ -1325,7 +1324,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 data: data,
                 options: options
             };
-            var newChart = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
+            var newChart = new Chart(ctx,config);
             ${nestedContent}
             newChart.update();
         });

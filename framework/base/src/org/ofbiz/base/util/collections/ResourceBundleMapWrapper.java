@@ -149,6 +149,14 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Collection<Object> values() {
         return this.rbmwStack.values();
     }
+    
+    /**
+     * SCIPIO: Returns the context reference which was passed to this bundle wrapper
+     * upon its creation.
+     */
+    public Map<String, Object> getContext() {
+        return context;
+    }
 
     public static class InternalRbmWrapper implements Map<String, Object>, Serializable {
         protected ResourceBundle resourceBundle;

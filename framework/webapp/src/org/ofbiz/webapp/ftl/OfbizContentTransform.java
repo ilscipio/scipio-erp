@@ -57,9 +57,9 @@ public class OfbizContentTransform implements TemplateTransformModel {
             if (obj instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) obj;
                 try {
-                    // SCIPIO: 2016-10-14: this must bypass screen auto-escaping!
-                    //result = s.getAsString();
-                    result = LangFtlUtil.getAsStringNonEscaping(s);
+                    // SCIPIO: can't enable this yet... too many templates are misusing encoding currently
+                    //result = LangFtlUtil.getAsStringNonEscaping(s);
+                    result = s.getAsString();
                 } catch (TemplateModelException e) {
                     Debug.logError(e, "Template Exception", module);
                 }

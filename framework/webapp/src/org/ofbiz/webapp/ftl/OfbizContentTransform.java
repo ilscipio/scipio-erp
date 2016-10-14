@@ -33,6 +33,8 @@ import org.ofbiz.webapp.content.ContentRequestWorker;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.TemplateModelException;
@@ -55,7 +57,9 @@ public class OfbizContentTransform implements TemplateTransformModel {
             if (obj instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) obj;
                 try {
-                    result = s.getAsString();
+                    // SCIPIO: 2016-10-14: this must bypass screen auto-escaping!
+                    //result = s.getAsString();
+                    result = LangFtlUtil.getAsStringNonEscaping(s);
                 } catch (TemplateModelException e) {
                     Debug.logError(e, "Template Exception", module);
                 }
@@ -70,6 +74,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, Map args) {
         final StringBuilder buf = new StringBuilder();
         final String imgSize = OfbizContentTransform.getArg(args, "variant");
+        final String uri = OfbizContentTransform.getArg(args, "uri"); // SCIPIO: uri as alternative to nested
         return new Writer(out) {
             @Override
             public void write(char cbuf[], int off, int len) {
@@ -91,7 +96,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     // SCIPIO: delegated to our new method
                     BeanModel resp = (BeanModel) env.getVariable("response");
                     HttpServletResponse response = resp == null ? null : (HttpServletResponse) resp.getWrappedObject();
-                    String url = ContentRequestWorker.makeContentLink(request, response, buf.toString(), imgSize);
+                    String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize);
                             
                     out.write(url);
                 } catch (TemplateModelException e) {

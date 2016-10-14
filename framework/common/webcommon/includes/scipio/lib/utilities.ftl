@@ -414,6 +414,7 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 TODO: Make this accept uri
 
   * Parameters *
+    uri                     = (string) URI or path as parameter; alternative to nested
     variant                 = ((string)) variant
                               (Stock Ofbiz parameter)
 -->
@@ -435,7 +436,7 @@ Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl m
     @ofbizContentUrl
 -->
 <#function makeOfbizContentUrl uri variant="">
-  <#local res><@ofbizContentUrl variant=variant>${rawString(uri)}</@ofbizContentUrl></#local>
+  <#local res><@ofbizContentUrl uri=uri variant=variant /></#local>
   <#return res>
 </#function>
 

@@ -4,6 +4,9 @@
 <p>Debug mode: ON</p>
 </#if>
 
+
+${escapeFull('/asdfasd/fsadf', 'url')}
+
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>

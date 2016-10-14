@@ -21,6 +21,7 @@ package org.ofbiz.base.util.collections;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -156,6 +157,13 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
      */
     public Map<String, Object> getContext() {
         return context;
+    }
+    
+    /**
+     * SCIPIO: Returns the initial locale upon creation.
+     */
+    public Locale getInitialLocale() {
+        return this.initialResourceBundle.getLocale();
     }
 
     public static class InternalRbmWrapper implements Map<String, Object>, Serializable {

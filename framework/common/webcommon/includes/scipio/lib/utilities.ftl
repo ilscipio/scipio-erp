@@ -208,6 +208,11 @@ DEV NOTES:
                               For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
                               server root, containing webapp context root and servlet path; if webSiteId specified, 
                               this should specified relative like intra-webapp (unless absPath forced to true).
+                              WARN: At current time (2016-10-14), this macro version of @ofbizUrl does NOT prevent automatic
+                                  screen html escaping on the URI parameter, because too many templates use @ofbizUrl
+                                  directly without consideration to escaping.
+                                  However, the function versions of this macro such as #makeOfbizUrl DO bypass the
+                                  auto screen escaping on this parameter.
                               (New in Scipio)
     absPath                 = ((boolean), default: -depends on type-, fallback default: false)       
                               If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
@@ -415,6 +420,11 @@ TODO: Make this accept uri
 
   * Parameters *
     uri                     = (string) URI or path as parameter; alternative to nested
+                              WARN: At current time (2016-10-14), this macro version of @ofbizContentUrl does NOT prevent automatic
+                                  screen html escaping on the URI parameter, because too many templates use @ofbizUrl
+                                  directly without consideration to escaping.
+                                  However, the function versions of this macro such as #makeOfbizContentUrl DO bypass the
+                                  auto screen escaping on this parameter.
     variant                 = ((string)) variant
                               (Stock Ofbiz parameter)
 -->

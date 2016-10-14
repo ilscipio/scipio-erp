@@ -712,9 +712,25 @@ to indicate the value null.
 *************
 * getLabel
 ************
-Returns label from global label map or resource, or empty string if no label is found.
+Returns label from global label map or resource, or empty string if no label is found,
+with automatic screen html-escaping applied.
+This is a higher-level, abstracted function for fetching labels.
 
-NOTE: The result is automatically html-escaped by the screen renderer during regular freemarker template rendering.
+By default this function tries to maintain the same behavior as {{{uiLabelMap}}} with respect to locale
+selection and the context map used for label substitutions/arguments.
+
+However, unlike stock {{{uiLabelMap}}}, this supports explicit message arguments using the {{{msgArgs}}} parameter.
+
+NOTE: The default context used by {{{uiLabelMap}}} (which is used by default by {{{getLabel}}}) is 
+    ''not'' the current Freemarker namespace ''nor'' the same as the {{{context}}} variable that is 
+    present as a freemarker global. 
+    It uses a context created earlier, and the only predictable way to set variables
+    in it is through the screen global context, using #setGlobalContextField.
+    Therefore, to pass arguments to label reliably, #getLabel must be used with explicit {{{msgArgs}}} parameter.
+    
+The locale is determined by uiLabelMap. If you must 
+
+DEV NOTE: It is not possible to add custom locale here; already loaded into the {{{uiLabelMap}}}.
 
   * Parameters *
     name                    = (required) Label name
@@ -722,18 +738,39 @@ NOTE: The result is automatically html-escaped by the screen renderer during reg
                               If label not found in uiLabelMap (preferred), falls back to lookup in this 
                               resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
                               a whole file for one label.
-  
+    msgArgs                 = ((map)|(boolean), default: -true / use uiLabelMap's context-) Message arguments
+                              If boolean: if true, uses uiLabelMap's default/arbitrary context; if false,
+                              prevents any context from being used.
+    
   * Related *
     #rawLabel
     #getPropertyMsg
 -->
-<#function getLabel name resource="">
+<#function getLabel name resource="" msgArgs=true>
   <#if name?has_content>
-    <#local var=uiLabelMap[name]!"" />
-    <#if var!=name>
+    <#if msgArgs?is_boolean>
+      <#if msgArgs>
+        <#local var=(uiLabelMap[name])!false />
+      <#else>
+        <#local var=(uiLabelMap.get(name, _NULL_PLACEHOLDER))!false />
+      </#if>
+    <#else>
+      <#local var=(uiLabelMap.get(name, msgArgs))!false />
+    </#if>
+    <#if (!var?is_boolean) && var != name>
       <#return var>
     <#elseif resource?has_content>
-      <#return getPropertyMsg(resource, name)>
+      <#-- 2016-10-13: getPropertyMsg must uses the exact same arguments that uiLabelMap is using,
+          meaning same context for args and same locale -->
+      <#if msgArgs?is_boolean>
+        <#if msgArgs>
+          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getInitialLocale())!true)>
+        <#else>
+          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getInitialLocale())!true)>
+        </#if>
+      <#else>
+        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getInitialLocale())!true)>
+      </#if>
     <#else>
       <#return "">
     </#if>
@@ -748,6 +785,7 @@ NOTE: The result is automatically html-escaped by the screen renderer during reg
 ************
 Returns label from global label map or resource, or empty string if no label is found,
 and prevents automatic html-escaping on the result.
+This is a higher-level, abstracted function for fetching labels.
 
 Shorthand for {{{rawString(getLabel(...))}}}.
 
@@ -756,14 +794,17 @@ Shorthand for {{{rawString(getLabel(...))}}}.
     resource                = (optional) Resource name
                               If label not found in uiLabelMap (preferred), falls back to lookup in this 
                               resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
-                              a whole file for one label. 
+                              a whole file for one label.
+    msgArgs                 = ((map)|(boolean), default: -true / use uiLabelMap's context-) Message arguments
+                              If boolean: if true, uses uiLabelMap's default/arbitrary context; if false,
+                              prevents any context from being used.
                               
   * Related *
     #getLabel
     #rawString
 -->
-<#function rawLabel name resource="">
-  <#return rawString(getLabel(name, resource))>
+<#function rawLabel name resource="" msgArgs=true>
+  <#return rawString(getLabel(name, resource, msgArgs))>
 </#function>
 
 <#-- 
@@ -793,13 +834,8 @@ NOTE: The result from this method is '''not''' HTML-encoded, as such values are 
 *************
 * getPropertyMsg
 ************
-Gets property or empty string if missing (same behavior as UtilProperties).
-
-Uses locales. Meant for resource bundles / UI labels.
-Will use context locale if none specified.
-If msgArgs not specified, property is given access to context for substitute values (occasionally 
-this is used in Ofbiz screens).
-If msgArgs is a sequence, they are passed instead of context to the property.
+Gets property or empty string if missing, using behavior and rules of the {{{UtilProperties}}}
+class (low-level).
 
 NOTE: The resulting message is subject to automatic HTML encoding (by Ofbiz). 
     Use #rawString on the result to prevent escaping.
@@ -812,24 +848,25 @@ TODO: implement as transform.
   * Parameters *
     resource                = (required) Resource name
     name                    = (required) Property name
-    msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
-    specLocale              = ((locale), default: -locale from context-) Explicit locale
+    msgArgs                 = ((map)|(list)|(boolean), default: -false / none-) Substitute values for message template
+    locale                  = ((locale)|(boolean), default: -true / locale from context-) Locale
+                              If boolean: if true, uses locale from context; if false, forced to use system default.
+                              NOTE: There should almost always be a locale in context or explicit.
+                                  Fallback on system default usually means something is missing.
 -->
-<#function getPropertyMsg resource name msgArgs=false specLocale=true>
-  <#if specLocale?is_boolean>
-    <#if specLocale>
-      <#local specLocale = locale!"">
+<#function getPropertyMsg resource name msgArgs=false locale=true>
+  <#if locale?is_boolean>
+    <#if locale>
+      <#local locale = .globals.locale!Static["java.util.Locale"].getDefault()>
     <#else>
-      <#local specLocale = "">
+      <#local locale = Static["java.util.Locale"].getDefault()>
     </#if>
   </#if>
-  <#if msgArgs?is_sequence>
-    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale)>
-  <#elseif msgArgs?is_hash>
-    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale)>
+  <#if msgArgs?is_sequence || msgArgs?is_hash><#-- NOTE: these will actually call different overloads -->
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, locale)>
   <#else>
-    <#-- WARN: context variable _could_ be missing! -->
-    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, context!{}, specLocale)>
+    <#-- don't use context by default here (only uiLabelMap/getLabel should do that): context!{} -->
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, locale)>
   </#if>
 </#function>
 
@@ -844,13 +881,13 @@ TODO: implement as transform.
   * Parameters *
     resourceExpr            = (required) Resource name and property name separated with "#", or name alone
                               If name alone, assumes CommonUiLabels for resource.
-    msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
-    specLocale              = ((locale), default: -locale from context-) Explicit locale
+    msgArgs                 = ((map)|(list)|(boolean), default: -false / none-) Substitute values for message template
+    locale                  = ((locale)|(boolean), default: -true / locale from context-) Explicit locale
     
   * Related *
     #getPropertyMsg
 -->
-<#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false specLocale=true>
+<#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false locale=true>
   <#local parts = resourceExpr?split("#")>
   <#if (parts?size >= 2)>
     <#local resource = parts[0]>
@@ -859,7 +896,7 @@ TODO: implement as transform.
     <#local resource = "CommonUiLabels">
     <#local name = parts[0]>
   </#if>
-  <#return getPropertyMsg(resource, name, msgArgs, specLocale)> 
+  <#return getPropertyMsg(resource, name, msgArgs, locale)> 
 </#function>
 
 <#-- 
@@ -876,13 +913,13 @@ If no such prefix in textExpr, returns the text as-is.
   * Parameters *
     textExpr                = (required) Label text expression 
     msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
-    specLocale              = ((locale), default: -locale from context-) Explicit locale
+    locale                  = ((locale)|(boolean), default: -true / locale from context-) Explicit locale
 -->
-<#function getTextLabelFromExpr textExpr msgArgs=false specLocale=true>
+<#function getTextLabelFromExpr textExpr msgArgs=false locale=true>
   <#if textExpr?starts_with("#LABEL:")>
     <#return getLabel(textExpr[7..])!"">
   <#elseif textExpr?starts_with("#PROP:")>
-    <#return getPropertyMsgFromLocExpr(textExpr[6..], msgArgs, specLocale)!"">
+    <#return getPropertyMsgFromLocExpr(textExpr[6..], msgArgs, locale)!"">
   <#else>
     <#return textExpr>
   </#if>
@@ -3415,19 +3452,22 @@ Renders a formatted date.
 NOTE: formattedDate by default renders the "date" type but it also doubles as handler for the other types
     (which also have convenience wrappers below).
     
+WARN: The locale and timeZone (explicit or from context) should not resolve to null/empty;
+    if they do a log warning is printed.
+    
   * Parameters *
     date                    = ((date), required) The date
     dateType                = (date-time|timestamp|date|time, default: date)
                               "timestamp" and "date-time" are synonymous.  
     defaultVal              = If no output is produced (empty), this value (string) will be shown instead
-    specLocale              = ((locale), default: -locale from context-) Override locale
-    specTimeZone            = ((timezone), default: -timeZone from context-) Override time zones
+    locale                  = ((locale), default: -locale from context-) Override locale
+    timeZone                = ((timezone), default: -timeZone from context-) Override time zones
     
   * Related *
     @formattedDateTime, @formattedTime, #formatDate, #formatDateTime, #formatTime
 -->
-<#macro formattedDate date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="" dateType="date">
-  ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, dateType)!defaultVal}<#t>
+<#macro formattedDate date dateTimeFormat="" locale=true timeZone=true defaultVal="" dateType="date">
+  ${formatDate(date, dateTimeFormat, locale, timeZone, dateType)!defaultVal}<#t>
 </#macro>
 
 <#-- 
@@ -3436,11 +3476,14 @@ NOTE: formattedDate by default renders the "date" type but it also doubles as ha
 ************
 Renders a formatted date-time value (convenience wrapper).
 
+WARN: The locale and timeZone (explicit or from context) should not resolve to null/empty;
+    if they do a log warning is printed.
+    
   * Related *
     @formattedDate
 -->
-<#macro formattedDateTime date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="">
-  ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, "timestamp")!defaultVal}<#t>
+<#macro formattedDateTime date dateTimeFormat="" locale=true timeZone=true defaultVal="">
+  ${formatDate(date, dateTimeFormat, locale, timeZone, "timestamp")!defaultVal}<#t>
 </#macro>
 
 <#-- 
@@ -3449,11 +3492,14 @@ Renders a formatted date-time value (convenience wrapper).
 ************
 Renders a formatted time value (convenience wrapper).
 
+WARN: The locale and timeZone (explicit or from context) should not resolve to null/empty;
+    if they do a log warning is printed.
+    
   * Related *
     @formattedDate
 -->
-<#macro formattedTime date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="">
-  ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, "time")!defaultVal}<#t>
+<#macro formattedTime date dateTimeFormat="" locale=true timeZone=true defaultVal="">
+  ${formatDate(date, dateTimeFormat, locale, timeZone, "time")!defaultVal}<#t>
 </#macro>
 
 <#-- 
@@ -3466,37 +3512,14 @@ These functions return VOID (no value) if no or empty output, so default value o
 
 NOTE: The result is auto-HTML-escaped (where applicable); use #rawString to prevent.
 
+WARN: The locale and timeZone (explicit or from context) should not resolve to null/empty;
+    if they do a log warning is printed.
+
   * Related *
     @formattedDate
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function formatDate date dateTimeFormat="" specLocale=true specTimeZone=true dateType="date">
-  <#- old implementation; similar but transform handles nulls/booleans better ->
-  <#if specLocale?is_boolean>
-    <#if specLocale>
-      <#local specLocale = locale!>
-    <#else>
-      <#local specLocale = ""> <#- FIXME: won't work, must emulate null but freemarker sucks here... ->
-    </#if>
-  </#if>
-  <#if specTimeZone?is_boolean>
-    <#if specTimeZone>
-      <#local specTimeZone = timeZone!>
-    <#else>
-      <#local specTimeZone = ""> <#- FIXME: won't work, must emulate null but freemarker sucks here... ->
-    </#if>
-  </#if>
-  <#if dateType == "date">
-    <#local res = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(date, dateTimeFormat, locale, timeZone)!"">
-  <#elseif dateType == "time">
-    <#local res = Static["org.ofbiz.base.util.UtilFormatOut"].formatTime(date, dateTimeFormat, locale, timeZone)!"">
-  <#else>
-    <#local res = Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(date, dateTimeFormat, locale, timeZone)!"">
-  </#if>
-  <#if res?has_content>
-    <#return res>
-    <#- otherwise, return void (for default value operator) ->
-  </#if>
+<#function formatDate date dateTimeFormat="" locale=true timeZone=true dateType="date">
 </#function>
 -->
 
@@ -3508,11 +3531,14 @@ Formats a date-time value.
 
 These functions return VOID (no value) if no or empty output, so default value operator can be used.
 
+WARN: The locale and timeZone (explicit or from context) should not resolve to null/empty;
+    if they do a log warning is printed.
+
   * Related *
     @formattedDate
 -->
-<#function formatDateTime date dateTimeFormat="" specLocale=true specTimeZone=true>
-  <#local res = formatDate(date, dateTimeFormat, specLocale, specTimeZone, "timestamp")!"">
+<#function formatDateTime date dateTimeFormat="" locale=true timeZone=true>
+  <#local res = formatDate(date, dateTimeFormat, locale, timeZone, "timestamp")!"">
   <#if res?has_content>
     <#return res>
     <#-- otherwise, return void (for default value operator) -->
@@ -3527,11 +3553,14 @@ Formats a time value.
 
 These functions return VOID (no value) if no or empty output, so default value operator can be used.
 
+WARN: The locale and timeZone (explicit or from context) should not resolve to null/empty;
+    if they do a log warning is printed.
+
   * Related *
     @formattedDate
 -->
-<#function formatTime date dateTimeFormat="" specLocale=true specTimeZone=true>
-  <#local res = formatDate(date, dateTimeFormat, specLocale, specTimeZone, "time")!"">
+<#function formatTime date dateTimeFormat="" locale=true timeZone=true>
+  <#local res = formatDate(date, dateTimeFormat, locale, timeZone, "time")!"">
   <#if res?has_content>
     <#return res>
     <#-- otherwise, return void (for default value operator) -->

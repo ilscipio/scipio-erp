@@ -165,6 +165,17 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Locale getInitialLocale() {
         return this.initialResourceBundle.getLocale();
     }
+    
+    /**
+     * SCIPIO: Returns the locale considered the main one for this bundle wrapper.
+     * <p>
+     * NOTE: 2016-10-13: currently always returns the initial locale.
+     * TODO: maybe should return the last?
+     */
+    public Locale getLocale() {
+        // TODO?: should this return the first or last locale??
+        return getInitialLocale();
+    }
 
     public static class InternalRbmWrapper implements Map<String, Object>, Serializable {
         protected ResourceBundle resourceBundle;

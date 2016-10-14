@@ -115,7 +115,12 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Set<Map.Entry<String, Object>> entrySet() {
         return this.rbmwStack.entrySet();
     }
-    public Object get(Object arg0) {
+    /**
+     * Gets an entry.
+     * <p>
+     * SCIPIO: Modified to accept an explicit context to expand args.
+     */
+    public Object get(Object arg0, Map<String, Object> context) {
         Object value = this.rbmwStack.get(arg0);
         if (value == null) {
             value = arg0;
@@ -128,6 +133,14 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
             }
         }
         return value;
+    }
+    /**
+     * Gets an entry, with optional expansion using the context passed on creation.
+     * <p>
+     * SCIPIO: Delegating.
+     */
+    public Object get(Object arg0) {
+        return get(arg0, this.context);
     }
     public boolean isEmpty() {
         return this.rbmwStack.isEmpty();

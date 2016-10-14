@@ -1505,6 +1505,7 @@ WARN: this works using FTL's primitive ?is_string test, which may return TRUE fo
 ************
 Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and 
 depending on current implementation and system policy may process the string for allowed HTML.
+DEPRECATED: This will be replaced by a more generic and powerful function.
 
 Typically for database-stored content such as product descriptions which use limited HTML.
 

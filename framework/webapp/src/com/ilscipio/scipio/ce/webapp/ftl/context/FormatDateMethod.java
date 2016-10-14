@@ -68,39 +68,48 @@ public class FormatDateMethod implements TemplateMethodModelEx {
             dateTimeFormat = null;
         }
         
+        // NOTE: 2016-10-12: CANNOT pass null locale or timeZone because it causes crash.
+        // warn when missing.
+        
         Locale locale;
         if (specLocaleModel == null || specLocaleModel instanceof TemplateBooleanModel) {
             if (specLocaleModel == null || ((TemplateBooleanModel) specLocaleModel).getAsBoolean()) {
-                locale = LangFtlUtil.getLocale(env.getVariable("locale"));
+                locale = LangFtlUtil.getLocale(ContextFtlUtil.getFtlContextGlobalVar("locale", env));
+                if (locale == null) {
+                    locale = Locale.getDefault();
+                    Debug.logWarning("Scipio: formatDate(Time): locale empty (from context); using system default", module);
+                }
             } else {
-                locale = null;
+                locale = Locale.getDefault();
+                Debug.logWarning("Scipio: formatDate(Time): locale false (from caller); using system default", module);
             }
         } else {
             locale = LangFtlUtil.getLocale(specLocaleModel);
+            if (locale == null) {
+                locale = Locale.getDefault();
+                Debug.logWarning("Scipio: formatDate(Time): locale empty (from caller); using system default", module);
+            }
         }
         
         TimeZone timeZone;
         if (specTimeZoneModel == null || specTimeZoneModel instanceof TemplateBooleanModel) {
             if (specTimeZoneModel == null || ((TemplateBooleanModel) specTimeZoneModel).getAsBoolean()) {
-                timeZone = LangFtlUtil.getTimeZone(env.getVariable("timeZone"));
+                timeZone = LangFtlUtil.getTimeZone(ContextFtlUtil.getFtlContextGlobalVar("timeZone", env));
+                if (timeZone == null) {
+                    timeZone = TimeZone.getDefault();
+                    Debug.logWarning("Scipio: formatDate(Time): timeZone empty (from context); using system default", module);
+                }
             } else {
-                timeZone = null;
+                timeZone = TimeZone.getDefault();
+                Debug.logWarning("Scipio: formatDate(Time): timeZone false (from caller); using system default", module);
             }
         } else {
             timeZone = LangFtlUtil.getTimeZone(specTimeZoneModel);
-        }
-        
-        // NOTE: 2016-10-12: CANNOT pass null locale or timeZone because it causes crash.
-        // warn when missing.
-        if (locale == null) {
-            locale = Locale.getDefault();
-            Debug.logWarning("Scipio: formatDate(Time) transform received null/empty locale; using"
-                    + " system default", module);
-        }
-        if (timeZone == null) {
-            timeZone = TimeZone.getDefault();
-            Debug.logWarning("Scipio: formatDate(Time) transform received null/empty time zone; using"
-                    + " system default", module);
+            if (timeZone == null) {
+                timeZone = TimeZone.getDefault();
+                Debug.logWarning("Scipio: formatDate(Time): timeZone empty (from caller); using"
+                        + " system default", module);
+            }
         }
         
         Object res;

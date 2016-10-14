@@ -1030,25 +1030,6 @@ under the License.
         <response name="success" type="view" value="viewprofile"/>
     </request-map>
 
-    <request-map uri="createCustomerTaxAuthInfo">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <event type="service" invoke="createCustomerTaxAuthInfo"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
-    </request-map>
-    <request-map uri="updateCustomerTaxAuthInfo">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <event type="service" invoke="updatePartyTaxAuthInfo"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
-    </request-map>
-    <request-map uri="deleteCustomerTaxAuthInfo">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <event type="service" invoke="deletePartyTaxAuthInfo"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
-    </request-map>
-    
     <!-- Scipio: New helper event that redirects to the request URI named in the 
         request attribute or parameter "targetPage" or "donePage".
         This helps avoid extra steps when updating addresses, user info, etc.

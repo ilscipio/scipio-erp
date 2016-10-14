@@ -60,7 +60,7 @@ under the License.
                         </#if>
                       </#if>
                     </#assign>
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=wrapAsRaw(radioText, 'html') checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=wrapAsRaw(radioText, 'htmlmarkup') checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
                 </#list>
                 <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="Default" checked=true label=uiLabelMap.FacilityNoOtherShippingMethods/>

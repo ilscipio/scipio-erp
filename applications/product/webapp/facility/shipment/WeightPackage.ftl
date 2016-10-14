@@ -19,7 +19,7 @@ under the License.
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
   <#if !(showWarningForm)>
-    <@section title="${rawString(uiLabelMap.ProductWeighPackageOnly)} ${rawString(uiLabelMap.CommonIn)} ${facility.facilityName!} [${rawString((facility.facilityId)!)}]">
+    <@section title="${rawLabel('ProductWeighPackageOnly')} ${rawLabel('CommonIn')} ${facility.facilityName!} [${rawString((facility.facilityId)!)}]">
         <#if invoiceIds?has_content>
           <div>
             ${uiLabelMap.CommonView} <a href="<@ofbizUrl>PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}

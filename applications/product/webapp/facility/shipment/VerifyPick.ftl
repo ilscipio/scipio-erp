@@ -35,7 +35,7 @@ under the License.
             <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
                 <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=(picklistBinId!)/>
             </@field>
-            <@field type="submit" text="${rawString(uiLabelMap.ProductVerify)} ${rawString(uiLabelMap.OrderOrder)}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
+            <@field type="submit" text="${rawLabel('ProductVerify')} ${rawLabel('OrderOrder')}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
         </form>
         <form name="clearPickForm" method="post" action="<@ofbizUrl>cancelAllRows</@ofbizUrl>">
             <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -278,7 +278,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
             <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
             <#if pickRows?has_content>
-                <@section title="${rawString(uiLabelMap.ProductVerified)} ${rawString(uiLabelMap.OrderItems)} : ${pickRows.size()!}">
+                <@section title="${rawLabel('ProductVerified')} ${rawLabel('OrderItems')} : ${pickRows.size()!}">
                     <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                         <@thead>
                             <@tr class="header-row">

@@ -122,7 +122,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
              <#assign currStatusItem = orderPaymentStatuses[0].getRelatedOne("StatusItem", false)!>
              <#if currStatusItem?has_content>${currStatusItem.get("description",locale)}</#if> 
              
-              <@modal id="${orderId}_paymentstatus_" label="(${rawString(uiLabelMap.CommonDetail)})">
+              <@modal id="${orderId}_paymentstatus_" label="(${rawLabel('CommonDetail')})">
                  <ul class="no-bullet">
                    <#list orderPaymentStatuses as orderPaymentStatus>
                      <#assign statusItem = orderPaymentStatus.getRelatedOne("StatusItem", false)!>

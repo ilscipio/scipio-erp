@@ -8,13 +8,13 @@
             <#assign value = "N" />
             <#if serviceParameter.defaultValue?has_content><#if (serviceParameter.defaultValue)><#assign value = "Y" /></#if></#if>             
             <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)</#assign>
-            <@field type="checkbox" label=wrapAsRaw(fieldLabel, 'html') name=serviceParameter.name value=value required=(serviceParameter.optional == "N") checked=(value == "Y") />
+            <@field type="checkbox" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name value=value required=(serviceParameter.optional == "N") checked=(value == "Y") />
           <#elseif serviceParameter.type == "Timestamp">
             <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)</#assign>
-            <@field type="datetime" label=wrapAsRaw(fieldLabel, 'html') name=serviceParameter.name value=(serviceParameter.value!) required=(serviceParameter.optional == "N") />
+            <@field type="datetime" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name value=(serviceParameter.value!) required=(serviceParameter.optional == "N") />
           <#else>
             <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if serviceParameter.defaultValue?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${serviceParameter.defaultValue}</em>)</#if></#assign>
-            <@field type="input" label=wrapAsRaw(fieldLabel, 'html') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
+            <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
           </#if>
           <#assign serviceParameterNames = serviceParameterNames + [serviceParameter.name] />
         </#list>

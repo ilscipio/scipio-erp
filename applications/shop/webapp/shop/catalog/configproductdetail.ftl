@@ -234,7 +234,7 @@ ${virtualJavaScript!}
                           <#assign inlineCounter = counter+ "_" +optionCounter + "_"+componentCounter>
                             <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if> <span id="variant_price_display${inlineCounter}"> </span></#assign>
                             <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter?string
-                                onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'html') />
+                                onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                             
                           <@fields type="default">
                             <#assign components = option.getComponents()>
@@ -260,7 +260,7 @@ ${virtualJavaScript!}
                               <#if !option.isAvailable()> (*)</#if>
                             </#assign>
                             <@field type="radio" name=counter?string value=optionCounter?string checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory()))
-                                label=wrapAsRaw(fieldLabel, 'html') />
+                                label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                           </div>
                         </#if>
                       <#assign optionCounter = optionCounter + 1>
@@ -304,7 +304,7 @@ ${virtualJavaScript!}
                       <#assign inlineCounter = counter+ "_" +optionCounter + "_"+componentCounter>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if> <span id="variant_price_display${inlineCounter}"> </span></#assign>
                         <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter?string onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" 
-                            label=wrapAsRaw(fieldLabel, 'html') />
+                            label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
 
                      <@fields type="default">
                         <#assign components = option.getComponents()>
@@ -324,7 +324,7 @@ ${virtualJavaScript!}
                     <#else>
                     <div>
                       <#assign fieldLabel>${option.description!}&nbsp;+<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if></#assign>
-                      <@field type="checkbox" name=counter?string value=optionCounter?string checked=option.isSelected() label=wrapAsRaw(fieldLabel, 'html') />
+                      <@field type="checkbox" name=counter?string value=optionCounter?string checked=option.isSelected() label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                     </div>
                     </#if>
                   <#assign optionCounter = optionCounter + 1>

@@ -178,7 +178,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#macro renderFieldTitle style title id fieldHelpText="" for="" extraArgs...>
 <#if (renderFormatFieldRowTitleCellOpened!false) != true>
   <#-- <label<#if for?has_content> for="${escapePart(for, 'html')}"</#if><#if fieldHelpText?has_content> title="${escapePart(fieldHelpText, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if>><#t/> -->
-    ${escapePart(title, 'html')}<#t/>
+    ${escapePart(title, 'htmlmarkup')}<#t/>
   <#-- </label><#t/> -->
 </#if>
   <#global renderFieldTitleCurrentTitle = title>
@@ -657,9 +657,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderBanner style leftStyle rightStyle leftText text rightText extraArgs...>
   <table width="100%">
     <tr><#rt/>
-      <#if leftText?has_content><td align="left"><#if leftStyle?has_content><div class="${escapePart(leftStyle, 'html')}"></#if>${escapePart(leftText, 'html')}<#if leftStyle?has_content></div></#if></td><#rt/></#if>
-      <#if text?has_content><td align="center"><#if style?has_content><div class="${escapePart(style, 'html')}"></#if>${escapePart(text, 'html')}<#if style?has_content></div></#if></td><#rt/></#if>
-      <#if rightText?has_content><td align="right"><#if rightStyle?has_content><div class="${escapePart(rightStyle, 'html')}"></#if>${escapePart(rightText, 'html')}<#if rightStyle?has_content></div></#if></td><#rt/></#if>
+      <#if leftText?has_content><td align="left"><#if leftStyle?has_content><div class="${escapePart(leftStyle, 'html')}"></#if>${escapePart(leftText, 'htmlmarkup')}<#if leftStyle?has_content></div></#if></td><#rt/></#if>
+      <#if text?has_content><td align="center"><#if style?has_content><div class="${escapePart(style, 'html')}"></#if>${escapePart(text, 'htmlmarkup')}<#if style?has_content></div></#if></td><#rt/></#if>
+      <#if rightText?has_content><td align="right"><#if rightStyle?has_content><div class="${escapePart(rightStyle, 'html')}"></#if>${escapePart(rightText, 'htmlmarkup')}<#if rightStyle?has_content></div></#if></td><#rt/></#if>
     </tr>
   </table>
 </#macro>
@@ -681,7 +681,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     <#if showSelectAll="Y"><input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${escapePart(name, 'js-html')}');"/></#if>
   </#local>
   <#if (renderFormatFieldRowTitleCellOpened!false) != true>
-    <#if title?has_content>${escapePart(title, 'html')}<br /></#if>
+    <#if title?has_content>${escapePart(title, 'htmlmarkup')}<br /></#if>
     ${titleDetail}
   <#else>
     <#--<#global renderFieldTitleCurrentTitle = content>-->
@@ -691,13 +691,13 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderSortField style title linkUrl ajaxEnabled tooltip="" extraArgs...>
-  <a<#if style?has_content> class="${escapePart(style, 'html')}"</#if> href="<#if ajaxEnabled?has_content && ajaxEnabled>javascript:ajaxUpdateAreas('${escapeFullUrl(linkUrl, 'js-html')}')<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"<#if tooltip?has_content> title="${escapePart(tooltip, 'html')}"</#if>>${escapePart(title, 'html')}</a>
+  <a<#if style?has_content> class="${escapePart(style, 'html')}"</#if> href="<#if ajaxEnabled?has_content && ajaxEnabled>javascript:ajaxUpdateAreas('${escapeFullUrl(linkUrl, 'js-html')}')<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"<#if tooltip?has_content> title="${escapePart(tooltip, 'html')}"</#if>>${escapePart(title, 'htmlmarkup')}</a>
 </#macro>
 
 <#macro formatBoundaryComment boundaryType widgetType widgetName><!-- ${escapePart(boundaryType, 'html')}  ${escapePart(widgetType, 'html')}  ${escapePart(widgetName, 'html')} --></#macro>
 
 <#macro renderTooltip tooltip tooltipStyle extraArgs...>
-  <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${escapePart(tooltipStyle, 'html')}<#else>tooltip</#if>">${escapePart(tooltip, 'html')}</span><#rt/></#if>
+  <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${escapePart(tooltipStyle, 'html')}<#else>tooltip</#if>">${escapePart(tooltip, 'htmlmarkup')}</span><#rt/></#if>
 </#macro>
 
 <#macro renderClass className alert="false" extraArgs...>
@@ -735,7 +735,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <a<#if linkStyle?has_content> class="${escapePart(linkStyle, 'html')}"</#if> href="javascript:document['${escapePart(hiddenFormName, 'js-html')}'].submit()"
     <#if action?has_content && event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}"</#if>
     <#if confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}')"</#if>>
-      <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt=""/></#if>${escapePart(description, 'html')}</a>
+      <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt=""/></#if>${escapePart(description, 'htmlmarkup')}</a>
 </#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation>
     <a<#if linkStyle?has_content> class="${escapePart(linkStyle, 'html')}"</#if> 
@@ -743,7 +743,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
       <#if action?has_content && event?has_content> ${escapePart(event, 'html')}="${escapePart(action, 'html')}"</#if>
       <#if confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}')"</#if>
       <#if imgSrc?length == 0 && title?has_content> title="${escapePart(title, 'html')}"</#if>>
-        <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt="${escapePart(alternate, 'html')}" title="${escapePart(title, 'html')}"/></#if>${escapePart(description, 'html')}</a>
+        <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt="${escapePart(alternate, 'html')}" title="${escapePart(title, 'html')}"/></#if>${escapePart(description, 'htmlmarkup')}</a>
 </#macro>
 
 <#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns extraArgs...>

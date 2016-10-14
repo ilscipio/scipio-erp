@@ -72,13 +72,13 @@ under the License.
     <#if returnHeader?has_content>
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
         <#list returnShipmentIds as returnShipmentId>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawString(uiLabelMap.ProductShipmentId)} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
           <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
         </#list>
       <#elseif returnHeader.statusId == "SUP_RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId == "VENDOR_RETURN">
          <#if returnShipmentIds?has_content>
            <#list returnShipmentIds as returnShipmentId>
-             <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawString(uiLabelMap.ProductShipmentId)} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
+             <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
            </#list>
          <#else>
            <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN") text=uiLabelMap.OrderCreateReturnShipment class="+${styles.action_nav!} ${styles.action_add!}" />

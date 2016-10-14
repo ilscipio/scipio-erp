@@ -166,7 +166,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if placeholder?has_content> placeholder="${escapePart(placeholder, 'html')}"</#if><#t/>
     <#if required> required="required"</#if><#t/>
   ><#t/>
-    <#if value?has_content>${escapePart(value, 'html')}<#else><#nested></#if><#t/>
+    <#if value?has_content>${escapePart(value, 'htmlmarkup')}<#else><#nested></#if><#t/>
   </textarea><#lt/>
   <#--
   TODO: Remove
@@ -494,10 +494,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </div>
     <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
       <select<#if opSelectName?has_content> name="${escapePart(opSelectName, 'html')}"</#if><#-- class="selectBox"-->>
-        <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${escapePart(opEquals, 'html')}</option>
-        <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${escapePart(opSameDay, 'html')}</option>
-        <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${escapePart(opGreaterThanFromDayStart, 'html')}</option>
-        <option value="greaterThan"<#if defaultOptionFrom == "greaterThan"> selected="selected"</#if>>${escapePart(opGreaterThan, 'html')}</option>
+        <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${escapePart(opEquals, 'htmlmarkup')}</option>
+        <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${escapePart(opSameDay, 'htmlmarkup')}</option>
+        <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${escapePart(opGreaterThanFromDayStart, 'htmlmarkup')}</option>
+        <option value="greaterThan"<#if defaultOptionFrom == "greaterThan"> selected="selected"</#if>>${escapePart(opGreaterThan, 'htmlmarkup')}</option>
       </select>
     </div>
   </div>
@@ -600,7 +600,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   ><#lt/>
   <#if !manualItemsOnly>  
     <#if currentFirst && currentValue?has_content && !multiple>
-      <option selected="selected" value="${escapePart(currentValue, 'html')}">${escapePart(currentDescription, 'html')}</option>
+      <option selected="selected" value="${escapePart(currentValue, 'html')}">${escapePart(currentDescription, 'htmlmarkup')}</option>
       <option value="${escapePart(currentValue, 'html')}">---</option>
     </#if>
     <#if allowEmpty || (!manualItems && !options?has_content)>
@@ -612,10 +612,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
       <#if multiple>
         <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#rt/>
-          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapePart(itemValue, 'html')}">${escapePart(item.description!, 'html')}</option><#lt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapePart(itemValue, 'html')}">${escapePart(item.description!, 'htmlmarkup')}</option><#lt/>
       <#else>
         <option<#if currentValue?has_content && currentValue == itemValue && inlineSelected> selected="selected"<#rt/>
-          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapePart(itemValue, 'html')}">${escapePart(item.description!, 'html')}</option><#lt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapePart(itemValue, 'html')}">${escapePart(item.description!, 'htmlmarkup')}</option><#lt/>
       </#if>
     </#list>
   </#if>
@@ -674,7 +674,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- field markup - theme override -->
 <#macro field_option_markup_widget text="" value="" selected=false style="" origArgs={} passArgs={} catchArgs...>
-   <option value="${escapePart(value, 'html')}"<#if selected> selected="selected"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if>>${escapePart(text, 'html')}</option><#t/>
+   <option value="${escapePart(value, 'html')}"<#if selected> selected="selected"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if>>${escapePart(text, 'htmlmarkup')}</option><#t/>
 </#macro>    
 
 <#-- migrated from @renderLookupField form widget macro -->
@@ -825,7 +825,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         onclick="javascript:document['${escapePart(formName, 'js-html')}']['${escapePart(name, 'js-html')}'].value='';
           jQuery('#' + jQuery('#${escapePart(id, 'js-html')}_clear').next().attr('id').replace('_button','') + '_${escapePart(id, 'js-html')}_lookupDescription').html('');
           <#if descriptionFieldName?has_content>document['${escapePart(formName, 'js-html')}']['${escapePart(descriptionFieldName, 'js-html')}'].value='';</#if>">
-          <#if clearText?has_content>${escapePart(clearText, 'html')}<#else>${escapePart(uiLabelMap.CommonClear, 'html')}</#if>
+          <#if clearText?has_content>${escapePart(clearText, 'htmlmarkup')}<#else>${escapePart(uiLabelMap.CommonClear, 'htmlmarkup')}</#if>
       </a>
     </#if>
   </span>
@@ -995,11 +995,11 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if labelType == "extralabel">
           <label<#if currentId?has_content> for="${escapePart(currentId, 'html')}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${escapePart(labelTitle, 'html')}"</#if><@fieldClassAttribStr class=labelClass/>></label>
           <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
-          <#if item.description?has_content><span class="checkbox-label-local">${escapePart(item.description, 'html')}</span></#if>
+          <#if item.description?has_content><span class="checkbox-label-local">${escapePart(item.description, 'htmlmarkup')}</span></#if>
         <#elseif labelType == "spanonly">
-          <#if item.description?has_content><span class="checkbox-label-local">${escapePart(item.description, 'html')}</span></#if>
+          <#if item.description?has_content><span class="checkbox-label-local">${escapePart(item.description, 'htmlmarkup')}</span></#if>
         <#else> <#-- labelType == "standard" -->
-          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${escapePart(currentId, 'html')}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${escapePart(labelTitle, 'html')}"</#if><@fieldClassAttribStr class=labelClass/>>${escapePart(item.description, 'html')}</label></#if>
+          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${escapePart(currentId, 'html')}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${escapePart(labelTitle, 'html')}"</#if><@fieldClassAttribStr class=labelClass/>>${escapePart(item.description, 'htmlmarkup')}</label></#if>
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
@@ -1168,7 +1168,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${escapePart(currentId, 'html')}_item"</#if><#if itemStyle?has_content> style="${escapePart(itemStyle, 'html')}"</#if>><#rt/>
       <#local labelMarkup>
         <#if item.description?has_content>
-          <label class="radio-label-local"<#if currentId?has_content> for="${escapePart(currentId, 'html')}"</#if>>${escapePart(item.description, 'html')}</label>
+          <label class="radio-label-local"<#if currentId?has_content> for="${escapePart(currentId, 'html')}"</#if>>${escapePart(item.description, 'htmlmarkup')}</label>
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
@@ -1350,7 +1350,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapePart(confirmation, 'js-html')}');"</#if></#if><#t/>
           <#if id?has_content> id="${escapePart(id, 'html')}"</#if><#t/>
           <#if style?has_content> style="${escapePart(style, 'html')}"</#if><#t/>
-          <#lt>><#if text?has_content>${escapePart(text, 'html')}</#if></a>
+          <#lt>><#if text?has_content>${escapePart(text, 'htmlmarkup')}</#if></a>
       <#elseif buttonType == "image">
         <input type="<#if inputType?has_content>${escapePart(inputType, 'html')}<#else>image</#if>" src="${escapeFullUrl(imgSrc, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
         <#if description?has_content> alt="${escapePart(description, 'html')}"</#if><#t/>
@@ -1549,11 +1549,11 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#local newName = name/>
           <@cell class=class1>
             <select<#if name?has_content> name="${escapePart(name, 'html')}_op"</#if><#-- class="selectBox"-->>
-              <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${escapePart(opEquals, 'html')}</option>
-              <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${escapePart(opContains, 'html')}</option>
-              <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${escapePart(opIsEmpty, 'html')}</option>
-              <option value="notEqual"<#if defaultOption == "notEqual"> selected="selected"</#if>>${escapePart(opNotEqual, 'html')}</option>
-              <option value="like"<#if defaultOption == "like"> selected="selected"</#if>>${escapePart(opBeginsWith, 'html')} (${escapePart(opLike, 'html')})</option>
+              <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${escapePart(opEquals, 'htmlmarkup')}</option>
+              <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${escapePart(opContains, 'htmlmarkup')}</option>
+              <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${escapePart(opIsEmpty, 'htmlmarkup')}</option>
+              <option value="notEqual"<#if defaultOption == "notEqual"> selected="selected"</#if>>${escapePart(opNotEqual, 'htmlmarkup')}</option>
+              <option value="like"<#if defaultOption == "like"> selected="selected"</#if>>${escapePart(opBeginsWith, 'htmlmarkup')} (${escapePart(opLike, 'htmlmarkup')})</option>
             </select>
           </@cell>
         <#else>
@@ -1573,7 +1573,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#else>
           <div>
             <label for="${escapePart(name, 'html')}_ic"><input type="checkbox" id="${escapePart(name, 'html')}_ic" name="${escapePart(name, 'html')}_ic" value="Y"<#if ignoreCase> checked="checked"</#if>/>
-            ${escapePart(ignoreCaseMsg, 'html')}</label>
+            ${escapePart(ignoreCaseMsg, 'htmlmarkup')}</label>
             <#rt/>
           </div>
         </#if>
@@ -1648,9 +1648,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <span class="${escapePart(titleClass, 'html')}"><#rt/>
       </#if>
       <select<#if name?has_content> name="${escapePart(name, 'html')}_fld0_op"</#if>><#-- class="selectBox"-->
-        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${escapePart(opEquals, 'html')}</option>
-        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${escapePart(opGreaterThan, 'html')}</option>
-        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${escapePart(opGreaterThanEquals, 'html')}</option>
+        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${escapePart(opEquals, 'htmlmarkup')}</option>
+        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${escapePart(opGreaterThan, 'htmlmarkup')}</option>
+        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${escapePart(opGreaterThanEquals, 'htmlmarkup')}</option>
       </select><#rt/>
       <#if titleClass?has_content>
         </span><#rt/>
@@ -1670,8 +1670,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <span class="${escapePart(titleClass, 'html')}"><#rt/>
       </#if>
       <select<#if name?has_content> name="${escapePart(name, 'html')}_fld1_op"</#if>><#-- class="selectBox"-->
-        <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${escapePart(opLessThan, 'html')}</option>
-        <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${escapePart(opLessThanEquals, 'html')}</option>
+        <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${escapePart(opLessThan, 'htmlmarkup')}</option>
+        <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${escapePart(opLessThanEquals, 'htmlmarkup')}</option>
       </select>
       <#if titleClass?has_content>
         </span>
@@ -1774,9 +1774,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     -->
     <#if description?has_content>
       <#if formatText>
-        ${escapePart(description, 'html')?replace("\n", "<br />")}<#t/>
+        ${escapePart(description, 'htmlmarkup')?replace("\n", "<br />")}<#t/>
       <#else>
-        ${escapePart(description, 'html')}<#t/>
+        ${escapePart(description, 'htmlmarkup')}<#t/>
       </#if>
     <#elseif nestedContent?has_content>
       <#if formatText>
@@ -1827,7 +1827,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <div<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#if title?has_content> title="${escapePart(title, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if>><#rt/>
   </#if>
     <#if text?has_content>
-      ${escapePart(text, 'html')}<#t/>
+      ${escapePart(text, 'htmlmarkup')}<#t/>
     <#else>
       <#nested><#t/>
     </#if>

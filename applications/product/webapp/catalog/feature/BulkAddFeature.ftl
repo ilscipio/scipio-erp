@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${rawString(uiLabelMap.ProductAddProductFeatureInBulk)} ${rawString(uiLabelMap.CommonFor)} ${rawString(featureCategory.description)}">
+<@section title="${rawLabel('ProductAddProductFeatureInBulk')} ${rawLabel('CommonFor')} ${rawString(featureCategory.description)}">
       <form method="post" action="<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />

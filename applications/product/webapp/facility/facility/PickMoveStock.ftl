@@ -21,7 +21,7 @@ under the License.
         
         var productId = productelement.value;
         if (productId.length == 0) {
-          alert("${rawString(uiLabelMap.ProductFieldEmpty)?js_string}");
+          alert("${rawLabel('ProductFieldEmpty')?js_string}");
           return;
         }
         var facilityId = facilityelement.value;

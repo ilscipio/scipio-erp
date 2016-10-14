@@ -49,7 +49,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
  
 <#macro renderLabel id style labelText extraArgs...>
 <span<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if>><#rt/>
-<#if labelText?has_content>${escapePart(labelText, 'html')}</#if><#rt/>
+<#if labelText?has_content>${escapePart(labelText, 'htmlmarkup')}</#if><#rt/>
 </span>    
 </#macro>
 
@@ -63,7 +63,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#if name?has_content> name="${escapePart(name, 'html')}"</#if><#rt/>
 <#if title?has_content> title="${escapePart(title, 'html')}"</#if><#rt/>
 <#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}</#if><#if linkUrl?has_content> href="${escapeFullUrl(linkUrl, 'html')}"<#else> href="javascript:void(0);"</#if>><#rt/>
-<#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${escapePart(linkText, 'html')}<#else>&nbsp;</#if></a><#rt/>
+<#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${escapePart(linkText, 'htmlmarkup')}<#else>&nbsp;</#if></a><#rt/>
 </#macro>
 
 <#macro renderImage src id style wid hgt border alt urlString extraArgs...>

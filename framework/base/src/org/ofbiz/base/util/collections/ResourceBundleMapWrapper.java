@@ -21,6 +21,7 @@ package org.ofbiz.base.util.collections;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -114,7 +115,12 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Set<Map.Entry<String, Object>> entrySet() {
         return this.rbmwStack.entrySet();
     }
-    public Object get(Object arg0) {
+    /**
+     * Gets an entry.
+     * <p>
+     * SCIPIO: Modified to accept an explicit context to expand args.
+     */
+    public Object get(Object arg0, Map<String, Object> context) {
         Object value = this.rbmwStack.get(arg0);
         if (value == null) {
             value = arg0;
@@ -127,6 +133,14 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
             }
         }
         return value;
+    }
+    /**
+     * Gets an entry, with optional expansion using the context passed on creation.
+     * <p>
+     * SCIPIO: Delegating.
+     */
+    public Object get(Object arg0) {
+        return get(arg0, this.context);
     }
     public boolean isEmpty() {
         return this.rbmwStack.isEmpty();
@@ -148,6 +162,32 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     }
     public Collection<Object> values() {
         return this.rbmwStack.values();
+    }
+    
+    /**
+     * SCIPIO: Returns the context reference which was passed to this bundle wrapper
+     * upon its creation.
+     */
+    public Map<String, Object> getContext() {
+        return context;
+    }
+    
+    /**
+     * SCIPIO: Returns the initial locale upon creation.
+     */
+    public Locale getInitialLocale() {
+        return this.initialResourceBundle.getLocale();
+    }
+    
+    /**
+     * SCIPIO: Returns the locale considered the main one for this bundle wrapper.
+     * <p>
+     * NOTE: 2016-10-13: currently always returns the initial locale.
+     * TODO: maybe should return the last?
+     */
+    public Locale getLocale() {
+        // TODO?: should this return the first or last locale??
+        return getInitialLocale();
     }
 
     public static class InternalRbmWrapper implements Map<String, Object>, Serializable {

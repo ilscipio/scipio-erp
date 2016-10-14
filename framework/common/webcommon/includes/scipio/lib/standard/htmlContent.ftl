@@ -140,7 +140,7 @@ An HTML heading (title).
     <${containerElem}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if>>
   </#if>
   <#if elem?has_content><${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
-    <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#if title?has_content>${escapePart(title, 'html')}<#else><#nested></#if><#if elem?has_content></${elem}></#if>
+    <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#if title?has_content>${escapePart(title, 'htmlmarkup')}<#else><#nested></#if><#if elem?has_content></${elem}></#if>
   <#if containerElem?has_content>
     </${containerElem}>
   </#if>
@@ -1010,7 +1010,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#-- @pul main markup - theme override -->
 <#macro pul_markup title="" origArgs={} passArgs={} catchArgs...>
   <ul class="${styles.pricing_wrap!}">
-    <#if title?has_content><@pli type="title">${escapePart(title, 'html')}</@pli></#if>
+    <#if title?has_content><@pli type="title">${escapePart(title, 'htmlmarkup')}</@pli></#if>
     <#nested>
   </ul>
 </#macro>
@@ -1393,9 +1393,9 @@ Chart data entry.
   <#if chartLibrary == "foundation">
     <#if chartType == "line">
       <#global chartDataIndex =  chartDataIndex + 1 />
-      <li data-y="${escapePart(value, 'html')}" data-x="${chartDataIndex}">${escapePart(title, 'html')}</li>
+      <li data-y="${escapePart(value, 'html')}" data-x="${chartDataIndex}">${escapePart(title, 'htmlmarkup')}</li>
     <#else>
-      <li data-value="${escapePart(value, 'html')}">${escapePart(title, 'html')}</li>
+      <li data-value="${escapePart(value, 'html')}">${escapePart(title, 'htmlmarkup')}</li>
     </#if>
   <#else>
       config.data.labels.push('${escapePart(title, 'js')}');
@@ -1564,7 +1564,7 @@ Slider data entry - a single slide.
         <div id="${escapePart(id, 'html')}" class="item">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
             <div>
-            <#if title?has_content><h2>${escapePart(title, 'html')}</h2></#if>
+            <#if title?has_content><h2>${escapePart(title, 'htmlmarkup')}</h2></#if>
             <#if image?has_content>
               <img src="${escapeFullUrl(image, 'html')}"/>
             </#if>
@@ -1577,7 +1577,7 @@ Slider data entry - a single slide.
         <div data-orbit-slide="${escapePart(id, 'html')}" class="${styles.slide_container!}">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
             <div>
-            <#if title?has_content><h2>${escapePart(title, 'html')}</h2></#if>
+            <#if title?has_content><h2>${escapePart(title, 'htmlmarkup')}</h2></#if>
               <#if image?has_content>
                 <img src="${escapeFullUrl(image, 'html')}"/>
               </#if>
@@ -1612,6 +1612,8 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                               * fill|cover|contain|scale-down = css3 object-fit
                               * bgcover = css background cover
     link                    = Link URL around nested content
+                              WARN: 2016-10-10: '''Do not pass''' any unsafe input in this link at this time!
+                                  Escaping protection is only partial (html but not css).
                               WARN: can only use if no other links inside nested content
                               NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
                                   to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
@@ -1640,13 +1642,13 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 
 <#-- @img main markup - theme override -->
 <#macro img_markup class="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
-    <#local imgContainer><#if width?has_content>width: ${width};</#if><#if height?has_content>height: ${height};</#if></#local>
+    <#local imgContainer><#if width?has_content>width: ${escapePart(width, 'css-html')};</#if><#if height?has_content> height: ${escapePart(height, 'css-html')};</#if></#local>
     <#local nested><#nested></#local>
     <#switch type>
         <#case "bgcover">
             <#local imgStyle>
                 <#-- WARN/FIXME: escapeFullUrl currently doesn't escape style, so this is unsafe! no easy functions for this -->
-                background:url('${escapeFullUrl(src, 'style')}') no-repeat center center fixed;        
+                background:url('${escapeFullUrl(src, 'css-html')}') no-repeat center center fixed;        
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;
@@ -1665,7 +1667,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             </div>
           <#break>
         <#default>
-            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapePart(type, 'style')};</#local>
+            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapePart(type, 'css-html')};</#local>
             <#local class = addClassArg(class, "scipio-image-container")>
             <div<@compiledClassAttribStr class=class /> style="${imgContainer}" scipioFit="${escapePart(type, 'html')}">
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>

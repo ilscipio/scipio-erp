@@ -34,7 +34,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="shippingPanel" title="${rawString(uiLabelMap.EcommerceStep)} 2: ${rawString(uiLabelMap.FacilityShipping)}">
+        <@section id="shippingPanel" title="${rawLabel('EcommerceStep')} 2: ${rawLabel('FacilityShipping')}">
           <div id="shippingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel id="shippingCompleted">
@@ -127,8 +127,8 @@ under the License.
                 </fieldset>
                 <#--<fieldset>-->
                   <@field type="submitarea">
-                    <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 3"/>
-                    <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
+                    <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${rawLabel('EcommerceContinueToStep')} 3"/>
+                    <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${rawLabel('EcommercePleaseWait')}..."/>
                   </@field>
                 <#--</fieldset>-->
             </form>
@@ -136,7 +136,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="shippingOptionPanel" title="${rawString(uiLabelMap.EcommerceStep)} 3: ${rawString(uiLabelMap.PageTitleShippingOptions)}">
+        <@section id="shippingOptionPanel" title="${rawLabel('EcommerceStep')} 3: ${rawLabel('PageTitleShippingOptions')}">
           <div id="shippingOptionSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingOptionPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel class="+completed" id="shippingOptionCompleted">
@@ -160,8 +160,8 @@ under the License.
               </fieldset>
               <#--<fieldset>-->
                 <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 4"/>
-                  <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${rawLabel('EcommerceContinueToStep')} 4"/>
+                  <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${rawLabel('EcommercePleaseWait')}..."/>
                 </@field>
               <#--</fieldset>-->
             </form>
@@ -169,7 +169,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="billingPanel" title="${rawString(uiLabelMap.EcommerceStep)} 4: ${rawString(uiLabelMap.AccountingBilling)}">
+        <@section id="billingPanel" title="${rawLabel('EcommerceStep')} 4: ${rawLabel('AccountingBilling')}">
           <div id="billingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openBillingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel class="+completed" id="billingCompleted">
@@ -293,8 +293,8 @@ under the License.
               </fieldset>
               <#--<fieldset>-->
                 <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${rawString(uiLabelMap.EcommerceContinueToStep)} 5"/>
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${rawString(uiLabelMap.EcommercePleaseWait)}..."/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${rawLabel('EcommerceContinueToStep')} 5"/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${rawLabel('EcommercePleaseWait')}..."/>
                 </@field>
               <#--</fieldset>-->
             </form>
@@ -302,7 +302,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section title="${rawString(uiLabelMap.EcommerceStep)} 5: ${rawString(uiLabelMap.OrderSubmitOrder)}">
+        <@section title="${rawLabel('EcommerceStep')} 5: ${rawLabel('OrderSubmitOrder')}">
           <div id="orderSubmitPanel" style="display: none;">
             <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
                 <#--<fieldset>-->

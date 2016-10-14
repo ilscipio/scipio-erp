@@ -101,7 +101,7 @@ under the License.
                 <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
             </@menu>
         </#macro>
-        <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${rawString(uiLabelMap.CommonUsername)} & ${rawString(uiLabelMap.CommonPassword)}" -->
+        <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${rawLabel('CommonUsername')} & ${rawLabel('CommonPassword')}" -->
             <#-- Scipio: This was a table, not illogical but will look better as fields -->
               
               <@field type="display" label=uiLabelMap.AccountingAccountType>
@@ -344,7 +344,7 @@ under the License.
               <#list carrierShipMethods as shipMeth>
                 <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId!) + "@" + rawString(shipMeth.partyId) />
                 <#assign shippingMethodLabel><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description", locale)!}</#assign>
-                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'html') />
+                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'htmlmarkup') />
               </#list>
               <@field type="submit" text=uiLabelMap.EcommerceSetDefault />
             <#else>
@@ -355,20 +355,6 @@ under the License.
         </@section>
     </div>
 </div>
-
-
-<#-- ============================================================= -->
-<#-- Scipio: TODO?
-<@section title=uiLabelMap.PartyTaxIdentification>
-    <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
-      <div>
-      <input type="hidden" name="partyId" value="${party.partyId}"/>
-      <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" />
-      <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-      </div>
-    </form>
-</@section>
--->
 
 <#-- ============================================================= -->
 <#-- Scipio: TODO?

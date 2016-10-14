@@ -216,7 +216,7 @@ under the License.
             <form name="addProductToReceive" method="post" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
-                <@field type="generic" label="${rawString(uiLabelMap.ProductProductId)}/${rawString(uiLabelMap.ProductGoodIdentification)}">
+                <@field type="generic" label="${rawLabel('ProductProductId')}/${rawLabel('ProductGoodIdentification')}">
                     <@field type="input" inline=true size="20" id="productId" name="productId" value=""/>
                         @
                     <@field type="input" inline=true  name="quantity" size="6" maxlength="6" value="1" tabindex="0"/>

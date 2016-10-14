@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${rawString(uiLabelMap.OrderRequest)} ${rawString(custRequest.custRequestId)} ${rawString(uiLabelMap.CommonInformation)}">
+<@section title="${rawLabel('OrderRequest')} ${rawString(custRequest.custRequestId)} ${rawLabel('CommonInformation')}">
         <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
             <#-- request header information -->
             <@tr>

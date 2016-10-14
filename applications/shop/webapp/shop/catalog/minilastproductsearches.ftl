@@ -34,7 +34,7 @@ under the License.
           </#if>
         </@menu>
     </#macro>
-    <@section id="minilastproductsearches" title="${rawString(uiLabelMap.OrderLastSearches)}..." menuContent=menuContent>
+    <@section id="minilastproductsearches" title="${rawLabel('OrderLastSearches')}..." menuContent=menuContent>
       <ul>
         <#list searchOptionsHistoryList[0..limit] as searchOptions>
           <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${rawString(uiLabelMap.WorkEffortSearchWorkEfforts)}, ${rawString(uiLabelMap.ProductSearchFor)}:">
+<@section title="${rawLabel('WorkEffortSearchWorkEfforts')}, ${rawLabel('ProductSearchFor')}:">
     <#list searchConstraintStrings as searchConstraintString>
         <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>

@@ -157,14 +157,13 @@ under the License.
       <@td>${uiLabelMap.FormFieldTitle_priority}</@td>
       <@td colspan="3">
          
-         <#assign priorityLabel>
-            <#switch orderHeader.priority!>
-                <#case "1">${rawString(uiLabelMap.CommonHigh)}<#break>
-                <#case "2">${rawString(uiLabelMap.CommonNormal)}<#break>
-                <#case "3">${rawString(uiLabelMap.CommonLow)}<#break>
-                <#default>${rawString(uiLabelMap.CommonNormal)}
-            </#switch>
-         </#assign>
+         
+         <#switch orderHeader.priority!>
+            <#case "1"><#assign priorityLabel = uiLabelMap.CommonHigh><#break>
+            <#case "2"><#assign priorityLabel = uiLabelMap.CommonNormal><#break>
+            <#case "3"><#assign priorityLabel = uiLabelMap.CommonLow><#break>
+            <#default><#assign priorityLabel = uiLabelMap.CommonNormal>
+         </#switch>
          <@modal id="${orderId}_priority" label=priorityLabel>
              <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
              <input type="hidden" name="orderId" value="${orderId}"/>
@@ -188,13 +187,12 @@ under the License.
     <@tr>
       <@td>${uiLabelMap.AccountingInvoicePerShipment}</@td>
       <@td colspan="3">
-         <#assign invoicePerShipmentLabel>
-             <#switch orderHeader.invoicePerShipment!>
-                <#case "Y">${rawString(uiLabelMap.CommonYes)}<#break>
-                <#case "N">${rawString(uiLabelMap.CommonNo)}<#break>
-                <#default>${rawString(uiLabelMap.CommonYes)}
-            </#switch>
-         </#assign>
+         
+         <#switch orderHeader.invoicePerShipment!>
+            <#case "Y"><#assign invoicePerShipmentLabel = uiLabelMap.CommonYes><#break>
+            <#case "N"><#assign invoicePerShipmentLabel = uiLabelMap.CommonNo><#break>
+            <#default><#assign invoicePerShipmentLabel = uiLabelMap.CommonYes>
+         </#switch>
          <@modal id="${orderId}_invoicePerShipment" label=invoicePerShipmentLabel>
              <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId}"/>

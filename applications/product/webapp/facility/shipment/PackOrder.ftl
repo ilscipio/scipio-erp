@@ -270,7 +270,7 @@ under the License.
                                     <@tr>
                                         <@td colspan="12">
                                             <@field type="submitarea">                                            
-                                                <@field type="submit" text="${rawString(uiLabelMap.CommonClear)} (${rawString(uiLabelMap.CommonAll)})" onClick="javascript:document.clearPackForm.submit();"/>
+                                                <@field type="submit" text="${rawLabel('CommonClear')} (${rawLabel('CommonAll')})" onClick="javascript:document.clearPackForm.submit();"/>
                                             </@field>
                                         </@td>
                                     </@tr>
@@ -308,7 +308,7 @@ under the License.
                                 <#list packageSeqIds as packageSeqId>
                                     <@tr>
                                         <@td>
-                                            <#assign packageWeightLabel>${rawString(uiLabelMap.ProductPackage)} ${rawString(packageSeqId)}</#assign>
+                                            <#assign packageWeightLabel>${rawLabel('ProductPackage')} ${rawString(packageSeqId)}</#assign>
                                             <@field type="input" size="7" name="packageWeight_${packageSeqId}" value=(packingSession.getPackageWeight(packageSeqId?int)!) label=packageWeightLabel/>
                                             <#if orderItemShipGroup?has_content>
                                                 <input type="hidden" name="shippingContactMechId" value="${orderItemShipGroup.contactMechId!}"/>
@@ -359,7 +359,7 @@ under the License.
         <#assign packageMap = linesByPackageResultMap.get("packageMap")!>
         <#assign sortedKeys = linesByPackageResultMap.get("sortedKeys")!>
         <#if ((packageMap?has_content) && (sortedKeys?has_content))>
-            <@section title="${rawString(uiLabelMap.ProductPackages)} : ${sortedKeys.size()!}">
+            <@section title="${rawLabel('ProductPackages')} : ${sortedKeys.size()!}">
                 <#list sortedKeys as key>
                     <#assign packedLines = packageMap.get(key)>
                     <#if packedLines?has_content>

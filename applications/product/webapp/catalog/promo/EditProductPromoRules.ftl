@@ -53,7 +53,7 @@ under the License.
                           <option value="N">${uiLabelMap.CommonN}</option>
                           <option value="Y">${uiLabelMap.CommonY}</option>
                         </@field>
-                        <@field type="text" label="${rawString(uiLabelMap.CommonAnd)} ${rawString(uiLabelMap.CommonGroup)}" required=true size="10" maxlength="20" name="andGroupId" value="_NA_"/>
+                        <@field type="text" label="${rawLabel('CommonAnd')} ${rawLabel('CommonGroup')}" required=true size="10" maxlength="20" name="andGroupId" value="_NA_"/>
                         <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </@fields>
                </form>
@@ -181,8 +181,7 @@ under the License.
                     </#if>
                 </#assign>
 
-
-                <@modal id="modal_rule_condition_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(ruleLabel, 'html')>
+                <@modal id="modal_rule_condition_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(ruleLabel, 'htmlmarkup')>
                     <@heading>${uiLabelMap.ProductCondition} ${(productPromoCond.productPromoCondSeqId)!}</@heading>
                     <@table type="data-complex" autoAltRows=false>
                         <#assign maxCondSeqId = 1>
@@ -406,8 +405,7 @@ under the License.
                     </#if>
                 </#assign>
 
-
-                <@modal id="modal_rule_action_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(actionLabel, 'html')>
+                <@modal id="modal_rule_action_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(actionLabel, 'htmlmarkup')>
                     <@heading>${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!}</@heading>
                     <@table type="data-complex" autoAltRows=false>
                         <#assign actionClass = "2">
@@ -642,7 +640,7 @@ under the License.
 
 
 <#if promoProductPromoCategories?has_content>
-    <@section title="${rawString(uiLabelMap.ProductPromotion)} ${rawString(uiLabelMap.ProductCategories)}">
+    <@section title="${rawLabel('ProductPromotion')} ${rawLabel('ProductCategories')}">
       <#-- ======================= Categories ======================== -->
       <#list promoProductPromoCategories as promoProductPromoCategory>
         <#assign promoProductCategory = promoProductPromoCategory.getRelatedOne("ProductCategory", true)>

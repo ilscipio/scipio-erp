@@ -18,9 +18,9 @@ under the License.
 -->
 
 <@menu type="button">
-  <@menuitem type="link" href=makeOfbizUrl("EditProductConfigItemContent?configItemId=${configItemId}") text="${rawString(uiLabelMap.ProductProduct)} ${rawString(uiLabelMap.ProductConfigItem)} ${rawString(uiLabelMap.ProductContent)} ${rawString(uiLabelMap.CommonList)}" class="+${styles.action_nav!}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditProductConfigItemContent?configItemId=${configItemId}") text="${rawLabel('ProductProduct')} ${rawLabel('ProductConfigItem')} ${rawLabel('ProductContent')} ${rawLabel('CommonList')}" class="+${styles.action_nav!}" />
 <#if contentId?has_content>
-  <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/EditContent?contentId=${contentId}") target='_blank' text="${rawString(uiLabelMap.ProductContent)} ${rawString(uiLabelMap.CommonPage)}" class="+${styles.action_nav!}" />
+  <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/EditContent?contentId=${contentId}") target='_blank' text="${rawLabel('ProductContent')} ${rawLabel('CommonPage')}" class="+${styles.action_nav!}" />
 </#if>
 </@menu>
 <br />

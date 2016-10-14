@@ -22,7 +22,7 @@ under the License.
     <#assign intervalDateTitle = Static['org.ofbiz.base.util.UtilDateTime'].toDateString(fromDate)>
 </#if>
 
-<@section title="${rawString(uiLabelMap.OrderOrdersReceivedFrom)} ${rawString(intervalDateTitle!)}">
+<@section title="${rawLabel('OrderOrdersReceivedFrom')} ${rawString(intervalDateTitle!)}">
       <#assign listSize = state.getSize()>
       <#-- FIXME: Do we need this? -->
       <#--if (listSize > 10)>

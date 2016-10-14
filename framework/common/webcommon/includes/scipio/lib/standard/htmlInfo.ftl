@@ -58,7 +58,7 @@ FIXME: Needs parameter to control injection and location of hidden modal content
 
 <#-- @modal main markup - theme override -->
 <#macro modal_markup id="" label="" href="" class="" icon="" origArgs={} passArgs={} catchArgs...>
-  <a href="#" data-reveal-id="modal_${escapePart(id, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${escapePart(icon, 'html')}"></i> </#if>${escapePart(label, 'html')}</a>
+  <a href="#" data-reveal-id="modal_${escapePart(id, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${escapePart(icon, 'html')}"></i> </#if>${escapePart(label, 'htmlmarkup')}</a>
   <div id="modal_${escapePart(id, 'html')}" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>
@@ -180,7 +180,7 @@ Creates a panel box.
   <#local class = addClassArg(class, type)>
   <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> style="${escapePart(style, 'html')}"</#if>>
     <#if !topContent?is_boolean><@contentArgRender content=topContent args=topContentArgs /></#if>
-    <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${escapePart(title, 'html')}</h5></#if></div>
+    <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${escapePart(title, 'htmlmarkup')}</h5></#if></div>
     <div<@compiledClassAttribStr class=(styles.panel_body!)/>><#nested></div>
     <#if !bottomContent?is_boolean><@contentArgRender content=bottomContent args=bottomContentArgs /></#if>
   </div>
@@ -256,7 +256,7 @@ translates to:
   <#local styleNamePrefix = "commonmsg_" + type?replace("-", "_")>
   <#local defaultClass = styles[styleNamePrefix]!styles["commonmsg_default"]>
   <#local class = addClassArgDefault(class, defaultClass)>
-  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id closable=closable origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${escapePart(text, 'html')}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
+  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id closable=closable origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${escapePart(text, 'htmlmarkup')}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
 </#macro>
 
 <#-- @commonMsg main markup - theme override -->

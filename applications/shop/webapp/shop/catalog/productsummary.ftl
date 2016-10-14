@@ -93,7 +93,7 @@
         </#if>
     </#assign>
 
-     <@pul title=wrapAsRaw(productTitle!"", 'html')><#-- FIXME?: the wrapping already done by the content wrapper -->
+     <@pul title=wrapAsRaw(productTitle!"", 'htmlmarkup')><#-- FIXME?: the wrapping already done by the content wrapper -->
         <#if price.isSale?? && price.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
         <@pli>
            ${productImage!""}

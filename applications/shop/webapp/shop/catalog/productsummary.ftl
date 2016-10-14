@@ -31,17 +31,20 @@
     </#if>
 
     <#-- Product Information -->
-    <#if solrProduct?? && title??>
-        <#assign productName = title>
-    <#elseif productContentWrapper?? && productContentWrapper.get("PRODUCT_NAME")?has_content>
-        <#assign productName = productContentWrapper.get("PRODUCT_NAME")>
-    <#elseif !productName??>
-        <#assign productName = "">
-    </#if>
-    <#assign productTitle = productName />
+    <#assign productTitle>
+        <#if solrProduct?? && title??>
+            <#assign productName = title>
+        <#elseif productContentWrapper?? && productContentWrapper.get("PRODUCT_NAME","html")!?string?has_content>
+            <#assign productName = productContentWrapper.get("PRODUCT_NAME","html")?string>
+        <#elseif !productName??>
+            <#assign productName = "">
+        </#if>
+        ${productName}
+    </#assign>
+
 
     <#if smallImageUrl?has_content>
-        <#assign imgSrc><@ofbizContentUrl>${rawString(smallImageUrl)}</@ofbizContentUrl></#assign>
+        <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
     <#else>
         <#assign imgSrc="https://placehold.it/300x100"/>    
     </#if>
@@ -90,7 +93,7 @@
         </#if>
     </#assign>
 
-     <@pul title=productTitle>
+     <@pul title=wrapAsRaw(productTitle!"", 'htmlmarkup')><#-- FIXME?: the wrapping already done by the content wrapper -->
         <#if price.isSale?? && price.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
         <@pli>
            ${productImage!""}

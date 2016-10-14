@@ -31,7 +31,7 @@
     <#-- SCIPIO: We are using the clearing mechanism in foundation here. This may be migrated to the grid macro at a later stage. -->
     <#if productAdditionalImage1?has_content>
       <div class="product-image-thumbs">
-        <ul class="clearing-thumbs" data-clearing><!-- ${productAdditionalImage1!} -->
+        <ul class="clearing-thumbs" data-clearing>
             <#if productAdditionalImage1?has_content>
                 <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage1!}</@ofbizContentUrl></#assign>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover" class=""/></li>
@@ -140,8 +140,8 @@
         <#assign targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
-        <#assign assocTitle>${rawString(beforeName)}<#if showName == "Y">${rawString(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${rawString(afterName)}</#assign>
-        <@section title=assocTitle>
+        <#assign assocTitle>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</#assign>
+        <@section title=wrapAsRaw(assocTitle, 'htmlmarkup')>
             <@grid columns=5>
                 <#list assocProducts as productAssoc>
                     <li>
@@ -203,15 +203,15 @@
     <#assign dummy = setRequestAttribute("productValue", productValue)>
 
     <#-- also bought -->
-    <@associatedProducts assocProducts=alsoBoughtProducts beforeName="" showName="N" afterName=rawLabel('ProductAlsoBought') formNamePrefix="albt" targetRequestName="" />
+    <@associatedProducts assocProducts=alsoBoughtProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductAlsoBought}" formNamePrefix="albt" targetRequestName="" />
     <#-- obsolete -->
-    <@associatedProducts assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolete')}" formNamePrefix="obs" targetRequestName="" />
+    <@associatedProducts assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolete}" formNamePrefix="obs" targetRequestName="" />
     <#-- cross sell -->
-    <@associatedProducts assocProducts=crossSellProducts beforeName="" showName="N" afterName="${rawLabel('ProductCrossSell')}" formNamePrefix="cssl" targetRequestName="crosssell" />
+    <@associatedProducts assocProducts=crossSellProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductCrossSell}" formNamePrefix="cssl" targetRequestName="crosssell" />
     <#-- up sell -->
-    <@associatedProducts assocProducts=upSellProducts beforeName="${rawLabel('ProductUpSell')} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell" />
+    <@associatedProducts assocProducts=upSellProducts beforeName="${uiLabelMap.ProductUpSell} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell" />
     <#-- obsolescence -->
-    <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolescense')}" formNamePrefix="obce" targetRequestName="" />
+    <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolescense}" formNamePrefix="obce" targetRequestName="" />
 </#macro>
 
 

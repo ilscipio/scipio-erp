@@ -208,6 +208,11 @@ DEV NOTES:
                               For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
                               server root, containing webapp context root and servlet path; if webSiteId specified, 
                               this should specified relative like intra-webapp (unless absPath forced to true).
+                              WARN: At current time (2016-10-14), this macro version of @ofbizUrl does NOT prevent automatic
+                                  screen html escaping on the URI parameter, because too many templates use @ofbizUrl
+                                  directly without consideration to escaping.
+                                  However, the function versions of this macro such as #makeOfbizUrl DO bypass the
+                                  auto screen escaping on this parameter.
                               (New in Scipio)
     absPath                 = ((boolean), default: -depends on type-, fallback default: false)       
                               If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
@@ -414,6 +419,12 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 TODO: Make this accept uri
 
   * Parameters *
+    uri                     = (string) URI or path as parameter; alternative to nested
+                              WARN: At current time (2016-10-14), this macro version of @ofbizContentUrl does NOT prevent automatic
+                                  screen html escaping on the URI parameter, because too many templates use @ofbizUrl
+                                  directly without consideration to escaping.
+                                  However, the function versions of this macro such as #makeOfbizContentUrl DO bypass the
+                                  auto screen escaping on this parameter.
     variant                 = ((string)) variant
                               (Stock Ofbiz parameter)
 -->
@@ -435,7 +446,7 @@ Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl m
     @ofbizContentUrl
 -->
 <#function makeOfbizContentUrl uri variant="">
-  <#local res><@ofbizContentUrl variant=variant>${rawString(uri)}</@ofbizContentUrl></#local>
+  <#local res><@ofbizContentUrl uri=uri variant=variant /></#local>
   <#return res>
 </#function>
 
@@ -733,21 +744,31 @@ The locale is determined by uiLabelMap. If you must
 DEV NOTE: It is not possible to add custom locale here; already loaded into the {{{uiLabelMap}}}.
 
   * Parameters *
-    name                    = (required) Label name
-    resource                = (optional) Resource name
-                              If label not found in uiLabelMap (preferred), falls back to lookup in this 
-                              resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
+    name                    = ((string), required) Label name
+    resource                = ((string)) Resource name for fallback
+                              If label not found in {{{uiLabelMap}}} (preferred), falls back to lookup in this 
+                              resource. Usually {{{uiLabelMap}}} is preferred for templates, but sometimes not worth importing
                               a whole file for one label.
+                              NOTE: If a map is passed as second parameter instead of string, it is interpreted
+                                  as {{{msgArgs}}} instead of a resource and {{{resource}}} is interpreted as empty.
     msgArgs                 = ((map)|(boolean), default: -true / use uiLabelMap's context-) Message arguments
                               If boolean: if true, uses uiLabelMap's default/arbitrary context; if false,
                               prevents any context from being used.
-    
+                              NOTE: For convenience, {{{msgArgs}}} can be specified as the 
+                                  second parameter instead of third (like a java function overload), by
+                                  passing a map type to the second parameter.
+                                  So {{{getLabel("xxx", {})}}} is the same as {{{getLabel("xxx", "", {})}}}.
+
   * Related *
     #rawLabel
     #getPropertyMsg
 -->
 <#function getLabel name resource="" msgArgs=true>
   <#if name?has_content>
+    <#if isObjectType("map", resource)><#-- msgArgs can be passed as 2nd param -->
+      <#local msgArgs = resource>
+      <#local resource = "">
+    </#if>
     <#if msgArgs?is_boolean>
       <#if msgArgs>
         <#local var=(uiLabelMap[name])!false />
@@ -760,16 +781,16 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
     <#if (!var?is_boolean) && var != name>
       <#return var>
     <#elseif resource?has_content>
-      <#-- 2016-10-13: getPropertyMsg must uses the exact same arguments that uiLabelMap is using,
+      <#-- 2016-10-13: getPropertyMsg must use the exact same arguments that uiLabelMap is using,
           meaning same context for args and same locale -->
       <#if msgArgs?is_boolean>
         <#if msgArgs>
-          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getInitialLocale())!true)>
+          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getLocale())!true)>
         <#else>
-          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getInitialLocale())!true)>
+          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getLocale())!true)>
         </#if>
       <#else>
-        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getInitialLocale())!true)>
+        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getLocale())!true)>
       </#if>
     <#else>
       <#return "">
@@ -790,15 +811,21 @@ This is a higher-level, abstracted function for fetching labels.
 Shorthand for {{{rawString(getLabel(...))}}}.
 
   * Parameters *
-    name                    = (required) Label name
-    resource                = (optional) Resource name
-                              If label not found in uiLabelMap (preferred), falls back to lookup in this 
-                              resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
+    name                    = ((string), required) Label name
+    resource                = ((string)) Resource name for fallback
+                              If label not found in {{{uiLabelMap}}} (preferred), falls back to lookup in this 
+                              resource. Usually {{{uiLabelMap}}} is preferred for templates, but sometimes not worth importing
                               a whole file for one label.
+                              NOTE: If a map is passed as second parameter instead of string, it is interpreted
+                                  as {{{msgArgs}}} instead of a resource and {{{resource}}} is interpreted as empty.
     msgArgs                 = ((map)|(boolean), default: -true / use uiLabelMap's context-) Message arguments
                               If boolean: if true, uses uiLabelMap's default/arbitrary context; if false,
                               prevents any context from being used.
-                              
+                              NOTE: For convenience, {{{msgArgs}}} can be specified as the 
+                                  second parameter instead of third (like a java function overload), by
+                                  passing a map type to the second parameter.
+                                  So {{{rawLabel("xxx", {})}}} is the same as {{{rawLabel("xxx", "", {})}}}.
+
   * Related *
     #getLabel
     #rawString
@@ -1489,6 +1516,7 @@ WARN: this works using FTL's primitive ?is_string test, which may return TRUE fo
 ************
 Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and 
 depending on current implementation and system policy may process the string for allowed HTML.
+DEPRECATED: This will be replaced by a more generic and powerful function.
 
 Typically for database-stored content such as product descriptions which use limited HTML.
 

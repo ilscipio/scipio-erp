@@ -18,19 +18,45 @@
  *******************************************************************************/
 package org.ofbiz.content.content;
 
-import org.ofbiz.base.util.StringUtil;
-
 /**
  * ContentWrapper Interface
  */
 
 public interface ContentWrapper {
 
-    public StringUtil.StringWrapper get(String contentTypeId, String encoderType); 
+    /**
+     * Gets a content field by ID.
+     * <p>
+     * SCIPIO: NOTE: This method's parameters and implementation is modified from stock Ofbiz.
+     * Encoding is generally NOT DONE by this method anymore, with a few possible exceptions (such as url parameter encoding).
+     * <p>
+     * In overwhelming majority of cases it is the TEMPLATES and SCREENS responsibility to encode in the output document language
+     * at the proper point of use; usually done automatically by screen html auto-escaping for html
+     * (which can be bypassed for non-html).
+     * <p>
+     * The contentLangType parameter replaces encoderType and it denotes the intrinsic language
+     * elements that may be contained in the specified content; but does NOT imply encoding
+     * will be done in the named language.
+     * <p>
+     * In other words, "html" means the value may contain HTML markup, and "url" means
+     * the value is a URL. It does not mean the markup will be html-escaped, although this
+     * happens automatically by the screen automatic html-escaping when this is called
+     * from freemarker or passed from groovy/screens to freemarker (so there are no added
+     * security issues from removing the previous HTML encodings).
+     * <p>
+     * For URL, individual parameters may get encoded, but unlike stock ofbiz, the URL
+     * will not get slaughtered and is still subject to HTML and other encoding by caller/screens.
+     * <p>
+     * The implementations should make use of {@link ContentLangUtil}.
+     * See {@link ContentLangUtil} for automatic encoding behavior.
+     */
+    //public StringUtil.StringWrapper get(String contentTypeId, String encoderType); 
+    public String get(String contentTypeId, String contentLangType); 
 
     /**
-     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding,
-     * which includes screen auto-escaping.
+     * SCIPIO: Gets a content field by ID, with content language type general/handled by caller.
+     * <p>
+     * NEVER performs encoding.
      */
     public String get(String contentTypeId); 
 

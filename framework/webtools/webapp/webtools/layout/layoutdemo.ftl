@@ -1498,6 +1498,8 @@
     <#assign dummy = setGlobalContextField("errMessage", "")>
     <li>getLabel (args explicit off): "${getLabel("CommonDatabaseProblem", "", false)}"</li>
     <li>getLabel (explicit args): "${getLabel("CommonDatabaseProblem", "", {"errMessage":"INSERTED-ERRMESSAGE"})}"</li>
+    <li>getLabel (explicit args, shorthand): "${getLabel("CommonDatabaseProblem", {"errMessage":"INSERTED-ERRMESSAGE"})}"</li>
+    <li>rawLabel (explicit args, shorthand): "${rawLabel("CommonDatabaseProblem", {"errMessage":"INSERTED-ERRMESSAGE"})}"</li>
 
     <#assign prevPartyId = globalContext.partyId!"">
     <#assign dummy = setGlobalContextField("partyId", "GLOBALCONTEXT-PARTYID")>

@@ -22,7 +22,7 @@ under the License.
   <@section id="layeredNav" title=uiLabelMap.EcommerceLayeredNavigation>
     <#escape x as x?xml>
       <#if productCategory.productCategoryId != currentSearchCategory.productCategoryId>
-        <#assign currentSearchCategoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!?string />
+        <#assign currentSearchCategoryName = categoryContentWrapper.get("CATEGORY_NAME")! />
         <#list searchConstraintStrings as searchConstraintString>
           <#if (searchConstraintString?string?index_of(currentSearchCategoryName) >= 0)>
             <div id="searchConstraints">&nbsp;<a href="<@ofbizUrl>category/~category_id=${productCategoryId}?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N<#if previousCategoryId??>&amp;searchCategoryId=${previousCategoryId}</#if></@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a><#noescape>&nbsp;${searchConstraintString}</#noescape></div>
@@ -41,7 +41,7 @@ under the License.
         <ul>
           <#list subCategoryList as category>
             <#assign subCategoryContentWrapper = category.categoryContentWrapper />
-            <#assign categoryName = subCategoryContentWrapper.get("CATEGORY_NAME", "html")!?string />
+            <#assign categoryName = subCategoryContentWrapper.get("CATEGORY_NAME")! />
             <li><a href="<@ofbizUrl>category/~category_id=${productCategoryId}?SEARCH_CATEGORY_ID${index}=${category.productCategoryId}&amp;searchCategoryId=${category.productCategoryId}&amp;clearSearch=N</@ofbizUrl>">${categoryName!} (${category.count})</a></li>
           </#list>
         </ul>

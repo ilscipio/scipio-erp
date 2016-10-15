@@ -39,6 +39,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -85,12 +86,13 @@ public class ProductPromoContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
-    public StringUtil.StringWrapper get(String productPromoContentTypeId, String encoderType) {
+    // SCIPIO: changed return type, parameter, and encoding largely removed
+    public String get(String productPromoContentTypeId, String encoderType) {
         if (UtilValidate.isEmpty(this.productPromo)) {
             Debug.logWarning("Tried to get ProductPromoContent for type [" + productPromoContentTypeId + "] but the productPromo field in the ProductPromoContentWrapper is null", module);
             return null;
         }
-        return StringUtil.makeStringWrapper(getProductPromoContentAsText(this.productPromo, productPromoContentTypeId, locale, mimeTypeId, null, null, this.productPromo.getDelegator(), dispatcher, encoderType));
+        return getProductPromoContentAsText(this.productPromo, productPromoContentTypeId, locale, mimeTypeId, null, null, this.productPromo.getDelegator(), dispatcher, encoderType);
     }
     
     /**
@@ -118,7 +120,7 @@ public class ProductPromoContentWrapper implements ContentWrapper {
             return null;
         }
 
-        UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getEarlySanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(productPromoContentTypeId);
         /* caching: there is one cache created, "product.promo.content"  Each productPromo's content is cached with a key of
          * contentTypeId::locale::mimeType::productPromoId, or whatever the SEPARATOR is defined above to be.

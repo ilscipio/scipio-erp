@@ -15,11 +15,10 @@
         <#assign smallImageUrl = solrProduct.mediumImage?trim>
     <#elseif solrProduct?has_content && solrProduct.smallImage??>
         <#assign smallImageUrl = solrProduct.smallImage?trim>        
-    <#elseif productContentWrapper?? && productContentWrapper.get("SMALL_IMAGE_URL","url")!?string?has_content>
-        <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL","url")?string?trim>        
+    <#elseif productContentWrapper?? && productContentWrapper.get("SMALL_IMAGE_URL","url")?has_content>
+        <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL","url")>        
     </#if>
     
-
     <#assign isPromotional = false>
     <#if requestAttributes.isPromotional??>
         <#assign isPromotional = requestAttributes.isPromotional>
@@ -31,17 +30,14 @@
     </#if>
 
     <#-- Product Information -->
-    <#assign productTitle>
-        <#if solrProduct?? && title??>
-            <#assign productName = title>
-        <#elseif productContentWrapper?? && productContentWrapper.get("PRODUCT_NAME","html")!?string?has_content>
-            <#assign productName = productContentWrapper.get("PRODUCT_NAME","html")?string>
-        <#elseif !productName??>
-            <#assign productName = "">
-        </#if>
-        ${productName}
-    </#assign>
-
+    <#if solrProduct?? && title??>
+        <#assign productName = title>
+    <#elseif productContentWrapper?? && productContentWrapper.get("PRODUCT_NAME")?has_content>
+        <#assign productName = productContentWrapper.get("PRODUCT_NAME")>
+    <#elseif !productName??>
+        <#assign productName = "">
+    </#if>
+    <#assign productTitle = productName/>
 
     <#if smallImageUrl?has_content>
         <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
@@ -55,7 +51,7 @@
         <#if solrProduct?? && description??>
             ${description}<#t>
         <#elseif productContentWrapper??>
-            ${productContentWrapper.get("DESCRIPTION","html")!}<#--<#if daysToShip??></#if>--><#t>
+            ${productContentWrapper.get("DESCRIPTION")!}<#--<#if daysToShip??></#if>--><#t>
         </#if>
     </#assign>
 
@@ -93,7 +89,7 @@
         </#if>
     </#assign>
 
-     <@pul title=wrapAsRaw(productTitle!"", 'htmlmarkup')><#-- FIXME?: the wrapping already done by the content wrapper -->
+     <@pul title=productTitle>
         <#if price.isSale?? && price.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
         <@pli>
            ${productImage!""}

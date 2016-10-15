@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil.StringWrapper;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
@@ -638,14 +637,14 @@ public class CategoryWorker {
                 String categoryName = null;
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
                 // SCIPIO: Do NOT HTML-escape this here
-                StringWrapper categoryNameWrapper = wrapper.get("CATEGORY_NAME", "raw");
+                String categoryNameWrapper = wrapper.get("CATEGORY_NAME", "raw").toString();
                 if (categoryNameWrapper != null) {
                     categoryName = categoryNameWrapper.toString();
                 }
                 if (UtilValidate.isEmpty(categoryName)) {
                     // 2016-03-22: Some categories don't have a name but have description
                     // SCIPIO: Do NOT HTML-escape this here
-                    categoryNameWrapper = wrapper.get("DESCRIPTION", "raw");
+                    categoryNameWrapper = wrapper.get("DESCRIPTION", "raw").toString();
                     if (categoryNameWrapper != null) {
                         categoryName = categoryNameWrapper.toString();
                     }

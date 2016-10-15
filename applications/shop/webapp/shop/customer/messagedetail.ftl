@@ -65,8 +65,13 @@ under the License.
       <@tr><@td>&nbsp;</@td></@tr>
       <@tr>
         <@td>&nbsp;</@td>
-        <#-- Scipio: FIXME: This must be reviewed for escaping issues, real security risk here -->
-        <@td>${htmlContentString(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}
+        
+        <@td>
+            <#-- SCIPIO: FIXME: 2016-10-14: HTML markup is DISABLED here for the time being because htmlContentString is not
+              truly implemented at this time and there is a high chance of serious security issue in this screen
+              This screen requires advanced html filtering
+            ${htmlContentString(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}-->
+            ${(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}
         </@td>
       </@tr>
     </@table>

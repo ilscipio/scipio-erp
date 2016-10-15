@@ -20,6 +20,8 @@ public abstract class ContentRequestWorker {
             return requestUrl;
         }
 
+        // SCIPIO: WARN: FIXME?: this is an Ofbiz kludge to get around Ofbiz's own UtilCodec behavior.
+        // this should not have to happen here and consequences unknown at this time...
         requestUrl = UtilCodec.getDecoder("url").decode(requestUrl);
 
         // make the link

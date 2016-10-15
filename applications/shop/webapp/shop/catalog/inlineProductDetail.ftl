@@ -285,7 +285,7 @@ ${virtualJavaScript!}
 
   <@row>
     <@cell small=9>
-        <#--<@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>-->
+        <#--<@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>-->
         <#assign inStock = true>
         <#if (product.isVirtual!?upper_case) == "Y">
           <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>

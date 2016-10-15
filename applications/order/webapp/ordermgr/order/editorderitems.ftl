@@ -115,7 +115,7 @@ under the License.
                                       <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
                                       <#- Scipio: Now points to shop ->
                                       <a href="<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${getLabel("Shop", "ShopUiLabels")}</a>
-                                      <#if orderItemContentWrapper.get("IMAGE_URL", "url")!?string?has_content>
+                                      <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                       <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
                                   </div>
@@ -269,7 +269,7 @@ under the License.
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
                                         <#-- Scipio: Now points to shop -->
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
-                                        <#if orderItemContentWrapper.get("IMAGE_URL", "url")!?string?has_content>
+                                        <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>
                                     </@menu>

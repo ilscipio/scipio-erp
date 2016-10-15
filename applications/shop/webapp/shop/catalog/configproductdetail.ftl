@@ -181,13 +181,13 @@ ${virtualJavaScript!}
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 <div>${question.description!}</div>
-                <#assign instructions = question.content.get("INSTRUCTIONS", "html")!?string>
+                <#assign instructions = htmlContentString(question.content.get("INSTRUCTIONS")!)>
                 <#if instructions?has_content>
-                  <#-- SCIPIO: dont understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
+                  <#-- SCIPIO: don't understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
                   <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a> -->
                   <@modal label=uiLabelMap.OrderInstructions><p>${instructions}</p></@modal>
                 </#if>
-                <#assign image = question.content.get("IMAGE_URL", "url")!?string>
+                <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
                   <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
                 </#if>
@@ -360,9 +360,9 @@ ${virtualJavaScript!}
         <@cell columns=4>
           <@panel>
             <div id="product-info"> 
-              <#assign hasDesc = productContentWrapper.get("DESCRIPTION","html")!?string?has_content>
+              <#assign hasDesc = productContentWrapper.get("DESCRIPTION")?has_content>
               <#if hasDesc><p></#if>
-                <#if hasDesc>${productContentWrapper.get("DESCRIPTION","html")!}</#if>
+                <#if hasDesc>${productContentWrapper.get("DESCRIPTION")}</#if>
               <#if hasDesc></p></#if>
 
               <#-- example of showing a certain type of feature with the product -->
@@ -613,17 +613,11 @@ ${virtualJavaScript!}
 
 <@section>
 
-    <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")!?string?trim/>
+    <#assign prodLongDescr = htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)/>
     <#if !prodLongDescr?has_content>
-      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")!?string?trim/>
+      <#assign prodLongDescr = productContentWrapper.get("DESCRIPTION")!?trim/>
     </#if>
-    <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
-
-    <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")!?string?trim/>
-    <#if !prodLongDescr?has_content>
-      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")!?string?trim/>
-    </#if>
-    <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
+    <#assign prodWarnings = htmlContentString(productContentWrapper.get("WARNINGS")!)/>
 
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->

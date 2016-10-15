@@ -1255,12 +1255,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }            
                     </#if>
                 };
-            var ctx_${renderSeqNumber}_${chartIdNum} = $('#${escapePart(id, 'js')}').get(0).getContext("2d");
+            var ctx = $('#${escapePart(id, 'js')}').get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
                     {
-                    
                       <#if type=="line" || type=="bar">
                       label: '${escapePart(label1, 'js')}',                      
                       fill: true,
@@ -1325,7 +1324,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 data: data,
                 options: options
             };
-            var newChart = new Chart(ctx_${renderSeqNumber}_${chartIdNum},config);
+            var newChart = new Chart(ctx,config);
             ${nestedContent}
             newChart.update();
         });
@@ -1609,8 +1608,8 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     type                    = (none|fill|cover|contain|scale-down|bg-cover, default: cover) 
-                              * fill|cover|contain|scale-down = css3 object-fit
-                              * bgcover = css background cover
+                              * {{{fill|cover|contain|scale-down}}}: css3 object-fit
+                              * {{{bgcover}}}: css background cover
     link                    = Link URL around nested content
                               WARN: 2016-10-10: '''Do not pass''' any unsafe input in this link at this time!
                                   Escaping protection is only partial (html but not css).

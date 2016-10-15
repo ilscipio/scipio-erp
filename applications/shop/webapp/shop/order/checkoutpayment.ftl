@@ -386,7 +386,6 @@ jQuery(document).ready(function(){
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"content_${paymentMethod.paymentMethodId}"})>
                <#-- Scipio: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
                     cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
-                <#-- FIXME?: wrapAsRaw -->
                 <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
                   class="+pay-select-radio pay-select-field" label=wrapAsRaw("${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}", 'htmlmarkup') /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
               </#if>
@@ -406,7 +405,6 @@ jQuery(document).ready(function(){
           <#assign methodShortInfo><em>${uiLabelMap.CommonNew}</em></#assign>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"newCreditCard", "contentId":"content__NEW_CREDIT_CARD"})>
-            <#-- FIXME?: wrapAsRaw -->
             <@field type="radio" id="newCreditCard" name="checkOutPaymentId" value="_NEW_CREDIT_CARD_" 
               checked=(selectedCheckOutPaymentIdList?seq_contains("_NEW_CREDIT_CARD_")) class="+pay-select-radio pay-select-field" 
               label=wrapAsRaw("${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}", 'htmlmarkup') /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->

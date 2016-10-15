@@ -106,6 +106,8 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         if (o instanceof TemplateScalarModel) {
             TemplateScalarModel s = (TemplateScalarModel) o;
             try {
+                // SCIPIO: can't enable this yet... too many templates are misusing encoding currently
+                //return LangFtlUtil.getAsStringNonEscaping(s);
                 return s.getAsString();
             } catch (TemplateModelException e) {
                 Debug.logError(e, "Invalid uri arg for ofbizUrl", module);

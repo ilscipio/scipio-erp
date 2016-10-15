@@ -224,9 +224,9 @@
         <@cell columns=4>
             <@panel>
             <div id="product-info"> 
-              <#assign hasDesc = productContentWrapper.get("DESCRIPTION","html")!?string?has_content>
+              <#assign hasDesc = productContentWrapper.get("DESCRIPTION")?has_content>
               <#if hasDesc><p></#if>
-                <#if hasDesc>${productContentWrapper.get("DESCRIPTION","html")!}</#if>
+                <#if hasDesc>${productContentWrapper.get("DESCRIPTION")}</#if>
                 <#-- for prices:
                     - if price < competitivePrice, show competitive or "Compare At" price
                     - if price < listPrice, show list price
@@ -464,7 +464,7 @@
                                 </#if>
                             </#list>
                         <#elseif minimumQuantity?? && minimumQuantity?has_content && (minimumQuantity > 0)>
-                            <div>minimum order quantity for ${productContentWrapper.get("PRODUCT_NAME","html")!} is ${minimumQuantity!}</div>
+                            <div>minimum order quantity for ${productContentWrapper.get("PRODUCT_NAME")!} is ${minimumQuantity!}</div>
                         </#if>
                 -->
             </div>
@@ -517,11 +517,11 @@
 -->   
      
 <@section>
-    <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")!?string?trim/>
+    <#assign prodLongDescr = htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)/>
     <#if !prodLongDescr?has_content>
-      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")!?string?trim/>
+      <#assign prodLongDescr = productContentWrapper.get("DESCRIPTION")!?trim/>
     </#if>
-    <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
+    <#assign prodWarnings = htmlContentString(productContentWrapper.get("WARNINGS")!)/>
 
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->

@@ -143,7 +143,7 @@ under the License.
     </@tr>
   </#if>
  
-  <#if orderContentWrapper.get("IMAGE_URL", "url")!?string?trim?has_content>
+  <#if orderContentWrapper.get("IMAGE_URL", "url")!?trim?has_content>
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">

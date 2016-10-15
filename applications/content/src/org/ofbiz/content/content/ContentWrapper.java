@@ -27,8 +27,7 @@ public interface ContentWrapper {
     /**
      * Gets a content field by ID.
      * <p>
-     * SCIPIO: NOTE: This method's meanings and implementation and heavily modified.
-     * This overload's implementation and meaning is DIFFERENT from stock ofbiz.
+     * SCIPIO: NOTE: This method's parameters and implementation is modified from stock Ofbiz.
      * Encoding is generally NOT DONE by this method anymore, with a few possible exceptions (such as url parameter encoding).
      * <p>
      * In overwhelming majority of cases it is the TEMPLATES and SCREENS responsibility to encode in the output document language
@@ -41,14 +40,15 @@ public interface ContentWrapper {
      * <p>
      * In other words, "html" means the value may contain HTML markup, and "url" means
      * the value is a URL. It does not mean the markup will be html-escaped, although this
-     * happens automatically by the screen automatic html-escaping (so there are no added
-     * security issues).
+     * happens automatically by the screen automatic html-escaping when this is called
+     * from freemarker or passed from groovy/screens to freemarker (so there are no added
+     * security issues from removing the previous HTML encodings).
      * <p>
      * For URL, individual parameters may get encoded, but unlike stock ofbiz, the URL
      * will not get slaughtered and is still subject to HTML and other encoding by caller/screens.
      * <p>
      * The implementations should make use of {@link ContentLangUtil}.
-     * SEE {@link ContentLangUtil} for automatic encoding behavior.
+     * See {@link ContentLangUtil} for automatic encoding behavior.
      */
     //public StringUtil.StringWrapper get(String contentTypeId, String encoderType); 
     public String get(String contentTypeId, String contentLangType); 

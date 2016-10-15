@@ -79,9 +79,9 @@ if (category) {
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request);
     // SCIPIO: don't want page title overridden/forced by groovy
-    //context.title = categoryContentWrapper.get("CATEGORY_NAME","raw").toString();
-    context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME","raw").toString();
-    categoryDescription = categoryContentWrapper.get("DESCRIPTION","raw").toString();
+    //context.title = categoryContentWrapper.get("CATEGORY_NAME");
+    context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME");
+    categoryDescription = categoryContentWrapper.get("DESCRIPTION");
     if (categoryDescription) {
         context.metaDescription = categoryDescription;
         context.metaKeywords = categoryDescription + ", " + catalogName;

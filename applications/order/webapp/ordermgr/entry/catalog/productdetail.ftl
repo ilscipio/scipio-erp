@@ -312,8 +312,8 @@ ${virtualJavaScript!}
       </#if>
     </@td>
     <@td align="right" valign="top">
-      <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
-      <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>
+      <div>${productContentWrapper.get("DESCRIPTION")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
@@ -641,8 +641,8 @@ ${virtualJavaScript!}
 
   <#-- Long description of product -->
   <div id="long-description">
-      <div>${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</div>
-      <div>${productContentWrapper.get("WARNINGS", "html")!}</div>
+      <div>${htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)}</div>
+      <div>${htmlContentString(productContentWrapper.get("WARNINGS")!)}</div>
   </div>
 
   <#-- Any attributes/etc may go here -->
@@ -654,7 +654,7 @@ ${virtualJavaScript!}
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <@heading>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</@heading>
+    <@heading>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName}</@heading>
 
     <div class="productsummary-container">
     <#list assocProducts as productAssoc>

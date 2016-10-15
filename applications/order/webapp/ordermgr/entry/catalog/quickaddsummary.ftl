@@ -26,7 +26,7 @@ under the License.
   </@row>
   <@row>
     <@cell class="+name">
-      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
+      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${productContentWrapper.get("PRODUCT_NAME")!}</a>
     </@cell>
   </@row>
   <@row>

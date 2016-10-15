@@ -79,7 +79,7 @@ under the License.
               <@td><#-- SCIPIO: this is breaking datatables for some reason: colspan="4" -->
                 <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
                 <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${orderItem.orderAdjustmentId}"/>
-                ${htmlContentString(description)!(uiLabelMap.CommonNA)}
+                <#if description?has_content>${htmlContentString(description)}<#else>${uiLabelMap.CommonNA}</#if>
               </@td>
               <@td></@td>
               <@td></@td>

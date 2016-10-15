@@ -167,7 +167,7 @@ under the License.
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
           <@tr valign="middle">
             <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>">${shoppingListItem.productId} -
-              ${productContentWrapper.get("PRODUCT_NAME", "html")!"No Name"}</a> : ${productContentWrapper.get("DESCRIPTION", "html")!}
+              ${productContentWrapper.get("PRODUCT_NAME")!"No Name"}</a> : ${productContentWrapper.get("DESCRIPTION")!}
             </@td>
             <form method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>" name="removeform_${shoppingListItem.shoppingListItemSeqId}">
               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}" />

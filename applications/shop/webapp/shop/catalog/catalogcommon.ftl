@@ -5,23 +5,25 @@
 
 <#-- TODO: params instead of context vars -->
 <#macro productDetailImages>
+    <#-- FIXME: these ?trim should be removed and handled elsewhere or differently because
+        they cause coercion to string -->
     <#--
-    <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","url")!?string?trim />
-    <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","url")!?string?trim />
-    <#assign productAdditionalSmallImage3 = productContentWrapper.get("XTRA_IMG_3_SMALL","url")?string?trim />
-    <#assign productAdditionalSmallImage4 = productContentWrapper.get("XTRA_IMG_4_SMALL","url")!?string?trim />-->
+    <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","url")! />
+    <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","url")! />
+    <#assign productAdditionalSmallImage3 = productContentWrapper.get("XTRA_IMG_3_SMALL","url")! />
+    <#assign productAdditionalSmallImage4 = productContentWrapper.get("XTRA_IMG_4_SMALL","url")! />-->
 
-    <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1","url")!?string?trim />
-    <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2","url")!?string?trim />
-    <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3","url")?string?trim />
-    <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4","url")!?string?trim />
-    <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","url")!?string?trim /> 
-    <#assign productOriginalImage = productContentWrapper.get("ORIGINAL_IMAGE_URL","url")!?string?trim />
+    <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1","url")! />
+    <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2","url")! />
+    <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3","url")! />
+    <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4","url")! />
+    <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","url")! /> 
+    <#assign productOriginalImage = productContentWrapper.get("ORIGINAL_IMAGE_URL","url")! />
     
     <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage />
     </#if>
-    <#if productLargeImageUrl?string?has_content>
+    <#if productLargeImageUrl?has_content>
         <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl></#assign>
     <#else>
         <#assign largeImage = "https://placehold.it/800x300">
@@ -56,7 +58,7 @@
 <#macro productDetailLongDescContent>
     <#-- Long description of product -->
     <p>${prodLongDescr!""}</p>
-    <#if warnings?has_content><@alert type="warning">${prodWarnings!""}</@alert></#if>
+    <#if prodWarnings?has_content><@alert type="warning">${prodWarnings!""}</@alert></#if>
 
     <#-- Digital Download Files Associated with this Product -->
     <#if downloadProductContentAndInfoList?has_content>            
@@ -140,8 +142,8 @@
         <#assign targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
-        <#assign assocTitle>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</#assign>
-        <@section title=wrapAsRaw(assocTitle, 'htmlmarkup')>
+        <#assign assocTitle>${beforeName}<#if showName == "Y">${rawString(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${afterName}</#assign>
+        <@section title=assocTitle>
             <@grid columns=5>
                 <#list assocProducts as productAssoc>
                     <li>
@@ -203,15 +205,15 @@
     <#assign dummy = setRequestAttribute("productValue", productValue)>
 
     <#-- also bought -->
-    <@associatedProducts assocProducts=alsoBoughtProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductAlsoBought}" formNamePrefix="albt" targetRequestName="" />
+    <@associatedProducts assocProducts=alsoBoughtProducts beforeName="" showName="N" afterName="${rawLabel('ProductAlsoBought')}" formNamePrefix="albt" targetRequestName="" />
     <#-- obsolete -->
-    <@associatedProducts assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolete}" formNamePrefix="obs" targetRequestName="" />
+    <@associatedProducts assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolete')}" formNamePrefix="obs" targetRequestName="" />
     <#-- cross sell -->
-    <@associatedProducts assocProducts=crossSellProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductCrossSell}" formNamePrefix="cssl" targetRequestName="crosssell" />
+    <@associatedProducts assocProducts=crossSellProducts beforeName="" showName="N" afterName="${rawLabel('ProductCrossSell')}" formNamePrefix="cssl" targetRequestName="crosssell" />
     <#-- up sell -->
-    <@associatedProducts assocProducts=upSellProducts beforeName="${uiLabelMap.ProductUpSell} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell" />
+    <@associatedProducts assocProducts=upSellProducts beforeName="${rawLabel('ProductUpSell')} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell" />
     <#-- obsolescence -->
-    <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolescense}" formNamePrefix="obce" targetRequestName="" />
+    <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolescense')}" formNamePrefix="obce" targetRequestName="" />
 </#macro>
 
 

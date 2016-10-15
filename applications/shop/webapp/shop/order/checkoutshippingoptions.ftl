@@ -65,7 +65,6 @@ function submitForm(form, mode, value) {
             <#-- Scipio: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
             <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
-            <#-- FIXME?: wrapAsRaw is not ideal -->
             <@field type="generic" label=wrapAsRaw("<strong>${uiLabelMap.OrderShippingMethod}</strong>", 'htmlmarkup') required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
@@ -85,7 +84,6 @@ function submitForm(form, mode, value) {
                     <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                   </#assign>
                   <#--<@commonInvField type="generic" labelContent=labelContent>-->
-                  <#-- FIXME?: wrapAsRaw is not ideal -->
                   <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=wrapAsRaw(labelContent, 'htmlmarkup') /><#--inline=true -->
                   <#--</@commonInvField>-->
                 </#if>
@@ -93,7 +91,6 @@ function submitForm(form, mode, value) {
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
                 <#--<@commonInvField type="generic" labelContent=labelContent>-->
-                <#-- FIXME?: wrapAsRaw is not ideal -->
                 <@field type="radio" name="shipping_method" value="Default" checked=true label=wrapAsRaw(labelContent, 'htmlmarkup')/><#--inline=true -->
                 <#--</@commonInvField>-->
               </#if>

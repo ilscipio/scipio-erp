@@ -196,8 +196,8 @@ function getConfigDetails() {
       </#if>
     </@cell>
     <@cell columns=8>
-      <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
-      <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>
+      <div>${productContentWrapper.get("DESCRIPTION")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
@@ -418,8 +418,8 @@ function getConfigDetails() {
   </@row>
 
   <#-- Long description of product -->
-  <#assign longDesc = productContentWrapper.get("LONG_DESCRIPTION", "html")!?string?trim>
-  <#if longDesc?has_content>
+  <#assign longDesc = htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)>
+  <#if longDesc?trim?has_content>
     <hr class="sepbar"/>
     <@row>
       <@cell>${longDesc}</@cell>
@@ -456,10 +456,10 @@ function getConfigDetails() {
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 
-                <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
+                <#assign instructions = question.content.get("INSTRUCTIONS")!>
                 <#assign instructionsHtml = "">
                 <#if instructions?has_content>
-                  <#assign instructionsHtml> <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a></#assign>
+                  <#assign instructionsHtml> <a href="javascript:showErrorAlert('${escapePart(uiLabelMap.CommonErrorMessage2, 'js-html')}','${escapePart(instructions, 'js-html')}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a></#assign>
                 </#if>
                 <div>${question.description!}${instructionsHtml}</div>
 
@@ -624,7 +624,7 @@ function getConfigDetails() {
   </#if>
   <#if assocProducts?has_content>
   <@row><@cell>&nbsp;</@cell></@row>
-  <#assign title>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName}</#assign>
+  <#assign title>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName}</#assign>
   <@section title=wrapAsRaw(title, 'htmlmarkup')><#-- FIXME: currently needed due to productContentWrapper escaping -->
     <hr />
     <#list assocProducts as productAssoc>

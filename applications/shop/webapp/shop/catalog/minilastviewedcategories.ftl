@@ -34,10 +34,10 @@ under the License.
           <#if category?has_content>
             <li class="browsecategorytext">
               <#-- Scipio: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
-              <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")??>
-                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")}</a>
-              <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")??>
-                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")}</a>
+              <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")??>
+                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
+              <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION")??>
+                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
               <#else>
                 <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${category.description!}</a>
               </#if>

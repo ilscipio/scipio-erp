@@ -108,14 +108,14 @@ if (productId) {
             // SCIPIO: NOTE: There is no need to encrypt as HTML here because the screen will automatically
             // encode and we are causing forced/hard-to-manage double-encoding in string substitutions
             // WARN: when using "raw" this way, you should always call toString()!
-            //context.put("title", contentWrapper.get("PRODUCT_NAME", "raw").toString());
-            context.put("productTitle", contentWrapper.get("PRODUCT_NAME", "raw").toString());
+            //context.put("title", contentWrapper.get("PRODUCT_NAME"));
+            context.put("productTitle", contentWrapper.get("PRODUCT_NAME"));
         }
 
         if (metaDescription) {
             context.metaDescription = metaDescription.textData;
         } else {
-            context.put("metaDescription", contentWrapper.get("DESCRIPTION", "raw").toString());
+            context.put("metaDescription", contentWrapper.get("DESCRIPTION"));
         }
 
         if (metaKeywords) {
@@ -123,7 +123,7 @@ if (productId) {
         } else {
             keywords = [];
             // SCIPIO: Do NOT HTML-escape this here
-            keywords.add(contentWrapper.get("PRODUCT_NAME", "raw").toString());
+            keywords.add(contentWrapper.get("PRODUCT_NAME"));
             keywords.add(catalogName);
             members = from("ProductCategoryMember").where("productId", productId).cache(true).queryList();
             members.each { member ->
@@ -131,7 +131,7 @@ if (productId) {
                 if (category.description) {
                     categoryContentWrapper = new CategoryContentWrapper(category, request);
                     // SCIPIO: Do NOT HTML-escape this here
-                    categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
+                    categoryDescription = categoryContentWrapper.get("DESCRIPTION");
                     if (categoryDescription) {
                             keywords.add(categoryDescription);
                     }

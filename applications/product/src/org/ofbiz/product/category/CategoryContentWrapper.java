@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -77,8 +78,9 @@ public class CategoryContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
-    public StringUtil.StringWrapper get(String prodCatContentTypeId, String encoderType) {
-        return StringUtil.makeStringWrapper(getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, encoderType));
+    // SCIPIO: changed return type, parameter, and encoding largely removed
+    public String get(String prodCatContentTypeId, String encoderType) {
+        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, encoderType);
     }
     
     /**
@@ -99,7 +101,7 @@ public class CategoryContentWrapper implements ContentWrapper {
 
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
         String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
-        UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getEarlySanitizer(encoderType);
         try {
             Writer outWriter = new StringWriter();
             getProductCategoryContentAsText(null, productCategory, prodCatContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter);

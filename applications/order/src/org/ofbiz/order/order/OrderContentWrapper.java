@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -76,8 +77,9 @@ public class OrderContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
-    public StringUtil.StringWrapper get(String orderContentTypeId, String encoderType) {
-        return StringUtil.makeStringWrapper(getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, encoderType));
+    // SCIPIO: changed return type, parameter, and encoding largely removed
+    public String get(String orderContentTypeId, String encoderType) {
+        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, encoderType);
     }
 
     /**
@@ -100,7 +102,7 @@ public class OrderContentWrapper implements ContentWrapper {
         /* caching: there is one cache created, "order.content"  Each order's content is cached with a key of
          * contentTypeId::locale::mimeType::orderId::orderItemSeqId, or whatever the SEPARATOR is defined above to be.
          */
-        UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getEarlySanitizer(encoderType);
 
         String orderItemSeqId = (order.getEntityName().equals("OrderItem")? order.getString("orderItemSeqId"): "_NA_");
 

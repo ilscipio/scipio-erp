@@ -735,9 +735,9 @@ public class CatalogUrlFilter extends ContextFilter {
 
     public static String makeCategoryUrl(Delegator delegator, CategoryContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         String url = "";
-        String alternativeUrl = wrapper.get("ALTERNATIVE_URL", "url").toString(); // SCIPIO: toString() early
+        String alternativeUrl = wrapper.get("ALTERNATIVE_URL", "url"); // SCIPIO: now returns regular String
         
-        if (UtilValidate.isNotEmpty(alternativeUrl) && UtilValidate.isNotEmpty(alternativeUrl.toString())) {
+        if (UtilValidate.isNotEmpty(alternativeUrl)) {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append(contextPath);
             if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
@@ -811,8 +811,8 @@ public class CatalogUrlFilter extends ContextFilter {
 
     public static String makeProductUrl(Delegator delegator, ProductContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId) {
         String url = "";
-        String alternativeUrl = wrapper.get("ALTERNATIVE_URL", "url").toString(); // SCIPIO: toString() early
-        if (UtilValidate.isNotEmpty(alternativeUrl) && UtilValidate.isNotEmpty(alternativeUrl.toString())) {
+        String alternativeUrl = wrapper.get("ALTERNATIVE_URL", "url");  // SCIPIO: now returns regular String
+        if (UtilValidate.isNotEmpty(alternativeUrl)) {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append(contextPath);
             if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {

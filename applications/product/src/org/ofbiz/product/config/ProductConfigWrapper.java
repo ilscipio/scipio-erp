@@ -462,8 +462,10 @@ public class ProductConfigWrapper implements Serializable {
                 question = configItemAssoc.getString("description");
             } else {
                 if (content != null) {
-                    // SCIPIO: Do NOT HTML-escape this here (description just below is not escaped anyway!)
-                    question = content.get("DESCRIPTION", "raw").toString();
+                    question = content.get("DESCRIPTION");
+                    if (question == null) {
+                        question = "";
+                    }
                 } else {
                     question = (configItem.getString("description") != null? configItem.getString("description"): "");
                 }
@@ -477,8 +479,10 @@ public class ProductConfigWrapper implements Serializable {
                 description = configItemAssoc.getString("longDescription");
             } else {
                 if (content != null) {
-                    // SCIPIO: Do NOT HTML-escape this here (description just below is not escaped anyway!)
-                    description = content.get("LONG_DESCRIPTION", "raw").toString();
+                    description = content.get("LONG_DESCRIPTION");
+                    if (description == null) {
+                        description = "";
+                    }
                 } else {
                     description = (configItem.getString("longDescription") != null? configItem.getString("longDescription"): "");
                 }

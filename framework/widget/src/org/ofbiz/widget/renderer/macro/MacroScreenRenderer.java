@@ -42,6 +42,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.FtlScriptFormatter;
@@ -53,6 +54,7 @@ import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.content.WidgetContentWorker;
 import org.ofbiz.widget.content.WidgetDataResourceWorker;
+import org.ofbiz.widget.model.HtmlWidget;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.model.ModelScreenWidget;
@@ -71,6 +73,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -92,9 +95,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private ContextHandler contextHandler = new ContextHandler("screen");
     private static final String formrendererName = UtilProperties.getPropertyValue("widget", "screen.name");
     
+    // SCIPIO: special config and cache for html rendering
+    protected static final Configuration ftlHtmlConfig = HtmlWidget.getFtlConfig();
+    protected static final UtilCache<String, Template> ftlHtmlTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.macro", 0, 0, false);
+    
     public MacroScreenRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
-        macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
-        rendererName = name;
+        // SCIPIO: use special config for HTML
+        this.macroLibrary = getTemplate(name, macroLibraryPath);
+        this.rendererName = name;
     }
 
     @Deprecated
@@ -102,6 +110,33 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         this(name, macroLibraryPath);
     }
 
+    /**
+     * SCIPIO: Abstracted template fetcher method.
+     * <p>
+     * 2016-10-17: Currently this uses a special Configuration and cache for html;
+     * auto html escaping is now enabled on context and request vars (but not macro parameters!),
+     * so that macro implementations are much closer to regular FTL renders ({@link org.ofbiz.widget.model.HtmlWidget})
+     * and their implementations are more safely sharable.
+     */
+    protected static Template getTemplate(String rendererName, String macroLibraryPath) throws TemplateException, IOException {
+        if ("html".equals(rendererName)) {
+            return FreeMarkerWorker.getTemplate(macroLibraryPath, ftlHtmlTemplateCache, ftlHtmlConfig);
+        } else {
+            return FreeMarkerWorker.getTemplate(macroLibraryPath);
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns the basic Freemarker configuration used for rendering the given name/type.
+     */
+    public static Configuration getFtlConfig(String rendererName) {
+        if ("html".equals(rendererName)) {
+            return ftlHtmlConfig;
+        } else {
+            return FreeMarkerWorker.getDefaultOfbizConfig();
+        }
+    }
+    
     /**
      * SCIPIO: Returns macro library path used for this renderer. 
      */

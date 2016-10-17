@@ -129,7 +129,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
      * SCIPIO: modified to require name.
      */
     public MacroFormRenderer(String name, String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
-        macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
+        // SCIPIO: use abstracted template build
+        this.macroLibrary = MacroScreenRenderer.getTemplate(name, macroLibraryPath);
         this.request = request;
         this.response = response;
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");

@@ -107,7 +107,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
      * SCIPIO: modified to require name.
      */
     public MacroMenuRenderer(String name, String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
-        this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
+        // SCIPIO: use abstracted template build
+        this.macroLibrary = MacroScreenRenderer.getTemplate(name, macroLibraryPath);
         this.request = request;
         this.response = response;
         this.rendererName = name; // SCIPIO: new

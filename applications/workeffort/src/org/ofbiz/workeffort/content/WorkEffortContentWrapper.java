@@ -239,7 +239,7 @@ public class WorkEffortContentWrapper implements ContentWrapper {
             return null;
         }
 
-        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getEarlySanitizer(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(workEffortContentTypeId);
         String cacheKey;
         if (contentId != null) {

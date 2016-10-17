@@ -3,9 +3,8 @@ package org.ofbiz.content.content;
 import org.ofbiz.base.util.UtilCodec;
 
 /**
- * SCIPIO: ContentWrapper language handling encoder.
- * <p>
- * Should be used to implement {@link ContentWrapper#get(String, String)}.
+ * SCIPIO: ContentWrapper language handling encoder, to help implement {@link ContentWrapper}
+ * method implementations.
  */
 public class ContentLangUtil {
     
@@ -26,7 +25,7 @@ public class ContentLangUtil {
     public static class UrlContentSanitizer implements ContentSanitizer {
         @Override
         public String encode(String original) {
-            // TODO: Here we should URL-encode the parameters (ONLY)
+            // TODO?: Here we would URL-encode the parameters (ONLY)
             return UtilCodec.getRawEncoder().encode(original);
         }
     }
@@ -34,20 +33,27 @@ public class ContentLangUtil {
     /**
      * SCIPIO: Returns a content early sanitizer for the given language.
      * <p>
-     * TODO: 2016-10-14: Currently the ONLY language which will receive sanitization will be
-     * "url". The URL will be parsed and its individual parameters will be URL-escaped in UTF-8.
-     * PROPER URL ENCODE NOT YET IMPLEMENTED, TODO
+     * Should be used to implement {@link ContentWrapper#get(String, String)}.
+     * <p>
+     * NOTE: 2016-10-14: Currently the only language which <em>may</em> receive sanitization is
+     * "url". The URL <em>may</em> receive URL encoding of its parameters (only).
+     * TODO?: Said URL parameter escaping is not currently implemented (is not urgent as this is
+     * used to process values fresh out of database using {@link ContentWrapper}).
      * <p>
      * All others such as HTML are left as-is. HTML gets automatically escaped
-     * by the screen auto-escaping when returned from the {@link ContentWrapper#get(String, String)}
-     * method (since it no longer returns a StringWrapper).
+     * by the screen renderer auto-escaping when returned from the {@link ContentWrapper#get(String, String)}
+     * method in a freemarker template or across the data prep boundary (since it no longer returns a StringWrapper) 
+     * during freemarker/screen rendering.
      */
-    public static ContentSanitizer getEarlySanitizer(String langName) {
-        if ("url".equals(langName)) {
+    public static ContentSanitizer getContentWrapperSanitizer(String lang) {
+        return getEarlySanitizer(lang);
+    }
+    
+    public static ContentSanitizer getEarlySanitizer(String lang) {
+        if ("url".equals(lang)) {
             return urlContentSanitizer;
         } else {
             return rawContentSanitizer;
         }
     }
-    
 }

@@ -124,7 +124,7 @@ under the License.
     
     <!-- Payment Group Member -->
     <form name="ListPaymentGroupMember" type="list" list-name="paymentGroupMembers" target="updatePaymentGroupMember"
-            odd-row-style="alternate-row" header-row-style="header-row" separate-columns="true" use-row-submit="false"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row" header-row-style="header-row" separate-columns="true" use-row-submit="false" paginate-target="EditPaymentGroupMember"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Payment" value-field="payment"/>
             <set field="paymentTypeId" from-field="payment.paymentTypeId"/>
@@ -190,7 +190,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="PaymentGroupMembers" type="list" list-name="paymentGroupMembers"
-            odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row" paginate-target="PaymentGroupOverview"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Payment" value-field="payment"/>
             <set field="statusId" from-field="payment.statusId"/>

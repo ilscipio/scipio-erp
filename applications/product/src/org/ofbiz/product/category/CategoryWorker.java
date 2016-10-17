@@ -681,9 +681,8 @@ public class CategoryWorker {
                 if (UtilValidate.isEmpty(productName)) {
                     productName = productId;
                     ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null);
-                    // SCIPIO: Do NOT HTML-escape this here
-                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME", "raw").toString()))
-                        productName = wrapper.get("CATEGORY_NAME", "raw").toString();
+                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME")))
+                        productName = wrapper.get("PRODUCT_NAME");
                 }
 
                 if (library.equals("jsTree")) {

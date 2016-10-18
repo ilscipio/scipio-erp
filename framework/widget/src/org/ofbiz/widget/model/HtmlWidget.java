@@ -53,7 +53,7 @@ public class HtmlWidget extends ModelScreenWidget {
     public static final String module = HtmlWidget.class.getName();
 
     private static final UtilCache<String, Template> specialTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.general", 0, 0, false);
-    protected static Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version, "html")); // SCIPIO: generalized, must pass "html"
+    protected static final Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version, "html")); // SCIPIO: generalized, must pass "html"
 
     // SCIPIO: NOTE: 2016-10-17: Exceptionally, the Ofbiz ExtendedWrapper that was present here
     // was so generic and needed elsewhere, that it has been MOVED to:

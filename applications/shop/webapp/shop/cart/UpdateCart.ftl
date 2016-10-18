@@ -48,7 +48,7 @@ under the License.
                 <#-- SCIPIO: Uncomment if you want to use the image placeholders
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
-                  <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
+                  <img src="<@catalogContentUrl>${smallImageUrl}</@catalogContentUrl>" alt="Product Image" />
                 -->
                 <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
                 <#-- For configurable products, the selected options are shown -->
@@ -191,7 +191,7 @@ under the License.
                         <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                         <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
                         <#if smallImageUrl?string?has_content>
-                          <#assign imgUrl><@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl></#assign>
+                          <#assign imgUrl><@catalogContentUrl>${smallImageUrl}</@catalogContentUrl></#assign>
                           <@img src=imgUrl width="150px;" height="75px"/>
                         </#if>
                       -->

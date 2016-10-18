@@ -123,6 +123,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-addParamsToStr">addParamsToStr</a>, 
                   <a href="#entry-addParamsToUrl">addParamsToUrl</a>, 
                   <a href="#entry-camelCaseToDashLowerName">camelCaseToDashLowerName</a>, 
+                  <a href="#entry-catalogContentUrl">catalogContentUrl</a>, 
                   <a href="#entry-clearVars">clearVars</a>, 
                   <a href="#entry-compileProgressSuccessAction">compileProgressSuccessAction</a>, 
                   <a href="#entry-concatMaps">concatMaps</a>, 
@@ -155,12 +156,14 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-isWrappedAsRaw">isWrappedAsRaw</a>, 
                   <a href="#entry-joinStyleNames">joinStyleNames</a>, 
                   <a href="#entry-joinStyleNamesList">joinStyleNamesList</a>, 
+                  <a href="#entry-makeCatalogContentUrl">makeCatalogContentUrl</a>, 
                   <a href="#entry-makeOfbizContentUrl">makeOfbizContentUrl</a>, 
                   <a href="#entry-makeOfbizInterWebappUrl">makeOfbizInterWebappUrl</a>, 
                   <a href="#entry-makeOfbizUrl">makeOfbizUrl</a>, 
                   <a href="#entry-makeOfbizWebappUrl">makeOfbizWebappUrl</a>, 
                   <a href="#entry-mapKeys">mapKeys</a>, 
                   <a href="#entry-objectAsScript">objectAsScript</a>, 
+                  <a href="#entry-ofbizContentAltUrl">ofbizContentAltUrl</a>, 
                   <a href="#entry-ofbizContentUrl">ofbizContentUrl</a>, 
                   <a href="#entry-ofbizInterWebappUrl">ofbizInterWebappUrl</a>, 
                   <a href="#entry-ofbizUrl">ofbizUrl</a>, 
@@ -286,6 +289,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-addStringToBoolStringVal">addStringToBoolStringVal</a>, 
         <a href="#entry-attribSpecialVal">attribSpecialVal</a>, 
         <a href="#entry-camelCaseToDashLowerName">camelCaseToDashLowerName</a>, 
+        <a href="#entry-catalogContentUrl">catalogContentUrl</a>, 
         <a href="#entry-clearVars">clearVars</a>, 
         <a href="#entry-combineClassArgs">combineClassArgs</a>, 
         <a href="#entry-compileClassArg">compileClassArg</a>, 
@@ -353,6 +357,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-joinStyleNamesList">joinStyleNamesList</a>, 
         <a href="#entry-localsPutAll">localsPutAll</a>, 
         <a href="#entry-makeAttribMapFromArgMap">makeAttribMapFromArgMap</a>, 
+        <a href="#entry-makeCatalogContentUrl">makeCatalogContentUrl</a>, 
         <a href="#entry-makeOfbizContentUrl">makeOfbizContentUrl</a>, 
         <a href="#entry-makeOfbizInterWebappUrl">makeOfbizInterWebappUrl</a>, 
         <a href="#entry-makeOfbizUrl">makeOfbizUrl</a>, 
@@ -365,6 +370,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-mergeArgMapsToLocalsBasic">mergeArgMapsToLocalsBasic</a>, 
         <a href="#entry-mergeAttribMaps">mergeAttribMaps</a>, 
         <a href="#entry-objectAsScript">objectAsScript</a>, 
+        <a href="#entry-ofbizContentAltUrl">ofbizContentAltUrl</a>, 
         <a href="#entry-ofbizContentUrl">ofbizContentUrl</a>, 
         <a href="#entry-ofbizInterWebappUrl">ofbizInterWebappUrl</a>, 
         <a href="#entry-ofbizUrl">ofbizUrl</a>, 
@@ -700,13 +706,23 @@ See widget-menu.xsd <code>include-menu</code> element for details.        </span
                       <div class="lib-entry-extradesc">
         <p>
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.        </p>
+        <p>
+See also the function version, <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>; #makeOfbizUrl should be used instead when passing URLs to other macros
+(rather than trying to capture the output of <a href="#entry-ofbizUrl">@ofbizUrl</a>) and in other cases.        </p>
           <div class="lib-text-note">
             <strong>WARN: </strong>
-This utility and all similar link-generating utilities do NOT escape the URLs for
-HTML or javascript! You may need to use <a href="#entry-escapeFullUrl">#escapeFullUrl</a> in addition if there is
-any chance of the link containing parameters from user input or unsafe stored database data.
-The Ofbiz automatic context screen escaping is frequently bypassed using <a href="#entry-rawString">#rawString</a>
-for URLs, resulting in some dangerous URLs, particularly in javascript but also HTML.          </div>
+HTML/Javascript escaping: This utility and all similar link-generating utilities
+do NOT escape the URLs for HTML or javascript!
+If the screen auto-html-escaping is insufficient (often relied upon in stock Ofbiz templates),
+and you are not passing the URL to another Scipio macro, you may need to use <a href="#entry-escapePart">#escapePart</a> or <a href="#entry-escapeFullUrl">#escapeFullUrl</a>
+in addition to @ofbizUrl (in which case #makeOfbizUrl may be more appropriate).          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, this macro&#39;s string
+parameters are currently not subject to auto-escaping bypass with <a href="#entry-rawString">#rawString</a> (in other words, stock behavior is preserved);
+caller must currently call #rawString if needed. This may be rectified in the future (TODO?).
+HOWEVER, the <em>function</em> version of this macro, #makeOfbizUrl, automatically calls #rawString on its
+string parameters (uri), and can be exploited as an easier alternative to this macro in various cases.          </div>
           <div class="lib-text-note">
             <strong>WARN: </strong>
 <code>fullPath</code> and <code>secure</code> parameters have different behavior than stock Ofbiz!          </div>
@@ -792,6 +808,15 @@ to webapp root, excluding webapp context root).
 For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
 server root, containing webapp context root and servlet path; if webSiteId specified,
 this should specified relative like intra-webapp (unless absPath forced to true).
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+At current time (2016-10-14), this macro version of <a href="#entry-ofbizUrl">@ofbizUrl</a> does NOT prevent automatic
+screen html escaping on the URI parameter, because too many templates use @ofbizUrl
+directly without consideration to escaping.
+However, the function versions of this macro such as <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a> DO bypass the
+auto screen escaping on this parameter.          </div>
+        <span>
 (New in Scipio)        </span>
 </span>
                         </td>
@@ -1009,6 +1034,10 @@ If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
         <p>
 This is useful to prevent bloating templates with <code>&lt;#assign...&gt;&lt;@ofbizUrl.../&gt;&lt;/#assign&gt;</code> captures
 which is very frequent due to use of macros.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This function&#39;s string arguments (uri) are coded to bypass screen auto-escaping with <a href="#entry-rawString">#rawString</a>,
+as per standard Scipio macro behavior. This may be different from the macro version of this function (@ofbizUrl).          </div>
                       </div>
                   </div>
             
@@ -1066,6 +1095,9 @@ The URI takes the basic form /control/requesturi,
 but this is normally used to access another servlet, such as /products/PH-1000.        </p>
         <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.          </div>
                       </div>
                   </div>
             
@@ -1169,6 +1201,9 @@ The URI takes the basic form /control/requesturi,
 but this is normally used to access another servlet, such as /products/PH-1000.        </p>
         <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior noted for <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>.          </div>
                       </div>
                   </div>
             
@@ -1226,6 +1261,9 @@ OR requesturi if webSiteId is specified and is a controller request.        </p>
         <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with interWebapp=true and optional webSiteId; absPath is left to interpretation
 by the implementation or can be overridden; controller is left to interpretation or can be specified.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.          </div>
                       </div>
                   </div>
             
@@ -1342,6 +1380,9 @@ by the implementation or can be overridden; controller is left to interpretation
             <strong>NOTE: </strong>
 If args is specified as map, &quot;webSiteId&quot; must be passed in args, not as argument.
 (This is intentional, to be consistent with macro invocations, emulated for functions)          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior noted for <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>.          </div>
                       </div>
                   </div>
             
@@ -1403,6 +1444,20 @@ If args is specified as map, &quot;webSiteId&quot; must be passed in args, not a
                       <div class="lib-entry-extradesc">
         <p>
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-18: URL decoding: The default behavior of this macro has been <strong>changed</strong> from
+stock Ofbiz. By default this macro NO LONGER url-decodes the uri/nested. The stock
+Ofbiz behavior was presumably originally written to URL-decode whole URLs that had been stored
+URL-encoded in the database or encoded elsewhere; however, in the general-purpose use case of this macro (extends
+being database-stored URLs), applying URL-decoding by default is <em>dangerous</em>.
+In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
+<em>before</em> storing in database - but note that URL-encoded parameters should probably not be decoded if
+they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
+(parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior and exceptions noted for <a href="#entry-ofbizUrl">@ofbizUrl</a>.          </div>
                       </div>
                   </div>
             
@@ -1414,6 +1469,24 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.  
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
+                            <code>uri</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">URI or path as parameter; alternative to nested</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+At current time (2016-10-14), this macro version of <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a> does NOT prevent automatic
+screen html escaping on the URI parameter, because too many templates use <a href="#entry-ofbizUrl">@ofbizUrl</a>
+directly without consideration to escaping.
+However, the function versions of this macro such as <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a> DO bypass the
+auto screen escaping on this parameter.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>variant</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -1422,6 +1495,22 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.  
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
 (Stock Ofbiz parameter)        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>urlDecode</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether to URL-decode (UTF-8) the uri/nested</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).          </div>
+        <span>
+(New in Scipio)        </span>
 </span>
                         </td>
                       </tr>
@@ -1461,6 +1550,11 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.  
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz content/resource URL. Function version of the <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a> macro.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior noted for <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>.          </div>
+                      </div>
                   </div>
             
               
@@ -1471,7 +1565,7 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.  
               <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">
-                            <code>uri</code>
+                            <code>args</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a></span>
@@ -1494,6 +1588,245 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.  
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
+                       <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-ofbizContentAltUrl"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">ofbizContentAltUrl</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizContentAltUrl</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Builds an Ofbiz content/resource Alt URL, from a URL stored in the database by contentId.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-18: URL decoding: The default behavior of this macro has been <strong>changed</strong> from
+stock Ofbiz. By default this macro NO LONGER url-decodes the URL retrieved by contentId. The stock
+Ofbiz behavior was presumably originally written to URL-decode whole URLs that had been stored
+URL-encoded in the database.
+For consistency and prevention of some less obvious security issues (not as dramatic as <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>),
+the default has been changed to <em>not</em> decode by default.
+In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
+<em>before</em> storing in database - but note that URL-encoded parameters should probably not be decoded if
+they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
+(parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior and exceptions noted for <a href="#entry-ofbizUrl">@ofbizUrl</a>.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentId</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Content ID</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+(Stock Ofbiz parameter)        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>viewContent</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">view content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+(Stock Ofbiz parameter)        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>urlDecode</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether to URL-decode (UTF-8) the stored URL</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).          </div>
+        <span>
+(New in Scipio)        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>...</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-catalogContentUrl"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">catalogContentUrl</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>catalogContentUrl</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Version of <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a> with extra catalog-specific prefix.
+This prepends a <code>contentPathPrefix</code> string to the URI/nested before passing to @ofbizContentUrl.
+It is gotten from context or request attributes; or if undefined, will run its own lookup.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Usually, the contentPathPrefix is returned from
+<code>CatalogWorker.getContentPathPrefix(request)</code>.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior and exceptions noted for <a href="#entry-ofbizUrl">@ofbizUrl</a>.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>uri</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>variant</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>urlDecode</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>, 
+                       <a href="#entry-makeCatalogContentUrl">#makeCatalogContentUrl</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-makeCatalogContentUrl"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">makeCatalogContentUrl</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeCatalogContentUrl</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Version of <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a> with extra catalog-specific prefix.
+This prepends a <code>contentPathPrefix</code> string to the URI before passing to #makeOfbizContentUrl.
+It is gotten from context or request attributes; or if undefined, will run its own lookup.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Usually, the contentPathPrefix is returned from
+<code>CatalogWorker.getContentPathPrefix(request)</code>.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior noted for <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>args</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>variant</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a>, 
+                       <a href="#entry-makeCatalogContentUrl">#makeCatalogContentUrl</a>, 
                        <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>
                      </p>
                   </div>  
@@ -2117,11 +2450,25 @@ object found in the global <code>scipioNullObject</code> variable.          </di
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns label from global label map or resource, or empty string if no label is found.</p>
+                      <p class="lib-entry-shortdesc">Returns label from global label map or resource, or empty string if no label is found,
+with automatic screen html-escaping applied.
+This is a higher-level, abstracted function for fetching labels.</p>
                       <div class="lib-entry-extradesc">
+        <p>
+By default this function tries to maintain the same behavior as <code>uiLabelMap</code> with respect to locale
+selection and the context map used for label substitutions/arguments.        </p>
+        <p>
+However, unlike stock <code>uiLabelMap</code>, this supports explicit message arguments using the <code>msgArgs</code> parameter.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-The result is automatically html-escaped by the screen renderer during regular freemarker template rendering.          </div>
+The default context used by <code>uiLabelMap</code> (which is used by default by <code>getLabel</code>) is
+<em>not</em> the current Freemarker namespace <em>nor</em> the same as the <code>context</code> variable that is
+present as a freemarker global.
+It uses a context created earlier, and the only predictable way to set variables
+in it is through the screen global context, using <a href="#entry-setGlobalContextField">#setGlobalContextField</a>.
+Therefore, to pass arguments to label reliably, <a href="#entry-getLabel">#getLabel</a> must be used with explicit <code>msgArgs</code> parameter.          </div>
+        <p>
+The locale is determined by uiLabelMap. If you must        </p>
                       </div>
                   </div>
             
@@ -2136,7 +2483,7 @@ The result is automatically html-escaped by the screen renderer during regular f
                             <code>name</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Label name</span>
                         </td>
                       </tr>
@@ -2145,13 +2492,39 @@ The result is automatically html-escaped by the screen renderer during regular f
                             <code>resource</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(optional)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">Resource name</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Resource name for fallback</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-If label not found in uiLabelMap (preferred), falls back to lookup in this
-resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
-a whole file for one label.        </span>
+If label not found in <code>uiLabelMap</code> (preferred), falls back to lookup in this
+resource. Usually <code>uiLabelMap</code> is preferred for templates, but sometimes not worth importing
+a whole file for one label.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If a map is passed as second parameter instead of string, it is interpreted
+as <code>msgArgs</code> instead of a resource and <code>resource</code> is interpreted as empty.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>msgArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(boolean), default: -true / use uiLabelMap&#39;s context-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Message arguments</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If boolean: if true, uses uiLabelMap&#39;s default/arbitrary context; if false,
+prevents any context from being used.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+For convenience, <code>msgArgs</code> can be specified as the
+second parameter instead of third (like a java function overload), by
+passing a map type to the second parameter.
+So <code>getLabel(&quot;xxx&quot;, {})</code> is the same as <code>getLabel(&quot;xxx&quot;, &quot;&quot;, {})</code>.          </div>
 </span>
                         </td>
                       </tr>
@@ -2188,7 +2561,8 @@ a whole file for one label.        </span>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns label from global label map or resource, or empty string if no label is found,
-and prevents automatic html-escaping on the result.</p>
+and prevents automatic html-escaping on the result.
+This is a higher-level, abstracted function for fetching labels.</p>
                       <div class="lib-entry-extradesc">
         <p>
 Shorthand for <code>rawString(getLabel(...))</code>.        </p>
@@ -2206,7 +2580,7 @@ Shorthand for <code>rawString(getLabel(...))</code>.        </p>
                             <code>name</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Label name</span>
                         </td>
                       </tr>
@@ -2215,13 +2589,39 @@ Shorthand for <code>rawString(getLabel(...))</code>.        </p>
                             <code>resource</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>(optional)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc">Resource name</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Resource name for fallback</span>
                             <br/>
                             <span class="lib-entry-param-desc-extradesc">        <span>
-If label not found in uiLabelMap (preferred), falls back to lookup in this
-resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
-a whole file for one label.        </span>
+If label not found in <code>uiLabelMap</code> (preferred), falls back to lookup in this
+resource. Usually <code>uiLabelMap</code> is preferred for templates, but sometimes not worth importing
+a whole file for one label.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If a map is passed as second parameter instead of string, it is interpreted
+as <code>msgArgs</code> instead of a resource and <code>resource</code> is interpreted as empty.          </div>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>msgArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(boolean), default: -true / use uiLabelMap&#39;s context-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Message arguments</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If boolean: if true, uses uiLabelMap&#39;s default/arbitrary context; if false,
+prevents any context from being used.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+For convenience, <code>msgArgs</code> can be specified as the
+second parameter instead of third (like a java function overload), by
+passing a map type to the second parameter.
+So <code>rawLabel(&quot;xxx&quot;, {})</code> is the same as <code>rawLabel(&quot;xxx&quot;, &quot;&quot;, {})</code>.          </div>
 </span>
                         </td>
                       </tr>
@@ -2320,14 +2720,9 @@ The result from this method is <strong>not</strong> HTML-encoded, as such values
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Gets property or empty string if missing (same behavior as UtilProperties).</p>
+                      <p class="lib-entry-shortdesc">Gets property or empty string if missing, using behavior and rules of the <code>UtilProperties</code>
+class (low-level).</p>
                       <div class="lib-entry-extradesc">
-        <p>
-Uses locales. Meant for resource bundles / UI labels.
-Will use context locale if none specified.
-If msgArgs not specified, property is given access to context for substitute values (occasionally
-this is used in Ofbiz screens).
-If msgArgs is a sequence, they are passed instead of context to the property.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 The resulting message is subject to automatic HTML encoding (by Ofbiz).
@@ -2364,17 +2759,26 @@ Use <a href="#entry-rawString">#rawString</a> on the result to prevent escaping.
                             <code>msgArgs</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(list), default: -use context-)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(list)|(boolean), default: -false / none-)</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Substitute values for message template</span>
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
-                            <span class="lib-entry-param-desc-shortdesc"> Explicit locale</span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((locale)|(boolean), default: -true / locale from context-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Locale</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If boolean: if true, uses locale from context; if false, forced to use system default.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+There should almost always be a locale in context or explicit.
+Fallback on system default usually means something is missing.          </div>
+</span>
                         </td>
                       </tr>
               </table>
@@ -2429,16 +2833,16 @@ If name alone, assumes CommonUiLabels for resource.        </span>
                             <code>msgArgs</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(list), default: -use context-)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map)|(list)|(boolean), default: -false / none-)</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Substitute values for message template</span>
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((locale)|(boolean), default: -true / locale from context-)</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Explicit locale</span>
                         </td>
                       </tr>
@@ -2509,10 +2913,10 @@ If no such prefix in textExpr, returns the text as-is.        </p>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
-                            <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
+                            <span class="lib-entry-param-desc-typeinfo"><code>((locale)|(boolean), default: -true / locale from context-)</code></span>
                             <span class="lib-entry-param-desc-shortdesc"> Explicit locale</span>
                         </td>
                       </tr>
@@ -3902,13 +4306,14 @@ objects that aren&#39;t really strings.          </div>
             
             <div class="lib-entry-formal">
                <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>htmlContentString</code></span>
-                  </h4>
+                   <strong>(DEPRECATED)</strong></h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and
-depending on current implementation and system policy may process the string for allowed HTML.</p>
+depending on current implementation and system policy may process the string for allowed HTML.
+DEPRECATED: This will be replaced by a more generic and powerful function.</p>
                       <div class="lib-entry-extradesc">
         <p>
 Typically for database-stored content such as product descriptions which use limited HTML.        </p>
@@ -8309,6 +8714,10 @@ macros (works via <a href="#entry-elemAttribStr">@elemAttribStr</a>).</p>
             <strong>NOTE: </strong>
 formattedDate by default renders the &quot;date&quot; type but it also doubles as handler for the other types
 (which also have convenience wrappers below).          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The locale and timeZone (explicit or from context) should not resolve to null/empty;
+if they do a log warning is printed.          </div>
                       </div>
                   </div>
             
@@ -8349,7 +8758,7 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
@@ -8358,7 +8767,7 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specTimeZone</code>
+                            <code>timeZone</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-typeinfo"><code>((timezone), default: -timeZone from context-)</code></span>
@@ -8408,6 +8817,12 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Renders a formatted date-time value (convenience wrapper).</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The locale and timeZone (explicit or from context) should not resolve to null/empty;
+if they do a log warning is printed.          </div>
+                      </div>
                   </div>
             
               
@@ -8432,14 +8847,14 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specTimeZone</code>
+                            <code>timeZone</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
@@ -8481,6 +8896,12 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Renders a formatted time value (convenience wrapper).</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The locale and timeZone (explicit or from context) should not resolve to null/empty;
+if they do a log warning is printed.          </div>
+                      </div>
                   </div>
             
               
@@ -8505,14 +8926,14 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specTimeZone</code>
+                            <code>timeZone</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
@@ -8560,6 +8981,10 @@ These functions return VOID (no value) if no or empty output, so default value o
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 The result is auto-HTML-escaped (where applicable); use <a href="#entry-rawString">#rawString</a> to prevent.          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The locale and timeZone (explicit or from context) should not resolve to null/empty;
+if they do a log warning is printed.          </div>
                       </div>
                   </div>
             
@@ -8585,14 +9010,14 @@ The result is auto-HTML-escaped (where applicable); use <a href="#entry-rawStrin
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specTimeZone</code>
+                            <code>timeZone</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
@@ -8642,6 +9067,10 @@ The result is auto-HTML-escaped (where applicable); use <a href="#entry-rawStrin
                       <div class="lib-entry-extradesc">
         <p>
 These functions return VOID (no value) if no or empty output, so default value operator can be used.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The locale and timeZone (explicit or from context) should not resolve to null/empty;
+if they do a log warning is printed.          </div>
                       </div>
                   </div>
             
@@ -8667,14 +9096,14 @@ These functions return VOID (no value) if no or empty output, so default value o
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specTimeZone</code>
+                            <code>timeZone</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
@@ -8712,6 +9141,10 @@ These functions return VOID (no value) if no or empty output, so default value o
                       <div class="lib-entry-extradesc">
         <p>
 These functions return VOID (no value) if no or empty output, so default value operator can be used.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The locale and timeZone (explicit or from context) should not resolve to null/empty;
+if they do a log warning is printed.          </div>
                       </div>
                   </div>
             
@@ -8737,14 +9170,14 @@ These functions return VOID (no value) if no or empty output, so default value o
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specLocale</code>
+                            <code>locale</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
-                            <code>specTimeZone</code>
+                            <code>timeZone</code>
                         </td>
                         <td class="entry-paramdesc">
                         </td>

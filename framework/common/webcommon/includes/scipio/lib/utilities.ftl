@@ -161,11 +161,20 @@ Builds an Ofbiz navigation URL.
 
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 
-WARN: This utility and all similar link-generating utilities do NOT escape the URLs for
-    HTML or javascript! You may need to use #escapeFullUrl in addition if there is
-    any chance of the link containing parameters from user input or unsafe stored database data. 
-    The Ofbiz automatic context screen escaping is frequently bypassed using #rawString
-    for URLs, resulting in some dangerous URLs, particularly in javascript but also HTML.
+See also the function version, #makeOfbizUrl; #makeOfbizUrl should be used instead when passing URLs to other macros
+(rather than trying to capture the output of @ofbizUrl) and in other cases.
+
+WARN: HTML/Javascript escaping: This utility and all similar link-generating utilities 
+    do NOT escape the URLs for HTML or javascript!
+    If the screen auto-html-escaping is insufficient (often relied upon in stock Ofbiz templates),
+    and you are not passing the URL to another Scipio macro, you may need to use #escapePart or #escapeFullUrl 
+    in addition to @ofbizUrl (in which case #makeOfbizUrl may be more appropriate).
+    
+NOTE: Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, this macro's string
+    parameters are currently not subject to auto-escaping bypass with #rawString (in other words, stock behavior is preserved);
+    caller must currently call #rawString if needed. This may be rectified in the future (TODO?).
+    HOWEVER, the ''function'' version of this macro, #makeOfbizUrl, automatically calls #rawString on its
+    string parameters (uri), and can be exploited as an easier alternative to this macro in various cases.
 
 WARN: {{{fullPath}}} and {{{secure}}} parameters have different behavior than stock Ofbiz!
 
@@ -188,9 +197,6 @@ that in general, setting secure false does not may the link will be insecure in 
 In addition, in Scipio, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
 secure to force a fullPath link. Links may still generate full-path secure links when needed even 
 if not requested, however.
-
-DEV NOTES:
-* webSiteId arg below is from stock but does not fully work and will not work with stock webapps (don't have webSiteIds and can't give them any)
 
   * Parameters *
     type                    = (intra-webapp|inter-webapp|, default: intra-webapp)
@@ -231,6 +237,8 @@ DEV NOTES:
                               This usually should only be specified for inter-webapp links.
                               Will determine the specific target webapp to use.
                               NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
+                              DEV NOTE: webSiteId arg is from stock but does not fully work and will not work with stock 
+                                  webapps (don't have webSiteIds and can't give them any)
                               (Stock arg, some fixes in Scipio)
     controller              = ((boolean), default: -depends on type-, fallback default: true)
                               If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
@@ -277,6 +285,9 @@ Builds an Ofbiz navigation URL. Function version of the @ofbizUrl macro.
 This is useful to prevent bloating templates with {{{<#assign...><@ofbizUrl.../></#assign>}}} captures
 which is very frequent due to use of macros.
 
+NOTE: This function's string arguments (uri) are coded to bypass screen auto-escaping with #rawString,
+    as per standard Scipio macro behavior. This may be different from the macro version of this function (@ofbizUrl).
+
   * Parameters *
     args                    = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
                               DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
@@ -293,8 +304,8 @@ which is very frequent due to use of macros.
 -->
 <#function makeOfbizUrl args>
   <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") webSiteId=args.webSiteId!"" absPath=args.absPath!"" interWebapp=args.interWebapp!"" controller=args.controller!"" 
-        extLoginKey=args.extLoginKey!"" fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
+    <#local res><@ofbizUrl uri=rawString(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
+        extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
   <#else>
     <#local res><@ofbizUrl uri=rawString(args) /></#local>
   </#if>
@@ -311,6 +322,8 @@ The URI takes the basic form /control/requesturi,
 but this is normally used to access another servlet, such as /products/PH-1000.
 
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
+
+NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
   * Parameters *
     (other)                 = See @ofbizUrl
@@ -334,6 +347,8 @@ but this is normally used to access another servlet, such as /products/PH-1000.
 
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
 
+NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+
   * Parameters *
     (other)                 = See #makeOfbizUrl, @ofbizWebappUrl
 
@@ -343,8 +358,8 @@ This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by 
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=args.absPath!false interWebapp=false controller=args.controller!false 
-        extLoginKey=args.extLoginKey!false fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
+    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
+        extLoginKey=(args.extLoginKey!false) fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
   <#else>
     <#local res><@ofbizUrl uri=rawString(args) absPath=false interWebapp=false controller=false 
         extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
@@ -363,6 +378,8 @@ OR requesturi if webSiteId is specified and is a controller request.
 
 This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
 by the implementation or can be overridden; controller is left to interpretation or can be specified.
+
+NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
   * Parameters *
     (other)                 = See @ofbizUrl
@@ -390,6 +407,8 @@ by the implementation or can be overridden; controller is left to interpretation
 NOTE: If args is specified as map, "webSiteId" must be passed in args, not as argument.
     (This is intentional, to be consistent with macro invocations, emulated for functions)
 
+NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+
   * Parameters *
     (other)                 = See #makeOfbizUrl, @ofbizInterWebappUrl
 
@@ -399,8 +418,8 @@ NOTE: If args is specified as map, "webSiteId" must be passed in args, not as ar
 -->
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=args.absPath!"" interWebapp=true webSiteId=args.webSiteId!  
-        controller=args.controller!"" extLoginKey=args.extLoginKey!"" fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
+    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
+        controller=(args.controller!"") extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
   <#else>
     <#local res><@ofbizUrl uri=rawString(args) absPath="" interWebapp=true webSiteId=webSiteId
         controller="" extLoginKey="" fullPath="" secure="" encode="" /></#local>
@@ -416,7 +435,17 @@ Builds an Ofbiz content/resource URL.
 
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 
-TODO: Make this accept uri
+NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''changed''' from 
+    stock Ofbiz. By default this macro NO LONGER url-decodes the uri/nested. The stock
+    Ofbiz behavior was presumably originally written to URL-decode whole URLs that had been stored
+    URL-encoded in the database or encoded elsewhere; however, in the general-purpose use case of this macro (extends
+    being database-stored URLs), applying URL-decoding by default is ''dangerous''.
+    In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
+    ''before'' storing in database - but note that URL-encoded parameters should probably not be decoded if
+    they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
+    (parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
+
+NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
   * Parameters *
     uri                     = (string) URI or path as parameter; alternative to nested
@@ -427,6 +456,9 @@ TODO: Make this accept uri
                                   auto screen escaping on this parameter.
     variant                 = ((string)) variant
                               (Stock Ofbiz parameter)
+    urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the uri/nested
+                              NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
+                              (New in Scipio)
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentUrl ...>
@@ -439,15 +471,119 @@ TODO: Make this accept uri
 ************
 Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl macro.
 
+NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+
   * Parameters *
     (other)                 = See @ofbizContentUrl
 
   * Related * 
     @ofbizContentUrl
 -->
-<#function makeOfbizContentUrl uri variant="">
-  <#local res><@ofbizContentUrl uri=uri variant=variant /></#local>
+<#function makeOfbizContentUrl args variant="">
+  <#if isObjectType("map", args)>
+    <#local res><@ofbizContentUrl uri=rawString(args.uri!"") variant=(args.variant!"") urlDecode=(args.urlDecode!"") /></#local>
+  <#else>
+    <#local res><@ofbizContentUrl uri=rawString(args) variant=variant urlDecode="" /></#local>
+  </#if>
   <#return res>
+</#function>
+
+<#-- 
+*************
+* ofbizContentAltUrl
+************
+Builds an Ofbiz content/resource Alt URL, from a URL stored in the database by contentId.
+
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
+
+NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''changed''' from 
+    stock Ofbiz. By default this macro NO LONGER url-decodes the URL retrieved by contentId. The stock
+    Ofbiz behavior was presumably originally written to URL-decode whole URLs that had been stored
+    URL-encoded in the database.
+    For consistency and prevention of some less obvious security issues (not as dramatic as @ofbizContentUrl),
+    the default has been changed to ''not'' decode by default.
+    In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
+    ''before'' storing in database - but note that URL-encoded parameters should probably not be decoded if
+    they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
+    (parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
+
+NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
+
+  * Parameters *
+    contentId               = (string) Content ID
+                              (Stock Ofbiz parameter)
+    viewContent             = (string) view content
+                              (Stock Ofbiz parameter)                          
+    urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the stored URL
+                              NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
+                              (New in Scipio)
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro ofbizContentAltUrl ...>
+</#macro>
+-->
+
+<#-- 
+*************
+* catalogContentUrl
+************
+Version of @ofbizContentUrl with extra catalog-specific prefix.
+This prepends a {{{contentPathPrefix}}} string to the URI/nested before passing to @ofbizContentUrl.
+It is gotten from context or request attributes; or if undefined, will run its own lookup.
+
+Usually, the contentPathPrefix is returned from
+{{{CatalogWorker.getContentPathPrefix(request)}}}.
+
+NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
+
+  * Related * 
+    @ofbizContentUrl
+    #makeCatalogContentUrl
+-->
+<#macro catalogContentUrl uri variant="" urlDecode="">
+  <#if uri?has_content><#t>
+    <@ofbizContentUrl uri=(getContentPathPrefix()+uri) variant=variant urlDecode=urlDecode/><#t>
+  <#else><#t>
+    <@ofbizContentUrl variant=variant urlDecode=urlDecode>${getContentPathPrefix()}<#nested></@ofbizContentUrl><#t>
+  </#if><#t>
+</#macro>
+
+<#-- 
+*************
+* makeCatalogContentUrl
+************
+Version of #makeOfbizContentUrl with extra catalog-specific prefix.
+This prepends a {{{contentPathPrefix}}} string to the URI before passing to #makeOfbizContentUrl.
+It is gotten from context or request attributes; or if undefined, will run its own lookup.
+
+Usually, the contentPathPrefix is returned from
+{{{CatalogWorker.getContentPathPrefix(request)}}}.
+
+NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+
+  * Related * 
+    #makeOfbizContentUrl
+    #makeCatalogContentUrl
+    @ofbizContentUrl
+-->
+<#function makeCatalogContentUrl args variant="">
+  <#if isObjectType("map", args)>
+    <#return makeOfbizContentUrl(args + {"uri":getContentPathPrefix()+rawString(args.uri!"")}) />
+  <#else>
+    <#return makeOfbizContentUrl(getContentPathPrefix()+rawString(args), variant) />
+  </#if>
+</#function>
+
+<#function getContentPathPrefix>
+  <#local res = contentPathPrefix!(requestAttributes.contentPathPrefix)!false>
+  <#if res?is_boolean>
+    <#if request??>
+      <#local res = Static["org.ofbiz.product.catalog.CatalogWorker"].getContentPathPrefix(request)!"">
+    <#else>
+      <#local res = "">
+    </#if>
+  </#if>
+  <#return rawString(res)>
 </#function>
 
 <#-- 

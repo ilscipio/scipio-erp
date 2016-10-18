@@ -24,7 +24,7 @@
         <#assign productLargeImageUrl = firstLargeImage />
     </#if>
     <#if productLargeImageUrl?has_content>
-        <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl></#assign>
+        <#assign largeImage = makeCatalogContentUrl(productLargeImageUrl)/>
     <#else>
         <#assign largeImage = "https://placehold.it/800x300">
     </#if>
@@ -35,19 +35,19 @@
       <div class="product-image-thumbs">
         <ul class="clearing-thumbs" data-clearing>
             <#if productAdditionalImage1?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage1!}</@ofbizContentUrl></#assign>
+                <#assign largeImage = makeCatalogContentUrl(productAdditionalImage1)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover" class=""/></li>
             </#if>
             <#if productAdditionalImage2?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage2!}</@ofbizContentUrl></#assign>
+                <#assign largeImage = makeCatalogContentUrl(productAdditionalImage2)/>
                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage3?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage3!}</@ofbizContentUrl></#assign>
+                <#assign largeImage = makeCatalogContentUrl(productAdditionalImage3)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage4?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage4!}</@ofbizContentUrl></#assign>
+                <#assign largeImage = makeCatalogContentUrl(productAdditionalImage4)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
         </ul>

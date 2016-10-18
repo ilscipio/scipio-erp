@@ -7686,4 +7686,8 @@
         <value xml:lang="fr">SEO du site web</value>
         <value xml:lang="it">SEO Sito Web</value>
     </property>
+    <property key="ContentWebAppInterfaceDeprecated">
+        <value xml:lang="de">Das ältere Content-Webanwendungsinterface wird in Scipio ERP veraltet und nicht unterstützt.</value>
+        <value xml:lang="en">The legacy Content web application interface is deprecated and unsupported in Scipio ERP.</value>
+    </property>
 </resource>

@@ -57,7 +57,7 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <!-- SCIPIO: content user interface is largely deprecated -->
-                        <label text="${uiLabelMap.ContentWebAppInterfaceDeprecated}" style="common-msg-warning" />
+                        <label text="${uiLabelMap.ContentWebAppUiDeprecated}" style="common-msg-warning" />
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

@@ -525,6 +525,69 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
 
 <#-- 
 *************
+* catalogContentUrl
+************
+Version of @ofbizContentUrl with extra catalog-specific prefix.
+This prepends a {{{contentPathPrefix}}} string to the URI/nested before passing to @ofbizContentUrl.
+It is gotten from context or request attributes; or if undefined, will run its own lookup.
+
+Usually, the contentPathPrefix is returned from
+{{{CatalogWorker.getContentPathPrefix(request)}}}.
+
+NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
+
+  * Related * 
+    @ofbizContentUrl
+    #makeCatalogContentUrl
+-->
+<#macro catalogContentUrl uri variant="" urlDecode="">
+  <#if uri?has_content><#t>
+    <@ofbizContentUrl uri=(getContentPathPrefix()+uri) variant=variant urlDecode=urlDecode/><#t>
+  <#else><#t>
+    <@ofbizContentUrl variant=variant urlDecode=urlDecode>${getContentPathPrefix()}<#nested></@ofbizContentUrl><#t>
+  </#if><#t>
+</#macro>
+
+<#-- 
+*************
+* makeCatalogContentUrl
+************
+Version of #makeOfbizContentUrl with extra catalog-specific prefix.
+This prepends a {{{contentPathPrefix}}} string to the URI before passing to #makeOfbizContentUrl.
+It is gotten from context or request attributes; or if undefined, will run its own lookup.
+
+Usually, the contentPathPrefix is returned from
+{{{CatalogWorker.getContentPathPrefix(request)}}}.
+
+NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+
+  * Related * 
+    #makeOfbizContentUrl
+    #makeCatalogContentUrl
+    @ofbizContentUrl
+-->
+<#function makeCatalogContentUrl args variant="">
+  <#if isObjectType("map", args)>
+    <#return makeOfbizContentUrl(args + {"uri":getContentPathPrefix()+rawString(args.uri!"")}) />
+  <#else>
+    <#return makeOfbizContentUrl(getContentPathPrefix()+rawString(args), variant) />
+  </#if>
+</#function>
+
+<#function getContentPathPrefix>
+  <#local res = contentPathPrefix!(requestAttributes.contentPathPrefix)!false>
+  <#if res?is_boolean>
+    <#if request??>
+      <#local res = Static["org.ofbiz.product.catalog.CatalogWorker"].getContentPathPrefix(request)!"">
+    <#else>
+      <#local res = "">
+    </#if>
+  </#if>
+  <#return rawString(res)>
+</#function>
+
+<#-- 
+*************
 * interpretRequestUri
 ************
 Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.

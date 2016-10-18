@@ -20,6 +20,7 @@ package org.ofbiz.base.component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -50,18 +51,24 @@ public class ComponentLoaderConfig {
     protected static List<ComponentDef> componentsToLoad = null;
 
     public static List<ComponentDef> getRootComponents(String configFile) throws ComponentException {
-        if (componentsToLoad == null) {
+        // SCIPIO: some changes to this method to prevent synchronization errors
+        List<ComponentDef> result = componentsToLoad; 
+        if (result == null) {
             synchronized (ComponentLoaderConfig.class) {
-                if (componentsToLoad == null) {
+                result = componentsToLoad;
+                if (result == null) {
                     if (configFile == null) {
                         configFile = COMPONENT_LOAD_XML_FILENAME;
                     }
                     URL xmlUrl = UtilURL.fromResource(configFile);
-                    ComponentLoaderConfig.componentsToLoad = ComponentLoaderConfig.getComponentsFromConfig(xmlUrl);
+                    // SCIPIO: NOTE: use unmodifiableList here to get thread safety by its internal final field
+                    // also enforces read-only
+                    result = Collections.unmodifiableList(ComponentLoaderConfig.getComponentsFromConfig(xmlUrl));
+                    componentsToLoad = result;
                 }
             }
         }
-        return componentsToLoad;
+        return result;
     }
 
     public static List<ComponentDef> getComponentsFromConfig(URL configUrl) throws ComponentException {

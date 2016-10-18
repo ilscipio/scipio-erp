@@ -121,7 +121,10 @@ public class ContentUrlFilter extends ContextFilter {
                     .queryFirst();
             if (contentAssocDataResource != null) {
                 url = contentAssocDataResource.getString("drObjectInfo");
+                
+                // SCIPIO: FIXME?: REVIEW: There should not be need for decode here
                 url = UtilCodec.getDecoder("url").decode(url);
+                
                 String mountPoint = request.getContextPath();
                 if (!(mountPoint.equals("/")) && !(mountPoint.equals(""))) {
                     url = mountPoint + url;

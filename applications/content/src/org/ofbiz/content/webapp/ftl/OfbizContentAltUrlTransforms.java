@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentUrlFilter;
+import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -39,6 +40,13 @@ import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 
+/**
+ * Content Alt URL transform.
+ * <p>
+ * SCIPIO: Added <code>urlDecode</code> boolean param.
+ * and changed the logical default to <code>false</code> compared to stock Ofbiz (where
+ * it would have been <code>true</code>).
+ */
 public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
     public final static String module = OfbizContentAltUrlTransforms.class.getName();
     @SuppressWarnings("unchecked")
@@ -82,6 +90,7 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                     if (req != null) {
                         String contentId = getStringArg(args, "contentId");
                         String viewContent = getStringArg(args, "viewContent");
+                        Boolean urlDecode = OfbizUrlTransform.checkBooleanArg(args, "urlDecode", null);
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         HttpServletResponse response = null;
                         if (res != null) {
@@ -89,7 +98,7 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                         }
                         String url = "";
                         if (UtilValidate.isNotEmpty(contentId)) {
-                            url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent);
+                            url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent, urlDecode);
                         }
                         out.write(url);
                     }

@@ -43,6 +43,10 @@ import freemarker.template.TemplateTransformModel;
 
 /**
  * OfbizContentTransform - Freemarker Transform for content links
+ * <p>
+ * SCIPIO: added explicit <code>uri</code> (instead of nested) and 
+ * <code>urlDecode</code> boolean which is changed to <code>false</code> by default
+ * (would have been <code>true</code> default in stock Ofbiz).
  */
 public class OfbizContentTransform implements TemplateTransformModel {
 
@@ -75,6 +79,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
         final StringBuilder buf = new StringBuilder();
         final String imgSize = OfbizContentTransform.getArg(args, "variant");
         final String uri = OfbizContentTransform.getArg(args, "uri"); // SCIPIO: uri as alternative to nested
+        final Boolean urlDecode = OfbizUrlTransform.checkBooleanArg(args, "urlDecode", null); // SCIPIO: new
         return new Writer(out) {
             @Override
             public void write(char cbuf[], int off, int len) {
@@ -96,7 +101,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     // SCIPIO: delegated to our new method
                     BeanModel resp = (BeanModel) env.getVariable("response");
                     HttpServletResponse response = resp == null ? null : (HttpServletResponse) resp.getWrappedObject();
-                    String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize);
+                    String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize, null, urlDecode);
                             
                     out.write(url);
                 } catch (TemplateModelException e) {

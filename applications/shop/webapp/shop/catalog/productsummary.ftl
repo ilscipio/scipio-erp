@@ -40,9 +40,9 @@
     <#assign productTitle = productName/>
 
     <#if smallImageUrl?has_content>
-        <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
+        <#assign imgSrc = makeCatalogContentUrl(smallImageUrl)>
     <#else>
-        <#assign imgSrc="https://placehold.it/300x100"/>    
+        <#assign imgSrc = "https://placehold.it/300x100"/>    
     </#if>
     <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
     <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>

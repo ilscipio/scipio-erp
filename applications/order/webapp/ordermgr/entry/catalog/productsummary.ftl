@@ -70,13 +70,13 @@ ${virtualJavaScript!}
     <div class="productsummary">
         <div class="smallimage">
             <a href="${productUrl}">
-                <span id="${productInfoLinkId}" class="popup_link"><img src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/></span>
+                <span id="${productInfoLinkId}" class="popup_link"><img src="<@catalogContentUrl>${smallImageUrl}</@catalogContentUrl>" alt="Small Image"/></span>
             </a>
         </div>
         <div id="${productDetailId}" class="popup" style="display:none;">
           <@row>
             <@cell>
-                <img src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
+                <img src="<@catalogContentUrl>${smallImageUrl}</@catalogContentUrl>" alt="Small Image"/><br />
                 ${uiLabelMap.ProductProductId}   : ${product.productId!}<br />
                 ${uiLabelMap.ProductProductName} : ${product.productName!}<br />
                 ${uiLabelMap.CommonDescription}  : ${product.description!}

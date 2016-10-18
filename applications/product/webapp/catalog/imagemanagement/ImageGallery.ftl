@@ -26,8 +26,8 @@ under the License.
         <#-- <#assign productName = productTextData >
         <#assign seoUrl = productName.replaceAll(" ", "-") > -->
         <#list productImageList as productImage>
-              <#assign imgLink><@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl></#assign>
-              <#assign thumbSrc><@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl></#assign>
+              <#assign imgLink = makeOfbizContentUrl((productImage.productImage)!)/>
+              <#assign thumbSrc = makeOfbizContentUrl((productImage.productImageThumb)!)/>
               <@tile size="normal" image=thumbSrc> <#-- can't use this, breaks Share button: link=imgLink so use View button instead -->
                   <@container class="+${styles.text_center!}">
                       <#--<a href="<@ofbizInterWebappUrl>/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}</@ofbizInterWebappUrl>" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>

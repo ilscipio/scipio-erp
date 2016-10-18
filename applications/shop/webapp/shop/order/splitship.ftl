@@ -177,7 +177,7 @@ function submitForm(form, mode, value) {
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                   <#if smallImageUrl?string?has_content>
                     <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
-                      <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" />
+                      <img src="<@catalogContentUrl>${smallImageUrl}</@catalogContentUrl>" class="cssImgSmall" alt="" />
                     </a>
                   </#if>
                   -->

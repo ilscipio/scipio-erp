@@ -31,7 +31,7 @@ under the License.
         <#assign smallImageUrl = "/images/defaultImage.jpg"/>
     </#if>
         <@td style="width:${tdWidth?c}%;">
-            <img src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
+            <img src="<@catalogContentUrl>${smallImageUrl}</@catalogContentUrl>" alt="Small Image"/><br />
             ${productContentWrapper.get("PRODUCT_NAME")!}<br />
     <#if totalPrice??>
             <div>${uiLabelMap.ProductAggregatedPrice}: <span class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.CollectionModel;
@@ -26,10 +27,12 @@ import freemarker.template.Version;
 public class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapper { // SCIPIO: Now implements EscapingObjectWrapper for identification purposes
 
     protected final String lang;
+    protected final SimpleEncoder encoder;
     
     public ExtendedWrapper(Version version, String lang) {
         super(version);
         this.lang = lang;
+        this.encoder = UtilCodec.getEncoder(lang);
     }
 
     @Override
@@ -52,7 +55,7 @@ public class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapp
         }
         @Override
         public String getAsString() {
-            return UtilCodec.getEncoder(lang).encode(super.getAsString());
+            return encoder.encode(super.getAsString());
         }
     }
 
@@ -64,7 +67,7 @@ public class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapp
 
         @Override
         public String getAsString() {
-            return UtilCodec.getEncoder(lang).encode(super.getAsString());
+            return encoder.encode(super.getAsString());
         }
 
     }

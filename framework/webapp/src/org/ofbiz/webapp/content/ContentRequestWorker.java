@@ -50,6 +50,13 @@ public abstract class ContentRequestWorker {
         }
 
         if(UtilValidate.isNotEmpty(imgSize)){
+            // SCIPIO: WARN/FIXME?: This hardcoded value check does NOT work properly even if it's
+            // unhardcoded, because the uri may have been passed encoded in html or some other language.
+            // It generally only works if the value is hardcoded straight into FTL, e.g.,
+            // <#assign someUrl = "/images/defaultImage.jpg">
+            // <@ofbizContentUrl>${someUrl}</@ofbizContentUrl>
+            // In Scipio we should probably just avoid having such exceptions, but leaving this
+            // here for now for legacy compatibility with old templates.
             if(!"/images/defaultImage.jpg".equals(requestUrl)){
                 int index = requestUrl.lastIndexOf(".");
                 if (index > 0) {

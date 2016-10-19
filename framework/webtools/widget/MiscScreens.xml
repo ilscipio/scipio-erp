@@ -102,6 +102,8 @@ under the License.
                 <set field="ofbizWidgetsLayoutScreenLocation" value="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemoOfbizWidgets" />
                 <set field="parameters.showLeftColumn" value="Y" />
                 <set field="complexCharString" value="&amp; &lt; &gt; ' &quot; [] () ü ö ä Ä Ü Ö ß"/>
+                <set field="demoScreenContentUri" value="/admin/images/does_not_exist.jpg?param1=value1&amp;param2=value2"/><!-- NOTE: the &amp; only bypasses this xml, not html -->
+                <set field="contentPathPrefix" value="https://ilscipio.com/images"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

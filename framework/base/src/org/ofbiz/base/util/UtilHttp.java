@@ -1434,13 +1434,18 @@ public class UtilHttp {
     
     /**
      * SCIPIO: Checks if the given uri is a full URL, permissively, attempting to allow
-     * various encodings.
-     * <strong>WARN</strong>: This method is highly problematic, imprecise and should be avoided where
-     * possible by proper design and usage of escaping.
-     * It is needed in some cases in Ofbiz where escaping happens too early.
+     * some types of language encodings.
      * <p>
-     * Currently (2016-10-19), this tries to handle HTML, Javascript and XML encoding only.
-     * FIXME: nothing for CSS
+     * <strong>WARN</strong>: This method is imprecise and should be avoided where
+     * possible by proper design and using post-escaping instead of pre-escaping, to avoid
+     * escaped strings being encountered in such logic as isFullUrl calls.
+     * <p>
+     * In other words, isFullUrlPerm is currently needed for cases in Ofbiz where escaping happens too early.
+     * <p>
+     * Currently (2016-10-19), this only handles HTML and Javascript (based on behavior of
+     * UtilCodec and Freemarker builtins).
+     * <p>
+     * FIXME: does nothing for CSS
      */
     public static boolean isFullUrlPerm(String uri) {
         for(String prefix : fullUrlPermPrefixes) {
@@ -1454,22 +1459,20 @@ public class UtilHttp {
     /**
      * SCIPIO: builds a list of prefixes used for checking full URL presence in permissive fashion.
      * <p>
-     * WARN: This is extremely imprecise
-     * <p>
-     * FIXME?: Extremely imprecise, bad, potential security risk, does not do CSS
+     * WARN/FIXME?: Imprecise, bad, potential security risk, does not handle CSS
      * 
      * @see #isFullUrlPerm
      */
     private static List<String> makeFullUrlPermPrefixes() {
         Set<String> prefixes = new LinkedHashSet<>(); // the Set will eliminate duplicates
-        prefixes.add("http:"); // produces fewer problems/doubles than "http://"
-        prefixes.add("https:"); // produces fewer problems/doubles than "https://"
+        prefixes.add("http://");
+        prefixes.add("https://");
         prefixes.add("//");
         
-        for(String encoderName : new String[] { "html", "xml" }) {
+        for(String encoderName : new String[] { "html" }) {
             UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderName);
-            prefixes.add(encoder.encode("http:"));
-            prefixes.add(encoder.encode("https:"));
+            prefixes.add(encoder.encode("http://"));
+            prefixes.add(encoder.encode("https://"));
             prefixes.add(encoder.encode("//"));
         }
         
@@ -1490,16 +1493,4 @@ public class UtilHttp {
      */
     private static final List<String> fullUrlPermPrefixes = makeFullUrlPermPrefixes();
 
-    /**
-     * SCIPIO: Gets the list of prefixes used for checking full URL presence in permissive fashion.
-     * <p>
-     * WARN: This is extremely imprecise
-     * <p>
-     * FIXME?: Extremely imprecise, does not do CSS
-     * 
-     * @see #isFullUrlPerm
-     */
-    public static List<String> getFullUrlPermPrefixes() {
-        return Collections.unmodifiableList(fullUrlPermPrefixes);
-    }
 }

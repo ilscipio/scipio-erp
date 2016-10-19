@@ -287,11 +287,14 @@ which is very frequent due to use of macros.
 
 NOTE: This function's string arguments (uri) are coded to bypass screen auto-escaping with #rawString,
     as per standard Scipio macro behavior. This may be different from the macro version of this function (@ofbizUrl).
+    In general, this function version expects to deal with non-escaped values; however,
+    for reasons of legacy support, pre-escaped parameter delimiters ({{{&amp;}}}) are handled
+    automatically where possible.
 
   * Parameters *
     args                    = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
                               DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
-                                  for functions, which would be unreadable here (makeOfbizUrl("main", false, false, true, true...))
+                                  for functions, which would be unreadable here ({{{makeOfbizUrl("main", false, false, true, true...)}}})
                                   However majority of cases use only a URI so we can shortcut in that case.
                                   Freemarker doesn't support overloading so we basically implement it ourselves.
                                   Note that if we needed extra positional parameters for common cases, should keep the args map check on
@@ -443,7 +446,7 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
     In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
     ''before'' storing in database - but note that URL-encoded parameters should probably not be decoded if
     they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
-    (parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
+    (in such cases, parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
 
 NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
@@ -462,9 +465,36 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
                                   "/images/defaultImage.jpg" as a special value, or simply not use it.
     variant                 = ((string)) variant
                               (Stock Ofbiz parameter)
+    ctxPrefix               = ((boolean)|(string), default: false) Contextual path prefix
+                              Extra path prefix prepended to the uri, which may replace the central system default prefix if
+                              it produces an absolute URL (prefixed with "http:", "https:", or "//").
+                              If string, it is used as given.
+                              If boolean: if false, no extra prefix; if true, the context variable
+                              NOTE: As an exception, this parameter is automatically passed
+                                  through #rawString; so this prefix should never be passed an unsafe value
+                                  unless you manually captured and escaped the output (in which case
+                                  #makeOfbizContentUrl should be used instead anyway).
+                                  In general, the prefixes for content URLs should never be unsafe values.
+                              (New in Scipio)
     urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the uri/nested
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
                               (New in Scipio)
+    strict                  = ((boolean), default: false) Whether to handle only raw strings or recognize pre-escaped strings
+                              This macro must perform checks and concatenations on the passed uri; if pre-escaped
+                              values are passed (such as HTML), this parameter must be false.
+                              When false, rurrently (2016-10-19), only HTML and Javascript pre-escaped strings are handled.
+                              WARN: Pre-escaped string handling is heuristic-like and only tries to detect encodings
+                                  done by {{{UtilCodec}}} class and Freemarker built-ins.
+                                  In some edge cases, the resulting Javascript may not necessarily be secure!
+                                  The method will try to warn in log.
+                                  Known cases: 
+                                  * If a prefix ends with raw less-than ("<") character and the uri does not begin
+                                    with a forward slash or escaped equivalent ("/"), the method could produce
+                                    a dangerous result! This is prevented by not passing unsafe values as the
+                                    {{{ctxPrefix}}}, or simply not pre-escaping for javascript.
+                              NOTE: The function version of this macro, #makeOfbizContentUrl, uses
+                                  true as default for this parameter, unlike this macro.
+                              (New in Scipio) 
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentUrl ...>
@@ -480,6 +510,9 @@ Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl m
 NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 
   * Parameters *
+    strict                  = ((boolean), default: true) Whether to handle only raw strings or recognize pre-escaped strings
+                              NOTE: Unlike @ofbizContentUrl, the default here is true, such that, by default, this
+                                  function is meant to operate on raw unescaped strings only.
     (other)                 = See @ofbizContentUrl
 
   * Related * 
@@ -487,11 +520,39 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 -->
 <#function makeOfbizContentUrl args variant="">
   <#if isObjectType("map", args)>
-    <#local res><@ofbizContentUrl uri=rawString(args.uri!"") variant=(args.variant!"") urlDecode=(args.urlDecode!"") /></#local>
+    <#local strict = args.strict!true>
+    <#if !strict?has_content><#-- case to detect if empty string was passed -->
+      <#local strict = true>
+    </#if>
+    <#-- DEV NOTE: no rawString around ctxPrefix because already done by the macro (exceptionally) -->
+    <#local res><@ofbizContentUrl uri=rawString(args.uri!"") variant=rawString(args.variant!"") 
+        ctxPrefix=(args.ctxPrefix!false) urlDecode=(args.urlDecode!"") strict=strict/></#local>
   <#else>
-    <#local res><@ofbizContentUrl uri=rawString(args) variant=variant urlDecode="" /></#local>
+    <#local res><@ofbizContentUrl uri=rawString(args) variant=variant strict=true /></#local>
   </#if>
   <#return res>
+</#function>
+
+<#-- 
+*************
+* makeOfbizContentCtxPrefixUrl
+************
+Version of #makeOfbizContentUrl that is preset to recognize the {{{contentPathPrefix}}} context prefix.
+Same as (shorthand for):
+  makeOfbizContentUrl({"uri":someUri, "ctxPrefix":true, ...})
+
+NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+
+  * Related * 
+    #makeOfbizContentUrl
+    @ofbizContentUrl
+-->
+<#function makeOfbizContentCtxPrefixUrl args variant="">
+  <#if isObjectType("map", args)>
+    <#return makeOfbizContentUrl({"ctxPrefix":true} + args) />
+  <#else>
+    <#return makeOfbizContentUrl({"ctxPrefix":true, "uri":args, "variant":variant}) />
+  </#if>
 </#function>
 
 <#-- 
@@ -528,69 +589,6 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
 <#macro ofbizContentAltUrl ...>
 </#macro>
 -->
-
-<#-- 
-*************
-* catalogContentUrl
-************
-Version of @ofbizContentUrl with extra catalog-specific prefix.
-This prepends a {{{contentPathPrefix}}} string to the URI/nested before passing to @ofbizContentUrl.
-It is gotten from context or request attributes; or if undefined, will run its own lookup.
-
-Usually, the contentPathPrefix is returned from
-{{{CatalogWorker.getContentPathPrefix(request)}}}.
-
-NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
-
-  * Related * 
-    @ofbizContentUrl
-    #makeCatalogContentUrl
--->
-<#macro catalogContentUrl uri variant="" urlDecode="">
-  <#if uri?has_content><#t>
-    <@ofbizContentUrl uri=(getContentPathPrefix()+uri) variant=variant urlDecode=urlDecode/><#t>
-  <#else><#t>
-    <@ofbizContentUrl variant=variant urlDecode=urlDecode>${getContentPathPrefix()}<#nested></@ofbizContentUrl><#t>
-  </#if><#t>
-</#macro>
-
-<#-- 
-*************
-* makeCatalogContentUrl
-************
-Version of #makeOfbizContentUrl with extra catalog-specific prefix.
-This prepends a {{{contentPathPrefix}}} string to the URI before passing to #makeOfbizContentUrl.
-It is gotten from context or request attributes; or if undefined, will run its own lookup.
-
-Usually, the contentPathPrefix is returned from
-{{{CatalogWorker.getContentPathPrefix(request)}}}.
-
-NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
-
-  * Related * 
-    #makeOfbizContentUrl
-    #makeCatalogContentUrl
-    @ofbizContentUrl
--->
-<#function makeCatalogContentUrl args variant="">
-  <#if isObjectType("map", args)>
-    <#return makeOfbizContentUrl(args + {"uri":getContentPathPrefix()+rawString(args.uri!"")}) />
-  <#else>
-    <#return makeOfbizContentUrl(getContentPathPrefix()+rawString(args), variant) />
-  </#if>
-</#function>
-
-<#function getContentPathPrefix>
-  <#local res = contentPathPrefix!(requestAttributes.contentPathPrefix)!false>
-  <#if res?is_boolean>
-    <#if request??>
-      <#local res = Static["org.ofbiz.product.catalog.CatalogWorker"].getContentPathPrefix(request)!"">
-    <#else>
-      <#local res = "">
-    </#if>
-  </#if>
-  <#return rawString(res)>
-</#function>
 
 <#-- 
 *************

@@ -454,6 +454,12 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
                                   directly without consideration to escaping.
                                   However, the function versions of this macro such as #makeOfbizContentUrl DO bypass the
                                   auto screen escaping on this parameter.
+                              NOTE: SPECIAL VALUES: Stock ofbiz originally recognized the string "/images/defaultImage.jpg" as
+                                  a special value; when this value was specified, the {{{variant}}} parameter was ignored.
+                                  However, this check does not work properly in general.
+                                  In Scipio, while this behavior is left intact for compatibility with old code, 
+                                  you should simply avoid relying on any such check and not consider
+                                  "/images/defaultImage.jpg" as a special value, or simply not use it.
     variant                 = ((string)) variant
                               (Stock Ofbiz parameter)
     urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the uri/nested

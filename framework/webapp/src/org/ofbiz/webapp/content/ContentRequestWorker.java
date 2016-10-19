@@ -1,9 +1,15 @@
 package org.ofbiz.webapp.content;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 
@@ -11,7 +17,7 @@ import org.ofbiz.webapp.taglib.ContentUrlTag;
  * SCIPIO: new class for content request-related implementations.
  */
 public abstract class ContentRequestWorker {
-
+    
     /**
      * SCIPIO: builds a content link.
      * <p>
@@ -22,14 +28,17 @@ public abstract class ContentRequestWorker {
     public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId, Boolean urlDecode) {
         String requestUrl = uri;
 
-        // If the URL starts with http(s) then there is nothing for us to do here
-        if (requestUrl.startsWith("http://") || requestUrl.startsWith("https://") || requestUrl.startsWith("//")) { // SCIPIO: better tests
-            return requestUrl;
-        }
-
         // SCIPIO: Our default behavior is NOT to decode unless requested, in contrast to stock Ofbiz
         if (Boolean.TRUE.equals(urlDecode)) {
             requestUrl = UtilCodec.getUrlDecoder().decode(requestUrl);
+        }
+        
+        // If the URL starts with http(s) then there is nothing for us to do here
+        // SCIPIO: FIXME?: We try to use a better test here, but we are forced to use the Permissive
+        // version because - due to Ofbiz design of escaping - here we may receive a uri encoded 
+        // in any language - highly problematic!
+        if (UtilHttp.isFullUrlPerm(requestUrl)) {
+            return requestUrl;
         }
 
         // make the link

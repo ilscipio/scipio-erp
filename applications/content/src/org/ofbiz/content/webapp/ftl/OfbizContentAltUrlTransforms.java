@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentUrlFilter;
+import org.ofbiz.webapp.ftl.OfbizContentTransform;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
 import freemarker.core.Environment;
@@ -50,18 +51,9 @@ import freemarker.template.TemplateTransformModel;
 public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
     public final static String module = OfbizContentAltUrlTransforms.class.getName();
     @SuppressWarnings("unchecked")
-    public String getStringArg(Map args, String key) {
-        Object o = args.get(key);
-        if (o instanceof SimpleScalar) {
-            return ((SimpleScalar) o).getAsString();
-        } else if (o instanceof StringModel) {
-            return ((StringModel) o).getAsString();
-        } else if (o instanceof SimpleNumber) {
-            return ((SimpleNumber) o).getAsNumber().toString();
-        } else if (o instanceof NumberModel) {
-            return ((NumberModel) o).getAsNumber().toString();
-        }
-        return null;
+    public static String getStringArg(Map args, String key) {
+        // SCIPIO: delegate this, make static
+        return OfbizContentTransform.getStringArg(args, key);
     }
     
     @Override

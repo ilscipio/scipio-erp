@@ -42,7 +42,7 @@ under the License.
 
     <div class="productcategorylink">
       <#if imageUrl?string?has_content>
-        <div class="smallimage"><a href="${linkUrl}"><img src="<@catalogContentUrl>${imageUrl}</@catalogContentUrl>" alt="${titleText!"Link Image"}"/></a></div>
+        <div class="smallimage"><a href="${linkUrl}"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" alt="${titleText!"Link Image"}"/></a></div>
       </#if>
       <#if titleText?has_content>
         <a href="${linkUrl}" class="${styles.link_nav_info_name!}">${titleText}</a>

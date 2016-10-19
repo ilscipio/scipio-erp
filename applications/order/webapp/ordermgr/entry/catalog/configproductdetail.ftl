@@ -192,7 +192,7 @@ function getConfigDetails() {
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?string?has_content>
-        <a href="javascript:popupDetail();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@catalogContentUrl>${productLargeImageUrl!}</@catalogContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
+        <a href="javascript:popupDetail();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl ctxPrefix=true>${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
     </@cell>
     <@cell columns=8>
@@ -401,7 +401,7 @@ function getConfigDetails() {
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}">les.<img src="<@catalogContentUrl>${imageUrl}</@catalogContentUrl>" class="cssImgStandard" alt="" /></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}">les.<img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" class="cssImgStandard" alt="" /></a>
                   <br />
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>
@@ -465,7 +465,7 @@ function getConfigDetails() {
 
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
-                  <img src="<@catalogContentUrl>${image}</@catalogContentUrl>" vspace="5" hspace="5" class="cssImgSmall" align="left" alt="" />
+                  <img src="<@ofbizContentUrl ctxPrefix=true>${image}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgSmall" align="left" alt="" />
                 </#if>
               <#else>
                 <a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav!} ${styles.action_view!}">Details</a>

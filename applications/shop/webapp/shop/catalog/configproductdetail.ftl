@@ -189,7 +189,7 @@ ${virtualJavaScript!}
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
-                  <img src="<@catalogContentUrl>${image}</@catalogContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
+                  <img src="<@ofbizContentUrl ctxPrefix=true>${image}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
                 </#if>
               <#else>
                 <#-- SCIPIO: FIXME?: this does nothing in ecommerce
@@ -591,7 +591,7 @@ ${virtualJavaScript!}
                           <#assign imageUrl = "/images/defaultImage.jpg">
                         </#if>
                         <@td align="center" valign="bottom">
-                          <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@catalogContentUrl>${imageUrl}</@catalogContentUrl>" class="cssImgSmall" alt="" /></a>
+                          <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                           <br />
                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_info_name!}">${key}</a>
                         </@td>

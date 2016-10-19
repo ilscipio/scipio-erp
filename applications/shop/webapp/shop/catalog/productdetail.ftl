@@ -558,7 +558,7 @@
                         </#if>
 
                         <div class="product-virtual-swatch-item">
-                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@catalogContentUrl>${imageUrl}</@catalogContentUrl>" width="60" height="60" alt="" /></a>                        
+                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" width="60" height="60" alt="" /></a>                        
                            <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
                            <div class="clear"></div>
                         </div>

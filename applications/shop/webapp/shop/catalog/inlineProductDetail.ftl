@@ -352,7 +352,7 @@ ${virtualJavaScript!}
       </#if>
       <#if productLargeImageUrl?string?has_content>
         <input type="hidden" name="detailImage${inlineCounter}" value="${firstDetailImage!(mainDetailImageUrl!("_NONE_"))}"/>
-        <a href="javascript:popupDetailInline('${inlineCounter}');" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@catalogContentUrl>${productLargeImageUrl!}</@catalogContentUrl>" name="mainImage${inlineCounter}" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
+        <a href="javascript:popupDetailInline('${inlineCounter}');" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl ctxPrefix=true>${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage${inlineCounter}" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
     </@cell>
   </@row>
@@ -400,7 +400,7 @@ ${virtualJavaScript!}
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@catalogContentUrl>${imageUrl}</@catalogContentUrl>" border="0" width="60" height="60" alt="" /></a>
+                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" alt="" /></a>
                   <br />
                   <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>

@@ -33,7 +33,7 @@ under the License.
         <#if shoppingCart.getOrderPartyId() == "_NA_" || (shoppingCart.size() == 0)>
           <@menuitem type="link" text=uiLabelMap.OrderFinalizeOrder disabled=true class="+${styles.action_nav!} ${styles.action_complete!}"/>
         <#else>
-          <@menuitem type="link" href=makeOfbizUrl("finalizeOrder?finalizeMode=purchase&amp;finalizeReqCustInfo=false&amp;finalizeReqShipInfo=false&amp;finalizeReqOptions=false&amp;finalizeReqPayInfo=false") text=uiLabelMap.OrderFinalizeOrder class="+${styles.action_nav!} ${styles.action_complete!}" />
+          <@menuitem type="link" href=makeOfbizUrl("finalizeOrder?finalizeMode=purchase&finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false") text=uiLabelMap.OrderFinalizeOrder class="+${styles.action_nav!} ${styles.action_complete!}" />
         </#if>
       <#else>
         <#if shoppingCart.size() == 0>

@@ -25,7 +25,7 @@ under the License.
     <#if showEmpty>
       <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}") text=uiLabelMap.ProductHideEmptyItems class="+${styles.action_run_sys!} ${styles.action_hide!}" />
     <#else>
-      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}&amp;showEmpty=true") text=uiLabelMap.ProductShowEmptyItems class="+${styles.action_run_sys!} ${styles.action_show!}" />
+      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}&showEmpty=true") text=uiLabelMap.ProductShowEmptyItems class="+${styles.action_run_sys!} ${styles.action_show!}" />
     </#if>
   </#if>
   </@menu>

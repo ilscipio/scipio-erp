@@ -232,7 +232,7 @@ under the License.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         ${menuContent}
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')} ${rawLabel('ContentSurveryCategory')}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')} ${rawLabel('ContentSurveryCategory')}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </@menu>
     </#macro>
   </#if>
@@ -283,7 +283,7 @@ under the License.
       <#assign sectionTitle>${uiLabelMap.ContentSurveyEditQuestionOption}</#assign>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}") text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]" class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}") text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]" class="+${styles.action_nav!} ${styles.action_add!}" />
         </@menu>
       </#macro>
     </#if>

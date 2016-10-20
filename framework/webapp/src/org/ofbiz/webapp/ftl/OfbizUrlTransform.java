@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.OfbizUrlBuilder;
@@ -38,6 +39,7 @@ import org.ofbiz.webapp.control.RequestLinkUtil;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
@@ -70,15 +72,21 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     @SuppressWarnings("rawtypes")
     public Writer getWriter(final Writer out, final Map args) throws TemplateModelException {
         final StringBuilder buf = new StringBuilder();
-        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", false); // SCIPIO: new
+        
+        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+        final boolean strict = TransformUtil.getBooleanArg(args, "strict", rawParamsDefault); // SCIPIO: new
+        
         final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: modified to remove default; leave centralized
         final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
         final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: modified to remove default; leave centralized
-        final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", null, false, rawParams);
+        final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
         // SCIPIO: We now support a "uri" arg as alternative to #nested
-        final String uriArg = TransformUtil.getStringArg(args, "uri", null, false, rawParams);
+        final String uriArg = TransformUtil.getStringArg(args, "uri", rawParams);
         // SCIPIO: more new parameters
-        final String type = TransformUtil.getStringArg(args, "type", null, false, rawParams);
+        final String type = TransformUtil.getStringArg(args, "type", rawParams);
         final Boolean absPath = TransformUtil.getBooleanArg(args, "absPath"); 
         final Boolean interWebapp = TransformUtil.getBooleanArg(args, "interWebapp"); // Alias for type="inter-webapp"
         final Boolean controller = TransformUtil.getBooleanArg(args, "controller");
@@ -163,7 +171,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         }
                         String link = rh.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
                         if (link != null) {
-                            out.write(link);
+                            out.write(TransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
                         }
                         else {
                             // SCIPIO: If link is null, it means there was an error building link; write nothing, so that
@@ -171,7 +179,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                             //out.write(requestUrl);
                         }
                     } else {
-                        out.write(buf.toString());
+                        out.write(TransformUtil.escapeGeneratedUrl(buf.toString(), escapeAs, strict, env));
                     }
                 } catch (Exception e) {
                     Debug.logWarning(e, "Exception thrown while running ofbizUrl transform", module);

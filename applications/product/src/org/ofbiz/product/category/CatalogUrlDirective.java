@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
@@ -33,6 +34,7 @@ import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -81,20 +83,28 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
     @Override
     public void execute(Environment env, Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         Map<String, TemplateModel> params = UtilGenerics.checkMap(args);
-        String productId = (String) DeepUnwrap.unwrap(params.get("productId"));
-        String currentCategoryId = (String) DeepUnwrap.unwrap(params.get("currentCategoryId"));
-        String previousCategoryId = (String) DeepUnwrap.unwrap(params.get("previousCategoryId"));
+        // SCIPIO: various changes here
+        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+        
+        String productId = TransformUtil.getStringArg(args, "productId", rawParams);
+        String currentCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
+        String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
 
         BeanModel req = (BeanModel) env.getVariable("request");
 
         // SCIPIO: new flags
+        
         Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath");
         Boolean secure = TransformUtil.getBooleanArg(args, "secure");
         Boolean encode = TransformUtil.getBooleanArg(args, "encode");
 
-        String webSiteId = TransformUtil.getStringArg(args, "webSiteId"); // SCIPIO: webSiteId
+        String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams); // SCIPIO: webSiteId
         
-        String prefix = TransformUtil.getStringArg(args, "prefix");
+        String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
         
         Object urlParams = DeepUnwrap.unwrap(params.get("params"));
         
@@ -116,7 +126,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             
             // SCIPIO: no null
             if (url != null) {
-                env.getOut().write(url);
+                env.getOut().write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
             }
         } else if (webSiteId != null || prefix != null) {
             // SCIPIO: New: Handle non-request cases
@@ -134,7 +144,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             
             // SCIPIO: no null
             if (url != null) {
-                env.getOut().write(url);
+                env.getOut().write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
             }
         }
     }

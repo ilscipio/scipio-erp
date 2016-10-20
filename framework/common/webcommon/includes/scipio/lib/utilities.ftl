@@ -164,11 +164,17 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 See also the function version, #makeOfbizUrl; #makeOfbizUrl should be used instead when passing URLs to other macros
 (rather than trying to capture the output of @ofbizUrl) and in other cases.
 
-WARN: HTML/Javascript escaping: This utility and all similar link-generating utilities 
+WARN: HTML/Javascript escaping: By default, this utility and all similar link-generating utilities 
     do NOT escape the URLs for HTML or javascript!
-    If the screen auto-html-escaping is insufficient (often relied upon in stock Ofbiz templates),
-    and you are not passing the URL to another Scipio macro, you may need to use #escapePart or #escapeFullUrl 
-    in addition to @ofbizUrl (in which case #makeOfbizUrl may be more appropriate).
+    If the screen auto-html-escaping is insufficient or inappropriate (often relied upon in stock Ofbiz templates, but often inappropriate),
+    and you are not passing the URL to another Scipio macro, you may need to use #escapeFullUrl 
+    in addition to @ofbizUrl - in which case #makeOfbizUrl may be more appropriate, or alternatively the {{{escapeAs}}} parameter
+    on @ofbizUrl.
+    In general, @ofbizUrl and sister macros were written to work in "pre-escaping" mode, where nested input
+    is pre-escaped in HTML or other language (most often by screen auto-html-escaping) - however, this poses serious
+    drawbacks. 
+    It is generally more better and more correct to post-escape using either {{{escapeFullUrl(makeOfbizUrl(...))}}}
+    or {{{<@ofbizUrl escapeAs='lang'.../>}}} or equivalents.
     
 NOTE: Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, by default,
     this macro's string parameters are currently not subject to auto-escaping bypass with #rawString (in other words, stock behavior is preserved);
@@ -200,12 +206,6 @@ secure to force a fullPath link. Links may still generate full-path secure links
 if not requested, however.
 
   * Parameters *
-    rawParams               = ((boolean), default: false) Whether macro should call #rawString on string parameters (mainly {{{uri}}})
-                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
-                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
-                              NOTE: 2016-10-19: For legacy reasons, the default for this for all URL generation ''macros'' 
-                                  defined in this file use {{{false}}} as default.
-                                  ''However'', URL generation ''functions'' (which are new in Scipio) use {{{true}}} by default.
     type                    = (intra-webapp|inter-webapp|, default: intra-webapp)
                               * intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
                               * inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
@@ -277,9 +277,31 @@ if not requested, however.
     encode                  = ((boolean), default: true) or string boolean repr
                               If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
                               (Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)
+    rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
+                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
+                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
+                              For legacy reasons, the default for all URL generation ''macros'' (which are derived from stock Ofbiz)
+                              defined in this file is {{{false}}} ''UNLESS'' the {{{escapeAs}}} parameter is set,
+                              in which case this is toggled to {{{true}}}.
+                              For URL generation ''functions'' (which are new in Scipio), the default is always {{{true}}}.
+    escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
+                              See #escapeFullUrl for possible values.
+                              When this is empty (default), the macro performs no escaping whatsoever.
+                              If this is set to a language, it toggles {{{rawParams}}} and {{{strict}}} to {{{true}}}, and doing
+                                <@ofbizUrl uri=someUri escapeAs='html'... />
+                              is basically equivalent to doing:
+                                <#assign urlContent><@ofbizUrl uri=someUri rawParams=true strict=true ... /></#assign>
+                                ${escapeFullUrl(urlContext, 'html')}
+                              Usually, if you use this shortcut, you should use the {{{uri}}} parameter instead of nested, to bypass screen auto-html-escaping;
+                              but note you may need to use #rawString manually if you are adding parameters to the uri.
+    strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
+                              Default is false unless {{{escapeAs}}} is non-empty, in which case this switches to {{{true}}}.
+                              NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
+                              NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
+                                  pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro ofbizUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="">
+<#macro ofbizUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="" rawParams="" escapeAs="" strict="">
 </#macro>
 -->
 
@@ -322,9 +344,13 @@ NOTE: This function's string arguments (uri) are coded to bypass screen auto-esc
     <#if !rawParams?has_content><#-- handles empty string case -->
       <#local rawParams = true>
     </#if>
+    <#local strict = args.strict!true>
+    <#if !strict?has_content><#-- handles empty string case -->
+      <#local strict = true>
+    </#if>
     <#local res><@ofbizUrl uri=(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
         extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
-        rawParams=rawParams/></#local>
+        rawParams=rawParams strict=strict/></#local>
   <#else>
     <#local res><@ofbizUrl uri=args rawParams=true /></#local>
   </#if>
@@ -477,12 +503,6 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
 NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
   * Parameters *
-    rawParams               = ((boolean), default: false) Whether macro should call #rawString on string parameters (especially {{{uri}}})
-                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
-                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
-                              NOTE: 2016-10-19: For legacy reasons, the default for this for all URL generation ''macros'' 
-                                  defined in this file use {{{false}}} as default.
-                                  ''However'', URL generation ''functions'' (which are a new construct in Scipio) use {{{true}}} by default.
     uri                     = (string) URI or path as parameter; alternative to nested
                               WARN: At current time (2016-10-14), this macro version of @ofbizContentUrl does NOT prevent automatic
                                   screen html escaping on the URI parameter, because too many templates use @ofbizUrl
@@ -506,10 +526,18 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
     urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the uri/nested
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
                               (New in Scipio)
-    strict                  = ((boolean), default: false) Whether to handle only raw strings or recognize pre-escaped strings
+    rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
+                              See @ofbizUrl for description.
+    escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
+                              See #escapeFullUrl for possible values.
+                              See @ofbizUrl for description.
+    strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
                               This macro must perform checks and concatenations on the passed uri; if pre-escaped
                               values are passed (such as HTML), this parameter must be false.
-                              When false, rurrently (2016-10-19), only HTML and Javascript pre-escaped strings are handled.
+                              When false, currently (2016-10-19), only HTML and Javascript pre-escaped strings are handled.
+                              If {{{escapeAs}}} is set to a specific language, the default for {{{strict}}} becomes {{{true}}}.
+                              NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
+                                  pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
                               WARN: Pre-escaped string handling is heuristic-like and only tries to detect encodings
                                   done by {{{UtilCodec}}} class and Freemarker built-ins.
                                   In some edge cases, the resulting Javascript may not necessarily be secure!
@@ -611,12 +639,6 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
 NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
   * Parameters *
-    rawParams               = ((boolean), default: false) Whether macro should call #rawString on string parameters
-                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
-                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
-                              NOTE: 2016-10-19: For legacy reasons, the default for this for all URL generation ''macros'' 
-                                  defined in this file use {{{false}}} as default.
-                                  ''However'', URL generation ''functions'' (which are a new construct in Scipio) use {{{true}}} by default.
     contentId               = (string) Content ID
                               (Stock Ofbiz parameter)
     viewContent             = (string) view content
@@ -624,6 +646,16 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
     urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the stored URL
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
                               (New in Scipio)
+    rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
+                              See @ofbizUrl for description.
+    escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
+                              See #escapeFullUrl for possible values.
+                              See @ofbizUrl for description.
+    strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
+                              NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
+                              NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
+                                  pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
+                              See @ofbizUrl for description.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentAltUrl ...>

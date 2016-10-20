@@ -41,6 +41,7 @@ import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -89,26 +90,18 @@ import freemarker.template.utility.DeepUnwrap;
 public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizCatalogUrlTransform.class.getName();
 
-    @SuppressWarnings("unchecked")
-    public String getStringArg(Map args, String key) {
-        Object o = args.get(key);
-        if (o instanceof SimpleScalar) {
-            return ((SimpleScalar) o).getAsString();
-        } else if (o instanceof StringModel) {
-            return ((StringModel) o).getAsString();
-        } else if (o instanceof SimpleNumber) {
-            return ((SimpleNumber) o).getAsNumber().toString();
-        } else if (o instanceof NumberModel) {
-            return ((NumberModel) o).getAsNumber().toString();
-        }
-        return null;
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, final Map args)
             throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
+        // SCIPIO: various changes here
+        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+        
         final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: changed from boolean to Boolean
         final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: changed from boolean to Boolean
         final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: new flag
@@ -130,20 +123,20 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                 try {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     BeanModel req = (BeanModel) env.getVariable("request");
-                    String previousCategoryId = getStringArg(args, "previousCategoryId");
-                    String productCategoryId = getStringArg(args, "productCategoryId");
-                    String productId = getStringArg(args, "productId");
+                    String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
+                    String productCategoryId = TransformUtil.getStringArg(args, "productCategoryId", rawParams);
+                    String productId = TransformUtil.getStringArg(args, "productId", rawParams);
                     String url = "";
                     
-                    String viewSize = getStringArg(args, "viewSize");
-                    String viewIndex = getStringArg(args, "viewIndex");
-                    String viewSort = getStringArg(args, "viewSort");
-                    String searchString = getStringArg(args, "searchString");
+                    String viewSize = TransformUtil.getStringArg(args, "viewSize", rawParams);
+                    String viewIndex = TransformUtil.getStringArg(args, "viewIndex", rawParams);
+                    String viewSort = TransformUtil.getStringArg(args, "viewSort", rawParams);
+                    String searchString = TransformUtil.getStringArg(args, "searchString", rawParams);
                     
                     // SCIPIO: webSiteId
-                    String webSiteId = getStringArg(args, "webSiteId");
+                    String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
                     
-                    String prefix = getStringArg(args, "prefix");
+                    String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
                     
                     Object urlParams = DeepUnwrap.unwrap((TemplateModel) args.get("params"));
                     
@@ -159,7 +152,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
 
                         // SCIPIO: no null
                         if (url != null) {
-                            out.write(url);
+                            out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }
                     } else if (webSiteId != null || prefix != null) {
                         Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
@@ -173,10 +166,10 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         
                         // SCIPIO: no null
                         if (url != null) {
-                            out.write(url);
+                            out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }
                     } else {
-                        out.write(buf.toString());
+                        out.write(TransformUtil.escapeGeneratedUrl(buf.toString(), escapeAs, strict, env));
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());

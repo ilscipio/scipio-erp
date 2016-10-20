@@ -36,6 +36,7 @@ import org.ofbiz.webapp.taglib.ContentUrlTag;
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -63,12 +64,16 @@ public class OfbizContentTransform implements TemplateTransformModel {
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) throws TemplateModelException {
         final StringBuilder buf = new StringBuilder();
-        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", false); // SCIPIO: new
-        final String imgSize = TransformUtil.getStringArg(args, "variant", null, false, rawParams);
-        final String uri = TransformUtil.getStringArg(args, "uri", null, false, rawParams); // SCIPIO: uri as alternative to nested
+        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+        
+        final String imgSize = TransformUtil.getStringArg(args, "variant", rawParams);
+        final String uri = TransformUtil.getStringArg(args, "uri", rawParams); // SCIPIO: uri as alternative to nested
         final Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode"); // SCIPIO: new
         final Object ctxPrefixObj = TransformUtil.getBooleanOrStringArg(args, "ctxPrefix", null, false, rawParams); // SCIPIO: new
-        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", false); // SCIPIO: new
         return new Writer(out) {
             @Override
             public void write(char cbuf[], int off, int len) {
@@ -93,7 +98,7 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     String ctxPrefix = getContentPathPrefix(ctxPrefixObj, rawParams, env); // SCIPIO: new
                     String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize, null, ctxPrefix, urlDecode, strict);
                             
-                    out.write(url);
+                    out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());
                 }

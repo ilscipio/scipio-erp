@@ -33,6 +33,7 @@ import org.ofbiz.webapp.ftl.OfbizContentTransform;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -77,9 +78,14 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                     BeanModel req = (BeanModel) env.getVariable("request");
                     BeanModel res = (BeanModel) env.getVariable("response");
                     if (req != null) {
-                        boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", false); // SCIPIO: new
-                        String contentId = TransformUtil.getStringArg(args, "contentId", null, false, rawParams);
-                        String viewContent = TransformUtil.getStringArg(args, "viewContent", null, false, rawParams);
+                        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+                        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+                        boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+                        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+                        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+                        
+                        String contentId = TransformUtil.getStringArg(args, "contentId", rawParams);
+                        String viewContent = TransformUtil.getStringArg(args, "viewContent", rawParams);
                         Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         HttpServletResponse response = null;
@@ -90,7 +96,7 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                         if (UtilValidate.isNotEmpty(contentId)) {
                             url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent, urlDecode);
                         }
-                        out.write(url);
+                        out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());

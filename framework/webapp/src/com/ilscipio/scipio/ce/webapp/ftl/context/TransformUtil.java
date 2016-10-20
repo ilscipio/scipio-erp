@@ -6,6 +6,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateBooleanModel;
@@ -125,6 +126,10 @@ public abstract class TransformUtil {
         return getStringArg(obj, defaultValue, false, false);
     }
     
+    public static String getStringArg(TemplateModel obj, boolean nonEscaping) throws TemplateModelException {
+        return getStringArg(obj, null, false, nonEscaping);
+    }
+    
     public static String getStringArg(TemplateModel obj) throws TemplateModelException {
         return getStringArg(obj, null, false, false);
     }
@@ -148,6 +153,10 @@ public abstract class TransformUtil {
     
     public static String getStringArg(Map<?, ?> args, String key, String defaultValue) throws TemplateModelException {
         return getStringArg(getModel(args, key), defaultValue, false, false);
+    }
+    
+    public static String getStringArg(Map<?, ?> args, String key, boolean nonEscaping) throws TemplateModelException {
+        return getStringArg(getModel(args, key), null, false, nonEscaping);
     }
     
     public static String getStringArg(Map<?, ?> args, String key) throws TemplateModelException {
@@ -203,5 +212,16 @@ public abstract class TransformUtil {
 
     public static TemplateModel getModel(Map<?, ?> args, String key) {
         return (TemplateModel) args.get(key);
+    }
+
+    /**
+     * Escapes a URL built by a transform such as ofbizUrl IF a language is specified.
+     * <p>
+     * WARN/FIXME?: 2016-10-19: THE STRICT BOOLEAN IS CURRENTLY IGNORED HERE BECAUSE THERE ARE TOO
+     * MANY ESCAPED AMPERSANDS THROUGHOUT ALL OF OFBIZ AND TEMPLATES.
+     */
+    public static String escapeGeneratedUrl(String value, String lang, boolean strict, Environment env) throws TemplateModelException {
+        //return TemplateFtlUtil.escapeFullUrl(value, lang, strict, env); // TODO/FIXME?
+        return TemplateFtlUtil.escapeFullUrl(value, lang, false, env);
     }
 }

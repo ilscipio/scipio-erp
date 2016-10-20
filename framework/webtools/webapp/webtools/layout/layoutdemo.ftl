@@ -1307,7 +1307,8 @@
   
   <@section title="Standard navigation URLs">
     <ul>
-      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
+      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
+      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
       <li><@ofbizUrl>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
       <li>${makeOfbizUrl("WebtoolsLayoutDemo?param1=val1&amp;param2=val2")}</li>
       <li><@ofbizUrl fullPath=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
@@ -1405,6 +1406,7 @@
     </em></p>
     <ul>
       <li>${escapePart(makeOfbizContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping - <strong>NOTE: this is the best way (post-escaping)</strong>, compared to others below that do pre-escaping)</em></li>
+      <li><@ofbizContentUrl uri=demoScreenContentUri escapeAs='html'/> <em>(no pre-escaping (rawString implicit), html post-escaping - this is equivalent to the previous, but slightly shorter.</em></li>
       <li>
         <#assign urlContent><@ofbizContentUrl strict=true>${rawString(demoScreenContentUri)}</@ofbizContentUrl></#assign>
         ${escapePart(urlContent, 'html')} <em>(no pre-escaping (rawString explicit, strict true explicit), html post-escaping - NOTE: This is a more verbose and clumsy version (but still correct and strict) of the previous, but technically valid)</em>

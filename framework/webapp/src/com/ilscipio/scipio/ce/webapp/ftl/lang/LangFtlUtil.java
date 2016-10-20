@@ -35,6 +35,7 @@ import freemarker.template.ObjectWrapperAndUnwrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
 import freemarker.template.Template;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
@@ -1726,5 +1727,9 @@ public abstract class LangFtlUtil {
             result = env.getGlobalVariable(name);
         }
         return result;
+    }
+    
+    public static TemplateBooleanModel toBooleanModel(boolean value, Environment env) throws TemplateModelException {
+        return value ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
     }
 }

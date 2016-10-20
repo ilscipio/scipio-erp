@@ -170,9 +170,10 @@ WARN: HTML/Javascript escaping: This utility and all similar link-generating uti
     and you are not passing the URL to another Scipio macro, you may need to use #escapePart or #escapeFullUrl 
     in addition to @ofbizUrl (in which case #makeOfbizUrl may be more appropriate).
     
-NOTE: Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, this macro's string
-    parameters are currently not subject to auto-escaping bypass with #rawString (in other words, stock behavior is preserved);
-    caller must currently call #rawString if needed. This may be rectified in the future (TODO?).
+NOTE: Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, by default,
+    this macro's string parameters are currently not subject to auto-escaping bypass with #rawString (in other words, stock behavior is preserved);
+    caller must currently call #rawString if needed, or specify the {{{rawParams}}} parameter to change. 
+    The default may be changed in the future (TODO?).
     HOWEVER, the ''function'' version of this macro, #makeOfbizUrl, automatically calls #rawString on its
     string parameters (uri), and can be exploited as an easier alternative to this macro in various cases.
 
@@ -199,6 +200,12 @@ secure to force a fullPath link. Links may still generate full-path secure links
 if not requested, however.
 
   * Parameters *
+    rawParams               = ((boolean), default: false) Whether macro should call #rawString on string parameters (mainly {{{uri}}})
+                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
+                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
+                              NOTE: 2016-10-19: For legacy reasons, the default for this for all URL generation ''macros'' 
+                                  defined in this file use {{{false}}} as default.
+                                  ''However'', URL generation ''functions'' (which are new in Scipio) use {{{true}}} by default.
     type                    = (intra-webapp|inter-webapp|, default: intra-webapp)
                               * intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
                               * inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
@@ -286,13 +293,17 @@ This is useful to prevent bloating templates with {{{<#assign...><@ofbizUrl.../>
 which is very frequent due to use of macros.
 
 NOTE: This function's string arguments (uri) are coded to bypass screen auto-escaping with #rawString,
-    as per standard Scipio macro behavior. This may be different from the macro version of this function (@ofbizUrl).
+    as per standard Scipio macro behavior.
+    This may be different from the macro version of this function (@ofbizUrl).
+    In other words, the @ofbizUrl parameter {{{rawParams}}} is {{{true}}} by default for this function
+    and similar functions.
     In general, this function version expects to deal with non-escaped values; however,
     for reasons of legacy support, pre-escaped parameter delimiters ({{{&amp;}}}) are handled
     automatically where possible.
 
   * Parameters *
     args                    = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
+                              NOTE: The {{{rawParams}}} default is {{{true}}}, unlike the macro version.
                               DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
                                   for functions, which would be unreadable here ({{{makeOfbizUrl("main", false, false, true, true...)}}})
                                   However majority of cases use only a URI so we can shortcut in that case.
@@ -306,11 +317,16 @@ NOTE: This function's string arguments (uri) are coded to bypass screen auto-esc
     @ofbizUrl
 -->
 <#function makeOfbizUrl args>
-  <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
-        extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
+  <#if isObjectType("map", args)><#-- ?is_hash doesn't work right with context var strings and hashes -->
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
+    <#local res><@ofbizUrl uri=(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
+        extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
+        rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=rawString(args) /></#local>
+    <#local res><@ofbizUrl uri=args rawParams=true /></#local>
   </#if>
   <#return res>
 </#function>
@@ -334,9 +350,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
   * Related *                           
     @ofbizUrl
 -->
-<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false>
+<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="">
   <@ofbizUrl uri=uri absPath=absPath interWebapp=false controller=controller 
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -361,11 +377,16 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
-        extLoginKey=(args.extLoginKey!false) fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
+    <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
+        extLoginKey=(args.extLoginKey!false) fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
+        rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=rawString(args) absPath=false interWebapp=false controller=false 
-        extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
+    <#local res><@ofbizUrl uri=args absPath=false interWebapp=false controller=false 
+        extLoginKey=false fullPath="" secure="" encode="" rawParams=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -390,9 +411,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
   * Related * 
     @ofbizUrl
 -->
-<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="">
+<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="">
   <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -421,11 +442,16 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 -->
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
-        controller=(args.controller!"") extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
+    <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
+        controller=(args.controller!"") extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
+        rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=rawString(args) absPath="" interWebapp=true webSiteId=webSiteId
-        controller="" extLoginKey="" fullPath="" secure="" encode="" /></#local>
+    <#local res><@ofbizUrl uri=args absPath="" interWebapp=true webSiteId=webSiteId
+        controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -451,6 +477,12 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
 NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
   * Parameters *
+    rawParams               = ((boolean), default: false) Whether macro should call #rawString on string parameters (especially {{{uri}}})
+                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
+                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
+                              NOTE: 2016-10-19: For legacy reasons, the default for this for all URL generation ''macros'' 
+                                  defined in this file use {{{false}}} as default.
+                                  ''However'', URL generation ''functions'' (which are a new construct in Scipio) use {{{true}}} by default.
     uri                     = (string) URI or path as parameter; alternative to nested
                               WARN: At current time (2016-10-14), this macro version of @ofbizContentUrl does NOT prevent automatic
                                   screen html escaping on the URI parameter, because too many templates use @ofbizUrl
@@ -470,11 +502,6 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
                               it produces an absolute URL (prefixed with "http:", "https:", or "//").
                               If string, it is used as given.
                               If boolean: if false, no extra prefix; if true, the context variable
-                              NOTE: As an exception, this parameter is automatically passed
-                                  through #rawString; so this prefix should never be passed an unsafe value
-                                  unless you manually captured and escaped the output (in which case
-                                  #makeOfbizContentUrl should be used instead anyway).
-                                  In general, the prefixes for content URLs should never be unsafe values.
                               (New in Scipio)
     urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the uri/nested
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
@@ -510,6 +537,8 @@ Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl m
 NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 
   * Parameters *
+    rawParams               = ((boolean), default: true) Whether macro should call #rawString on string parameters (mainly {{{uri}}})
+                              NOTE: Unlike @ofbizContentUrl, the default here is true.
     strict                  = ((boolean), default: true) Whether to handle only raw strings or recognize pre-escaped strings
                               NOTE: Unlike @ofbizContentUrl, the default here is true, such that, by default, this
                                   function is meant to operate on raw unescaped strings only.
@@ -520,15 +549,20 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 -->
 <#function makeOfbizContentUrl args variant="">
   <#if isObjectType("map", args)>
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
     <#local strict = args.strict!true>
-    <#if !strict?has_content><#-- case to detect if empty string was passed -->
+    <#if !strict?has_content><#-- handles empty string case -->
       <#local strict = true>
     </#if>
     <#-- DEV NOTE: no rawString around ctxPrefix because already done by the macro (exceptionally) -->
-    <#local res><@ofbizContentUrl uri=rawString(args.uri!"") variant=rawString(args.variant!"") 
-        ctxPrefix=(args.ctxPrefix!false) urlDecode=(args.urlDecode!"") strict=strict/></#local>
+    <#local res><@ofbizContentUrl uri=(args.uri!"") variant=(args.variant!"") 
+        ctxPrefix=(args.ctxPrefix!false) urlDecode=(args.urlDecode!"") 
+        strict=strict rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizContentUrl uri=rawString(args) variant=variant strict=true /></#local>
+    <#local res><@ofbizContentUrl uri=args variant=variant strict=true rawParams=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -551,7 +585,7 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
   <#if isObjectType("map", args)>
     <#return makeOfbizContentUrl({"ctxPrefix":true} + args) />
   <#else>
-    <#return makeOfbizContentUrl({"ctxPrefix":true, "uri":args, "variant":variant}) />
+    <#return makeOfbizContentUrl({"uri":args, "variant":variant, "ctxPrefix":true}) />
   </#if>
 </#function>
 
@@ -577,6 +611,12 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
 NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
   * Parameters *
+    rawParams               = ((boolean), default: false) Whether macro should call #rawString on string parameters
+                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
+                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
+                              NOTE: 2016-10-19: For legacy reasons, the default for this for all URL generation ''macros'' 
+                                  defined in this file use {{{false}}} as default.
+                                  ''However'', URL generation ''functions'' (which are a new construct in Scipio) use {{{true}}} by default.
     contentId               = (string) Content ID
                               (Stock Ofbiz parameter)
     viewContent             = (string) view content

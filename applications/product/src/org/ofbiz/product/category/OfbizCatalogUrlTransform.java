@@ -32,6 +32,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.StringModel;
@@ -86,12 +88,6 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
         }
         return null;
     }
-
-    // SCIPIO: Added and modified to support Boolean
-    @SuppressWarnings("unchecked")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // SCIPIO: NOTE: can now return null
-        return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
-    }
     
     @Override
     @SuppressWarnings("unchecked")
@@ -99,9 +95,9 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
         final StringBuilder buf = new StringBuilder();
         
         // SCIPIO: new flags
-        final Boolean fullPath = checkBooleanArg(args, "fullPath", null);
-        final Boolean secure = checkBooleanArg(args, "secure", null);
-        final Boolean encode = checkBooleanArg(args, "encode", null);
+        final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath");
+        final Boolean secure = TransformUtil.getBooleanArg(args, "secure");
+        final Boolean encode = TransformUtil.getBooleanArg(args, "encode");
         
         return new Writer(out) {
 

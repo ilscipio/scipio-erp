@@ -32,6 +32,8 @@ import org.ofbiz.content.content.ContentUrlFilter;
 import org.ofbiz.webapp.ftl.OfbizContentTransform;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.NumberModel;
@@ -50,11 +52,6 @@ import freemarker.template.TemplateTransformModel;
  */
 public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
     public final static String module = OfbizContentAltUrlTransforms.class.getName();
-    @SuppressWarnings("unchecked")
-    public static String getStringArg(Map args, String key) {
-        // SCIPIO: delegate this, make static
-        return OfbizContentTransform.getStringArg(args, key);
-    }
     
     @Override
     @SuppressWarnings("unchecked")
@@ -80,9 +77,10 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                     BeanModel req = (BeanModel) env.getVariable("request");
                     BeanModel res = (BeanModel) env.getVariable("response");
                     if (req != null) {
-                        String contentId = getStringArg(args, "contentId");
-                        String viewContent = getStringArg(args, "viewContent");
-                        Boolean urlDecode = OfbizUrlTransform.checkBooleanArg(args, "urlDecode", null);
+                        boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", false); // SCIPIO: new
+                        String contentId = TransformUtil.getStringArg(args, "contentId", null, false, rawParams);
+                        String viewContent = TransformUtil.getStringArg(args, "viewContent", null, false, rawParams);
+                        Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         HttpServletResponse response = null;
                         if (res != null) {

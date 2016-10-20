@@ -32,6 +32,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.TemplateDirectiveBody;
@@ -86,14 +88,13 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
         BeanModel req = (BeanModel) env.getVariable("request");
 
         // SCIPIO: new flags
-        final Boolean fullPath = checkBooleanArg(args, "fullPath", null);
-        final Boolean secure = checkBooleanArg(args, "secure", null);
-        final Boolean encode = checkBooleanArg(args, "encode", null);
+        Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath");
+        Boolean secure = TransformUtil.getBooleanArg(args, "secure");
+        Boolean encode = TransformUtil.getBooleanArg(args, "encode");
+
+        String webSiteId = TransformUtil.getStringArg(args, "webSiteId"); // SCIPIO: webSiteId
         
-        // SCIPIO: webSiteId
-        String webSiteId = checkStringArg(args, "webSiteId", null);
-        
-        String prefix = checkStringArg(args, "prefix", null);
+        String prefix = TransformUtil.getStringArg(args, "prefix");
         
         Object urlParams = DeepUnwrap.unwrap(params.get("params"));
         
@@ -136,17 +137,5 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
                 env.getOut().write(url);
             }
         }
-    }
-    
-    // SCIPIO: new
-    @SuppressWarnings("unchecked")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // SCIPIO: NOTE: can now return null
-        return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
-    }
-    
-    // SCIPIO: new
-    @SuppressWarnings("unchecked")
-    private static String checkStringArg(Map args, String key, String defaultValue) { // SCIPIO: NOTE: can now return null
-        return OfbizUrlTransform.checkStringArg(args, key, defaultValue);
     }
 }

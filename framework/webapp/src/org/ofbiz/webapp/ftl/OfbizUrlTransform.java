@@ -36,6 +36,7 @@ import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
@@ -65,99 +66,23 @@ public class OfbizUrlTransform implements TemplateTransformModel {
 
     public final static String module = OfbizUrlTransform.class.getName();
 
-    @SuppressWarnings("rawtypes")
-    public static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // SCIPIO: NOTE: can now return null
-        Object o = args.get(key);
-        // SCIPIO: NOTE (2016-02): we now support real booleans. 
-        // In addition, SimpleScalar was a bad type to use.
-        //if (o instanceof SimpleScalar) {
-        //    SimpleScalar s = (SimpleScalar) o;
-        //    return "true".equalsIgnoreCase(s.getAsString());
-        //}
-        if (o instanceof TemplateBooleanModel) {
-            try {
-                return ((TemplateBooleanModel) o).getAsBoolean();
-            } catch (TemplateModelException e) {
-                Debug.logError(e, "Could not get boolean arg for ofbizUrl (as boolean model)", module);
-            }
-        }
-        else if (o instanceof TemplateScalarModel) {
-            TemplateScalarModel s = (TemplateScalarModel) o;
-            try {
-                String val = s.getAsString();
-                // SCIPIO: empty check is desirable and makes it so caller can request default by specifying ""
-                if (!val.isEmpty()) {
-                    return "true".equalsIgnoreCase(s.getAsString());
-                }
-            } catch (TemplateModelException e) {
-                Debug.logError(e, "Could not get boolean arg for ofbizUrl (from string model)", module);
-            }
-        }
-        return defaultValue;
-    }
-
-    // SCIPIO: new (wrapper)
-    public static String checkStringArg(Map args, String key, String defaultValue) {
-        return getStringArg(args, key, defaultValue);
-    }
-    
-    private static String getStringArg(Map args, String key, String defaultValue) {
-        Object o = args.get(key);
-        if (o instanceof TemplateScalarModel) {
-            TemplateScalarModel s = (TemplateScalarModel) o;
-            try {
-                // SCIPIO: can't enable this yet... too many templates are misusing encoding currently
-                //return LangFtlUtil.getAsStringNonEscaping(s);
-                return s.getAsString();
-            } catch (TemplateModelException e) {
-                Debug.logError(e, "Invalid uri arg for ofbizUrl", module);
-            }
-        }
-        return defaultValue;
-    }
-
-    
-    private static String convertToString(Object o) {
-        String result = "";
-        if (o != null) {
-            if (Debug.verboseOn())
-                Debug.logVerbose("Arg Object : " + o.getClass().getName(), module);
-            if (o instanceof TemplateScalarModel) {
-                TemplateScalarModel s = (TemplateScalarModel) o;
-                try {
-                    // SCIPIO: FIXME: This should probably bypass auto-escaping,
-                    // but currently we cannot do this because in some cases there
-                    // may be security risks in existing templates, largely because 
-                    // HTML and javascript escaping are not really done properly.
-                    // This applies only to the "uri" argument (the others would be mostly safe)
-                    //result = LangFtlUtil.getAsStringNonEscaping(s);
-                    result = s.getAsString();
-                } catch (TemplateModelException e) {
-                    Debug.logError(e, "Template Exception", module);
-                }
-            } else {
-                result = o.toString();
-            }
-        }
-        return result;
-    }
-
     @Override
     @SuppressWarnings("rawtypes")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, final Map args) throws TemplateModelException {
         final StringBuilder buf = new StringBuilder();
-        final Boolean fullPath = checkBooleanArg(args, "fullPath", null); // SCIPIO: modified to remove default; leave centralized
-        final Boolean secure = checkBooleanArg(args, "secure", null); // SCIPIO: modified to remove default; leave centralized
-        final Boolean encode = checkBooleanArg(args, "encode", null); // SCIPIO: modified to remove default; leave centralized
-        final String webSiteId = convertToString(args.get("webSiteId"));
+        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", false); // SCIPIO: new
+        final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: modified to remove default; leave centralized
+        final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
+        final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: modified to remove default; leave centralized
+        final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", null, false, rawParams);
         // SCIPIO: We now support a "uri" arg as alternative to #nested
-        final String uriArg = getStringArg(args, "uri", null);
+        final String uriArg = TransformUtil.getStringArg(args, "uri", null, false, rawParams);
         // SCIPIO: more new parameters
-        final String type = getStringArg(args, "type", null);
-        final Boolean absPath = checkBooleanArg(args, "absPath", null); 
-        final Boolean interWebapp = checkBooleanArg(args, "interWebapp", null); // Alias for type="inter-webapp"
-        final Boolean controller = checkBooleanArg(args, "controller", null);
-        final boolean extLoginKey = checkBooleanArg(args, "extLoginKey", false);
+        final String type = TransformUtil.getStringArg(args, "type", null, false, rawParams);
+        final Boolean absPath = TransformUtil.getBooleanArg(args, "absPath"); 
+        final Boolean interWebapp = TransformUtil.getBooleanArg(args, "interWebapp"); // Alias for type="inter-webapp"
+        final Boolean controller = TransformUtil.getBooleanArg(args, "controller");
+        final boolean extLoginKey = TransformUtil.getBooleanArg(args, "extLoginKey", false);
         
         return new Writer(out) {
 
@@ -171,7 +96,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     // Handle prefix.
-                    String prefixString = convertToString(env.getVariable("urlPrefix"));
+                    String prefixString = TransformUtil.getStringArg(args, "urlPrefix", "");
                     if (!prefixString.isEmpty()) {
                         String bufString = buf.toString();
                         boolean prefixSlash = prefixString.endsWith("/");
@@ -264,5 +189,35 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                 buf.append(cbuf, off, len);
             }
         };
+    }
+    
+    /**
+     * Gets boolean arg.
+     * <p>
+     * @deprecated SCIPIO: use {@link com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil#getBooleanArg} instead.
+     */
+    @Deprecated
+    public static Boolean checkBooleanArg(Map<?, ?> args, String key, Boolean defaultValue) {
+        try {
+            return TransformUtil.getBooleanArg(args, key, defaultValue);
+        } catch (TemplateModelException e) {
+            Debug.logError(e, module);
+            return defaultValue;
+        }
+    }
+    
+    /**
+     * Gets string arg.
+     * <p>
+     * @deprecated SCIPIO: use {@link com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil#getStringArg} instead.
+     */
+    @Deprecated
+    public static String checkStringArg(Map<?, ?> args, String key, String defaultValue) {
+        try {
+            return TransformUtil.getStringArg(args, key, defaultValue);
+        } catch (TemplateModelException e) {
+            Debug.logError(e, module);
+            return defaultValue;
+        }
     }
 }

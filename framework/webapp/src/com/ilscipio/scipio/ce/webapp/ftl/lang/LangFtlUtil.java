@@ -1414,6 +1414,19 @@ public abstract class LangFtlUtil {
     }
     
     /**
+     * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels.
+     * 
+     * @see org.ofbiz.webapp.ftl.EscapingModel
+     */
+    public static String getAsString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
+        if (nonEscaping && (model instanceof EscapingModel)) {
+            return (String) ((EscapingModel) model).getWrappedObject();
+        } else {
+            return model.getAsString();
+        }
+    }
+    
+    /**
      * Generic rewrapObject abstracted implementation.
      * <p>
      * Rewraps objects with different wrappers.

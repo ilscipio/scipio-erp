@@ -87,6 +87,16 @@ public class FreeMarkerWorker {
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
     
     /**
+     * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
+     */
+    private static final ObjectWrapper defaultOfbizSimpleMapWrapper;
+    static {
+        BeansWrapperBuilder builder = new BeansWrapperBuilder(version);
+        builder.setSimpleMapWrapper(true);
+        defaultOfbizSimpleMapWrapper = builder.build();
+    }
+    
+    /**
      * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types.
      */
     private static final ObjectWrapper defaultSimpleTypeWrapper;
@@ -114,6 +124,13 @@ public class FreeMarkerWorker {
     
     public static BeansWrapper getDefaultOfbizWrapper() {
         return defaultOfbizWrapper;
+    }
+    
+    /**
+     * SCIPIO: Get version of getDefaultOfbizWrapper that is the same but produces simple maps.
+     */
+    public static ObjectWrapper getDefaultOfbizSimpleMapWrapper() {
+        return defaultOfbizSimpleMapWrapper;
     }
     
     /**

@@ -74,7 +74,7 @@ import freemarker.template.utility.DeepUnwrap;
  * <p>
  * It is also now possible to specify a string of parameters (with or without starting "?") using:
  * <ul>
- * <li>params</li>
+ * <li>params (TODO: support map of parameters)</li>
  * </ul>
  */
 public class OfbizCatalogUrlTransform implements TemplateTransformModel {
@@ -124,7 +124,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                     
                     String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
                     
-                    Object urlParams = DeepUnwrap.unwrap((TemplateModel) args.get("params"));
+                    Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
                     
                     if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();

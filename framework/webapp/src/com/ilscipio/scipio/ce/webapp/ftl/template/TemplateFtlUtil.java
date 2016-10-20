@@ -29,8 +29,10 @@ import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.ext.beans.BooleanModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -51,8 +53,10 @@ public abstract class TemplateFtlUtil {
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
 
-    private static Template escapePart2ArgFunctionCall = null;
-    private static Template escapePart3ArgFunctionCall = null;
+    private static volatile Template escapePart2ArgFunctionCall = null;
+    private static volatile Template escapePart3ArgFunctionCall = null;
+    private static volatile Template escapeFullUrl2ArgFunctionCall = null;
+    private static volatile Template escapeFullUrl3ArgFunctionCall = null;
     
     /**
      * Keep this private, implied unmodifiable.
@@ -540,4 +544,59 @@ public abstract class TemplateFtlUtil {
         }
         return (TemplateScalarModel) LangFtlUtil.execFunction(escapePart3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
     }
+    
+    public static String escapePart(String value, String lang, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        return execEscapePartFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+    }
+    
+    public static String escapePart(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        if (strict != null) {
+            return execEscapePartFunction(new SimpleScalar(value), new SimpleScalar(lang), 
+                    strict ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE, env).getAsString();
+        } else {
+            return execEscapePartFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+        }
+    }
+    
+    public static TemplateScalarModel execEscapeFullUrlFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
+        if (escapeFullUrl2ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapeFullUrl2ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeFullUrl", 2, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeFullUrl2ArgFunctionCall, new TemplateModel[] { arg1, arg2}, env);
+    }
+
+    public static TemplateScalarModel execEscapeFullUrlFunction(TemplateModel arg1, TemplateModel arg2, TemplateModel arg3, Environment env) throws TemplateModelException {
+        if (escapeFullUrl3ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapeFullUrl3ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeFullUrl", 3, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeFullUrl3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
+    }
+    
+    public static String escapeFullUrl(String value, String lang, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+    }
+    
+    public static String escapeFullUrl(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        if (strict != null) {
+            return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), 
+                    strict ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE, env).getAsString();
+        } else {
+            return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+        }
+    }
+
 }

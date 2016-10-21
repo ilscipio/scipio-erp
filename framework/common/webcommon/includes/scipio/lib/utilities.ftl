@@ -166,12 +166,12 @@ See also the function version, #makeOfbizUrl; #makeOfbizUrl should be used inste
 
 WARN: HTML/Javascript escaping: By default, this utility and all similar link-generating utilities 
     do NOT escape the URLs for HTML or javascript!
-    If the screen auto-html-escaping is insufficient or inappropriate (often relied upon in stock Ofbiz templates, but often inappropriate),
+    If the screen html auto-escaping is insufficient or inappropriate (often relied upon in stock Ofbiz templates, but often inappropriate),
     and you are not passing the URL to another Scipio macro, you may need to use #escapeFullUrl 
     in addition to @ofbizUrl - in which case #makeOfbizUrl may be more appropriate, or alternatively the {{{escapeAs}}} parameter
     on @ofbizUrl.
     In general, @ofbizUrl and sister macros were written to work in "pre-escaping" mode, where nested input
-    is pre-escaped in HTML or other language (most often by screen auto-html-escaping) - however, this poses serious
+    is pre-escaped in HTML or other language (most often by screen html auto-escaping) - however, this poses serious
     drawbacks. 
     It is generally more better and more correct to post-escape using either {{{escapeFullUrl(makeOfbizUrl(...))}}}
     or {{{<@ofbizUrl escapeAs='lang'.../>}}} or equivalents.
@@ -278,8 +278,8 @@ if not requested, however.
                               If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
                               (Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)
     rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
-                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen auto-html-escaping.
-                              If false, strings params are subject to screen auto-html-escaping and {{{uri}}} behaves more like nested.
+                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen html auto-escaping.
+                              If false, strings params are subject to screen html auto-escaping and {{{uri}}} behaves more like nested.
                               For legacy reasons, the default for all URL generation ''macros'' (which are derived from stock Ofbiz)
                               defined in this file is {{{false}}} ''UNLESS'' the {{{escapeAs}}} parameter is set,
                               in which case this is toggled to {{{true}}}.
@@ -292,7 +292,7 @@ if not requested, however.
                               is basically equivalent to doing:
                                 <#assign urlContent><@ofbizUrl uri=someUri rawParams=true strict=true ... /></#assign>
                                 ${escapeFullUrl(urlContext, 'html')}
-                              Usually, if you use this shortcut, you should use the {{{uri}}} parameter instead of nested, to bypass screen auto-html-escaping;
+                              Usually, if you use this shortcut, you should use the {{{uri}}} parameter instead of nested, to bypass screen html auto-escaping;
                               but note you may need to use #rawString manually if you are adding parameters to the uri.
     strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
                               Default is false unless {{{escapeAs}}} is non-empty, in which case this switches to {{{true}}}.
@@ -1655,23 +1655,35 @@ NOTES:
 
 <#-- 
 *************
-* toRawString
+* rawString
 ************
-Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
+Returns the given value, bypassing the screen renderer html auto-escaping, as a simple Freemarker string.
 
 This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
+This can be seen as the reverse operation of #rewrapStringStd.
+
 NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
 
+NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}}}-ed and then
+    concatenated together.
+
   * Parameters *
-    value                   = ((string), required) The value to return without screen escaping
-    
+    value...                    = ((string), required) Value(s) to return without/bypassing screen renderer html auto-escaping
+                                  If more than one parameter is passed to #rawString, 
+                                  each is applied the logical #rawString bypass, and
+                                  the result is a concatenation of all the parameters.
+                                  So
+                                    rawString(var1, " ", var2)
+                                  is equivalent to
+                                    rawString(var1) + " " + rawString(var2)
+                                  except the former is more efficient.
   * Related *
-    #rawString
+    #rewrapStringStd                             
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function toRawString value>
+<#function rawString value...>
   <#- ?string turns it into a basic FTL string ->
   <#return StringUtil.wrapString(value)?string> 
 </#function>
@@ -1679,23 +1691,13 @@ NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings us
 
 <#-- 
 *************
-* rawString
+* toRawString
 ************
 Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
-Alias for #toRawString (common operation).
-
-This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
-the resulting type into a simple Freemarker string.
-
-NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
-
-  * Parameters *
-    value                       = ((string), required) The value to return without screen escaping
+Alias for #rawString.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rawString value>
-  <#- ?string turns it into a basic FTL string ->
-  <#return StringUtil.wrapString(value)?string> 
+<#function toRawString value...>
 </#function>
 -->
 
@@ -1703,10 +1705,10 @@ NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings us
 *************
 * toStringIfNot
 ************
-Returns the given value as a string but only if not already a string
+Returns the given value as a string but only if not already a string.
 
-This intentionally skips calling ?string on existing strings to prevent auto-escaping,
-but still result will be a string.
+This intentionally skips calling ?string on existing strings to prevent auto-escaping.
+Result will always be a string (or something implementing {{{TemplateScalarModel}}}).
 
 WARN: this works using FTL's primitive ?is_string test, which may return TRUE for complex 
     objects that aren't really strings.
@@ -1748,38 +1750,109 @@ WARN: This is NOT fully implemented and currently does the same as #rawString.
 *************
 * rewrapObject
 ************
-Takes a object and, if applicable, rewraps it with a different Freemarker wrapper.
-Used to convert complex BeansWrapper objects to simple maps and auto-HTML-escaping wrappers to non-escaping
-wrappers, either shallow or deep.
+Re-wraps a value using the Freemarker ObjectWrapper in the current environment (by default)
+or a different wrapper, such as one producing simple type adapters, simple types as copies,
+and raw strings (without screen html auto-escaping).
 
-This tries to avoid rewrapping unless forced by the mode or the input map.
+By default (using current wrapper and default mode), this will rewrap a value to a state as if it had just
+come out of the screen's data model. For strings, in a typical rendering, this can be seen as the reverse
+operation of #rawString, using simply {{{rewrapObject(someRawString)}}}. 
+In this default mode, the value will ''always'' be rewrapped, which is the safest mode (but suboptimal).
 
-WARN: Currently this only works for maps!
+The function can remove the html auto-escaping behavior of entire maps coming from the data model.
+Simply doing {{{rewrapObject(someScreenMap, 'raw')}}} or {{{rewrapObject(someScreenMap, 'raw-simple')}}} (to
+further simplify the map for iteration).
 
-TODO: Lists, strings, etc.
+Using {{{wrapper}}} and {{{mode}}} parameters, different object wrappers such as simple-type-producing
+ones can be used, and some unnecessary rewrapping can be avoided.
+
+NOTE: 2016-10-20: This method was completely revamped, such that the default behavior is flipped
+    and behaves more predictably.
+    
+NOTE: 2016-10-20: The "simple*" current wrapper derivatives currently only handle maps.
+    If you are required to use simple or copies for other types of containers, you may
+    have to use "basic*" in the meantime (TODO), or if raw values are acceptable,
+    the "raw-simple*" types do handle non-maps.
+    
+NOTE: 2016-10-20: Currently only supports "always" (deep) rewrapping mode; ideally need a "needed" and/or "fast"
+    mode is needed to prevent needless container copies (TODO).
+    So currently this method is very slow for SimpleHash and similar types, forces copies. 
+    However optimization of this requires many assumptions and risks.
+    In non-deep cases, for maps, you may also use #toSimpleMap instead, which is more constrained.
+    
 
   * Parameters *
     object                  = ((object), required) The source object
-    mode                    = (simple|simple-raw-deep|simple-force|simple-raw-deep-force|simple-copy|simple-raw-deep-copy|simple-force-copy|simple-raw-deep-force-copy, default: simple) Rewrapping mode and target wrapper type
-                              The keywords mean the following:
-                              * {{{simple}}}: convert "complex" BeansWrapper maps to simple adapter maps (that have no extra unwanted keys),
-                                but only if they are not already simple and the other options do not force it.
-                              * {{{raw}}}: the target wrapper should be free of HTML auto-escaping
-                                WARN: Currently, this forces a performance-intensive unwrap operation in many cases,
-                                    because Freemarker does not allow checking which wrapper an object is currently using.
-                              * {{{deep}}}: the wrapper select should apply to any children the object may have
-                                WARN: Currently, this forces a performance-intensive deep unwrap operation in many cases,
-                                    because Freemarker does not allow checking which wrapper an object is currently using.
-                              * {{{force}}}: advanced option: this will force re-wrapping even if the target already appears adequate.
-                              * {{{copy}}}: requests a copy operation where possible. The copy operation will be slow, but
-                                it may make the resulting type faster.
-                              NOTE: Only the listed combinations are supported.
-                              WARN: {{{simple-raw-deep}}} uses a heuristic to avoid rewrapping simple FTL hashes. It is NOT
-                                  accurate. If problems arise, use {{{simple-raw-deep-force}}} instead.
-                              TODO?: {{{simple-deep}}} may be desirable but currently not supported.
+    wrapper                 = (current|complex-default|complex-extended|simple|simple-copy|..., default: current) Name/type of wrapper to use
+                              General values (abstracted):
+                              * {{{current}}}: the current wrapper
+                                In Scipio, this is usually {{{complex-extended}}}, though not guaranteed.
+                              Current ObjectWrapper derivatives (abstracted):
+                              * {{{raw}}}: derivative of current wrapper that performs NO auto html-escaping
+                                It does not simplify the collections in any other way.
+                              * {{{simple-adapter}}}: derivative of current wrapper but - if map - generates a simple map adapter (SimpleMapModel or DefaultMapAdapter)
+                                WARN: 2016-10-20: Only PARTIALLY implemented, only handles maps.
+                              * {{{simple-copy}}}: derivative of current wrapper - but - if map - generates a simple map copy (SimpleHash)
+                                WARN: 2016-10-20: Only PARTIALLY implemented, only handles maps.
+                              * {{{simple}}}: will use {{{simple-adapter}}} or {{{simple-copy}}}, whichever appears less costly
+                                WARN: 2016-10-20: Only PARTIALLY implemented, only handles maps.
+                                NOTE: 2016-10-20: selection optimization logic not fully implemented; currently makes adapters.
+                              * {{{raw-simple-adapter}}}: same as {{{simple-adapter}}} but performs NO auto html-escaping
+                                Works on any collections.
+                              * {{{raw-simple-copy}}}: same as {{{simple-copy}}} but performs NO auto html-escaping
+                                Works on any collections.
+                              * {{{raw-simple}}}: same as {{{simple}}} but performs NO auto html-escaping
+                                Works on any collections.
+                                NOTE: 2016-10-20: selection optimization logic not fully implemented for this; currently makes adapters.
+                              NOTE: 2016-10-20: all these "simple" types currently only operate on maps.
+                                  Lists are usually not as meaningful because the BeansWrapper list type 
+                                  works without any issues.
+                              Specific ObjectWrappers (advanced usage - poor abstraction):
+                              * {{{complex-default}}}: basic BeansWrapper from Freemarker, the default one kept in FreeMarkerWorker; performs NO auto html-escaping
+                                Produces complex maps that double as beans.
+                              * {{{complex-default-simplemap}}}: Version of {{{complex-default}}} that produces simple maps (SimpleMapAdapter).
+                              * {{{complex-extended}}}: extended BeansWrapper used in most rendering,
+                                and that (currently, 2016-10-20) implements screen html auto-escaping.
+                                the function will try to determine the escaping language needed (usually html).
+                                Produces complex maps that double as beans.
+                              * {{{complex-extended-simplemap}}}: Version of {{{complex-extended}}} that produces simple maps (SimpleMapAdapter).
+                              * {{{basic-adapter}}}: The Freemarker DefaultObjectWrapper, with adapters enabled; performs NO auto html-escaping
+                              * {{{basic-copy}}}: The Freemarker DefaultObjectWrapper, with adapters disabled, forcing object copies; performs NO auto html-escaping
+                                NOTE: Copies are slow to produce, but faster to access afterward, compared to adapters.
+                              * {{{basic}}}: same as either {{{basic-adapter}}} or {{{basic-copy}}}, at function's discretion (currently prefers adapters)
+    mode                    = (always-deep|, default: always-deep) Rewrapping mode
+                              Values:
+                              * {{{always-deep}}}: force re-wrapping even if target appears adequate, including any
+                                and all children - this the safest and most reliable, albeit slowest.
+                                WORKS FOR: any value and wrapper type (as long as the value is a TemplateModel properly recognized by
+                                Freemarker's DeepUnwrap function)
+                              NOTE: For optimization reasons, in the future, the default value may be changed (to something other than "always"),
+                                  to something better optimized, but the result will not change. If you absolutely count on the "always" strict
+                                  behavior (for some reason), you should pass it explicitly, but in most cases you
+                                  should not specify it or you should pass explicit empty.
+                              TODO: add support for always (non-deep), needed, needed-deep and some "fast"/dangerous variants
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rewrapObject object mode="simple">
+<#function rewrapObject object mode="">
+</#function>
+-->
+
+<#-- 
+*************
+* rewrapString
+************
+Re-wraps a string using the Freemarker ObjectWrapper in the current environment (by default)
+or a different ObjectWrapper, such as one producing simple adapters or simple types.
+Alias for #rewrapObject but expected to receive only strings.
+
+With default wrapper and mode, this can be seen as the reverse operation of #rawString, or re-enabling
+screen renderer html auto-escaping (if enabled) for a specific value.
+
+  * Related *
+    #rewrapObject
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function rewrapString object mode="">
 </#function>
 -->
 
@@ -1787,17 +1860,15 @@ TODO: Lists, strings, etc.
 *************
 * rewrapMap
 ************
-Takes a map and, if applicable, rewraps it with a different wrapper.
-Used to convert complex BeansWrapper objets to simple maps and auto-HTML-escaping wrappers to non-escaping
-wrappers, either shallow or deep.
-
-Alias for #rewrapObject.
+Re-wraps a map using the Freemarker ObjectWrapper in the current environment (by default)
+or a different ObjectWrapper, such as one producing simple adapters or simple types.
+Alias for #rewrapObject but expected to receive only maps.
 
   * Related *
-    #rewrapMap
+    #rewrapObject
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rewrapMap object mode="simple">
+<#function rewrapMap object mode="">
 </#function>
 -->
 
@@ -1806,14 +1877,16 @@ Alias for #rewrapObject.
 * toSimpleMap
 ************
 Takes a bean-wrapped map and switches it to a simple map adapter instead, without performing
-any copies. Alias for #rewrapMap(object, "simple").
+any copies. 
+
+This is similar to {{{#rewrapObject}}} except 
 
 If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.
 
 NOTE: This only changes the complexity of the map; it does NOT prevent auto-escaping. In fact, if
     called on certain types of unescaped complex maps, this function may cause auto-escaping to return, which
     is why its behavior is to leave maps alone unless they are complex bean maps.
-    Calling ?keys on this map may give escaped keys; use #mapKeys or #rewrapMap with args (object, "simple-raw").
+    Calling {{{?keys}}} on this map may give escaped keys; use #mapKeys to prevent this.
 
   * Parameters *
     object                  = ((map), required) The source map

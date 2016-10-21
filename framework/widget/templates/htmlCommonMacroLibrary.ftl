@@ -3,7 +3,7 @@ SCIPIO: Common HTML macro library code
 
 NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
     As a result all macros here must take care to html-escape as well as js-escape values.
-    Use escapePart/escapeFullUrl for this.
+    Use escapeVal/escapeFullUrl for this.
 -->
 
 <#-- SCIPIO: This function imports all main namespace directives (macros and functions) into the current namespace
@@ -30,7 +30,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
          Otherwise it is considered an inline element. -->
     <#-- SCIPIO: also support "p" style to indicate paragraph, headings and special error classes -->
     <#local idText = ""/>
-    <#if id?has_content><#local idText = " id=\"${escapePart(id, 'html')}\""/></#if>
+    <#if id?has_content><#local idText = " id=\"${escapeVal(id, 'html')}\""/></#if>
     <#if style?has_content>
       <#-- SCIPIO: can pass class and consumeLevel this way: "h2:class;consumeLevel=true" -->
       <#-- don't specify allowedElemTypes because we go through them ourselves below, redundant -->
@@ -55,20 +55,20 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
           <#-- SCIPIO: generic text container types -->
           <#if elemType=="div" || elemType=="p" || elemType=="span">
-            <${elemType}${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'htmlmarkup')}</${elemType}>
+            <${elemType}${idText}<@compiledClassAttribStr class=class />>${escapeVal(text, 'htmlmarkup')}</${elemType}>
           <#-- SCIPIO: common-message handling -->
           <#elseif elemType?starts_with("common-msg-")>
-            <@commonMsg type=elemType["common-msg-"?length..] class=class id=id>${escapePart(text, 'htmlmarkup')}</@commonMsg>
+            <@commonMsg type=elemType["common-msg-"?length..] class=class id=id>${escapeVal(text, 'htmlmarkup')}</@commonMsg>
           <#elseif elemType=="generic">
             <#-- SCIPIO: special case to force stock generic case (in case default style string is not empty) -->
-            <span${idText}<@compiledClassAttribStr class=class />>${escapePart(text, 'htmlmarkup')}</span>
+            <span${idText}<@compiledClassAttribStr class=class />>${escapeVal(text, 'htmlmarkup')}</span>
           <#else>
             <#-- SCIPIO: default markup and stock Ofbiz case (note: uses original style arg) -->
-            <span${idText}<@compiledClassAttribStr class=style />>${escapePart(text, 'htmlmarkup')}</span>
+            <span${idText}<@compiledClassAttribStr class=style />>${escapeVal(text, 'htmlmarkup')}</span>
           </#if>
       </#if>
     <#else>
-      <span${idText}>${escapePart(text, 'htmlmarkup')}</span>
+      <span${idText}>${escapeVal(text, 'htmlmarkup')}</span>
     </#if>
   </#if>
 </#macro>

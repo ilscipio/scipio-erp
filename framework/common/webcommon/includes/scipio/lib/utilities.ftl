@@ -2318,18 +2318,18 @@ Wraps pre-escaped values for specific languages in a special wrapper object.
 When passed to markup- or script-handling macros which normally escape values in these languages,
 the values are used as-is with no additional escape.
 
-These wrapper objects are automatically recognized by #escapePart and #escapeFullUrl.
+These wrapper objects are automatically recognized by #escapeVal and #escapeFullUrl.
 
 gets included as
 a raw string bypassing html, js or other language escaping. 
-This include @objectAsScript and macros that escape values using #escapePart or #escapeFull.
+This include @objectAsScript and macros that escape values using #escapeVal or #escapeFull.
 
 WARN: This is only safe to use if an explicit language is passed and the pre-escaping performed
     is adequate for that language.
 
 NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUtil.wrapString}}} or #rawString);
     its working scope is unrelated to Ofbiz's screen auto-escaping. It is primarily intended
-    for Scipio macros and templates that use #escapePart or equivalents.
+    for Scipio macros and templates that use #escapeVal or equivalents.
 
 For more information about escaping in general, see >>>standard/htmlTemplate.ftl<<<.
 
@@ -2356,7 +2356,7 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                                   a specific language. The unspecific mode is for rare workarounds only.
 
   * Related *
-    #escapePart
+    #escapeVal
     #escapeFullUrl                          
 -->
 <#function wrapAsRaw value lang="">
@@ -2447,10 +2447,9 @@ Checks if the value was wrapped using {{{#wrapAsRaw(object, "script")}}}.
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object, "script")>
 </#function>
 
-
 <#-- 
 *************
-* escapePart
+* escapeVal
 ************
 Escapes an individual value or code "part" for a given language, ignoring and crushing delimiters.
 
@@ -2474,7 +2473,7 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
 '''Single languages'''
 
 ''HTML'': Two language identifiers are supported: "html" and "htmlmarkup". 
-Callers of #escapePart should usually use "html" on html attributes, and "htmlmarkup" on text placed within element body.
+Callers of #escapeVal should usually use "html" on html attributes, and "htmlmarkup" on text placed within element body.
 By default, this function escapes all markup delimiters for ''both''.
 The difference is that callers upstream using #wrapAsRaw will then able to override markup specifically using:
   #wrapAsRaw(xxx, 'htmlmarkup')
@@ -2511,18 +2510,20 @@ NOTE: From template perspective, macros generally escape html by default, so tem
                                 NOTE: by default this safely escapes any html; it is the caller overrides that can make this unsafe for attributes.
                               WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
                               NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
-    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
-                              If true, escaping is always applied unconditionally.
-                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
-                              mainly to mitigate screen auto-escaping and early escaping.
-                              DEV NOTE: may want to eliminate need for boolean later
+    opts                    = ((map)) Additional options, including lang-specific options
+                              Members:
+                              * {{{strict}}} {{{((boolean), default: false)}}} Whether to escape strictly or allow handling of pre-escaped characters
+                                If true, escaping is always applied unconditionally, and any pre-escaped characters
+                                are not recognized (and ''may'' be errors if due to double-escaping errors).
+                                If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                                mainly to mitigate screen auto-escaping and early escaping.
 
   * Related *
-    #escapeFullUrl
     #rawString
     #wrapAsRaw
+    #escapeFullUrl
 -->
-<#function escapePart value lang strict=false>
+<#function escapeVal value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
     <#local lang = lang?replace("style", "css")>
   </#if>
@@ -2584,30 +2585,30 @@ NOTE: From template perspective, macros generally escape html by default, so tem
 
 <#-- 
 *************
+* escapePart
+************
+Escapes an individual value or code "part" for a given language, ignoring and crushing delimiters.
+DEPRECATED: Replaced by #escapeVal.
+
+  * Related *
+    #escapeVal
+-->
+<#function escapePart value lang opts={}>
+  <#return escapeVal(value, lang, opts)>
+</#function>
+
+<#-- 
+*************
 * escapeFull
 ************
-Encodes/escapes a complete code sequence for a given language, recognizing and sparing the language's delimiters.
-Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
-and encode in the requested language.
+Encodes/escapes a value in a given language.
+DEPRECATED: This was never properly defined or implemented and no longer meaningful. Use #escapeVal or #escapeFullUrl.
 
-WARN: 2016-10-10: Not currently properly implemented! Please use #escapePart or #escapeFullUrl.
-    
-  * Parameters *
-    value                   = The string or string-like value to escape
-    lang                    = (html|htmlmarkup|xml|raw) The target language
-                              NOTE: This does not currently support js/json because it does not
-                                  usually make sense to escape anything but single value strings.
-                                  It also does not encode URLs; see #escapeFullUrl.
-    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
-                              If true, escaping is always applied unconditionally.
-                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
-                              mainly to mitigate screen auto-escaping and early escaping.
-                              DEV NOTE: may want to eliminate need for boolean later
-                    
   * Related*
-    #escapePart
+    #escapeVal
+    #escapeFullUrl
 -->
-<#function escapeFull value lang strict=false>
+<#function escapeFull value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
     <#local lang = lang?replace("style", "css")>
   </#if>
@@ -2644,7 +2645,7 @@ to early escaping.
 
 In addition, this function accepts values produced by #wrapAsRaw. These can be used to bypass the escaping in part or in full.
 If the value was wrapped using the same language as specified in this call, the wrapped value will be used as-is.
-Note that most times, this is not nearly as useful as it is for #escapePart.
+Note that most times, this is not nearly as useful as it is for #escapeVal.
 
 NOTES: 
 * 2016-10-05: Currently, this is mostly implemented using Freemarker built-ins such as {{{?html}}}, {{{?js}}}, etc. but is subject to change.
@@ -2672,13 +2673,20 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                               WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
                               NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
                               WARN: Inserting URLs into CSS (using {{{url()}}}) is known to be unsafe even with escaping.
-    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
-                              If true, escaping is always applied unconditionally.
-                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
-                              mainly to mitigate screen auto-escaping and early escaping.
-                              DEV NOTE: may want to eliminate need for boolean later
+    opts                    = ((map)) Additional options, including lang-specific options
+                              Members:
+                              * {{{strict}}} {{{((boolean), default: false)}}} Whether to escape strictly or allow handling of pre-escaped characters
+                                If true, escaping is always applied unconditionally, and any pre-escaped characters
+                                are not recognized (and ''may'' be errors if due to double-escaping errors).
+                                If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                                mainly to mitigate screen auto-escaping and early escaping.
+                                NOTE: 2016-10-20: Currently, when strict false (default), the method will
+                                    tolerated pre-escaped param-separator ampersands "&amp;" ONLY.
+                                    In the future this behavior could be removed if all pre-escaping is eliminated in the framework.
+                                    It is recommended NOT to write them in templates when passing links to Scipio macro parameters
+                                    or to this function or equivalent.
 -->
-<#function escapeFullUrl value lang strict=false>
+<#function escapeFullUrl value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
     <#local lang = lang?replace("style", "css")>
   </#if>
@@ -2689,8 +2697,8 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
     <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   </#if>
-  <#if !strict>
-    <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
+  <#if !(opts.strict!false)>
+    <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html (or any working encoder) will re-encode them after. -->
     <#local value = value?replace("&amp;", "&")>
   </#if>
   <#switch lang?lower_case>
@@ -3165,7 +3173,7 @@ with leading space.
 -->
 <#macro compiledClassAttribStr class defaultVal="">
   <#local classes = compileClassArg(class, defaultVal)>
-  <#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#t>
+  <#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#t>
 </#macro>
 
 <#-- 
@@ -3176,7 +3184,7 @@ Explicit version of #compiledClassAttribStr.
 -->
 <#macro compiledClassAttribStrExplicit class defaultVal="">
   <#local classes = compileClassArgExplicit(class, defaultVal)>
-  <#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#t>
+  <#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#t>
 </#macro>
 
 <#-- 
@@ -3698,7 +3706,7 @@ TODO: implement as transform.
     camelCaseToDashLowerNames   = ((boolean)) If true converts attrib names from camelCase to camel-case at the very end
     emptyValToken               = ((string)) When this value encountered, will include an empty attrib
     noValToken                  = ((string)) When this value encountered, will include an attrib with no value
-    escapeLang                  = (html|...|none, default: 'html') Language to escape each attribute (passed to #escapePart)
+    escapeLang                  = (html|...|none, default: 'html') Language to escape each attribute (passed to #escapeVal)
                                   Callers may bypass escaping by wrapping their values using #wrapAsRaw.
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
@@ -4351,7 +4359,7 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
     <table>
     <#list mapKeys(var) as key>
       <tr>
-        <td style="width:200px; vertical-align:top">${escapePart(key, 'html')}</td>
+        <td style="width:200px; vertical-align:top">${escapeVal(key, 'html')}</td>
         <td>
           <@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=2/>
         </td>
@@ -4368,7 +4376,7 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
       <#-- WARN: ?is_ tests may not work as expected on widget context variables (BeanModel)
           see @objectAsScript -->
       <#if isObjectType("string", var)>
-        ${escapePart(var, 'html')}
+        ${escapeVal(var, 'html')}
       <#elseif var?is_boolean>
         ${var?c}
       <#elseif var?is_date>
@@ -4388,13 +4396,13 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
           <#-- takes too much space 
           <table>
           <#list mapKeys(var)?sort as key>
-            <tr><td>${escapePart(key, 'html')}</td><td><@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
+            <tr><td>${escapeVal(key, 'html')}</td><td><@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
           </#list>
           </table>-->
           <@objectAsScript lang="json" escape=false object=var maxDepth=maxDepth currDepth=currDepth />
         </#if>
       <#elseif var?is_string>
-        ${escapePart(var, 'html')}
+        ${escapeVal(var, 'html')}
       </#if>
     <#recover>
       <span style="color:red"><strong>${(.error)!"(generic)"}</strong></span>

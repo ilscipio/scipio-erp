@@ -53,8 +53,8 @@ public abstract class TemplateFtlUtil {
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
 
-    private static volatile Template escapePart2ArgFunctionCall = null;
-    private static volatile Template escapePart3ArgFunctionCall = null;
+    private static volatile Template escapeVal2ArgFunctionCall = null;
+    private static volatile Template escapeVal3ArgFunctionCall = null;
     private static volatile Template escapeFullUrl2ArgFunctionCall = null;
     private static volatile Template escapeFullUrl3ArgFunctionCall = null;
     
@@ -399,7 +399,7 @@ public abstract class TemplateFtlUtil {
                         sb.append("=\"");
                         if (!valStr.equals(emptyValToken)) {
                             if (escapeLang != null && env != null && !RawScript.isRawScript(val)) {
-                                valStr = execEscapePartFunction(new SimpleScalar(valStr), new SimpleScalar(escapeLang), env).getAsString();
+                                valStr = execEscapeValFunction(new SimpleScalar(valStr), new SimpleScalar(escapeLang), env).getAsString();
                             }
                             sb.append(valStr);
                         }
@@ -529,38 +529,38 @@ public abstract class TemplateFtlUtil {
         }
     }
     
-    public static TemplateScalarModel execEscapePartFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
-        if (escapePart2ArgFunctionCall == null) {
+    public static TemplateScalarModel execEscapeValFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
+        if (escapeVal2ArgFunctionCall == null) {
             // NOTE: no real need for synchronize here
-            escapePart2ArgFunctionCall = LangFtlUtil.getFunctionCall("escapePart", 2, env);
+            escapeVal2ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeVal", 2, env);
         }
-        return (TemplateScalarModel) LangFtlUtil.execFunction(escapePart2ArgFunctionCall, new TemplateModel[] { arg1, arg2}, env);
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeVal2ArgFunctionCall, new TemplateModel[] { arg1, arg2}, env);
     }
 
-    public static TemplateScalarModel execEscapePartFunction(TemplateModel arg1, TemplateModel arg2, TemplateModel arg3, Environment env) throws TemplateModelException {
-        if (escapePart3ArgFunctionCall == null) {
+    public static TemplateScalarModel execEscapeValFunction(TemplateModel arg1, TemplateModel arg2, TemplateModel arg3, Environment env) throws TemplateModelException {
+        if (escapeVal3ArgFunctionCall == null) {
             // NOTE: no real need for synchronize here
-            escapePart3ArgFunctionCall = LangFtlUtil.getFunctionCall("escapePart", 3, env);
+            escapeVal3ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeVal", 3, env);
         }
-        return (TemplateScalarModel) LangFtlUtil.execFunction(escapePart3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeVal3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
     }
     
-    public static String escapePart(String value, String lang, Environment env) throws TemplateModelException {
+    public static String escapeVal(String value, String lang, Environment env) throws TemplateModelException {
         if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
             return value;
         }
-        return execEscapePartFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+        return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
     }
     
-    public static String escapePart(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
+    public static String escapeVal(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
         if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
             return value;
         }
         if (strict != null) {
-            return execEscapePartFunction(new SimpleScalar(value), new SimpleScalar(lang), 
+            return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), 
                     strict ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE, env).getAsString();
         } else {
-            return execEscapePartFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+            return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
         }
     }
     

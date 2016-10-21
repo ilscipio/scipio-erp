@@ -222,6 +222,6 @@ public abstract class TransformUtil {
      */
     public static String escapeGeneratedUrl(String value, String lang, boolean strict, Environment env) throws TemplateModelException {
         //return TemplateFtlUtil.escapeFullUrl(value, lang, strict, env); // TODO/FIXME?
-        return TemplateFtlUtil.escapeFullUrl(value, lang, false, env);
+        return TemplateFtlUtil.escapeFullUrl(value, lang, null, env);
     }
 }

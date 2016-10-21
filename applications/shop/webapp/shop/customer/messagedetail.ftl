@@ -67,11 +67,14 @@ under the License.
         <@td>&nbsp;</@td>
         
         <@td>
-            <#-- SCIPIO: FIXME: 2016-10-14: HTML markup is DISABLED here for the time being because htmlContentString is not
-              truly implemented at this time and there is a high chance of serious security issue in this screen
-              This screen requires advanced html filtering
-            ${htmlContentString(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}-->
-            ${(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}
+            <#-- SCIPIO: NOTE: 2016-10-20: this content markup is subject to serious security concerns.
+                Strict filter is used, and whether any markup is allowed at all is dependent on
+                and centralized in the escapeVal call. -->
+            <#if (communicationEvent.content)??>
+              ${escapeVal(communicationEvent.content, 'htmlmarkup', {"allow":"external"})}
+            <#else>
+              ${uiLabelMap.EcommerceEmptyBody}
+            </#if>
         </@td>
       </@tr>
     </@table>

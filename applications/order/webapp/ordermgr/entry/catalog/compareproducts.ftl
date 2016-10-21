@@ -110,7 +110,7 @@ under the License.
 <#list compareList as product>
     <#assign productData = productDataMap[product.productId]/>
     <#assign productContentWrapper = productData.productContentWrapper/>
-        <@td>${htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)}</@td>
+        <@td>${escapeVal(productContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})}</@td>
 </#list>
     </@tr>
 <#list productFeatureTypeIds as productFeatureTypeId>

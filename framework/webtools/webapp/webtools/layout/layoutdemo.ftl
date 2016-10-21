@@ -1449,6 +1449,17 @@
         <li>complexCharString (double-escaping failure): ${complexCharString?html}</li>
       </ul>
   </@section>
+  <@section title="Filtered/validating/partial escaping">
+      <#assign testMarkup>This is <span class="somespanclass">"test"</span> <em class="someclass">markup</em>!</#assign>
+      <#assign testMarkup = rewrapString(testMarkup)><#-- make sure the rawString works -->
+      <ul>
+        <li>htmlmarkup allow none: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})}</li>
+        <li>htmlmarkup allow external: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'external'})}</li>
+        <li>htmlmarkup allow internal: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'internal'})}</li>
+        <li>htmlmarkup allow any-valid: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'any-valid'})}</li>
+        <li>htmlmarkup allow any: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'any'})}</li>
+      </ul>
+  </@section>
   <@section title="objectAsScript">
       <ul>
         <li>objectAsScript (js-escaped, with bypass): <@objectAsScript lang="js" object={

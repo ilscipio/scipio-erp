@@ -641,8 +641,8 @@ ${virtualJavaScript!}
 
   <#-- Long description of product -->
   <div id="long-description">
-      <div>${htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)}</div>
-      <div>${htmlContentString(productContentWrapper.get("WARNINGS")!)}</div>
+      <div>${escapeVal(productContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})}</div>
+      <div>${escapeVal(productContentWrapper.get("WARNINGS")!, 'htmlmarkup', {"allow":"internal"})}</div>
   </div>
 
   <#-- Any attributes/etc may go here -->

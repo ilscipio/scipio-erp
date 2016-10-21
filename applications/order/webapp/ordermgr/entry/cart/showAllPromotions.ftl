@@ -23,7 +23,7 @@ under the License.
         <#list productPromosAllShowable as productPromo>
             <li>
                 <@heading level=3>${productPromo.promoName!}</@heading>
-                ${htmlContentString(productPromo.promoText!)}
+                ${escapeVal(productPromo.promoText!, 'htmlmarkup', {"allow":"internal"})}
                 <br/><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
             </li>
         </#list>

@@ -152,7 +152,7 @@ under the License.
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
           <#-- non-product item -->
           <@td>
-            ${htmlContentString(orderItem.itemDescription!"")} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
+            ${escapeVal(orderItem.itemDescription!"", 'htmlmarkup', {"allow":"internal"})} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
             <#if orderItemAttributes?has_content>
                 <ul>
@@ -330,8 +330,7 @@ under the License.
             <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
             ${uiLabelMap.EcommerceAdjustment}: ${adjustmentType.get("description",locale)!}
             
-            <#-- Scipio: WARN: description here potentially unsafe, but may contain HTML, allow for now -->
-            <#if orderItemAdjustment.description?has_content>: ${htmlContentString(orderItemAdjustment.get("description",locale))}</#if>
+            <#if orderItemAdjustment.description?has_content>: ${escapeVal(orderItemAdjustment.get("description",locale), 'htmlmarkup', {"allow":"internal"})}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
               <#if orderItemAdjustment.primaryGeoId?has_content>
                 <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>

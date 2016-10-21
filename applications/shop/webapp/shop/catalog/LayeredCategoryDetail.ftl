@@ -53,7 +53,7 @@ under the License.
     <#if categoryDescription?has_content>
         <p>${categoryDescription}</p>
     </#if>
-    <#assign longDescription = htmlContentString(categoryContentWrapper.get("LONG_DESCRIPTION")!)/>
+    <#assign longDescription = escapeVal(categoryContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})/>
     <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>
     <#if categoryImageUrl?string?has_content || longDescription?has_content>
       <div>

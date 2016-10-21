@@ -517,11 +517,11 @@
 -->   
      
 <@section>
-    <#assign prodLongDescr = htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)/>
+    <#assign prodLongDescr = escapeVal(productContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})/>
     <#if !prodLongDescr?has_content>
       <#assign prodLongDescr = productContentWrapper.get("DESCRIPTION")!?trim/>
     </#if>
-    <#assign prodWarnings = htmlContentString(productContentWrapper.get("WARNINGS")!)/>
+    <#assign prodWarnings = escapeVal(productContentWrapper.get("WARNINGS")!, 'htmlmarkup', {"allow":"internal"})/>
 
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->

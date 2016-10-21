@@ -418,7 +418,7 @@ function getConfigDetails() {
   </@row>
 
   <#-- Long description of product -->
-  <#assign longDesc = htmlContentString(productContentWrapper.get("LONG_DESCRIPTION")!)>
+  <#assign longDesc = escapeVal(productContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})>
   <#if longDesc?trim?has_content>
     <hr class="sepbar"/>
     <@row>

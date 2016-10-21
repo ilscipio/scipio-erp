@@ -1402,7 +1402,7 @@
        Other macro implementations new to Scipio (part of Scipio standard library) all do post-escaping.<br/>
        These examples are complicated not only for testing purposes, but also because @ofbizContentUrl (legacy Ofbiz macro, modified in Scipio) is forced to support
        pre-escaping, which was frequently used in legacy Ofbiz templates (<em>even though</em> the macro suffered from implementation problems because of it),
-       usually done by screen auto-html-escaping.
+       usually done by screen html auto-escaping.
     </em></p>
     <ul>
       <li>${escapePart(makeOfbizContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping - <strong>NOTE: this is the best way (post-escaping)</strong>, compared to others below that do pre-escaping)</em></li>
@@ -1457,7 +1457,40 @@
         }/></li>
       </ul>
   </@section>
-  <@section title="Pre-escaping and escaping bypass">
+  <@section title="Screen html auto-escaping bypass (rawString)">
+      <p><em>The current renderer implementation automatically html-escapes strings as soon as they
+        are output or interpolated using $\{} or ?string. The function #rawString prevents this.
+        The advanced function #rewrapString can be seen as re-enabling the escaping (undoing the
+        #rawString bypass).</em></p>
+      <ul>
+        <#assign autoEscString1 = rewrapString("<em>1234^&;\"'343</em>")>
+        <#assign autoEscString2 = rewrapString("<i>123532^&;\"'3443343</i>")>
+        <li>Auto-escaped string: "${autoEscString1} - ${autoEscString2}"</li>
+        <li>Auto-escaped string: "${autoEscString1 + " - " + autoEscString2}"</li>
+        <li>rawString: "${rawString(autoEscString1)} - ${rawString(autoEscString2)}"</li>
+        <li>rawString: "${rawString(autoEscString1) + " - " + rawString(autoEscString2)}"</li>
+        <li>rawString: "${rawString(autoEscString1, " - ", autoEscString2)}"</li>
+        
+        <!-- Whole maps bypassing the auto-escaping by rewrapping them in non-escaping models
+            NOTE: at current time (2016-10-20) these may be inefficient -->
+        <#assign autoEscMapInner1 = {"autoEscString1":autoEscString1, "autoEscString2":autoEscString2}>
+        <#assign autoEscMap1 = rewrapMap(autoEscMapInner1)>
+        <li>Auto-escaped map strings: "${autoEscMap1.autoEscString1} - ${autoEscMap1.autoEscString2}"</li>
+        <li>Auto-escaped map strings: "${autoEscMapInner1.autoEscString1} - ${autoEscMapInner1.autoEscString2}"</li>
+        <li>Number of map keys (complex/simple, should be >2/2): ${autoEscMap1?keys?size}/${autoEscMapInner1?keys?size}</li>
+        <#assign rawMap1 = rewrapMap(autoEscMap1, "raw")>
+        <#assign rawMapInner1 = rewrapMap(autoEscMapInner1, "raw")>
+        <li>Raw map strings: "${rawMap1.autoEscString1} - ${rawMap1.autoEscString2}"</li>
+        <li>Raw map strings: "${rawMapInner1.autoEscString1} - ${rawMapInner1.autoEscString2}"</li>
+        <li>Number of map keys (complex/complex, should be >2/>2): ${rawMap1?keys?size}/${rawMapInner1?keys?size}</li>
+        <#assign rawMap1 = rewrapMap(autoEscMap1, "raw-simple")>
+        <#assign rawMapInner1 = rewrapMap(autoEscMapInner1, "raw-simple")>
+        <li>Raw map strings: "${rawMap1.autoEscString1} - ${rawMap1.autoEscString2}"</li>
+        <li>Raw map strings: "${rawMapInner1.autoEscString1} - ${rawMapInner1.autoEscString2}"</li>
+        <li>Number of map keys (simple/simple, should be 2/2): ${rawMap1?keys?size}/${rawMapInner1?keys?size}</li>
+      </ul>
+  </@section>
+  <@section title="Pre-escaping and macro escaping bypass">
       <ul>
         <li>Normal html escaping: ${escapePart('<em>text, not emphasized because html-escaped</em>', 'htmlmarkup')}</li>
         <li>Bypass html escaping: ${escapePart(wrapAsRaw('<em>text emphasized with html</em>', 'htmlmarkup'), 'htmlmarkup')}</li>

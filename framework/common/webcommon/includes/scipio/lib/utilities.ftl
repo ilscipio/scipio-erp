@@ -1730,15 +1730,8 @@ WARN: this works using FTL's primitive ?is_string test, which may return TRUE fo
 ************
 Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and 
 depending on current implementation and system policy may process the string for allowed HTML.
-DEPRECATED: This will be replaced by a more generic and powerful function.
+DEPRECATED: Use #escapeVal with the {{{allow}}} option instead.
 
-Typically for database-stored content such as product descriptions which use limited HTML.
-
-WARN: This is NOT fully implemented and currently does the same as #rawString.
-
-  * Parameters *
-    str                     = ((string), required) The string
-    
   * Related *
     #rawString
 -->
@@ -2493,6 +2486,22 @@ It is impossible to safely encode javascript outside string literals (see OWASP)
 typically "js-html" is needed. 
 NOTE: From template perspective, macros generally escape html by default, so templates only need to escape the javascript part.
 
+'''Validation and allowed code'''
+
+This function is scheduled to support ''some'' language-specific code validation/filters, to provide
+a middle ground between allowing no code (full escaping - default behavior) and allowing all code (no escaping - #rawString alone).
+See the {{{opts.allow}}} parameter below.
+
+It is usually logical to perform such validation nearest to point-of-use as possible using this function.
+However, note that, ''in addition'', it is usually either a very good idea or simply required to validate input 
+such as code markup before storage in database (server-side, or even client-side yet in addition), long before
+and elsewhere from a template containing this function call is rendered.
+Thus, the safest solution is to do both; validate markup in content from actors server-side, and apply
+the equivalent filter using this function in templates. This guards against errors and stale content spanning security policy 
+and filter implementation changes.
+
+NOTE: Validation and allowed code filters are not fully implemented (TODO), but will be supported by this function.
+
   * Parameters *
     value                   = The string or string-like value to escape
                               2016-09-29: This now automatically coerces non-strings to string, for convenience.
@@ -2507,16 +2516,34 @@ NOTE: From template perspective, macros generally escape html by default, so tem
                               * {{{html}}}: safely escapes ''any'' html, but primarily attribute content
                               * {{{htmlmarkup}}: safely escapes only ''markup'' html, but not (necessarily) attributes. Must be
                                 used to allow callers to insert html markup using #wrapAsRaw in the right places (not in attributes!).
-                                NOTE: by default this safely escapes any html; it is the caller overrides that can make this unsafe for attributes.
+                                NOTE: by default this can safely escapes any html, even for attributes; 
+                                    but the caller overrides (#wrapAsRaw) can make the value unsafe for insertion in attributes, so
+                                    the distinction is important.
                               WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
                               NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
-    opts                    = ((map)) Additional options, including lang-specific options
+    opts                    = ((map)) Additional options, including language-specific options
                               Members:
                               * {{{strict}}} {{{((boolean), default: false)}}} Whether to escape strictly or allow handling of pre-escaped characters
                                 If true, escaping is always applied unconditionally, and any pre-escaped characters
                                 are not recognized (and ''may'' be errors if due to double-escaping errors).
                                 If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
                                 mainly to mitigate screen auto-escaping and early escaping.
+                              * {{{allow}}} {{{((string)|any|none|...|, default: none)}}} Allowed code exceptions (validation filter)
+                                By default, no code exceptions are allowed ("none"), and regular aggressive escaping is applied.
+                                At the other extreme ({{{any}}}), escaping may be disabled entirely.
+                                In between, each language may support filtering levels or profiles to restrict allowed code. 
+                                The possible values depend on the language.
+                                Recognized {{{allow}}} filters:
+                                * {{{htmlmarkup}}}: {{{(any|none|any-valid|internal|external, default: none)}}}
+                                  * {{{none}}}: no HTML elements or code allowed, regular escaping applied (default behavior)
+                                  * {{{external}}}: allow only very basic HTML elements that are always safe to use, even from
+                                    and assuming coming from completely untrusted sources (public)
+                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{none}}}.
+                                  * {{{internal}}}: allow HTML from trusted sources (employees)
+                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{any}}}.
+                                  * {{{any-valid}}}: any HTML allowed, as long as it is well-formed
+                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{any}}}.
+                                  * {{{any}}}: escaping disabled/bypassed, for debugging purposes
 
   * Related *
     #rawString
@@ -2545,8 +2572,32 @@ NOTE: From template perspective, macros generally escape html by default, so tem
       <#return value?js_string?replace("\\'", "\'")>
       <#break>
     <#case "html">
-    <#case "htmlmarkup">
       <#return value?html>
+      <#break>
+    <#case "htmlmarkup">
+      <#if opts.allow?has_content>
+        <#-- TODO: implement external, internal, any-valid -->
+        <#switch opts.allow>
+          <#case "any">
+            <#return value>
+            <#break>
+          <#case "any-valid">
+            <#return value><#-- TODO: NOT IMPLEMENTED (validation library required) -->
+            <#break>
+          <#case "internal">
+            <#return value><#-- TODO: NOT IMPLEMENTED (validation library required) -->
+            <#break>
+          <#case "external">
+            <#return value?html><#-- TODO: NOT IMPLEMENTED (validation library required) -->
+            <#break>
+          <#case "none">
+          <#default>
+            <#return value?html>
+            <#break>
+        </#switch>
+      <#else>
+        <#return value?html>
+      </#if>
       <#break>
     <#case "js-html">
       <#return value?js_string?html>
@@ -2582,6 +2633,29 @@ NOTE: From template perspective, macros generally escape html by default, so tem
       <#break>
   </#switch>
 </#function>
+
+<#-- alternative super-simple implementation, TODO: review if worth its own alias
+<#function escapeHtmlMarkup value allow="">
+    <#switch rawString(allow)>
+      <#case "any">
+        <#return value>
+        <#break>
+      <#case "any-valid">
+        <#return value>
+        <#break>
+      <#case "internal">
+        <#return value>
+        <#break>
+      <#case "external">
+        <#return value?html>
+        <#break>
+      <#case "none">
+      <#default>
+        <#return value?html>
+        <#break>
+    </#switch>
+</#function>
+-->
 
 <#-- 
 *************

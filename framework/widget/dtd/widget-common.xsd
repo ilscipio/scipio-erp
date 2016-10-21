@@ -651,7 +651,16 @@ under the License.
         <xs:attribute type="xs:string" name="name" />
         <xs:attribute type="xs:string" name="title" />
         <xs:attribute type="xs:nonNegativeInteger" name="size" /><!-- Text size limit -->
-        <xs:attribute type="xs:string" name="target" />
+        <xs:attribute type="xs:string" name="target">
+            <xs:annotation>
+                <xs:documentation>
+                    Link target (href).
+                    SCIPIO: 2016-10-21: enhanced: if url-mode is "inter-app" and target ends with exactly the string
+                    "#extLoginKey=OFF", then no external login key is added, and the 
+                    "#extLoginKey=OFF" string is stripped. It must be the last part of the string to work (ends with).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="target-window" />
         <xs:attribute type="xs:string" name="prefix" />
         <xs:attribute type="xs:string" name="width" />

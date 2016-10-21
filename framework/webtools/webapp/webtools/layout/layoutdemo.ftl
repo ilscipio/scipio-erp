@@ -1295,105 +1295,157 @@
 </@section>
 
 <@section title="URL generation">
-  <p>Our webSiteId (<em>NOTE:</em> in stock Ofbiz there is none assigned to webtools, so should be nothing here! Do not add one!): 
-    <em>${Static["org.ofbiz.webapp.website.WebSiteWorker"].getWebSiteId(request)!"(none)"}</em></p>
-
-  <p>Standard URL variations:</p>
-  <ul>
-    <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
-    <li><@ofbizUrl>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li>${makeOfbizUrl("WebtoolsLayoutDemo?param1=val1&amp;param2=val2")}</li>
-    <li><@ofbizUrl fullPath=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl fullPath="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl fullPath=true secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl fullPath=true secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl fullPath=true secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl fullPath=true secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl uri="main" webSiteId="ScipioWebStore"/></li>
-    <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" /></li>
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true/></li>
-    <#-- Explicitly allow downgrading to HTTP -->
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" secure=false/></li>
-    <#-- Explicitly allow downgrading to HTTP -->
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true secure=false/></li>
-    <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" /></li>
-    <li>${makeOfbizInterWebappUrl("/shop/control/main")}</li>
-    <li>${makeOfbizInterWebappUrl("main", "ScipioWebStore")}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
-  </ul>
+  <@section title="Current webapp/context info">
+    <ul>
+      <li>
+        <strong>webSiteId</strong>: ${Static["org.ofbiz.webapp.website.WebSiteWorker"].getWebSiteId(request)!"(none)"}
+        <em>(NOTE: In stock Ofbiz there is no webSiteId assigned to admin (webtools) in web.xml, so should be none here! 
+             Do not add one to the admin webapp, because it would likely conflict with some screen implementations)</em>
+      </li>
+    </ul>
+  </@section>
   
-  <p>Non-standard URLs:</p>
-  <ul>
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" webSiteId="ScipioWebStore" absPath=true /></li>
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=true /></li>
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false /></li>
-    <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true/></li>
-    <#-- Allow downgrade -->
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true secure=false/></li>
-    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false secure=true/></li>
-    <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="ScipioWebStore" controller=false /></li>
-    <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" controller=true /></li>
-    <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/admin/control/main" /></li>
-    <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
-    <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>
-    <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/admin/control/main" /></li>
-  </ul>
+  <@section title="Standard navigation URLs">
+    <ul>
+      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
+      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
+      <li><@ofbizUrl>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li>${makeOfbizUrl("WebtoolsLayoutDemo?param1=val1&amp;param2=val2")}</li>
+      <li><@ofbizUrl fullPath=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl uri="main" webSiteId="ScipioWebStore"/></li>
+      <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" /></li>
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true/></li>
+      <#-- Explicitly allow downgrading to HTTP -->
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" secure=false/></li>
+      <#-- Explicitly allow downgrading to HTTP -->
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true secure=false/></li>
+      <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" /></li>
+      <li>${makeOfbizInterWebappUrl("/shop/control/main")}</li>
+      <li>${makeOfbizInterWebappUrl("main", "ScipioWebStore")}</li>
+      <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
+      <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
+    </ul>
+  </@section>
   
-  <p>Inter-webapp catalog URLs:</p>
-  <ul>
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" /></li>
-    <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" /></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" /></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" /></li>
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true/></li>
-    <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" fullPath=true/></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true /></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" fullPath=true /></li>
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true secure=true/></li>
-    <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true/></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true secure=true params="?test1=val1&test2=val2"?html/></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true params="test1=val1&test2=val2"?html /></li>
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false/></li>
-    <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" secure=false/></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false /></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" secure=false /></li>
+  <@section title="Non-standard navigation URLs">
+    <p><em>NOTE: These are not invalid, but needlessly obscure; for testing.</em></p>
+    <ul>
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" webSiteId="ScipioWebStore" absPath=true /></li>
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=true /></li>
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false /></li>
+      <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true/></li>
+      <#-- Allow downgrade -->
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true secure=false/></li>
+      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false secure=true/></li>
+      <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="ScipioWebStore" controller=false /></li>
+      <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" controller=true /></li>
+      <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/admin/control/main" /></li>
+      <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
+      <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>
+      <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/admin/control/main" /></li>
+    </ul>
+  </@section>
+  
+  <@section title="Inter-webapp catalog URLs">
+    <p><em>NOTE: These should only reference a webapp configured to handle these in its web.xml file.</em></p>
+    <ul>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" /></li>
+      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" /></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" /></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" /></li>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true/></li>
+      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" fullPath=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true /></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" fullPath=true /></li>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true secure=true params="?test1=val1&test2=val2"?html/></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true params="test1=val1&test2=val2"?html /></li>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false/></li>
+      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" secure=false/></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false /></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" secure=false /></li>
     
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" /></li>
-    <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" /></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" /></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" /></li>
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true/></li>
-    <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true/></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true /></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true /></li>
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
-    <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
-    <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
-    <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
-    <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=false params="test1=val1&test2=val2"?html/></li>
-    <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
-  </ul>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true/></li>
+      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true /></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true /></li>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
+      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=false params="test1=val1&test2=val2"?html/></li>
+      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
+    </ul>
+  </@section>
   
-  <ul>Misc tests:
-    <li>${addExtLoginKey("main")}</li>
-  </ul>
+  <@section title="Content URLs">
+    <p><em><strong>NOTE:</strong> Some of these are poor-to-terrible use of ofbizContentUrl/makeOfbizContentUrl; post-escaping is always best where possible.
+       Other macro implementations new to Scipio (part of Scipio standard library) all do post-escaping.<br/>
+       These examples are complicated not only for testing purposes, but also because @ofbizContentUrl (legacy Ofbiz macro, modified in Scipio) is forced to support
+       pre-escaping, which was frequently used in legacy Ofbiz templates (<em>even though</em> the macro suffered from implementation problems because of it),
+       usually done by screen html auto-escaping.
+    </em></p>
+    <ul>
+      <li>${escapeVal(makeOfbizContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping - <strong>NOTE: this is the best way (post-escaping)</strong>, compared to others below that do pre-escaping)</em></li>
+      <li><@ofbizContentUrl uri=demoScreenContentUri escapeAs='html'/> <em>(no pre-escaping (rawString implicit), html post-escaping - this is equivalent to the previous, but slightly shorter.</em></li>
+      <li>
+        <#assign urlContent><@ofbizContentUrl strict=true>${rawString(demoScreenContentUri)}</@ofbizContentUrl></#assign>
+        ${escapeVal(urlContent, 'html')} <em>(no pre-escaping (rawString explicit, strict true explicit), html post-escaping - NOTE: This is a more verbose and clumsy version (but still correct and strict) of the previous, but technically valid)</em>
+      </li>
+      <li><@ofbizContentUrl>${demoScreenContentUri}</@ofbizContentUrl> <em>(has html pre-escaping)</em></li>
+      <li><@ofbizContentUrl uri=demoScreenContentUri /> <em>(has html pre-escaping)</em></li>
+      <li>${escapeVal(makeOfbizContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeOfbizContentUrl({"uri":demoScreenContentUri}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li><@ofbizContentUrl ctxPrefix=true>${demoScreenContentUri}</@ofbizContentUrl> <em>(partial html pre-escaping)</em></li>
+      <li><@ofbizContentUrl uri=demoScreenContentUri ctxPrefix=true/> <em>(partial html pre-escaping)</em></li>
+      <li>${escapeVal(makeOfbizContentCtxPrefixUrl(demoScreenContentUri), 'html')} (no pre-escaping <em>(rawString implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeOfbizContentUrl({"uri":demoScreenContentUri, "ctxPrefix":true}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <#assign manualPrefix = "https://ilscipio.com/images/"><#-- extra slash -->
+      <li><@ofbizContentUrl ctxPrefix=manualPrefix>${demoScreenContentUri}</@ofbizContentUrl> <em>(partial html pre-escaping)</em></li>
+      <li><@ofbizContentUrl uri=demoScreenContentUri ctxPrefix=manualPrefix/> <em>(partial html pre-escaping)</em></li>
+      <li>${escapeVal(makeOfbizContentUrl({"uri":demoScreenContentUri, "ctxPrefix":manualPrefix}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li><@ofbizContentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(contentPathPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
+      <li><@ofbizContentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
+      <li><@ofbizContentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html') strict=true/> <em>(<strong>USAGE ERROR:</strong> js-html pre-escaping - should contain an error (doubled slash), because we passed strict true which means the js-html pre-escaping doesn't get handled properly)</em></li>
+      <li>${escapeVal(makeOfbizContentUrl({"uri":escapeVal(demoScreenContentUri,'js'), "ctxPrefix":manualPrefix}), 'html')} <em>(<strong>USAGE ERROR:</strong> js pre-escaping - should contain an error (doubled slash), because this doesn't handle pre-encodings because strict true by default on function)</em></li>
+      <li>
+        <#assign urlContent><@ofbizContentUrl uri="suffix_without_a_starting_slash/something/extra.jpg" ctxPrefix=(manualPrefix+"<") /></#assign>
+        ${escapeVal(urlContent, 'html')} <em>(<strong>USAGE ERROR - DANGEROUS:</strong> js pre-escaping - unsafe string passed to ctxPrefix - should produce log warning that JS string possibly unsafe)</em>
+      </li>
+    </ul>
+  </@section>
+  
+  <@section title="Misc URL tests">
+    <ul>
+      <li>${addExtLoginKey("main")}</li>
+    </ul>
+  </@section>
 </@section>
 
 <@section title="Escaping">
   <@section title="Common escaping">
       <ul>
         <li>complexCharString (screen auto-escaping): ${complexCharString}</li>
-        <li>complexCharString (escapePart): ${escapePart(complexCharString, 'html')}</li>
+        <li>complexCharString (escapeVal): ${escapeVal(complexCharString, 'html')}</li>
         <li>complexCharString (double-escaping failure): ${complexCharString?html}</li>
       </ul>
   </@section>
@@ -1405,55 +1457,88 @@
         }/></li>
       </ul>
   </@section>
-  <@section title="Pre-escaping and escaping bypass">
+  <@section title="Screen html auto-escaping bypass (rawString)">
+      <p><em>The current renderer implementation automatically html-escapes strings as soon as they
+        are output or interpolated using $\{} or ?string. The function #rawString prevents this.
+        The advanced function #rewrapString can be seen as re-enabling the escaping (undoing the
+        #rawString bypass).</em></p>
       <ul>
-        <li>Normal html escaping: ${escapePart('<em>text, not emphasized because html-escaped</em>', 'htmlmarkup')}</li>
-        <li>Bypass html escaping: ${escapePart(wrapAsRaw('<em>text emphasized with html</em>', 'htmlmarkup'), 'htmlmarkup')}</li>
-        <li>Normal js escaping: ${escapePart('These "apostrophes" are js-escaped', 'js')}</li>
-        <li>Bypass js escaping: ${escapePart(wrapAsRaw('These "apostrophes" are not js-escaped', 'js'), 'js')}</li>
-        <li>Normal js-html escaping: ${escapePart('<em>text, not emphasized because html-escaped, plus "apostrophes" are js-escaped</em>', 'js-html')}</li>
-        <li>Bypass js-html escaping: ${escapePart(wrapAsRaw('<em>text emphasized, plus "apostrophes" are not escaped</em>', 'js-html'), 'js-html')}</li>
-        <li>Partial bypass js in js-html escaping: ${escapePart(wrapAsRaw('<em>text, not emphasized because html-escaped, plus "apostrophes" not escaped because of js bypass</em>', 'js'), 'js-html')}</li>
-        <li>Failed bypass (wrong language): ${escapePart(wrapAsRaw('<em>text, not emphasized because html-escaped, because we accidentally wrapped as js</em>', 'js'), 'htmlmarkup')}</li>
-        <li>html filling in for htmlmarkup in htmlmarkup: ${escapePart(wrapAsRaw('text <em>not html-escaped</em> WARN: bad usage! using <> is an error here, testing only, don\'t do this!!!', 'html'), 'htmlmarkup')}</li>
-        <li>html filling in for htmlmarkup in htmlmarkup-js: ${escapePart(wrapAsRaw('text <em>not html-escaped</em> WARN: bad usage! using <> is an error here, testing only, don\'t do this!!!', 'html'), 'htmlmarkup-js')}</em></li>
-        <li>htmlmarkup NOT filling in for html in html: ${escapePart(wrapAsRaw('text <em>html-escaped</em>', 'htmlmarkup'), 'html')}</li>
-        <li>htmlmarkup NOT filling in for html in html-js: ${escapePart(wrapAsRaw('text <em>html-escaped</em>', 'htmlmarkup'), 'html-js')}</em></li>
+        <#assign autoEscString1 = rewrapString("<em>1234^&;\"'343</em>")>
+        <#assign autoEscString2 = rewrapString("<i>123532^&;\"'3443343</i>")>
+        <li>Auto-escaped string: "${autoEscString1} - ${autoEscString2}"</li>
+        <li>Auto-escaped string: "${autoEscString1 + " - " + autoEscString2}"</li>
+        <li>rawString: "${rawString(autoEscString1)} - ${rawString(autoEscString2)}"</li>
+        <li>rawString: "${rawString(autoEscString1) + " - " + rawString(autoEscString2)}"</li>
+        <li>rawString: "${rawString(autoEscString1, " - ", autoEscString2)}"</li>
+        
+        <!-- Whole maps bypassing the auto-escaping by rewrapping them in non-escaping models
+            NOTE: at current time (2016-10-20) these may be inefficient -->
+        <#assign autoEscMapInner1 = {"autoEscString1":autoEscString1, "autoEscString2":autoEscString2}>
+        <#assign autoEscMap1 = rewrapMap(autoEscMapInner1)>
+        <li>Auto-escaped map strings: "${autoEscMap1.autoEscString1} - ${autoEscMap1.autoEscString2}"</li>
+        <li>Auto-escaped map strings: "${autoEscMapInner1.autoEscString1} - ${autoEscMapInner1.autoEscString2}"</li>
+        <li>Number of map keys (complex/simple, should be >2/2): ${autoEscMap1?keys?size}/${autoEscMapInner1?keys?size}</li>
+        <#assign rawMap1 = rewrapMap(autoEscMap1, "raw")>
+        <#assign rawMapInner1 = rewrapMap(autoEscMapInner1, "raw")>
+        <li>Raw map strings: "${rawMap1.autoEscString1} - ${rawMap1.autoEscString2}"</li>
+        <li>Raw map strings: "${rawMapInner1.autoEscString1} - ${rawMapInner1.autoEscString2}"</li>
+        <li>Number of map keys (complex/complex, should be >2/>2): ${rawMap1?keys?size}/${rawMapInner1?keys?size}</li>
+        <#assign rawMap1 = rewrapMap(autoEscMap1, "raw-simple")>
+        <#assign rawMapInner1 = rewrapMap(autoEscMapInner1, "raw-simple")>
+        <li>Raw map strings: "${rawMap1.autoEscString1} - ${rawMap1.autoEscString2}"</li>
+        <li>Raw map strings: "${rawMapInner1.autoEscString1} - ${rawMapInner1.autoEscString2}"</li>
+        <li>Number of map keys (simple/simple, should be 2/2): ${rawMap1?keys?size}/${rawMapInner1?keys?size}</li>
+      </ul>
+  </@section>
+  <@section title="Pre-escaping and macro escaping bypass">
+      <ul>
+        <li>Normal html escaping: ${escapeVal('<em>text, not emphasized because html-escaped</em>', 'htmlmarkup')}</li>
+        <li>Bypass html escaping: ${escapeVal(wrapAsRaw('<em>text emphasized with html</em>', 'htmlmarkup'), 'htmlmarkup')}</li>
+        <li>Normal js escaping: ${escapeVal('These "apostrophes" are js-escaped', 'js')}</li>
+        <li>Bypass js escaping: ${escapeVal(wrapAsRaw('These "apostrophes" are not js-escaped', 'js'), 'js')}</li>
+        <li>Normal js-html escaping: ${escapeVal('<em>text, not emphasized because html-escaped, plus "apostrophes" are js-escaped</em>', 'js-html')}</li>
+        <li>Bypass js-html escaping: ${escapeVal(wrapAsRaw('<em>text emphasized, plus "apostrophes" are not escaped</em>', 'js-html'), 'js-html')}</li>
+        <li>Partial bypass js in js-html escaping: ${escapeVal(wrapAsRaw('<em>text, not emphasized because html-escaped, plus "apostrophes" not escaped because of js bypass</em>', 'js'), 'js-html')}</li>
+        <li>Failed bypass (wrong language): ${escapeVal(wrapAsRaw('<em>text, not emphasized because html-escaped, because we accidentally wrapped as js</em>', 'js'), 'htmlmarkup')}</li>
+        <li>html filling in for htmlmarkup in htmlmarkup: ${escapeVal(wrapAsRaw('text <em>not html-escaped</em> WARN: bad usage! using <> is an error here, testing only, don\'t do this!!!', 'html'), 'htmlmarkup')}</li>
+        <li>html filling in for htmlmarkup in htmlmarkup-js: ${escapeVal(wrapAsRaw('text <em>not html-escaped</em> WARN: bad usage! using <> is an error here, testing only, don\'t do this!!!', 'html'), 'htmlmarkup-js')}</em></li>
+        <li>htmlmarkup NOT filling in for html in html: ${escapeVal(wrapAsRaw('text <em>html-escaped</em>', 'htmlmarkup'), 'html')}</li>
+        <li>htmlmarkup NOT filling in for html in html-js: ${escapeVal(wrapAsRaw('text <em>html-escaped</em>', 'htmlmarkup'), 'html-js')}</em></li>
         <li>Multi-bypass (only js and htmlmarkup specified):<br/>
             <#assign value = wrapAsRaw({'htmlmarkup':'<em>html text with em tags</em>', 'js':'js text with "apostrophes"'})>
             <ul>
-              <li>htmlmarkup (emphasized): ${escapePart(value, 'htmlmarkup')}</li>
-              <li>js (unescaped apostrophes): ${escapePart(value, 'js')}</li>
-              <li>js-html (here the js is selected because is prefix of js-html): ${escapePart(value, 'js-html')}</li>
-              <li>htmlmarkup-js (here the html is selected because is prefix of htmlmarkup-js): ${escapePart(value, 'htmlmarkup-js')}</em></li>
-              <li>raw (arbitrary text selected here, because raw was not specified, which it usually should): ${escapePart(value, 'raw')}</li>
+              <li>htmlmarkup (emphasized): ${escapeVal(value, 'htmlmarkup')}</li>
+              <li>js (unescaped apostrophes): ${escapeVal(value, 'js')}</li>
+              <li>js-html (here the js is selected because is prefix of js-html): ${escapeVal(value, 'js-html')}</li>
+              <li>htmlmarkup-js (here the html is selected because is prefix of htmlmarkup-js): ${escapeVal(value, 'htmlmarkup-js')}</em></li>
+              <li>raw (arbitrary text selected here, because raw was not specified, which it usually should): ${escapeVal(value, 'raw')}</li>
             </ul>     
         </li>
         <li>Multi-bypass (only htmlmarkup and raw specified):<br/>
             <#assign value = wrapAsRaw({'htmlmarkup':'<em>html text with em tags</em>', 'raw':'this is the "raw" text, as if no wrapAsRaw used'})>
             <ul>
-              <li>html (emphasized): ${escapePart(value, 'htmlmarkup')}</li>
-              <li>js (escaped apostrophes): ${escapePart(value, 'js')}</li>
-              <li>js-html (here raw text is used because html is not a prefix of js): ${escapePart(value, 'js-html')}</li>
-              <li>htmlmarkup-js (here htmlmarkup is used because is prefix of htmlmarkup-js): ${escapePart(value, 'htmlmarkup-js')}</em></li>
-              <li>raw (just prints the raw text): ${escapePart(value, 'raw')}</li>
+              <li>html (emphasized): ${escapeVal(value, 'htmlmarkup')}</li>
+              <li>js (escaped apostrophes): ${escapeVal(value, 'js')}</li>
+              <li>js-html (here raw text is used because html is not a prefix of js): ${escapeVal(value, 'js-html')}</li>
+              <li>htmlmarkup-js (here htmlmarkup is used because is prefix of htmlmarkup-js): ${escapeVal(value, 'htmlmarkup-js')}</em></li>
+              <li>raw (just prints the raw text): ${escapeVal(value, 'raw')}</li>
             </ul>     
         </li>
         <li>Multi-bypass (htmlmarkup and html specified):<br/>
             <#assign value = wrapAsRaw({'htmlmarkup':'<em>html text with em tags meant for markup</em>', 'html':'this is generic "html" meant <mainly> for attributes'})>
             <ul>
-              <li>htmlmarkup: ${escapePart(value, 'htmlmarkup')}</li>
-              <li>html (for attributes): ${escapePart(value, 'html')}</li>
-              <li>htmlmarkup-js: ${escapePart(value, 'htmlmarkup-js')}</em></li>
-              <li>html-js: ${escapePart(value, 'html-js')}</em></li>
+              <li>htmlmarkup: ${escapeVal(value, 'htmlmarkup')}</li>
+              <li>html (for attributes): ${escapeVal(value, 'html')}</li>
+              <li>htmlmarkup-js: ${escapeVal(value, 'htmlmarkup-js')}</em></li>
+              <li>html-js: ${escapeVal(value, 'html-js')}</em></li>
             </ul>     
         </li>
         <li>Multi-bypass (only html and raw specified):<br/>
             <#assign value = wrapAsRaw({'html':'this is generic "html" meant <em>mainly</em> for attributes WARN: contains bad usage of <>, for demo only! don\'t do this!', 'raw':'some <raw> text'})>
             <ul>
-              <li>html (for attributes): ${escapePart(value, 'html')}</li>
-              <li>htmlmarkup (html used here because also works in markup): ${escapePart(value, 'htmlmarkup')}</li>
-              <li>htmlmarkup-js (html used here because also works in markup): ${escapePart(value, 'htmlmarkup-js')}</em></li>
+              <li>html (for attributes): ${escapeVal(value, 'html')}</li>
+              <li>htmlmarkup (html used here because also works in markup): ${escapeVal(value, 'htmlmarkup')}</li>
+              <li>htmlmarkup-js (html used here because also works in markup): ${escapeVal(value, 'htmlmarkup-js')}</em></li>
             </ul>     
         </li>
       </ul>

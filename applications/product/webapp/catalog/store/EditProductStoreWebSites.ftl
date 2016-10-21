@@ -19,7 +19,7 @@ under the License.
 <#if productStoreId?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <#-- Scipio: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite...&amp;externalLoginKey=${requestAttributes.externalLoginKey} -->
+    <#-- Scipio: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite...&externalLoginKey=${requestAttributes.externalLoginKey} -->
     <@menuitem type="link" href=makeOfbizUrl("EditWebSite?productStoreId=${productStoreId}") text=uiLabelMap.ProductCreateNewProductStoreWebSite class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>

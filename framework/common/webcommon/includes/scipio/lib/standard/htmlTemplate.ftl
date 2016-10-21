@@ -113,7 +113,7 @@
 * that contain whole blocks of javascript code (read below). Nested content escaping must be handled by the caller, which
 * in most cases for html is done automatically by the renderer's automatic html escaping. Exceptions will be noted in macro docs.
 * 
-* Implementation and manipulation of escaping behavior is mainly done through the functions #escapePart, #rawString and #wrapAsRaw.
+* Implementation and manipulation of escaping behavior is mainly done through the functions #escapeVal, #rawString and #wrapAsRaw.
 *
 * ''Details and features:''
 * * ''Double-escaping prevention'': Values affected by screen renderer auto-escaping can be passed as-is to macros, and the
@@ -154,16 +154,16 @@
 *       "html" (normally escaped using freemarker's ?html or equivalent) on the other hand must be safe to insert into html attributes, 
 *       so caller '''must not''' pass markup elements in it. Its use is more limited and only really useful for rare cases
 *       where data was escaped as html too early (such that #rawString has no effect).
-*       See the related functions (#wrapAsRaw, #escapePart) for further details.
+*       See the related functions (#wrapAsRaw, #escapeVal) for further details.
 * * {{{attribs/inlineAttribs}}}: Macros that accept extra arbitrary attribs will automatically escape the values for html attributes.
 *   ''However'', if the attribs contain any javascript, the macros cannot be aware of this, and the caller must escape the javascript.
-*     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${escapePart(screenVar1, 'js')}');"}/> <#- (recommended) ->
+*     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${escapeVal(screenVar1, 'js')}');"}/> <#- (recommended) ->
 *     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${rawString(screenVar1)?js_string}');"}/> <#- (also works, but not recommended) ->
 *   This also applies to javascript html attributes in general, such as events.
 * * ''Javascript'': Note that escaping javascript typically means escaping the values inserted as string literals, and never the whole javascript code or html attribute (e.g. events).
 *   Arbitrary javascript code ''cannot'' be escaped safely; only strings and text within string literals ({{{""}}} {{{''}}}) can be. 
 *   Therefore, macros which accept entire pieces of javascript code cannot escape it and 
-*   the caller is responsible for escaping the strings inserted within it (using #escapePart or {{{?js_string}}}).
+*   the caller is responsible for escaping the strings inserted within it (using #escapeVal or {{{?js_string}}}).
 * * ''URL macro parameters'': URL macro parameters have some extra special handling and are escaped by macros as full URLs. 
 *   See #escapeFullUrl for details.
 *

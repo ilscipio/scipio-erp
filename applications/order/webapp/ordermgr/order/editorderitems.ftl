@@ -270,7 +270,7 @@ under the License.
                                         <#-- Scipio: Now points to shop -->
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                            <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
+                                            <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>
                                     </@menu>
                               </@td>

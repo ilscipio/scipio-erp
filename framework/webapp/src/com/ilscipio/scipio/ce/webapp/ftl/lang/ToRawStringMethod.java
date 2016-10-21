@@ -18,8 +18,10 @@
  *******************************************************************************/
 package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
@@ -45,17 +47,17 @@ public class ToRawStringMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        Object arg = args.get(0);
-        if (arg == null) { // Emulates StringUtil.wrapString
-            return null;
-        }
-        if (arg instanceof TemplateScalarModel) {
-            TemplateScalarModel strModel = (TemplateScalarModel) arg;
-            String str = LangFtlUtil.getAsStringNonEscaping(strModel);
-            return new SimpleScalar(str); // Emulates Freemarker ?string built-in
+        List<TemplateModel> values = UtilGenerics.cast(args);
+        Environment env = FreeMarkerWorker.getCurrentEnvironment();
+        if (args.size() == 1) {
+            return LangFtlUtil.toRawString(values.get(0), env);
+        } else if (args.size() > 1) {
+            return LangFtlUtil.toRawString(values, env);
         } else {
-            return LangFtlUtil.execStringBuiltIn((TemplateModel) arg, FreeMarkerWorker.getCurrentEnvironment());
+            throw new TemplateModelException("Invalid number of parameters passed to toRawString/rawString (none passed)");
         }
     }
+    
+
     
 }

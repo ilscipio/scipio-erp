@@ -74,7 +74,7 @@ public class FormatDateMethod implements TemplateMethodModelEx {
         Locale locale;
         if (specLocaleModel == null || specLocaleModel instanceof TemplateBooleanModel) {
             if (specLocaleModel == null || ((TemplateBooleanModel) specLocaleModel).getAsBoolean()) {
-                locale = LangFtlUtil.getLocale(ContextFtlUtil.getFtlContextGlobalVar("locale", env));
+                locale = LangFtlUtil.getLocale(TransformUtil.getFtlContextGlobalVar("locale", env));
                 if (locale == null) {
                     locale = Locale.getDefault();
                     Debug.logWarning("Scipio: formatDate(Time): locale empty (from context); using system default", module);
@@ -94,7 +94,7 @@ public class FormatDateMethod implements TemplateMethodModelEx {
         TimeZone timeZone;
         if (specTimeZoneModel == null || specTimeZoneModel instanceof TemplateBooleanModel) {
             if (specTimeZoneModel == null || ((TemplateBooleanModel) specTimeZoneModel).getAsBoolean()) {
-                timeZone = LangFtlUtil.getTimeZone(ContextFtlUtil.getFtlContextGlobalVar("timeZone", env));
+                timeZone = LangFtlUtil.getTimeZone(TransformUtil.getFtlContextGlobalVar("timeZone", env));
                 if (timeZone == null) {
                     timeZone = TimeZone.getDefault();
                     Debug.logWarning("Scipio: formatDate(Time): timeZone empty (from context); using system default", module);

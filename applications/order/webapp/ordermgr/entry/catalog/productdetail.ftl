@@ -308,7 +308,7 @@ ${virtualJavaScript!}
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?has_content>
-        <a href="javascript:popupDetail();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@catalogContentUrl>${productLargeImageUrl}</@catalogContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" alt="" /></a>
+        <a href="javascript:popupDetail();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl ctxPrefix=true>${productLargeImageUrl}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" alt="" /></a>
       </#if>
     </@td>
     <@td align="right" valign="top">
@@ -612,7 +612,7 @@ ${virtualJavaScript!}
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@catalogContentUrl>${imageUrl}</@catalogContentUrl>" class="cssImgSmall" alt="" /></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                   <br />
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>

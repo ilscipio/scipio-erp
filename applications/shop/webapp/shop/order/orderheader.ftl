@@ -56,7 +56,7 @@ under the License.
       <#-- Scipio: Always show it here: <#if maySelect>-->
       <#-- NOTE: The order may actually have more than one invoice available. On this page, show only this one for now, because the
           others don't become available until after order is completed and stuff. -->
-      <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + escapePart((orderHeader.orderId)!, 'js'), "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${rawLabel('CommonInvoice')} (${rawLabel('CommonPdf')})" />
+      <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + escapeVal((orderHeader.orderId)!, 'js'), "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${rawLabel('CommonInvoice')} (${rawLabel('CommonPdf')})" />
       <#--</#if>-->
       <#-- Scipio: TODO: Uncomment once converted/tested
       <#if maySelect && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">

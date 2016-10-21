@@ -17,24 +17,32 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.ftl.EscapingModel;
 import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
+import org.ofbiz.webapp.ftl.ExtendedWrapper;
+
+import com.ilscipio.scipio.ce.webapp.ftl.lang.WrappingOptions.RewrapMode;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
+import freemarker.template.AdapterTemplateModel;
 import freemarker.template.DefaultArrayAdapter;
 import freemarker.template.DefaultListAdapter;
 import freemarker.template.DefaultMapAdapter;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.ObjectWrapperAndUnwrapper;
 import freemarker.template.SimpleHash;
+import freemarker.template.SimpleScalar;
 import freemarker.template.SimpleSequence;
 import freemarker.template.Template;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
@@ -68,7 +76,7 @@ public abstract class LangFtlUtil {
     private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
     private static Template stringBuiltInCall = null;
     private static final Map<String, Template> functionCalls = new ConcurrentHashMap<>();
-    
+
     /**
      * Used for TemplateModel <-> unwrapped/raw value conversions.
      */
@@ -1414,77 +1422,92 @@ public abstract class LangFtlUtil {
     }
     
     /**
-     * Generic rewrapObject abstracted implementation.
-     * <p>
-     * Rewraps objects with different wrappers.
-     * <p>
-     * curObjectWrapper should usually be gotten from environment.
-     * If targetObjectWrapper is non-null, it overrides the method's decisions for the wrapper to use
-     * for the model itself (and, if deep, for the models it returns).
+     * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels.
+     * 
+     * @see org.ofbiz.webapp.ftl.EscapingModel
      */
-    public static Object rewrapObject(TemplateModel model, RewrapMode mode, Environment env, 
-        ObjectWrapper curObjectWrapper) throws TemplateModelException {
-        if (model instanceof TemplateHashModel) {
-            return rewrapMap((TemplateHashModel) model, mode, env, curObjectWrapper);
+    public static String getAsString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
+        if (nonEscaping && (model instanceof EscapingModel)) {
+            return (String) ((EscapingModel) model).getWrappedObject();
         } else {
-            if (mode.simple && mode.raw && mode.deep) {
-                Object unwrapped = LangFtlUtil.unwrapAlways(model);
-                ObjectWrapper objectWrapper = LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
-                return objectWrapper.wrap(unwrapped);
-            }
-            
-            throw new TemplateModelException("Scipio: rewrapObject doesn't support given object type or mode");
+            return model.getAsString();
         }
     }
     
-    public static Object rewrapMap(TemplateHashModel model, RewrapMode mode, Environment env, 
-            ObjectWrapper curObjectWrapper) throws TemplateModelException {
-        if (mode.simple) {
-            if (mode.force) {
+    /**
+     * Standard/"dumb" (re-)wrapping method. will deep-unwrap the value if necessary (if TemplateModel).
+     * <p>
+     * Failure to unwrap TemplateModel first will throw exception.
+     */
+    public static TemplateModel wrapObjectStd(Object value, String wrapper, Environment env) throws TemplateModelException {
+        return ObjectWrapperUtil.getObjectWrapperByName(wrapper, env).wrap(unwrap(value));
+    }
+    
+    public static TemplateModel wrapObjectStd(Object value, String wrapper) throws TemplateModelException {
+        return wrapObjectStd(value, wrapper, FreeMarkerWorker.getCurrentEnvironment());
+    }
+
+    /**
+     * Full-featured rewrapObject implementation. Rewraps objects with different wrappers and options.
+     * <p>
+     * TODO: 2016-10-20: this is currently very limited to the cases which we currently have in scipio,
+     * but other cases may pop up anytime.
+     * The non-deep is currently mainly handled by toSimpleMap in an imperfect way.
+     */
+    public static Object rewrapObject(TemplateModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
+        if (opts.rewrapMode.deep) {
+            if (opts.rewrapMode.always) {
+                // simplest case (default), just fully unwrap and rewrap
+                Object unwrapped = LangFtlUtil.unwrapAlways(model);
+                return opts.targetWrapper.wrap(unwrapped);
+            } else {
+                // TODO
+                throw new UnsupportedOperationException();
+            }
+        } else {
+            if (opts.rewrapMode.always) {
+                // TODO
+                throw new UnsupportedOperationException();
+            } else {
+                // TODO
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+    
+    /* obsoleted, remove later when rewrapObject is fully implemented
+    public static Object rewrapMap(TemplateHashModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
+        RewrapMode mode = opts.rewrapMode;
+        if (mode.always) {
+            return alwaysRewrapMap(model, opts, env);
+        } else {
+            
+            if (mode.deep) {
+                // WARN: Here we make one VERY delicate optimization:
+                // if the map is a simple hash, we do nothing to it.
+                // In theory this is WRONG but it works in most practical cases.
+                // Caller can force if it doesn't work right in his case.
+                if (model instanceof SimpleHash) {
+                    return model;
+                }
+                
+                // FIXME: Here we are forced to rewrap in most cases because Freemarker interface
+                // does not allow inspecting which object wrapper an object is using!
                 return alwaysRewrapMap(model, mode, env, curObjectWrapper);
             } else {
-                if (mode.raw) {
-                    if (mode.deep) {
-                        // WARN: Here we make one VERY delicate optimization:
-                        // if the map is a simple hash, we do nothing to it.
-                        // In theory this is WRONG but it works in most practical cases.
-                        // Caller can force if it doesn't work right in his case.
-                        if (model instanceof SimpleHash) {
-                            return model;
-                        }
-                        
-                        // FIXME: Here we are forced to rewrap in most cases because Freemarker interface
-                        // does not allow inspecting which object wrapper an object is using!
-                        return alwaysRewrapMap(model, mode, env, curObjectWrapper);
-                    } else {
-                        // Can't do raw without doing deep
-                        throw new TemplateModelException("Scipio: rewrapMap mode unsupported");
-                    }
-                } else {
-                    if (mode.deep) {
-                        // TODO: This mode is desirable but it requires implementing a new DefaultObjectWrapper
-                        // that would preserve the wrapping mode curObjectWrapper is doing.
-                        // Currently, to do deep, you must also do raw.
-                        throw new TemplateModelException("Scipio: rewrapMap mode not yet implemented");
-                    } else {
-                        // Shallow re-wrap to simple, non-(necessarily-)raw map. 
-                        // This is the rare case we can currently optimize...
-                        return toSimpleMap(model, mode.copy, curObjectWrapper);
-                    }
-                }
+                // Shallow re-wrap to simple, non-(necessarily-)raw map. 
+                // This is the rare case we can currently optimize...
+                return toSimpleMap(model, mode.copy, curObjectWrapper);
             }
-            
-        } else {
-            throw new TemplateModelException("Scipio: rewrapMap currently only supports simple target maps");
         }
     }
     
-    public static Object alwaysRewrapMap(TemplateHashModel model, RewrapMode mode, Environment env, 
-            ObjectWrapper curObjectWrapper) throws TemplateModelException {
+    public static Object alwaysRewrapMap(TemplateHashModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
         Map<?, ?> unwrapped = (Map<?, ?>) LangFtlUtil.unwrapAlways(model);
-
-        if (mode.raw) {
-            if (mode.deep) {
+        return 
+        
+        if (opts.rewrapMode.raw) {
+            if (opts.rewrapMode.deep) {
                 ObjectWrapper modelWrapper = mode.copy ? 
                         LangFtlUtil.getSimpleTypeCopyingNonEscapingObjectWrapper(curObjectWrapper) : LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
                 return modelWrapper.wrap(unwrapped);
@@ -1493,20 +1516,17 @@ public abstract class LangFtlUtil {
                 throw new TemplateModelException("Scipio: rewrapMap mode unsupported");
             }
         } else {
-            if (mode.deep) {
+            if (opts.rewrapMode.deep) {
                 // TODO: This mode is desirable but it requires implementing a new DefaultObjectWrapper
                 // that would preserve the wrapping mode curObjectWrapper is doing.
                 // as-is, to do deep, you must also do raw.
                 throw new TemplateModelException("Scipio: rewrapMap mode not yet implemented");
             } else {
-                if (mode.copy) {
-                    return new SimpleHash(unwrapped, curObjectWrapper);
-                } else {
-                    return new SimpleMapModel(unwrapped, (BeansWrapper) curObjectWrapper);
-                }
+                return opts.targetWrapper.wrap(unwrapped);
             }
         }
     }
+    */
     
     public static boolean isNullOrEmptyString(TemplateModel model) throws TemplateModelException {
         // this doesn't work out: TemplateScalarModel.EMPTY_STRING.equals(model)
@@ -1713,5 +1733,37 @@ public abstract class LangFtlUtil {
             result = env.getGlobalVariable(name);
         }
         return result;
+    }
+    
+    public static TemplateBooleanModel toBooleanModel(boolean value, Environment env) throws TemplateModelException {
+        return value ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
+    }
+    
+    /**
+     * Performs the logical raw string operation on a single value.
+     */
+    public static TemplateScalarModel toRawString(TemplateModel value, Environment env) throws TemplateModelException {
+        if (value instanceof TemplateScalarModel) {
+            TemplateScalarModel strModel = (TemplateScalarModel) value;
+            String str = getAsStringNonEscaping(strModel);
+            return new SimpleScalar(str); // Emulates Freemarker ?string built-in
+        } else {
+            return execStringBuiltIn(value, env);
+        }
+    }
+    
+    /**
+     * Performs the logical raw string operation on multiple values, concatenating the result.
+     */
+    public static TemplateScalarModel toRawString(Collection<TemplateModel> values, Environment env) throws TemplateModelException {
+        StringBuilder sb = new StringBuilder();
+        for(TemplateModel value: values) {
+            if (value instanceof TemplateScalarModel) {
+                sb.append(getAsStringNonEscaping((TemplateScalarModel) value));
+            } else {
+                sb.append(execStringBuiltIn(value, env).getAsString());
+            }
+        }
+        return new SimpleScalar(sb.toString());
     }
 }

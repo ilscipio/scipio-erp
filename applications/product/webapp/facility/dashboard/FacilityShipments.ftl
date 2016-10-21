@@ -31,7 +31,7 @@
                 </@table>
                 <script>
                     $(document).ready(function() {        
-                        var table = $('#${escapePart(currentShipmentType.shipmentTypeId, 'js')}_shipments').DataTable();
+                        var table = $('#${escapeVal(currentShipmentType.shipmentTypeId, 'js')}_shipments').DataTable();
                         //table.order( [[ 5, 'desc' ]] ).draw();
                     } );
                 </script>

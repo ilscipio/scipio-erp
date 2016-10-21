@@ -20,7 +20,7 @@ under the License.
 <#if glAcctgTrialBalanceList?has_content>
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}") text=uiLabelMap.AccountingInvoicePDF target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+            <@menuitem type="link" href=makeOfbizUrl("GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&timePeriod=${parameters.timePeriod}&isPosted=${parameters.isPosted}&glAccountId=${parameters.glAccountId}") text=uiLabelMap.AccountingInvoicePDF target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
         </@menu>
     </#macro>
     <@section menuContent=menuContent>
@@ -60,8 +60,8 @@ under the License.
                                 <@td align="left">${(acctgTransAndEntry.transDescription)!}</@td>
                                 <@td align="left">${(acctgTransAndEntry.currencyUomId)!}</@td>
                                 <@td align="left">${(acctgTransAndEntry.origCurrencyUomId)!}</@td>
-                                <@td class=("align-center"><#if (acctgTransAndEntry.debitCreditFlag)!) == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
-                                <@td class=("align-right"><#if (acctgTransAndEntry.debitCreditFlag)!) == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                <@td class="align-center"><#if ((acctgTransAndEntry.debitCreditFlag)!) == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                <@td class="align-right"><#if ((acctgTransAndEntry.debitCreditFlag)!) == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
                                 <@td class="align-right"></@td>
                                 <@td class="align-right"></@td>
                             </@tr>

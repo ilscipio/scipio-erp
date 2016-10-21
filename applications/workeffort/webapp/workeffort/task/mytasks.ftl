@@ -18,7 +18,7 @@ under the License.
 -->
 <#-- macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION") text=uiLabelMap.WorkEffortNewTask class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditWorkEffort?workEffortTypeId=TASK&currentStatusId=CAL_NEEDS_ACTION") text=uiLabelMap.WorkEffortNewTask class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleViewActivityAndTaskList menuContent=menuContent -->

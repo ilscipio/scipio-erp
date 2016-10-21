@@ -82,8 +82,8 @@ Defines a form. Analogous to <form> HTML element.
 <#-- @form main markup - theme override -->
 <#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
-      <#lt><#if name?has_content> name="${escapePart(name, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+      <#lt><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -139,7 +139,7 @@ for getFileUploadProgressStatus controller AJAX calls.
               });
               
             <#if (progressOptions.submitHook!) == "validate">
-              jQuery("${escapePart(progressOptions.formSel, 'js')}").validate({
+              jQuery("${escapeVal(progressOptions.formSel, 'js')}").validate({
                   submitHandler: function(form) {
                       var goodToGo = uploadProgress.initUpload();
                       if (goodToGo) {
@@ -149,7 +149,7 @@ for getFileUploadProgressStatus controller AJAX calls.
                   ${progressOptions.validateObjScript!""}
               });
             <#elseif (progressOptions.submitHook!) != "none" >
-              jQuery("${escapePart(progressOptions.formSel, 'js')}").submit(function(event) {
+              jQuery("${escapeVal(progressOptions.formSel, 'js')}").submit(function(event) {
                   var goodToGo = uploadProgress.initUpload();
                   if (!goodToGo) {
                       event.preventDefault();
@@ -237,9 +237,9 @@ to a form submit.
 <#macro progress_markup value=0 id="" class="" showValue=false containerClass="" stateClass="" origArgs={} passArgs={} catchArgs...>
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
-  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${escapePart(classes, 'html')}</#if><#if stateClass?has_content> ${escapePart(stateClass, 'html')}</#if><#if containerClasses?has_content> ${escapePart(containerClasses, 'html')}</#if>"<#if id?has_content> id="${escapePart(id, 'html')}"</#if>>
-    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${escapePart(classes, 'html')}</#if>"<#if id?has_content> id="${escapePart(id, 'html')}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
-      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value}%"<#if id?has_content> id="${escapePart(id, 'html')}_meter"</#if></#if>><#if showValue>${value}</#if></span>
+  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${escapeVal(classes, 'html')}</#if><#if stateClass?has_content> ${escapeVal(stateClass, 'html')}</#if><#if containerClasses?has_content> ${escapeVal(containerClasses, 'html')}</#if>"<#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
+    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${escapeVal(classes, 'html')}</#if>"<#if id?has_content> id="${escapeVal(id, 'html')}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
+      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value}%"<#if id?has_content> id="${escapeVal(id, 'html')}_meter"</#if></#if>><#if showValue>${value}</#if></span>
     <#if styles.progress_wrap?has_content></div></#if>
   </div>
 </#macro>
@@ -286,14 +286,14 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
     <#if id?has_content>
     <@script htmlwrap=htmlwrap>
     jQuery(document).ready(function() {
-        multiple = jQuery("#${escapePart(id, 'js')}");
+        multiple = jQuery("#${escapeVal(id, 'js')}");
     
       <#if !(title?is_boolean && title == false)>
         <#if title?is_boolean>
           <#local title = "">
         </#if>
         <#-- set the dropdown "title" if?? -->
-        multiple.attr('title', '${escapePart(title, 'js')}');
+        multiple.attr('title', '${escapeVal(title, 'js')}');
       </#if>
       
         <#if asmSelectDefaults>
@@ -314,14 +314,14 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
       <#if relatedFieldId?has_content> <#-- can be used without related field -->
         // track possible relatedField changes
         // on initial focus (focus-field-name must be relatedFieldId) or if the field value changes, select related multi values. 
-        typeValue = jQuery('#${escapePart(relatedTypeFieldId, 'js')}').val();
-        jQuery("#${escapePart(relatedFieldId, 'js')}").one('focus', function() {
-          selectMultipleRelatedValues('${escapePart(requestName, 'js')}', '${escapePart(paramKey, 'js')}', '${escapePart(relatedFieldId, 'js')}', '${escapePart(id, 'js')}', '${escapePart(relatedTypeName, 'js')}', typeValue, '${escapePart(responseName, 'js')}');
+        typeValue = jQuery('#${escapeVal(relatedTypeFieldId, 'js')}').val();
+        jQuery("#${escapeVal(relatedFieldId, 'js')}").one('focus', function() {
+          selectMultipleRelatedValues('${escapeVal(requestName, 'js')}', '${escapeVal(paramKey, 'js')}', '${escapeVal(relatedFieldId, 'js')}', '${escapeVal(id, 'js')}', '${escapeVal(relatedTypeName, 'js')}', typeValue, '${escapeVal(responseName, 'js')}');
         });
-        jQuery("#${escapePart(relatedFieldId, 'js')}").change(function() {
-          selectMultipleRelatedValues('${escapePart(requestName, 'js')}', '${escapePart(paramKey, 'js')}', '${escapePart(relatedFieldId, 'js')}', '${escapePart(id, 'js')}', '${escapePart(relatedTypeName, 'js')}', typeValue, '${escapePart(responseName, 'js')}');
+        jQuery("#${escapeVal(relatedFieldId, 'js')}").change(function() {
+          selectMultipleRelatedValues('${escapeVal(requestName, 'js')}', '${escapeVal(paramKey, 'js')}', '${escapeVal(relatedFieldId, 'js')}', '${escapeVal(id, 'js')}', '${escapeVal(relatedTypeName, 'js')}', typeValue, '${escapeVal(responseName, 'js')}');
         });
-        selectMultipleRelatedValues('${escapePart(requestName, 'js')}', '${escapePart(paramKey, 'js')}', '${escapePart(relatedFieldId, 'js')}', '${escapePart(id, 'js')}', '${escapePart(relatedTypeName, 'js')}', typeValue, '${escapePart(responseName, 'js')}');
+        selectMultipleRelatedValues('${escapeVal(requestName, 'js')}', '${escapeVal(paramKey, 'js')}', '${escapeVal(relatedFieldId, 'js')}', '${escapeVal(id, 'js')}', '${escapeVal(relatedTypeName, 'js')}', typeValue, '${escapeVal(responseName, 'js')}');
       </#if>
       });  
     </@script>
@@ -412,24 +412,24 @@ A visible fieldset, including the HTML element.
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
     <@row open=true close=false />
       <@cell open=true close=false class=containerClasses id=containerId />
-        <fieldset<#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#if id?has_content> id="${escapePart(id, 'html')}"</#if>>
+        <fieldset<#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapePart(collapsibleAreaId, 'js-html')}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapeVal(collapsibleAreaId, 'js-html')}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');">
                     <#else>expanded">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapePart(collapsibleAreaId, 'js-html')}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapeVal(collapsibleAreaId, 'js-html')}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');">
                     </#if>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${escapePart(title, 'htmlmarkup')}</#if></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${escapeVal(title, 'htmlmarkup')}</#if></a>
           </li>
         </ul>
       <#else>
-        <#if title?has_content>${escapePart(title, 'htmlmarkup')}</#if>
+        <#if title?has_content>${escapeVal(title, 'htmlmarkup')}</#if>
       </#if><#rt/>
     </div>
-    <div id="${escapePart(collapsibleAreaId, 'html')}" class="fieldgroup-body"<#if collapsed && collapsible> style="display: none;"</#if>>
+    <div id="${escapeVal(collapsibleAreaId, 'html')}" class="fieldgroup-body"<#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapePart(title, 'htmlmarkup')}</legend></#if>
+          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapeVal(title, 'htmlmarkup')}</legend></#if>
   </#if>
           <#nested>
   <#if close>
@@ -1860,7 +1860,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               maxlength=maxlength
                               wrap=wrap
                               required=required
-                              passArgs=passArgs>${escapePart(text, 'htmlmarkup')}${escapePart(value, 'htmlmarkup')}<#nested></@field_textarea_widget>
+                              passArgs=passArgs>${escapeVal(text, 'htmlmarkup')}${escapeVal(value, 'htmlmarkup')}<#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date" || dateType == "time" || dateType == "month">
@@ -2331,7 +2331,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     required=false labelContentArgs={} norows=false nocells=false container=true origArgs={} passArgs={} catchArgs...>
   <#-- the label must be escaped by default. caller can prevent using #wrapAsRaw
   <#local label = label?trim>-->
-  <#local label = escapePart(label, 'htmlmarkup')?trim>
+  <#local label = escapeVal(label, 'htmlmarkup')?trim>
   <#if !labelContent?is_boolean>
     <@contentArgRender content=labelContent args=labelContentArgs doTrim=true />
     <#-- don't show this here, let macro handle it
@@ -2340,7 +2340,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#if collapse>
       <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
     <#else>
-      <label class="form-field-label"<#if fieldId?has_content> for="${escapePart(fieldId, 'html')}"</#if>>${label}<#if required> *</#if></label>
+      <label class="form-field-label"<#if fieldId?has_content> for="${escapeVal(fieldId, 'html')}"</#if>>${label}<#if required> *</#if></label>
     </#if>
   <#-- only show this if there's a label, otherwise affects inline fields too in ugly way, and there are other indications anyhow
   <#else>

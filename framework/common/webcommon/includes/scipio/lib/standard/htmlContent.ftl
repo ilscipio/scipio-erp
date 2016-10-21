@@ -137,10 +137,10 @@ An HTML heading (title).
     <#local elem = "h" + elemLevel?string>
   </#if>
   <#if containerElem?has_content>
-    <${containerElem}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if>>
+    <${containerElem}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if>>
   </#if>
-  <#if elem?has_content><${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
-    <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#if title?has_content>${escapePart(title, 'htmlmarkup')}<#else><#nested></#if><#if elem?has_content></${elem}></#if>
+  <#if elem?has_content><${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+    <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#if title?has_content>${escapeVal(title, 'htmlmarkup')}<#else><#nested></#if><#if elem?has_content></${elem}></#if>
   <#if containerElem?has_content>
     </${containerElem}>
   </#if>
@@ -177,7 +177,7 @@ Creates a basic wrapper for code blocks.
 
 <#-- @code main markup - theme override -->
 <#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
-  <pre<@compiledClassAttribStr class=class />><code data-language="${escapePart(type, 'html')}"><#rt>
+  <pre<@compiledClassAttribStr class=class />><code data-language="${escapeVal(type, 'html')}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>
@@ -274,7 +274,7 @@ Creates a responsive tables script (script only - no markup).
       
       <@script htmlwrap=htmlwrap>
         $(document).ready(function() {
-            $('#${escapePart(tableId, 'js')}').DataTable(<@objectAsScript lang="js" object=respOpts />);
+            $('#${escapeVal(tableId, 'js')}').DataTable(<@objectAsScript lang="js" object=respOpts />);
         } );
       </@script>
     </#if>
@@ -555,7 +555,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 <#macro table_markup open=true close=true type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
   autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false tableIdNum=0 attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
+    <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if> width="100%">  
   </#if>
       <#nested>
@@ -622,7 +622,7 @@ Defines a table header with advanced generating functionality. Analogous to HTML
 <#-- @thead main markup - theme override -->
 <#macro thead_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -678,7 +678,7 @@ Defines a table body with advanced generating functionality. Analogous to HTML <
 <#-- @tbody main markup - theme override -->
 <#macro tbody_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -734,7 +734,7 @@ Defines a table footer with advanced generating functionality. Analogous to HTML
 <#-- @tfoot main markup - theme override -->
 <#macro tfoot_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -877,7 +877,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 <#-- @tr main markup - theme override -->
 <#macro tr_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -918,7 +918,7 @@ Defines a table header cell. Analogous to <th> HTML element.
 
 <#-- @th main markup - theme override -->
 <#macro th_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
-  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
+  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#-- 
@@ -944,7 +944,7 @@ Defines a table body cell. Analogous to <td> HTML element.
 
 <#-- @td main markup - theme override -->
 <#macro td_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
-  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></td></#if>
+  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
 <#-- 
@@ -1010,7 +1010,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#-- @pul main markup - theme override -->
 <#macro pul_markup title="" origArgs={} passArgs={} catchArgs...>
   <ul class="${styles.pricing_wrap!}">
-    <#if title?has_content><@pli type="title">${escapePart(title, 'htmlmarkup')}</@pli></#if>
+    <#if title?has_content><@pli type="title">${escapeVal(title, 'htmlmarkup')}</@pli></#if>
     <#nested>
   </ul>
 </#macro>
@@ -1122,11 +1122,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#if nestedContent?has_content>
     <@row>
       <@cell columns=3>
-        <ul data-${escapePart(type, 'html')}-id="${escapePart(id, 'html')}" class="${styles.chart_legend!}">
+        <ul data-${escapeVal(type, 'html')}-id="${escapeVal(id, 'html')}" class="${styles.chart_legend!}">
             <#nested/>
         </ul>
       </@cell>
-      <@cell columns=9><div id="${escapePart(id, 'html')}" style="height:300px;"></div></@cell>
+      <@cell columns=9><div id="${escapeVal(id, 'html')}" style="height:300px;"></div></@cell>
     </@row>
     <#else>
         <#-- Default to chart.js chart for now, as this is capable of rendering an empty chart -->
@@ -1143,7 +1143,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
     <#if (chartDatasets < 1)><#local chartDatasets = 1 /></#if>
     <span class="chart-data">&nbsp;</span>
-    <canvas id="${escapePart(id, 'html')}" height="300" width="500"></canvas>
+    <canvas id="${escapeVal(id, 'html')}" height="300" width="500"></canvas>
     <@script>
         $(function(){
             var chartDataEl = $('.chart-data').first();
@@ -1164,10 +1164,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                         var datasetLabel = '';                                  
                                         <#if type=="line" || type=="bar">
                                              datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
-                                             return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom1, 'js')}';
+                                             return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapeVal(labelUom1, 'js')}';
                                         <#elseif type="pie">
                                              datasetLabel = data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                             return datasetLabel + ' ${escapePart(labelUom1, 'js')}';
+                                             return datasetLabel + ' ${escapeVal(labelUom1, 'js')}';
                                         <#else>
                                             return datasetLabel;
                                         </#if>
@@ -1176,7 +1176,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 <#if labelUom2?has_content> 
                                     if(tooltipItem.datasetIndex == 1) {
                                         var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapePart(labelUom2, 'js')}';
+                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${escapeVal(labelUom2, 'js')}';
                                     }
                                 </#if>
                             }
@@ -1195,7 +1195,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     title: {
                         <#if title?has_content>
                             display: true,
-                            text: '${escapePart(title, 'js')}',
+                            text: '${escapeVal(title, 'js')}',
                         <#else>
                             display: false,
                         </#if>
@@ -1216,7 +1216,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 },
                                 scaleLabel : {
                                     display: chartData.scaleLabelDisplay,
-                                    <#if xlabel?has_content>labelString: '${escapePart(xlabel, 'js')}',</#if>
+                                    <#if xlabel?has_content>labelString: '${escapeVal(xlabel, 'js')}',</#if>
                                     fontColor: chartData.scaleLabelFontColor,
                                     fontFamily: chartData.scaleLabelFontFamily,
                                     fontSize: chartData.scaleLabelFontSize                                
@@ -1234,7 +1234,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             yAxes: [{
                                 scaleLabel : {
                                     display: chartData.scaleLabelDisplay,
-                                    <#if ylabel?has_content>scaleLabel: '${escapePart(xlabel, 'js')}',</#if>
+                                    <#if ylabel?has_content>scaleLabel: '${escapeVal(xlabel, 'js')}',</#if>
                                     fontColor: chartData.scaleLabelFontColor,
                                     fontFamily: chartData.scaleLabelFontFamily,
                                     fontSize: chartData.scaleLabelFontSize
@@ -1255,13 +1255,13 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }            
                     </#if>
                 };
-            var ctx = $('#${escapePart(id, 'js')}').get(0).getContext("2d");
+            var ctx = $('#${escapeVal(id, 'js')}').get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
                     {
                       <#if type=="line" || type=="bar">
-                      label: '${escapePart(label1, 'js')}',                      
+                      label: '${escapeVal(label1, 'js')}',                      
                       fill: true,
                       backgroundColor: chartData.primaryFillColor,
                       borderColor: chartData.primaryStrokeColor,
@@ -1292,7 +1292,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     <#if (chartDatasets > 1)>
                     ,{
                       <#if (type=="line" || type=="bar")>
-                      label: '${escapePart(label2, 'js')}',
+                      label: '${escapeVal(label2, 'js')}',
                       fill: true,
                       backgroundColor: chartData.secondaryFillColor,
                       borderColor: chartData.secondaryStrokeColor,
@@ -1392,14 +1392,14 @@ Chart data entry.
   <#if chartLibrary == "foundation">
     <#if chartType == "line">
       <#global chartDataIndex =  chartDataIndex + 1 />
-      <li data-y="${escapePart(value, 'html')}" data-x="${chartDataIndex}">${escapePart(title, 'htmlmarkup')}</li>
+      <li data-y="${escapeVal(value, 'html')}" data-x="${chartDataIndex}">${escapeVal(title, 'htmlmarkup')}</li>
     <#else>
-      <li data-value="${escapePart(value, 'html')}">${escapePart(title, 'htmlmarkup')}</li>
+      <li data-value="${escapeVal(value, 'html')}">${escapeVal(title, 'htmlmarkup')}</li>
     </#if>
   <#else>
-      config.data.labels.push('${escapePart(title, 'js')}');
-      <#if value?has_content>config.data.datasets[0].data.push(${escapePart(value, 'js')});</#if>
-      <#if value2?has_content>config.data.datasets[1].data.push(${escapePart(value2, 'js')});</#if>
+      config.data.labels.push('${escapeVal(title, 'js')}');
+      <#if value?has_content>config.data.datasets[0].data.push(${escapeVal(value, 'js')});</#if>
+      <#if value2?has_content>config.data.datasets[1].data.push(${escapeVal(value2, 'js')});</#if>
   </#if>
 </#macro>
 
@@ -1464,22 +1464,22 @@ Creates a slider wrapper.
     <#switch library>
         <#case "owl">    
             <#local class = addClassArg(class, "owl-carousel")>
-            <div<@compiledClassAttribStr class=class /> id="${escapePart(id, 'html')}">
+            <div<@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}">
                 <#nested/>
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
-                  $("#${escapePart(id, 'js')}").owlCarousel({${jsOptions}});
+                  $("#${escapeVal(id, 'js')}").owlCarousel({${jsOptions}});
                 });
             </script>
           <#break>
         <#case "slick">
-            <div<@compiledClassAttribStr class=class /> id="${escapePart(id, 'html')}">
+            <div<@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}">
                 <#nested/>
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
-                  $("#${escapePart(id, 'js')}").slick({${jsOptions}});
+                  $("#${escapeVal(id, 'js')}").slick({${jsOptions}});
                 });
             </script>
           <#break>
@@ -1488,7 +1488,7 @@ Creates a slider wrapper.
                 <#t>navigation_arrows:${controls?string("true","false")}; bullets:${indicator?string("true","false")};slide_number:false;
             </#local>
             <#local class = addClassArg(class, styles.slider_container!)>
-            <div<@compiledClassAttribStr class=class /> data-orbit id="${escapePart(id, 'html')}"<#if dataOptions?has_content> data-options="${escapePart(dataOptions, 'html')}"</#if>>
+            <div<@compiledClassAttribStr class=class /> data-orbit id="${escapeVal(id, 'html')}"<#if dataOptions?has_content> data-options="${escapeVal(dataOptions, 'html')}"</#if>>
               <#nested/>
             </div>
     </#switch>
@@ -1560,10 +1560,10 @@ Slider data entry - a single slide.
 <#-- @slide main markup - theme override -->
 <#macro slide_markup id="" sliderId="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" origArgs={} passArgs={} catchArgs...>
     <#if library=="owl" || library=="slick">
-        <div id="${escapePart(id, 'html')}" class="item">
-            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
+        <div id="${escapeVal(id, 'html')}" class="item">
+            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
             <div>
-            <#if title?has_content><h2>${escapePart(title, 'htmlmarkup')}</h2></#if>
+            <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
             <#if image?has_content>
               <img src="${escapeFullUrl(image, 'html')}"/>
             </#if>
@@ -1573,10 +1573,10 @@ Slider data entry - a single slide.
             <#if link?has_content></a></#if>
         </div>
     <#else>
-        <div data-orbit-slide="${escapePart(id, 'html')}" class="${styles.slide_container!}">
-            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
+        <div data-orbit-slide="${escapeVal(id, 'html')}" class="${styles.slide_container!}">
+            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
             <div>
-            <#if title?has_content><h2>${escapePart(title, 'htmlmarkup')}</h2></#if>
+            <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
               <#if image?has_content>
                 <img src="${escapeFullUrl(image, 'html')}"/>
               </#if>
@@ -1641,7 +1641,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 
 <#-- @img main markup - theme override -->
 <#macro img_markup class="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
-    <#local imgContainer><#if width?has_content>width: ${escapePart(width, 'css-html')};</#if><#if height?has_content> height: ${escapePart(height, 'css-html')};</#if></#local>
+    <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')};</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')};</#if></#local>
     <#local nested><#nested></#local>
     <#switch type>
         <#case "bgcover">
@@ -1659,17 +1659,17 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             </#local>
             <#local class = addClassArg(class, "scipio-image-container")>
             <div<@compiledClassAttribStr class=class />>
-                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
+                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
                     <div style="${imgStyle}" class="scipio-image"></div>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
             </div>
           <#break>
         <#default>
-            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapePart(type, 'css-html')};</#local>
+            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
             <#local class = addClassArg(class, "scipio-image-container")>
-            <div<@compiledClassAttribStr class=class /> style="${imgContainer}" scipioFit="${escapePart(type, 'html')}">
-                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
+            <div<@compiledClassAttribStr class=class /> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
+                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
                     <img src="${escapeFullUrl(src, 'html')}" class="scipio-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>

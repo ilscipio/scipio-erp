@@ -67,7 +67,7 @@ to this one.
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
+    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -146,8 +146,8 @@ Creates a grid row.
 <#macro row_markup open=true close=true class="" collapse=false id="" style="" alt="" selected="" 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
-        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
   </#if>
       <#nested />
   <#if close>
@@ -273,8 +273,8 @@ Creates a grid cell.
 <#macro cell_markup open=true close=true class="" id="" style="" last=false collapse=false 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt>
-        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -456,12 +456,12 @@ Since this is very foundation specific, this function may be dropped in future i
   </@container>
   <@script>
    $(function() {
-      $('#${escapePart(id, 'js')}').freetile({
+      $('#${escapeVal(id, 'js')}').freetile({
           selector: '.${styles.tile_wrap!}'
       });
       <#--
       Alternative implementation of gridster.js
-      $('#${escapePart(id, 'js')}').gridster({
+      $('#${escapeVal(id, 'js')}').gridster({
           widget_selector: '.${styles.tile_wrap!}',
           min_cols:${columns},
           autogenerate_stylesheet:false
@@ -684,13 +684,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
         <#-- WARN/FIXME: style escaping may be incomplete! -->
-        <div class="${escapePart(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapePart(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'css-html')});"></div>
+        <div class="${escapeVal(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapeVal(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'css-html')});"></div>
       </#if>
-      <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapePart(linkTarget, 'html')}"</#if>></#if>
-      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapePart(icon, 'html')}"></i></span></#if>
+      <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
+      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapeVal(icon, 'html')}"></i></span></#if>
       <#local nestedContent><#nested></#local>
-      <#if nestedContent?has_content><span class="${escapePart(overlayClass, 'html')}<#if overlayBgColorClass?has_content> ${escapePart(overlayBgColorClass, 'html')}</#if>">${nestedContent}</span></#if>
-      <#if title?has_content><span class="${escapePart(titleClass, 'html')}<#if titleBgColorClass?has_content> ${escapePart(titleBgColorClass, 'html')}</#if>">${escapePart(title, 'htmlmarkup')}</span></#if>
+      <#if nestedContent?has_content><span class="${escapeVal(overlayClass, 'html')}<#if overlayBgColorClass?has_content> ${escapeVal(overlayBgColorClass, 'html')}</#if>">${nestedContent}</span></#if>
+      <#if title?has_content><span class="${escapeVal(titleClass, 'html')}<#if titleBgColorClass?has_content> ${escapeVal(titleBgColorClass, 'html')}</#if>">${escapeVal(title, 'htmlmarkup')}</span></#if>
       <#if link?has_content></a></#if>
     </div>
   </@container>
@@ -1211,9 +1211,9 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#if collapsible>
     <li class="<#rt/>
     <#if collapsed>
-    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapePart(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if expandToolTip?has_content> title="${escapePart(expandToolTip, 'js-html')}"</#if>
+    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapeVal(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if expandToolTip?has_content> title="${escapeVal(expandToolTip, 'js-html')}"</#if>
     <#else>
-    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapePart(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapePart(expandToolTip, 'js-html')}', '${escapePart(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if collapseToolTip?has_content> title="${escapePart(collapseToolTip, 'js-html')}"</#if>
+    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapeVal(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if collapseToolTip?has_content> title="${escapeVal(collapseToolTip, 'js-html')}"</#if>
     </#if>
     >&nbsp;</a></li>
     </#if>
@@ -1237,11 +1237,11 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapePart(containerId, 'html')}"</#if><#rt>
-        <#lt><#if style?has_content> style="${escapePart(style, 'html')}"<#elseif containerStyle?has_content> style="${escapePart(containerStyle, 'html')}"</#if><#rt>
+    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"<#elseif containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
-      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapePart(title, 'htmlmarkup')}</p></#if>
+      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapeVal(title, 'htmlmarkup')}</p></#if>
       -->
       <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>
@@ -1254,7 +1254,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
           <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
           <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
           <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
-          <div<#if contentId?has_content> id="${escapePart(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapePart(contentStyle, 'html')}"</#if><#rt>
+          <div<#if contentId?has_content> id="${escapeVal(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapeVal(contentStyle, 'html')}"</#if><#rt>
           <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>>
   </#if>
             <#nested>

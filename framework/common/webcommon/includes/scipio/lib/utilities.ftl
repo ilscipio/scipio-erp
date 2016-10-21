@@ -164,15 +164,22 @@ STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 See also the function version, #makeOfbizUrl; #makeOfbizUrl should be used instead when passing URLs to other macros
 (rather than trying to capture the output of @ofbizUrl) and in other cases.
 
-WARN: HTML/Javascript escaping: This utility and all similar link-generating utilities 
+WARN: HTML/Javascript escaping: By default, this utility and all similar link-generating utilities 
     do NOT escape the URLs for HTML or javascript!
-    If the screen auto-html-escaping is insufficient (often relied upon in stock Ofbiz templates),
-    and you are not passing the URL to another Scipio macro, you may need to use #escapePart or #escapeFullUrl 
-    in addition to @ofbizUrl (in which case #makeOfbizUrl may be more appropriate).
+    If the screen html auto-escaping is insufficient or inappropriate (often relied upon in stock Ofbiz templates, but often inappropriate),
+    and you are not passing the URL to another Scipio macro, you may need to use #escapeFullUrl 
+    in addition to @ofbizUrl - in which case #makeOfbizUrl may be more appropriate, or alternatively the {{{escapeAs}}} parameter
+    on @ofbizUrl.
+    In general, @ofbizUrl and sister macros were written to work in "pre-escaping" mode, where nested input
+    is pre-escaped in HTML or other language (most often by screen html auto-escaping) - however, this poses serious
+    drawbacks. 
+    It is generally more better and more correct to post-escape using either {{{escapeFullUrl(makeOfbizUrl(...))}}}
+    or {{{<@ofbizUrl escapeAs='lang'.../>}}} or equivalents.
     
-NOTE: Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, this macro's string
-    parameters are currently not subject to auto-escaping bypass with #rawString (in other words, stock behavior is preserved);
-    caller must currently call #rawString if needed. This may be rectified in the future (TODO?).
+NOTE: Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, by default,
+    this macro's string parameters are currently not subject to auto-escaping bypass with #rawString (in other words, stock behavior is preserved);
+    caller must currently call #rawString if needed, or specify the {{{rawParams}}} parameter to change. 
+    The default may be changed in the future (TODO?).
     HOWEVER, the ''function'' version of this macro, #makeOfbizUrl, automatically calls #rawString on its
     string parameters (uri), and can be exploited as an easier alternative to this macro in various cases.
 
@@ -270,9 +277,31 @@ if not requested, however.
     encode                  = ((boolean), default: true) or string boolean repr
                               If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
                               (Stock arg, enhanced in Scipio: supports both boolean and string containing boolean)
+    rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
+                              If true, the macro will automatically call #rawString on {{{uri}}} and other string params, bypassing screen html auto-escaping.
+                              If false, strings params are subject to screen html auto-escaping and {{{uri}}} behaves more like nested.
+                              For legacy reasons, the default for all URL generation ''macros'' (which are derived from stock Ofbiz)
+                              defined in this file is {{{false}}} ''UNLESS'' the {{{escapeAs}}} parameter is set,
+                              in which case this is toggled to {{{true}}}.
+                              For URL generation ''functions'' (which are new in Scipio), the default is always {{{true}}}.
+    escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
+                              See #escapeFullUrl for possible values.
+                              When this is empty (default), the macro performs no escaping whatsoever.
+                              If this is set to a language, it toggles {{{rawParams}}} and {{{strict}}} to {{{true}}}, and doing
+                                <@ofbizUrl uri=someUri escapeAs='html'... />
+                              is basically equivalent to doing:
+                                <#assign urlContent><@ofbizUrl uri=someUri rawParams=true strict=true ... /></#assign>
+                                ${escapeFullUrl(urlContext, 'html')}
+                              Usually, if you use this shortcut, you should use the {{{uri}}} parameter instead of nested, to bypass screen html auto-escaping;
+                              but note you may need to use #rawString manually if you are adding parameters to the uri.
+    strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
+                              Default is false unless {{{escapeAs}}} is non-empty, in which case this switches to {{{true}}}.
+                              NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
+                              NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
+                                  pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro ofbizUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="">
+<#macro ofbizUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="" rawParams="" escapeAs="" strict="">
 </#macro>
 -->
 
@@ -286,12 +315,19 @@ This is useful to prevent bloating templates with {{{<#assign...><@ofbizUrl.../>
 which is very frequent due to use of macros.
 
 NOTE: This function's string arguments (uri) are coded to bypass screen auto-escaping with #rawString,
-    as per standard Scipio macro behavior. This may be different from the macro version of this function (@ofbizUrl).
+    as per standard Scipio macro behavior.
+    This may be different from the macro version of this function (@ofbizUrl).
+    In other words, the @ofbizUrl parameter {{{rawParams}}} is {{{true}}} by default for this function
+    and similar functions.
+    In general, this function version expects to deal with non-escaped values; however,
+    for reasons of legacy support, pre-escaped parameter delimiters ({{{&amp;}}}) are handled
+    automatically where possible.
 
   * Parameters *
     args                    = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
+                              NOTE: The {{{rawParams}}} default is {{{true}}}, unlike the macro version.
                               DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
-                                  for functions, which would be unreadable here (makeOfbizUrl("main", false, false, true, true...))
+                                  for functions, which would be unreadable here ({{{makeOfbizUrl("main", false, false, true, true...)}}})
                                   However majority of cases use only a URI so we can shortcut in that case.
                                   Freemarker doesn't support overloading so we basically implement it ourselves.
                                   Note that if we needed extra positional parameters for common cases, should keep the args map check on
@@ -303,11 +339,20 @@ NOTE: This function's string arguments (uri) are coded to bypass screen auto-esc
     @ofbizUrl
 -->
 <#function makeOfbizUrl args>
-  <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
-        extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
+  <#if isObjectType("map", args)><#-- ?is_hash doesn't work right with context var strings and hashes -->
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
+    <#local strict = args.strict!true>
+    <#if !strict?has_content><#-- handles empty string case -->
+      <#local strict = true>
+    </#if>
+    <#local res><@ofbizUrl uri=(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
+        extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
+        rawParams=rawParams strict=strict/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=rawString(args) /></#local>
+    <#local res><@ofbizUrl uri=args rawParams=true /></#local>
   </#if>
   <#return res>
 </#function>
@@ -331,9 +376,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
   * Related *                           
     @ofbizUrl
 -->
-<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false>
+<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="">
   <@ofbizUrl uri=uri absPath=absPath interWebapp=false controller=controller 
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -358,11 +403,16 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
-        extLoginKey=(args.extLoginKey!false) fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
+    <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
+        extLoginKey=(args.extLoginKey!false) fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
+        rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=rawString(args) absPath=false interWebapp=false controller=false 
-        extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
+    <#local res><@ofbizUrl uri=args absPath=false interWebapp=false controller=false 
+        extLoginKey=false fullPath="" secure="" encode="" rawParams=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -387,9 +437,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
   * Related * 
     @ofbizUrl
 -->
-<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="">
+<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="">
   <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -418,11 +468,16 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 -->
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
-        controller=(args.controller!"") extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") /></#local>
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
+    <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
+        controller=(args.controller!"") extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
+        rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=rawString(args) absPath="" interWebapp=true webSiteId=webSiteId
-        controller="" extLoginKey="" fullPath="" secure="" encode="" /></#local>
+    <#local res><@ofbizUrl uri=args absPath="" interWebapp=true webSiteId=webSiteId
+        controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -443,7 +498,7 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
     In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
     ''before'' storing in database - but note that URL-encoded parameters should probably not be decoded if
     they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
-    (parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
+    (in such cases, parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
 
 NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
 
@@ -454,11 +509,47 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
                                   directly without consideration to escaping.
                                   However, the function versions of this macro such as #makeOfbizContentUrl DO bypass the
                                   auto screen escaping on this parameter.
+                              NOTE: SPECIAL VALUES: Stock ofbiz originally recognized the string "/images/defaultImage.jpg" as
+                                  a special value; when this value was specified, the {{{variant}}} parameter was ignored.
+                                  However, this check does not work properly in general.
+                                  In Scipio, while this behavior is left intact for compatibility with old code, 
+                                  you should simply avoid relying on any such check and not consider
+                                  "/images/defaultImage.jpg" as a special value, or simply not use it.
     variant                 = ((string)) variant
                               (Stock Ofbiz parameter)
+    ctxPrefix               = ((boolean)|(string), default: false) Contextual path prefix
+                              Extra path prefix prepended to the uri, which may replace the central system default prefix if
+                              it produces an absolute URL (prefixed with "http:", "https:", or "//").
+                              If string, it is used as given.
+                              If boolean: if false, no extra prefix; if true, the context variable
+                              (New in Scipio)
     urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the uri/nested
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
                               (New in Scipio)
+    rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
+                              See @ofbizUrl for description.
+    escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
+                              See #escapeFullUrl for possible values.
+                              See @ofbizUrl for description.
+    strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
+                              This macro must perform checks and concatenations on the passed uri; if pre-escaped
+                              values are passed (such as HTML), this parameter must be false.
+                              When false, currently (2016-10-19), only HTML and Javascript pre-escaped strings are handled.
+                              If {{{escapeAs}}} is set to a specific language, the default for {{{strict}}} becomes {{{true}}}.
+                              NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
+                                  pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
+                              WARN: Pre-escaped string handling is heuristic-like and only tries to detect encodings
+                                  done by {{{UtilCodec}}} class and Freemarker built-ins.
+                                  In some edge cases, the resulting Javascript may not necessarily be secure!
+                                  The method will try to warn in log.
+                                  Known cases: 
+                                  * If a prefix ends with raw less-than ("<") character and the uri does not begin
+                                    with a forward slash or escaped equivalent ("/"), the method could produce
+                                    a dangerous result! This is prevented by not passing unsafe values as the
+                                    {{{ctxPrefix}}}, or simply not pre-escaping for javascript.
+                              NOTE: The function version of this macro, #makeOfbizContentUrl, uses
+                                  true as default for this parameter, unlike this macro.
+                              (New in Scipio) 
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentUrl ...>
@@ -474,6 +565,11 @@ Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl m
 NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 
   * Parameters *
+    rawParams               = ((boolean), default: true) Whether macro should call #rawString on string parameters (mainly {{{uri}}})
+                              NOTE: Unlike @ofbizContentUrl, the default here is true.
+    strict                  = ((boolean), default: true) Whether to handle only raw strings or recognize pre-escaped strings
+                              NOTE: Unlike @ofbizContentUrl, the default here is true, such that, by default, this
+                                  function is meant to operate on raw unescaped strings only.
     (other)                 = See @ofbizContentUrl
 
   * Related * 
@@ -481,11 +577,44 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 -->
 <#function makeOfbizContentUrl args variant="">
   <#if isObjectType("map", args)>
-    <#local res><@ofbizContentUrl uri=rawString(args.uri!"") variant=(args.variant!"") urlDecode=(args.urlDecode!"") /></#local>
+    <#local rawParams = args.rawParams!true>
+    <#if !rawParams?has_content><#-- handles empty string case -->
+      <#local rawParams = true>
+    </#if>
+    <#local strict = args.strict!true>
+    <#if !strict?has_content><#-- handles empty string case -->
+      <#local strict = true>
+    </#if>
+    <#-- DEV NOTE: no rawString around ctxPrefix because already done by the macro (exceptionally) -->
+    <#local res><@ofbizContentUrl uri=(args.uri!"") variant=(args.variant!"") 
+        ctxPrefix=(args.ctxPrefix!false) urlDecode=(args.urlDecode!"") 
+        strict=strict rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizContentUrl uri=rawString(args) variant=variant urlDecode="" /></#local>
+    <#local res><@ofbizContentUrl uri=args variant=variant strict=true rawParams=true/></#local>
   </#if>
   <#return res>
+</#function>
+
+<#-- 
+*************
+* makeOfbizContentCtxPrefixUrl
+************
+Version of #makeOfbizContentUrl that is preset to recognize the {{{contentPathPrefix}}} context prefix.
+Same as (shorthand for):
+  makeOfbizContentUrl({"uri":someUri, "ctxPrefix":true, ...})
+
+NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+
+  * Related * 
+    #makeOfbizContentUrl
+    @ofbizContentUrl
+-->
+<#function makeOfbizContentCtxPrefixUrl args variant="">
+  <#if isObjectType("map", args)>
+    <#return makeOfbizContentUrl({"ctxPrefix":true} + args) />
+  <#else>
+    <#return makeOfbizContentUrl({"uri":args, "variant":variant, "ctxPrefix":true}) />
+  </#if>
 </#function>
 
 <#-- 
@@ -517,74 +646,21 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
     urlDecode               = ((boolean), default: false) Whether to URL-decode (UTF-8) the stored URL
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
                               (New in Scipio)
+    rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
+                              See @ofbizUrl for description.
+    escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
+                              See #escapeFullUrl for possible values.
+                              See @ofbizUrl for description.
+    strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
+                              NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
+                              NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
+                                  pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
+                              See @ofbizUrl for description.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentAltUrl ...>
 </#macro>
 -->
-
-<#-- 
-*************
-* catalogContentUrl
-************
-Version of @ofbizContentUrl with extra catalog-specific prefix.
-This prepends a {{{contentPathPrefix}}} string to the URI/nested before passing to @ofbizContentUrl.
-It is gotten from context or request attributes; or if undefined, will run its own lookup.
-
-Usually, the contentPathPrefix is returned from
-{{{CatalogWorker.getContentPathPrefix(request)}}}.
-
-NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
-
-  * Related * 
-    @ofbizContentUrl
-    #makeCatalogContentUrl
--->
-<#macro catalogContentUrl uri variant="" urlDecode="">
-  <#if uri?has_content><#t>
-    <@ofbizContentUrl uri=(getContentPathPrefix()+uri) variant=variant urlDecode=urlDecode/><#t>
-  <#else><#t>
-    <@ofbizContentUrl variant=variant urlDecode=urlDecode>${getContentPathPrefix()}<#nested></@ofbizContentUrl><#t>
-  </#if><#t>
-</#macro>
-
-<#-- 
-*************
-* makeCatalogContentUrl
-************
-Version of #makeOfbizContentUrl with extra catalog-specific prefix.
-This prepends a {{{contentPathPrefix}}} string to the URI before passing to #makeOfbizContentUrl.
-It is gotten from context or request attributes; or if undefined, will run its own lookup.
-
-Usually, the contentPathPrefix is returned from
-{{{CatalogWorker.getContentPathPrefix(request)}}}.
-
-NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
-
-  * Related * 
-    #makeOfbizContentUrl
-    #makeCatalogContentUrl
-    @ofbizContentUrl
--->
-<#function makeCatalogContentUrl args variant="">
-  <#if isObjectType("map", args)>
-    <#return makeOfbizContentUrl(args + {"uri":getContentPathPrefix()+rawString(args.uri!"")}) />
-  <#else>
-    <#return makeOfbizContentUrl(getContentPathPrefix()+rawString(args), variant) />
-  </#if>
-</#function>
-
-<#function getContentPathPrefix>
-  <#local res = contentPathPrefix!(requestAttributes.contentPathPrefix)!false>
-  <#if res?is_boolean>
-    <#if request??>
-      <#local res = Static["org.ofbiz.product.catalog.CatalogWorker"].getContentPathPrefix(request)!"">
-    <#else>
-      <#local res = "">
-    </#if>
-  </#if>
-  <#return rawString(res)>
-</#function>
 
 <#-- 
 *************
@@ -1579,23 +1655,35 @@ NOTES:
 
 <#-- 
 *************
-* toRawString
+* rawString
 ************
-Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
+Returns the given value, bypassing the screen renderer html auto-escaping, as a simple Freemarker string.
 
 This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
+This can be seen as the reverse operation of #rewrapStringStd.
+
 NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
 
+NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}}}-ed and then
+    concatenated together.
+
   * Parameters *
-    value                   = ((string), required) The value to return without screen escaping
-    
+    value...                    = ((string), required) Value(s) to return without/bypassing screen renderer html auto-escaping
+                                  If more than one parameter is passed to #rawString, 
+                                  each is applied the logical #rawString bypass, and
+                                  the result is a concatenation of all the parameters.
+                                  So
+                                    rawString(var1, " ", var2)
+                                  is equivalent to
+                                    rawString(var1) + " " + rawString(var2)
+                                  except the former is more efficient.
   * Related *
-    #rawString
+    #rewrapStringStd                             
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function toRawString value>
+<#function rawString value...>
   <#- ?string turns it into a basic FTL string ->
   <#return StringUtil.wrapString(value)?string> 
 </#function>
@@ -1603,23 +1691,13 @@ NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings us
 
 <#-- 
 *************
-* rawString
+* toRawString
 ************
 Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
-Alias for #toRawString (common operation).
-
-This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
-the resulting type into a simple Freemarker string.
-
-NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
-
-  * Parameters *
-    value                       = ((string), required) The value to return without screen escaping
+Alias for #rawString.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rawString value>
-  <#- ?string turns it into a basic FTL string ->
-  <#return StringUtil.wrapString(value)?string> 
+<#function toRawString value...>
 </#function>
 -->
 
@@ -1627,10 +1705,10 @@ NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings us
 *************
 * toStringIfNot
 ************
-Returns the given value as a string but only if not already a string
+Returns the given value as a string but only if not already a string.
 
-This intentionally skips calling ?string on existing strings to prevent auto-escaping,
-but still result will be a string.
+This intentionally skips calling ?string on existing strings to prevent auto-escaping.
+Result will always be a string (or something implementing {{{TemplateScalarModel}}}).
 
 WARN: this works using FTL's primitive ?is_string test, which may return TRUE for complex 
     objects that aren't really strings.
@@ -1672,38 +1750,109 @@ WARN: This is NOT fully implemented and currently does the same as #rawString.
 *************
 * rewrapObject
 ************
-Takes a object and, if applicable, rewraps it with a different Freemarker wrapper.
-Used to convert complex BeansWrapper objects to simple maps and auto-HTML-escaping wrappers to non-escaping
-wrappers, either shallow or deep.
+Re-wraps a value using the Freemarker ObjectWrapper in the current environment (by default)
+or a different wrapper, such as one producing simple type adapters, simple types as copies,
+and raw strings (without screen html auto-escaping).
 
-This tries to avoid rewrapping unless forced by the mode or the input map.
+By default (using current wrapper and default mode), this will rewrap a value to a state as if it had just
+come out of the screen's data model. For strings, in a typical rendering, this can be seen as the reverse
+operation of #rawString, using simply {{{rewrapObject(someRawString)}}}. 
+In this default mode, the value will ''always'' be rewrapped, which is the safest mode (but suboptimal).
 
-WARN: Currently this only works for maps!
+The function can remove the html auto-escaping behavior of entire maps coming from the data model.
+Simply doing {{{rewrapObject(someScreenMap, 'raw')}}} or {{{rewrapObject(someScreenMap, 'raw-simple')}}} (to
+further simplify the map for iteration).
 
-TODO: Lists, strings, etc.
+Using {{{wrapper}}} and {{{mode}}} parameters, different object wrappers such as simple-type-producing
+ones can be used, and some unnecessary rewrapping can be avoided.
+
+NOTE: 2016-10-20: This method was completely revamped, such that the default behavior is flipped
+    and behaves more predictably.
+    
+NOTE: 2016-10-20: The "simple*" current wrapper derivatives currently only handle maps.
+    If you are required to use simple or copies for other types of containers, you may
+    have to use "basic*" in the meantime (TODO), or if raw values are acceptable,
+    the "raw-simple*" types do handle non-maps.
+    
+NOTE: 2016-10-20: Currently only supports "always" (deep) rewrapping mode; ideally need a "needed" and/or "fast"
+    mode is needed to prevent needless container copies (TODO).
+    So currently this method is very slow for SimpleHash and similar types, forces copies. 
+    However optimization of this requires many assumptions and risks.
+    In non-deep cases, for maps, you may also use #toSimpleMap instead, which is more constrained.
+    
 
   * Parameters *
     object                  = ((object), required) The source object
-    mode                    = (simple|simple-raw-deep|simple-force|simple-raw-deep-force|simple-copy|simple-raw-deep-copy|simple-force-copy|simple-raw-deep-force-copy, default: simple) Rewrapping mode and target wrapper type
-                              The keywords mean the following:
-                              * {{{simple}}}: convert "complex" BeansWrapper maps to simple adapter maps (that have no extra unwanted keys),
-                                but only if they are not already simple and the other options do not force it.
-                              * {{{raw}}}: the target wrapper should be free of HTML auto-escaping
-                                WARN: Currently, this forces a performance-intensive unwrap operation in many cases,
-                                    because Freemarker does not allow checking which wrapper an object is currently using.
-                              * {{{deep}}}: the wrapper select should apply to any children the object may have
-                                WARN: Currently, this forces a performance-intensive deep unwrap operation in many cases,
-                                    because Freemarker does not allow checking which wrapper an object is currently using.
-                              * {{{force}}}: advanced option: this will force re-wrapping even if the target already appears adequate.
-                              * {{{copy}}}: requests a copy operation where possible. The copy operation will be slow, but
-                                it may make the resulting type faster.
-                              NOTE: Only the listed combinations are supported.
-                              WARN: {{{simple-raw-deep}}} uses a heuristic to avoid rewrapping simple FTL hashes. It is NOT
-                                  accurate. If problems arise, use {{{simple-raw-deep-force}}} instead.
-                              TODO?: {{{simple-deep}}} may be desirable but currently not supported.
+    wrapper                 = (current|complex-default|complex-extended|simple|simple-copy|..., default: current) Name/type of wrapper to use
+                              General values (abstracted):
+                              * {{{current}}}: the current wrapper
+                                In Scipio, this is usually {{{complex-extended}}}, though not guaranteed.
+                              Current ObjectWrapper derivatives (abstracted):
+                              * {{{raw}}}: derivative of current wrapper that performs NO auto html-escaping
+                                It does not simplify the collections in any other way.
+                              * {{{simple-adapter}}}: derivative of current wrapper but - if map - generates a simple map adapter (SimpleMapModel or DefaultMapAdapter)
+                                WARN: 2016-10-20: Only PARTIALLY implemented, only handles maps.
+                              * {{{simple-copy}}}: derivative of current wrapper - but - if map - generates a simple map copy (SimpleHash)
+                                WARN: 2016-10-20: Only PARTIALLY implemented, only handles maps.
+                              * {{{simple}}}: will use {{{simple-adapter}}} or {{{simple-copy}}}, whichever appears less costly
+                                WARN: 2016-10-20: Only PARTIALLY implemented, only handles maps.
+                                NOTE: 2016-10-20: selection optimization logic not fully implemented; currently makes adapters.
+                              * {{{raw-simple-adapter}}}: same as {{{simple-adapter}}} but performs NO auto html-escaping
+                                Works on any collections.
+                              * {{{raw-simple-copy}}}: same as {{{simple-copy}}} but performs NO auto html-escaping
+                                Works on any collections.
+                              * {{{raw-simple}}}: same as {{{simple}}} but performs NO auto html-escaping
+                                Works on any collections.
+                                NOTE: 2016-10-20: selection optimization logic not fully implemented for this; currently makes adapters.
+                              NOTE: 2016-10-20: all these "simple" types currently only operate on maps.
+                                  Lists are usually not as meaningful because the BeansWrapper list type 
+                                  works without any issues.
+                              Specific ObjectWrappers (advanced usage - poor abstraction):
+                              * {{{complex-default}}}: basic BeansWrapper from Freemarker, the default one kept in FreeMarkerWorker; performs NO auto html-escaping
+                                Produces complex maps that double as beans.
+                              * {{{complex-default-simplemap}}}: Version of {{{complex-default}}} that produces simple maps (SimpleMapAdapter).
+                              * {{{complex-extended}}}: extended BeansWrapper used in most rendering,
+                                and that (currently, 2016-10-20) implements screen html auto-escaping.
+                                the function will try to determine the escaping language needed (usually html).
+                                Produces complex maps that double as beans.
+                              * {{{complex-extended-simplemap}}}: Version of {{{complex-extended}}} that produces simple maps (SimpleMapAdapter).
+                              * {{{basic-adapter}}}: The Freemarker DefaultObjectWrapper, with adapters enabled; performs NO auto html-escaping
+                              * {{{basic-copy}}}: The Freemarker DefaultObjectWrapper, with adapters disabled, forcing object copies; performs NO auto html-escaping
+                                NOTE: Copies are slow to produce, but faster to access afterward, compared to adapters.
+                              * {{{basic}}}: same as either {{{basic-adapter}}} or {{{basic-copy}}}, at function's discretion (currently prefers adapters)
+    mode                    = (always-deep|, default: always-deep) Rewrapping mode
+                              Values:
+                              * {{{always-deep}}}: force re-wrapping even if target appears adequate, including any
+                                and all children - this the safest and most reliable, albeit slowest.
+                                WORKS FOR: any value and wrapper type (as long as the value is a TemplateModel properly recognized by
+                                Freemarker's DeepUnwrap function)
+                              NOTE: For optimization reasons, in the future, the default value may be changed (to something other than "always"),
+                                  to something better optimized, but the result will not change. If you absolutely count on the "always" strict
+                                  behavior (for some reason), you should pass it explicitly, but in most cases you
+                                  should not specify it or you should pass explicit empty.
+                              TODO: add support for always (non-deep), needed, needed-deep and some "fast"/dangerous variants
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rewrapObject object mode="simple">
+<#function rewrapObject object mode="">
+</#function>
+-->
+
+<#-- 
+*************
+* rewrapString
+************
+Re-wraps a string using the Freemarker ObjectWrapper in the current environment (by default)
+or a different ObjectWrapper, such as one producing simple adapters or simple types.
+Alias for #rewrapObject but expected to receive only strings.
+
+With default wrapper and mode, this can be seen as the reverse operation of #rawString, or re-enabling
+screen renderer html auto-escaping (if enabled) for a specific value.
+
+  * Related *
+    #rewrapObject
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function rewrapString object mode="">
 </#function>
 -->
 
@@ -1711,17 +1860,15 @@ TODO: Lists, strings, etc.
 *************
 * rewrapMap
 ************
-Takes a map and, if applicable, rewraps it with a different wrapper.
-Used to convert complex BeansWrapper objets to simple maps and auto-HTML-escaping wrappers to non-escaping
-wrappers, either shallow or deep.
-
-Alias for #rewrapObject.
+Re-wraps a map using the Freemarker ObjectWrapper in the current environment (by default)
+or a different ObjectWrapper, such as one producing simple adapters or simple types.
+Alias for #rewrapObject but expected to receive only maps.
 
   * Related *
-    #rewrapMap
+    #rewrapObject
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rewrapMap object mode="simple">
+<#function rewrapMap object mode="">
 </#function>
 -->
 
@@ -1730,14 +1877,16 @@ Alias for #rewrapObject.
 * toSimpleMap
 ************
 Takes a bean-wrapped map and switches it to a simple map adapter instead, without performing
-any copies. Alias for #rewrapMap(object, "simple").
+any copies. 
+
+This is similar to {{{#rewrapObject}}} except 
 
 If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.
 
 NOTE: This only changes the complexity of the map; it does NOT prevent auto-escaping. In fact, if
     called on certain types of unescaped complex maps, this function may cause auto-escaping to return, which
     is why its behavior is to leave maps alone unless they are complex bean maps.
-    Calling ?keys on this map may give escaped keys; use #mapKeys or #rewrapMap with args (object, "simple-raw").
+    Calling {{{?keys}}} on this map may give escaped keys; use #mapKeys to prevent this.
 
   * Parameters *
     object                  = ((map), required) The source map
@@ -2169,18 +2318,18 @@ Wraps pre-escaped values for specific languages in a special wrapper object.
 When passed to markup- or script-handling macros which normally escape values in these languages,
 the values are used as-is with no additional escape.
 
-These wrapper objects are automatically recognized by #escapePart and #escapeFullUrl.
+These wrapper objects are automatically recognized by #escapeVal and #escapeFullUrl.
 
 gets included as
 a raw string bypassing html, js or other language escaping. 
-This include @objectAsScript and macros that escape values using #escapePart or #escapeFull.
+This include @objectAsScript and macros that escape values using #escapeVal or #escapeFull.
 
 WARN: This is only safe to use if an explicit language is passed and the pre-escaping performed
     is adequate for that language.
 
 NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUtil.wrapString}}} or #rawString);
     its working scope is unrelated to Ofbiz's screen auto-escaping. It is primarily intended
-    for Scipio macros and templates that use #escapePart or equivalents.
+    for Scipio macros and templates that use #escapeVal or equivalents.
 
 For more information about escaping in general, see >>>standard/htmlTemplate.ftl<<<.
 
@@ -2207,7 +2356,7 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                                   a specific language. The unspecific mode is for rare workarounds only.
 
   * Related *
-    #escapePart
+    #escapeVal
     #escapeFullUrl                          
 -->
 <#function wrapAsRaw value lang="">
@@ -2298,10 +2447,9 @@ Checks if the value was wrapped using {{{#wrapAsRaw(object, "script")}}}.
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object, "script")>
 </#function>
 
-
 <#-- 
 *************
-* escapePart
+* escapeVal
 ************
 Escapes an individual value or code "part" for a given language, ignoring and crushing delimiters.
 
@@ -2325,7 +2473,7 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
 '''Single languages'''
 
 ''HTML'': Two language identifiers are supported: "html" and "htmlmarkup". 
-Callers of #escapePart should usually use "html" on html attributes, and "htmlmarkup" on text placed within element body.
+Callers of #escapeVal should usually use "html" on html attributes, and "htmlmarkup" on text placed within element body.
 By default, this function escapes all markup delimiters for ''both''.
 The difference is that callers upstream using #wrapAsRaw will then able to override markup specifically using:
   #wrapAsRaw(xxx, 'htmlmarkup')
@@ -2362,18 +2510,20 @@ NOTE: From template perspective, macros generally escape html by default, so tem
                                 NOTE: by default this safely escapes any html; it is the caller overrides that can make this unsafe for attributes.
                               WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
                               NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
-    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
-                              If true, escaping is always applied unconditionally.
-                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
-                              mainly to mitigate screen auto-escaping and early escaping.
-                              DEV NOTE: may want to eliminate need for boolean later
+    opts                    = ((map)) Additional options, including lang-specific options
+                              Members:
+                              * {{{strict}}} {{{((boolean), default: false)}}} Whether to escape strictly or allow handling of pre-escaped characters
+                                If true, escaping is always applied unconditionally, and any pre-escaped characters
+                                are not recognized (and ''may'' be errors if due to double-escaping errors).
+                                If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                                mainly to mitigate screen auto-escaping and early escaping.
 
   * Related *
-    #escapeFullUrl
     #rawString
     #wrapAsRaw
+    #escapeFullUrl
 -->
-<#function escapePart value lang strict=false>
+<#function escapeVal value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
     <#local lang = lang?replace("style", "css")>
   </#if>
@@ -2435,30 +2585,30 @@ NOTE: From template perspective, macros generally escape html by default, so tem
 
 <#-- 
 *************
+* escapePart
+************
+Escapes an individual value or code "part" for a given language, ignoring and crushing delimiters.
+DEPRECATED: Replaced by #escapeVal.
+
+  * Related *
+    #escapeVal
+-->
+<#function escapePart value lang opts={}>
+  <#return escapeVal(value, lang, opts)>
+</#function>
+
+<#-- 
+*************
 * escapeFull
 ************
-Encodes/escapes a complete code sequence for a given language, recognizing and sparing the language's delimiters.
-Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
-and encode in the requested language.
+Encodes/escapes a value in a given language.
+DEPRECATED: This was never properly defined or implemented and no longer meaningful. Use #escapeVal or #escapeFullUrl.
 
-WARN: 2016-10-10: Not currently properly implemented! Please use #escapePart or #escapeFullUrl.
-    
-  * Parameters *
-    value                   = The string or string-like value to escape
-    lang                    = (html|htmlmarkup|xml|raw) The target language
-                              NOTE: This does not currently support js/json because it does not
-                                  usually make sense to escape anything but single value strings.
-                                  It also does not encode URLs; see #escapeFullUrl.
-    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
-                              If true, escaping is always applied unconditionally.
-                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
-                              mainly to mitigate screen auto-escaping and early escaping.
-                              DEV NOTE: may want to eliminate need for boolean later
-                    
   * Related*
-    #escapePart
+    #escapeVal
+    #escapeFullUrl
 -->
-<#function escapeFull value lang strict=false>
+<#function escapeFull value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
     <#local lang = lang?replace("style", "css")>
   </#if>
@@ -2495,7 +2645,7 @@ to early escaping.
 
 In addition, this function accepts values produced by #wrapAsRaw. These can be used to bypass the escaping in part or in full.
 If the value was wrapped using the same language as specified in this call, the wrapped value will be used as-is.
-Note that most times, this is not nearly as useful as it is for #escapePart.
+Note that most times, this is not nearly as useful as it is for #escapeVal.
 
 NOTES: 
 * 2016-10-05: Currently, this is mostly implemented using Freemarker built-ins such as {{{?html}}}, {{{?js}}}, etc. but is subject to change.
@@ -2523,13 +2673,20 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                               WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
                               NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
                               WARN: Inserting URLs into CSS (using {{{url()}}}) is known to be unsafe even with escaping.
-    strict                  = ((boolean), default: false) Whether should always escape unconditionally/strictly, or allow heuristics
-                              If true, escaping is always applied unconditionally.
-                              If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
-                              mainly to mitigate screen auto-escaping and early escaping.
-                              DEV NOTE: may want to eliminate need for boolean later
+    opts                    = ((map)) Additional options, including lang-specific options
+                              Members:
+                              * {{{strict}}} {{{((boolean), default: false)}}} Whether to escape strictly or allow handling of pre-escaped characters
+                                If true, escaping is always applied unconditionally, and any pre-escaped characters
+                                are not recognized (and ''may'' be errors if due to double-escaping errors).
+                                If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
+                                mainly to mitigate screen auto-escaping and early escaping.
+                                NOTE: 2016-10-20: Currently, when strict false (default), the method will
+                                    tolerated pre-escaped param-separator ampersands "&amp;" ONLY.
+                                    In the future this behavior could be removed if all pre-escaping is eliminated in the framework.
+                                    It is recommended NOT to write them in templates when passing links to Scipio macro parameters
+                                    or to this function or equivalent.
 -->
-<#function escapeFullUrl value lang strict=false>
+<#function escapeFullUrl value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
     <#local lang = lang?replace("style", "css")>
   </#if>
@@ -2540,8 +2697,8 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
     <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   </#if>
-  <#if !strict>
-    <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
+  <#if !(opts.strict!false)>
+    <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html (or any working encoder) will re-encode them after. -->
     <#local value = value?replace("&amp;", "&")>
   </#if>
   <#switch lang?lower_case>
@@ -3016,7 +3173,7 @@ with leading space.
 -->
 <#macro compiledClassAttribStr class defaultVal="">
   <#local classes = compileClassArg(class, defaultVal)>
-  <#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#t>
+  <#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#t>
 </#macro>
 
 <#-- 
@@ -3027,7 +3184,7 @@ Explicit version of #compiledClassAttribStr.
 -->
 <#macro compiledClassAttribStrExplicit class defaultVal="">
   <#local classes = compileClassArgExplicit(class, defaultVal)>
-  <#if classes?has_content> class="${escapePart(classes, 'html')}"</#if><#t>
+  <#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#t>
 </#macro>
 
 <#-- 
@@ -3549,7 +3706,7 @@ TODO: implement as transform.
     camelCaseToDashLowerNames   = ((boolean)) If true converts attrib names from camelCase to camel-case at the very end
     emptyValToken               = ((string)) When this value encountered, will include an empty attrib
     noValToken                  = ((string)) When this value encountered, will include an attrib with no value
-    escapeLang                  = (html|...|none, default: 'html') Language to escape each attribute (passed to #escapePart)
+    escapeLang                  = (html|...|none, default: 'html') Language to escape each attribute (passed to #escapeVal)
                                   Callers may bypass escaping by wrapping their values using #wrapAsRaw.
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
@@ -4202,7 +4359,7 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
     <table>
     <#list mapKeys(var) as key>
       <tr>
-        <td style="width:200px; vertical-align:top">${escapePart(key, 'html')}</td>
+        <td style="width:200px; vertical-align:top">${escapeVal(key, 'html')}</td>
         <td>
           <@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=2/>
         </td>
@@ -4219,7 +4376,7 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
       <#-- WARN: ?is_ tests may not work as expected on widget context variables (BeanModel)
           see @objectAsScript -->
       <#if isObjectType("string", var)>
-        ${escapePart(var, 'html')}
+        ${escapeVal(var, 'html')}
       <#elseif var?is_boolean>
         ${var?c}
       <#elseif var?is_date>
@@ -4239,13 +4396,13 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
           <#-- takes too much space 
           <table>
           <#list mapKeys(var)?sort as key>
-            <tr><td>${escapePart(key, 'html')}</td><td><@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
+            <tr><td>${escapeVal(key, 'html')}</td><td><@printVar value=(var[key]!"") platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
           </#list>
           </table>-->
           <@objectAsScript lang="json" escape=false object=var maxDepth=maxDepth currDepth=currDepth />
         </#if>
       <#elseif var?is_string>
-        ${escapePart(var, 'html')}
+        ${escapeVal(var, 'html')}
       </#if>
     <#recover>
       <span style="color:red"><strong>${(.error)!"(generic)"}</strong></span>

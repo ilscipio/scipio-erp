@@ -59,7 +59,7 @@ under the License.
       <div>
         <#if categoryImageUrl?string?has_content>
           <#assign height=100/>
-          <img src="<@catalogContentUrl>${categoryImageUrl}</@catalogContentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
+          <img src="<@ofbizContentUrl ctxPrefix=true>${categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
         </#if>
         <#if longDescription?has_content>
           ${longDescription}

@@ -24,7 +24,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
     As a result all macros here must take care to html-escape as well as js-escape values.
-    Use escapePart/escapeFullUrl for this.
+    Use escapeVal/escapeFullUrl for this.
 -->
 
 <#-- 
@@ -279,7 +279,7 @@ Only those not marked DEPRECATED should still be used.
 -->
 
 <#macro renderImage src id style width height border menuCtxRole="" extraArgs...>
-  <img src="${escapeFullUrl(src, 'html')}"<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${escapePart(border, 'html')}"</#if> />
+  <img src="${escapeFullUrl(src, 'html')}"<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${escapeVal(border, 'html')}"</#if> />
 </#macro>
 
 <#-- SCIPIO: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
@@ -298,9 +298,9 @@ Only those not marked DEPRECATED should still be used.
   </#if>
   <#if linkType?has_content && "hidden-form" == linkType>
     <#local hiddenFormContent>
-      <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapePart(uniqueItemName, 'html')}" class="menu-widget-action-form"><#t>
+      <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapeVal(uniqueItemName, 'html')}" class="menu-widget-action-form"><#t>
         <#list parameterList as parameter>
-          <input name="${escapePart(parameter.name, 'html')}" value="${escapePart(parameter.value, 'html')}" type="hidden"/><#t>
+          <input name="${escapeVal(parameter.name, 'html')}" value="${escapeVal(parameter.value, 'html')}" type="hidden"/><#t>
         </#list>
       </form><#t>
     </#local>
@@ -315,7 +315,7 @@ Only those not marked DEPRECATED should still be used.
       ${imgStr}<#t>
     </#if>
     <#if text?has_content>
-      ${escapePart(text, 'htmlmarkup')}<#t>
+      ${escapeVal(text, 'htmlmarkup')}<#t>
     </#if>
   </#local>
 
@@ -327,7 +327,7 @@ Only those not marked DEPRECATED should still be used.
   <#if isLink>
     <#if linkType == "hidden-form">
         <#-- SCIPIO: NOTE: only JS escaped here; macro markup does the html part -->
-        <#local href>javascript:document['${escapePart(uniqueItemName, 'js')}'].submit()</#local>
+        <#local href>javascript:document['${escapeVal(uniqueItemName, 'js')}'].submit()</#local>
     <#else>
         <#local href = linkUrl>
     </#if>

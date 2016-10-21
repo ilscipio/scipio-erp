@@ -108,7 +108,7 @@ under the License.
 <#if childShoppingListDatas?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${rawLabel('PartyChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
@@ -143,7 +143,7 @@ under the License.
 <@section title="${rawLabel('PartyListItems')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
   <#if shoppingListItemDatas?has_content>
 
-    <#assign paramStr = "partyId=" + partyId + "&amp;shoppingListId=" + (shoppingListId!)/>
+    <#assign paramStr = "partyId=" + partyId + "&shoppingListId=" + (shoppingListId!)/>
     <@paginate mode="content" url=makeOfbizUrl("editShoppingList") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>

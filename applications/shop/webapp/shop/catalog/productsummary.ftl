@@ -40,7 +40,7 @@
     <#assign productTitle = productName/>
 
     <#if smallImageUrl?has_content>
-        <#assign imgSrc = makeCatalogContentUrl(smallImageUrl)>
+        <#assign imgSrc = makeOfbizContentCtxPrefixUrl(smallImageUrl)>
     <#else>
         <#assign imgSrc = "https://placehold.it/300x100"/>    
     </#if>

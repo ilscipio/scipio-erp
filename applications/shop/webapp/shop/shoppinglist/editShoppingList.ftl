@@ -374,7 +374,7 @@ under the License.
   <#if childShoppingListDatas?has_content>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddChildListsToCart />
+      <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddChildListsToCart />
     </@menu>
   </#macro>
   <@section title="${rawLabel('EcommerceChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>

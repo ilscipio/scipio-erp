@@ -123,7 +123,6 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-addParamsToStr">addParamsToStr</a>, 
                   <a href="#entry-addParamsToUrl">addParamsToUrl</a>, 
                   <a href="#entry-camelCaseToDashLowerName">camelCaseToDashLowerName</a>, 
-                  <a href="#entry-catalogContentUrl">catalogContentUrl</a>, 
                   <a href="#entry-clearVars">clearVars</a>, 
                   <a href="#entry-compileProgressSuccessAction">compileProgressSuccessAction</a>, 
                   <a href="#entry-concatMaps">concatMaps</a>, 
@@ -156,7 +155,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-isWrappedAsRaw">isWrappedAsRaw</a>, 
                   <a href="#entry-joinStyleNames">joinStyleNames</a>, 
                   <a href="#entry-joinStyleNamesList">joinStyleNamesList</a>, 
-                  <a href="#entry-makeCatalogContentUrl">makeCatalogContentUrl</a>, 
+                  <a href="#entry-makeOfbizContentCtxPrefixUrl">makeOfbizContentCtxPrefixUrl</a>, 
                   <a href="#entry-makeOfbizContentUrl">makeOfbizContentUrl</a>, 
                   <a href="#entry-makeOfbizInterWebappUrl">makeOfbizInterWebappUrl</a>, 
                   <a href="#entry-makeOfbizUrl">makeOfbizUrl</a>, 
@@ -289,7 +288,6 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-addStringToBoolStringVal">addStringToBoolStringVal</a>, 
         <a href="#entry-attribSpecialVal">attribSpecialVal</a>, 
         <a href="#entry-camelCaseToDashLowerName">camelCaseToDashLowerName</a>, 
-        <a href="#entry-catalogContentUrl">catalogContentUrl</a>, 
         <a href="#entry-clearVars">clearVars</a>, 
         <a href="#entry-combineClassArgs">combineClassArgs</a>, 
         <a href="#entry-compileClassArg">compileClassArg</a>, 
@@ -357,7 +355,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-joinStyleNamesList">joinStyleNamesList</a>, 
         <a href="#entry-localsPutAll">localsPutAll</a>, 
         <a href="#entry-makeAttribMapFromArgMap">makeAttribMapFromArgMap</a>, 
-        <a href="#entry-makeCatalogContentUrl">makeCatalogContentUrl</a>, 
+        <a href="#entry-makeOfbizContentCtxPrefixUrl">makeOfbizContentCtxPrefixUrl</a>, 
         <a href="#entry-makeOfbizContentUrl">makeOfbizContentUrl</a>, 
         <a href="#entry-makeOfbizInterWebappUrl">makeOfbizInterWebappUrl</a>, 
         <a href="#entry-makeOfbizUrl">makeOfbizUrl</a>, 
@@ -711,16 +709,23 @@ See also the function version, <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>; 
 (rather than trying to capture the output of <a href="#entry-ofbizUrl">@ofbizUrl</a>) and in other cases.        </p>
           <div class="lib-text-note">
             <strong>WARN: </strong>
-HTML/Javascript escaping: This utility and all similar link-generating utilities
+HTML/Javascript escaping: By default, this utility and all similar link-generating utilities
 do NOT escape the URLs for HTML or javascript!
-If the screen auto-html-escaping is insufficient (often relied upon in stock Ofbiz templates),
-and you are not passing the URL to another Scipio macro, you may need to use <a href="#entry-escapePart">#escapePart</a> or <a href="#entry-escapeFullUrl">#escapeFullUrl</a>
-in addition to @ofbizUrl (in which case #makeOfbizUrl may be more appropriate).          </div>
+If the screen auto-html-escaping is insufficient or inappropriate (often relied upon in stock Ofbiz templates, but often inappropriate),
+and you are not passing the URL to another Scipio macro, you may need to use <a href="#entry-escapeFullUrl">#escapeFullUrl</a>
+in addition to @ofbizUrl - in which case #makeOfbizUrl may be more appropriate, or alternatively the <code>escapeAs</code> parameter
+on @ofbizUrl.
+In general, @ofbizUrl and sister macros were written to work in &quot;pre-escaping&quot; mode, where nested input
+is pre-escaped in HTML or other language (most often by screen auto-html-escaping) - however, this poses serious
+drawbacks.
+It is generally more better and more correct to post-escape using either <code>escapeFullUrl(makeOfbizUrl(...))</code>
+or <code>&lt;@ofbizUrl escapeAs=&#39;lang&#39;.../&gt;</code> or equivalents.          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, this macro&#39;s string
-parameters are currently not subject to auto-escaping bypass with <a href="#entry-rawString">#rawString</a> (in other words, stock behavior is preserved);
-caller must currently call #rawString if needed. This may be rectified in the future (TODO?).
+Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, by default,
+this macro&#39;s string parameters are currently not subject to auto-escaping bypass with <a href="#entry-rawString">#rawString</a> (in other words, stock behavior is preserved);
+caller must currently call #rawString if needed, or specify the <code>rawParams</code> parameter to change.
+The default may be changed in the future (TODO?).
 HOWEVER, the <em>function</em> version of this macro, #makeOfbizUrl, automatically calls #rawString on its
 string parameters (uri), and can be exploited as an easier alternative to this macro in various cases.          </div>
           <div class="lib-text-note">
@@ -1001,6 +1006,68 @@ If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
 </span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>rawParams</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -false, unless escapeAs is set-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether macro should call <a href="#entry-rawString">#rawString</a> on its string parameters</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+If true, the macro will automatically call #rawString on <code>uri</code> and other string params, bypassing screen auto-html-escaping.
+If false, strings params are subject to screen auto-html-escaping and <code>uri</code> behaves more like nested.
+For legacy reasons, the default for all URL generation <em>macros</em> (which are derived from stock Ofbiz)
+defined in this file is <code>false</code> <em>UNLESS</em> the <code>escapeAs</code> parameter is set,
+in which case this is toggled to <code>true</code>.
+For URL generation <em>functions</em> (which are new in Scipio), the default is always <code>true</code>.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>escapeAs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|js-html|...|, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Language in which to escape the whole resulting URL</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-escapeFullUrl">#escapeFullUrl</a> for possible values.
+When this is empty (default), the macro performs no escaping whatsoever.
+If this is set to a language, it toggles <code>rawParams</code> and <code>strict</code> to <code>true</code>, and doing
+        </span>
+<pre>&lt;@ofbizUrl uri=someUri escapeAs=&#39;html&#39;... /&gt;</pre>        <span>
+is basically equivalent to doing:
+        </span>
+<pre>&lt;#assign urlContent&gt;&lt;@ofbizUrl uri=someUri rawParams=true strict=true ... /&gt;&lt;/#assign&gt;
+${escapeFullUrl(urlContext, &#39;html&#39;)}</pre>        <span>
+Usually, if you use this shortcut, you should use the <code>uri</code> parameter instead of nested, to bypass screen auto-html-escaping;
+but note you may need to use <a href="#entry-rawString">#rawString</a> manually if you are adding parameters to the uri.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>strict</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -false, unless escapeAs is set-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether to handle only raw strings or recognize pre-escaped strings</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Default is false unless <code>escapeAs</code> is non-empty, in which case this switches to <code>true</code>.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision).          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-19: Currently this parameter is <em>not</em> passed to <a href="#entry-escapeFullUrl">#escapeFullUrl</a> (when <code>escapeAs</code> is set), because the
+pre-escaped ampersand <code>&amp;amp;</code> is too ubiquitous in existing code.          </div>
+</span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1037,7 +1104,13 @@ which is very frequent due to use of macros.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 This function&#39;s string arguments (uri) are coded to bypass screen auto-escaping with <a href="#entry-rawString">#rawString</a>,
-as per standard Scipio macro behavior. This may be different from the macro version of this function (@ofbizUrl).          </div>
+as per standard Scipio macro behavior.
+This may be different from the macro version of this function (@ofbizUrl).
+In other words, the @ofbizUrl parameter <code>rawParams</code> is <code>true</code> by default for this function
+and similar functions.
+In general, this function version expects to deal with non-escaped values; however,
+for reasons of legacy support, pre-escaped parameter delimiters (<code>&amp;amp;</code>) are handled
+automatically where possible.          </div>
                       </div>
                   </div>
             
@@ -1054,7 +1127,10 @@ as per standard Scipio macro behavior. This may be different from the macro vers
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">Map of <a href="#entry-ofbizUrl">@ofbizUrl</a> arguments OR a string containing a uri (single parameter)</span>
                             <br/>
-                            <span class="lib-entry-param-desc-extradesc"></span>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The <code>rawParams</code> default is <code>true</code>, unlike the macro version.          </div>
+</span>
                         </td>
                       </tr>
               </table>
@@ -1158,6 +1234,14 @@ This is subject to the same escaping behavior and exceptions noted for @ofbizUrl
                       <tr>
                         <td class="entry-paramname">
                             <code>extLoginKey</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizUrl">@ofbizUrl</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>rawParams</code>
                         </td>
                         <td class="entry-paramdesc">
                             <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizUrl">@ofbizUrl</a></span>
@@ -1337,6 +1421,14 @@ This is subject to the same escaping behavior and exceptions noted for @ofbizUrl
                             <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizUrl">@ofbizUrl</a></span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>rawParams</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizUrl">@ofbizUrl</a></span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1454,7 +1546,7 @@ being database-stored URLs), applying URL-decoding by default is <em>dangerous</
 In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
 <em>before</em> storing in database - but note that URL-encoded parameters should probably not be decoded if
 they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
-(parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).          </div>
+(in such cases, parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 This is subject to the same escaping behavior and exceptions noted for <a href="#entry-ofbizUrl">@ofbizUrl</a>.          </div>
@@ -1482,6 +1574,14 @@ screen html escaping on the URI parameter, because too many templates use <a hre
 directly without consideration to escaping.
 However, the function versions of this macro such as <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a> DO bypass the
 auto screen escaping on this parameter.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+SPECIAL VALUES: Stock ofbiz originally recognized the string &quot;/images/defaultImage.jpg&quot; as
+a special value; when this value was specified, the <code>variant</code> parameter was ignored.
+However, this check does not work properly in general.
+In Scipio, while this behavior is left intact for compatibility with old code,
+you should simply avoid relying on any such check and not consider
+&quot;/images/defaultImage.jpg&quot; as a special value, or simply not use it.          </div>
 </span>
                         </td>
                       </tr>
@@ -1500,6 +1600,23 @@ auto screen escaping on this parameter.          </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>ctxPrefix</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|(string), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Contextual path prefix</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+Extra path prefix prepended to the uri, which may replace the central system default prefix if
+it produces an absolute URL (prefixed with &quot;http:&quot;, &quot;https:&quot;, or &quot;//&quot;).
+If string, it is used as given.
+If boolean: if false, no extra prefix; if true, the context variable
+(New in Scipio)        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>urlDecode</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -1509,6 +1626,77 @@ auto screen escaping on this parameter.          </div>
                             <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).          </div>
+        <span>
+(New in Scipio)        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>rawParams</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -false, unless escapeAs is set-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether macro should call <a href="#entry-rawString">#rawString</a> on its string parameters</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-ofbizUrl">@ofbizUrl</a> for description.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>escapeAs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|js-html|...|, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Language in which to escape the whole resulting URL</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-escapeFullUrl">#escapeFullUrl</a> for possible values.
+See <a href="#entry-ofbizUrl">@ofbizUrl</a> for description.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>strict</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -false, unless escapeAs is set-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether to handle only raw strings or recognize pre-escaped strings</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+This macro must perform checks and concatenations on the passed uri; if pre-escaped
+values are passed (such as HTML), this parameter must be false.
+When false, currently (2016-10-19), only HTML and Javascript pre-escaped strings are handled.
+If <code>escapeAs</code> is set to a specific language, the default for <code>strict</code> becomes <code>true</code>.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-19: Currently this parameter is <em>not</em> passed to <a href="#entry-escapeFullUrl">#escapeFullUrl</a> (when <code>escapeAs</code> is set), because the
+pre-escaped ampersand <code>&amp;amp;</code> is too ubiquitous in existing code.          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Pre-escaped string handling is heuristic-like and only tries to detect encodings
+done by <code>UtilCodec</code> class and Freemarker built-ins.
+In some edge cases, the resulting Javascript may not necessarily be secure!
+The method will try to warn in log.
+Known cases:          </div>
+        <div>  <ul>
+      <li>
+        <span>
+If a prefix ends with raw less-than (&quot;&lt;&quot;) character and the uri does not begin
+with a forward slash or escaped equivalent (&quot;/&quot;), the method could produce
+a dangerous result! This is prevented by not passing unsafe values as the
+<code>ctxPrefix</code>, or simply not pre-escaping for javascript.        </span>
+      </li>
+  </ul>
+</div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The function version of this macro, <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a>, uses
+true as default for this parameter, unlike this macro.          </div>
         <span>
 (New in Scipio)        </span>
 </span>
@@ -1579,6 +1767,22 @@ This is subject to the same escaping behavior noted for <a href="#entry-makeOfbi
                             <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a></span>
                         </td>
                       </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>rawParams</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>strict</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a></span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1588,6 +1792,66 @@ This is subject to the same escaping behavior noted for <a href="#entry-makeOfbi
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
+                       <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-makeOfbizContentCtxPrefixUrl"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">makeOfbizContentCtxPrefixUrl</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizContentCtxPrefixUrl</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Version of <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a> that is preset to recognize the <code>contentPathPrefix</code> context prefix.
+Same as (shorthand for):
+  makeOfbizContentUrl({&quot;uri&quot;:someUri, &quot;ctxPrefix&quot;:true, ...})</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is subject to the same escaping behavior noted for <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>args</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>variant</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
+
+                  </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a>, 
                        <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>
                      </p>
                   </div>  
@@ -1682,6 +1946,53 @@ This is subject to the same escaping behavior and exceptions noted for <a href="
                       </tr>
                       <tr>
                         <td class="entry-paramname">
+                            <code>rawParams</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -false, unless escapeAs is set-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether macro should call <a href="#entry-rawString">#rawString</a> on its string parameters</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-ofbizUrl">@ofbizUrl</a> for description.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>escapeAs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|js|js-html|...|, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Language in which to escape the whole resulting URL</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
+See <a href="#entry-escapeFullUrl">#escapeFullUrl</a> for possible values.
+See <a href="#entry-ofbizUrl">@ofbizUrl</a> for description.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>strict</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -false, unless escapeAs is set-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether to handle only raw strings or recognize pre-escaped strings</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision).          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-10-19: Currently this parameter is <em>not</em> passed to <a href="#entry-escapeFullUrl">#escapeFullUrl</a> (when <code>escapeAs</code> is set), because the
+pre-escaped ampersand <code>&amp;amp;</code> is too ubiquitous in existing code.          </div>
+        <span>
+See <a href="#entry-ofbizUrl">@ofbizUrl</a> for description.        </span>
+</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
                             <code>...</code>
                         </td>
                         <td class="entry-paramdesc">
@@ -1698,140 +2009,6 @@ This is subject to the same escaping behavior and exceptions noted for <a href="
                   <span class="lib-entry-detail">Implemented as transform.</span>
                 </p>
               </div>
-            
-          </div>
-          
-          
-          <hr />
-          <a name="entry-catalogContentUrl"></a>
-          <div class="lib-entry lib-entry-type-macro">
-
-            <h3 class="lib-entry-title">catalogContentUrl</h3>
-            
-            <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>catalogContentUrl</code></span>
-                  </h4>
-            </div>
-            
-              
-                  <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Version of <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a> with extra catalog-specific prefix.
-This prepends a <code>contentPathPrefix</code> string to the URI/nested before passing to @ofbizContentUrl.
-It is gotten from context or request attributes; or if undefined, will run its own lookup.</p>
-                      <div class="lib-entry-extradesc">
-        <p>
-Usually, the contentPathPrefix is returned from
-<code>CatalogWorker.getContentPathPrefix(request)</code>.        </p>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-This is subject to the same escaping behavior and exceptions noted for <a href="#entry-ofbizUrl">@ofbizUrl</a>.          </div>
-                      </div>
-                  </div>
-            
-              
-                  <div class="lib-entry-section-params">
-                    <h4>Parameters</h4>
-                    
-                      <div class="lib-entry-params-doc">
-              <table class="entry-parameters">
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>uri</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>variant</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>urlDecode</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-              </table>
-                      </div>
-
-                  </div>
-                  <div class="lib-entry-section-related">
-                     <h4>Related</h4>
-                     <p>
-                       <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>, 
-                       <a href="#entry-makeCatalogContentUrl">#makeCatalogContentUrl</a>
-                     </p>
-                  </div>  
-            
-
-            
-          </div>
-          
-          
-          <hr />
-          <a name="entry-makeCatalogContentUrl"></a>
-          <div class="lib-entry lib-entry-type-function">
-
-            <h3 class="lib-entry-title">makeCatalogContentUrl</h3>
-            
-            <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeCatalogContentUrl</code></span>
-                  </h4>
-            </div>
-            
-              
-                  <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Version of <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a> with extra catalog-specific prefix.
-This prepends a <code>contentPathPrefix</code> string to the URI before passing to #makeOfbizContentUrl.
-It is gotten from context or request attributes; or if undefined, will run its own lookup.</p>
-                      <div class="lib-entry-extradesc">
-        <p>
-Usually, the contentPathPrefix is returned from
-<code>CatalogWorker.getContentPathPrefix(request)</code>.        </p>
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-This is subject to the same escaping behavior noted for <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>.          </div>
-                      </div>
-                  </div>
-            
-              
-                  <div class="lib-entry-section-params">
-                    <h4>Parameters</h4>
-                    
-                      <div class="lib-entry-params-doc">
-              <table class="entry-parameters">
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>args</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="entry-paramname">
-                            <code>variant</code>
-                        </td>
-                        <td class="entry-paramdesc">
-                        </td>
-                      </tr>
-              </table>
-                      </div>
-
-                  </div>
-                  <div class="lib-entry-section-related">
-                     <h4>Related</h4>
-                     <p>
-                       <a href="#entry-makeOfbizContentUrl">#makeOfbizContentUrl</a>, 
-                       <a href="#entry-makeCatalogContentUrl">#makeCatalogContentUrl</a>, 
-                       <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>
-                     </p>
-                  </div>  
-            
-
             
           </div>
           

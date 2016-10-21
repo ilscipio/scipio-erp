@@ -28,8 +28,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,20 @@ public class UtilCodec {
         tmpCodecs.add(new PercentCodec());
         codecs = Collections.unmodifiableList(tmpCodecs);
     }
+    
+    /**
+     * SCIPIO: list of available encoder names.
+     */
+    private static final Set<String> encoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+            "raw", "url", "xml", "html", "css", "string"
+    })));
+    
+    /**
+     * SCIPIO: list of available decoder names.
+     */
+    private static final Set<String> decoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+            "url"
+    })));
 
     public static class IntrusionException extends GeneralRuntimeException {
         public IntrusionException(String message) {
@@ -236,6 +252,19 @@ public class UtilCodec {
         return urlCodec;
     }
     
+    /**
+     * SCIPIO: Returns all available encoder names.
+     */
+    public static Set<String> getEncoderNames() {
+        return encoderNames;
+    }
+    
+    /**
+     * SCIPIO: Returns all available decoder names.
+     */
+    public static Set<String> getDecoderNames() {
+        return decoderNames;
+    }
     
     /**
      * SCIPIO: Quick encoding method.

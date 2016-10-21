@@ -43,7 +43,7 @@ under the License.
 
 jQuery(document).ready(function() {
 
-    <#assign fieldIdPrefixJs = escapePart(fieldIdPrefix, 'js')>
+    <#assign fieldIdPrefixJs = escapeVal(fieldIdPrefix, 'js')>
 
     <#-- Scipio: NOTE: the container IDs can be omitted because the js doesn't make proper use of them anyhow -->
     <#-- TODO?: getAssociatedStateList may be out of date compared to getDependentDropdownValues?  -->

@@ -29,7 +29,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentUrlFilter;
+import org.ofbiz.webapp.ftl.OfbizContentTransform;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
+
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -49,20 +53,6 @@ import freemarker.template.TemplateTransformModel;
  */
 public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
     public final static String module = OfbizContentAltUrlTransforms.class.getName();
-    @SuppressWarnings("unchecked")
-    public String getStringArg(Map args, String key) {
-        Object o = args.get(key);
-        if (o instanceof SimpleScalar) {
-            return ((SimpleScalar) o).getAsString();
-        } else if (o instanceof StringModel) {
-            return ((StringModel) o).getAsString();
-        } else if (o instanceof SimpleNumber) {
-            return ((SimpleNumber) o).getAsNumber().toString();
-        } else if (o instanceof NumberModel) {
-            return ((NumberModel) o).getAsNumber().toString();
-        }
-        return null;
-    }
     
     @Override
     @SuppressWarnings("unchecked")
@@ -88,9 +78,15 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                     BeanModel req = (BeanModel) env.getVariable("request");
                     BeanModel res = (BeanModel) env.getVariable("response");
                     if (req != null) {
-                        String contentId = getStringArg(args, "contentId");
-                        String viewContent = getStringArg(args, "viewContent");
-                        Boolean urlDecode = OfbizUrlTransform.checkBooleanArg(args, "urlDecode", null);
+                        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+                        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+                        boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+                        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+                        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+                        
+                        String contentId = TransformUtil.getStringArg(args, "contentId", rawParams);
+                        String viewContent = TransformUtil.getStringArg(args, "viewContent", rawParams);
+                        Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         HttpServletResponse response = null;
                         if (res != null) {
@@ -100,7 +96,7 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                         if (UtilValidate.isNotEmpty(contentId)) {
                             url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent, urlDecode);
                         }
-                        out.write(url);
+                        out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());

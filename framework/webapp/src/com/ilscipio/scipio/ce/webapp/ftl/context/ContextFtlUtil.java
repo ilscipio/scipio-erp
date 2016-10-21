@@ -120,26 +120,6 @@ public abstract class ContextFtlUtil {
     }
     
     /**
-     * Abstracted method to retrieve a "context/global" var (loosely-defined) from the Freemarker environment.
-     * At minimum, always include Freemarker globals and data model, encompassing Ofbiz context and globalContext.
-     * In addition - SUBJECT TO CHANGE - may read from current or main namespace.
-     * <p>
-     * NOTE: 2016-10-13: Currently this only reads from globals and data model, ignoring main
-     * and current namespaces. So it will only respond to changes made using #global directive and not #assign.
-     * TODO: REVIEW: We will start with this more restrictive/safer behavior first and see in future if main
-     * or current namespace should be considered. This should be made to match the FTL macro implementations.
-     * Some of the more common variable names (such as "locale") can cause problematic conflicts.
-     * 
-     * @see freemarker.core.Environment#getGlobalVariable(String)
-     * @see com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil#getMainNsOrGlobalVar(String, Environment)
-     * @see com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil#getCurrentNsOrGlobalVar(String, Environment)
-     */
-    public static TemplateModel getFtlContextGlobalVar(String name, Environment env) throws TemplateModelException {
-        //return LangFtlUtil.getMainNsOrGlobalVar(name, env);
-        return env.getGlobalVariable(name);
-    }
-
-    /**
      * Removes the whole request vars map.
      */
     public static void removeRequestVars(HttpServletRequest request, 

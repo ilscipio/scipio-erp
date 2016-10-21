@@ -178,11 +178,11 @@ if (typeof getScipioFieldCheckElems === 'undefined') {
 }  
   
 jQuery(document).ready(function() {
-    var allItems = getScipioFieldCheckElemsByClass('${escapePart(itemFieldClass, 'js')}');
+    var allItems = getScipioFieldCheckElemsByClass('${escapeVal(itemFieldClass, 'js')}');
     
     var contentItemMap = {
       <#list contentItems as item>
-        "${escapePart(item.fieldId, 'js')}" : <@objectAsScript lang="js" object=item />,
+        "${escapeVal(item.fieldId, 'js')}" : <@objectAsScript lang="js" object=item />,
       </#list>
     };
     

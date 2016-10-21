@@ -54,8 +54,8 @@ IMPL NOTE: Beware of whitespace.
 
 <#-- @htmlHeadOpen main markup - theme override -->
 <#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} passArgs={} catchArgs...>
-<!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${escapePart(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapePart(langDir, 'html')}"</#if>><![endif]-->
-<html class="no-js"<#if docLangAttr?has_content> lang="${escapePart(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapePart(langDir, 'html')}"</#if>>
+<!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${escapeVal(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapeVal(langDir, 'html')}"</#if>><![endif]-->
+<html class="no-js"<#if docLangAttr?has_content> lang="${escapeVal(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapeVal(langDir, 'html')}"</#if>>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -151,10 +151,10 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
 <#-- @script main markup - theme override -->
 <#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} passArgs={} catchArgs...>
   <#if src?has_content>
-    <script type="${escapePart(type, 'html')}" src="${escapeFullUrl(src, 'html')}"></script>
+    <script type="${escapeVal(type, 'html')}" src="${escapeFullUrl(src, 'html')}"></script>
   <#else>
     <#if htmlwrap>
-      <script type="${escapePart(type, 'html')}">
+      <script type="${escapeVal(type, 'html')}">
       <#if cdata>//<![CDATA[</#if>
     </#if>
         <#nested>
@@ -207,7 +207,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
               var commonOfbizUrls = {};
           }
           </#if>
-          commonOfbizUrls["${escapePart(uri, 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
+          commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makeOfbizUrl(rawString(uri)), 'js')}";
           
         </@script>
       <#else>
@@ -232,7 +232,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${escapePart(uri, 'js')}"] = "${escapePart(makeOfbizUrl(rawString(uri)), 'js')}";
+      commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makeOfbizUrl(rawString(uri)), 'js')}";
       </#list>
 
     </@script>

@@ -25,15 +25,15 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
     As a result all macros here must take care to html-escape as well as js-escape values.
-    Use escapePart/escapeFullUrl for this.
+    Use escapeVal/escapeFullUrl for this.
 -->
 <#macro renderNodeBegin style extraArgs...>
-<#if style?has_content><ul class="${escapePart(style, 'html')}"></#if>
+<#if style?has_content><ul class="${escapeVal(style, 'html')}"></#if>
 <li><#rt/>
 </#macro>
 
 <#macro renderLastElement style extraArgs...>
-<ul<#if style?has_content> class="${escapePart(style, 'html')}"</#if>>
+<ul<#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>
 <#rt/>
 </#macro>
   
@@ -48,27 +48,27 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
  
 <#macro renderLabel id style labelText extraArgs...>
-<span<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if>><#rt/>
-<#if labelText?has_content>${escapePart(labelText, 'htmlmarkup')}</#if><#rt/>
+<span<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if>><#rt/>
+<#if labelText?has_content>${escapeVal(labelText, 'htmlmarkup')}</#if><#rt/>
 </span>    
 </#macro>
 
 <#macro formatBoundaryComment boundaryType widgetType widgetName>
-<!-- ${escapePart(boundaryType, 'html')}  ${escapePart(widgetType, 'html')}  ${escapePart(widgetName, 'html')} -->
+<!-- ${escapeVal(boundaryType, 'html')}  ${escapeVal(widgetType, 'html')}  ${escapeVal(widgetName, 'html')} -->
 </#macro>
 
 <#macro renderLink id style name title targetWindow linkUrl linkText imgStr extraArgs...>
-<a<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#rt/>
-<#if style?has_content> class="${escapePart(style, 'html')}"</#if><#rt/>
-<#if name?has_content> name="${escapePart(name, 'html')}"</#if><#rt/>
-<#if title?has_content> title="${escapePart(title, 'html')}"</#if><#rt/>
-<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}</#if><#if linkUrl?has_content> href="${escapeFullUrl(linkUrl, 'html')}"<#else> href="javascript:void(0);"</#if>><#rt/>
-<#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${escapePart(linkText, 'htmlmarkup')}<#else>&nbsp;</#if></a><#rt/>
+<a<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt/>
+<#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#rt/>
+<#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#rt/>
+<#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#rt/>
+<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}</#if><#if linkUrl?has_content> href="${escapeFullUrl(linkUrl, 'html')}"<#else> href="javascript:void(0);"</#if>><#rt/>
+<#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${escapeVal(linkText, 'htmlmarkup')}<#else>&nbsp;</#if></a><#rt/>
 </#macro>
 
 <#macro renderImage src id style wid hgt border alt urlString extraArgs...>
 <#if src?has_content>
-<img<#if id?has_content> id="${escapePart(id, 'html')}"</#if><#if style?has_content> class="${escapePart(style, 'html')}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${escapePart(border, 'html')}"</#if> alt="<#if alt?has_content>${escapePart(alt, 'html')}</#if>" src="${escapeFullUrl(urlString, 'html')}" /><#rt/>
+<img<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#if wid?has_content> width="${wid}"</#if><#if hgt?has_content> height="${hgt}"</#if><#if border?has_content> border="${escapeVal(border, 'html')}"</#if> alt="<#if alt?has_content>${escapeVal(alt, 'html')}</#if>" src="${escapeFullUrl(urlString, 'html')}" /><#rt/>
 </#if>
 </#macro>
  

@@ -459,7 +459,7 @@ function getConfigDetails() {
                 <#assign instructions = question.content.get("INSTRUCTIONS")!>
                 <#assign instructionsHtml = "">
                 <#if instructions?has_content>
-                  <#assign instructionsHtml> <a href="javascript:showErrorAlert('${escapePart(uiLabelMap.CommonErrorMessage2, 'js-html')}','${escapePart(instructions, 'js-html')}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a></#assign>
+                  <#assign instructionsHtml> <a href="javascript:showErrorAlert('${escapeVal(uiLabelMap.CommonErrorMessage2, 'js-html')}','${escapeVal(instructions, 'js-html')}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a></#assign>
                 </#if>
                 <div>${question.description!}${instructionsHtml}</div>
 

@@ -51,20 +51,20 @@ under the License.
         <div class="errorMessage">
             <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
             <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderProductNotFound?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${escapePart(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
+            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
         </div>
     <#elseif ProductReceiveInventoryAgainstPurchaseOrderQuantityExceedsAvailableToReceive??>
         <div class="errorMessage">
             <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
             <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderQuantityExceedsAvailableToReceive?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${escapePart(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
+            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
         </div>
     </#if>
     <#if ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder??>
         <div class="errorMessage" class="${styles.text_color_success!}">
             <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
             <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${escapePart(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
+            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
         </div>
     </#if>
 </#if>

@@ -66,7 +66,9 @@ under the License.
             <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
             <link target="FindPortalPage"/>
         </menu-item> -->
-        <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
+        <!-- TODO: REVIEW NAMES... contain a "& Doc"? maybe -->
+        <!--${uiLabelMap.WebtoolsLayoutDemo} / ${uiLabelMap.CommonDev}-->
+        <menu-item name="LayoutDemo" title="${uiLabelMap.CommonDevelopment}">
             <link target="WebtoolsLayoutDemo" />
         </menu-item>
         <menu-item name="solrAdmin" title="${uiLabelMap.WebtoolsSolrAdmin}">
@@ -433,7 +435,84 @@ under the License.
         <include-elements menu-name="geoManagementTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="LayoutDemoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <!-- SCIPIO: new -->
+    <menu name="TemplateApiDocTabBar" items-sort-mode="off" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
+        </actions>
+        <menu-item name="htmlTemplate" title="${docLibTitleMap['standard/htmlTemplate']}"><!-- SHOULD remain the first as contains the intro & read-first stuff -->
+            <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlStructure" title="${docLibTitleMap['standard/htmlStructure']}">
+            <link target="${basePageInterWebappUri}/standard/htmlStructure#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlContent" title="${docLibTitleMap['standard/htmlContent']}">
+            <link target="${basePageInterWebappUri}/standard/htmlContent#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlInfo" title="${docLibTitleMap['standard/htmlInfo']}">
+            <link target="${basePageInterWebappUri}/standard/htmlInfo#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlForm" title="${docLibTitleMap['standard/htmlForm']}">
+            <link target="${basePageInterWebappUri}/standard/htmlForm#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlNav" title="${docLibTitleMap['standard/htmlNav']}">
+            <link target="${basePageInterWebappUri}/standard/htmlNav#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlScript" title="${docLibTitleMap['standard/htmlScript']}">
+            <link target="${basePageInterWebappUri}/standard/htmlScript#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="utilities" title="${docLibTitleMap['utilities']}">
+            <link target="${basePageInterWebappUri}/utilities#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+    </menu>
+    <menu name="TemplateApiDocSideBar" items-sort-mode="off" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="TemplateApiDocTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="TemplateApiDocSubTabBar" items-sort-mode="off" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
+            <set field="sideBarShown" type="Boolean" value="${context.widePage != true}"/>
+            <set field="sideBarOnOffLabel" value="${groovy: sideBarShown ? 'CommonOff' : 'CommonOn'}"/>
+        </actions>
+        <!-- TODO? the logic and decorators for this toggle work, but themes don't seem to respect context.widePage anymore
+        <menu-item name="toggleDocSideBar" title="${uiLabelMap.CommonSideBar}: ${uiLabelMap[sideBarOnOffLabel]}">
+            <condition>
+                <and>
+                    <not><if-empty field="targetLibPath"/></not>
+                    <not><if-empty field="userLogin"/></not>
+                </and>
+            </condition>
+            <link target="${basePageInterWebappUri}/${targetLibPath}?docWidePage=${sideBarShown}#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>-->
+        <menu-item name="reloadDataModel" title="${uiLabelMap.CommonReload}" widget-style="+${styles.action_run_session} ${styles.action_update}">
+            <condition>
+                <and>
+                    <not><if-empty field="targetLibPath"/></not>
+                    <not><if-empty field="userLogin"/></not><!-- heavy session cache and processing, avoid abuse -->
+                </and>
+            </condition>
+            <link target="${basePageInterWebappUri}/${targetLibPath}?reloadDataModel=true#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="LayoutDemoSideBar" items-sort-mode="off" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="WebtoolsLayoutDemo"/>
+            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
+        </actions>
+        <menu-item name="LayoutDemoDebug" title="Layout Demo (Debug)">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="debugMode" value="true"/>
+            </link>
+        </menu-item>
+        <menu-item name="LayoutDemo" title="Layout Demo">
+            <link target="${demoTargetUrl}"/>
+        </menu-item>
+        <menu-item name="templateApiDocs" title="${uiLabelMap.WebtoolsTemplateApiDocs}">
+            <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
+            <sub-menu name="TemplateApiDoc" include="TemplateApiDocSideBar"/>
+        </menu-item>
         <!-- 
         <menu-item name="Selected" title="${uiLabelMap.CommonSelected}">
             <link target="${demoTargetUrl}">
@@ -456,14 +535,6 @@ under the License.
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
             </link>
-        </menu-item>
-        <menu-item name="LayoutDemoDebug" title="Layout Demo (Debug)">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="debugMode" value="true"/>
-            </link>
-        </menu-item>
-        <menu-item name="LayoutDemo" title="Layout Demo">
-            <link target="${demoTargetUrl}"/>
         </menu-item>
     </menu>
     

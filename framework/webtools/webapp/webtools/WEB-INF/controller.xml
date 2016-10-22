@@ -646,6 +646,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListDemoDataGeneratorProviders"/>
     </request-map>
+    
+    <!-- SCIPIO: Template API docs render -->
+    <request-map uri="ViewTemplateApiDocPage">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="TemplateApiDocPage"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -756,6 +762,8 @@ under the License.
     <view-map name="DemoDataGeneratorResult" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#DemoDataGeneratorResult"/>
     <view-map name="ListDemoDataGeneratorProviders" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorProviders"/>
   
+    <!-- SCIPIO: Templating API docs -->
+    <view-map name="TemplateApiDocPage" type="screen" page="component://webtools/widget/DocScreens.xml#TemplateApiDocPage"/>
 
     <!-- end of view mappings -->
 </site-conf>

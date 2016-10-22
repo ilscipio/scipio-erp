@@ -589,6 +589,46 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: New -->
+    <screen name="CommonDocumentationDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="LayoutDemo"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="userLogin"/></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- FIXME?: workaround for default theme missing bg -->
+                                <screenlet>
+                                    <decorator-section-include name="body"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
     <screen name="MainSideBarMenu">
         <section>

@@ -1,5 +1,9 @@
 <#--
 * Scipio FTL doc common markup and utilities
+*
+* WARN: Don't add macros/functions here with same names as live template API 
+*     names!
+*
 -->
   
 <#-- 
@@ -8,9 +12,11 @@
 *************************************
 -->
 
-<#function makeInterLibUrl targetLibDocPath targetName="">
-  <#if !targetLibDocPath?ends_with(".html")>
-    <#local targetLibDocPath = targetLibDocPath + ".html">
+<#function makeRelInterLibUrl targetLibDocPath targetName=""><#-- default one -->
+  <#if docOutFileExt?has_content>
+    <#if !targetLibDocPath?ends_with(docOutFileExt)>
+      <#local targetLibDocPath = targetLibDocPath + docOutFileExt>
+    </#if>
   </#if>
   <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, libInfo.libDocPath)!""><#t>
   <#if targetName?has_content>
@@ -19,6 +25,30 @@
     <#return relLibDocPath>
   </#if>
 </#function>
+
+<#-- NOTE: baseAbsInterLibUrl MUST be defined by caller as global IF this is used  -->
+<#function makeAbsInterLibUrl targetLibDocPath targetName="">
+  <#if docOutFileExt?has_content>
+    <#if !targetLibDocPath?ends_with(docOutFileExt)>
+      <#local targetLibDocPath = targetLibDocPath + docOutFileExt>
+    </#if>
+  </#if>
+  <#if targetLibDocPath?starts_with("/")>
+    <#local absLibDocPath = baseAbsInterLibUrl + targetLibDocPath>
+  <#else>
+    <#local absLibDocPath = baseAbsInterLibUrl + "/" + targetLibDocPath>
+  </#if>
+  <#if targetName?has_content>
+    <#return absLibDocPath + "#" + targetName>
+  <#else>
+    <#return absLibDocPath>
+  </#if>
+</#function>
+
+<#-- WE use the relative builder by default. caller can override this with the other, or something else entirely. -->
+<#assign makeInterLibUrl = makeRelInterLibUrl>
+
+
   
 <#-- reference to another entry. name is either a full reference or name only, with or without @ or #. -->
 <#macro entryRef name>

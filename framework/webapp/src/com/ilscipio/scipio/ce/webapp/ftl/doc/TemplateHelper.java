@@ -18,21 +18,36 @@ public abstract class TemplateHelper {
     
     protected MsgHandler msgHandler = new MsgHandler.VoidMsgHandler();
     
+    protected final String inFileExtension;
+    protected final String outFileExtension;
+    
+    protected TemplateHelper(String inFileExtension, String outFileExtension) {
+        this.inFileExtension = (inFileExtension != null) ? inFileExtension : "";
+        this.outFileExtension = (outFileExtension != null) ? outFileExtension : "";
+    }
+
     public void setMsgHandler(MsgHandler msgHandler) {
         this.msgHandler = msgHandler;
     }
 
 
-    public static TemplateHelper getInstance(String libFormat) {
+    public static TemplateHelper getInstance(String libFormat, String inFileExtension, String outFileExtension) {
         if (FtlDocCompiler.SCIPIO_LIB_FORMAT.equals(libFormat)) {
-            return new ScipioLibTemplateHelper();
+            return new ScipioLibTemplateHelper(inFileExtension, outFileExtension);
         }
         else {
             throw new IllegalArgumentException("Unrecognized or missing lib format when trying to find appropriate template helper");
         }
     }
     
-    
+    public String getInFileExtension() {
+        return inFileExtension;
+    }
+
+    public String getOutFileExtension() {
+        return outFileExtension;
+    }
+
     public String stripIndent(String text, int charsToRemove) {
         return text.replaceAll("(\\n)[ ]{" + charsToRemove + "}", "$1");
     }
@@ -207,9 +222,9 @@ public abstract class TemplateHelper {
                 res = nameRef.substring(0, index);
             }
         }
-        if (res != null) {
-            if (res.endsWith(FtlDocCompiler.inFileExtension)) {
-                res = res.substring(0, res.length() - FtlDocCompiler.inFileExtension.length());
+        if (res != null && !inFileExtension.isEmpty()) {
+            if (res.endsWith(inFileExtension)) {
+                res = res.substring(0, res.length() - inFileExtension.length());
             }
         }
         return res;

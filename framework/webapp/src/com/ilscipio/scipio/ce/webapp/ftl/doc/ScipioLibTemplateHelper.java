@@ -15,7 +15,10 @@ import java.util.regex.Pattern;
 public class ScipioLibTemplateHelper extends TemplateHelper {
     // NOTE: some of the Parser methods could actually be moved here, but don't need for now
     
-    
+    public ScipioLibTemplateHelper(String inFileExtension, String outFileExtension) {
+        super(inFileExtension, outFileExtension);
+    }
+
     private static final Pattern bulletPat = Pattern.compile(
             "^([ ]*)[*]"
             , Pattern.DOTALL + Pattern.MULTILINE);
@@ -154,8 +157,8 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 // relative to doc root. need to adjust the link.
                 value = getTargetRelLibDocPath(value, libDocPath);
             }
-            if (value.endsWith(".ftl")) {
-                value = value.substring(0, value.length() - 4) + ".html";
+            if (value.endsWith(inFileExtension)) {
+                value = value.substring(0, value.length() - inFileExtension.length()) + outFileExtension;
             }
             linkInfo.put("value", value);
             return linkInfo;

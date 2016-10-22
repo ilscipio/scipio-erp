@@ -16279,4 +16279,46 @@
         <value xml:lang="de">Keine Zeile ausgewählt</value>
         <value xml:lang="en">No row selected</value>
     </property>
+    <property key="CommonDev">
+        <value xml:lang="de">Dev</value>
+        <value xml:lang="en">Dev</value>
+    </property>
+    <property key="CommonDevDocs">
+        <value xml:lang="de">Dev Docs</value>
+        <value xml:lang="en">Dev Docs</value>
+    </property>
+    <property key="CommonDeveloper">
+        <value xml:lang="de">Entwickler</value>
+        <value xml:lang="en">Developer</value>
+    </property>
+    <property key="CommonDevelopment">
+        <value xml:lang="en">Development</value>
+        <value xml:lang="es">Desarrollo</value>
+        <value xml:lang="fr">Développement</value>
+        <value xml:lang="it">Sviluppo</value>
+        <value xml:lang="ja">開発</value>
+        <value xml:lang="nl">Ontwikkeling</value>
+        <value xml:lang="ro">Dezvoltare</value>
+        <value xml:lang="ru">Совершенствование</value>
+        <value xml:lang="th">การพัฒนา</value>
+        <value xml:lang="vi">Phát triển</value>
+        <value xml:lang="zh">开发</value>
+        <value xml:lang="zh_TW">開發</value>
+    </property>
+    <property key="CommonReload">
+        <value xml:lang="de">Laden</value>
+        <value xml:lang="en">Reload</value>
+        <value xml:lang="es">Recargar</value>
+        <value xml:lang="fr">Recharger</value>
+        <value xml:lang="pt_BR">Recarregar</value>
+        <value xml:lang="ru">Перезагрузка</value>
+    </property>
+    <property key="CommonSideBar">
+        <value xml:lang="de">SideBar</value>
+        <value xml:lang="en">SideBar</value>
+    </property>
+    <property key="CommonOff">
+        <value xml:lang="de">Aus</value>
+        <value xml:lang="en">Off</value>
+    </property>
 </resource>

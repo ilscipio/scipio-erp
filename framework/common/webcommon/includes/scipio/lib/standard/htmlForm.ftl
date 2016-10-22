@@ -26,6 +26,8 @@
 ************
 Defines a form. Analogous to <form> HTML element.
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/fields.png" alt="" style="height:400px"/>]]]
+
   * Usage Examples *  
     <@form name="myform">
       <@fields>
@@ -167,6 +169,8 @@ for getFileUploadProgressStatus controller AJAX calls.
 * Progress Bar 
 ************
 A progress bar.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/progress.png" alt=""/>]]]
 
 Can be animated using Javascript manually or by using progressOptions argument.  
 Presence of progressOptions activates use of ScipioUploadProgress script for this progress bar by linking it 

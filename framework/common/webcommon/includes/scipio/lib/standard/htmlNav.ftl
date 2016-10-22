@@ -19,6 +19,8 @@
 ************
 Creates a navigation list, for example based on magellan-destination or breadcrumbs.
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/breadcrumbs.png" alt=""/>]]]
+
 Since this is very foundation specific, this function may be dropped in future installations
 
   * Usage Examples *  
@@ -233,6 +235,8 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
 ************
 Menu macro, mainly intended for small inline menu definitions in templates, but able to substitute for widget menu
 definitions if needed.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/menu.png" alt=""/>]]]
 
 It may be used in two forms:
   <#assign items = [{"type":"link", ...}, {"type":"link", ...}, ...]>

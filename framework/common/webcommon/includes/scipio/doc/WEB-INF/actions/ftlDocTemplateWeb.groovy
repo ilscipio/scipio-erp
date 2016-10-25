@@ -133,7 +133,12 @@ if (!ofbizHome) {
     compileArgs.srcFolderPath = (new File(ofbizHome, compileArgs.srcFolderPath)).getPath();
 }
 
-reloadDataModel = Boolean.TRUE.equals(fdtwArgs.reloadDataModel);
+// ONLY respond to reload requests if we are admin (using entities for now). otherwise could be abused.
+if (security.hasEntityPermission("ENTITY_DATA", "_ADMIN", session)) {
+    reloadDataModel = Boolean.TRUE.equals(fdtwArgs.reloadDataModel);
+} else {
+    reloadDataModel = false;
+}
 
 try {
     targetDataModel = new HashMap<>();
@@ -141,7 +146,7 @@ try {
     srcFileDataModels = null; // this is the mega motherload data model covering all the files
     if (!reloadDataModel) {
         // check motherload in cache (relaxed)
-        srcFileDataModels = request.getSession().getAttribute("fdtwDataModelsCached");
+        srcFileDataModels = request.getSession().getServletContext().getAttribute("fdtwDataModelsCached");
     }
     
     FtlDocCompiler compiler = FtlDocCompiler.getInstance();
@@ -162,7 +167,7 @@ try {
         throw new IOException("Data model incomplete from parsing (reason: unknown)");
     } else {
         // (re-)cache the motherload with latest
-        request.getSession().setAttribute("fdtwDataModelsCached", compiler.getSrcFileDataModels());
+        request.getSession().getServletContext().setAttribute("fdtwDataModelsCached", compiler.getSrcFileDataModels());
     }
     
     context.docContext = Collections.unmodifiableMap(targetDataModel); // for regular access from screens

@@ -111,6 +111,14 @@ pre {
   margin-top: 0.3em;
   margin-bottom: 0.4em;
 }
+
+<#-- FIXME: this is a hack to make page readable when no login on default theme -->
+<#if !userLogin?? && (visualThemeId!) == "METRO">
+#main-content {
+  background-color: #F5F5F5;
+}
+</#if>
+
 </style>
 
 
@@ -119,8 +127,12 @@ pre {
 * MAIN PAGE *
 *************************************
 -->  
-      
-      
+
+<div class="doc-main-content">   
+    <#if !userLogin??><#-- FIXME: hack for no-login -->
+      <h1 class="lib-pagetitle">${title}</h1>
+    </#if>
+   
       <#if libFilename?has_content>
         <h3><span class="lib-filename">${escapeText(libFilename)}</span></h3>
       </#if>
@@ -450,6 +462,8 @@ pre {
     </#if>
   </#list>
 
+</div>
+
 <#else>
   <#if libFormat??>
      <@alert type="error">ERROR: This doc template can only render scipio-lib format FTL lib docs.</@alert>
@@ -457,4 +471,5 @@ pre {
      <#-- data model missing, already flagged by groovy -->
   </#if>
 </#if>
+
 

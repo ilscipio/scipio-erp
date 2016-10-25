@@ -489,7 +489,9 @@ under the License.
             <condition>
                 <and>
                     <not><if-empty field="targetLibPath"/></not>
-                    <not><if-empty field="userLogin"/></not><!-- heavy session cache and processing, avoid abuse -->
+                    <!-- heavy session cache and processing, avoid abuse -->
+                    <not><if-empty field="userLogin"/></not>
+                    <if-has-permission permission="ENTITY_DATA_ADMIN"/>
                 </and>
             </condition>
             <link target="${basePageInterWebappUri}/${targetLibPath}?reloadDataModel=true#extLoginKey=OFF" url-mode="inter-app"/>

@@ -120,6 +120,8 @@ public class ModelMenuItem extends ModelWidget {
     
     private final FlexibleStringExpander disabled; // SCIPIO: new
     
+    private final Boolean alwaysExpandSelectedOrAncestor; // SCIPIO: new (override)
+    
     // ===== CONSTRUCTORS =====
 
     public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, BuildArgs buildArgs) {
@@ -184,6 +186,11 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.link = null;
         }
+        
+        if (!menuItemElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) 
+            alwaysExpandSelectedOrAncestor = "true".equals(menuItemElement.getAttribute("always-expand-selected-or-ancestor"));
+        else 
+            alwaysExpandSelectedOrAncestor = null;
 
         // SCIPIO: legacy inlined menu-items
         if (buildArgs.omitSubMenus) {
@@ -297,6 +304,7 @@ public class ModelMenuItem extends ModelWidget {
         this.linkStyle = "";
         this.overrideMode = "";
         this.sortMode = "";
+        this.alwaysExpandSelectedOrAncestor = null;
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
         this.subMenuList = Collections.emptyList();
@@ -374,6 +382,7 @@ public class ModelMenuItem extends ModelWidget {
         this.link = existingMenuItem.link;
  
         this.overrideMode = existingMenuItem.overrideMode;
+        this.alwaysExpandSelectedOrAncestor = existingMenuItem.alwaysExpandSelectedOrAncestor;
     }
     
     // Merge constructor
@@ -446,6 +455,11 @@ public class ModelMenuItem extends ModelWidget {
             this.sortMode = overrideMenuItem.sortMode;
         } else {
             this.sortMode = existingMenuItem.sortMode;
+        }
+        if (overrideMenuItem.alwaysExpandSelectedOrAncestor != null) {
+            this.alwaysExpandSelectedOrAncestor = overrideMenuItem.alwaysExpandSelectedOrAncestor;
+        } else {
+            this.alwaysExpandSelectedOrAncestor = existingMenuItem.alwaysExpandSelectedOrAncestor;
         }
         
         if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuModel)) {
@@ -1100,7 +1114,8 @@ public class ModelMenuItem extends ModelWidget {
         // SCIPIO: first check if must always render selected or ancestor
         Boolean result = null;
         MenuItemState itemState = renderState.getItemState();
-        if (this.getModelMenu().isAlwaysExpandSelectedOrAncestor() &&
+        if (Boolean.TRUE.equals(this.alwaysExpandSelectedOrAncestor) ||
+                (this.alwaysExpandSelectedOrAncestor == null && this.getModelMenu().isAlwaysExpandSelectedOrAncestor()) &&
             itemState.isSelectedOrAncestor()) {
             result = Boolean.TRUE;
         }

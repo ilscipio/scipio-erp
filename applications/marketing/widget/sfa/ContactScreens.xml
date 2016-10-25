@@ -26,9 +26,9 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="currentUrl" value="FindContacts"/>
                 <set field="activeSubMenuItem" value="Contacts"/>
-                <set field="setContactDescription" value="${groovy:session.setAttribute(&quot;contactDescription&quot;,activeMainMenuItem)}"/>
-                <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
-                <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>
+                <set field="setContactDescription" value="${groovy:session.setAttribute('contactDescription', context.activeMainMenuItem)}"/>
+                <set field="removeAccountDescription" value="${groovy:session.removeAttribute('accountDescription')}"/>
+                <set field="removeLeadDescription" value="${groovy:session.removeAttribute('leadDescription')}"/>
                 
                 <set field="title" value="${uiLabelMap.SfaContacts}"/>
             </actions>

@@ -24,7 +24,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPromos"/>
-                <set field="activeSubMenuItem" value="Promotions" global="true"/>
+                <!--<set field="activeSubMenuItem" value="Promotions"/>-->
+                <set field="activeSubMenuItem" value="FindProductPromo"/>
                 <set field="userEntered" from-field="parameters.userEntered"/>
                 <entity-condition entity-name="ProductPromo" list="productPromos">
                     <condition-expr field-name="userEntered" from-field="userEntered" ignore-if-empty="true"/>
@@ -61,11 +62,12 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromos"/>
                 <set field="activeMainMenuItem" value="promos"/>
-                <set field="activeSubMenuItem" value="EditProductPromo"/>
+                <!-- SCIPIO: if not editing existing, the find one is selected, which has same label
+                <set field="activeSubMenuItem" value="EditProductPromo"/> -->
                 <set field="labelTitleProperty" value="ProductPromotion"/>
                 <set field="productPromoId" from-field="parameters.productPromoId"/>
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>
-
+                <set field="activeSubMenuItem" value="${groovy: context.productPromoId ? 'EditProductPromo' : 'FindProductPromo'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
@@ -142,7 +144,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"><!-- SCIPIO: copied & modified: name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml" -->
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/promo/EditProductPromoRules.ftl"/></html>
@@ -174,7 +176,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"><!-- SCIPIO: copied & modified: name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml" -->
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/promo/EditProductPromoStores.ftl"/></html>
@@ -202,7 +204,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"><!-- SCIPIO: copied & modified: name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml" -->
                     <decorator-section name="body">  
                         <section>
                             <widgets>
@@ -226,8 +228,8 @@ under the License.
                                 <section>
                                     <actions>
                                         <entity-condition entity-name="ProductPromoCode" list="productPromoCodes">
-                                            <condition-list combine="and">
-                                            </condition-list>
+                                            <!--<condition-list combine="and">
+                                            </condition-list>-->
                                             <order-by field-name="-createdDate"/>
                                         </entity-condition>
                                     </actions>
@@ -255,7 +257,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/promo/EditProductPromoCode.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"><!-- SCIPIO: copied & modified: name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml" -->
                     <decorator-section name="body">
                         <container>
                             <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}"/>
@@ -289,7 +291,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"><!-- SCIPIO: copied & modified: name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml" -->
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditProductPromoContent}">
                             <include-form name="EditProductPromoContentImage" location="component://product/widget/catalog/PromoForms.xml"/>

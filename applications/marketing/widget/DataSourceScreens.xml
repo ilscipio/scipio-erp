@@ -24,6 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/DataSourceMenus.xml#DataSource" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${activeDataSourceSubMenuItem}" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="DataSource"/>

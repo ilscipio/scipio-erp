@@ -31,6 +31,9 @@ under the License.
     <menu name="MarketingAppSideBar" title="${uiLabelMap.MarketingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         always-expand-selected-or-ancestor="true">
         <include-elements menu-name="MarketingAppBar" recursive="full" />
+    </menu>
+    <menu name="MarketingSideBar" title="${uiLabelMap.MarketingManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="MarketingAppBar" recursive="includes-only" />
         <!--<menu-item name="DataSource">
             <sub-menu name="DataSource" include="component://marketing/widget/DataSourceMenus.xml#DataSourceSideBar"/>
         </menu-item>-->        
@@ -41,7 +44,7 @@ under the License.
             <sub-menu name="SegmentGroup" include="component://marketing/widget/SegmentMenus.xml#SegmentGroupSideBar"/>
         </menu-item>
         <menu-item name="Promotions">
-            <!--<sub-menu name="Marketing" include="MarketingSideBar"/>-->
+            <sub-menu name="Promo" include="component://product/widget/catalog/CatalogMenus.xml#PromoSideBar"/>
         </menu-item>
         <menu-item name="MarketingCampaign">
             <sub-menu name="MarketingCampaign" include="component://marketing/widget/MarketingCampaignMenus.xml#MarketingCampaignSideBar"/>
@@ -53,8 +56,5 @@ under the License.
         </menu-item>
         <menu-item name="promos">
         </menu-item>-->
-    </menu>
-    <menu name="MarketingSideBar" title="${uiLabelMap.MarketingManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="MarketingAppBar" recursive="includes-only" />
     </menu>
 </menus>

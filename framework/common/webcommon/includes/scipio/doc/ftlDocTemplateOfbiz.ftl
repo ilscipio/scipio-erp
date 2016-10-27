@@ -223,7 +223,6 @@ pre {
     </div>
   </#if>
 
-<#-- redundant on hosted version
   <#if libMap?has_content>
     <div class="lib-links">
       <h4>All libraries:</h4>
@@ -235,7 +234,6 @@ pre {
       </p>
     </div>
   </#if>
--->
  
     <#-- NOTE: there is a global entryMap, and each section also has its own entryMap -->
 

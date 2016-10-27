@@ -46,12 +46,13 @@
 *         An alternative is to use the three brackets to pass user-defined special characters
 *         which your doc template can scan for and interpret as new text directives.
 *
+*
 * * Macro Interfaces *
 * 
 * Scipio standard macros have versatile interfaces. There are template-facing macros (most of which support
 * an advanced arguments interface) and a separate set of delegated macros for theme implementation (markup macros).
 *
-* '''General remarks:'''
+* ''General remarks:''
 * * All macros expect to be invoked using named parameters only (always {{{<@row class="my-class">}}}, never {{{<@row "my-class">}}})
 * * Functions in Freemarker only support positional arguments, but some Scipio functions support
 *   an "args" argument as a map, which emulates named arguments. This is also done
@@ -69,7 +70,7 @@
 *   It also provides more power for theme overrides; however, theme overrides must be careful in their use of it;
 *   it's better for themes to use simple markup overrides instead, which do not use the advanced pattern.
 *
-* '''Template-facing macros (advanced args pattern):'''
+* ''Template-facing macros (advanced args pattern):''
 * * These macros such as @field, @row, @heading, etc. are meant to be
 *   used in templates and can also be overridden directly by themes (though not preferred method).
 *   Most of these use a versatile args pattern that looks like: 
@@ -106,8 +107,36 @@
 *         always add new members to it instead. e.g. 
 *       <@somemacro passArgs=(passArgs + {"myParam":"myValue")>
 *
-* '''Value escaping''' (2016-10-12)
+* ''Markup macros (theme overrides):''
+* * These macros such as @row_markup, @heading_markup, etc. containing
+*   the "_markup" name are overridable by themes to provide alternative HTML and sometimes javascript markup.
+*   This is the simplest and preferred way to provide alternate markup.
+*   They do not have a versatile interface like the template-facing macros and are intentionally kept
+*   simple.
+*   * Nevertheless, they have some requirements: these macros should always end their parameter list with
+*     a varargs catch-all parameter "catchArgs..." so that future changes do not backwards break compability
+*     with themes.
+* * Interface:
+*     <#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...>
+*   * {{{origArgs}}}: Original caller's args. map of complex parameters usually roughly as they were received by the calling macro. Rarely-used and should be
+*     avoided in favor of the other simpler macro arguments passed by the caller, which are usually very similar. Is 
+*     needed in rare cases where the simpler macro arguments are too simplistic or don't provide all the information needed.
+*     NOTE: In general orig args do not come from a template-facing macro but from an intermediate macro
+*         (such as @fieldset_core or @field_input_widget). This is the intention, as the former would break 
+*         abstraction too much. In many cases however, the calling macro may happen to be 
+*         a template-facing macro. Do not rely on this while using origArgs.
+*   * {{{passArgs}}}: Pass-through args. Map of args that are passed through from the template-facing macro to the parent/caller macro to 
+*     this macro or in other words passed through the whole call stack, similar to a context. This is needed especially to allow theme overrides 
+*     to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
+*     Be careful about using sufficiently unique names.
+*   * {{{catchArgs}}}: Catch-all args. Simply catches all the parameters the macro doesn't need to handle
+*     NOTE: The previous parameters may be omitted and caught with catchArgs if unused.
 *
+*
+* * Value escaping *
+*
+* ''Added for 1.14.2 (2016-10-12)''.
+
 * Macros now generally implement html escaping, javascript string value escaping, and other escaping
 * for strings at point-of-use in their markup implementations, across the board, irrespective
 * of and in addition to automatic html escaping performed by the ofbiz freemarker renderer.  
@@ -172,31 +201,6 @@
 *   the caller is responsible for escaping the strings inserted within it (using #escapeVal or {{{?js_string}}}).
 * * ''URL macro parameters'': URL macro parameters have some extra special handling and are escaped by macros as full URLs. 
 *   See #escapeFullUrl for details.
-*
-* '''Markup macros (theme overrides):'''
-* * These macros such as @row_markup, @heading_markup, etc. containing
-*   the "_markup" name are overridable by themes to provide alternative HTML and sometimes javascript markup.
-*   This is the simplest and preferred way to provide alternate markup.
-*   They do not have a versatile interface like the template-facing macros and are intentionally kept
-*   simple.
-*   * Nevertheless, they have some requirements: these macros should always end their parameter list with
-*     a varargs catch-all parameter "catchArgs..." so that future changes do not backwards break compability
-*     with themes.
-* * Interface:
-*     <#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...>
-*   * {{{origArgs}}}: Original caller's args. map of complex parameters usually roughly as they were received by the calling macro. Rarely-used and should be
-*     avoided in favor of the other simpler macro arguments passed by the caller, which are usually very similar. Is 
-*     needed in rare cases where the simpler macro arguments are too simplistic or don't provide all the information needed.
-*     NOTE: In general orig args do not come from a template-facing macro but from an intermediate macro
-*         (such as @fieldset_core or @field_input_widget). This is the intention, as the former would break 
-*         abstraction too much. In many cases however, the calling macro may happen to be 
-*         a template-facing macro. Do not rely on this while using origArgs.
-*   * {{{passArgs}}}: Pass-through args. Map of args that are passed through from the template-facing macro to the parent/caller macro to 
-*     this macro or in other words passed through the whole call stack, similar to a context. This is needed especially to allow theme overrides 
-*     to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
-*     Be careful about using sufficiently unique names.
-*   * {{{catchArgs}}}: Catch-all args. Simply catches all the parameters the macro doesn't need to handle
-*     NOTE: The previous parameters may be omitted and caught with catchArgs if unused.
 *
 -->
 

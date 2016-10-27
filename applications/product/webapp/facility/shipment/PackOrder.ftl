@@ -106,7 +106,7 @@ under the License.
 
     <#if showInput != "N" && ((orderHeader?exists && orderHeader?has_content))>
         <#assign sectionTitle>${uiLabelMap.ProductOrderId} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</#assign>
-        <@section title=sectionTitle>
+        <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
             <#if orderItemShipGroup?has_content>
                 <#if (orderItemShipGroup.contactMechId)?has_content>
                     <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
@@ -158,7 +158,7 @@ under the License.
     
             <#-- manual per item form -->
             <#if showInput != "N" && itemInfos?has_content>
-                <#assign sectionTitle="${uiLabelMap.ProductProduct} ${uiLabelMap.ProductToPack}"/>
+                <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
                     <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>">                    
                         <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
@@ -179,7 +179,7 @@ under the License.
     
                 <#-- auto grid form -->
                 <#assign itemInfos = packingSession.getItemInfos()!>
-                <#assign sectionTitle="${uiLabelMap.ProductProducts} ${uiLabelMap.ProductToPack}"/>
+                <#assign sectionTitle="${rawLabel('ProductProducts')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
                     <form name="multiPackForm" method="post" action="<@ofbizUrl>ProcessBulkPackOrder</@ofbizUrl>">
                         <@fields type="default-manual">

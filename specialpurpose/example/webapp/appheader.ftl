@@ -32,8 +32,7 @@ under the License.
         <#if portalPages?has_content>
             <#list portalPages as page>
               <#if page.portalPageName?has_content>
-                <#assign text><#if page.portalPageName??>${page.portalPageName}<#else>?</#if></#assign>
-                <@menuitem type="link" href=makeOfbizUrl("showPortalPage?portalPageId=${page.portalPageId}") text=text selected=(selected=="${rawString(page.portalPageId)}") class="+${styles.action_nav!}" />
+                <@menuitem type="link" href=makeOfbizUrl("showPortalPage?portalPageId=${rawString(page.portalPageId)}") text=(page.portalPageName!"?") selected=(selected=="${rawString(page.portalPageId)}") class="+${styles.action_nav!}" />
               </#if>
             </#list>
         </#if>

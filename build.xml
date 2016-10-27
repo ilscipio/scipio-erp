@@ -840,6 +840,25 @@ under the License.
         <echo message="[docs-ftl-scipio] ========== Done Building (FTL docs) =========="/>
     </target>
     
+    <!-- SCIPIO: these would have been used to deploy html files or intermediate FTLs (highly complex,
+        but now we do dynamic renders which are much easier to handle
+    <target name="docs-ftl-scipio-deploylocal" depends="docs-ftl-scipio">
+        <antcall target="docs-ftl-scipio-deploylocalonly"/>
+    </target>
+    
+    <target name="docs-ftl-scipio-deploylocalonly">
+        <echo message="[docs-ftl-scipio] ========== Deploying Locally (FTL docs) =========="/>
+        <copy todir="${basedir}/framework/webtools/webapp/webtools/docs/html/templating/ftl/lib" overwrite="true" verbose="true">
+            <fileset dir="${basedir}/doc/scipio/templating/ftl/lib"/>
+        </copy>
+        <echo message="[docs-ftl-scipio] ========== Done Deploying (FTL docs) =========="/>
+    </target>
+    
+    <target name="docs-ftl-scipio-ftldeploylocalonly">
+        <antcall target="docs-ftl-scipio-ftlonly"/>
+        <antcall target="docs-ftl-scipio-deploylocalonly"/>
+    </target>-->
+    
     <!-- ================================================================== -->
     <!-- Contrib Targets                                                    -->
     <!-- ================================================================== -->

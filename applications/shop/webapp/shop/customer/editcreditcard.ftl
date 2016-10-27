@@ -35,7 +35,12 @@ under the License.
     <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle><#if !creditCard??>${uiLabelMap.AccountingAddNewCreditCard}<#else><#-- Scipio: duplicate: ${uiLabelMap.AccountingEditCreditCard}--></#if></#assign>
+<#if !creditCard??>
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewCreditCard/>
+<#else>
+  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.AccountingEditCreditCard/>-->
+  <#assign sectionTitle = ""/>
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
   <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editcreditcardform">

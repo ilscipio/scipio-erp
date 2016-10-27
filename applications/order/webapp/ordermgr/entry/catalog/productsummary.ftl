@@ -51,10 +51,10 @@ ${virtualJavaScript!}
 </@script>
 <#if product??>
     <#-- variable setup -->
-    <#if backendPath?default("N") == "Y">
-        <#assign productUrl><@ofbizCatalogUrl productId=product.productId productCategoryId=categoryId/></#assign>
+    <#if (backendPath!"N") == "Y">
+        <#assign productUrl><@ofbizCatalogUrl productId=product.productId productCategoryId=categoryId escapeAs='html'/></#assign>
     <#else>
-        <#assign productUrl><@ofbizCatalogAltUrl productId=product.productId productCategoryId=categoryId/></#assign>
+        <#assign productUrl><@ofbizCatalogAltUrl productId=product.productId productCategoryId=categoryId escapeAs='html'/></#assign>
     </#if>
 
     <#if requestAttributes.productCategoryMember??>

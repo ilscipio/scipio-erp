@@ -39,6 +39,12 @@
 *     it is prefixed with "./" or "../" in which case it is assumed relative to current file: >>>../utilities.ftl<<<,  >>>./htmlContent.ftl<<<
 *     Text starting with http or https protocol are automatically linked.
 *     .ftl is changed to .html.
+*   * As last resort, short strings of raw HTML can be inserted by wrapping them with
+*     three square brackets, [[[<em>like this</em>]]].
+*     WARN: HTML should be avoided in these docs because it badly affects readability
+*         of the plain text! Use sparingly. Acceptable for basic image (img elem) links.
+*         An alternative is to use the three brackets to pass user-defined special characters
+*         which your doc template can scan for and interpret as new text directives.
 *
 * * Macro Interfaces *
 * 

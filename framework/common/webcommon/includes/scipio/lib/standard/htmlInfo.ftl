@@ -18,6 +18,8 @@
 ************
 Creates a modal UI element.
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/modal.png" alt=""/>]]]
+
 FIXME: Needs parameter to control injection and location of hidden modal content so can inject
     within forms
 
@@ -70,6 +72,9 @@ FIXME: Needs parameter to control injection and location of hidden modal content
 * Alert box
 ************
 Alert box for messages that must grab user attention.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/alerts.png" alt=""/>]]]
+
 
 NOTE: Should avoid using this for regular, common inlined message results such as "No records found." unless
     it's an unexpected result, error or one that requires user action.
@@ -138,6 +143,8 @@ NOTE: Should avoid using this for regular, common inlined message results such a
 * Panel box
 ************
 Creates a panel box.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/panel.png" alt=""/>]]]
 
   * Usage Examples *  
     <@panel type="">

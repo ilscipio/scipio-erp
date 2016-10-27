@@ -201,7 +201,12 @@ under the License.
           <#-- SCIPIO: new from upstream since 2016-06-13 -->
           <#if product?has_content>
             <@field type="display" name="inventoryItemTypeId" label=uiLabelMap.ProductInventoryItemTypeId>
+              <#-- 2016-10-25: from ofbiz patch: if inventoryItemTypeId is null, by convention, NON_SERIAL_INV_ITEM is implied -->
+              <#if product.inventoryItemTypeId?has_content>
                 ${(product.getRelatedOne("InventoryItemType").get("description", locale))!}
+              <#else>
+                ${(delegator.findOne("InventoryItemType", {"inventoryItemTypeId":"NON_SERIAL_INV_ITEM"}, true).get("description", locale))!"NON_SERIAL_INV_ITEM"}
+              </#if>
             </@field>
           <#else>
             <@field type="select" name="inventoryItemTypeId" label=uiLabelMap.ProductInventoryItemTypeId>

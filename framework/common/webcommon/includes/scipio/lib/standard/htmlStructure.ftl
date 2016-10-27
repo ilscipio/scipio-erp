@@ -2,6 +2,8 @@
 * 
 * The Grid
 *
+* [[[<img src="http://www.scipioerp.com/files/2016/05/grid-1024x141.png" alt=""/>]]]
+*
 * Displaying content within a (flexible) grid is a way of structuring content on a website.
 * The grid itself works as a layer on top of the basic html structure. Everything visible is grouped inside 
 * columns and individual cells. The SCIPIO framework uses the standard 12 column grid that is used by  
@@ -492,6 +494,8 @@ Since this is very foundation specific, this function may be dropped in future i
 * Tile
 ************
 Creates a very basic wrapper for tiles (can be used in metro designs).
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/tiles.png" alt=""/>]]]
 
 Please be aware that this is neither based on standard bootstrap, nor foundation. 
 It is loosely based on http://metroui.org.ua/tiles.html 

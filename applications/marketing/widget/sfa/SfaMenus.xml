@@ -81,9 +81,8 @@ under the License.
             <sub-menu name="Analytics" include="component://marketing/widget/AnalyticsMenus.xml#AnalyticsSideBar"/>
         </menu-item>
         <menu-item name="Settings">
-            <!-- TODO? <sub-menu name="" include=""/> -->
+            <sub-menu name="DataSource" include="component://marketing/widget/DataSourceMenus.xml#DataSourceSideBar"/>
         </menu-item>
-        
         <menu-item name="Contacts">
             <sub-menu name="Contact" include="ContactSideBar"/>
         </menu-item>

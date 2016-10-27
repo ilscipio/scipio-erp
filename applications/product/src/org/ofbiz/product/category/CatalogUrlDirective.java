@@ -60,6 +60,9 @@ import freemarker.template.utility.DeepUnwrap;
  * <li>fullPath (boolean)</li>
  * <li>secure (boolean)</li>
  * <li>encode (boolean)</li>
+ * <li>rawParams (boolean)</li>
+ * <li>strict (boolean)</li>
+ * <li>escapeAs (string)</li>
  * </ul>
  * <p>
  * In addition, it now supports inter-webapp links. If either of the parameters

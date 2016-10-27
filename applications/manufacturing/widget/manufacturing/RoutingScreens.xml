@@ -23,11 +23,33 @@ under the License.
     <screen name="CommonRoutingDecorator">
         <section>
             <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="routing"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Routing"/>
+                
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="routing"/>
+                
+                <set field="titleFormat" value="\${finalTitle} ${routing.workEffortName} [${routing.workEffortId}]"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <!-- do check for MANUFACTURING, _VIEW permission -->
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                                    <not><if-empty field="routing"/></not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->
@@ -35,15 +57,16 @@ under the License.
                                 <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <section>
+                                <!--<section>
                                     <condition>
                                         <not><if-empty field="routing"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu name="RoutingTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                                     </widgets>
-                                </section>
-                                <label style="heading">[${uiLabelMap.CommonId} ${routing.workEffortId}] ${routing.workEffortName}</label>
+                                </section>-->
+                                <!-- SCIPIO: integrate into title like other apps
+                                <label style="heading">[${uiLabelMap.CommonId} ${routing.workEffortId}] ${routing.workEffortName}</label> -->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -58,11 +81,33 @@ under the License.
     <screen name="CommonRoutingTaskDecorator">
         <section>
             <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="routingTask"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="RoutingTask"/>
+            
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="routingTask"/>
+                
+                <set field="titleFormat" value="\${finalTitle} ${routingTask.workEffortName} [${routingTask.workEffortId}]"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <!-- do check for MANUFACTURING, _VIEW permission -->
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                                    <not><if-empty field="routingTask"/></not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->
@@ -70,15 +115,15 @@ under the License.
                                 <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <section>
+                                <!--<section>
                                     <condition>
                                         <not><if-empty field="routingTask"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu name="RoutingTaskTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                                     </widgets>
-                                </section>
-                                <label style="heading">[${uiLabelMap.CommonId} ${routingTask.workEffortId}] ${routingTask.workEffortName}</label>
+                                </section>-->
+                                <!--<label style="heading">[${uiLabelMap.CommonId} ${routingTask.workEffortId}] ${routingTask.workEffortName}</label>-->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -132,20 +177,27 @@ under the License.
     <screen name="EditRouting">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditRouting"/>
-                <set field="activeMainMenuItem" value="routing"/>
                 <set field="activeSubMenuItem" value="editRouting"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="routing"/>
+                
+                <set field="titleProperty" value="${groovy: context.routing ? 'PageTitleEditRouting' : 'ManufacturingNewRouting'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="routing"/></not>
+                            </condition>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </widgets>
+                        </section>
                         <screenlet>
-                            <container style="button-bar">
-                                <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="${styles.link_nav} ${styles.action_add}"/>
-                            </container>
                             <include-form name="EditRouting" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -191,20 +243,27 @@ under the License.
     <screen name="EditRoutingTask">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditRoutingTask"/>
-                <set field="activeMainMenuItem" value="routingTask"/>
                 <set field="activeSubMenuItem" value="editRoutingTask"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="routingTask"/>
+                
+                <set field="titleProperty" value="${groovy: context.routingTask ? 'PageTitleEditRoutingTask' : 'ManufacturingNewRoutingTask'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="routingTask"/></not>
+                            </condition>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </widgets>
+                        </section>
                         <screenlet>
-                            <container style="button-bar">
-                                <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="${styles.link_nav} ${styles.action_add}"/>
-                            </container>
                             <include-form name="EditRoutingTask" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -216,7 +275,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditRoutingTaskCosts"/>
-                <set field="activeMainMenuItem" value="routingTask"/>
                 <set field="activeSubMenuItem" value="editRoutingTaskCosts"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -241,7 +299,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListRoutingTaskRoutings"/>
-                <set field="activeMainMenuItem" value="routingTask"/>
                 <set field="activeSubMenuItem" value="listRoutingTaskRoutings"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -265,7 +322,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListRoutingTaskProducts"/>
-                <set field="activeMainMenuItem" value="routingTask"/>
                 <set field="activeSubMenuItem" value="listRoutingTaskProducts"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -278,10 +334,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
+                        <link target="EditRoutingTaskProduct" text="${uiLabelMap.ManufacturingNewRoutingTaskProduct}" style="${styles.link_nav} ${styles.action_add}">
+                            <parameter param-name="workEffortId"/>
+                        </link>
                         <screenlet id="EditRoutingTaskProductPanel">
-                            <link target="EditRoutingTaskProduct" text="${uiLabelMap.ManufacturingNewRoutingTaskProduct}" style="${styles.link_nav} ${styles.action_add}">
-                                <parameter param-name="workEffortId"/>
-                            </link>
                             <include-form name="ListRoutingTaskProducts" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -293,7 +349,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditRoutingTaskProduct"/>
-                <set field="activeMainMenuItem" value="routingTask"/>
                 <set field="activeSubMenuItem" value="listRoutingTaskProducts"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -319,7 +374,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditRoutingTaskAssoc"/>
                 <set field="activeSubMenuItem" value="routingTaskAssoc"/>
-                <set field="activeMainMenuItem" value="routing"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="workEffortAssocTypeId" value="ROUTING_COMPONENT"/>
@@ -352,7 +406,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditRoutingProductLink"/>
                 <set field="activeSubMenuItem" value="routingProductLink"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
-                <set field="activeMainMenuItem" value="routing"/>
 
                 <set field="workEffortGoodStdTypeId" value="ROU_PROD_TEMPLATE"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -367,7 +420,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
-                        <screenlet id="EditRoutingProductLinkPanel" title="${uiLabelMap.PageTitleEditRoutingProductLink}" collapsible="true">
+                        <screenlet id="EditRoutingProductLinkPanel" collapsible="true"><!-- title="${uiLabelMap.PageTitleEditRoutingProductLink}" -->
                             <include-form name="EditRoutingProductLink" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
                         <include-form name="ListRoutingProductLink" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
@@ -381,7 +434,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditRoutingTaskFixedAsset"/>
                 <set field="activeSubMenuItem" value="editRoutingTaskFixedAssets"/>
-                <set field="activeMainMenuItem" value="routingTask"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-and entity-name="WorkEffortFixedAssetStd" list="allFixedAssets">
                     <field-map field-name="workEffortId" from-field="workEffortId"/>

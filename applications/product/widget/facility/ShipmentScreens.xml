@@ -246,7 +246,7 @@ under the License.
                 <decorator-screen name="CommonShipmentDecorator">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductShipmentPlan}">
-                            <include-form name="findOrderItems" location="component://product/widget/facility//ShipmentForms.xml"/>
+                            <include-form name="findOrderItems" location="component://product/widget/facility/ShipmentForms.xml"/>
                         </screenlet>
                         <section>
                             <condition>
@@ -254,12 +254,12 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.ProductShipmentPlanAdd}">
-                                    <include-form name="addToShipmentPlan" location="component://product/widget/facility//ShipmentForms.xml"/>
+                                    <include-form name="addToShipmentPlan" location="component://product/widget/facility/ShipmentForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
                         <screenlet title="${uiLabelMap.ProductShipmentPlanList}">
-                            <include-form name="listShipmentPlan" location="component://product/widget/facility//ShipmentForms.xml"/>
+                            <include-form name="listShipmentPlan" location="component://product/widget/facility/ShipmentForms.xml"/>
                             <label style="heading" text="${uiLabelMap.ProductShipmentTotalWeight}: ${totWeight} ${uiLabelMap.ProductShipmentTotalVolume}: ${totVolume}"/>
                         </screenlet>
                         <section>

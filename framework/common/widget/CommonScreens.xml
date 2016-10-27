@@ -168,7 +168,28 @@ under the License.
                 <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
                 <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
                 <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
-                <set field="headerTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
+
+                <!-- Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these -->
+                <set field="origTitle" from-field="title" />
+                <set field="origTitleProperty" from-field="titleProperty" />
+
+                <set field="finalTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
+                <!-- 2016-10-26: support titleFormatString to simplify screens 
+                    use backslash to delay the evaluation of expression to here -->
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}" />
+
+                <set field="resolvedTitle" value="${groovy: org.ofbiz.base.util.string.FlexibleStringExpander.expandString(titleFormat, context)}" />
+
+                <!-- OVERWRITE the title field with resolved so automatically works with existing themes -->
+                <!-- NOTE: 2016-10-26: This now means that themes only need to check the "title" field; don't need to check titleProperty anymore (shouldn't be their job) -->
+                <set field="title" from-field="resolvedTitle"/>
+
+                <!-- GLOBAL version of the title so top-level templates can also access it
+                    (NOTE: due to language issues, must be a different field name) -->
+                <set field="globalTitle" from-field="resolvedTitle" global="true"/>
+
+                <set field="headerTitle" from-field="resolvedTitle"/>
+
                 <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
             </actions>
             <widgets />

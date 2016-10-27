@@ -91,18 +91,24 @@ public final class WidgetWorker {
                 localWriter.append(externalLoginKey);
             }
             */
-            Appendable tempWriter = new StringWriter(); // SCIPIO: DON'T use localWriter
+            StringWriter tempWriter = new StringWriter(); // SCIPIO: DON'T use localWriter
             String fullTarget = localRequestName;
-            tempWriter.append(fullTarget);
-            String externalLoginKey = (String) request.getAttribute("externalLoginKey");
-            if (UtilValidate.isNotEmpty(externalLoginKey)) {
-                if (fullTarget.indexOf('?') < 0) {
-                    tempWriter.append('?');
-                } else {
-                    tempWriter.append("&amp;");
+
+            // SCIPIO: 2016-10-21: special "#extLoginKey=OFF" override to prevent adding ext login key
+            if (fullTarget.endsWith("#extLoginKey=OFF")) {
+                tempWriter.append(fullTarget, 0, fullTarget.length() - "#extLoginKey=OFF".length());
+            } else {
+                tempWriter.append(fullTarget);
+                String externalLoginKey = (String) request.getAttribute("externalLoginKey");
+                if (UtilValidate.isNotEmpty(externalLoginKey)) {
+                    if (fullTarget.indexOf('?') < 0) {
+                        tempWriter.append('?');
+                    } else {
+                        tempWriter.append("&amp;");
+                    }
+                    tempWriter.append("externalLoginKey=");
+                    tempWriter.append(externalLoginKey);
                 }
-                tempWriter.append("externalLoginKey=");
-                tempWriter.append(externalLoginKey);
             }
             if (request != null && response != null) {
                 // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this

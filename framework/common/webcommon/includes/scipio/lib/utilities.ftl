@@ -350,7 +350,7 @@ NOTE: This function's string arguments (uri) are coded to bypass screen auto-esc
     </#if>
     <#local res><@ofbizUrl uri=(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
         extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
-        rawParams=rawParams strict=strict/></#local>
+        rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
     <#local res><@ofbizUrl uri=args rawParams=true /></#local>
   </#if>
@@ -376,9 +376,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
   * Related *                           
     @ofbizUrl
 -->
-<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="">
+<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="" strict="" escapeAs="">
   <@ofbizUrl uri=uri absPath=absPath interWebapp=false controller=controller 
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams><#nested></@ofbizUrl><#t>
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -407,12 +407,16 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
     <#if !rawParams?has_content><#-- handles empty string case -->
       <#local rawParams = true>
     </#if>
+    <#local strict = args.strict!true>
+    <#if !strict?has_content><#-- handles empty string case -->
+      <#local strict = true>
+    </#if>
     <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
         extLoginKey=(args.extLoginKey!false) fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
-        rawParams=rawParams/></#local>
+        rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=args absPath=false interWebapp=false controller=false 
-        extLoginKey=false fullPath="" secure="" encode="" rawParams=true/></#local>
+    <#local res><@ofbizUrl uri=args absPath=false interWebapp=false controller=false extLoginKey=false
+        rawParams=true /></#local>
   </#if>
   <#return res>
 </#function>
@@ -437,9 +441,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
   * Related * 
     @ofbizUrl
 -->
-<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="">
+<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="" strict="" escapeAs="">
   <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams><#nested></@ofbizUrl><#t>
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -472,12 +476,16 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
     <#if !rawParams?has_content><#-- handles empty string case -->
       <#local rawParams = true>
     </#if>
+    <#local strict = args.strict!true>
+    <#if !strict?has_content><#-- handles empty string case -->
+      <#local strict = true>
+    </#if>
     <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
         controller=(args.controller!"") extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
-        rawParams=rawParams/></#local>
+        rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
     <#local res><@ofbizUrl uri=args absPath="" interWebapp=true webSiteId=webSiteId
-        controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams=true/></#local>
+        controller="" extLoginKey="" rawParams=true/></#local>
   </#if>
   <#return res>
 </#function>

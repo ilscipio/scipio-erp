@@ -180,8 +180,11 @@ function getConfigDetails() {
   <hr class="sepbar"/>
 
   <#-- Scipio: open form earlier than stock code so don't produce invalid html... -->
-  <#assign action><@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl></#assign>
-  <@form method="post" action=action name="addform">
+  <#assign viewSwitch = "">
+  <#if requestAttributes._CURRENT_VIEW_??>
+    <#assign viewSwitch = "/" + rawString(requestAttributes._CURRENT_VIEW_)>
+  </#if>
+  <@form method="post" action=makeOfbizUrl('additem'+viewSwitch) name="addform">
 
   <#-- Product image/name/price -->
   <@row>
@@ -624,8 +627,8 @@ function getConfigDetails() {
   </#if>
   <#if assocProducts?has_content>
   <@row><@cell>&nbsp;</@cell></@row>
-  <#assign title>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName}</#assign>
-  <@section title=wrapAsRaw(title, 'htmlmarkup')><#-- FIXME: currently needed due to productContentWrapper escaping -->
+  <#assign title>${rawString(beforeName)}<#if showName == "Y">${rawString(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${rawString(afterName)}</#assign>
+  <@section title=title>
     <hr />
     <#list assocProducts as productAssoc>
       <@row>

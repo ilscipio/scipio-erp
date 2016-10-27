@@ -226,7 +226,7 @@ escaping, nor to parameters that emulate nested content (usually named <code>xxx
 that contain whole blocks of javascript code (read below). Nested content escaping must be handled by the caller, which
 in most cases for html is done automatically by the renderer&#39;s automatic html escaping. Exceptions will be noted in macro docs.        </p>
         <p>
-Implementation and manipulation of escaping behavior is mainly done through the functions <a href="../utilities.html#entry-escapePart">#escapePart</a>, <a href="../utilities.html#entry-rawString">#rawString</a> and <a href="../utilities.html#entry-wrapAsRaw">#wrapAsRaw</a>.        </p>
+Implementation and manipulation of escaping behavior is mainly done through the functions <a href="../utilities.html#entry-escapeVal">#escapeVal</a>, <a href="../utilities.html#entry-rawString">#rawString</a> and <a href="../utilities.html#entry-wrapAsRaw">#wrapAsRaw</a>.        </p>
         <p>
 <em>Details and features:</em>
         </p>
@@ -283,14 +283,14 @@ not be used in html attributes.
 &quot;html&quot; (normally escaped using freemarker&#39;s ?html or equivalent) on the other hand must be safe to insert into html attributes,
 so caller <strong>must not</strong> pass markup elements in it. Its use is more limited and only really useful for rare cases
 where data was escaped as html too early (such that #rawString has no effect).
-See the related functions (#wrapAsRaw, #escapePart) for further details.          </div>
+See the related functions (#wrapAsRaw, #escapeVal) for further details.          </div>
       </li>
       <li>
         <span>
 <code>attribs/inlineAttribs</code>: Macros that accept extra arbitrary attribs will automatically escape the values for html attributes.
 <em>However</em>, if the attribs contain any javascript, the macros cannot be aware of this, and the caller must escape the javascript.
         </span>
-<pre>&lt;@somemacro attribs={&quot;somejsattrib&quot;: &quot;javascript:someFunction(&#39;${escapePart(screenVar1, &#39;js&#39;)}&#39;);&quot;}/&gt; &lt;#- (recommended) -&gt;
+<pre>&lt;@somemacro attribs={&quot;somejsattrib&quot;: &quot;javascript:someFunction(&#39;${escapeVal(screenVar1, &#39;js&#39;)}&#39;);&quot;}/&gt; &lt;#- (recommended) -&gt;
 &lt;@somemacro attribs={&quot;somejsattrib&quot;: &quot;javascript:someFunction(&#39;${rawString(screenVar1)?js_string}&#39;);&quot;}/&gt; &lt;#- (also works, but not recommended) -&gt;</pre>        <span>
 This also applies to javascript html attributes in general, such as events.        </span>
       </li>
@@ -299,7 +299,7 @@ This also applies to javascript html attributes in general, such as events.     
 <em>Javascript</em>: Note that escaping javascript typically means escaping the values inserted as string literals, and never the whole javascript code or html attribute (e.g. events).
 Arbitrary javascript code <em>cannot</em> be escaped safely; only strings and text within string literals (<code>&quot;&quot;</code> <code>&#39;&#39;</code>) can be.
 Therefore, macros which accept entire pieces of javascript code cannot escape it and
-the caller is responsible for escaping the strings inserted within it (using #escapePart or <code>?js_string</code>).        </span>
+the caller is responsible for escaping the strings inserted within it (using #escapeVal or <code>?js_string</code>).        </span>
       </li>
       <li>
         <span>

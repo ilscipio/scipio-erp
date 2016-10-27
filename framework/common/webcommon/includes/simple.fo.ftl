@@ -63,7 +63,7 @@ under the License.
                         <fo:table-cell>
                             <#-- The title of the report -->
                             <fo:block font-weight="bold" text-decoration="underline" space-after="0.03in">
-                                <#if titleProperty??>${uiLabelMap.get(titleProperty)}<#else>${title!}</#if>
+                                <#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap[titleProperty]}</#if>
                             </fo:block>
                             <#-- Username and date -->
                             <fo:list-block provisional-distance-between-starts="1in">

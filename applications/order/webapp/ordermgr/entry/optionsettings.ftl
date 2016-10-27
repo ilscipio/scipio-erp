@@ -36,7 +36,7 @@ under the License.
 </#if>
 <#assign supplierPartyId = cart.getSupplierPartyId(shipGroupIndex)!>
 <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":supplierPartyId}, false)! />
-  <#assign sectionTitle>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}<#if supplier?has_content> - ${supplier.groupName!(supplier.partyId)}</#if></#assign>
+  <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawString(supplier.groupName!(supplier.partyId))}</#if></#assign>
   <@section title=sectionTitle>   
     <@row>
         <@cell columns=columns>

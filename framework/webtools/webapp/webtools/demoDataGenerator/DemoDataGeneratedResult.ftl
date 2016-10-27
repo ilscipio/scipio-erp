@@ -1,4 +1,4 @@
-<#assign sectionTitle = uiLabelMap.WebtoolsDemoDataGeneratorResults + " - " + parameters.SERVICE_NAME!>
+<#assign sectionTitle = rawLabel('WebtoolsDemoDataGeneratorResults') + " - " + rawString(parameters.SERVICE_NAME!)>
 <@section title=sectionTitle>
     <#if generatedDataStats?has_content>
         <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->

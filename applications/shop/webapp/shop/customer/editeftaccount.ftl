@@ -35,13 +35,12 @@ under the License.
     <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle>
-  <#if !eftAccount??>
-    ${uiLabelMap.AccountingAddNewEftAccount}
-  <#else>
-    <#-- Scipio: duplicate: ${uiLabelMap.PageTitleEditEFTAccount}-->
-  </#if>
-</#assign>
+<#if !eftAccount??>
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewEftAccount />
+<#else>
+  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.PageTitleEditEFTAccount/>-->
+  <#assign sectionTitle = ""/>
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
   <form method="post" action="<@ofbizUrl><#if !eftAccount??>createEftAccount?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateEftAccount?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editeftaccountform">

@@ -28,6 +28,8 @@
 ************
 An HTML heading (title).
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/heading.png" alt=""/>]]]
+
   * Usage Examples *  
     <@heading>My Title</@heading>         
                                  
@@ -151,6 +153,8 @@ An HTML heading (title).
 * Code Block
 ************
 Creates a basic wrapper for code blocks.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/code.png" alt=""/>]]]
 
   * Usage Examples *  
     <@code type="java">
@@ -286,6 +290,8 @@ Creates a responsive tables script (script only - no markup).
 * Table
 ************
 Defines a table with advanced generating functionality. Analogous to HTML <table> element.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/table-1.png" alt=""/>]]]
 
 Required wrapper for all @table sub-element macros.
 
@@ -987,6 +993,8 @@ DEPRECATED: use @table, @tr macros instead.
 ************
 Creates a pricing table wrapper.
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/pricing.png" alt=""/>]]]
+
 Since this is very foundation specific, this function may be dropped in future installations.
 
   * Usage Examples *  
@@ -1062,6 +1070,8 @@ Since this is very foundation specific, this function may be dropped in future i
 * Chart
 ************
 Creates a chart wrapper.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/charts.png" alt=""/>]]]
 
 Libraries used:
 Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss) - deprecated
@@ -1409,6 +1419,8 @@ Chart data entry.
 ************
 Creates a slider wrapper.
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/slider.png" alt=""/>]]]
+
   * Usage Examples *  
     <@slider>
         <@slide title="" image="" link="/myUrl.html">
@@ -1594,6 +1606,8 @@ Slider data entry - a single slide.
 ************
 Image tag - eases the positioning/styling of images with inline styles. Uses https://www.w3.org/TR/css3-images/#the-object-fit .
 Relies on custom scipioObjectFit Javascript function as a fallback for IE.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/img.png" alt=""/>]]]
 
   * Usage Examples *  
     <@img src="..." type="cover" height="" width=""/>

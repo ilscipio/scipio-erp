@@ -61,11 +61,13 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromos"/>
-                <set field="activeSubMenuItem" value="EditProductPromo"/>
+                <!-- SCIPIO: if not editing existing, the find one is selected, which has same label
+                <set field="activeSubMenuItem" value="EditProductPromo"/>-->
                 <set field="productPromoId" from-field="parameters.productPromoId"/>
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>
                 <set field="isCreateProductPromo" type="Boolean" value="${groovy: !(context.productPromo || (parameters.productPromoId &amp;&amp; parameters.isCreate != 'true'))}"/>
                 <set field="labelTitleProperty" value="${groovy: isCreateProductPromo ? 'ProductNewPromotion' : 'ProductPromotion'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.productPromoId ? 'EditProductPromo' : 'FindProductPromo'}"/>                
             </actions>
             <widgets>
                 <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">

@@ -27,7 +27,7 @@ under the License.
         </@cell>
     </@row>
 </#assign>
-<@section title=sectionTitle titleClass="raw">
+<@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') titleClass="raw">
 
   <#-- information about orders and amount refunded/credited on past returns -->
   <#if orh??>
@@ -185,7 +185,7 @@ under the License.
   
 <#if returnableItems?has_content>
   <#assign sectionTitle>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
-  <@section title=sectionTitle>
+  <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
     <#if orderHeaderAdjustments?has_content>
       <@table type="data-list">
         <@thead>
@@ -239,7 +239,7 @@ under the License.
         <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
         
   <#assign sectionTitle>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
-  <@section title=sectionTitle>
+  <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
         <@table type="data-list">
           <@thead>
           <@tr type="meta" class="header-row">

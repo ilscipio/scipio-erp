@@ -94,7 +94,7 @@ under the License.
 
 <#-- show it for now due to the order completion notice
 <#if hasOrderDownloads>-->
-  <#assign sectionTitle>${uiLabelMap.EcommerceDownloadsAvailableTitle}</#assign>
+  <#assign sectionTitle = uiLabelMap.EcommerceDownloadsAvailableTitle/>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
       <@menuitem type="link" href=makeOfbizUrl("orderdownloads") class="+${styles.action_nav!} ${styles.action_export!}" text=uiLabelMap.EcommerceViewAll />

@@ -1,11 +1,11 @@
 <@section title=sectionTitle>
-    <#assign action="createProdCatalog" />
-    <#assign actionLabel>${uiLabelMap.CommonCreate}</#assign>
+    <#assign actionUri = "createProdCatalog" />
+    <#assign actionLabel = uiLabelMap.CommonCreate/>
     <#if prodCatalog?has_content>
-        <#assign action="updateProdCatalog" />
-        <#assign actionLabel>${uiLabelMap.CommonUpdate}</#assign>
+        <#assign actionUri = "updateProdCatalog" />
+        <#assign actionLabel = uiLabelMap.CommonUpdate />
     </#if>
-        <form method="post" action="<@ofbizUrl>${action}</@ofbizUrl>" name="addProductCategoryMemberForm">        
+        <form method="post" action="<@ofbizUrl>${actionUri}</@ofbizUrl>" name="addProductCategoryMemberForm">        
             <#if !prodCatalog?has_content>
               <input type="hidden" name="isCreate" value="true" />
             </#if>
@@ -19,7 +19,7 @@
                         <input type="hidden" name="prodCatalogId" value="${prodCatalogId}"/>      
                     <#else>                        
                         <#if parameters.prodCatalogId?has_content>
-                            <#assign tooltip>${uiLabelMap.ProductCouldNotFindProductCatalogWithId} [${prodCatalogId}]</#assign>
+                            <#assign tooltip>${rawLabel('ProductCouldNotFindProductCatalogWithId')} [${rawString(prodCatalogId)}]</#assign>
                         </#if>
                         <@field type="input" name="prodCatalogId" label=uiLabelMap.CommonId tooltip=((tooltip)!) />
                     </#if>

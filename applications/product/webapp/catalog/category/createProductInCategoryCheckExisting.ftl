@@ -36,7 +36,7 @@ under the License.
         </#list>
     </#if>
 </#assign>
-<@section title=sectionTitle menuContent=menuContent>
+<@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
       <#if products?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>

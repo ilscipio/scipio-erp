@@ -35,9 +35,9 @@ under the License.
 <#if mechMap.contactMechTypeId?has_content>
 
   <#if !mechMap.contactMech?has_content>
-    <#assign sectionTitle>${uiLabelMap.PartyCreateNewContact}</#assign>
+    <#assign sectionTitle = uiLabelMap.PartyCreateNewContact />
   <#else>
-    <#assign sectionTitle>${uiLabelMap.PartyEditContactInformation}</#assign>
+    <#assign sectionTitle = uiLabelMap.PartyEditContactInformation />
   </#if>
   <@section title=sectionTitle>
   

@@ -28,7 +28,11 @@ under the License.
                 <@field type="input" label=uiLabelMap.ProductName value=((productCategory.categoryName)!) name="categoryName" size="60" maxlength="60"/>
                 <@field type="textarea" label=uiLabelMap.ProductCategoryDescription name="description" cols="60" rows="2">${(productCategory.description)!}</@field>
                 <@field type="textarea" label=uiLabelMap.ProductLongDescription name="longDescription" cols="60" rows="7">${(productCategory.longDescription)!}</@field>
-                <#assign fieldValue><#if productCategory?has_content>${productCategory.detailScreen!}</#if></#assign>
+                <#if productCategory?has_content>
+                    <#assign fieldValue = productCategory.detailScreen!>
+                <#else>
+                    <#assign fieldValue = "">
+                </#if>
                 <#-- Scipio: Now points to shop -->
                 <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue tooltip="${rawLabel('ProductDefaultsTo')} \"categorydetail\", ${rawLabel('ProductDetailScreenMessage')}: \"component://shop/widget/CatalogScreens.xml#categorydetail\"" />
                 <@field type="submit" name="Update" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />

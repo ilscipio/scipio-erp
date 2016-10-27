@@ -16,17 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#--
-<#assign title>
-        ${uiLabelMap.CommonCreate}&nbsp;
-        <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-            ${uiLabelMap.OrderPurchaseOrder}
-        <#else>
-        ${uiLabelMap.OrderOrder}
-        </#if>
-</#assign>-->
-
-
 <@section>   
       <@menu type="button">
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">

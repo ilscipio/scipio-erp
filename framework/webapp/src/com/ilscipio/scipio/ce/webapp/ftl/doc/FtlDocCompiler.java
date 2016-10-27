@@ -57,6 +57,17 @@ public class FtlDocCompiler {
 
     protected MsgHandler msgHandler = new MsgHandler.VoidMsgHandler();
     
+    protected String inFileExtension = ".ftl";
+    protected String outFileExtension = ".html";
+    
+    protected Configuration cfg = null;
+    
+    protected String docPurpose = "templating";
+    
+    protected String defaultLibFormat = SCIPIO_LIB_FORMAT;
+    protected Charset defaultEncoding = DEFAULT_FILE_ENCODING;
+    
+    // IN
     protected String srcFolderPath = null;
     protected File srcFolderPathFile = null;
     protected List<String> libFilenames = null;
@@ -65,17 +76,15 @@ public class FtlDocCompiler {
     protected File templatePathFile = null;
     protected String outFolderPath = null;
     protected File outFolderPathFile = null;
-    
-    protected static final String inFileExtension = ".ftl";
-    protected static final String outFileExtension = ".html";
-    
-    protected Configuration cfg = null;
-    
-    protected String docPurpose = "templating";
-    
-    protected String defaultLibFormat = SCIPIO_LIB_FORMAT;
-    protected Charset defaultEncoding = DEFAULT_FILE_ENCODING;
 
+
+    // OUT
+    protected String targetLibName = null; // for single render mode(s)
+    protected Map<String, Object> targetDataModel = null; // for single render mode(s)
+
+    // RESULTS (CACHED/INTERMEDIATE)
+    protected Map<String, Map<String, Object>> srcFileDataModels = null; // this is the motherload
+    
 
     public FtlDocCompiler() {
     }
@@ -117,20 +126,100 @@ public class FtlDocCompiler {
         }
     }
     
+    /* Getters */
+    
+    public MsgHandler getMsgHandler() {
+        return msgHandler;
+    }
+
+    public String getDocPurpose() {
+        return docPurpose;
+    }
+
+    public String getDefaultLibFormat() {
+        return defaultLibFormat;
+    }
+
+    public Charset getDefaultEncoding() {
+        return defaultEncoding;
+    }
+    
+    public String getInFileExtension() {
+        return inFileExtension;
+    }
+
+    public String getOutFileExtension() {
+        return outFileExtension;
+    }
+
+    public String getSrcFolderPath() {
+        return srcFolderPath;
+    }
+
+    public File getSrcFolderPathFile() {
+        return srcFolderPathFile;
+    }
+
+    public List<String> getLibFilenames() {
+        return libFilenames;
+    }
+
+    public List<File> getLibFiles() {
+        return libFiles;
+    }
+
+    public String getTemplatePath() {
+        return templatePath;
+    }
+
+    public File getTemplatePathFile() {
+        return templatePathFile;
+    }
+
+    public String getOutFolderPath() {
+        return outFolderPath;
+    }
+
+    public File getOutFolderPathFile() {
+        return outFolderPathFile;
+    }
+
+    public String getTargetLibName() {
+        return targetLibName;
+    }
+
+    public Map<String, Object> getTargetDataModel() {
+        return targetDataModel;
+    }
+
+    
+    /* exec */
+
     public void execBasic(String defaultLibFormat, String docPurpose, String srcFolderPath, List<String> libFilenames, 
             String templatePath, String outFolderPath) throws IllegalArgumentException, IOException, TemplateException, ParseException {
-        msgHandler.logInfo("Setting sources and output...");
+        //msgHandler.logInfo("Setting sources and output...");
         setDefaultLibFormat(defaultLibFormat);
         setDocPurpose(docPurpose);
-        setSources(srcFolderPath, libFilenames, templatePath);
+        setSources(srcFolderPath, libFilenames);
+        setTemplatePath(templatePath);
         setOutputFolder(outFolderPath);
         
-        msgHandler.logInfo("Initializing...");
         init();
-        
-        msgHandler.logInfo("Begin compiling...");
         compile();
-        msgHandler.logInfo("Compilation complete.");
+    }
+    
+    public void execDataLoadOnly(String defaultLibFormat, String docPurpose, String srcFolderPath, List<String> libFilenames, 
+            String targetLibName, Map<String, Object> targetDataModel) throws IllegalArgumentException, IOException, TemplateException, ParseException {
+        //msgHandler.logInfo("Setting sources...");
+        setDefaultLibFormat(defaultLibFormat);
+        setDocPurpose(docPurpose);
+        setSources(srcFolderPath, libFilenames);
+        
+        setTargetLibName(targetLibName);
+        setTargetDataModel(targetDataModel);
+        
+        initDataOnly();
+        compileDataOnly();
     }
     
     public void setMsgHandler(MsgHandler msgHandler) {
@@ -145,7 +234,15 @@ public class FtlDocCompiler {
         this.docPurpose = docPurpose;
     }
     
-    public void setSources(String srcFolderPath, List<String> libFilenames, String templatePath) throws FileNotFoundException, IllegalArgumentException {
+    public void setInFileExtension(String inFileExtension) {
+        this.inFileExtension = inFileExtension;
+    }
+
+    public void setOutFileExtension(String outFileExtension) {
+        this.outFileExtension = outFileExtension;
+    }
+
+    public void setSources(String srcFolderPath, List<String> libFilenames) throws FileNotFoundException, IllegalArgumentException {
         this.srcFolderPath = validateFilename(srcFolderPath);
         this.srcFolderPathFile = new File(this.srcFolderPath);
         if (!this.srcFolderPathFile.exists()) {
@@ -160,7 +257,7 @@ public class FtlDocCompiler {
         for(String filename : libFilenames) {
             String validFn = validateFilename(filename);
             if (!validFn.endsWith(inFileExtension)) {
-                throw new IllegalArgumentException("Input file " + filename + " does not end in .ftl");
+                throw new IllegalArgumentException("Input file " + filename + " does not end in " + inFileExtension);
             }
             File libFile = new File(this.srcFolderPathFile, validFn);
             if (!libFile.exists()) {
@@ -172,7 +269,9 @@ public class FtlDocCompiler {
             this.libFilenames.add(validateFilename(filename));
             this.libFiles.add(libFile);
         }
-        
+    }
+    
+    public void setTemplatePath(String templatePath) throws FileNotFoundException, IllegalArgumentException {
         this.templatePath = validateFilename(templatePath);
         this.templatePathFile = new File(this.templatePath);
         if (!this.templatePathFile.exists()) {
@@ -194,25 +293,75 @@ public class FtlDocCompiler {
         }
     }
     
+    public void setTargetLibName(String targetLibName) {
+        this.targetLibName = targetLibName;
+    }
+
+    public void setTargetDataModel(Map<String, Object> targetDataModel) {
+        this.targetDataModel = targetDataModel;
+    }
+    
+    /**
+     * Gets the data model motherload, to cache externally.
+     */
+    public Map<String, Map<String, Object>> getSrcFileDataModels() {
+        return srcFileDataModels;
+    }
+
+    /**
+     * Sets the data model motherload, so this method can reuse value that was cached externally.
+     */
+    public void setSrcFileDataModels(Map<String, Map<String, Object>> srcFileDataModels) {
+        this.srcFileDataModels = srcFileDataModels;
+    }
+
     public void init() throws IOException {
-         cfg = new Configuration(Configuration.VERSION_2_3_22);
-         cfg.setDirectoryForTemplateLoading(new File("."));
-         cfg.setDefaultEncoding(defaultEncoding.name());
-         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+        if (cfg == null) {
+            msgHandler.logInfo("Initializing...");
+            cfg = new Configuration(Configuration.VERSION_2_3_22);
+            cfg.setDirectoryForTemplateLoading(new File("."));
+            cfg.setDefaultEncoding(defaultEncoding.name());
+            cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+        }
+    }
+    
+    public void initDataOnly() throws IOException {
+        //msgHandler.logInfo("Initializing...");
     }
     
     public void compile() throws IOException, ParseException, TemplateException {
-        msgHandler.logInfo("Parsing to data models...");
-        Map<String, Map<String, Object>> srcFileDataModels = parseLibs(this.defaultLibFormat);
-        msgHandler.logInfo("Got " + srcFileDataModels.size() + " data models");
+        msgHandler.logInfo("Begin compilation...");
+        if (this.srcFileDataModels == null) {
+            msgHandler.logInfo("Parsing to data models...");
+            this.srcFileDataModels = parseLibs(this.defaultLibFormat);
+            msgHandler.logInfo("Got " + srcFileDataModels.size() + " data models");
+        } else {
+            msgHandler.logInfo("Got " + srcFileDataModels.size() + " data models from existing parse result (cached)");
+        }
         
         msgHandler.logInfo("Loading FTL doc template...");
         Template template = cfg.getTemplate(this.templatePath);
         
-        msgHandler.logInfo("Rendering...");
-        render(template, srcFileDataModels);
+        msgHandler.logInfo("Rendering with FTL...");
+        render(template);
+        msgHandler.logInfo("Compilation complete.");
     }
     
+    public void compileDataOnly() throws IOException, ParseException, TemplateException {
+        msgHandler.logInfo("Begin compilation...");
+        if (this.srcFileDataModels == null) {
+            msgHandler.logInfo("Parsing to data models...");
+            this.srcFileDataModels = parseLibs(this.defaultLibFormat);
+            msgHandler.logInfo("Got " + srcFileDataModels.size() + " data models");
+
+        } else {
+            msgHandler.logInfo("Got " + srcFileDataModels.size() + " data models from existing parse result (cached)");
+        }
+        
+        msgHandler.logInfo("Populating data model...");
+        populateDataModel(targetDataModel, targetLibName);
+        msgHandler.logInfo("Data model ready.");
+    }
     
     /*
      **********************************************************
@@ -248,7 +397,7 @@ public class FtlDocCompiler {
         String text = FtlDocUtil.readFileAsString(srcFile.getPath(), this.defaultEncoding);
         
         try {
-            FtlDocFileParser parser = FtlDocFileParser.getInstance(libFilename, srcFile, defaultLibFormat);
+            FtlDocFileParser parser = FtlDocFileParser.getInstance(libFilename, srcFile, inFileExtension, outFileExtension, defaultLibFormat);
             parser.setMsgHandler(msgHandler);
             parser.setLibProperties(dataModel);
             parser.parseLib(dataModel, text);
@@ -269,7 +418,7 @@ public class FtlDocCompiler {
      **********************************************************
      */
     
-    protected void render(Template template, Map<String, Map<String, Object>> srcFileDataModels) throws TemplateException, IOException {
+    protected void render(Template template) throws TemplateException, IOException {
         
         // Create out folder if doesn't exist
         File outFolderFile = new File(this.outFolderPath);
@@ -295,7 +444,7 @@ public class FtlDocCompiler {
                 fos = new FileOutputStream(outFile);
                 out = new OutputStreamWriter(fos, this.defaultEncoding);
                 
-                render(template, srcFileDataModel, srcFileDataModels, out);
+                render(template, srcFileDataModel, out);
             }
             finally {
                 if (out != null) {
@@ -308,19 +457,32 @@ public class FtlDocCompiler {
         }
     }
     
-    protected void render(Template template, Map<String, Object> srcFileDataModel, Map<String, Map<String, Object>> srcFileDataModels, 
-            Writer out) throws TemplateException, IOException {
-        
+    protected void render(Template template, Map<String, Object> srcFileDataModel, Writer out) throws TemplateException, IOException {
         Map<String, Object> dataModel = FtlDocFileParser.makeObjectMap();
+        populateDataModel(dataModel, srcFileDataModel);
+        template.process(dataModel, out);
+    }
+    
+    protected void populateDataModel(Map<String, Object> dataModel, String libName) throws TemplateException, IOException {
+        if (libName != null && !srcFileDataModels.containsKey(libName)) {
+            throw new IOException("Library name " + libName + " is not within data model input files");
+        }
+        populateDataModel(dataModel, libName != null ? srcFileDataModels.get(libName) : null);
+    }
+    
+    protected void populateDataModel(Map<String, Object> dataModel, Map<String, Object> srcFileDataModel) throws TemplateException, IOException {
         dataModel.put("libMap", srcFileDataModels);
-        dataModel.putAll(srcFileDataModel);
+        if (srcFileDataModel != null) {
+            dataModel.putAll(srcFileDataModel);
+        }
         
-        TemplateHelper tmplHelper = TemplateHelper.getInstance((String) dataModel.get("libFormat"));
+        TemplateHelper tmplHelper = TemplateHelper.getInstance((String) dataModel.get("libFormat"),
+                inFileExtension, outFileExtension);
         tmplHelper.setMsgHandler(msgHandler);
         dataModel.put("tmplHelper", tmplHelper);
         dataModel.put("docPurpose", this.docPurpose);
-        
-        template.process(dataModel, out);
+        dataModel.put("docInFileExt", inFileExtension);
+        dataModel.put("docOutFileExt", outFileExtension);
     }
 
     /*

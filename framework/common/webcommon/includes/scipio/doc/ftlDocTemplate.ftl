@@ -4,6 +4,8 @@
 * Produces rudimentary javadoc-like .html files.
 *
 * DEV NOTE: PLEASE COMMENT rather than delete.
+* DEV NOTE: Nothing active is using this template anymore. 
+*     See the *Website.ftl and *Ofbiz.ftl variants.
 *
 * Invoke by running
 *   ant docs-ftl-scipio

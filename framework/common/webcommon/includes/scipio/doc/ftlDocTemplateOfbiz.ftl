@@ -143,7 +143,7 @@ pre {
 *************************************
 -->  
 
-<div class="doc-main-content">   
+<div class="ftl-doc-main-content">   
     <#if !userLogin??><#-- FIXME: hack for no-login -->
       <h1 class="lib-pagetitle">${title}</h1>
     </#if>

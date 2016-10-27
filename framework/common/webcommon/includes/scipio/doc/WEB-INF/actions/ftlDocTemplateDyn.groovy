@@ -1,5 +1,5 @@
 /**
- * SCIPIO: Data prep for hosted web version of ftl doc template (ftlDocTemplateWeb.ftl).
+ * SCIPIO: Data prep for hosted web version of ftl doc template (ftlDocTemplateDyn.ftl).
  * Performs two different operations, the second is separated so the special
  * ftl wrapped values have less chance of interfering with the regular namespace.
  * (these are times when you wish everything had its own namespace)
@@ -16,7 +16,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.doc.OfbizDebugMsgHandler;
 
 // VAR & HELPERS
 
-final module = "ftlDocTemplateWebGroovy";
+final module = "ftlDocTemplateDynGroovy";
 final msgHandler = new OfbizDebugMsgHandler(module);
 
 def addCtxErrorMsg(errMsg) {

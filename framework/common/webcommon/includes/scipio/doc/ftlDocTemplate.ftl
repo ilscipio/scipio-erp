@@ -1,11 +1,15 @@
 <#--
-* Scipio FTL doc formatting template
+* Scipio FTL doc formatting template - Basic/original HTML
+*
+* Produces rudimentary javadoc-like .html files.
 *
 * Invoke by running
 *   ant docs-ftl-scipio
 * OR
 *   ant docs-ftl-scipio-ftlonly (no java build)
 * in root project folder.
+* Output folder:
+*   /doc/scipio/templating/ftl/lib
 *
 * See 
 *   com.ilscipio.scipio.ce.webapp.ftl.doc.ScipioLibFtlDocFileParser 

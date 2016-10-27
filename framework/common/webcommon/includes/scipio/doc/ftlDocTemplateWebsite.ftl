@@ -144,6 +144,7 @@ pre {
 *************************************
 -->  
   
+  <div class="lib-page-intro">
     <div>
       <#if pageTitle?has_content>
         <h1 class="lib-pagetitle"><@labelText text=pageTitle /></h1>
@@ -224,6 +225,8 @@ pre {
   </#if>
 -->
     
+  </div>
+  
     <#-- NOTE: there is a global entryMap, and each section also has its own entryMap -->
 
   <#list sectionMap?keys as sectionName> 

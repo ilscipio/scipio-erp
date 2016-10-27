@@ -125,12 +125,12 @@ pre {
 </#if>
 
 <#-- metro theme was not exactly made for this markup -->
-.lib-pagedesc h4 {
+.lib-page-intro h4 {
   margin-top: 2em;
   color: black;
   font-weight: bold;
 }
-.lib-pagedesc p {
+.lib-page-intro p {
   margin-bottom: 0.4em;
 }
 
@@ -143,7 +143,8 @@ pre {
 *************************************
 -->  
 
-<div class="ftl-doc-main-content">   
+<div class="ftl-doc-main-content">
+  <div class="lib-page-intro">
     <#if !userLogin??><#-- FIXME: hack for no-login -->
       <h1 class="lib-pagetitle">${title}</h1>
     </#if>
@@ -244,7 +245,9 @@ pre {
       </p>
     </div>
   </#if>
- 
+  
+  </div>
+  
     <#-- NOTE: there is a global entryMap, and each section also has its own entryMap -->
 
   <#list sectionMap?keys as sectionName> 

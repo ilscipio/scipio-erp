@@ -222,7 +222,7 @@ under the License.
       <@menuitem type="link" href="javascript:document.reorderinfo.submit();" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
     </@menu>
   </#macro>
-  <@section title=sectionTitle menuContent=menuContent>
+  <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
         <form name="reorderinfo" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
         <@fields type="default-manual-widgetonly">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>

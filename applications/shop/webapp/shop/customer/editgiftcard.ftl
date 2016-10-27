@@ -40,13 +40,13 @@ under the License.
     <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle>
-  <#if !giftCard??>
-    ${uiLabelMap.AccountingAddNewGiftCard}
-  <#else>
-    <#-- Scipio: duplicate: ${uiLabelMap.AccountingEditGiftCard} -->
-  </#if>
-</#assign>
+
+<#if !giftCard??>
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewGiftCard/>
+<#else>
+  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.AccountingEditGiftCard/> -->
+  <#assign sectionTitle = ""/>
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
   <form method="post" action="<@ofbizUrl><#if !giftCard??>createGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editgiftcardform">
     <#if giftCard??>

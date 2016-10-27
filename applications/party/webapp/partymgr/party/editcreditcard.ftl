@@ -19,9 +19,9 @@ under the License.
 
 <!-- begin editcreditcard.ftl -->
 <#if !creditCard??>
-  <#assign sectionTitle = "${uiLabelMap.AccountingAddNewCreditCard}">
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewCreditCard>
 <#else>
-  <#assign sectionTitle = "${uiLabelMap.AccountingEditCreditCard}">
+  <#assign sectionTitle = uiLabelMap.AccountingEditCreditCard>
 </#if>
 <@section title=sectionTitle menuContent=menuContent>
     <#macro saveCancelMenu>

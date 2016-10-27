@@ -6,8 +6,7 @@
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.FormFieldTitle_personalImage}
                   </@td>
-                  <#assign imgSrc><@ofbizInterWebappUrl>/content/control/stream?contentId=${pc.contentId!}</@ofbizInterWebappUrl></#assign>
-                  <@td colspan="3"><@img src=imgSrc height="150px" width="100px" type="contain"/></@td>
+                  <@td colspan="3"><@img src=makeOfbizInterWebappUrl('/content/control/stream?contentId=${pc.contentId!}') height="150px" width="100px" type="contain"/></@td>
                 </@tr>
                 <#break>
             </#list> 

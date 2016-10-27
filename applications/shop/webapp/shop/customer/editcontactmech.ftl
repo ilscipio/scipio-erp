@@ -68,7 +68,12 @@ under the License.
     <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else><#-- Scipio: duplicate: ${uiLabelMap.PartyEditContactInfo}--></#if></#assign>
+<#if !contactMech??>
+  <#assign sectionTitle = uiLabelMap.PartyCreateNewContactInfo>
+<#else>
+  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.PartyEditContactInfo>-->
+  <#assign sectionTitle = "">
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
     
     <#if contactMech??>
@@ -159,7 +164,11 @@ under the License.
       </@field>
       -->
     <#elseif contactMechTypeId == "EMAIL_ADDRESS">
-      <#assign fieldValue><#if tryEntity>${contactMech.infoString!}<#else>${requestParameters.emailAddress!}</#if></#assign>
+      <#if tryEntity>
+        <#assign fieldValue = contactMech.infoString!>
+      <#else>
+        <#assign fieldValue = requestParameters.emailAddress!>
+      </#if>
       <@field type="input" label=uiLabelMap.PartyEmailAddress required=true size="60" maxlength="255" name="emailAddress" value=fieldValue />
     <#else>
       <@field type="input" label=(contactMechType.get("description",locale)!) required=true size="60" maxlength="255" name="infoString" value=(contactMechData.infoString!) />

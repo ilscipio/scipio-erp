@@ -262,8 +262,8 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
           <@generalMenu />
-          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}<#if parameters.portalPageId?has_content>&portalPageId=${parameters.portalPageId!}</#if></@ofbizUrl></#assign>
-          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>   
+          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
+          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makeOfbizUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li>
         </ul>
     </aside>
     
@@ -304,8 +304,8 @@ so for now we have to split the screens in half and rely on the menu widget rend
             </ul>
           </li>
           <li class="divider"></li>
-          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>       
+          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
+          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makeOfbizUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li>      
         </ul>
         
         <#if userLogin?has_content>

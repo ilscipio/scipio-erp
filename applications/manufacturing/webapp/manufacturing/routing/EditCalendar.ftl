@@ -27,9 +27,9 @@ under the License.
 <@section menuContent=menuContent>
 
 <#if techDataCalendar?has_content>
-  <#assign formActionUrl><@ofbizUrl>UpdateCalendar</@ofbizUrl></#assign>
+  <#assign formActionUrl><@ofbizUrl escapeAs='html'>UpdateCalendar</@ofbizUrl></#assign>
 <#else>
-  <#assign formActionUrl><@ofbizUrl>CreateCalendar</@ofbizUrl></#assign>
+  <#assign formActionUrl><@ofbizUrl escapeAs='html'>CreateCalendar</@ofbizUrl></#assign>
 </#if>
 
   <form name="calendarform" method="post" action="${formActionUrl}">

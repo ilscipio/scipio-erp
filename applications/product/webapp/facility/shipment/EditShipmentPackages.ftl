@@ -117,7 +117,7 @@ under the License.
     <#list shipmentPackageDatas as shipmentPackageData>        
         <#assign shipmentPackageContents = shipmentPackageData.shipmentPackageContents!>            
         <@modal id="shipmentPackageContent_${shipmentPackageData_index}">
-            <#assign sectionTitle="${uiLabelMap.ProductPackage} ${uiLabelMap.ContentContents}"/>
+            <#assign sectionTitle="${rawLabel('ProductPackage')} ${rawLabel('ContentContents')}"/>
             <@section title=sectionTitle>
                 <#-- Scipio FIXME: Does makes sense to show this if all items have been packed already? -->
                 <@section>

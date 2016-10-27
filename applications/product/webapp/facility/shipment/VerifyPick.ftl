@@ -46,7 +46,7 @@ under the License.
     
     <#if orderHeader?? && orderHeader?has_content && orderItemShipGroup?has_content>
         <#assign sectionTitle>${uiLabelMap.ProductOrderId} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</#assign>
-        <@section title=sectionTitle>
+        <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
             <#if (orderItemShipGroup.contactMechId)?has_content>
                 <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
             </#if>
@@ -94,7 +94,7 @@ under the License.
         </@section>
     </#if>
     <#if shipments?has_content>
-        <#assign sectionTitle>${uiLabelMap.ProductPicked} ${uiLabelMap.FacilityShipments}</#assign>
+        <#assign sectionTitle>${rawLabel('ProductPicked')} ${rawLabel('FacilityShipments')}</#assign>
         <@section title=sectionTitle>
             <@row>
                 <@cell>
@@ -122,7 +122,7 @@ under the License.
     </#if>
 
     <#if showInput != "N">
-        <#assign sectionTitle="${uiLabelMap.ProductProduct} ${uiLabelMap.ProductToPick}"/>
+        <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
         <@section title=sectionTitle>
             <form name="singlePickForm" method="post" action="<@ofbizUrl>processVerifyPick</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -135,7 +135,7 @@ under the License.
         </@section>
 
         <#if orderItems?has_content>
-            <#assign sectionTitle="${uiLabelMap.ProductProduct} ${uiLabelMap.ProductToPick}"/>
+            <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
             <@section title=sectionTitle>                
                 <form name="multiPickForm" method="post" action="<@ofbizUrl>processBulkVerifyPick</@ofbizUrl>">
                     <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>

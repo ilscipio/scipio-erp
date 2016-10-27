@@ -214,9 +214,9 @@
     <#-- Multi-Item PO Receiving -->
     <#elseif purchaseOrder?has_content>
         <#if shipment?has_content>
-            <#assign sectionTitle>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId} / ${uiLabelMap.ProductShipmentId} #${shipment.shipmentId}</#assign>
+            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${rawString(purchaseOrder.orderId)} / ${rawLabel('ProductShipmentId')} #${rawString(shipment.shipmentId)}</#assign>
         <#else>
-            <#assign sectionTitle>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</#assign>
+            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${rawString(purchaseOrder.orderId)}</#assign>
         </#if>
         <@section title=sectionTitle>
             <input type="hidden" id="getConvertedPrice" value="<@ofbizUrl>getConvertedPrice"</@ofbizUrl> />

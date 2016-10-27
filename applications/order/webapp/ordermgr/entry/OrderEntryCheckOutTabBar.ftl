@@ -23,11 +23,11 @@ under the License.
 
 <#assign sectionTitle>
     <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-        ${uiLabelMap.OrderPurchaseOrder}
+        ${rawLabel('OrderPurchaseOrder')}
     <#else>
-        ${uiLabelMap.OrderSalesOrder}
+        ${rawLabel('OrderSalesOrder')}
     </#if>
-    :&nbsp;${stepTitle!}
+    : ${rawString(stepTitle!)}
 </#assign>
 
 <@section title=sectionTitle>

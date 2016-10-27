@@ -26,7 +26,7 @@ under the License.
 </#if>
 
 <#if (shoppingCartSize > 0)>
-  <#assign sectionTitle>${uiLabelMap.CommonOr?upper_case} ${uiLabelMap.CommonCheckoutAnonymous}</#assign>
+  <#assign sectionTitle>${rawLabel('CommonOr')?upper_case} ${rawLabel('CommonCheckoutAnonymous')}</#assign>
   <@row>
     <@cell>
       <@section title=sectionTitle>

@@ -44,7 +44,7 @@
     <#else>
         <#assign imgSrc = "https://placehold.it/300x100"/>    
     </#if>
-    <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
+    <#assign imgLink><@ofbizCatalogAltUrl rawParams=true productCategoryId=categoryId productId=product.productId/></#assign>
     <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>
 
     <#assign productDescription>
@@ -92,7 +92,7 @@
      <@pul title=productTitle>
         <#if price.isSale?? && price.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
         <@pli>
-           ${productImage!""}
+           ${productImage}
         </@pli>
         <#if productDescription?has_content>
         <@pli type="description">
@@ -100,7 +100,7 @@
         </@pli>
         </#if>
         <@pli type="price">
-            ${productPrice!""}
+            ${productPrice}
         </@pli>
         <@pli type="button">
             <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           

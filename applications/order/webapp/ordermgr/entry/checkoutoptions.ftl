@@ -79,9 +79,9 @@ function submitForm(form, mode, value) {
 
     <#assign sectionTitle>
       <#if shipping == true>
-        1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?
+        1) ${rawLabel('OrderWhereShallWeShipIt')}?
       <#else>
-        &nbsp;${uiLabelMap.OrderInformationAboutYou}
+        ${rawLabel('OrderInformationAboutYou')}
       </#if>
     </#assign>
     <@section title=sectionTitle>
@@ -153,9 +153,9 @@ function submitForm(form, mode, value) {
         
     <#assign sectionTitle>
         <#if shipping == true>
-            2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?
+            2) ${rawLabel('OrderHowShallWeShipIt')}?
         <#else>
-            2)&nbsp;${uiLabelMap.OrderOptions}?
+            2) ${rawLabel('OrderOptions')}?
         </#if>
     </#assign>
     <@section title=sectionTitle>

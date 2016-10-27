@@ -30,9 +30,9 @@ under the License.
     <#if smallImageUrl?has_content>
         <#assign imgSrc = makeOfbizContentUrl(smallImageUrl) />
     <#else>
-        <#assign imgSrc="https://placehold.it/300x100"/>
+        <#assign imgSrc = "https://placehold.it/300x100"/>
     </#if>
-    <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/></#assign>
+    <#assign imgLink><@ofbizCatalogAltUrl rawParams=true productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/></#assign>
 
     <#assign productImage>
         <#-- has no effect: (imgSrc!"https://placehold.it/300x100") -->
@@ -41,7 +41,7 @@ under the License.
     <@pul>
         <#if priceResult.isSale?? && priceResult.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
             <@pli>
-               ${productImage!""}
+               ${productImage}
             </@pli>
         <@pli type="description">
             <#-- Scipio: TODO: Localize -->

@@ -248,7 +248,7 @@ jQuery(document).ready(function(){
       <#assign fieldDescription = uiLabelMap.AccountingLeaveEmptyForMaximumAmount + ".">
       <#assign realCurPayAmountFullStr = "">
       <#if realCurPayAmount?has_content>
-        <#assign realCurPayAmountFullStr>${uiLabelMap.CommonCurrent}: <@ofbizCurrency amount=realCurPayAmount isoCode=cart.getCurrency()/></#assign>
+        <#assign realCurPayAmountFullStr>${rawLabel('CommonCurrent')}: <@ofbizCurrency amount=realCurPayAmount isoCode=cart.getCurrency()/></#assign>
       </#if>
 
       <#assign postfixContent>

@@ -19,9 +19,9 @@ under the License.
 
 <!-- begin editeftaccount.ftl -->
 <#if !eftAccount??>
-  <#assign sectionTitle = "${uiLabelMap.AccountingAddNewEftAccount}">
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewEftAccount>
 <#else>
-  <#assign sectionTitle = "${uiLabelMap.PageTitleEditEftAccount}">
+  <#assign sectionTitle = uiLabelMap.PageTitleEditEftAccount>
 </#if>
 <@section title=sectionTitle>
     <#macro saveCancelMenu>

@@ -19,9 +19,9 @@ under the License.
 
 <!-- begin editgiftcard.ftl -->
 <#if !giftCard??>
-  <#assign sectionTitle = "${uiLabelMap.AccountingCreateNewGiftCard}">
+  <#assign sectionTitle = uiLabelMap.AccountingCreateNewGiftCard>
 <#else>
-  <#assign sectionTitle = "${uiLabelMap.AccountingEditGiftCard}">
+  <#assign sectionTitle = uiLabelMap.AccountingEditGiftCard>
 </#if>
 <@section title=sectionTitle>
     <#macro saveCancelMenu>

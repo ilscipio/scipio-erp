@@ -87,7 +87,7 @@ under the License.
       <#assign sectionTitle = "Add New Setting">
     </#if>
     <@section title=sectionTitle menuContent=menuContent>
-        <#assign formAction><#if webSitePayment?has_content><@ofbizUrl>updateWebSitePaymentSetting</@ofbizUrl><#else><@ofbizUrl>createWebSitePaymentSetting</@ofbizUrl></#if></#assign>
+        <#assign formAction><#if webSitePayment?has_content><@ofbizUrl escapeAs='html'>updateWebSitePaymentSetting</@ofbizUrl><#else><@ofbizUrl escapeAs='html'>createWebSitePaymentSetting</@ofbizUrl></#if></#assign>
         <form method="post" action="${formAction}">
 
         <#if webSitePayment?has_content>

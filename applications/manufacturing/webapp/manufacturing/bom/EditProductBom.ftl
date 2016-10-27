@@ -123,7 +123,7 @@ function lookupBom() {
     <@field type="input" label=uiLabelMap.ManufacturingQuantity name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15"/>
     <@field type="input" label=uiLabelMap.ManufacturingScrapFactor name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15"/>
     <@field type="select" label=uiLabelMap.ManufacturingFormula name="estimateCalcMethod">
-        <option value="">&nbsp;</option>
+        <option value=""></option>
         <#assign selectedFormula = "">
         <#if useValues>
             <#assign selectedFormula = (productAssoc.estimateCalcMethod)!>
@@ -170,8 +170,8 @@ function lookupBom() {
         <@th>${uiLabelMap.ManufacturingScrapFactor}</@th>
         <@th>${uiLabelMap.ManufacturingFormula}</@th>
         <@th>${uiLabelMap.ManufacturingRoutingTask}</@th>
-        <@th>&nbsp;</@th>
-        <@th>&nbsp;</@th>
+        <@th></@th>
+        <@th></@th>
       </@tr>
     </@thead>
     <#list assocFromProducts! as assocFromProduct>
@@ -179,18 +179,24 @@ function lookupBom() {
     <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
       <@tr>
         <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(assocFromProduct.productIdTo)!}</a></@td>
-        <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</@td>
-        <#assign class><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>alert-elem</#if></#assign>
-        <@td class=class>
-        ${(assocFromProduct.fromDate)!}&nbsp;</@td>
-        <#assign class><#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))>alert-elem</#if></#assign>
-        <@td class=class>
-        ${(assocFromProduct.thruDate)!}&nbsp;</@td>
-        <@td>&nbsp;${(assocFromProduct.sequenceNum)!}</@td>
-        <@td>&nbsp;${(assocFromProduct.quantity)!}</@td>
-        <@td>&nbsp;${(assocFromProduct.scrapFactor)!}</@td>
-        <@td>&nbsp;${(assocFromProduct.estimateCalcMethod)!}</@td>
-        <@td>&nbsp;${(assocFromProduct.routingWorkEffortId)!}</@td>
+        <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if></@td>
+        <#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>
+          <#assign class = "alert-elem">
+        <#else>
+          <#assign class = "">
+        </#if>
+        <@td class=class>${(assocFromProduct.fromDate)!}</@td>
+        <#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))>
+          <#assign class = "alert-elem">
+        <#else>
+          <#assign class = "">
+        </#if>
+        <@td class=class>${(assocFromProduct.thruDate)!}</@td>
+        <@td>${(assocFromProduct.sequenceNum)!}</@td>
+        <@td>${(assocFromProduct.quantity)!}</@td>
+        <@td>${(assocFromProduct.scrapFactor)!}</@td>
+        <@td>${(assocFromProduct.estimateCalcMethod)!}</@td>
+        <@td>${(assocFromProduct.routingWorkEffortId)!}</@td>
         <@td>
         <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
         </@td>
@@ -211,7 +217,7 @@ function lookupBom() {
             <@th>${uiLabelMap.CommonFromDate}</@th>
             <@th>${uiLabelMap.CommonThruDate}</@th>
             <@th>${uiLabelMap.CommonQuantity}</@th>
-            <@th>&nbsp;</@th>
+            <@th></@th>
         </@tr>
       </@thead>
       <@tbody>
@@ -222,9 +228,9 @@ function lookupBom() {
             <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(assocToProduct.productId)!}</a></@td>
 <#--                <@td><#if listToProduct??><a href="<@ofbizUrl>ViewProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if></@td> -->
             <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if></@td>
-            <@td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</@td>
-            <@td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</@td>
-            <@td>${(assocToProduct.quantity)!}&nbsp;</@td>
+            <@td>${(assocToProduct.getTimestamp("fromDate"))!}</@td>
+            <@td>${(assocToProduct.getTimestamp("thruDate"))!}</@td>
+            <@td>${(assocToProduct.quantity)!}</@td>
             <@td>
                 <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">
                 ${uiLabelMap.CommonDelete}</a>

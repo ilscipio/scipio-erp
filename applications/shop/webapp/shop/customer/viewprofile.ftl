@@ -68,7 +68,11 @@ under the License.
      <div class="content active" id="panel1">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
-                <#assign itemText><#if person??>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></#assign>
+                <#if person??>
+                  <#assign itemText = uiLabelMap.CommonUpdate>
+                <#else>
+                  <#assign itemText = uiLabelMap.CommonCreate>
+                </#if>
                 <@menuitem type="link" href=makeOfbizUrl("editperson") text=itemText />
             </@menu>
         </#macro>

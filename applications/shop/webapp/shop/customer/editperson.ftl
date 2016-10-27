@@ -22,7 +22,13 @@ under the License.
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
-<#assign sectionTitle><#if person??><#-- Scipio: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
+
+<#if person??>
+  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.PartyEditPersonalInformation/>-->
+  <#assign sectionTitle = ""/>
+<#else>
+  <#assign sectionTitle = uiLabelMap.PartyAddNewPersonalInformation/>
+</#if>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />

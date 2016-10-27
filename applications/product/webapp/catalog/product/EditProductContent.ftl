@@ -46,7 +46,7 @@ under the License.
             <@field type="textarea" label=uiLabelMap.ProductProductDescription name="description" cols="60" rows="2">${(product.description)!}</@field>
             <@field type="textarea" label=uiLabelMap.ProductLongDescription class="+dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</@field>
             <#-- Scipio: Now points to shop -->
-            <#assign fieldTooltip>${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://shop/widget/CatalogScreens.xml#productdetail&quot;</#assign>
+            <#assign fieldTooltip>${rawLabel('ProductIfNotSpecifiedDefaultsIsProductdetail')} "productdetail", ${rawLabel('ProductDetailScreenMessage')}: "component://shop/widget/CatalogScreens.xml#productdetail"</#assign>
             <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" value=((product.detailScreen)!) size="60" maxlength="250" tooltip=fieldTooltip/>
             <#-- Scipio: FIXME: same pattern copy-pasted... -->
             <#assign labelDetail>

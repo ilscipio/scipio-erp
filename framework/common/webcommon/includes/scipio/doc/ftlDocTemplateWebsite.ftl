@@ -1,6 +1,8 @@
 <#--
 * Scipio FTL doc formatting template - External Website variant
 *
+* DEV NOTE: PLEASE COMMENT rather than delete.
+*
 * Invoke by running
 *   ant docs-ftl-scipio-website
 * OR
@@ -49,7 +51,30 @@
 *************************************
 -->
 
+<#-- COMMON INCLUDE AND URL HANDLING -->
+
+<#-- UNCOMMENT THIS (and further below) if you want to make absolute links; COMMENT for relative links -->
+<#global baseAbsInterLibUrl = "//www.scipioerp.com/community/developer/freemarker-macros">
+
 <#include "ftlDocCommon.ftl">
+
+<#-- SPECIAL URI REWRITES FOR WEBSITE 
+    WARN: this will NOT match the physically output files, such that they won't be browsable locally.
+        it's so you can copy-paste the output to the right location.
+    TODO?: ideally this would be done in the compiler, so the output files match this,
+        but this should be enough for us... -->
+<#function transformDocUri uri>
+  <#-- flatten the URI, remove any dir prefix, lowercase -->
+  <#local ind = uri?last_index_of("/")>
+  <#if (ind >= 0)>
+    <#local uri = uri?substring(ind + 1)>
+  </#if>
+  <#return uri?lower_case + "/">
+</#function>
+
+<#-- UNCOMMENT THIS if you want to make absolute links; COMMENT for relative links -->
+<#assign makeInterLibUrl = makeAbsInterLibUrl>
+
 
 <#-- 
 *************************************
@@ -122,6 +147,7 @@ pre {
       <#if pageTitle?has_content>
         <h1 class="lib-pagetitle"><@labelText text=pageTitle /></h1>
       </#if>
+    <#--  not present on website version; "templating" implied I guess
       <#if docPurpose == "templating">
         <h2>Templating Documentation</h2>
       <#elseif docPurpose == "theming">
@@ -129,6 +155,7 @@ pre {
       <#else>
         <h2>Dev Documentation</h2>
       </#if>
+     -->
       <#if libFilename?has_content>
         <p><em><span class="lib-filename">${escapeText(libFilename)}</span></em></p>
       </#if>
@@ -144,6 +171,7 @@ pre {
       </#if>
     </div>
     
+<#-- not present on website version
   <#if (sectionMap?size >= 2) && entryMap?has_content>
     <div class="lib-section-links">
       <h4>Sections:</h4>
@@ -156,7 +184,7 @@ pre {
                 <#elseif sectionName == "default"><@labelText text="MAIN" /><#t>
                 <#else><@labelText text=sectionName /></#if><#t>
                 </a>
-                <#--<strong>Definitions:</strong><br/>-->
+                <#-<strong>Definitions:</strong><br/>->
                 <p>
                 <#list section.entryMap?keys?sort as entryName>
                   <a href="#entry-${entryName}">${entryName}</a><#if entryName_has_next>, </#if>
@@ -168,7 +196,8 @@ pre {
       </ul>
     </div>
   </#if>
-
+ -->
+ 
   <#if entryMap?has_content>
     <div class="lib-entry-links">
       <h4><#if (sectionMap?size >= 2)>All </#if>Definitions:</h4>
@@ -180,6 +209,7 @@ pre {
     </div>
   </#if>
 
+<#-- not present on website version
   <#if libMap?has_content>
     <div class="lib-links">
       <h4>All libraries:</h4>
@@ -191,6 +221,7 @@ pre {
       </p>
     </div>
   </#if>
+-->
     
     <#-- NOTE: there is a global entryMap, and each section also has its own entryMap -->
 

@@ -3,6 +3,8 @@
 * 
 * This contains live usage of Scipio templating API (for use within Ofbiz only).
 *
+* DEV NOTE: PLEASE COMMENT rather than delete.
+*
 * WARN: This is EXTREMELY confusing because of the
 * multiple ObjectWrappers used and mixing two libraries,
 * with no namespaces!!! 
@@ -221,6 +223,7 @@ pre {
     </div>
   </#if>
 
+<#-- redundant on hosted version
   <#if libMap?has_content>
     <div class="lib-links">
       <h4>All libraries:</h4>
@@ -232,7 +235,8 @@ pre {
       </p>
     </div>
   </#if>
-    
+-->
+ 
     <#-- NOTE: there is a global entryMap, and each section also has its own entryMap -->
 
   <#list sectionMap?keys as sectionName> 

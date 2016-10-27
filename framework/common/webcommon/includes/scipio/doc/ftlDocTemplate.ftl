@@ -3,6 +3,8 @@
 *
 * Produces rudimentary javadoc-like .html files.
 *
+* DEV NOTE: PLEASE COMMENT rather than delete.
+*
 * Invoke by running
 *   ant docs-ftl-scipio
 * OR

@@ -72,50 +72,9 @@
 *************************************
 -->
 
+<#-- NOTE: the styles that were initially here have been moved into each theme
+    TODO: REVIEW the styles for this, in each theme -->
 <style type="text/css">
-table.entry-parameters {
-  width: 100%;
-  border: 1px outset black;
-}
-
-table.entry-parameters td {
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  border: 1px solid black;
-}
-
-table.entry-parameters td.entry-paramname {
-  width: 20%;
-}
-
-.lib-entry-detail {
-  font-style: italic;
-  font-size: 0.6em;
-}
-
-.lib-entry-formalname {
-  font-weight: bold;
-}
-
-.lib-entry-param-desc-extradesc {
-  font-size: 0.8em;
-}
-
-.lib-entry-params-details {
-  font-size: 0.8em;
-}
-
-ul {
-  margin-top: 0.3em;
-  margin-bottom: 0.4em;
-}
-
-pre {
-  margin-top: 0.3em;
-  margin-bottom: 0.4em;
-}
 
 <#-- FIXME: this is a hack to make page readable when no login on default theme -->
 <#if !userLogin?? && (visualThemeId!) == "METRO">
@@ -123,16 +82,6 @@ pre {
   background-color: #F5F5F5;
 }
 </#if>
-
-<#-- metro theme was not exactly made for this markup -->
-.lib-page-intro h4 {
-  margin-top: 2em;
-  color: black;
-  font-weight: bold;
-}
-.lib-page-intro p {
-  margin-bottom: 0.4em;
-}
 
 </style>
 
@@ -143,7 +92,7 @@ pre {
 *************************************
 -->  
 
-<div class="ftl-doc-main-content">
+<div class="tmpldoc-content">
   <div class="lib-page-intro">
     <#if !userLogin??><#-- FIXME: hack for no-login -->
       <h1 class="lib-pagetitle">${title}</h1>

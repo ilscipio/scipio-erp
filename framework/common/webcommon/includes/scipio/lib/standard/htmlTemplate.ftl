@@ -135,7 +135,7 @@
 *
 * * Value escaping *
 *
-* ''Added for 1.14.2 (2016-10-12)''.
+* ''2016-10-12: Added for 1.14.2.''
 
 * Macros now generally implement html escaping, javascript string value escaping, and other escaping
 * for strings at point-of-use in their markup implementations, across the board, irrespective

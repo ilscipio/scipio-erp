@@ -90,12 +90,12 @@
     </#if>
 
 <style type="text/css">
-table.entry-parameters {
+.tmpldoc-content table.entry-parameters {
   width: 100%;
   border: 1px outset black;
 }
 
-table.entry-parameters td {
+.tmpldoc-content table.entry-parameters td {
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 0.5em;
@@ -103,33 +103,33 @@ table.entry-parameters td {
   border: 1px solid black;
 }
 
-table.entry-parameters td.entry-paramname {
+.tmpldoc-content table.entry-parameters td.entry-paramname {
   width: 20%;
 }
 
-.lib-entry-detail {
+.tmpldoc-content .lib-entry-detail {
   font-style: italic;
   font-size: 0.6em;
 }
 
-.lib-entry-formalname {
+.tmpldoc-content .lib-entry-formalname {
   font-weight: bold;
 }
 
-.lib-entry-param-desc-extradesc {
+.tmpldoc-content .lib-entry-param-desc-extradesc {
   font-size: 0.8em;
 }
 
-.lib-entry-params-details {
+.tmpldoc-content .lib-entry-params-details {
   font-size: 0.8em;
 }
 
-ul {
+.tmpldoc-content ul {
   margin-top: 0.3em;
   margin-bottom: 0.4em;
 }
 
-pre {
+.tmpldoc-content pre {
   margin-top: 0.3em;
   margin-bottom: 0.4em;
 }
@@ -143,7 +143,7 @@ pre {
 * MAIN PAGE *
 *************************************
 -->  
-  
+<div class="tmpldoc-content">
   <div class="lib-page-intro">
     <div>
       <#if pageTitle?has_content>
@@ -458,6 +458,7 @@ pre {
       </div>
     </#if>
   </#list>
+</div>
 
     <footer id="footer">
       <div>

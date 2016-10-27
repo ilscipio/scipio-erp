@@ -840,6 +840,39 @@ under the License.
         <echo message="[docs-ftl-scipio] ========== Done Building (FTL docs) =========="/>
     </target>
     
+    <!-- Scipio: Website FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. -->
+    <target name="docs-ftl-scipio-website" depends="build">
+        <antcall target="docs-ftl-scipio-website-ftlonly"/>
+    </target>
+
+    <target name="docs-ftl-scipio-website-ftlonly">
+        <echo message="[docs-ftl-scipio-website] ========== Start Building (FTL docs) =========="/>
+        <echo message="[docs-ftl-scipio-website] Building Scipio template-writer-friendly FTL lib docs..."/>
+        <java classname="com.ilscipio.scipio.ce.webapp.ftl.doc.FtlDocCompiler" fork="true">
+            <arg value="scipio-lib"/> <!-- lib format -->
+            <arg value="templating"/> <!-- doc purpose -->
+            <arg value="framework/common/webcommon/includes/scipio/lib"/> <!-- base source folder -->
+            <arg value="doc/scipio-website/templating/ftl/lib"/> <!-- base output folder -->
+            <arg value="framework/common/webcommon/includes/scipio/doc/ftlDocTemplateWebsite.ftl"/> <!-- doc template -->
+            <!-- source files to process -->
+            <arg value="utilities.ftl"/>
+            <arg value="standard/htmlContent.ftl"/>
+            <arg value="standard/htmlForm.ftl"/>
+            <arg value="standard/htmlInfo.ftl"/>
+            <arg value="standard/htmlNav.ftl"/>
+            <arg value="standard/htmlScript.ftl"/>
+            <arg value="standard/htmlStructure.ftl"/>
+            <arg value="standard/htmlTemplate.ftl"/>
+            <classpath>
+                <path location="framework/webapp/build/lib/ofbiz-webapp.jar"/> <!-- the compiler class currently lives in here -->
+                <path location="framework/base/lib/*"/> <!-- includes Freemarker (and some others: log4j) -->
+            </classpath>
+        </java>
+        <!-- TODO?: same as above but for docPurpose "theming"... currently I don't see the need,
+            theme creators need to look at the FTL files in depth anyway, even with markup separation -->
+        <echo message="[docs-ftl-scipio-website] ========== Done Building (FTL docs) =========="/>
+    </target>
+    
     <!-- SCIPIO: these would have been used to deploy html files or intermediate FTLs (highly complex,
         but now we do dynamic renders which are much easier to handle
     <target name="docs-ftl-scipio-deploylocal" depends="docs-ftl-scipio">

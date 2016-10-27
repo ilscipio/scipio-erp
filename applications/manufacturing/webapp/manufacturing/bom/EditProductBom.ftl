@@ -24,12 +24,16 @@ function lookupBom() {
     document.searchbom.submit();
 }
 </@script>
-
-<#assign sectionTitle>${uiLabelMap.PageTitleEditProductBom}<#if product??> ${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</#assign>
+<#-- NOTE: this is a little different: we "create"/add even if have existing product... it's presence of association that determine if we create or add -->
+<#if productAssoc??>
+  <#assign sectionTitle>${rawLabel('PageTitleEditProductBom')}<#if product??>: ${(rawString(product.internalName)!)} [${rawLabel('CommonId')} ${rawString(productId!)}]</#if></#assign>
+<#else>
+  <#assign sectionTitle>${rawLabel('ManufacturingCreateProductBom')}<#if product??>: ${(rawString(product.internalName)!)} [${rawLabel('CommonId')} ${rawString(productId!)}]</#if></#assign>
+</#if>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if product?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&bomType=${productAssocTypeId}") text=uiLabelMap.ManufacturingBomSimulation class="+${styles.action_nav!}" />
+    <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&bomType=${productAssocTypeId!}") text=uiLabelMap.ManufacturingBomSimulation class="+${styles.action_nav!}" />
   </#if>
   </@menu>
 </#macro>
@@ -97,8 +101,8 @@ function lookupBom() {
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
           </@field>
-          <@field type="lookup" label=uiLabelMap.ProductProductId value=(productId!) formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
-          <@field type="lookup" label=uiLabelMap.ManufacturingProductIdTo value=(productIdTo!) formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
+          <@field type="lookup" required=true label=uiLabelMap.ProductProductId value=(productId!) formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
+          <@field type="lookup" required=true label=uiLabelMap.ManufacturingProductIdTo value=(productIdTo!) formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
           <@field type="datetime" label=uiLabelMap.CommonFromDate tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})" name="fromDate" value="" size="25" maxlength="50" id="fromDate_1"/>
     <#else>
           <@field type="display" label=uiLabelMap.ProductProductId>${productId!}</@field>

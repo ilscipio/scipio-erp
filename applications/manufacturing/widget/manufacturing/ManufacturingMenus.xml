@@ -80,25 +80,59 @@ under the License.
     <menu name="ManufacturingAppSideBar" title="${uiLabelMap.ManufacturingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         always-expand-selected-or-ancestor="true">
         <include-elements menu-name="ManufacturingAppBar" recursive="full" />
+        <menu-item name="jobshop">
+            <sub-menu name="ProductionRun" include="ProductionRunSideBar" />
+        </menu-item>
+        <menu-item name="routing">
+            <sub-menu name="Routing" include="RoutingSideBar" />
+        </menu-item>
+        <menu-item name="routingTask">
+            <sub-menu name="RoutingTask" include="RoutingTaskSideBar" />
+        </menu-item>
+        <menu-item name="calendar">
+            <sub-menu name="Calendar" include="CalendarSideBar" />
+        </menu-item>
+        <menu-item name="bom">
+            <sub-menu name="Bom" include="BomSideBar" />
+        </menu-item>
+        <menu-item name="mrp">
+            <sub-menu name="Mrp" include="MrpSideBar" />
+        </menu-item>
     </menu>
 
     <menu name="BomTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="findBom" title="${uiLabelMap.CommonFind}">
             <link target="FindBom"/>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="bomSimulation" title="${uiLabelMap.ManufacturingBomSimulation}">
-            <link target="BomSimulation"/>
+            <link target="BomSimulation">
+                <parameter param-name="productId" from-field="parameters.productId"/>
+                <parameter param-name="productAssocTypeId" from-field="parameters.productAssocTypeId"/>
+            </link>
         </menu-item>
-        <menu-item name="EditProductBom" title="${uiLabelMap.ManufacturingEditProductBom}">
-            <link target="EditProductBom"/>
+        <menu-item name="EditProductBom" title="${uiLabelMap.ManufacturingBillOfMaterials}" always-expand-selected-or-ancestor="false"><!--${uiLabelMap.ManufacturingEditProductBom}-->
+            <condition>
+                <not><if-empty field="parameters.productId"/></not><!-- SCIPIO: added for consistency FIXME: poor condition however... -->
+            </condition>
+            <link target="EditProductBom">
+                <parameter param-name="productId" from-field="parameters.productId"/>
+                <parameter param-name="productAssocTypeId" from-field="parameters.productAssocTypeId"/>
+            </link>
         </menu-item>
         <menu-item name="productManufacturingRules" title="${uiLabelMap.ManufacturingManufacturingRules}">
-            <link target="EditProductManufacturingRules"/>
+            <link target="EditProductManufacturingRules">
+                <parameter param-name="productId" from-field="parameters.productId"/>
+            </link>
         </menu-item>
+    </menu>
+    
+    <menu name="BomSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="BomTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="ProductionRunTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="edit" title="${uiLabelMap.ManufacturingEditProductionRun}">
+        <menu-item name="edit" title="${uiLabelMap.ManufacturingProductionRun}"><!-- ${uiLabelMap.ManufacturingEditProductionRun} -->
             <condition>
                 <or>
                     <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_CREATED"/>
@@ -183,6 +217,10 @@ under the License.
                 <parameter param-name="productionRunId"/>
             </link>
         </menu-item>
+    </menu>
+    
+    <menu name="ProductionRunSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ProductionRunTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="ProductionRunStatusTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -282,11 +320,16 @@ under the License.
                 <parameter param-name="productionRunId"/>
             </link>
         </menu-item>
-        <menu-item name="print" title="${uiLabelMap.CommonPrint}">
+        <menu-item name="print" title="${uiLabelMap.CommonPrint}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <link target="PrintProductionRun" target-window="_BLANK">
                 <parameter param-name="productionRunId"/>
             </link>
         </menu-item>
+    </menu>
+
+    <!-- SCIPIO: use this if using as a button bar in templates, as opposed to ProductionRunStatusTabBar (ProductionRunStatusTabBar will have issues with active items) -->
+    <menu name="ProductionRunStatusSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ProductionRunStatusTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="MrpTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -297,16 +340,20 @@ under the License.
             <link target="FindInventoryEventPlan"/>
         </menu-item>
     </menu>
+    
+    <menu name="MrpSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="MrpTabBar" recursive="includes-only" />
+    </menu>
 
     <menu name="CalendarTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="Calendar" title="${uiLabelMap.ManufacturingCalendars}">
             <link target="FindCalendar"/>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="CalendarWeek" title="${uiLabelMap.ManufacturingCalendarWeeks}">
             <link target="ListCalendarWeek"/>
         </menu-item>
-
-        <menu-item name="calendar" title="${uiLabelMap.CommonEdit}">
+        <menu-item name="calendar" title="${uiLabelMap.ManufacturingCalendar}" always-expand-selected-or-ancestor="false"><!-- ${uiLabelMap.CommonEdit} -->
             <condition>
                 <not><if-empty field="techDataCalendar"/></not>
             </condition>
@@ -331,9 +378,13 @@ under the License.
             </link>
         </menu-item>
     </menu>
+    
+    <menu name="CalendarSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="CalendarTabBar" recursive="includes-only" />
+    </menu>
 
     <menu name="RoutingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="editRouting" title="${uiLabelMap.ManufacturingEditRouting}">
+        <menu-item name="editRouting" title="${uiLabelMap.ManufacturingRouting}"><!-- ${uiLabelMap.ManufacturingEditRouting} -->
             <link target="EditRouting">
                 <parameter param-name="workEffortId" from-field="routing.workEffortId"/>
             </link>
@@ -349,9 +400,13 @@ under the License.
             </link>
         </menu-item>
     </menu>
+    
+    <menu name="RoutingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="RoutingTabBar" recursive="includes-only" />
+    </menu>
 
     <menu name="RoutingTaskTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="editRoutingTask" title="${uiLabelMap.ManufacturingEditRoutingTask}">
+        <menu-item name="editRoutingTask" title="${uiLabelMap.ManufacturingRoutingTask}"><!-- ${uiLabelMap.ManufacturingEditRoutingTask} -->
             <link target="EditRoutingTask">
                 <parameter param-name="workEffortId" from-field="routingTask.workEffortId"/>
             </link>
@@ -373,4 +428,7 @@ under the License.
         </menu-item>
     </menu>
 
+    <menu name="RoutingTaskSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="RoutingTaskTabBar" recursive="includes-only" />
+    </menu>
 </menus>

@@ -805,13 +805,15 @@ under the License.
         <echo message="[docs-all] ========== Done Building (JavaDocs) =========="/>
     </target>
 
-    <!-- Scipio: Main FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. -->
+    <!-- Scipio: Main FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. 
+        NOTE: 2016-10-27: The output of this is no longer committed to repo. -->
     <target name="docs-ftl-scipio" depends="build">
         <antcall target="docs-ftl-scipio-ftlonly"/>
     </target>
     
     <!-- Scipio: FIXME?: This is currently standard-Scipio-specific and quite hardcoded. May even belong in a separate project.
-        Or could also integrate this better with other "docs" builds in future (delegate to component build.xml) -->
+        Or could also integrate this better with other "docs" builds in future (delegate to component build.xml).
+        NOTE: 2016-10-27: The output of this is no longer committed to repo.  -->
     <target name="docs-ftl-scipio-ftlonly">
         <echo message="[docs-ftl-scipio] ========== Start Building (FTL docs) =========="/>
         <echo message="[docs-ftl-scipio] Building Scipio template-writer-friendly FTL lib docs..."/>

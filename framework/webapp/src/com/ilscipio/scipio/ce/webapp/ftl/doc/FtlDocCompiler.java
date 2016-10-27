@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.ilscipio.scipio.ce.webapp.ftl.doc.FtlDocException.ParseException;
 
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -330,6 +331,8 @@ public class FtlDocCompiler {
             cfg.setDirectoryForTemplateLoading(new File("."));
             cfg.setDefaultEncoding(defaultEncoding.name());
             cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+            // support Static like ofbiz does
+            cfg.setSharedVariable("Static", ((BeansWrapper) cfg.getObjectWrapper()).getStaticModels());
         }
     }
     

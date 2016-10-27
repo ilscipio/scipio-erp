@@ -76,6 +76,7 @@
 *************************************
 -->
 
+<#include "ftlDocStdLibEmu.ftl">
 <#include "ftlDocCommon.ftl">
 
 <#-- 

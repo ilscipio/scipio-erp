@@ -5,14 +5,14 @@
 *
 * DEV NOTE: PLEASE COMMENT rather than delete.
 *
-* WARN: This is EXTREMELY confusing because of the
-* multiple ObjectWrappers used and mixing two libraries,
-* with no namespaces!!! 
-* The doc datamodel has NO auto-escaping, but
-* all other screen values like regular context DO auto-escaping.
+* WARN: This dynamic template is EXTREMELY confusing because of the multiple 
+*     Freemarker ObjectWrappers used and mixing of two libraries (ftlDocCommon.ftl and standard templating API),
+*     and two data models, all with no namespaces!!! 
+*     The data model for the source documents has NO auto html-escaping, but
+*     all other screen values from regular Ofbiz screen context DO have auto html-escaping.
 * 
-* {{{escapeVal}}} should be able to handle security in all cases,
-* at least, but can't use in the common file right now.
+* NOTE: {{{escapeVal}}} should be able to handle security in all cases,
+*     at least, but it can't be used in the ftlDocCommon.ftl file right now (TODO).
 * 
 * See ftlDocTemplate.ftl for more information.
 -->
@@ -123,6 +123,16 @@ pre {
   background-color: #F5F5F5;
 }
 </#if>
+
+<#-- metro theme was not exactly made for this markup -->
+.lib-pagedesc h4 {
+  margin-top: 2em;
+  color: black;
+  font-weight: bold;
+}
+.lib-pagedesc p {
+  margin-bottom: 0.4em;
+}
 
 </style>
 

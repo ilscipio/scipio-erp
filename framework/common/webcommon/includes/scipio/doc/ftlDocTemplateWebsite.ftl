@@ -56,6 +56,7 @@
 <#-- UNCOMMENT THIS (and further below) if you want to make absolute links; COMMENT for relative links -->
 <#global baseAbsInterLibUrl = "//www.scipioerp.com/community/developer/freemarker-macros">
 
+<#include "ftlDocStdLibEmu.ftl">
 <#include "ftlDocCommon.ftl">
 
 <#-- SPECIAL URI REWRITES FOR WEBSITE 

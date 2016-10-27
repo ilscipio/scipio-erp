@@ -107,13 +107,14 @@ public class FtlDocCompiler {
             String docPurpose = args[1];
             String srcFolderPath = args[2];
             String outFolderPath = args[3];
-            String templatePath = args[4];
-            List<String> libFilenames = Arrays.asList(args).subList(5, args.length);
+            String outFileExtension = args[4];
+            String templatePath = args[5];
+            List<String> libFilenames = Arrays.asList(args).subList(6, args.length);
 
             try {
                 FtlDocCompiler compiler = FtlDocCompiler.getInstance();
                 compiler.setMsgHandler(msgHandler);
-                compiler.execBasic(defaultLibFormat, docPurpose, srcFolderPath, libFilenames, templatePath, outFolderPath);
+                compiler.execBasic(defaultLibFormat, docPurpose, srcFolderPath, libFilenames, outFileExtension, templatePath, outFolderPath);
             } catch (Throwable t) {
                 msgHandler.logError(t.getMessage());
                 t.printStackTrace();
@@ -196,11 +197,12 @@ public class FtlDocCompiler {
     /* exec */
 
     public void execBasic(String defaultLibFormat, String docPurpose, String srcFolderPath, List<String> libFilenames, 
-            String templatePath, String outFolderPath) throws IllegalArgumentException, IOException, TemplateException, ParseException {
+            String outFileExtension, String templatePath, String outFolderPath) throws IllegalArgumentException, IOException, TemplateException, ParseException {
         //msgHandler.logInfo("Setting sources and output...");
         setDefaultLibFormat(defaultLibFormat);
         setDocPurpose(docPurpose);
         setSources(srcFolderPath, libFilenames);
+        setOutFileExtension(outFileExtension);
         setTemplatePath(templatePath);
         setOutputFolder(outFolderPath);
         
@@ -235,10 +237,16 @@ public class FtlDocCompiler {
     }
     
     public void setInFileExtension(String inFileExtension) {
+        if (inFileExtension == null) {
+            inFileExtension = "";
+        }
         this.inFileExtension = inFileExtension;
     }
 
     public void setOutFileExtension(String outFileExtension) {
+        if (outFileExtension == null) {
+            outFileExtension = "";
+        }
         this.outFileExtension = outFileExtension;
     }
 

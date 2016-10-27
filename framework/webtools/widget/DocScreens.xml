@@ -37,7 +37,7 @@ under the License.
                 <set field="fdtwArgs.targetLibPath" value="${groovy: request.getAttribute('scipioTmplApiTargetLibPath')}"/><!-- set by templateApiDocPage.jsp -->
                 <set field="fdtwArgs.targetLibName" value=""/>
                 <set field="fdtwArgs.reloadDataModel" type="Boolean" from-field="parameters.reloadDataModel" />
-                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateDyn.groovy"/>
+                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateOfbiz.groovy"/>
                 
                 <set field="title" value="${docLibTitleMap[targetLibName]}"/>
                 <set field="subtitle" value="${docContext.pageTitle}"/>
@@ -63,11 +63,11 @@ under the License.
                                 <!-- dumps the docContext we made into main context but with special freemarker object wrapping (do this as late as possible) -->
                                 <set field="fdtwArgs" type="NewMap"/>
                                 <set field="fdtwArgs.doPrepFtlCtx" type="Boolean" value="true"/>
-                                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateDyn.groovy"/>
+                                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateOfbiz.groovy"/>
                             </actions>
                             <widgets>
                                 <!--<screenlet>-->
-                                <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/doc/ftlDocTemplateDyn.ftl"/></html></platform-specific>
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/doc/ftlDocTemplateOfbiz.ftl"/></html></platform-specific>
                                 <!--/<screenlet>-->
                             </widgets>
                         </section>

@@ -1,6 +1,8 @@
 <#--
-* Scipio FTL doc formatting template, Hosted Web version
+* Scipio FTL doc formatting template - Dynamic Ofbiz version (for hosting within Ofbiz instance)
 * 
+* This contains live usage of Scipio templating API (for use within Ofbiz only).
+*
 * WARN: This is EXTREMELY confusing because of the
 * multiple ObjectWrappers used and mixing two libraries,
 * with no namespaces!!! 
@@ -10,6 +12,7 @@
 * {{{escapeVal}}} should be able to handle security in all cases,
 * at least, but can't use in the common file right now.
 * 
+* See ftlDocTemplate.ftl for more information.
 -->
 <#if (libFormat!"") == "scipio-lib">
 

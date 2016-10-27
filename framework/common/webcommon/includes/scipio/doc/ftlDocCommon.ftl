@@ -12,13 +12,20 @@
 *************************************
 -->
 
+<#-- OVERRIDABLE callback that you can use the rewrite doc URIs manually.
+    This affects only the links href, not their text. -->
+<#function transformDocUri uri>
+  <#return uri>
+</#function>
+
 <#function makeRelInterLibUrl targetLibDocPath targetName=""><#-- default one -->
   <#if docOutFileExt?has_content>
     <#if !targetLibDocPath?ends_with(docOutFileExt)>
       <#local targetLibDocPath = targetLibDocPath + docOutFileExt>
     </#if>
   </#if>
-  <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, libInfo.libDocPath)!""><#t>
+  <#local targetLibDocPath = transformDocUri(targetLibDocPath)>
+  <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, transformDocUri(libInfo.libDocPath))!""><#t>
   <#if targetName?has_content>
     <#return relLibDocPath + "#" + targetName>
   <#else>
@@ -33,6 +40,7 @@
       <#local targetLibDocPath = targetLibDocPath + docOutFileExt>
     </#if>
   </#if>
+  <#local targetLibDocPath = transformDocUri(targetLibDocPath)>
   <#if targetLibDocPath?starts_with("/")>
     <#local absLibDocPath = baseAbsInterLibUrl + targetLibDocPath>
   <#else>
@@ -45,11 +53,10 @@
   </#if>
 </#function>
 
-<#-- WE use the relative builder by default. caller can override this with the other, or something else entirely. -->
+<#-- WE use the relative builder by default. template can override this with the other, or something else entirely. -->
 <#assign makeInterLibUrl = makeRelInterLibUrl>
 
 
-  
 <#-- reference to another entry. name is either a full reference or name only, with or without @ or #. -->
 <#macro entryRef name>
   <#local searchRes = tmplHelper.findEntryGlobal(name, entryMap, libMap)!false>
@@ -144,7 +151,11 @@
           <@decoratedText text=entry.origText escape=escape /><#t>
         </#if>
       <#elseif entry.type == "link">
-        <a href="${entry.value}">${escapeText(entry.text, escape)}</a><#t>
+        <#if (entry.isDocLink!false) == true>
+          <a href="${makeInterLibUrl(entry.value)}">${escapeText(entry.text, escape)}</a><#t>
+        <#else>
+          <a href="${entry.value}">${escapeText(entry.text, escape)}</a><#t>
+        </#if>
       <#elseif entry.type == "text-raw">
         ${entry.value}<#t>
       <#elseif entry.type == "text-plain">

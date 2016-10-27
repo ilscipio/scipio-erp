@@ -146,16 +146,30 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 // relative to current, just strip the prefix
                 value = value.substring(2);
                 linkInfo.put("text", value);
+                
+                // 2016-10-27: check if this is a valid doc link, so template can process it
+                if (libMap.containsKey(value) || 
+                        (value.endsWith(inFileExtension) && libMap.containsKey(value.substring(0, value.length() - inFileExtension.length())))) {
+                    linkInfo.put("isDocLink", Boolean.TRUE);
+                }
             }
             else if (value.startsWith("../")) {
                 // relative to current
+                // WARN: this currently bypasses the auto-doc stuff
                 linkInfo.put("text", value);
             }
             else {
-                String libDocPath = (String) libInfo.get("libDocPath");
+                //String libDocPath = (String) libInfo.get("libDocPath");
                 linkInfo.put("text", value);
+                // 2016-10-27: let the template process the link instead
                 // relative to doc root. need to adjust the link.
-                value = getTargetRelLibDocPath(value, libDocPath);
+                //value = getTargetRelLibDocPath(value, libDocPath);
+                
+                // 2016-10-27: check if this is a valid doc link, so template can process it
+                if (libMap.containsKey(value) || 
+                        (value.endsWith(inFileExtension) && libMap.containsKey(value.substring(0, value.length() - inFileExtension.length())))) {
+                    linkInfo.put("isDocLink", Boolean.TRUE);
+                }
             }
             if (value.endsWith(inFileExtension)) {
                 value = value.substring(0, value.length() - inFileExtension.length()) + outFileExtension;

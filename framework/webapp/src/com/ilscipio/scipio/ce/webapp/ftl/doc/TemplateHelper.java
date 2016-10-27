@@ -230,6 +230,10 @@ public abstract class TemplateHelper {
         return res;
     }
     
+    /**
+     * 2016-10-27: NOTE: the java should not use this anymore; should be called from FTL
+     * so the FTL can decide how to use this logic.
+     */
     public String getTargetRelLibDocPath(String targetLibDocPath, String currLibDocPath) {
         String[] currParts = currLibDocPath.split("/");
         String res = "";

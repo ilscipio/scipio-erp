@@ -1,6 +1,9 @@
 <#--
 * Scipio FTL doc common markup and utilities
 *
+* WARN: DO NOT MODIFY MARKUP HERE unless you are sure you want to change it for
+*     ALL template types (basic html, website, ofbiz)
+*
 * WARN: Don't add macros/functions here with same names as live template API 
 *     names!
 *

@@ -134,7 +134,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             // FIXME?: Currently only support href==label
             String value = (String) linkInfo.get("value");
             
-            if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("file://")) {
+            if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("file://") || value.startsWith("//")) {
                 // absolute, do nothing
                 linkInfo.put("text", value);
             }

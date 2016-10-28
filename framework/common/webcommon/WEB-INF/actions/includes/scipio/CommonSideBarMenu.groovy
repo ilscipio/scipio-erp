@@ -50,7 +50,7 @@ if (cond) {
                 perm = permEntry[0];
                 permAction = null;
                 if (permEntry.size() >= 2) {
-                    permAction = [1];
+                    permAction = permEntry[1];
                 }
             } else {
                 perm = permEntry;

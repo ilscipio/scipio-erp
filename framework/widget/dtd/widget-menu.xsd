@@ -614,12 +614,13 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="sort-mode" default="auto">
+            <xs:attribute name="sort-mode"><!-- implied: default="auto" -->
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Controls whether sorting applies to this item or
                         not. Only meaningful when items-sort-mode is enabled.
                         If set to off, item will try to remain at the same index of the menu items
                         in which it was declared.
+                        Default: auto
                         NOTE: 'override-mode' can influence the final display order when combined with 'soft-mode' off.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>

@@ -451,7 +451,7 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.position = existingMenuItem.position;
         }
-        if (overrideMenuItem.sortMode != null) {
+        if (UtilValidate.isNotEmpty(overrideMenuItem.sortMode)) {
             this.sortMode = overrideMenuItem.sortMode;
         } else {
             this.sortMode = existingMenuItem.sortMode;

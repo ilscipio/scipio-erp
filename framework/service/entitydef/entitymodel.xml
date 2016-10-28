@@ -88,10 +88,10 @@ under the License.
             <index-field name="statusId"/>
         </index>
     </entity>
-    <!-- Scipio: JobSandbox enhanced with special event field -->
+    <!-- SCIPIO: JobSandbox enhanced with special event field -->
     <extend-entity entity-name="JobSandbox">
         <field name="eventId" type="id">
-            <description>Scipio: Identifies the event at which the job should be triggered, or in other words
+            <description>SCIPIO: Identifies the event at which the job should be triggered, or in other words
                 the event which will limit when the job can be run.</description>
         </field>
         <relation type="one" fk-name="JOB_SNDBX_EVENT" title="Event" rel-entity-name="Enumeration">

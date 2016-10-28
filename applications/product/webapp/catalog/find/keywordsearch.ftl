@@ -61,7 +61,7 @@ under the License.
         }
     </@script>
   
-  <#-- Scipio: NOTE: actual keyword search params are stored in session -->
+  <#-- SCIPIO: NOTE: actual keyword search params are stored in session -->
   <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
     <#assign paramStr = "~clearSearch=N/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}">
   <#else>

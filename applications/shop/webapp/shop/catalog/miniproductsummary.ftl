@@ -44,7 +44,7 @@ under the License.
                ${productImage}
             </@pli>
         <@pli type="description">
-            <#-- Scipio: TODO: Localize -->
+            <#-- SCIPIO: TODO: Localize -->
             ${miniProductContentWrapper.get("PRODUCT_NAME")!"No Name Available"}
          </@pli>
 

@@ -290,7 +290,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/InlineProductDetail.groovy"/>
             </actions>
             <widgets>
-                <!-- Scipio: now in shop
+                <!-- SCIPIO: now in shop
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/inlineProductDetail.ftl"/></html></platform-specific> -->
                 <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/inlineProductDetail.ftl"/></html></platform-specific> 
             </widgets>
@@ -512,7 +512,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#compareProducts -->
+    <!-- SCIPIO: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#compareProducts -->
     <screen name="compareProducts">
         <section>
             <actions>
@@ -523,7 +523,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#ProductUomDropDownOnly -->
+    <!-- SCIPIO: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#ProductUomDropDownOnly -->
     <screen name="ProductUomDropDownOnly">
         <section>
             <actions>

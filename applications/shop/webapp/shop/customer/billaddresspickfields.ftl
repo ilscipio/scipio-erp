@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Scipio: Based on editcreditcard.ftl -->
+<#-- SCIPIO: Based on editcreditcard.ftl -->
 
 <#if !bapfParams??>
   <#assign bapfParams = parameters>
@@ -143,7 +143,7 @@ under the License.
     <@addrContent />
   </#if>
 
-    <#if !postalAddressInfos?has_content && !curContactMech?? && !useNewAddr><#-- Scipio: Don't show if also showing "new" option -->
+    <#if !postalAddressInfos?has_content && !curContactMech?? && !useNewAddr><#-- SCIPIO: Don't show if also showing "new" option -->
       <@commonMsg type="info">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
     </#if>
 </@fields>

@@ -179,10 +179,10 @@ under the License.
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-  <#assign shipGroup = shipGroup> <#-- Scipio: make this global so macro can access - ftl kludge -->
+  <#assign shipGroup = shipGroup> <#-- SCIPIO: make this global so macro can access - ftl kludge -->
     <#macro menuContent menuArgs={}>
        <@menu args=menuArgs>
-         <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text=" " title="Collapse" class="+${styles.action_run_local!} ${styles.action_hide!}" />-->
+         <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${escapeVal(rawLabel('CommonExpand'), 'js')}', '${escapeVal(rawLabel('CommonCollapse'), 'js')}');" text=" " title="Collapse" class="+${styles.action_run_local!} ${styles.action_hide!}" />-->
          <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${rawLabel('OrderShipGroup')} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>

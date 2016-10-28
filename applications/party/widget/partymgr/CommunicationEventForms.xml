@@ -904,7 +904,7 @@ under the License.
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
                 target="${uploadContent_submitAction}"/>
         </field>
-        <!-- Scipio: this at least allows to show progress bar if enabled... -->
+        <!-- SCIPIO: this at least allows to show progress bar if enabled... -->
         <field name="submitProgress" title=" " combine-previous="false"><submit/></field>
     </form>
     <form name="uploadContent1" type="upload" extends="uploadContent" target="uploadAttachFile">

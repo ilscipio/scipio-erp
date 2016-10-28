@@ -1,7 +1,7 @@
 <form name="demoDataGeneratorForm" method="post" action="<@ofbizUrl>DemoDataGeneratorResult?_RUN_SYNC_=Y</@ofbizUrl>">
       <#assign serviceParameterNames = [] />
 
-      <#-- Scipio: leave room for the label area because service parameter names can be long -->
+      <#-- SCIPIO: leave room for the label area because service parameter names can be long -->
       <@fields fieldArgs={"labelColumns":4}>
         <#list serviceParameters as serviceParameter>    
           <#if serviceParameter.type == "Boolean">

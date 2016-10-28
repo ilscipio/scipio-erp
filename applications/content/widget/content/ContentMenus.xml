@@ -20,7 +20,7 @@ under the License.
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="ContentAppBar" title="${uiLabelMap.ContentContentManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <!-- Scipio: Not using the high level functionality -->
+        <!-- SCIPIO: Not using the high level functionality -->
         <menu-item name="websites" title="${uiLabelMap.ContentWebSites}"><link target="FindWebSite"/></menu-item>
         <menu-item name="survey" title="${uiLabelMap.ContentSurvey}"><link target="FindSurvey"/></menu-item>
         <!--<menu-item name="Forum" title="${uiLabelMap.ContentForum}"><link target="findForumGroups"/></menu-item>-->
@@ -57,7 +57,7 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="role" title="${uiLabelMap.FormFieldTitle_roles}" >
-            <!-- Scipio: works without contentId
+            <!-- SCIPIO: works without contentId
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
             </condition>-->
@@ -168,7 +168,7 @@ under the License.
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
-        <!-- Scipio: Unneeded
+        <!-- SCIPIO: Unneeded
         <menu-item name="EditWebSiteParties" title="${uiLabelMap.PartyParties}">
             <condition>
                 <not><if-empty field="parameters.webSiteId"/></not>
@@ -177,7 +177,7 @@ under the License.
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>-->
-        <!-- Scipio: No high-level functionality needed
+        <!-- SCIPIO: No high-level functionality needed
         <menu-item name="WebSiteCMS" title="${uiLabelMap.ContentCMS}">
             <condition>
                 <not><if-empty field="parameters.webSiteId"/></not>
@@ -194,7 +194,7 @@ under the License.
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
-        <!-- Scipio: Unneeded
+        <!-- SCIPIO: Unneeded
         <menu-item name="WebSiteContactList" title="${uiLabelMap.ContentWebSiteContactList}">
             <condition>
                 <not><if-empty field="parameters.webSiteId"/></not>

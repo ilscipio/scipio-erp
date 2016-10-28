@@ -36,7 +36,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <!-- Scipio: Duplicate
+                                    <!-- SCIPIO: Duplicate
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar"><link text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="${styles.link_nav} ${styles.action_add}"/></container>
                                     </decorator-section>

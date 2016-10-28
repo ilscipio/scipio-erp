@@ -286,7 +286,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#AddProductCategoryMember -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#AddProductCategoryMember -->
     <screen name="ScipioAddProductCategoryMember">
         <section>
              <widgets>
@@ -297,7 +297,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#UpdateProductCategoryMember -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#UpdateProductCategoryMember -->
     <screen name="ScipioProductCategoryMemberList">
         <section>
              <actions>
@@ -935,7 +935,7 @@ under the License.
                 <set field="activeSubMenuItem" value="EditProductContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
-                <!-- Scipio: Now points to shop -->
+                <!-- SCIPIO: Now points to shop -->
                 <set field="layoutSettings.javaScripts[]" value="/shop/images/productAdditionalView.js" global="true"/>
 
                 <set field="productId" from-field="parameters.productId"/>

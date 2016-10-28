@@ -51,7 +51,7 @@
         </field>
     </form>
 
-    <!-- Scipio: EditProdCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioEditProdCatalog (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: EditProdCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioEditProdCatalog (can't be removed yet, still references I haven't covered) -->
     <form name="EditProdCatalog" type="single" target="updateProdCatalog" title="" default-map-name="prodCatalog"
         header-row-style="header-row" default-entity-name="ProdCatalog"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="prodCatalog==null" target="createProdCatalog" />
@@ -108,7 +108,7 @@
         </field>
     </form>
 
-    <!-- Scipio: AddProdCatalogToParty form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioAddProdCatalogToParty (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: AddProdCatalogToParty form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioAddProdCatalogToParty (can't be removed yet, still references I haven't covered) -->
     <form name="AddProdCatalogToParty" type="single" target="addProdCatalogToParty" title="" header-row-style="header-row"
        > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="addProdCatalogToParty" />
@@ -139,7 +139,7 @@
         </field>
     </form>
 
-    <!-- Scipio: UpdateProdCatalogToParty form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioProdCatalogPartyList (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: UpdateProdCatalogToParty form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioProdCatalogPartyList (can't be removed yet, still references I haven't covered) -->
     <form name="UpdateProdCatalogToParty" type="list" target="updateProdCatalogToParty" title="" list-name="prodCatalogRoleList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
@@ -180,7 +180,7 @@
         </field>
     </form>
 
-    <!-- Scipio: CreateProductStoreCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioAddProdCatalogToStore (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: CreateProductStoreCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioAddProdCatalogToStore (can't be removed yet, still references I haven't covered) -->
     <form name="CreateProductStoreCatalog" type="single" target="createProdCatalogStore" title="" header-row-style="header-row"
        > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="prodCatalogId" map-name="prodCatalog">
@@ -207,7 +207,7 @@
         </field>
     </form>
 
-    <!-- Scipio: UpdateProductStoreCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioProdCatalogStoreList (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: UpdateProductStoreCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioProdCatalogStoreList (can't be removed yet, still references I haven't covered) -->
     <form name="UpdateProductStoreCatalog" type="list" target="updateProdCatalogStore" title="" list-name="productStoreCatalogList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
@@ -242,7 +242,7 @@
         </field>
     </form>
 
-    <!-- Scipio: EditProdCatalogCategories form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioEditProdCatalogCategories (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: EditProdCatalogCategories form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioEditProdCatalogCategories (can't be removed yet, still references I haven't covered) -->
     <form name="EditProdCatalogCategories" type="list" target="updateProductCategoryToProdCatalog" title=""
         list-name="prodCatalogCategories" odd-row-style="alternate-row" paginate-target="EditProdCatalogCategories"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
@@ -292,7 +292,7 @@
         </field>
     </form>
 
-    <!-- Scipio: addProductCategoryToProdCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioAddProductCategoryToProdCatalog (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: addProductCategoryToProdCatalog form moved to ./applications/product/widget/catalog/CatalogScreens.xml#ScipioAddProductCategoryToProdCatalog (can't be removed yet, still references I haven't covered) -->
     <form name="addProductCategoryToProdCatalog" type="single" target="addProductCategoryToProdCatalog" title=""
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="addProductCategoryToProdCatalog" />

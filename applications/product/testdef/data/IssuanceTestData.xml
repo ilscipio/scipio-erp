@@ -21,7 +21,7 @@ under the License.
 <entity-engine-xml>
 
     <!-- An order that needs stock from two inventory items -->
-    <!-- Scipio: The default product store is now ScipioShop -->
+    <!-- SCIPIO: The default product store is now ScipioShop -->
     <OrderHeader createdBy="admin" createdStamp="2011-08-12 23:17:11.656" createdTxStamp="2011-08-12 23:17:11.491" currencyUom="USD" entryDate="2011-08-12 23:17:11.507" grandTotal="105.14" lastUpdatedStamp="2011-08-12 23:17:13.272" lastUpdatedTxStamp="2011-08-12 23:17:13.251" orderDate="2011-08-12 23:17:11.507" orderId="DEMO81015" orderName="" orderTypeId="SALES_ORDER" priority="2" productStoreId="ScipioShop" remainingSubTotal="79.56" salesChannelEnumId="WEB_SALES_CHANNEL" statusId="ORDER_APPROVED" visitId="10043"/>
     
     <OrderItem changeByUserLoginId="admin" correspondingPoId="" createdStamp="2011-08-12 23:17:11.83" createdTxStamp="2011-08-12 23:17:11.491" isModifiedPrice="N" isPromo="N" itemDescription="Nikon Analog Camera" lastUpdatedStamp="2011-08-12 23:17:11.83" lastUpdatedTxStamp="2011-08-12 23:17:11.491" orderId="DEMO81015" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" prodCatalogId="DemoCatalog" productId="CAM-2644" quantity="6.000000" selectedAmount="0.000000" statusId="ITEM_APPROVED" unitListPrice="48.000" unitPrice="38.400"/>

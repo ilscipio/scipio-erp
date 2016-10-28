@@ -60,7 +60,7 @@ under the License.
         <#if returnableItems?has_content>
           <#assign rowCount = 0>
           <#list returnableItems.keySet() as orderItem>
-          <#-- Scipio: This stock check does not work in FTL (crash); make our own;
+          <#-- SCIPIO: This stock check does not work in FTL (crash); make our own;
               BUT still do the check commented as a fallback in case it's not a GenericValue
           <#if !orderItem.orderAdjustmentId?has_content>    <#- filter orderAdjustments ->
           -->

@@ -88,7 +88,7 @@ under the License.
                             <condition>
                                 <and>
                                     <if-has-permission permission="EXAMPLE" action="_VIEW"/>
-                                    <!-- Scipio: moved to use-when: <not><if-empty field="example"/></not> --><!-- This is a check useful when only seed data are loaded -->
+                                    <!-- SCIPIO: moved to use-when: <not><if-empty field="example"/></not> --><!-- This is a check useful when only seed data are loaded -->
                                 </and>
                             </condition>
                             <widgets>
@@ -167,7 +167,7 @@ under the License.
                             <condition>
                                 <and>
                                     <if-has-permission permission="EXAMPLE" action="_VIEW"/>
-                                    <!-- Scipio: moved to use-when: <not><if-empty field="exampleFeature"/></not> --><!-- This is a check useful when only seed data are loaded -->
+                                    <!-- SCIPIO: moved to use-when: <not><if-empty field="exampleFeature"/></not> --><!-- This is a check useful when only seed data are loaded -->
                                 </and>
                             </condition>
                             <widgets>

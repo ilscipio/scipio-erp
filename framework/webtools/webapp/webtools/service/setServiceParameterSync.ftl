@@ -22,7 +22,7 @@ under the License.
       <input type="hidden" name="${scheduleOption.name}" value="${scheduleOption.value}"/>
     </#list>
 
-  <#-- Scipio: leave room for the label area because service parameter names can be long -->
+  <#-- SCIPIO: leave room for the label area because service parameter names can be long -->
   <@fields fieldArgs={"labelColumns":4}>
     <#list serviceParameters as serviceParameter>
       <#-- NOTE: defaultValue is actually a private member and getDefaultValue is invoked instead -->

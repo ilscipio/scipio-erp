@@ -215,7 +215,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewEmploymentApp"/>
     </request-map>
-    <!-- Scipio: simple view and edit screens -->
+    <!-- SCIPIO: simple view and edit screens -->
     <request-map uri="ViewEmploymentApp">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewEmploymentApp"/>
@@ -236,7 +236,7 @@ under the License.
         <response name="success" type="request" value="FindEmploymentApps"/>
         <response name="error" type="view" value="FindEmploymentApps"/>
     </request-map>
-    <!-- Scipio: need single update version -->
+    <!-- SCIPIO: need single update version -->
     <request-map uri="updateEmploymentAppSingle">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmploymentApp"/>
@@ -818,7 +818,7 @@ under the License.
     <request-map uri="createEmploymentAppExt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmploymentApp"/>
-        <response name="success" type="view" value="EditEmploymentApp"/><!-- Scipio: go back to singular form:  value="EditEmploymentApps" -->
+        <response name="success" type="view" value="EditEmploymentApp"/><!-- SCIPIO: go back to singular form:  value="EditEmploymentApps" -->
         <response name="error" type="view" value="EditEmploymentApp"/>
     </request-map>
     <request-map uri="updateEmploymentAppExt">
@@ -827,7 +827,7 @@ under the License.
         <response name="success" type="request" value="EditEmploymentApps"/>
         <response name="error" type="view" value="EditEmploymentApps"/>
     </request-map>
-    <!-- Scipio: single version -->
+    <!-- SCIPIO: single version -->
     <request-map uri="updateEmploymentAppExtSingle">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmploymentApp"/>

@@ -184,7 +184,7 @@ under the License.
   
   
 <#if returnableItems?has_content>
-  <#assign sectionTitle>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${getLabel('OrderReturnAdjustments')} ${getLabel('CommonNbr')} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
   <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
     <#if orderHeaderAdjustments?has_content>
       <@table type="data-list">
@@ -238,7 +238,7 @@ under the License.
         <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RET_MAN_ADJ"/>
         <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
         
-  <#assign sectionTitle>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${getLabel('OrderReturnManualAdjustment')} ${getLabel('CommonNbr')} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
   <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
         <@table type="data-list">
           <@thead>
@@ -278,7 +278,7 @@ under the License.
     <@row>
       <@cell>
         <input type="hidden" name="_rowCount" value="${rowCount}"/>
-        <a href="javascript:document.${selectAllFormName}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderReturnSelectedItems}</a>
+        <a href="javascript:document['${escapeVal(selectAllFormName, 'js-html')}'].submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderReturnSelectedItems}</a>
       </@cell>
     </@row>
 

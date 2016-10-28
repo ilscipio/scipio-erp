@@ -21,7 +21,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     <screen name=""><section></section></screen>
-    <!-- Scipio: Commenting this out for now. -->
+    <!-- SCIPIO: Commenting this out for now. -->
     <!-- <screen name="FindFacilityGroup">
         <section>
             <actions>
@@ -91,7 +91,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityGroupDecorator">
                     <decorator-section name="body">
-                        Scipio: redundant
+                        SCIPIO: redundant
                         <container style="button-bar">
                             <link target="EditFacilityGroup" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_add}"/>
                         </container>

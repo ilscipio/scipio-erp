@@ -23,7 +23,7 @@ under the License.
     <#if catInfo?is_boolean>
       <#local catInfo = catHelper.makeCategoryInfo(productCategoryId)>
     </#if>
-    <#-- Scipio: sometimes this happens for reasons I'm not sure... just prevent it here -->
+    <#-- SCIPIO: sometimes this happens for reasons I'm not sure... just prevent it here -->
     <#if previousCategoryId == productCategoryId>
       <#local previousCategoryId = "">
     </#if>
@@ -49,7 +49,7 @@ under the License.
     <#local class = addClassArg(class, "menu-${level}")>
     <@menuitem type="link" href=categoryUrl text=linkText class=class active=active activeTarget=activeTarget>
       <#if isMultiLevel>
-        <#-- Scipio: NOTE: this code does not work properly, use urlContainsPathPart
+        <#-- SCIPIO: NOTE: this code does not work properly, use urlContainsPathPart
         <#if currentCategoryPath.contains("/"+productCategoryId)>-->
         <#if isOnCurrentCatPath>
             <#assign nextLevel=level+1/>
@@ -63,7 +63,7 @@ under the License.
 </#macro>
 
 <#macro iterateList currentList currentLevel isMultiLevel previousCategoryId="">
-        <#-- Scipio: NOTE: this will automatically figure out it's a nested menu and it will inherit the type of the parent -->
+        <#-- SCIPIO: NOTE: this will automatically figure out it's a nested menu and it will inherit the type of the parent -->
         <@menu id="menu-${currentLevel!0}">
           <#list catHelper.makeCategoryInfos(currentList)?sort_by("displayName") as catInfo>
               <#local item = catInfo.item>
@@ -79,7 +79,7 @@ under the License.
           <#-- current categories -->
           <@categoryList productCategoryId=baseCategoryId level=0 isMultiLevel=false path="" count=0 class=styles.menu_sidebar_itemdashboard! />
           <#list catHelper.makeCategoryInfos(catList.get("menu-0"))?sort_by("displayName") as catInfo>
-              <#-- Scipio: sanity check - each item should have as parent the top category - should be able to remove this check later for speed, 
+              <#-- SCIPIO: sanity check - each item should have as parent the top category - should be able to remove this check later for speed, 
                   but helps in case something went wrong with query -->
               <#assign item = catInfo.item>
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, catInfo.productCategoryId)>
@@ -89,7 +89,7 @@ under the License.
                     " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
               </#if>
           </#list>
-        <#elseif topLevelList?has_content><#-- Scipio: Fallback for empty categories / catalogs -->
+        <#elseif topLevelList?has_content><#-- SCIPIO: Fallback for empty categories / catalogs -->
           <#-- top categories -->
           <#list catHelper.makeCategoryInfos(topLevelList) as catInfo>
               <@categoryList catInfo=catInfo productCategoryId=catInfo.productCategoryId level=0 isMultiLevel=false path="" count=0 previousCategoryId=""/>

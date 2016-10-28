@@ -147,7 +147,7 @@ ${virtualJavaScript!}
             },
             error: function(data) {
                 <#-- FIXME: better message -->
-                alert("${uiLabelMap.CommonError?js_string}");
+                alert("${escapeVal(uiLabelMap.CommonError, 'js')}");
                 <#-- SCIPIO: prevent connection fail causing weirdness -->
                 event.preventDefault();
             }
@@ -184,7 +184,8 @@ ${virtualJavaScript!}
                 <#assign instructions = escapeVal(question.content.get("INSTRUCTIONS")!, 'htmlmarkup', {"allow":"internal"})>
                 <#if instructions?has_content>
                   <#-- SCIPIO: don't understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
-                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a> -->
+                      also, FIXME: js escaping for instructions
+                  <a href="javascript:showErrorAlert('${escapeVal(uiLabelMap.CommonErrorMessage2, 'js-html')}','${escapeVal(question.content.get("INSTRUCTIONS")!, 'js-html'}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a> -->
                   <@modal label=uiLabelMap.OrderInstructions><p>${instructions}</p></@modal>
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
@@ -366,7 +367,7 @@ ${virtualJavaScript!}
               <#if hasDesc></p></#if>
 
               <#-- example of showing a certain type of feature with the product -->
-              <#-- Scipio: not now
+              <#-- SCIPIO: not now
               <#if sizeProductFeatureAndAppls?has_content>
                 <div>
                   <#if (sizeProductFeatureAndAppls?size == 1)>
@@ -457,7 +458,7 @@ ${virtualJavaScript!}
             <#macro amountField>
                 <#local fieldStyle = "">
                 <#if (product.requireAmount!"N") != "Y">
-                    <#-- Scipio: Issues with css
+                    <#-- SCIPIO: Issues with css
                     <#assign hiddenStyle = styles.hidden!/>-->
                     <#local fieldStyle = "display: none;">
                 </#if>
@@ -469,7 +470,7 @@ ${virtualJavaScript!}
                 <#assign inStock = true>
                 <#-- Variant Selection -->
                 <#if (product.isVirtual!?upper_case) == "Y">
-                  <#-- Scipio: TODO: support for virtual products -->
+                  <#-- SCIPIO: TODO: support for virtual products -->
                   <#if variantTree?? && (0 < variantTree.size())>
                     <#list featureSet as currentType>
                       <@field type="select" name="FT${currentType}" onChange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
@@ -642,7 +643,7 @@ ${virtualJavaScript!}
 
 </@section>
 
-  <#-- Scipio: Not for now
+  <#-- SCIPIO: Not for now
   <#- Product Reviews ->
   <@tr>
     <@td colspan="2">

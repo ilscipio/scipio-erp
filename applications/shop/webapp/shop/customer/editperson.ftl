@@ -18,13 +18,13 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
 
 <#if person??>
-  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.PartyEditPersonalInformation/>-->
+  <#-- SCIPIO: duplicate: <#assign sectionTitle = uiLabelMap.PartyEditPersonalInformation/>-->
   <#assign sectionTitle = ""/>
 <#else>
   <#assign sectionTitle = uiLabelMap.PartyAddNewPersonalInformation/>
@@ -36,7 +36,7 @@ under the License.
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
-  <#-- Scipio: Bugfix? action used to be this: <#if person??>updatePerson<#else>createPerson/${donePage}</#if> 
+  <#-- SCIPIO: Bugfix? action used to be this: <#if person??>updatePerson<#else>createPerson/${donePage}</#if> 
     but the view override is inconsistent with the other edit*.ftl pages. -->
   <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>createPerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editpersonform">    
 

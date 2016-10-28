@@ -20,7 +20,7 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <#assign columns=6>
 
-  <#-- Scipio: Warning to prevent confusion... -->
+  <#-- SCIPIO: Warning to prevent confusion... -->
   <#if cart.getOrderType() != "PURCHASE_ORDER" && (!carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0)>
     <@alert type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.OrderNoShipMethodAvailable} ${uiLabelMap.OrderMayNotProceedWithOrder}</@alert>
   </#if>

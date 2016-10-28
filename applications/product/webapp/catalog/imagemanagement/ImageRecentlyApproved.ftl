@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
         
-<#-- Scipio: this needs an explanation: 
+<#-- SCIPIO: this needs an explanation: 
      on stock this page grouped products by date and for each date showed a list of products,
      but no actual images.
      we want sample images at least, so instead of grouping by date we just make a tile
@@ -27,12 +27,12 @@ under the License.
         but they'll be really small -->
 <@grid type="tiles" tilesType="gallery1">    
     <#list productContentEntries as productContentEntry>
-    <#if productContentEntry?has_content> <#-- Scipio: WARN: entries may be null! -->
+    <#if productContentEntry?has_content> <#-- SCIPIO: WARN: entries may be null! -->
       <#if productContentEntry.approved?has_content>
         <#list productContentEntry.approved as show>
           <#assign thumbSrc = (productContentEntry.sampleImageList[show_index].productImageThumb)!"">
           <#assign targetLink><@ofbizUrl>ListImageRecentlyApproved?productId=${rawString(show.productId)}&date1=${rawString(productContentEntry.timeStampDate1)}&date2=${rawString(productContentEntry.timeStampDate2)}&showDate=${rawString(productContentEntry.date)}</@ofbizUrl></#assign>
-          <#-- Scipio: NOTE: the productContentEntry.date used to be in a wrapper around the entries (outside
+          <#-- SCIPIO: NOTE: the productContentEntry.date used to be in a wrapper around the entries (outside
                <#list productContentEntry.approved as show>). but we'll just integrate it into the tiles as title. -->
           <@tile size="normal" image=thumbSrc title="${productContentEntry.date} - ${rawString(show.productId)}" link=targetLink>
             <#--link whole tile instead and put product ID in title

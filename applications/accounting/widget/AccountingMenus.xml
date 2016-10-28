@@ -160,7 +160,7 @@
         </menu-item>
     </menu>
     
-    <!-- Scipio: New settings sidebar -->
+    <!-- SCIPIO: New settings sidebar -->
     <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
@@ -821,7 +821,7 @@
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
-        <!-- Scipio: Commented out for now. Will need to relocate it to a proper place at some point   -->
+        <!-- SCIPIO: Commented out for now. Will need to relocate it to a proper place at some point   -->
         <!-- <menu-item name="EditCustomTimePeriod" title="${uiLabelMap.AccountingEditCustomTimePeriods}">
             <condition>
                 <if-has-permission permission="PERIOD_MAINT" />
@@ -953,7 +953,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <!-- Scipio: TODO: REVIEW IF NEEDED (came from upstream)
+        <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
         <menu-item name="invoiceTerms" title="${uiLabelMap.PartyTerms}">
             <condition>
                 <and>
@@ -1209,7 +1209,7 @@
                 <parameter param-name="statusId" value="INVOICE_CANCELLED" />
             </link>
         </menu-item>
-        <!-- Scipio: Disabled feature for now (how useful is this?!
+        <!-- SCIPIO: Disabled feature for now (how useful is this?!
         <menu-item name="saveInvoiceAsTemplate" title="${uiLabelMap.AccountingInvoiceSaveAsTemplate}" widget-style="+${styles.action_run_sys} ${styles.action_copy}">
             <condition>
                 <and>

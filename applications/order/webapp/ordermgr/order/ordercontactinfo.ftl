@@ -19,7 +19,7 @@ under the License.
 
 <#macro updateOrderContactMech orderHeader contactMechTypeId contactMechList contactMechPurposeTypeId contactMechAddress>
   <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-    <@modal label="(${uiLabelMap.CommonEdit})" id="modal_updateOrderContactMech_${contactMechTypeId}">
+    <@modal label="(${rawLabel('CommonEdit')})" id="modal_updateOrderContactMech_${contactMechTypeId}">
         <form name="updateOrderContactMech" method="post" action="<@ofbizUrl>updateOrderContactMech</@ofbizUrl>">
           <input type="hidden" name="orderId" value="${orderId!}" />
           <input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurpose.contactMechPurposeTypeId!}" />

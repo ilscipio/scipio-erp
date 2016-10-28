@@ -353,12 +353,12 @@ under the License.
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.OrderLastOrderedDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
-                          <@td>${lastOrderedString?default("${uiLabelMap.OrderNotYetOrdered}")}</@td>
+                          <@td>${lastOrderedString!(uiLabelMap.OrderNotYetOrdered)}</@td>
                         </@tr>
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.EcommerceEstimateNextOrderDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
-                          <@td>${nextTimeString?default("${uiLabelMap.EcommerceNotYetKnown}")}</@td>
+                          <@td>${nextTimeString!(uiLabelMap.EcommerceNotYetKnown)}</@td>
                         </@tr>
                       </@table>
                     </div>

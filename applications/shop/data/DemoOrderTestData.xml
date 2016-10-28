@@ -125,7 +125,7 @@ under the License.
     <ItemIssuance itemIssuanceId="9000" orderId="Demo1001" orderItemSeqId="00001" shipGroupSeqId="00001" shipmentId="9997" shipmentItemSeqId="00001" issuedDateTime="2009-08-13 17:46:29.603" quantity="2.000000"/>
 
     <Invoice invoiceId="8008" invoiceTypeId="PURCHASE_INVOICE" description="Purchase Order Invoice" partyIdFrom="DemoSupplier" partyId="Company" statusId="INVOICE_READY" invoiceDate="2009-08-13 17:47:47.929" currencyUomId="USD"/>
-    <!-- Scipio: FIXME?: It's not clear currently if description should be product name or description field - see createInvoiceItem service -->
+    <!-- SCIPIO: FIXME?: It's not clear currently if description should be product name or description field - see createInvoiceItem service -->
     <InvoiceItem invoiceId="8008" invoiceItemSeqId="00001" invoiceItemTypeId="PINV_FPROD_ITEM" productId="CAM-2644" quantity="2.000000" amount="24.000" description="The retro analog Nikon camera with FM2 film"/>
     <OrderItemBilling orderId="Demo1001" orderItemSeqId="00001" invoiceId="8008" invoiceItemSeqId="00001" shipmentReceiptId="9000" quantity="2.000000" amount="24.00"/>
     <AcctgTrans acctgTransId="9001" acctgTransTypeId="PURCHASE_INVOICE" transactionDate="2009-08-13 18:58:34.65" isPosted="Y" postedDate="2009-08-13 18:58:35.08" glFiscalTypeId="ACTUAL" partyId="DemoSupplier" roleTypeId="BILL_FROM_VENDOR" invoiceId="8008"/>

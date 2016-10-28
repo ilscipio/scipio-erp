@@ -42,7 +42,7 @@ under the License.
   </#list>
 </#macro>
 
-<#-- Scipio: FIXME: hides scipio macro of same name -->
+<#-- SCIPIO: FIXME: hides scipio macro of same name -->
 <#macro section inSection level first="no">
   <#list inSection.* as subSection>
     <#if subSection?node_name == "title">

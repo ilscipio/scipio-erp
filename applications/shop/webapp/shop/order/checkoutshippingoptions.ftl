@@ -57,18 +57,18 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<@section title="${rawLabel('OrderHowShallWeShipIt')}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2) ${uiLabelMap.OrderHowShallWeShipIt}? -->
+<@section title="${rawLabel('OrderHowShallWeShipIt')}?"><#-- SCIPIO: No numbers for multi-page checkouts, make checkout too rigid: 2) ${uiLabelMap.OrderHowShallWeShipIt}? -->
     <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
         <#--<fieldset>-->
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>
 
-            <#-- Scipio: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
+            <#-- SCIPIO: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
             <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
             <@field type="generic" label=wrapAsRaw("<strong>${uiLabelMap.OrderShippingMethod}</strong>", 'htmlmarkup') required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
-                <#-- Scipio: For shop, will not show ship methods whose shipping estimates returned an error.
+                <#-- SCIPIO: For shop, will not show ship methods whose shipping estimates returned an error.
                     Selecting them here causes the next events to fail (offline calc for these was not supported in ecommerce). 
                     Some stores may want to let customers place
                     orders with offline calculation, but we know the failure is very likely to be misconfiguration

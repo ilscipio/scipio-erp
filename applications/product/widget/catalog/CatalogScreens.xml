@@ -71,7 +71,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#EditProdCatalog -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#EditProdCatalog -->
     <screen name="ScipioEditProdCatalog">
         <section>
             <widgets>
@@ -130,7 +130,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
     <screen name="ScipioAddProductCategoryToProdCatalog">
         <section>
             <actions>
@@ -141,7 +141,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
      <screen name="ScipioProdCatalogCategoryList">
         <section>
             <actions>
@@ -182,7 +182,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#AddProdCatalogToParty -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#AddProdCatalogToParty -->
     <screen name="ScipioAddProdCatalogToParty">
         <section>
             <actions>
@@ -196,7 +196,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProdCatalogToParty -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProdCatalogToParty -->
     <screen name="ScipioProdCatalogPartyList">
         <section>
             <actions>
@@ -243,7 +243,7 @@ under the License.
         </section>
     </screen> -->
     
-     <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#CreateProductStoreCatalog -->
+     <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#CreateProductStoreCatalog -->
     <screen name="ScipioAddProdCatalogToStore">
         <section>
             <actions>
@@ -256,7 +256,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProductStoreCatalog -->
+    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProductStoreCatalog -->
     <screen name="ScipioProdCatalogStoreList">
         <section>
             <actions>

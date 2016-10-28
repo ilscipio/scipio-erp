@@ -45,10 +45,10 @@ under the License.
             <@field type="input" label=uiLabelMap.ProductProductName name="productName" value=((product.productName?html)!) size="30" maxlength="60"/>
             <@field type="textarea" label=uiLabelMap.ProductProductDescription name="description" cols="60" rows="2">${(product.description)!}</@field>
             <@field type="textarea" label=uiLabelMap.ProductLongDescription class="+dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</@field>
-            <#-- Scipio: Now points to shop -->
+            <#-- SCIPIO: Now points to shop -->
             <#assign fieldTooltip>${rawLabel('ProductIfNotSpecifiedDefaultsIsProductdetail')} "productdetail", ${rawLabel('ProductDetailScreenMessage')}: "component://shop/widget/CatalogScreens.xml#productdetail"</#assign>
             <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" value=((product.detailScreen)!) size="60" maxlength="250" tooltip=fieldTooltip/>
-            <#-- Scipio: FIXME: same pattern copy-pasted... -->
+            <#-- SCIPIO: FIXME: same pattern copy-pasted... -->
             <#assign labelDetail>
               <#if (product.smallImageUrl)??>
                 <a href="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Small Image" src="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall"/></a>

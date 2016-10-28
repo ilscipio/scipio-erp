@@ -20,7 +20,7 @@ under the License.
 
 <entity-engine-xml>
 
-    <!-- Scipio: Unneeded. The screens referenced below are considered removed.
+    <!-- SCIPIO: Unneeded. The screens referenced below are considered removed.
 
     <Content contentId="BLOGROOT" contentTypeId="WEB_SITE_PUB_PT"
         ownerContentId=""

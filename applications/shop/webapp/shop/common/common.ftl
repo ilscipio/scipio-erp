@@ -1,5 +1,5 @@
 
-<#-- Scipio: common shop-wide helper definitions and macros -->
+<#-- SCIPIO: common shop-wide helper definitions and macros -->
 
 <#macro addressUpdateLink address updateLink class="">
   <#local class = addClassArg(class, styles.action_update!)>
@@ -252,7 +252,7 @@ jQuery(document).ready(function() {
 
 </#macro>
 
-<#-- Scipio: local macro where cells of label and widget areas are inverted and tweaked 
+<#-- SCIPIO: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: You can set labelContentFieldsType="default-compact" for a different default look
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType -->
 <#macro commonInvField args={} inlineArgs...>
@@ -369,7 +369,7 @@ jQuery(document).ready(function() {
   </#if>
     <#local args = inlineArgs>
     <@field type="select" name=name label=label>
-        <#-- Scipio: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+        <#-- SCIPIO: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
             This is probably an error because the values read from DB become hard to re-localize.
             It is better to store these as values coded in english (and localize on print only). -->
         <#assign personalTitle = params[name]!(args.personalTitle)!"">
@@ -403,7 +403,7 @@ jQuery(document).ready(function() {
 
 
 <#function getLocalizedPersonalTitle personalTitle>
-    <#-- Scipio: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+    <#-- SCIPIO: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
         This is probably an error because the values read from DB become hard to re-localize.
         It is better to store these as values coded in english (and localize on print only). 
         But otherwise, this function is a best-effort only. -->

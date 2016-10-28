@@ -540,7 +540,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <!-- Scipio: DemoDataGenerator sidebar menu -->
+    <!-- SCIPIO: DemoDataGenerator sidebar menu -->
     <!-- SCIPIO: NOTE: this is not in use -->
     <menu name="DemoDataGeneratorSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ListDemoDataGeneratorServices" title="${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">
@@ -570,7 +570,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <!-- Scipio: nested menu test -->
+    <!-- SCIPIO: nested menu test -->
     <menu name="LayoutDemoNestedButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="top1" title="Toplevel1">
             <link target="${demoTargetUrl}">
@@ -605,7 +605,7 @@ under the License.
                         <parameter param-name="demoParam3"/>
                     </link>
                 </menu-item>
-                <!-- Scipio: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
+                <!-- SCIPIO: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
                 <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
                     <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
                         <link target="${demoTargetUrl}">
@@ -643,12 +643,12 @@ under the License.
         </menu-item>
     </menu>
     
-    <!-- Scipio: Just here to demonstrate sub-menu-model local lookup -->
+    <!-- SCIPIO: Just here to demonstrate sub-menu-model local lookup -->
     <menu name="LayoutDemoButtonDropdownMenuModel" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-link-style="+my-dropdown-item-link">
     </menu>
     
-    <!-- Scipio: button menu with nested button-dropdown test -->
+    <!-- SCIPIO: button menu with nested button-dropdown test -->
     <menu name="LayoutDemoButton2" menu-container-style="+my-special-button-menu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
         default-widget-style="+my-list-item">
         <menu-item name="top1" title="Toplevel1" widget-style="my-list-item-override-style">
@@ -665,7 +665,7 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <!-- Scipio: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
+        <!-- SCIPIO: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
             use sub-menu-title instead). sub-menu-model means the default styles will be fetched from the specified menu
             instead of this top-level menu. -->
         <menu-item name="top3">
@@ -686,7 +686,7 @@ under the License.
                 </menu-item>
             </sub-menu>
         </menu-item>
-        <!-- Scipio: DEPRECATED, OLD SYNTAX, DO NOT USE. ALWAYS USE SUB-MENU ELEMENT FROM NOW ON. -->
+        <!-- SCIPIO: DEPRECATED, OLD SYNTAX, DO NOT USE. ALWAYS USE SUB-MENU ELEMENT FROM NOW ON. -->
         <menu-item name="top3b" sub-menu-model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" sub-menu-title="Sub-menu, as button-dropdown (deprecated)">
             <menu-item name="nestednestednested1" title="Nestednestednested1">
                 <link target="${demoTargetUrl}">

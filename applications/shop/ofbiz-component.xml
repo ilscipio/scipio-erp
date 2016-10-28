@@ -29,7 +29,7 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ShopTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ShopSecurityData.xml"/>
     
-    <!-- Scipio: most demo data structure is derived from the original data under /specialpurpose/ecommerce/data/ 
+    <!-- SCIPIO: most demo data structure is derived from the original data under /specialpurpose/ecommerce/data/ 
         but heavily customized and reorganized. -->
     
     <!-- demo data: store -->
@@ -91,7 +91,7 @@ under the License.
         menu-name="secondary"
         />
     -->
-    <!-- Scipio: Legacy mount-point redirect -->
+    <!-- SCIPIO: Legacy mount-point redirect -->
     <webapp name="ecommerce"
         title="SCIPIO Commerce"
         server="default-server"

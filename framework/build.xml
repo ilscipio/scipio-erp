@@ -17,7 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- Scipio: don't include this; invalid: default="build" -->
+<!-- SCIPIO: don't include this; invalid: default="build" -->
 <project name="OFBiz Framework Build" basedir=".">
     <filelist id="framework-builds" dir="framework"
         files="start/build.xml,base/build.xml,

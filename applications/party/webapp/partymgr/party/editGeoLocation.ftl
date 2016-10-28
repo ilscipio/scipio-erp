@@ -72,7 +72,7 @@ under the License.
         if (geocoder) {
             geocoder.geocode({'address': address}, function(result, status) {
               if (status != google.maps.GeocoderStatus.OK) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonAddressNotFound}");
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonAddressNotFound, 'js')}");
             } else {
                 var point = result[0].geometry.location; 
                 var lat = point.lat().toFixed(5);

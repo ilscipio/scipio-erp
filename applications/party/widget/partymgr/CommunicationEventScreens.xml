@@ -1142,7 +1142,7 @@ under the License.
                                             <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                             <section>
                                                 <actions>          
-                                                    <!-- Scipio: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
+                                                    <!-- SCIPIO: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
                                                     <set field="showProgress" type="Boolean" value="false" /> 
                                                     <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=EMAIL_COMMUNICATION&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
                                                     <set field="progressOptions" value="{}" />
@@ -1200,7 +1200,7 @@ under the License.
                                             <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                             <section>
                                                 <actions>          
-                                                    <!-- Scipio: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
+                                                    <!-- SCIPIO: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
                                                     <set field="showProgress" type="Boolean" value="false" /> 
                                                     <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=COMMENT_NOTE&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
                                                     <set field="progressOptions" value="{}" />

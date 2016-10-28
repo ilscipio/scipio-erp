@@ -97,7 +97,7 @@
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <!-- Scipio: To be removed -->
+        <!-- SCIPIO: To be removed -->
         <!-- <menu-item name="FacilityChildren" title="${uiLabelMap.CommonEntityChildren}">
             <link target="FacilityChildren">
                 <parameter param-name="facilityId"/>

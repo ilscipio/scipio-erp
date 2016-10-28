@@ -193,7 +193,7 @@ under the License.
     <screen name="main-decorator">
         <section>
             <actions>
-                <!-- Scipio: NOTE: Here we set defaults in the parameters maps. It is okay because it is run once
+                <!-- SCIPIO: NOTE: Here we set defaults in the parameters maps. It is okay because it is run once
                     for the main request, but other screens with local scopes should usually set context vars instead (which have priority) -->
                 <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="12"/> <!-- Number of items to be displayed on a page -->
                 <set field="parameters.INDEX_SIZE" from-field="parameters.INDEX_SIZE" default-value="0"/> <!-- View index for a list of items-->
@@ -237,7 +237,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <!-- Scipio: now points to shop -->
+                                <!-- SCIPIO: now points to shop -->
                                 <label style="warning" text="A Product Store has not been defined for this shop."/>
                             </fail-widgets>
                         </section>
@@ -325,7 +325,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <actions>
-                                <!-- Scipio: TODO: This category ID should be configurable -->
+                                <!-- SCIPIO: TODO: This category ID should be configurable -->
                                 <set field="productCategoryId" value="PROMOTIONS"/> <!-- value="ELTRN-100" -->
                                 <set field="viewSize" value="12"/>
                                 <set field="viewIndex" value="0"/>
@@ -339,7 +339,7 @@ under the License.
                         <include-screen name="ScipioDashboardSlider"/>
                         <section>
                             <actions>
-                                <!-- Scipio: TODO: This category ID should be configurable -->
+                                <!-- SCIPIO: TODO: This category ID should be configurable -->
                                 <set field="productCategoryId" value="ELTRN-100"/>
                                 <set field="viewSize" value="6"/>
                                 <set field="viewIndex" value="0"/>

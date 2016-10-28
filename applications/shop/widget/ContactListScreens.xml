@@ -21,7 +21,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- Scipio: Duplicated from: component://marketing/widget/ContactListScreens.xml#DefaultOptOutScreen -->
+    <!-- SCIPIO: Duplicated from: component://marketing/widget/ContactListScreens.xml#DefaultOptOutScreen -->
     <screen name="DefaultOptOutScreen">
         <section>            
             <widgets>
@@ -36,7 +36,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Duplicated from: component://marketing/widget/ContactListScreens.xml#OptOutResponse -->
+    <!-- SCIPIO: Duplicated from: component://marketing/widget/ContactListScreens.xml#OptOutResponse -->
     <screen name="OptOutResponse">
         <section>
             <actions>

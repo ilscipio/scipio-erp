@@ -1,16 +1,26 @@
 <#--
 * Scipio FTL doc common markup and utilities
 *
-* WARN: Don't add macros/functions here with same names as live template API 
-*     names!
+* WARN: DO NOT MODIFY MARKUP HERE unless you are sure you want to change it for
+*     ALL template types (basic html, website, ofbiz)
 *
+* WARN: These definitions CRUSH the standard API ones if they are present, by default!
+*     Avoid macros/functions here with same names as live template API names!
+*
+* NOTE: if rendering from non-dynamic context, caller must include ftlDocStdLibEmu.ftl before this.
 -->
-  
+
 <#-- 
 *************************************
 * LINK FUNCTIONS *
 *************************************
 -->
+
+<#-- OVERRIDABLE callback that you can use the rewrite doc URIs manually.
+    This affects only the links href, not their text. -->
+<#function transformDocUri uri>
+  <#return uri>
+</#function>
 
 <#function makeRelInterLibUrl targetLibDocPath targetName=""><#-- default one -->
   <#if docOutFileExt?has_content>
@@ -18,7 +28,8 @@
       <#local targetLibDocPath = targetLibDocPath + docOutFileExt>
     </#if>
   </#if>
-  <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, libInfo.libDocPath)!""><#t>
+  <#local targetLibDocPath = transformDocUri(targetLibDocPath)>
+  <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, transformDocUri(libInfo.libDocPath))!""><#t>
   <#if targetName?has_content>
     <#return relLibDocPath + "#" + targetName>
   <#else>
@@ -33,6 +44,7 @@
       <#local targetLibDocPath = targetLibDocPath + docOutFileExt>
     </#if>
   </#if>
+  <#local targetLibDocPath = transformDocUri(targetLibDocPath)>
   <#if targetLibDocPath?starts_with("/")>
     <#local absLibDocPath = baseAbsInterLibUrl + targetLibDocPath>
   <#else>
@@ -45,24 +57,23 @@
   </#if>
 </#function>
 
-<#-- WE use the relative builder by default. caller can override this with the other, or something else entirely. -->
+<#-- WE use the relative builder by default. template can override this with the other, or something else entirely. -->
 <#assign makeInterLibUrl = makeRelInterLibUrl>
 
 
-  
 <#-- reference to another entry. name is either a full reference or name only, with or without @ or #. -->
-<#macro entryRef name>
+<#macro entryRef name escape=true>
   <#local searchRes = tmplHelper.findEntryGlobal(name, entryMap, libMap)!false>
   <#if !searchRes?is_boolean>
-    <@entryRef_markup entry=searchRes /><#t>
+    <@entryRef_markup entry=searchRes escape=escape/><#t>
   </#if>
 </#macro>
 
-<#macro entryRef_markup entry>
+<#macro entryRef_markup entry escape=true>
   <#if entry.libDocPath?has_content>
-    <a href="${makeInterLibUrl(entry.libDocPath, "entry-" + entry.rawName)}">${escapeText(entry.name, escape)}</a><#t>
+    <a href="${escapeVal(makeInterLibUrl(entry.libDocPath, "entry-" + entry.rawName), 'html')}">${escapeText(entry.name, escape)}</a><#t>
   <#else>
-    <a href="#entry-${entry.rawName}">${escapeText(entry.name, escape)}</a><#t>
+    <a href="#entry-${escapeVal(entry.rawName, 'html')}">${escapeText(entry.name, escape)}</a><#t>
   </#if>
 </#macro>
 
@@ -73,12 +84,12 @@
 *************************************
 -->
 
-<#-- helper -->
+<#-- escapes text as HTML, if escape true -->
 <#function escapeText text escape=true>
   <#if escape>
-    <#return text?html>
+    <#return escapeVal(text, 'html')>
   <#else>
-    <#return text>
+    <#return rawString(text)>
   </#if>
 </#function>
 
@@ -115,7 +126,7 @@
 <#-- Does bold, underline, italic (rudimentary!)
    NOTE: some of this overlaps with interpretedText; that's okay -->
 <#function decorateText text>
-  <#return text?replace("{{{", "<code>")?replace("}}}", "</code>")
+  <#return rawString(text)?replace("{{{", "<code>")?replace("}}}", "</code>")
     ?replace("(((", "")?replace(")))", "")
     ?replace("'{3}(.*?)'{3}", "<strong>$1</strong>", "r")?replace("(&#39;){3}(.*?)(&#39;){3}", "<strong>$2</strong>", "r")
     ?replace("'{2}(.*?)'{2}", "<em>$1</em>", "r")?replace("(&#39;){2}(.*?)(&#39;){2}", "<em>$2</em>", "r")
@@ -131,12 +142,12 @@
 
 <#-- interprets {{{, ((( and auto-highlighted entry references -->
 <#macro interpretedText text autoEntryRefs=true escape=true>
-  <#list tmplHelper.splitByTextualElems(text, entryMap, libMap, libInfo) as entry>
+  <#list tmplHelper.splitByTextualElems(rawString(text), entryMap, libMap, libInfo) as entry>
     <#if entry?is_hash>
       <#if entry.type == "entryref">
         <#-- NOTE: prevent duplicate refs via global record -->
         <#if autoEntryRefs && ((preventDuplicateEntryRefs!false) == false || !(currentRecordedEntryRefs!{})[entry.name]??)>
-          <@entryRef_markup entry=entry /><#t>
+          <@entryRef_markup entry=entry escape=escape/><#t>
           <#-- Record the entry ref in global hashes for some custom stuff (NOTE: slow) -->
           <#global allRecordedEntryRefs = (allRecordedEntryRefs!{}) + {entry.name : "true"}>
           <#global currentRecordedEntryRefs = (currentRecordedEntryRefs!{}) + {entry.name : "true"}>
@@ -144,7 +155,11 @@
           <@decoratedText text=entry.origText escape=escape /><#t>
         </#if>
       <#elseif entry.type == "link">
-        <a href="${entry.value}">${escapeText(entry.text, escape)}</a><#t>
+        <#if (entry.isDocLink!false) == true>
+          <a href="${makeInterLibUrl(entry.value)}">${escapeText(entry.text, escape)}</a><#t>
+        <#else>
+          <a href="${entry.value}">${escapeText(entry.text, escape)}</a><#t>
+        </#if>
       <#elseif entry.type == "text-raw">
         ${entry.value}<#t>
       <#elseif entry.type == "text-plain">

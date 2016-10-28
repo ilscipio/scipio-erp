@@ -1,15 +1,20 @@
 <#--
-* Scipio FTL doc formatting template, Hosted Web version
+* Scipio FTL doc formatting template - Dynamic Ofbiz version (for hosting within Ofbiz instance)
 * 
-* WARN: This is EXTREMELY confusing because of the
-* multiple ObjectWrappers used and mixing two libraries,
-* with no namespaces!!! 
-* The doc datamodel has NO auto-escaping, but
-* all other screen values like regular context DO auto-escaping.
+* This contains live usage of Scipio templating API (for use within Ofbiz only).
+*
+* DEV NOTE: PLEASE COMMENT rather than delete.
+*
+* WARN: This dynamic template is EXTREMELY confusing because of the multiple 
+*     Freemarker ObjectWrappers used and mixing of two libraries (ftlDocCommon.ftl and standard templating API),
+*     and two data models, all with no namespaces!!! 
+*     The data model for the source documents has NO auto html-escaping, but
+*     all other screen values from regular Ofbiz screen context DO have auto html-escaping.
 * 
-* {{{escapeVal}}} should be able to handle security in all cases,
-* at least, but can't use in the common file right now.
+* NOTE: {{{escapeVal}}} should be able to handle security in all cases,
+*     at least, but it can't be used in the ftlDocCommon.ftl file right now (TODO).
 * 
+* See ftlDocTemplate.ftl for more information.
 -->
 <#if (libFormat!"") == "scipio-lib">
 
@@ -67,50 +72,9 @@
 *************************************
 -->
 
+<#-- NOTE: the styles that were initially here have been moved into each theme
+    TODO: REVIEW the styles for this, in each theme -->
 <style type="text/css">
-table.entry-parameters {
-  width: 100%;
-  border: 1px outset black;
-}
-
-table.entry-parameters td {
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  border: 1px solid black;
-}
-
-table.entry-parameters td.entry-paramname {
-  width: 20%;
-}
-
-.lib-entry-detail {
-  font-style: italic;
-  font-size: 0.6em;
-}
-
-.lib-entry-formalname {
-  font-weight: bold;
-}
-
-.lib-entry-param-desc-extradesc {
-  font-size: 0.8em;
-}
-
-.lib-entry-params-details {
-  font-size: 0.8em;
-}
-
-ul {
-  margin-top: 0.3em;
-  margin-bottom: 0.4em;
-}
-
-pre {
-  margin-top: 0.3em;
-  margin-bottom: 0.4em;
-}
 
 <#-- FIXME: this is a hack to make page readable when no login on default theme -->
 <#if !userLogin?? && (visualThemeId!) == "METRO">
@@ -128,7 +92,8 @@ pre {
 *************************************
 -->  
 
-<div class="doc-main-content">   
+<div class="tmpldoc-content">
+  <div class="lib-page-intro">
     <#if !userLogin??><#-- FIXME: hack for no-login -->
       <h1 class="lib-pagetitle">${title}</h1>
     </#if>
@@ -229,7 +194,9 @@ pre {
       </p>
     </div>
   </#if>
-    
+  
+  </div>
+  
     <#-- NOTE: there is a global entryMap, and each section also has its own entryMap -->
 
   <#list sectionMap?keys as sectionName> 

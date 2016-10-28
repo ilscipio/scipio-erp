@@ -55,7 +55,7 @@ document.lookupinventory.productId.focus();
       <#if inventoryList?has_content>
         <p class="${styles.float_left!}">${uiLabelMap.CommonElementsFound}</p>
 
-    <#-- Scipio: FIXME?: I'm not sure this search works properly... -->
+    <#-- SCIPIO: FIXME?: I'm not sure this search works properly... -->
     <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
     <@paginate mode="content" url=makeOfbizUrl("FindInventoryEventPlan") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->

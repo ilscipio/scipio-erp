@@ -64,7 +64,7 @@
                 form.submit();
             </#if>
         } else {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CannotFindCmsform}");
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CannotFindCmsform, 'js')}");
         }
 
         return false;

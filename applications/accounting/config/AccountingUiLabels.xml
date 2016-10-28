@@ -9684,7 +9684,7 @@
         <value xml:lang="zh">没有修改，不更新电子资金转账账户</value>
         <value xml:lang="zh_TW">沒有修改,不更新電子資金轉帳帳戶</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="AccountingNoChangesMadeNotUpdatingGiftCard">
         <value xml:lang="de">Keine Änderungen, Gift Card wurde nicht aktualisiert</value>
         <value xml:lang="en">No changes made, not updating Gift Card</value>
@@ -11608,7 +11608,7 @@
         <value xml:lang="zh">支付方式</value>
         <value xml:lang="zh_TW">支付方式</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="AccountingAdditionalPaymentMethods">
         <value xml:lang="de">Zusätzliche Zahlungsmethoden</value>
         <value xml:lang="en">Additional Payment Methods</value>
@@ -20442,7 +20442,7 @@
         <value xml:lang="zh_TW">增加帳單帳戶角色</value>
     </property>
     
-    <!-- Scipio: New Billing Account labels -->
+    <!-- SCIPIO: New Billing Account labels -->
     <property key="PageTitleListBillingAccountRoles">
         <value xml:lang="en">Billing Account Role List</value>
     </property>
@@ -22374,7 +22374,7 @@
         <value xml:lang="zh">交易成功了。</value>
         <value xml:lang="zh_TW">交易成功了.</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="AccountingMaintenanceJobs">
         <value xml:lang="de">Wartung Jobs</value>
         <value xml:lang="en">Maintenance Jobs</value>

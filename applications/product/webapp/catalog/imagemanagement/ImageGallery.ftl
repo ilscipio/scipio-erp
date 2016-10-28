@@ -21,7 +21,7 @@ under the License.
   <#if product?has_content>
       <@heading>${product.productId}</@heading>
   </#if>
-  <#-- Scipio: NOTE: no need for handling rows when have tiles -->
+  <#-- SCIPIO: NOTE: no need for handling rows when have tiles -->
   <@grid type="tiles" tilesType="gallery1">
         <#-- <#assign productName = productTextData >
         <#assign seoUrl = productName.replaceAll(" ", "-") > -->

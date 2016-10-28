@@ -81,7 +81,7 @@ ${virtualJavaScript!}
     }
     function addItem() {
        if (document.addform.add_product_id.value == 'NULL') {
-           showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllRequiredOptions}");
+           showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonPleaseSelectAllRequiredOptions, 'js')}");
            return;
        } else {
            if (isVirtual(document.addform.add_product_id.value)) {
@@ -105,8 +105,8 @@ ${virtualJavaScript!}
 
         if (detailImageUrl == "_NONE_") {
             hack = document.createElement('span');
-            hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
+            hack.innerHTML="${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}";
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}");
             return;
         }
         detailImageUrl = detailImageUrl.replace(/\&\#47;/g, "/");
@@ -207,7 +207,7 @@ ${virtualJavaScript!}
     }
 
     function showAlert(msg) {
-        showErrorAlert("${uiLabelMap.CommonErrorMessage2}",msg);
+        showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}",msg);
     }
 
     function additemSubmit(){
@@ -464,7 +464,7 @@ ${virtualJavaScript!}
             <div id="addCart2" style="display:block;">
               <span style="white-space: nowrap;"><b>${uiLabelMap.CommonQuantity}:</b></span>&nbsp;
               <input type="text" size="5" value="1" disabled="disabled"/>
-              <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+              <a href="javascript:showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js-html')}","${escapeVal(uiLabelMap.CommonPleaseSelectAllFeaturesFirst, 'js-html')}");" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
           </#if>
@@ -647,14 +647,14 @@ ${virtualJavaScript!}
 
   <#-- Any attributes/etc may go here -->
 
-  <#-- Upgrades/Up-Sell/Cross-Sell -->
-  <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
+<#-- Upgrades/Up-Sell/Cross-Sell -->
+<#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
   <#assign targetRequest = "product">
   <#if targetRequestName?has_content>
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <@heading>${beforeName}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName}</@heading>
+    <@heading>${escapeVal(beforeName, 'html')}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${escapeVal(afterName, 'html')}</@heading>
 
     <div class="productsummary-container">
     <#list assocProducts as productAssoc>
@@ -686,13 +686,13 @@ ${virtualJavaScript!}
 <#assign dummy = setRequestAttribute("productValue", productValue)>
 <div id="associated-products">
     <#-- obsolete -->
-    <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolete}" formNamePrefix="obs" targetRequestName=""/>
+    <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolete')}" formNamePrefix="obs" targetRequestName=""/>
     <#-- cross sell -->
-    <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductCrossSell}" formNamePrefix="cssl" targetRequestName="crosssell"/>
+    <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="${rawLabel('ProductCrossSell')}" formNamePrefix="cssl" targetRequestName="crosssell"/>
     <#-- up sell -->
-    <@associated assocProducts=upSellProducts beforeName="${uiLabelMap.ProductUpSell} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
+    <@associated assocProducts=upSellProducts beforeName="${rawLabel('ProductUpSell')} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
     <#-- obsolescence -->
-    <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolescense}" formNamePrefix="obce" targetRequestName=""/>
+    <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolescense')}" formNamePrefix="obce" targetRequestName=""/>
 </div>
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->

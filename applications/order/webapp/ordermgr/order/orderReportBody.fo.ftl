@@ -200,7 +200,7 @@ under the License.
                                     <fo:block>
                                     <#if note.noteParty?has_content>
                                         <#assign notePartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":note.noteParty, "compareDate":note.noteDateTime, "lastNameFirst":"Y", "userLogin":userLogin})/>
-                                        ${uiLabelMap.CommonBy}: ${notePartyNameResult.fullName?default("${uiLabelMap.OrderPartyNameNotFound}")}
+                                        ${uiLabelMap.CommonBy}: ${notePartyNameResult.fullName!(uiLabelMap.OrderPartyNameNotFound)}
                                     </#if>
                                     </fo:block>
                                 </fo:table-cell>

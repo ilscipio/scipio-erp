@@ -123,7 +123,7 @@ jQuery(document).ready(createTree());
             type: 'POST',
             data: {"contentId" : contentId},
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);
@@ -138,7 +138,7 @@ jQuery(document).ready(createTree());
             data: {contentId: contentId,
                         contentAssocTypeId: 'TREE_CHILD'},
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);
@@ -152,7 +152,7 @@ jQuery(document).ready(createTree());
             type: 'POST',
             data: {contentId: contentId},
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);
@@ -166,7 +166,7 @@ jQuery(document).ready(createTree());
             type: 'POST',
             data: {contentIdTo: contentIdTo},
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);
@@ -181,7 +181,7 @@ jQuery(document).ready(createTree());
             type: 'POST',
             data: {contentId : contentId, contentIdTo : contentIdTo, contentAssocTypeId : contentAssocTypeId, fromDate : fromDate},
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 location.reload();
@@ -198,7 +198,7 @@ jQuery(document).ready(createTree());
                      rename: 'Y'
                      },
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);
@@ -212,7 +212,7 @@ jQuery(document).ready(createTree());
             url: url,
             type: 'POST',
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);

@@ -22,7 +22,7 @@ under the License.
     <!-- Demo Content Alternative Url -->
     <!-- The content alternative url come from the contentName in the Content entity.-->
     
-    <!-- Scipio: Currently all these are links to blogs, which is unneeded functionality; 
+    <!-- SCIPIO: Currently all these are links to blogs, which is unneeded functionality; 
         NOTE: Leave these here as examples of how to make alternative URLs (or provide new ones)
     <DataResource dataResourceId="DRS_CNT_URL005" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/Cute-Kid-BLG10000-content" localeString="en_US"/>
     <ElectronicText dataResourceId="DRS_CNT_URL005" textData="Cute Kid"/>

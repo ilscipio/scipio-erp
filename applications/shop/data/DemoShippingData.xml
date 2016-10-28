@@ -170,7 +170,7 @@ under the License.
     <CarrierShipmentMethod partyId="DHL" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" sequenceNumber="7" carrierServiceCode="G"/>
     <!-- End of DHL Data-->
 
-    <!-- Scipio: NOTE: These are still using the stock productStoreShipMethId values due to their familiarity in Ofbiz.
+    <!-- SCIPIO: NOTE: These are still using the stock productStoreShipMethId values due to their familiarity in Ofbiz.
         WARN: For each new store, you must use a new set of productStoreShipMethId values because they are the sole primary key of ProductStoreShipmentMeth (productStoreId not included). -->
     <ProductStoreShipmentMeth productStoreShipMethId="9000" productStoreId="ScipioShop" partyId="_NA_" includeNoChargeItems="Y" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="NO_SHIPPING" sequenceNumber="6"/>
     <ProductStoreShipmentMeth productStoreShipMethId="9001" productStoreId="ScipioShop" partyId="UPS" includeNoChargeItems="N" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" sequenceNumber="3"/>

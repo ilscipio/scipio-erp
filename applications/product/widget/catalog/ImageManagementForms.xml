@@ -509,7 +509,7 @@ under the License.
         <field name="imageY"><hidden/></field>
         <field name="imageW"><hidden/></field>
         <field name="imageH"><hidden/></field>
-        Scipio: widget-area-style here creates an extra div
+        SCIPIO: widget-area-style here creates an extra div
         <field name="imageCropp" widget-area-style=";container:cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}"/></field>
         <field name="imageCropp" use-when="imageURL == null" title="${uiLabelMap.CommonImage}" ><image value="/images/defaultImage.jpg" style="cssImgXLarge"/></field>
     </form>
@@ -535,7 +535,7 @@ under the License.
         <field name="dataResourceId"><hidden/></field>
         <field name="angle"><hidden/></field>
         <field name="imageName"><hidden value="${contentDataResource.drDataResourceName}"/></field>
-        Scipio: widget-area-style here creates an extra div
+        SCIPIO: widget-area-style here creates an extra div
         <field name="imageRotate" widget-area-style=";container:cropbox" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" /></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}" position="1"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">

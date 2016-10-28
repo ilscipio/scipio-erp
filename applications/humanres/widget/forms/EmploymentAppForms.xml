@@ -40,7 +40,7 @@ under the License.
         <alt-target use-when="insideEmployee==null" target="updateEmploymentApp"/>
         <auto-fields-service default-field-type="hidden" service-name="updateEmploymentApp"/>
         <field name="applicationId" title="${uiLabelMap.HumanResApplicationId}">
-            <!-- Scipio: full page link -->
+            <!-- SCIPIO: full page link -->
             <hyperlink target="EditEmploymentApp" description="${applicationId}" also-hidden="true">
                 <parameter param-name="applicationId"/>
             </hyperlink>
@@ -73,7 +73,7 @@ under the License.
                 <parameter param-name="referredByPartyId"/>
             </hyperlink>
         </field>
-        <!-- Scipio: there will be a checkbox... 
+        <!-- SCIPIO: there will be a checkbox... 
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         -->
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
@@ -107,7 +107,7 @@ under the License.
         </field>
         <field name="referredByPartyId" use-when="referredByPartyId!=null"><hidden/></field>
         <field name="approverPartyId"><hidden/></field>
-        <field name="jobRequisitionId"><lookup target-form-name="LookupJobRequisition"/></field><!-- Scipio: show -->
+        <field name="jobRequisitionId"><lookup target-form-name="LookupJobRequisition"/></field><!-- SCIPIO: show -->
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="AddEmploymentApp" type="single" target="createEmploymentApp" default-entity-name="EmploymentApp" 
@@ -120,19 +120,19 @@ under the License.
             prevents us from reordering fields -->
         <auto-fields-service service-name="createEmploymentApp" default-field-type="hidden"/>
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
-        <field name="applicationId" tooltip="${uiLabelMap.CommonLeaveEmptyAutoValue}"><text/></field><!-- Scipio: this should auto-generated if absent: required-field="true" --><!-- Scipio: don't look this up, makes no sense: <lookup target-form-name="LookupEmploymentApp"/> -->
+        <field name="applicationId" tooltip="${uiLabelMap.CommonLeaveEmptyAutoValue}"><text/></field><!-- SCIPIO: this should auto-generated if absent: required-field="true" --><!-- SCIPIO: don't look this up, makes no sense: <lookup target-form-name="LookupEmploymentApp"/> -->
         <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
-        <!-- Scipio: you should be able to specify job req instead of position -->
+        <!-- SCIPIO: you should be able to specify job req instead of position -->
         <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- Scipio: required to avoid errors -->
-            <drop-down current-description=""><!-- Scipio: don't allow empty, to avoid confusion: allow-empty="true"  -->
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- SCIPIO: required to avoid errors -->
+            <drop-down current-description=""><!-- SCIPIO: don't allow empty, to avoid confusion: allow-empty="true"  -->
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_POSITION_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field><!-- Scipio: required to avoid errors, somewhat nonsensical to leave empty -->
+        <field name="applyingPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field><!-- SCIPIO: required to avoid errors, somewhat nonsensical to leave empty -->
         <field name="referredByPartyId" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field>
         <field name="referredByPartyId" use-when="employmentApp!=null"><hidden/></field>
         <field name="employmentAppSourceTypeId">
@@ -142,11 +142,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applicationDate"><date-time default-value="${nowTimestamp}"/></field><!-- Scipio: pre-fill to now -->
+        <field name="applicationDate"><date-time default-value="${nowTimestamp}"/></field><!-- SCIPIO: pre-fill to now -->
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
-    <!-- Scipio: WARN: Unfortunately this had to be duplicated from AddEmploymentApp -->
+    <!-- SCIPIO: WARN: Unfortunately this had to be duplicated from AddEmploymentApp -->
     <form name="EditEmploymentApp" type="single" target="updateEmploymentAppSingle" default-entity-name="EmploymentApp" 
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
@@ -159,17 +159,17 @@ under the License.
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
         <field name="applicationId"><display/></field>
         <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
-        <!-- Scipio: you should be able to specify job req instead of position -->
+        <!-- SCIPIO: you should be able to specify job req instead of position -->
         <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- Scipio: required to avoid errors -->
-            <drop-down current-description=""><!-- Scipio: don't allow empty, to avoid confusion: allow-empty="true"  -->
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- SCIPIO: required to avoid errors -->
+            <drop-down current-description=""><!-- SCIPIO: don't allow empty, to avoid confusion: allow-empty="true"  -->
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_POSITION_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field><!-- Scipio: required to avoid errors, somewhat nonsensical to leave empty -->
+        <field name="applyingPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field><!-- SCIPIO: required to avoid errors, somewhat nonsensical to leave empty -->
         <field name="referredByPartyId" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field>
         <field name="referredByPartyId" use-when="employmentApp!=null"><hidden/></field>
         <field name="employmentAppSourceTypeId">
@@ -179,11 +179,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applicationDate"><date-time default-value="${nowTimestamp}"/></field><!-- Scipio: pre-fill to now -->
+        <field name="applicationDate"><date-time default-value="${nowTimestamp}"/></field><!-- SCIPIO: pre-fill to now -->
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
-    <!-- Scipio: new quick view form -->
+    <!-- SCIPIO: new quick view form -->
     <form name="ViewEmploymentApp" type="single" default-entity-name="EmploymentApp" 
         header-row-style="header-row">
         <actions>

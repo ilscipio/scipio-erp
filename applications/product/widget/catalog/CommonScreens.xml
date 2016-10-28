@@ -548,7 +548,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegator to main-decorator -->
+                    <!-- SCIPIO: delegator to main-decorator -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>                   
@@ -838,7 +838,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
+                    <!-- SCIPIO: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
@@ -877,7 +877,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: New, transferred from Content app -->
+    <!-- SCIPIO: New, transferred from Content app -->
     <screen name="CommonWebSiteDecorator">
         <section>
             <actions>
@@ -949,7 +949,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: New, transferred from Content app -->
+    <!-- SCIPIO: New, transferred from Content app -->
     <screen name="CommonWebAnalyticsDecorator">
         <section>
             <actions>
@@ -1014,7 +1014,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: New, transferred from Content app -->
+    <!-- SCIPIO: New, transferred from Content app -->
     <screen name="CommonContentDecorator">
         <section>
             <actions>
@@ -1193,7 +1193,7 @@ under the License.
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <section>
                                    <actions>
-                                       <!-- Scipio: FIXME: Unhardcode this -->
+                                       <!-- SCIPIO: FIXME: Unhardcode this -->
                                        <set field="productStoreId" value="ScipioShop" global="true"/>
                                    </actions>
                                    <widgets>
@@ -1266,7 +1266,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
+                    <!-- SCIPIO: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
@@ -1298,7 +1298,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
+                    <!-- SCIPIO: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
@@ -1336,7 +1336,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
+                    <!-- SCIPIO: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
@@ -1406,7 +1406,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
+                    <!-- SCIPIO: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
@@ -1476,7 +1476,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
+                    <!-- SCIPIO: delegate to main-decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>

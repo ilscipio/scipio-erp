@@ -86,7 +86,7 @@ function submitForm(form, mode, value) {
     </#assign>
     <@section title=sectionTitle>
         <@fields type="default-manual">
-            <#-- Scipio: TODO: convert tables -->
+            <#-- SCIPIO: TODO: convert tables -->
                 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
                   <@tr>
                     <@td colspan="2">
@@ -271,7 +271,7 @@ function submitForm(form, mode, value) {
         </@fields>
     </@section>
 
-    <@section title="3)${uiLabelMap.OrderHowShallYouPay}?">
+    <@section title="3) ${rawLabel('OrderHowShallYouPay')}?">
         <@fields type="default-manual">
                 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
                   <@tr>

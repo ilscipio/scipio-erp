@@ -988,7 +988,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#local titleContainerClass = addClassArgDefault(titleContainerClass, styles["section_" + styleName + "_" + menuLayoutTitleStyleName + "_titlecontainerclass"]!styles["section_default_" + menuLayoutTitleStyleName + "_titlecontainerclass"]!)>
     <#local menuContainerClass = addClassArgDefault(menuContainerClass, styles["section_" + styleName + "_" + menuLayoutTitleStyleName + "_menucontainerclass"]!styles["section_default_" + menuLayoutTitleStyleName + "_menucontainerclass"]!)>
   
-    <#-- Scipio: we support menuContent as string (html), macro or hash definitions.
+    <#-- SCIPIO: we support menuContent as string (html), macro or hash definitions.
         When string, menuContent is not wrapped in UL when it's received here from macro renderer... 
         NOTE: with recent patch, menuContent passed by renderer is rendered by macro renderer (was not the case before - used old html renderer). -->
     <#if isObjectType("string", menuContent)> <#-- DEV NOTE: WARN: ?is_string would not always work here -->
@@ -1208,7 +1208,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     collapsible=false collapsed=false javaScriptEnabled=false contentId="" saveCollapsed=false expandToolTip="" 
     collapseToolTip="" fullUrlString="" fromScreenDef=false catchArgs...>
   <#return {"preMenuItems":[], "postMenuItems":[]}>
-  <#-- Scipio: TODO: translate this into vars above if/once needed again (as @menuitem args maps within lists)
+  <#-- SCIPIO: TODO: translate this into vars above if/once needed again (as @menuitem args maps within lists)
   <#local preMenuItems></#local>
   <#local postMenuItems>
     <#if menuLayoutTitle != "pre-title" && menuLayoutTitle != "inline-title">

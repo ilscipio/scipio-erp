@@ -1,5 +1,5 @@
 
-<#-- Scipio: TODO: show some cases only if debug mode is on -->
+<#-- SCIPIO: TODO: show some cases only if debug mode is on -->
 <#if debugMode>
 <p>Debug mode: ON</p>
 </#if>

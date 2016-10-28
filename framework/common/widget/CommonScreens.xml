@@ -883,7 +883,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Locales Screen (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- Locales Screen (SCIPIO: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocales">
         <section>
             <actions>
@@ -913,7 +913,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Compact version of list locales (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- SCIPIO: Compact version of list locales (Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocalesCompact">
         <section>
             <actions>
@@ -945,7 +945,7 @@ under the License.
         </section>
     </screen>  
 
-    <!-- Timezones Screen (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- Timezones Screen (SCIPIO: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListTimezones">
         <section>
             <actions>
@@ -975,7 +975,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- List visual themes (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- List visual themes (SCIPIO: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListVisualThemes">
         <section>
             <actions>
@@ -1151,7 +1151,7 @@ under the License.
     <screen name="states">
         <section>
             <actions>
-                <!-- Scipio: we now support currentStateProvinceGeoId -->
+                <!-- SCIPIO: we now support currentStateProvinceGeoId -->
                 <!--<set field="currentStateProvinceGeoId" from-field="currentStateProvinceGeoId" default-value="${''}"/>-->
                 <set field="statesPreselect" from-field="statesPreselect" type="Boolean" default-value="true"/>
                 <set field="statesPreselectFirst" from-field="statesPreselectFirst" type="Boolean" default-value="false"/>
@@ -1166,7 +1166,7 @@ under the License.
     <screen name="countries">
         <section>
             <actions>
-                <!-- Scipio: we now support currentCountryGeoId -->
+                <!-- SCIPIO: we now support currentCountryGeoId -->
                 <!--<set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>-->
                 <property-to-field field="defaultSystemCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
                 <set field="defaultCountryGeoId" from-field="defaultCountryGeoIdOverride" default-value="${defaultSystemCountryGeoId}"/>
@@ -1237,7 +1237,7 @@ under the License.
     </screen>
     
     <!-- 
-        Scipio: WIP - Common decorator for dashboards 
+        SCIPIO: WIP - Common decorator for dashboards 
         Render all child sections in a grid. Grid size may be overriden by passing a 'columns' argument. 
         Although, dashboard grids have size constraints (min col/max col size), defined in widget.properties, 
         in order to force screens that use this decorator to look like as a dashboard.           

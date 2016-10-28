@@ -36,7 +36,7 @@
                 </#list>
             </#if>
         </@field>
-        <!-- FIXME: Scipio: I'm not sure we should allow to change the orderId while editing... -->
+        <#-- SCIPIO: FIXME: I'm not sure we should allow to change the orderId while editing... -->
         <#if shipment?has_content>
             <@field type="display" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId value=(shipment.primaryOrderId!)>
                 <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@ofbizInterWebappUrl>">${shipment.primaryOrderId}</a>

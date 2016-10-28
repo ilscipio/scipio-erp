@@ -35,16 +35,16 @@ under the License.
 
             <#-- standard questions -->
             <@td align='right' nowrap="nowrap">
-              <#assign answerString = "${uiLabelMap.ContentAnswers}">
+              <#assign answerString = uiLabelMap.ContentAnswers>
               <#if (results._total?default(0) == 1)>
-                <#assign answerString = "${uiLabelMap.ContentAnswer}">
+                <#assign answerString = uiLabelMap.ContentAnswer>
               </#if>
               <div>${question.question!} (${results._total?default(0)?string.number} ${answerString})</div>
               <#if question.hint?has_content>
                 <div>${question.hint}</div>
               </#if>
             </@td>
-            <@td width='1'>&nbsp;</@td>
+            <@td width='1'></@td>
 
             <#-- answers -->
             <@td>

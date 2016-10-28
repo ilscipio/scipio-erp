@@ -26,7 +26,7 @@ under the License.
               <#if product.internalName?has_content>
                 ${product.internalName}
               <#else>
-                ${product.productName?default("${uiLabelMap.CommonNo} ${uiLabelMap.ProductInternalName} / ${uiLabelMap.ProductProductName}")}
+                ${product.productName!("${uiLabelMap.CommonNo} ${uiLabelMap.ProductInternalName} / ${uiLabelMap.ProductProductName}")}
               </#if>    
             </a>
             <div>

@@ -29,7 +29,7 @@ under the License.
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTELTRN" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="CNTELTRN" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
 
-    <!-- Scipio: Unneeded - but keep as structure reference
+    <!-- SCIPIO: Unneeded - but keep as structure reference
     <Content contentId="CNTGIZMOS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Gizmos" description="Gizmos" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="CNTGIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>

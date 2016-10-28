@@ -21,7 +21,7 @@
         </#if>
         <#local previousCategoryId = "">
         <#list crumbs as crumb>
-                <#-- Scipio: Try content wrappers set by screen first; if not there, lookup ourselves -->
+                <#-- SCIPIO: Try content wrappers set by screen first; if not there, lookup ourselves -->
                 <#local catContentWrapper = {}>
                 <#if (catContentWrappers[crumb])??>
                   <#local catContentWrapper = catContentWrappers[crumb]>

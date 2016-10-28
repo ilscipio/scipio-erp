@@ -319,7 +319,7 @@ under the License.
                 <set field="isFindQueryInputError" type="Boolean" from-field="rsleRes.isServiceFailure" />
 
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FindOrders.groovy"/>
-                <!-- Scipio: FIXME?: this hangs my rendering for unknown reasons and not currently used by the FTL
+                <!-- SCIPIO: FIXME?: this hangs my rendering for unknown reasons and not currently used by the FTL
                 <script location="component://content/webapp/content/WEB-INF/actions/print/FindPrinters.groovy"/>-->
                 
                 <!-- asmslect parameters, must be prefixed by asm_ for setMultipleSelectJs.ftl -->

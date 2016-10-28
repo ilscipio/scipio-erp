@@ -118,7 +118,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true"> <!-- Scipio: quick setting lets callers override this section -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true"> <!-- SCIPIO: quick setting lets callers override this section -->
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <!--<decorator-section-include name="pre-body"/>-->
                     </decorator-section>
@@ -146,7 +146,7 @@ under the License.
                                         </section>
                                     </widgets>
                                     <fail-widgets>
-                                        <!-- Scipio: duplicate 
+                                        <!-- SCIPIO: duplicate 
                                         <section>
                                             <condition>
                                                 <not><if-empty field="title"/></not>

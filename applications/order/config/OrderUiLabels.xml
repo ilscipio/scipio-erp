@@ -13823,7 +13823,7 @@
         <value xml:lang="zh">单位数量</value>
         <value xml:lang="zh_TW">單位數量</value>
     </property>
-    <!-- Scipio: TODO: translations -->
+    <!-- SCIPIO: TODO: translations -->
     <property key="OrderUnits">
         <value xml:lang="de">Einheiten</value>
         <value xml:lang="en">Units</value>
@@ -15148,12 +15148,12 @@
         <value xml:lang="en">Include Country</value>
         <value xml:lang="fr">Pays inclus</value>
     </property>
-    <!-- Scipio: TODO: translations -->
+    <!-- SCIPIO: TODO: translations -->
     <property key="OrderOrderInfo">
         <value xml:lang="de">Bestell-Info</value>
         <value xml:lang="en">Order Info</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="OrderNoShipMethodAvailable">
         <value xml:lang="de">Keine Versandmethoden.</value>
         <value xml:lang="en">No shipping methods available.</value>
@@ -15189,7 +15189,7 @@
         <value xml:lang="de">Sparen zu berücksichtigen</value>
         <value xml:lang="en">Save to account</value>
     </property>
-    <!-- Scipio: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but this is more direct for time being
+    <!-- SCIPIO: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but this is more direct for time being
         DO NOT REUSE these for now. -->
     <property key="OrderPaymentDescOffline">
         <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder Zahlungsanweisung.</value>

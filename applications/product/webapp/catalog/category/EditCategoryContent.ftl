@@ -33,7 +33,7 @@ under the License.
                 <#else>
                     <#assign fieldValue = "">
                 </#if>
-                <#-- Scipio: Now points to shop -->
+                <#-- SCIPIO: Now points to shop -->
                 <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue tooltip="${rawLabel('ProductDefaultsTo')} \"categorydetail\", ${rawLabel('ProductDetailScreenMessage')}: \"component://shop/widget/CatalogScreens.xml#categorydetail\"" />
                 <@field type="submit" name="Update" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />
         </form>

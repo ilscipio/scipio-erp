@@ -134,7 +134,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: Deprecated in favor to EditShipment -->
+    <!-- SCIPIO: Deprecated in favor to EditShipment -->
    <!--  <screen name="ViewShipment">
         <section>
             <actions>

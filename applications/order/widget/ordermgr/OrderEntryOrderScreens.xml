@@ -301,7 +301,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: Reusable actions -->
+    <!-- SCIPIO: Reusable actions -->
     <screen name="customertaxinfoimpl">
         <!-- meant to be included, generally through a screens.render type of thing -->
         <section>

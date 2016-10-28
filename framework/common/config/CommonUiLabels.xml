@@ -2983,7 +2983,7 @@
         <value xml:lang="zh">显示${lowCount} - ${highCount}，共${total}</value>
         <value xml:lang="zh_TW">顯示${lowCount} - ${highCount},共${total}</value>
     </property>
-    <property key="CommonDisplayingShort"> <!-- Scipio: new -->
+    <property key="CommonDisplayingShort"> <!-- SCIPIO: new -->
         <value xml:lang="ar">${lowCount} إلى ${highCount} من ${total}</value>
         <value xml:lang="cs">${lowCount} - ${highCount} z ${total}</value>
         <value xml:lang="de">${lowCount} - ${highCount} von ${total}</value>
@@ -8679,7 +8679,7 @@
         <value xml:lang="zh_CN">人员</value>
         <value xml:lang="zh_TW">人員</value>
     </property>
-    <!-- Scipio: TODO: Localize (was this from stock?) -->
+    <!-- SCIPIO: TODO: Localize (was this from stock?) -->
     <property key="CommonPersons">
         <value xml:lang="de">Personen</value>
         <value xml:lang="en">Persons</value>
@@ -15556,7 +15556,7 @@
         <value xml:lang="en">Document</value>
         <value xml:lang="fr">Document</value>
     </property>
-    <!-- Scipio: Default lookup titles for xxxAction field names. -->
+    <!-- SCIPIO: Default lookup titles for xxxAction field names. -->
     <property key="FormFieldTitle_addAction">
         <value xml:lang="ar">إضافة</value>
         <value xml:lang="cs">Přidat</value>
@@ -16129,7 +16129,7 @@
         <value xml:lang="zh">${dateLabel} (${dateFormatString})</value>
         <value xml:lang="zh_TW">${dateLabel} (${dateFormatString})</value>
     </property>
-    <!-- Scipio: TODO: better localize -->
+    <!-- SCIPIO: TODO: better localize -->
     <property key="CommonNoRecordFoundSentence">
         <value xml:lang="ar">لم يتم العثور على سجلات</value>
         <value xml:lang="da">Der er ikke fundet nogen registreringer/</value>
@@ -16150,7 +16150,7 @@
         <value xml:lang="zh">没有找到记录</value>
         <value xml:lang="zh_TW">沒有找到記錄</value>
     </property>
-    <!-- Scipio: TODO: localize -->
+    <!-- SCIPIO: TODO: localize -->
     <property key="CommonMedia">
         <value xml:lang="de">Medien</value>
         <value xml:lang="en">Media</value>

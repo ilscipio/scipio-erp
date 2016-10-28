@@ -154,7 +154,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <screen name="FacilityChildren">
         <section>
             <actions>
@@ -505,7 +505,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Commented out, it is very similar to EditFacilityInventoryItems but showing more data.
+    <!-- SCIPIO: Commented out, it is very similar to EditFacilityInventoryItems but showing more data.
         Quite cumbersome, inventory item detail must be presented to the user in a more friendly way -->
     <!-- <screen name="ViewFacilityInventoryItemsDetails">
         <section>
@@ -675,7 +675,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Hide for now -->
+    <!-- SCIPIO: Hide for now -->
     <!-- <screen name="EditFacilityGroups">
         <section>
             <actions>
@@ -708,7 +708,7 @@ under the License.
     </screen> -->
 
 
-    <!-- Scipio: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <screen name="EditFacilityParties">
         <section>
             <actions>
@@ -879,9 +879,9 @@ under the License.
                                 <not><if-empty field="inventoryItem"/></not>
                             </condition>
                             <widgets>
-                                <!-- Scipio: This makes no sense -->
+                                <!-- SCIPIO: This makes no sense -->
                                 <!-- <include-menu name="InventoryItemTabBar" location="component://product/widget/facility/FacilityMenus.xml"/> -->
-                                <!-- Scipio: FIXME: Move this to a proper menu -->
+                                <!-- SCIPIO: FIXME: Move this to a proper menu -->
                                 <!-- <container style="widget-container">
                                     <link target="EditInventoryItem" text="${uiLabelMap.ProductNewInventoryItem}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="facilityId" from-field="facilityId"/>
@@ -1489,7 +1489,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Hide for now -->
+    <!-- SCIPIO: Hide for now -->
     <!-- <screen name="EditFacilityAgreements">
         <section>
             <actions>

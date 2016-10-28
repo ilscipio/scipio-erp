@@ -20,7 +20,7 @@ under the License.
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
-    <!-- Scipio: Factored out framework-level core definitions into common-store-controller, analogous to common-controller for backend -->
+    <!-- SCIPIO: Factored out framework-level core definitions into common-store-controller, analogous to common-controller for backend -->
     <include location="component://common/webcommon/WEB-INF/common-store-controller.xml"/>
     <description>SCIPIO Shop Controller Configuration File</description>
 
@@ -73,7 +73,7 @@ under the License.
     </request-map>
 
     <!-- Session Setting Requests -->
-    <!-- Scipio: need a language select screen for anon users -->
+    <!-- SCIPIO: need a language select screen for anon users -->
     <request-map uri="ListLocales">
         <security https="false" auth="false"/>
         <response name="success" type="view" value="ListLocales" save-last-view="true"/>
@@ -86,7 +86,7 @@ under the License.
         <response name="error" type="view" value="main"/>
     </request-map>
     
-    <!-- Scipio: for profile. NOTE: fromSetSessionLocale event doesn't do anything useful, so can just redirect to profile (simpler) -->
+    <!-- SCIPIO: for profile. NOTE: fromSetSessionLocale event doesn't do anything useful, so can just redirect to profile (simpler) -->
     <request-map uri="setSessionLocaleProfile">
         <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
@@ -198,7 +198,7 @@ under the License.
         <response name="survey" type="view" value="survey"/>
         <response name="product" type="view" value="product"/>
         <response name="viewcart" type="request-redirect" value="showcart"/>
-        <!-- Scipio: If there's an error, currently in most case we want to go back to the previous (product page)...
+        <!-- SCIPIO: If there's an error, currently in most case we want to go back to the previous (product page)...
         <response name="error" type="view" value="showcart"/>-->
         <response name="error" type="view-last" value="showcart"/>
     </request-map>
@@ -249,7 +249,7 @@ under the License.
     </request-map>
     <request-map uri="emptycart">
         <security https="false" auth="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Scipio: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- SCIPIO: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
@@ -535,52 +535,52 @@ under the License.
 
     <!--End Anonymous Checkout 3 steps entry -->
 
-    <!-- Scipio: direct request to refresh/redirect to checkout review cleanly -->
+    <!-- SCIPIO: direct request to refresh/redirect to checkout review cleanly -->
     <request-map uri="checkoutreview">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="request" value="calcShipping" />
     </request-map>
     <request-map uri="checkoutpayment">
-        <!-- Scipio: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
+        <!-- SCIPIO: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <response name="success" type="request" value="calcShippingBeforePayment"/><!-- Scipio: changed from: type="view" value="checkoutpayment" -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <response name="success" type="request" value="calcShippingBeforePayment"/><!-- SCIPIO: changed from: type="view" value="checkoutpayment" -->
     </request-map>
-    <!-- Scipio: This is a compatibility request to make sure can return from adding a new address; missing in stock ecommerce? -->
+    <!-- SCIPIO: This is a compatibility request to make sure can return from adding a new address; missing in stock ecommerce? -->
     <request-map uri="checkoutshippingaddress">
-        <!-- Scipio: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
+        <!-- SCIPIO: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
-    <!-- Scipio: This is a compatibility request to make sure can return to shipping options -->
+    <!-- SCIPIO: This is a compatibility request to make sure can return to shipping options -->
     <request-map uri="checkoutshippingoptions">
-        <!-- Scipio: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
+        <!-- SCIPIO: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="checkoutshippingoptions"/>
     </request-map>
-    <!-- Scipio: New entry point for checkout options, so we may show login page and give a chance to login.
+    <!-- SCIPIO: New entry point for checkout options, so we may show login page and give a chance to login.
         NOTE: checkoutoptions itself must directly support anon on its own because it is not just entry but central submit for all screens  -->
     <request-map uri="checkoutoptionslogin">
         <security https="true" auth="true"/>
         <response name="success" type="request" value="checkoutoptions"/> 
     </request-map>
-    <!-- Scipio: New request, currently mainly for consistency -->
+    <!-- SCIPIO: New request, currently mainly for consistency -->
     <request-map uri="anoncheckoutoptions">
         <security https="true" auth="false"/>
         <response name="success" type="request" value="checkoutoptions"/> 
     </request-map>
-    <!-- Scipio: The main checkoutoptions entry point/submit target 
+    <!-- SCIPIO: The main checkoutoptions entry point/submit target 
         This is modified so that forms submitted may request the create of a fake/temporary anon user along
         with their main form (the party is persistent so don't really want to create a party before forms start getting submitted) -->
     <request-map uri="checkoutoptions">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="checkCreateUpdateAnonUser"/>
         <response name="success" type="request" value="checkoutoptionscore"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>   
-    <!-- Scipio: core checkoutoptions switch logic -->
+    <!-- SCIPIO: core checkoutoptions switch logic -->
     <request-map uri="checkoutoptionscore">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutPages"/>
@@ -593,7 +593,7 @@ under the License.
     </request-map>
     <request-map uri="setOrderCurrencyAgreementShipDates">
         <description>Handles setting the currency, agreement and shipment dates of an order.</description>
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDates"/>
         <response name="success" type="view" value="checkoutshippingoptions"/>
         <response name="error" type="request" value="checkouterror"/>
@@ -604,47 +604,47 @@ under the License.
         <response name="success" type="request" value="calcShippingBeforePayment"/>
     </request-map>
     <request-map uri="checkouterror">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutError"/>
         <response name="shippingaddress" type="view" value="checkoutshippingaddress"/>
         <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
         <response name="payment" type="view" value="checkoutpayment"/>
         <response name="confirm" type="request" value="calcShipping"/>
-        <!-- Scipio: Not supported
+        <!-- SCIPIO: Not supported
         <response name="quick" type="view" value="quickcheckout"/>
         -->
         <response name="quick" type="view" value="checkoutshippingaddress"/>
         <response name="error" type="view" value="checkoutshippingaddress"/>
         <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
-    <!-- Scipio: Abstraction for checkout errors that need to specifically send to payments page. -->
+    <!-- SCIPIO: Abstraction for checkout errors that need to specifically send to payments page. -->
     <request-map uri="checkoutpaymenterror">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="checkoutpayment"/>
         <response name="error" type="view" value="checkoutpayment"/>
     </request-map>
-    <!-- Scipio: Not supported
+    <!-- SCIPIO: Not supported
         DEV NOTE: If must prevent access to screens (for security), you must comment out the view-maps more than anything.
     <request-map uri="quickcheckout">
-        <security https="true" auth="false"/><!- Scipio: CHANGED TO AUTH FALSE so may support anon checkout ->
+        <security https="true" auth="false"/><!- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout ->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="view"  save-current-view="true" value="quickcheckout"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     -->
     <request-map uri="splitship">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="splitship"/>
     </request-map>
     <request-map uri="updatesplit">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="assignItemShipGroup"/>
         <response name="success" type="view" value="splitship"/>
         <response name="error" type="view" value="splitship"/>
     </request-map>
 
     <request-map uri="checkout">
-      <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+      <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
       <response name="success" type="request" value="setOptions"/>
       <response name="error" type="view" value="showcart"/>
@@ -652,13 +652,13 @@ under the License.
 
     <!-- old checkout options events -->
     <request-map uri="updateCheckoutOptions">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setPartialCheckOutOptions"/>
         <response name="success" type="view" value="checkoutshippingaddress"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="setOptions">
-        <security https="true" auth="false" direct-request="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false" direct-request="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
         <response name="success" type="request" value="calcShipping"/>
         <response name="error" type="request" value="checkouterror"/>
@@ -666,13 +666,13 @@ under the License.
 
     <!-- new checkout option services -->
     <request-map uri="updateShippingAddress">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="setCartShippingAddress"/>
         <response name="success" type="view" value="splitship"/>
         <response name="error" type="request" value="splitship"/>
     </request-map>
     <request-map uri="updateShippingOptions">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="setCartShippingOptions"/>
         <response name="success" type="view" value="splitship"/>
         <response name="error" type="request" value="splitship"/>
@@ -714,7 +714,7 @@ under the License.
     </request-map>
     <request-map uri="validatePaymentMethodsBeforePayment">
         <security direct-request="false"/>
-        <!-- Scipio: 2016-05-02: WARN: We no longer perform payment methods check at this point due to causing
+        <!-- SCIPIO: 2016-05-02: WARN: We no longer perform payment methods check at this point due to causing
             errors when going back and forth in checkout with "change returned cannot be greater than the cash given".
             It doesn't appear necessary. The new event, checkPaymentMethodsBeforePayment, at current time is a placeholder
             and does nothing.
@@ -723,7 +723,7 @@ under the License.
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/> -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethodsBeforePayment"/>
         <response name="success" type="view" value="checkoutpayment"/>
-        <!-- Scipio: Send directly back to payment for now; stock checkouterror sends back to shipping
+        <!-- SCIPIO: Send directly back to payment for now; stock checkouterror sends back to shipping
         <response name="error" type="request" value="checkouterror"/>-->
         <response name="payment" type="request" value="checkoutpaymenterror"/>
     </request-map>
@@ -742,19 +742,19 @@ under the License.
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <!-- Scipio: processorder first checks if cart empty, if empty then redirects to shopping cart, otherwise page refresh is confusing -->
+    <!-- SCIPIO: processorder first checks if cart empty, if empty then redirects to shopping cart, otherwise page refresh is confusing -->
     <request-map uri="processorder">
         <security https="true" auth="false" />
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="request" value="processordervalidatepayment"/>
         <response name="error" type="request-redirect-noparam" value="showcart" />
     </request-map>
-    <!-- Scipio: add extra check to validate payment methods before order is sent for creation, in case user managed to bypass -->
+    <!-- SCIPIO: add extra check to validate payment methods before order is sent for creation, in case user managed to bypass -->
     <request-map uri="processordervalidatepayment">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/>
         <response name="success" type="request" value="processordercreate"/>
-        <!-- Scipio: Send directly back to payment for now; stock checkouterror sends back to checkoutreview
+        <!-- SCIPIO: Send directly back to payment for now; stock checkouterror sends back to checkoutreview
         <response name="error" type="request" value="checkouterror"/>-->
         <response name="payment" type="request" value="checkoutpaymenterror"/>
     </request-map>
@@ -774,7 +774,7 @@ under the License.
     </request-map>
     <request-map uri="clearcartfororder">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Scipio: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- SCIPIO: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="request" value="checkExternalPayment"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
@@ -799,7 +799,7 @@ under the License.
         <response name="error" type="view" value="ordercomplete"/>
     </request-map>
     
-    <!-- Scipio: Re-accessible order view pages; need to be accessible anonymously -->
+    <!-- SCIPIO: Re-accessible order view pages; need to be accessible anonymously -->
     <request-map uri="ordercomplete"><!-- to re-view the exact ordercomplete page -->
         <security https="true" auth="false"/>
         <response name="success" type="view" value="ordercomplete"/>
@@ -1030,14 +1030,14 @@ under the License.
         <response name="success" type="view" value="viewprofile"/>
     </request-map>
 
-    <!-- Scipio: New helper event that redirects to the request URI named in the 
+    <!-- SCIPIO: New helper event that redirects to the request URI named in the 
         request attribute or parameter "targetPage" or "donePage".
         This helps avoid extra steps when updating addresses, user info, etc.
         The profile is only used in case of error which is usually a miscoded screen.  -->
     <request-map uri="handleProfileTargetPage">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="processTargetPage"/>
-        <!-- Scipio: This special response value syntax works thanks to a Scipio enhancement to Ofbiz request handler -->
+        <!-- SCIPIO: This special response value syntax works thanks to a Scipio enhancement to Ofbiz request handler -->
         <response name="redirect" type="request-redirect-noparam" value="${requestAttributes.targetPage}"/>
         <response name="forward" type="request" value="${requestAttributes.targetPage}"/>
         <response name="success" type="view" value="viewprofile"/>
@@ -1046,128 +1046,128 @@ under the License.
 
     <!-- ContactMech Requests -->
     <request-map uri="editcontactmech">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="editcontactmechnosave">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createContactMech">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyContactMech"/>
-        <!-- Scipio: Updated to support better redirects and forward
+        <!-- SCIPIO: Updated to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateContactMech">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyContactMech"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deleteContactMech">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="deletePartyContactMech"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPostalAddressAndPurpose">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyPostalAddress"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="createPostalAddress">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyPostalAddress"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updatePostalAddress">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyPostalAddress"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createTelecomNumber">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyTelecomNumber"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateTelecomNumber">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyTelecomNumber"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createEmailAddress">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyEmailAddress"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateEmailAddress">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyEmailAddress"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPartyContactMechPurpose">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyContactMechPurpose"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcontactmech"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deletePartyContactMechPurpose">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="deletePartyContactMechPurpose"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="editcreditcard">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="createCreditCard">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createCreditCard"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcreditcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="updateCreditCard">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="updateCreditCard"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editcreditcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="address" type="view" value="editcontactmech"/>
@@ -1175,52 +1175,52 @@ under the License.
     </request-map>
 
     <request-map uri="editgiftcard">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editgiftcard"/>
     </request-map>
     <request-map uri="createGiftCard">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <!-- Scipio: FIXME: This event bypasses GC product store validation!!! -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <!-- SCIPIO: FIXME: This event bypasses GC product store validation!!! -->
         <event type="service" invoke="createGiftCard"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editgiftcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editgiftcard"/>
     </request-map>
     <request-map uri="updateGiftCard">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <!-- Scipio: FIXME: This event bypasses GC product store validation!!! -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <!-- SCIPIO: FIXME: This event bypasses GC product store validation!!! -->
         <event type="service" invoke="updateGiftCard"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editgiftcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editgiftcard"/>
     </request-map>
 
     <request-map uri="editeftaccount">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editeftaccount"/>
     </request-map>
     <request-map uri="createEftAccount">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createEftAccount"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editeftaccount"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
     <request-map uri="updateEftAccount">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="updateEftAccount"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editeftaccount"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
 
     <request-map uri="deletePaymentMethod">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="deletePaymentMethod"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
@@ -1228,21 +1228,21 @@ under the License.
 
     <!-- Person and other profile requests -->
     <request-map uri="editperson">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editperson"/>
     </request-map>
     <request-map uri="createPerson">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPerson"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editperson"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editperson"/>
     </request-map>
     <request-map uri="updatePerson">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePerson"/>
-        <!-- Scipio: Changed to support better redirects and forward
+        <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editperson"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editperson"/>
@@ -1377,25 +1377,25 @@ under the License.
     </request-map>
 
     <request-map uri="signUpForContactList">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO HTTPS TRUE for basic user security -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="signUpForContactList"/>
         <response name="success" type="view-last"/>
         <response name="error" type="view-last" value="main"/>
     </request-map>
     <request-map uri="unsubscribeContactListParty">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO HTTPS TRUE for basic user security -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="unsubscribeContactListParty"/>
         <response name="success" type="view-last"/>
         <response name="error" type="view-last" value="main"/>
     </request-map>
     <request-map uri="unsubscribeContactListPartyContachMech">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO HTTPS TRUE for basic user security -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="unsubscribeContactListPartyContachMech"/>
         <response name="success" type="view-last"/>
         <response name="error" type="view-last" value="main"/>
     </request-map>
     <request-map uri="contactListOptOut" track-serverhit="false" track-visit="false">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO HTTPS TRUE for basic user security -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="updateContactListPartyNoUserLogin"/>
         <response name="success" type="view" value="ContactListOptOut"/>
     </request-map>
@@ -1426,7 +1426,7 @@ under the License.
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
     <request-map uri="updateContactListPartyNoUserLogin">
-        <security https="true" auth="false"/><!-- Scipio: CHANGED TO HTTPS TRUE for basic user security -->
+        <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="updateContactListPartyNoUserLogin"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
@@ -1464,11 +1464,11 @@ under the License.
         <response name="addparty" type="request" value="calcShipping"/> <!-- this actually wants to go to a page to set another party, but for shop we'll skip it and go to the beginning of the chain for review and checkout -->
         <response name="paysplit" type="view" value="checkoutpayment"/>
         <response name="sales" type="request" value="calcShipping"/>
-        <!-- Scipio: handle paymentError, previously unhandled  -->
+        <!-- SCIPIO: handle paymentError, previously unhandled  -->
         <response name="paymentError" type="request" value="calcShippingBeforePayment"/>
-        <!-- Scipio: handle shipGroups, previously unhandled -->
+        <!-- SCIPIO: handle shipGroups, previously unhandled -->
         <response name="shipGroups" type="request" value="finalizeOrderError"/>
-        <!-- Scipio: handle po, previously unhandled -->
+        <!-- SCIPIO: handle po, previously unhandled -->
         <response name="po" type="request" value="calcTax"/>
         <response name="error" type="request" value="finalizeOrderError"/>
     </request-map>
@@ -1521,7 +1521,7 @@ under the License.
     </request-map>
 
     <!-- PDFs -->
-    <!-- Scipio: Anon customer must be able to print his PDF, so auth="false" -->
+    <!-- SCIPIO: Anon customer must be able to print his PDF, so auth="false" -->
     <request-map uri="order.pdf">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="OrderPDF"/>
@@ -1645,7 +1645,7 @@ under the License.
 
     <request-map uri="onePageClearCartForOrder">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Scipio: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- SCIPIO: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="request" value="onePageCheckExternalPayment"/>
         <response name="error" type="view" value="OnePageCheckout"/>
     </request-map>
@@ -1754,7 +1754,7 @@ under the License.
     
     <request-map uri="returnBackFromGoogle">
         <security https="false" auth="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Scipio: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- SCIPIO: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
@@ -1882,7 +1882,7 @@ under the License.
     <view-map name="paymentoptions" type="screen" page="component://shop/widget/OrderScreens.xml#paymentoptions"/>
     <view-map name="paymentinformation" type="screen" page="component://shop/widget/OrderScreens.xml#paymentinformation"/>
 
-    <!-- Scipio: Not supported
+    <!-- SCIPIO: Not supported
     <view-map name="quickcheckout" type="screen" page="component://shop/widget/OrderScreens.xml#checkoutoptions"/>
     -->
     <view-map name="checkoutshippingaddress" type="screen" page="component://shop/widget/OrderScreens.xml#checkoutshippingaddress"/>
@@ -1951,7 +1951,7 @@ under the License.
     <!-- One Page Checkout -->
     <view-map name="OnePageCheckout" type="screen" page="component://shop/widget/OrderScreens.xml#OnePageCheckout"/>
     <!-- Google Checkout View Mapping -->
-    <!-- Scipio: No longer exists
+    <!-- SCIPIO: No longer exists
     <view-map name="cartToGoogleCheckout" type="screen" page="component://googlecheckout/widget/GoogleCheckoutScreens.xml#redirect"/>
     <view-map name="redirectToGoogleCheckout" type="screen" page="component://googlecheckout/widget/GoogleCheckoutScreens.xml#redirect"/>
     -->
@@ -1970,7 +1970,7 @@ under the License.
     <!-- Shopping List 's Ajax -->
     <view-map name="showShoppingList" type="screen" page="component://shop/widget/ShoppingListScreens.xml#showShoppingList"/>
     
-    <!-- Scipio: dedicated locales screen for anon users -->
+    <!-- SCIPIO: dedicated locales screen for anon users -->
     <view-map name="ListLocales" type="screen" page="component://common/widget/CommonScreens.xml#ListLocalesCompact"/>
 
     <!-- End of View Mappings -->

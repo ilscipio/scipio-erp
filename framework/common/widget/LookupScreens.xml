@@ -114,7 +114,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Compact version of list locales -->
+    <!-- SCIPIO: Compact version of list locales -->
     <screen name="ListLocalesCompact">
         <section>
             <actions>

@@ -20,13 +20,13 @@ under the License.
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
-    <description>Scipio: Common Application Services (New)</description>
+    <description>SCIPIO: Common Application Services (New)</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
     <service name="reloadVisualThemeResources" engine="java"
         location="com.ilscipio.scipio.common.CommonServices" invoke="reloadVisualThemeResources">
-        <description>Scipio: Reload visual theme definitions of specified theme or all themes if not specified</description>
+        <description>SCIPIO: Reload visual theme definitions of specified theme or all themes if not specified</description>
         <permission-service service-name="visualThemePermissionCheck" main-action="UPDATE"/>
         <attribute name="visualThemeId" type="String" mode="IN" optional="true"/>
     </service>

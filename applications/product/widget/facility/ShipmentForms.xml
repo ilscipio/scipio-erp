@@ -319,7 +319,7 @@ under the License.
         </field>
     </form>
     
-    <!-- Scipio: ViewShipment form moved to ./applications/product/widget/facility/ShipmentScreens.xml#ViewShipment (they have been merged actually) -->
+    <!-- SCIPIO: ViewShipment form moved to ./applications/product/widget/facility/ShipmentScreens.xml#ViewShipment (they have been merged actually) -->
     <!-- <form name="ViewShipment" type="single" default-map-name="shipment"
         header-row-style="header-row"> orig: default-table-style=-style="basic-table"
         <actions>

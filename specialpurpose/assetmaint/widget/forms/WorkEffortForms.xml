@@ -203,7 +203,7 @@
         <field name="maintHistSeqId"><hidden/></field>
     </form>
     
-    <!-- Scipio: -->
+    <!-- SCIPIO: -->
     <form name="WorkEffortAssignedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" paginate="true" list-name="workEfforts"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
         <set field="workEffortService" value="getWorkEffortAssignedTasks"/>

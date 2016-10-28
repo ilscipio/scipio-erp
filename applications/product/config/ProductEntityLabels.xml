@@ -4169,7 +4169,7 @@
         <value xml:lang="zh_TW">這個這個型錄所代表的公司的名稱.</value>
     </property>
     <property key="FieldDescription.ProductStore.title">
-        <!-- Scipio: now points to shop -->
+        <!-- SCIPIO: now points to shop -->
         <value xml:lang="en">This value gets displayed in the header section of the shop.</value>
         <value xml:lang="fr">Cette valeur s'affiche dans la section d'en-tête du magasin de commerce électronique (shop).</value>
         <value xml:lang="ja">この値はEコマース店舗のヘッダセクションに表示されます。</value>
@@ -4178,7 +4178,7 @@
         <value xml:lang="zh_TW">這個值會顯示在電子商務店鋪的頁眉部分.</value>
     </property>
     <property key="FieldDescription.ProductStore.subtitle">
-        <!-- Scipio: now points to shop -->
+        <!-- SCIPIO: now points to shop -->
         <value xml:lang="en">This value gets displayed in the header section of the shop.</value>
         <value xml:lang="fr">Cette valeur s'affiche dans la section d'en-tête du magasin de commerce électronique (shop).</value>
         <value xml:lang="ja">この値はEコマース店舗のヘッダセクションに表示されます。</value>

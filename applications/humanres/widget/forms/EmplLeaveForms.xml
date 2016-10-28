@@ -109,7 +109,7 @@
             </drop-down>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" required-field="true"><date-time type="date"/></field><!-- Scipio: order is unpredicable due to auto-fields-service: position="2"  -->
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" required-field="true"><date-time type="date"/></field><!-- SCIPIO: order is unpredicable due to auto-fields-service: position="2"  -->
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
         <field name="submitAction" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>

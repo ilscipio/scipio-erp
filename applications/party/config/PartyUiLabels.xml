@@ -5176,7 +5176,7 @@
         <value xml:lang="zh">缺少上传文件...</value>
         <value xml:lang="zh_TW">缺少上傳檔...</value>
     </property>
-    <!-- Scipio: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
+    <!-- SCIPIO: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
     <property key="PartyCreateNewBillingAddress">
         <value xml:lang="cs">Zložte novou fakturační adresu</value>
         <value xml:lang="de">Legen Sie eine neue Rechnungsadresse</value>

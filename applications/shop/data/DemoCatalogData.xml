@@ -20,7 +20,7 @@ under the License.
 
 <entity-engine-xml>
 
-    <!-- Scipio: NOTES: 
+    <!-- SCIPIO: NOTES: 
       * Some of the IDs from old ecommerce stock data have been changed, but not all yet:
         Generally, the completely new elements get a new IDs (from a new series of numbers, where applicable) 
         as well as existing elements that have been modified from their original structure.
@@ -43,7 +43,7 @@ under the License.
 
     <!-- CATEGORIES -->
 
-    <!-- Scipio: NOTES: 
+    <!-- SCIPIO: NOTES: 
       * Most categories are now defined here except old Rental catalog/categories (DemoRental*.xml)
         and specific best-selling categories (DemoCatalogTransientData.xml) 
       * Category names are in DemoCatalogI18n.xml 
@@ -52,7 +52,7 @@ under the License.
     <ProductCategory description="Demo Catalog Primary Category Root" longDescription="Demo Catalog Primary Category Root" 
         productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
 
-    <!-- Scipio: New categories and categories moved and renamed from other locations (all these have new IDs) -->
+    <!-- SCIPIO: New categories and categories moved and renamed from other locations (all these have new IDs) -->
     <ProductCategory description="Clothing" longDescription="Clothing"
         primaryParentCategoryId="CATALOG1" productCategoryId="CLOTH-100" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="Menswear" longDescription="Menswear"
@@ -106,14 +106,14 @@ under the License.
             primaryParentCategoryId="GFTC-100" productCategoryId="GC-PR-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="Gift Cards - Reloads"  longDescription="Gift Cards - Reloads" 
             primaryParentCategoryId="GFTC-100" productCategoryId="GC-RL-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <!-- Scipio: What is this one for? Not in rollup. -->
+        <!-- SCIPIO: What is this one for? Not in rollup. -->
         <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
             primaryParentCategoryId="GFTC-100" productCategoryId="GC-SP-101" productCategoryTypeId="GIFT_CARD_CATEGORY"/>
 
     <ProductCategory description="Drop-Ship Products" longDescription="Drop-Ship Products" 
         primaryParentCategoryId="CATALOG1" productCategoryId="DROP-100" productCategoryTypeId="CATALOG_CATEGORY"/>
 
-    <!-- Scipio: Special categories (NOTE: these still using stock IDs) -->
+    <!-- SCIPIO: Special categories (NOTE: these still using stock IDs) -->
     <ProductCategory description="Promotions" longDescription="Promotions" 
         productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY" detailScreen="component://shop/widget/CatalogScreens.xml#categorydetailmatrix"/>
     <ProductCategory description="Demo Default Search" longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
@@ -126,7 +126,7 @@ under the License.
         productCategoryId="CATALOG1_BEST_SELL" productCategoryTypeId="BEST_SELL_CATEGORY"/>
         <!-- NOTE: The specific BEST-SELL categories are defined in DemoCatalogTransientData.xml -->
 
-    <!-- Scipio: Other categories -->
+    <!-- SCIPIO: Other categories -->
     <ProductCategory categoryName="Test Limited Admin Category" longDescription="Test Limited Admin Category" 
         productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategoryRole productCategoryId="TSTLTDADMIN" partyId="ltdadmin" roleTypeId="LTD_ADMIN" fromDate="2001-05-13 12:00:00.0"/>
@@ -159,7 +159,7 @@ under the License.
 
     <!-- Category rollup/hierarchy -->
     
-    <!--  Scipio: New categories -->
+    <!-- SCIPIO: New categories -->
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="CLOTH-100" sequenceNum="010"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CLOTH-100" productCategoryId="CL-MEN-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CLOTH-100" productCategoryId="CL-WMN-101"/>
@@ -186,7 +186,7 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="TRVL-100" sequenceNum="100"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="AUTO-100" sequenceNum="110"/>
 
-    <!-- Scipio: Category links (examples) -->
+    <!-- SCIPIO: Category links (examples) -->
     <ProductCategoryLink productCategoryId="CLOTH-100" linkSeqId="01" fromDate="2001-05-13 12:00:00.0"
         titleText="See all clothing with standard colors feature" detailText="Click here to find clothing with standard colors feature"
         imageUrl="/images/products/small/handshake_01.png"
@@ -202,7 +202,7 @@ under the License.
             
     <!-- Category Alternative URL -->    
         
-    <!-- Scipio: TEMPLATE (variables surrounded by underscores _XXX_)
+    <!-- SCIPIO: TEMPLATE (variables surrounded by underscores _XXX_)
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="_ID_-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR_ID_-ALTEN" localeString="en_US"/>
     
@@ -217,10 +217,10 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="_ID_" contentId="_ID_-ALT" fromDate="2001-05-13 12:00:00.0"/>
     -->
         
-    <!-- Scipio: This is just a specific demo link, not needed for most categories -->  
+    <!-- SCIPIO: This is just a specific demo link, not needed for most categories -->  
     <DataResource dataResourceId="SERV-100-ALT" dataResourceTypeId="LINK" objectInfo="services-SERV-100-c"/>
         
-    <!-- Scipio: New Category Alternative URL -->
+    <!-- SCIPIO: New Category Alternative URL -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CLOTH-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRCLOTH-100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CL-MEN-101-ALT" localeString="en"/>
@@ -427,7 +427,7 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="AUTO-100" contentId="AUTO-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     
     <!-- PRODUCTS -->
-    <!-- Scipio: NOTE: These are not exhaustive; other products exist in the specialized data files.
+    <!-- SCIPIO: NOTE: These are not exhaustive; other products exist in the specialized data files.
         See also DemoCatalogGenericProductData.xml for generic templated products. -->
  
     <Product productId="PH-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 5" internalName="iPhone 5" description="The popular iPhone 5" longDescription="This iPhone is very small and supports all the latest applications." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -468,7 +468,7 @@ under the License.
     
     <!-- Product Alternative URL -->
     
-    <!-- Scipio: TEMPLATE:
+    <!-- SCIPIO: TEMPLATE:
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="_ID_-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR_ID_-ALTEN" localeString="en_US"/>
     
@@ -731,7 +731,7 @@ under the License.
     <ProductPrice productId="KB-5569" productPricePurposeId="PURCHASE" productPriceTypeId="SPECIAL_PROMO_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="41.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="KB-5569" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="59.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="KB-5569" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="60.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <!-- Scipio: minimum prices demoed on foods instead
+    <!-- SCIPIO: minimum prices demoed on foods instead
     <ProductPrice productId="KB-5569" productPricePurposeId="PURCHASE" productPriceTypeId="MINIMUM_ORDER_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="100.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     -->
     <ProductPrice productId="VH-9943" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="285000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -759,7 +759,7 @@ under the License.
     <ProductContent productId="NEWS-01-1MO" contentId="NEWS-01-1MO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>    
    
     <!-- test Digital Download product -->
-    <!-- Scipio: Test with two files, to clarify the associations and test -->
+    <!-- SCIPIO: Test with two files, to clarify the associations and test -->
     <Product productId="MP3-1000" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="MU-DL-101" productName="U2 - Greatest Hits (MP3 Download)" internalName="U2 - Greatest Hits (MP3 Download)" description="A compilation of U2's greatest hits from every era." longDescription="A compilation of U2's greatest hits from every era, in downloadable MP3 format." taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <DataResource dataResourceId="MP3-1000-01" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="audio/mpeg" dataResourceName="Digital MP3 Album - Track 01" objectInfo="framework/images/webapp/images/products/shop/digitalgood/music/Demo Artist - Demo Song 01.mp3"/>
     <DataResource dataResourceId="MP3-1000-02" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="audio/mpeg" dataResourceName="Digital MP3 Album - Track 02" objectInfo="framework/images/webapp/images/products/shop/digitalgood/music/Demo Artist - Demo Song 02.mp3"/>
@@ -903,8 +903,8 @@ under the License.
     <ProductPrice productId="METADATA" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-01-01 00:00:00.0" price="1.00" createdDate="2011-01-01 00:00:00.0"/>
     <ProductPrice productId="DVD" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-01-01 00:00:00.0" price="0.25" createdDate="2011-01-01 00:00:00.0"/>
     
-    <ProductConfigItem configItemId="SC00000" configItemTypeId="MULTIPLE" configItemName="Scanning Type" description="Scanning type"/><!-- Scipio: consistency: description="Select the scanning type :" -->
-    <ProductConfigItem configItemId="SCF0001" configItemTypeId="MULTIPLE" configItemName="Scanning Options" description="Scanning options"/><!-- Scipio: consistency: description="Scanning options :" -->
+    <ProductConfigItem configItemId="SC00000" configItemTypeId="MULTIPLE" configItemName="Scanning Type" description="Scanning type"/><!-- SCIPIO: consistency: description="Select the scanning type :" -->
+    <ProductConfigItem configItemId="SCF0001" configItemTypeId="MULTIPLE" configItemName="Scanning Options" description="Scanning options"/><!-- SCIPIO: consistency: description="Scanning options :" -->
     
     <ProductConfigOption configItemId="SC00000" configOptionId="SCOP001" configOptionName="OPT0001" description="Scanning Type" sequenceNum="10"/>
     <ProductConfigOption configItemId="SCF0001" configOptionId="SCOP006" configOptionName="OPT0006" description="Express" sequenceNum="10"/>
@@ -930,8 +930,8 @@ under the License.
     <ElectronicText dataResourceId="CSV-1001-ALT" textData="book-scanning-service"/>
     <ElectronicText dataResourceId="DRCSV-1001-ALTEN" textData="book-scanning-service"/>
 
-    <ProductConfig productId="CSV-1001" configItemId="SC00000" sequenceNum="10" fromDate="2011-01-01 00:00:00.0" description="Scanning type" configTypeId="QUESTION" isMandatory="N"/><!-- Scipio: consistency: description="Select the scanning type :"  -->
-    <ProductConfig productId="CSV-1001" configItemId="SCF0001" sequenceNum="20" fromDate="2011-01-01 00:00:00.0" description="Scanning options" configTypeId="QUESTION" isMandatory="N"/><!-- Scipio: consistency:  description="Scanning options :" -->
+    <ProductConfig productId="CSV-1001" configItemId="SC00000" sequenceNum="10" fromDate="2011-01-01 00:00:00.0" description="Scanning type" configTypeId="QUESTION" isMandatory="N"/><!-- SCIPIO: consistency: description="Select the scanning type :"  -->
+    <ProductConfig productId="CSV-1001" configItemId="SCF0001" sequenceNum="20" fromDate="2011-01-01 00:00:00.0" description="Scanning options" configTypeId="QUESTION" isMandatory="N"/><!-- SCIPIO: consistency:  description="Scanning options :" -->
     
     <WorkEffort workEffortId="SCTASK01" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Stock out" description="Components" revisionNumber="1" fixedAssetId="DEMO_BOOK_GROUP" estimatedMilliSeconds="600000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="SCTASK02" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Preparation" description="Preparation" revisionNumber="1" fixedAssetId="DEMO_BOOK_GROUP" estimatedMilliSeconds="900000" estimatedSetupMillis="0"/>
@@ -1098,8 +1098,8 @@ under the License.
 
 
     <!-- Product complements/upgrade/substitutes -->
-    <Product productId="PC-1000" /><!-- Scipio: Defined in another file -->
-    <Product productId="CAM-7000" /><!-- Scipio: Defined in another file -->
+    <Product productId="PC-1000" /><!-- SCIPIO: Defined in another file -->
+    <Product productId="CAM-7000" /><!-- SCIPIO: Defined in another file -->
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="VH-9944"
         productIdTo="VH-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="MPL-9290"
@@ -1732,7 +1732,7 @@ under the License.
     <ContentAssoc contentId="VH-9943-S4-BX2-ALT" contentIdTo="CVH-9943-S4-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="VH-9943-S4-BX5-ALT" contentIdTo="CVH-9943-S4-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
 
-    <!-- Scipio: NOTE: Here we consider piecesIncluded the number of spindles and quantityIncluded the number of discs -->
+    <!-- SCIPIO: NOTE: Here we consider piecesIncluded the number of spindles and quantityIncluded the number of discs -->
     <Product productId="CDR-1111-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="CD-R Writable Discs" internalName="CD-R Writable Discs (2 spindles, 50-count)" description="CD-R Writable Discs" longDescription="These CD-R writable disks are reliable and long-lasting and will preserve your date for ages." isVirtual="Y" isVariant="Y" quantityIncluded="50.0" weight="2.0" piecesIncluded="2" /> <!-- quantityUomId="OTH_box" OTH_ea, OTH_box, OTH_pk? -->
     <Product productId="CDR-1111-BX4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="CD-R Writable Discs" internalName="CD-R Writable Discs (4 spindles, 50-count)" description="CD-R Writable Discs" longDescription="These CD-R Writable Discs are reliable and long-lasting and will preserve your date for ages." isVirtual="Y" isVariant="Y" quantityIncluded="50.0" weight="2.0" piecesIncluded="4" /> <!-- quantityUomId="OTH_box" OTH_ea, OTH_box, OTH_pk? -->
     <ProductAssoc productId="CDR-1111-BX2" productIdTo="CDR-1111" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>

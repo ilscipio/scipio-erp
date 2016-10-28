@@ -87,7 +87,7 @@ under the License.
             <actions>
                 <set field="promoUseDetailsInlineScreen" value="component://shop/widget/CartScreens.xml#promoUseDetailsInline"/>
 
-                <set field="titleProperty" value="PageTitleAllPromotions"/><!-- Scipio: odd: PageTitleShowAllPromotions -->
+                <set field="titleProperty" value="PageTitleAllPromotions"/><!-- SCIPIO: odd: PageTitleShowAllPromotions -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/cart/ShowCart.groovy"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/cart/ShowPromoText.groovy"/>
             </actions>

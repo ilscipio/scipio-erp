@@ -109,7 +109,7 @@ under the License.
         location="webapp/ar"
         base-permission="OFBTOOLS,ACCOUNTING"
         mount-point="/ar"
-        app-bar-display="false"/> <!-- Scipio: don't display in main menu; shown under accounting menu instead -->
+        app-bar-display="false"/> <!-- SCIPIO: don't display in main menu; shown under accounting menu instead -->
 
     <webapp name="ap"
         title="Accounting - AP"
@@ -117,5 +117,5 @@ under the License.
         location="webapp/ap"
         base-permission="OFBTOOLS,ACCOUNTING"
         mount-point="/ap"
-        app-bar-display="false"/> <!-- Scipio: don't display in main menu; shown under accounting menu instead -->
+        app-bar-display="false"/> <!-- SCIPIO: don't display in main menu; shown under accounting menu instead -->
 </ofbiz-component>

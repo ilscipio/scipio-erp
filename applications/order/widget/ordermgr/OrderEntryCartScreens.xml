@@ -121,7 +121,7 @@ under the License.
     <screen name="showAllPromotions">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleAllPromotions"/><!-- Scipio: odd: PageTitleShowAllPromotions -->
+                <set field="titleProperty" value="PageTitleAllPromotions"/><!-- SCIPIO: odd: PageTitleShowAllPromotions -->
                 <set field="promoUseDetailsInlineScreen" value="component://order/widget/ordermgr/OrderEntryCartScreens.xml#promoUseDetailsInline"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/ShowCart.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/ShowPromoText.groovy"/>

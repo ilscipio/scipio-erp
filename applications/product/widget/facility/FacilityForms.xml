@@ -45,7 +45,7 @@ under the License.
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="FacilitySearchResults"/>
     </form>
 
-    <!-- Scipio: to be removed. This was absurd apart of useless as it has been removed -->
+    <!-- SCIPIO: to be removed. This was absurd apart of useless as it has been removed -->
    <!--  <form name="FindFacility10" method="get" type="single" target="EditFacility"
         odd-row-style="alternate-row" header-row-style="header-row-2"> orig: default-table-style=-style="basic-table hover-bar"
         <field name="facilityId">
@@ -571,7 +571,7 @@ under the License.
             <submit/>
         </field>
     </form>
-    <!-- Scipio: ListPhysicalInventory moved to component://product/widget/facility/FacilityScreens.xml#TransferInventoryItemDetail -->
+    <!-- SCIPIO: ListPhysicalInventory moved to component://product/widget/facility/FacilityScreens.xml#TransferInventoryItemDetail -->
     <!-- <form name="ListPhysicalInventory" type="multi" list-name="physicalInventory" target="createPhysicalVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
         odd-row-style="alternate-row" separate-columns="true"> orig: default-table-style=-style="basic-table hover-bar"
         <field name="inventoryItemId" widget-style="${styles.link_nav_info_id}">
@@ -602,7 +602,7 @@ under the License.
         </field>
     </form> -->
     <!-- FacilityGroups -->
-    <!-- Scipio: Hide for now -->
+    <!-- SCIPIO: Hide for now -->
     <!-- <form name="EditFacilityGroups" type="list" target="updateGroupToFacility" paginate-target="EditFacilityGroups" title="" list-name="facilityGroupMembers"
         header-row-style="header-row-2" odd-row-style="alternate-row"> orig: default-table-style=-style="basic-table hover-bar"
         <auto-fields-entity entity-name="FacilityGroupMember"/>
@@ -637,7 +637,7 @@ under the License.
     </form> -->
 
     <!-- FacilityParty -->
-    <!-- Scipio: To be removed -->
+    <!-- SCIPIO: To be removed -->
     <!-- <form name="EditFacilityParties" type="list" paginate-target="EditFacilityParties" title="" list-name="facilityParties"
         header-row-style="header-row-2" odd-row-style="alternate-row"> orig: default-table-style=-style="basic-table hover-bar"
         <field name="facilityId"><hidden/></field>
@@ -724,9 +724,9 @@ under the License.
         <field name="totalRetailPriceGrandTotal" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductRetailPrice}"><display/></field>
     </form>
 
-    <!-- Scipio: ToFacilityTransfers form moved to ./applications/product/widget/facility/FacilityScreens.xml#TransferInventoryItem  -->
+    <!-- SCIPIO: ToFacilityTransfers form moved to ./applications/product/widget/facility/FacilityScreens.xml#TransferInventoryItem  -->
 
-    <!-- Scipio: FromFacilityTransfers form moved to ./applications/product/widget/facility/FacilityScreens.xml#TransferInventoryItem  -->
+    <!-- SCIPIO: FromFacilityTransfers form moved to ./applications/product/widget/facility/FacilityScreens.xml#TransferInventoryItem  -->
 
     <form name="FromFacilityTransfersComplete" type="multi" target="CompleteRequestedTransfers?completeRequested=true&amp;facilityId=${facilityId}" title="" list-name="fromTransfers"
         odd-row-style="alternate-row" use-row-submit="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->

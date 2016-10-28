@@ -27,7 +27,7 @@ under the License.
     <screen name="OrderPDF">
         <section>
             <actions>
-                <!-- Scipio: FIXME!!!: This screen does not properly do permission checks!!!
+                <!-- SCIPIO: FIXME!!!: This screen does not properly do permission checks!!!
                     It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value)
                     and not allow viewing other people's orders!!! -->
                 <set field="titleProperty" value="OrderOrder"/>

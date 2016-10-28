@@ -87,7 +87,7 @@ under the License.
 
     <ContentType contentTypeId="PLACEHOLDER" description="Place Holder"/>
     <ContentType contentTypeId="WEB_SITE_PUB_PT" parentTypeId="PLACEHOLDER" hasTable="Y" description="Web Site Publish Point"/>
-    <!-- Scipio: Unneeded
+    <!-- SCIPIO: Unneeded
     <ContentType contentTypeId="FORUM_ROOT" parentTypeId="PLACEHOLDER" hasTable="N" description="Forum Root"/>
     <ContentType contentTypeId="BLOG_ROOT" parentTypeId="PLACEHOLDER" hasTable="N" description="Blog Root"/>
     -->
@@ -182,11 +182,11 @@ under the License.
     <SubscriptionType description="Product Info" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
 
     <!-- website data -->
-    <!-- Scipio: blog unneeded
+    <!-- SCIPIO: blog unneeded
     <WebSiteContentType webSiteContentTypeId="BLOG_ROOT" description="Blog Root" hasTable="N" parentTypeId=""/>
     -->
     <WebSiteContentType webSiteContentTypeId="DEFAULT_PAGE" description="Default Page" hasTable="N" parentTypeId=""/>
-    <!-- Scipio: Unneeded
+    <!-- SCIPIO: Unneeded
     <WebSiteContentType webSiteContentTypeId="FORUM_ROOT" description="Forum Root" hasTable="N" parentTypeId=""/>
     -->
     <WebSiteContentType webSiteContentTypeId="MENU_ROOT" description="Menu Containers" hasTable="N" parentTypeId=""/>

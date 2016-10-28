@@ -65,7 +65,7 @@
         <value xml:lang="zh">网站分析类型</value>
         <value xml:lang="zh_TW">網站分析型態</value>
     </property>
-    <!-- Scipio: TODO: translate -->
+    <!-- SCIPIO: TODO: translate -->
     <property key="CatalogWebAnalyticsType">
         <value xml:lang="de">Web Analytik Type</value>
         <value xml:lang="en">Web Analytics Type</value>
@@ -16043,7 +16043,7 @@
         <value xml:lang="zh_TW">為其他檔中的畫面使用類似於</value>
     </property>
     <property key="ProductDetailSubScreenTooltip">
-        <!-- Scipio: Now points to shop -->
+        <!-- SCIPIO: Now points to shop -->
         <value xml:lang="en">example: component://shop/widget/CatalogScreens.xml#categorydetail</value>
         <value xml:lang="it">esempio: component://shop/widget/CatalogScreens.xml#categorydetail</value>
         <value xml:lang="ja">例: component://shop/widget/CatalogScreens.xml#categorydetail</value>
@@ -31780,7 +31780,7 @@
         <value xml:lang="en">Lot Ref.</value>
         <value xml:lang="nl">Batch ref.</value>
     </property>
-    <!-- Scipio: new. TODO: localize -->
+    <!-- SCIPIO: new. TODO: localize -->
     <property key="ProductSettings">
         <value xml:lang="de">Produkteinstellungen</value>
         <value xml:lang="en">Product Settings</value>
@@ -31816,7 +31816,7 @@
     <property key="ProductReceiveInventoryItems">
         <value xml:lang="en">Receive Inventory</value>
     </property>
-    <!--  Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="ProductRooms">
         <value xml:lang="de">Zimmer</value>
         <value xml:lang="en">Rooms</value>

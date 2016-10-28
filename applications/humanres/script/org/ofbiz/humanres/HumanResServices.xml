@@ -223,7 +223,7 @@
     </simple-method>
 
 
-    <simple-method method-name="createEmploymentApp" short-description="Scipio: Create Employment App">
+    <simple-method method-name="createEmploymentApp" short-description="SCIPIO: Create Employment App">
         <call-simple-method method-name="validateEmploymentAppParams" />
         <check-errors />
         
@@ -242,7 +242,7 @@
         <field-to-result field="emplAppValue.applicationId" result-name="applicationId"/>
     </simple-method>
     
-    <simple-method method-name="updateEmploymentApp" short-description="Scipio: Update Employment App">
+    <simple-method method-name="updateEmploymentApp" short-description="SCIPIO: Update Employment App">
         <field-to-result field="parameters.applicationId" result-name="applicationId"/>
         <call-simple-method method-name="validateEmploymentAppParams" />
         <check-errors />
@@ -258,7 +258,7 @@
         <check-errors />
     </simple-method>
     
-    <simple-method method-name="validateEmploymentAppParams" short-description="Scipio: Validate Employment App Params">
+    <simple-method method-name="validateEmploymentAppParams" short-description="SCIPIO: Validate Employment App Params">
         <if-not-empty field="parameters.emplPositionId">
             <entity-one entity-name="EmplPosition" value-field="emplPosValue" auto-field-map="false">
                 <field-map field-name="emplPositionId" from-field="parameters.emplPositionId"/>
@@ -281,7 +281,7 @@
         </if-not-empty>
     </simple-method>
     
-    <simple-method method-name="validateEmploymentApp" short-description="Scipio: Validate Employment App">
+    <simple-method method-name="validateEmploymentApp" short-description="SCIPIO: Validate Employment App">
         <!-- check that emplPositionId and/or jobRequisition are set to valid values, and optionally
             if position not specified, transfer it from the job requisition -->
         <if-empty field="emplAppValue.emplPositionId">
@@ -298,7 +298,7 @@
                     <add-error><fail-property property="HumanResErrorInvalidJobRequisition" resource="HumanResErrorUiLabels" /></add-error>
                     <check-errors/>
                 <else>
-                    <!-- Scipio: NOTE: this is a new field in scipio -->
+                    <!-- SCIPIO: NOTE: this is a new field in scipio -->
                     <if-not-empty field="jobReqValue.emplPositionId">
                         <!-- get the position from the requisition -->
                         <set field="emplAppValue.emplPositionId" from-field="jobReqValue.emplPositionId" />

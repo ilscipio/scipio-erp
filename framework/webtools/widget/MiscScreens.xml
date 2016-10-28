@@ -48,7 +48,7 @@ under the License.
                 <set field="commonActionField1" value="This value 1 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
                 <set field="commonActionField2" value="This value 2 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive, but should get overridden by another include. [ERROR]"/>
                 
-                <!-- NEW in Scipio: flexible locations for <script> location -->
+                <!-- SCIPIO: NEW: flexible locations for <script> location -->
                 <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
                 <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemoWidgetTests.groovy"/>
             </actions>
@@ -248,7 +248,7 @@ under the License.
                 </screenlet>
                 <screenlet title="Specific markup labels">
                     <label style="generic" text="Generic markup"/>
-                    <label text="Default markup"/> <!-- Scipio: NOTE: at time of writing this defaults to "p" -->
+                    <label text="Default markup"/> <!-- SCIPIO: NOTE: at time of writing this defaults to "p" -->
                     <label style="p" text="Paragraph"/>
                     <label style="span" text="Span"/>
                     <label style="div" text="Div"/>

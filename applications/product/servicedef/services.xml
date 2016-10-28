@@ -1719,7 +1719,7 @@ under the License.
         <attribute name="groupOrderId" mode="IN" type="String" optional="false"/>
     </service>
     
-    <!-- Scipio: New service to build catalog/category/product tree-like structure according to the library being passed (currently jsTree supported only) -->
+    <!-- SCIPIO: New service to build catalog/category/product tree-like structure according to the library being passed (currently jsTree supported only) -->
     <service name="buildCatalogTree" engine="java" default-entity-name="ProdCatalog" location="org.ofbiz.product.category.CategoryServices" invoke="buildCatalogTree">
         <description>Builds a tree containing catalogs, categories and products using catalogs as starting point</description>
         <auto-attributes mode="IN" include="pk" optional="false" />

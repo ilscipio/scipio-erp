@@ -24,7 +24,7 @@ under the License.
     <Party partyId="DemoCustomer"/>
     <Party partyId="DemoCustAgent"/>
     <Party partyId="DemoCustomer2"/>
-    <!-- Scipio: The default product store is now ScipioShop -->
+    <!-- SCIPIO: The default product store is now ScipioShop -->
     <ProductStore productStoreId="ScipioShop"/>
     <CustRequest custRequestId="9000" custRequestDate="2008-07-28 09:45:31.928" custRequestTypeId="RF_SUPPORT" statusId="CRQ_SUBMITTED" fromPartyId="DemoCustomer" priority="9" custRequestName="Customer Request Usage" description="Could you please advise us how to use the customer request facility within ofbiz?" productStoreId="ScipioShop" createdDate="2008-07-28 11:45:31.928" createdByUserLogin="admin" lastModifiedDate="2008-07-28 11:45:31.928" lastModifiedByUserLogin="admin"/>
     <CustRequestItem custRequestId="9000" custRequestItemSeqId="00001" story="This can be the longer story of an item on the customer request.This can be the longer story of an item on the customer request.This can be the longer story of an item on the customer request.This can be the longer story of an item on the customer request.This can be the longer story of an item on the customer request.This can be the longer story of an item on the customer request. This can be the longer story of an item on the customer request. This can be the longer story of an item on the customer request. This can be the longer story of an item on the customer request. This can be the longer story of an item on the customer request. This can be the longer story of an item on the customer request."/>

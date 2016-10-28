@@ -35,7 +35,7 @@ under the License.
     <load-component component-location="testtools"/>
     <load-component component-location="webtools"/>
     <load-component component-location="images"/>
-    <!-- Scipio: NOTE: solr currently resides in /applications
+    <!-- SCIPIO: NOTE: solr currently resides in /applications
         WARN: To avoid possible problems, if in future have both solr components in framework and applications,
             folders should be named differently (e.g., /framework/solrcore and /applications/solr).
     <load-component component-location="solr"/> -->

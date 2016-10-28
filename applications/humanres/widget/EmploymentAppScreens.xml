@@ -38,7 +38,7 @@
                                 <section>
                                     <widgets>
                                         <container style="button-bar">
-                                            <!-- Scipio: link to our new screen instead: NewEmploymentApp -->
+                                            <!-- SCIPIO: link to our new screen instead: NewEmploymentApp -->
                                             <link target="EditEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                     </widgets>
@@ -101,7 +101,7 @@
         </section>
     </screen>
     
-    <!-- Scipio: new simple screen for editing individual appl (not in stock - stock only has new, above) 
+    <!-- SCIPIO: new simple screen for editing individual appl (not in stock - stock only has new, above) 
         Simpler version of EditEmploymentApps above.
         NOTE: this screen would be mainly for admins, who can edit submitted applications. In admin
         case it supersedes NewEmploymentApp -->
@@ -161,7 +161,7 @@
         </section>
     </screen>
     
-    <!-- Scipio: new simple screen for viewing appl (not in stock)  -->
+    <!-- SCIPIO: new simple screen for viewing appl (not in stock)  -->
     <screen name="ViewEmploymentApp">
         <section>
             <actions>

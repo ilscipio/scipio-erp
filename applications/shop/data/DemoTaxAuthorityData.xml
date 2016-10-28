@@ -19,7 +19,7 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <!-- Scipio: NOTE: All tax authority rates here have been changed to taxPromotions="Y" by default (in contrast to taxPromotions="N" in stock ofbiz) -->
+    <!-- SCIPIO: NOTE: All tax authority rates here have been changed to taxPromotions="Y" by default (in contrast to taxPromotions="N" in stock ofbiz) -->
 
     <TaxAuthorityRateProduct taxAuthorityRateSeqId="9000" taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" taxAuthorityRateTypeId="SALES_TAX" productStoreId=""
         productCategoryId="" titleTransferEnumId="" minItemPrice="25.00" minPurchase="0.00" taxShipping="N" taxPercentage="1" taxPromotions="Y"
@@ -40,7 +40,7 @@ under the License.
     <TaxAuthorityRateProduct taxAuthorityRateSeqId="9004" taxAuthGeoId="UT" taxAuthPartyId="UT_TAXMAN" taxAuthorityRateTypeId="SALES_TAX" productStoreId=""
         productCategoryId="" titleTransferEnumId="" minItemPrice="0.00" minPurchase="0.00" taxShipping="N" taxPercentage="4.75" taxPromotions="Y"
         fromDate="2001-05-13 00:00:00.001" thruDate="" description="Utah State Sales Tax"/>
-    <!-- Scipio: NOTE: here taxPromotions="Y" was added where it was previously missing -->
+    <!-- SCIPIO: NOTE: here taxPromotions="Y" was added where it was previously missing -->
     <TaxAuthorityRateProduct taxAuthorityRateSeqId="9005" taxAuthGeoId="UT-UTAH" taxAuthPartyId="UT_UTAH_TAXMAN" taxAuthorityRateTypeId="SALES_TAX" productStoreId=""
         productCategoryId="" titleTransferEnumId="" minItemPrice="0.00" minPurchase="0.00" taxShipping="N" taxPercentage="0.1" taxPromotions="Y"
         fromDate="2001-05-13 00:00:00.001" thruDate="" description="Utah County, Utah Sales Tax"/>

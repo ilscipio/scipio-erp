@@ -101,7 +101,7 @@
                                 <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                         </section>
-                        <!-- Scipio: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
+                        <!-- SCIPIO: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
                        <!--  <section>
                             <condition>
                                 <not><if-empty field="partyId"/></not>

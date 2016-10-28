@@ -34,7 +34,7 @@
         <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
         <attribute name="productCategoryTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="true"/>
-        <!-- Scipio: Let's comment this out for now -->
+        <!-- SCIPIO: Let's comment this out for now -->
         <!-- <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/> -->
     </service>
     

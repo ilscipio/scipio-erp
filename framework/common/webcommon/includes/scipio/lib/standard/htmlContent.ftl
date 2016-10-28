@@ -1563,7 +1563,7 @@ Slider data entry - a single slide.
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
   <#if !id?has_content>
-    <#local id = "slide_${renderSeqNumber}_${slideIdNum}"/>
+    <#local id = "slide_${renderSeqNumber!}_${slideIdNum}"/>
   </#if>
   <@slide_markup id=id sliderId=(sliderId!) class=class library=library image=image link=link linkTarget=linkTarget title=title 
     slideIdNum=slideIdNum sliderLength=sliderLength renderSeqNumber=(renderSeqNumber!) origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>

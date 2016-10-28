@@ -31,6 +31,13 @@ import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 productStore = ProductStoreWorker.getProductStore(request);
+// SCIPIO: additional default lookup
+if (!productStore) {
+    cfgDefProductStoreId = UtilProperties.getPropertyValue("order.properties", "store.preferred.productStoreId");
+    if (cfgDefProductStoreId) {
+        productStore = from("ProductStore").where("productStoreId", cfgDefProductStoreId).cache(true).queryOne();
+    }
+}
 if (productStore) {
     context.defaultProductStore = productStore;
     if (productStore.defaultSalesChannelEnumId)

@@ -1427,4 +1427,35 @@ under the License.
         </section>
     </screen>
     
+    <!-- Common SideBar Menu inclusion logic, adequate as a default in common/main decorator in most apps. 
+        Accepts context fields:
+        * commonSideBarMenu.perm - name of single permission to check to allow showing MainSideBarMenu (default: none)
+        * commonSideBarMenu.permAction - single permission action to check to allow showing MainSideBarMenu (default: none, optional for perm)
+        * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (default: none)
+          entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs
+        * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
+        * commonSideBarMenu.targetMenuName - name of menu shown if all permissions and conditions pass (default: "MainSideBarMenu") 
+          SPECIAL VALUE: "NONE"
+        * commonSideBarMenu.fallbackMenuName - name of menu shown if permission or conditions fail (default: "DefMainSideBarMenu") 
+          SPECIAL VALUE: "NONE"
+        * commonSideBarMenu.menuLoc - location of menus (default: parameters.mainDecoratorLocation)
+    -->
+    <screen name="CommonSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare field="hasTargetMenu" operator="equals" type="Boolean" value="true"/>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${targetMenuName}" location="${targetMenuLoc}"/>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

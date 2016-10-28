@@ -487,7 +487,7 @@ under the License.
         <xs:attribute name="transaction" default="">
             <xs:annotation>
                 <xs:documentation>
-                    Scipio: General event transaction enable/disable.
+                    SCIPIO: General event transaction enable/disable.
                     NOTE: Currently this has NO effect on stock behavior and is here for future use/compatibility.
                 </xs:documentation>
             </xs:annotation>
@@ -502,7 +502,7 @@ under the License.
         <xs:attribute name="abort-transaction" default="">
             <xs:annotation>
                 <xs:documentation>
-                    Scipio: If on-error-result and the event returned "error", abort running transaction.
+                    SCIPIO: If on-error-result and the event returned "error", abort running transaction.
                     NOTE: Currently only implemented for Java events.
                 </xs:documentation>
             </xs:annotation>
@@ -657,7 +657,7 @@ under the License.
                     
                     ***
                     
-                    Scipio: This field is enhanced to support dynamic variable response values extracted
+                    SCIPIO: This field is enhanced to support dynamic variable response values extracted
                     from the request. It uses EL-like notation ("${...}") in the form: "${scope.name}"
                     
                     The following scopes are currently recognized:                    

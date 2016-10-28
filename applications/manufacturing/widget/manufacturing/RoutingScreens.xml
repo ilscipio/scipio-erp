@@ -34,6 +34,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <!-- override left-column for routing field check -->
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->
                             <condition>
@@ -92,6 +93,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <!-- override left-column for routingTask field check -->
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->
                             <condition>
@@ -140,7 +142,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindRouting"/>
-                <set field="activeSubMenuItem" value="findRouting"/>
+                <!--<set field="activeSubMenuItem" value="findRouting"/>-->
+                <set field="activeSubMenuItem" value="PARENT"/>
                 <set field="activeMainMenuItem" value="routing"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -150,7 +153,7 @@ under the License.
                 <set field="requestParameters.currentStatusId" to-scope="screen" default-value="ROU_ACTIVE"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -209,14 +212,15 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindRoutingTask"/>
-                <set field="activeSubMenuItem" value="routingTask"/>
+                <!--<set field="activeSubMenuItem" value="routingTask"/>  -->
+                <set field="activeSubMenuItem" value="PARENT"/>
                 <set field="activeMainMenuItem" value="routingTask"/>
 
                 <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="ROU_TASK"/>
                 <set field="requestParameters.currentStatusId" to-scope="screen" default-value="ROU_ACTIVE"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
                         <section>
                             <widgets>

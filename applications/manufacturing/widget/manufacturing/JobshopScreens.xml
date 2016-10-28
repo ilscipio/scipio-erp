@@ -30,6 +30,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <!-- override default left-column because extra productionRun check is needed -->
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->
                             <condition>

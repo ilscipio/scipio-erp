@@ -40,7 +40,7 @@ under the License.
         <@td>
            <#if (!adjEditable)>
                 <#if adjReturnType?has_content>
-                  ${adjReturnType.get("description", locale)?default("${uiLabelMap.CommonNA}")}
+                  ${adjReturnType.get("description", locale)!(uiLabelMap.CommonNA)}
                 </#if>
            <#else>
                <select name="returnTypeId_o_${rowCount}">

@@ -28,14 +28,14 @@ under the License.
         <@step name="orderReview" icon="fa fa-info" href=makeOfbizUrl("checkoutreview")>${uiLabelMap.OrderConfirmOrder}</@step>
     </@nav>
 <#else>
-    <#-- Scipio: Migrated from anonymousCheckoutLinks.ftl -->
+    <#-- SCIPIO: Migrated from anonymousCheckoutLinks.ftl -->
     <@nav type="steps" activeElem=(activeStep!"cart")>
         <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>Cart</@step>
         <@step name="customer" icon="fa fa-user" href=makeOfbizUrl("setCustomer")>Personal Information</@step>
         <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("setShipping")>Shipping Address</@step>
         <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("setShipOptions")>Shipping Options</@step>
         <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentOption")>Billing</@step>
-        <#-- Scipio: TODO? Merge with billing? -->
+        <#-- SCIPIO: TODO? Merge with billing? -->
         <@step name="billingInfo" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}")>Billing Information</@step>
         <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
     </@nav>

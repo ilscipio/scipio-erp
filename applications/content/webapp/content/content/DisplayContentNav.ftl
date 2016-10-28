@@ -92,7 +92,7 @@ var rawdata = [
             type: 'POST',
             data: {"contentId" : contentId},
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);
@@ -106,7 +106,7 @@ var rawdata = [
             url: url,
             type: 'POST',
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#Document').html(msg);

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Scipio: WARN: 
+<#-- SCIPIO: WARN: 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 This template is no longer used by shop. If core fixes are applied to this file,
 they may need to be duplicated to:

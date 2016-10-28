@@ -69,8 +69,8 @@ under the License.
 
         if (detailImageUrl == "_NONE_") {
             hack = document.createElement('span');
-            hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
+            hack.innerHTML="${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}";
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}");
             return;
         }
         detailImageUrl = detailImageUrl.replace(/\&\#47;/g, "/");
@@ -179,7 +179,7 @@ function getConfigDetails() {
 
   <hr class="sepbar"/>
 
-  <#-- Scipio: open form earlier than stock code so don't produce invalid html... -->
+  <#-- SCIPIO: open form earlier than stock code so don't produce invalid html... -->
   <#assign viewSwitch = "">
   <#if requestAttributes._CURRENT_VIEW_??>
     <#assign viewSwitch = "/" + rawString(requestAttributes._CURRENT_VIEW_)>
@@ -333,7 +333,7 @@ function getConfigDetails() {
             <#else>
               <#assign hiddenStyle = styles.hidden!>
             </#if>
-            <#-- Scipio: NOTE: amount is kg or either; quantity is the number of units buying -->
+            <#-- SCIPIO: NOTE: amount is kg or either; quantity is the number of units buying -->
             <@field type="input" containerId="add_amount" label=uiLabelMap.OrderAmount containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
             <#if !configwrapper.isCompleted()>
               <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
@@ -372,7 +372,7 @@ function getConfigDetails() {
               <option value="">${uiLabelMap.OrderNewShoppingList}</option>
           </@field>
           <@field type="input" label=uiLabelMap.ProductQuantity size="5" name="quantity" value="1" />
-          <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="+${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />
+          <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="+${styles.link_run_sys!} ${styles.action_add!}" text="[${rawLabel('OrderAddToShoppingList')}]" />
         </form>
       <#else> 
         ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
@@ -455,7 +455,7 @@ function getConfigDetails() {
           <@row>
             <@cell columns=4>${question.question}</@cell>
             <@cell columns=8 class="+${styles.text_right!}">
-              <#-- Scipio: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
+              <#-- SCIPIO: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 

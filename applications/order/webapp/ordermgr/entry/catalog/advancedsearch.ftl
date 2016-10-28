@@ -22,7 +22,7 @@ under the License.
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
   
 <@section title=uiLabelMap.ProductAdvancedSearchInCategory>
-    <#-- Scipio: don't hardcode these
+    <#-- SCIPIO: don't hardcode these
     <input type="hidden" name="VIEW_SIZE" value="10" />-->
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
     <#if searchCategory?has_content>

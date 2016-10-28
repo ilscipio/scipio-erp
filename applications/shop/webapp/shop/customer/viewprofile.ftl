@@ -39,7 +39,7 @@ under the License.
 </#if>
 
 <@menu type="button">
-  <#-- Scipio: No store in the world will encourage to view expired records. Use direct link for testing. WARN: SHOW_OLD still implemented by screen.
+  <#-- SCIPIO: No store in the world will encourage to view expired records. Use direct link for testing. WARN: SHOW_OLD still implemented by screen.
   <#if showOld>
     <@menuitem type="link" href=makeOfbizUrl("viewprofile") class="+${styles.action_run_sys!} ${styles.action_hide!}" text=uiLabelMap.PartyHideOld />
   <#else>
@@ -50,7 +50,7 @@ under the License.
   </#if>
 </@menu>
 <#-- ============================================================= -->
-<#-- Scipio: Language -->
+<#-- SCIPIO: Language -->
 <#assign dummy = setRequestAttribute("setLocalesTarget", "setSessionLocaleProfile")>
 <@render resource="component://common/widget/CommonScreens.xml#listLocalesCompact" />
 <#-- ============================================================= -->
@@ -78,7 +78,7 @@ under the License.
         </#macro>
         <@section title=uiLabelMap.PartyPersonalInformation menuContent=menuContent>
             <#if person??>
-              <#-- Scipio: This was a table, not illogical but will look better as fields -->
+              <#-- SCIPIO: This was a table, not illogical but will look better as fields -->
               <@field type="display" label=uiLabelMap.PartyName>${person.personalTitle!} ${person.firstName!} ${person.middleName!} ${person.lastName!} ${person.suffix!}</@field>
               <#if person.nickname?has_content><@field type="display" label=uiLabelMap.PartyNickName>${person.nickname}</@field></#if>
               <#if person.gender?has_content><@field type="display" label=uiLabelMap.PartyGender>${person.gender}</@field></#if>
@@ -106,7 +106,7 @@ under the License.
             </@menu>
         </#macro>
         <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${rawLabel('CommonUsername')} & ${rawLabel('CommonPassword')}" -->
-            <#-- Scipio: This was a table, not illogical but will look better as fields -->
+            <#-- SCIPIO: This was a table, not illogical but will look better as fields -->
               
               <@field type="display" label=uiLabelMap.AccountingAccountType>
                 <#if userIsBusiness>
@@ -207,7 +207,7 @@ under the License.
                       <#else>
                         ${contactMech.infoString!}
                       </#if>
-                      <#-- Scipio: needless information
+                      <#-- SCIPIO: needless information
                       <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>-->
                       <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
                     </@td>
@@ -224,7 +224,7 @@ under the License.
                     </@td>
                     <@td class="+${styles.text_right!}">
                       <@menu type="button">
-                        <#-- Scipio: NOTE: this should list one non-expired SHIPPING_LOCATION at most. We also correct this to prevent showing button for expired ones. -->
+                        <#-- SCIPIO: NOTE: this should list one non-expired SHIPPING_LOCATION at most. We also correct this to prevent showing button for expired ones. -->
                         <#list partyContactMechValueMap.partyContactMechPurposes! as partyContactMechPurpose>
                           <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)! />
                           <#if !partyContactMechPurpose.thruDate?? && ((contactMechPurposeType.contactMechPurposeTypeId)!) == "SHIPPING_LOCATION" && (((profiledefs.defaultShipAddr)!"") != contactMech.contactMechId)>
@@ -273,7 +273,7 @@ under the License.
                   <#assign creditCard = paymentMethodValueMap.creditCard! />
                   <#assign giftCard = paymentMethodValueMap.giftCard! />
                   <#assign eftAccount = paymentMethodValueMap.eftAccount! />
-            <#-- Scipio: FIXME?: don't support listing any others yet -->
+            <#-- SCIPIO: FIXME?: don't support listing any others yet -->
             <#if creditCard?has_content || giftCard?has_content || eftAccount?has_content>
                   <@tr>
                     <#assign updateLink = "">
@@ -301,7 +301,7 @@ under the License.
                     <@td class="+${styles.text_right!}">
                       <@menu type="button">
                         <#--<#if ((profiledefs.defaultPayMeth)!"") == paymentMethod.paymentMethodId>
-                          <@menuitem type="text" class="+${styles.action_run_sys!} ${styles.action_updatestatus!}" text="[${uiLabelMap.EcommerceIsDefault}]" />
+                          <@menuitem type="text" class="+${styles.action_run_sys!} ${styles.action_updatestatus!}" text="[${rawLabel('EcommerceIsDefault')}]" />
                         <#else>-->
                         <#if ((profiledefs.defaultPayMeth)!"") != paymentMethod.paymentMethodId>
                           <@menuitem type="generic" class="+${styles.action_run_sys!} ${styles.action_updatestatus!}">
@@ -332,7 +332,7 @@ under the License.
     <div class="content" id="panel5">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
-            <#-- Scipio: this isn't a link, it's a form submit, put it at bottom so not mistakable
+            <#-- SCIPIO: this isn't a link, it's a form submit, put it at bottom so not mistakable
               <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
                 <@menuitem type="link" href="javascript:document.setdefaultshipmeth.submit();" text=uiLabelMap.EcommerceSetDefault />
               </#if>
@@ -361,7 +361,7 @@ under the License.
 </div>
 
 <#-- ============================================================= -->
-<#-- Scipio: TODO?
+<#-- SCIPIO: TODO?
 <@section title=uiLabelMap.EcommerceFileManager>
     <@table type="fields"> <#-orig: width="100%" border="0" cellpadding="1"->
       <#if partyContent?has_content>
@@ -422,7 +422,7 @@ under the License.
 </@section>
 -->
 <#-- ============================================================= -->
-<#-- Scipio: TODO?
+<#-- SCIPIO: TODO?
 <@section title=uiLabelMap.PartyContactLists>
     <@table type="data-complex"> <#-orig: width="100%" border="0" cellpadding="1" cellspacing="0"->
       <@tr>
@@ -518,7 +518,7 @@ under the License.
 </@section>
 -->
 <#-- ============================================================= -->
-<#-- Scipio: TODO?
+<#-- SCIPIO: TODO?
 <#if surveys?has_content>
   <@section title=uiLabelMap.EcommerceSurveys>
     <@table type="data-complex" width="100%" border="0" cellpadding="1">
@@ -549,22 +549,22 @@ under the License.
 -->
 <#-- ============================================================= -->
 <#-- only 5 messages will show; edit the ViewProfile.groovy to change this number -->
-<#-- Scipio: TODO? 
+<#-- SCIPIO: TODO? 
 <@render resource="component://shop/widget/CustomerScreens.xml#messagelist-include" />
 -->
-<#-- Scipio: TODO? 
+<#-- SCIPIO: TODO? 
 <@render resource="component://shop/widget/CustomerScreens.xml#FinAccountList-include" />
 -->
 <#-- Serialized Inventory Summary -->
-<#-- Scipio: TODO? 
+<#-- SCIPIO: TODO? 
 <@render resource="component://shop/widget/CustomerScreens.xml#SerializedInventorySummary" />
 -->
 <#-- Subscription Summary -->
-<#-- Scipio: TODO? 
+<#-- SCIPIO: TODO? 
 <@render resource="component://shop/widget/CustomerScreens.xml#SubscriptionSummary" />
 -->
 <#-- Reviews -->
-<#-- Scipio: TODO? 
+<#-- SCIPIO: TODO? 
 <@render resource="component://shop/widget/CustomerScreens.xml#showProductReviews" />
 -->
 <#else>

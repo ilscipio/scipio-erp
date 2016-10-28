@@ -12,8 +12,8 @@
     var featureIdList = [];
     var variantProductInfoMap = {};
     var baseProductInfo = { <#-- TODO: move map making to groovy -->
-        "productId" : "${product.productId}",
-        "requireAmount" : "${product.requireAmount!'N'}"
+        "productId" : "${escapeVal(product.productId, 'js')}",
+        "requireAmount" : "${escapeVal(product.requireAmount!'N', 'js')}"
     };
 
     <#if variantTree?has_content>
@@ -69,20 +69,20 @@
                     var options = [];
                     var nextFeatureId = featureIdList[nextIndex]; 
                     $('#FT_'+nextFeatureId).empty();
-                    $('#FT_'+nextFeatureId).append('<option value="">${uiLabelMap.EcommerceSelectOption}</option>');
+                    $('#FT_'+nextFeatureId).append('<option value="">${escapeVal(uiLabelMap.EcommerceSelectOption, 'js')}</option>');
                     $.each(dataObject,function(object) { 
                         $('#FT_'+nextFeatureId).append('<option value="'+object+'">'+object+'</option>');
                     });                    
                     $('#FT_'+nextFeatureId).prop( "disabled", false ); // activate next option
   
                     <#-- set the variant price
-                        Scipio: TODO?: Currently can't do this here, at least not by productId...
+                        SCIPIO: TODO?: Currently can't do this here, at least not by productId...
                             so if we changed any box, just reset the price to the original virtual for now...
                     setVariantPrice(productId); -->
                     setVariantPriceSpec(baseCurrentPrice);
 
                     <#-- check for amount box
-                    <#-- Scipio: For now we'll only set this at the last step, because don't have a tangible product ID until then
+                    <#-- SCIPIO: For now we'll only set this at the last step, because don't have a tangible product ID until then
                     toggleAmt(checkAmtReq(productId)); -->
                     toggleAmt('N');
                 }
@@ -102,7 +102,7 @@
     }
     
     function setVariantPriceSpec(price) {
-        <#-- Scipio: TODO -->
+        <#-- SCIPIO: TODO -->
     }    
   
     function checkAmtReq(productId) {
@@ -120,15 +120,15 @@
                 }
             }
         }
-        return 'N'; <#-- Scipio: hide it by default -->
+        return 'N'; <#-- SCIPIO: hide it by default -->
     }
     
-    <#-- Scipio: Handles final addItem submit -->
+    <#-- SCIPIO: Handles final addItem submit -->
     function addItem() {
         var productId = jQuery('#add_product_id').val();
         <#-- Ensure we have a product -->
         if (!productId || productId === 'NULL') {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllRequiredOptions}");
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonPleaseSelectAllRequiredOptions, 'js')}");
             return;
         } 
         
@@ -142,7 +142,7 @@
                 var id = featureIdList[i];
                 var val = jQuery('#FT_' + id).val();
                 if (!val) {
-                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllRequiredOptions}");
+                    showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonPleaseSelectAllRequiredOptions, 'js')}");
                     return;
                 }
             }
@@ -151,23 +151,23 @@
         
         <#-- verify quantity -->
         <#assign qtyErrorLabel = getLabel('cart.quantity_not_positive_number', 'OrderErrorUiLabels')>
-        if (verifyQty('quantity', '${qtyErrorLabel}') == null) {
+        if (verifyQty('quantity', '${escapeVal(qtyErrorLabel, 'js')}') == null) {
             return;
         }
         
         <#-- verify amount (if applicable) -->
         if (checkAmtReq(productId) == 'Y') {
             <#assign amtErrorLabel = getLabel('AccountingFinAccountMustBePositive', 'AccountingErrorUiLabels')>
-            if (verifyQty('add_amount', '${amtErrorLabel}') == null) {
+            if (verifyQty('add_amount', '${escapeVal(amtErrorLabel, 'js')}') == null) {
                 return;
             }
         }
 
-        <#-- Scipio: TODO?: This appears to be a sanity check to prevent trying to add a virtual product, which would be good,
+        <#-- SCIPIO: TODO?: This appears to be a sanity check to prevent trying to add a virtual product, which would be good,
              except it's not friendly to have this check in additem submit... isVirtual method is gone...
              server _should_ do this check anyway...
         if (isVirtual(addProductId)) {
-            document.location = '<@ofbizUrl>product?category_id=${categoryId!}&amp;product_id=</@ofbizUrl>' + addProductId;
+            document.location = '<@ofbizUrl>product?category_id=${escapeVal(categoryId!, 'js')}&amp;product_id=</@ofbizUrl>' + addProductId;
             return;
         }
         -->
@@ -177,26 +177,26 @@
     function verifyQty(fieldId, qtyErrorLabel) {
         var quantity = jQuery('#' + fieldId).val();
         if (!quantity) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}", qtyErrorLabel);
             return null;
         }
         quantity = quantity.trim();
         jQuery('#' + fieldId).val(quantity);
         if (!quantity) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}", qtyErrorLabel);
             return null;
         }
         if (!quantity.match(/^[0-9.,]+$/)) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}", qtyErrorLabel);
             return null;
         }
         quantity = parseFloat(quantity);
         if (isNaN(quantity)) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}", qtyErrorLabel);
             return null;
         }
         if (quantity <= 0) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}", qtyErrorLabel);
             return null;
         }
         return quantity;
@@ -239,7 +239,7 @@
                 </#if>
                 -->
                 <#-- Asset Usage price calculation -->
-                <#-- Scipio: TODO?: styling for this detail info -->
+                <#-- SCIPIO: TODO?: styling for this detail info -->
                 <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
                     <#if product.reserv2ndPPPerc?? && product.reserv2ndPPPerc != 0><br />${uiLabelMap.ProductReserv2ndPPPerc}<#if !product.reservNthPPPerc?? || product.reservNthPPPerc == 0> ${uiLabelMap.CommonUntil} ${product.reservMaxPersons!}</#if><#rt/>
                         <#lt/> <span class="product-price"><@ofbizCurrency amount=(product.reserv2ndPPPerc*price.price/100) isoCode=price.currencyUsed /></span></#if>
@@ -313,19 +313,19 @@
                     <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"html") />                    
                     <#assign inStock = true />
                     
-                    <#-- Scipio: TODO: We currently have no client-side check for incompatible (FEATURE_IACTN_INCOMP) and dependent features.
+                    <#-- SCIPIO: TODO: We currently have no client-side check for incompatible (FEATURE_IACTN_INCOMP) and dependent features.
                         See org.ofbiz.product.product.ProductWorker.getVariantFromFeatureTree(String, List<String>, Delegator).
                         The check only happens server-side currently. -->
                     
-                    <#-- Scipio: TODO: There is another case not currently handled properly: ALTERNATIVE_PACKAGE - see CDR-1111-BX2 -->
+                    <#-- SCIPIO: TODO: There is another case not currently handled properly: ALTERNATIVE_PACKAGE - see CDR-1111-BX2 -->
                     
-                    <#-- Scipio: This field should generally not be present! It is only for product that support/require an amount
+                    <#-- SCIPIO: This field should generally not be present! It is only for product that support/require an amount
                         in ADDITION to the quantity field. You also cannot know this for sure beforehand because for virtuals it is set on the
                         specific variant, so it has to be updated through JS lookups (the initial is only for the virtual product, but each variant can be different).  -->
                     <#macro amountField>
                         <#local fieldStyle = "">
                         <#if (product.requireAmount!"N") != "Y">
-                            <#-- Scipio: Issues with css
+                            <#-- SCIPIO: Issues with css
                             <#assign hiddenStyle = styles.hidden!/>-->
                             <#local fieldStyle = "display: none;">
                         </#if>
@@ -348,12 +348,12 @@
                             <@amountField />
                             <@script>
                                 featureCount = ${featureLists?size};
-                                featureIdList = [<#list featureLists as featureList>"${featureList.productFeatureTypeId?js_string}"<#if featureList_has_next>,</#if></#list>];
+                                featureIdList = [<#list featureLists as featureList>"${escapeVal(featureList.productFeatureTypeId, 'js')}"<#if featureList_has_next>,</#if></#list>];
                                 jQuery(document).ready(function() {
-                                  <#-- Scipio: FIXME?: This forces the select to return to their empty values upon page refresh.
+                                  <#-- SCIPIO: FIXME?: This forces the select to return to their empty values upon page refresh.
                                       We don't really want this, but otherwise values after browser refresh are currently too inconsistent -->
                                   <#list featureLists as featureList>
-                                    jQuery('#FT_${featureList.productFeatureTypeId}').val('');
+                                    jQuery('#FT_${escapeVal(featureList.productFeatureTypeId, 'js')}').val('');
                                   </#list>
                                 });
                             </@script>
@@ -381,10 +381,10 @@
                                     featureIdList = <@objectAsScript lang="js" object=featureSet />;
                                     
                                     jQuery(document).ready(function() {
-                                      <#-- Scipio: FIXME?: This forces the select to return to their empty values upon page refresh.
+                                      <#-- SCIPIO: FIXME?: This forces the select to return to their empty values upon page refresh.
                                           We don't really want this, but otherwise values after browser refresh are currently too inconsistent -->
                                       <#list featureSet as currentType>
-                                        jQuery('#FT_${currentType}').val('');
+                                        jQuery('#FT_${escapeVal(currentType, 'js')}').val('');
                                       </#list>
                                     });
                                 </@script>
@@ -394,7 +394,7 @@
                             </#if>
                         </#if>
                     <#else>
-                        <#-- Scipio: This is a sanity check, leave here for debugging, will do no harm -->
+                        <#-- SCIPIO: This is a sanity check, leave here for debugging, will do no harm -->
                         <#if selFeatureTypes?has_content>
                           <p>
                             <strong>WARN: </strong> Product has selectable features 
@@ -419,15 +419,15 @@
                     <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
                         <#if inStock>
                             <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
-                                <#-- Scipio: NOTE: here the actual dateType sent to server is yyyy-MM-dd -->
+                                <#-- SCIPIO: NOTE: here the actual dateType sent to server is yyyy-MM-dd -->
                                 <@field type="datetime" dateType="date" name="reservStart" maxlength=10 value=(parameters.reservStart!(earliestReservStartDate?string?substring(0, 10))) label=uiLabelMap.EcommerceStartdate />
 
-                                <#-- Scipio: TODO?: Consolidate these two inputs?... I think reservLength is more important... reservEnd is not included on cart
+                                <#-- SCIPIO: TODO?: Consolidate these two inputs?... I think reservLength is more important... reservEnd is not included on cart
                                 <@field type="datetime" dateType="date" name="reservEnd" maxlength=10 value=(parameters.reservEnd!) label=uiLabelMap.CommonEndDate /> -->
                                 <@field type="input" size="4" name="reservLength" value=(parameters.reservLength!) label=uiLabelMap.CommonDays />
 
                                 <@field type="input" size="4" name="reservPersons" value=(parameters.reservPersons!"1") label=uiLabelMap.CommonPersons/>
-                                <#-- Scipio: "Rooms" is too specific without checking product config: label=uiLabelMap.ProductRooms -->
+                                <#-- SCIPIO: "Rooms" is too specific without checking product config: label=uiLabelMap.ProductRooms -->
                                 <@field type="input" size="4" name="quantity" id="quantity" value=(parameters.quantity!"1") maxLength="4" label=uiLabelMap.CommonQuantity/>
                             <#else> 
                                 <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value=(parameters.quantity!"1") size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
@@ -448,7 +448,7 @@
                             </#if>
                         </#if>
                     <#elseif (product.virtualVariantMethodEnum!) == "VV_FEATURETREE">
-                        <#-- Scipio: NOTE: All stuff for VV_FEATURETREE should already be included above (except button) -->
+                        <#-- SCIPIO: NOTE: All stuff for VV_FEATURETREE should already be included above (except button) -->
                         <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12} ${styles.link_run_session!} ${styles.action_add!}"/> 
                     </#if>                 
 

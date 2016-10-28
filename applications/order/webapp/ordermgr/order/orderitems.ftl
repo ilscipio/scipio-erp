@@ -76,7 +76,7 @@ under the License.
                                             </#list>
                                             </ul>
                                         </#if>
-                                        <#-- Scipio: order by ProductContent.sequenceNum -->
+                                        <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                         <#if downloadContents?has_content>
                                            <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload class="${styles.link_nav!} ${styles.action_export!}">
@@ -518,7 +518,7 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}]
-                                        ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
+                                        ${shipGroupAddress.address1!(uiLabelMap.OrderNotShipped)}
                                     </@td>
                                     <@td align="center">
                                         ${shipGroupAssoc.quantity?string.number}&nbsp;

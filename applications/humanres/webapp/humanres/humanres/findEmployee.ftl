@@ -31,7 +31,7 @@ under the License.
 -->
   </@menu>
 </#macro>
-<@section id="findEmployee"><#--Scipio: no entries:  menuContent=menuContent -->
+<@section id="findEmployee"><#-- SCIPIO: no entries:  menuContent=menuContent -->
     <#if parameters.hideFields?default("N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:

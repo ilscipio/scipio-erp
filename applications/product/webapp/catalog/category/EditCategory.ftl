@@ -87,9 +87,9 @@ under the License.
               <#if productCategory?has_content>
                 <#assign fieldValue = productCategory.detailScreen!>
               </#if>
-              <#-- Scipio: Now points to shop -->
+              <#-- SCIPIO: Now points to shop -->
               <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue 
-                tooltip="${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://shop/widget/CatalogScreens.xml#categorydetail&quot;"/>
+                tooltip="${rawLabel('ProductDefaultsTo')} \"categorydetail\", ${rawLabel('ProductDetailScreenMessage')}: \"component://shop/widget/CatalogScreens.xml#categorydetail\""/>
             </@cell>
         </@row>
         <@row>

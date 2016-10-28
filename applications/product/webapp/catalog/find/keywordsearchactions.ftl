@@ -87,7 +87,7 @@ under the License.
         <form method="post" action="" name="searchShowParams">
           <input type="hidden" name="clearSearch" value="N" />
           <#assign searchParams = Static["org.ofbiz.product.product.ProductSearchSession"].makeSearchParametersString(session)>
-          <#-- Scipio: TODO: Review the escaping here -->
+          <#-- SCIPIO: TODO: Review the escaping here -->
           <@field type="input" label=uiLabelMap.ProductPlainSearchParameters size="60" name="searchParameters" readonly=true value=rawString(searchParams) />
           <@field type="input" label=uiLabelMap.ProductHtmlSearchParameters size="60" name="searchParameters" readonly=true value=rawString(searchParams)?html />
         </form>

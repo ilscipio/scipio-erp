@@ -39,7 +39,7 @@ under the License.
   </#if>
 
   <#if techDataCalendar?has_content>
-    <@field type="display" label=uiLabelMap.ManufacturingCalendarId tooltip="(${uiLabelMap.CommonNotModifRecreat})" value=(techDataCalendar.calendarId!) />
+    <@field type="display" label=uiLabelMap.ManufacturingCalendarId tooltip="(${rawLabel('CommonNotModifRecreat')})" value=(techDataCalendar.calendarId!) />
   <#else>
     <@field type="input" required=true label=uiLabelMap.ManufacturingCalendarId size="12" name="calendarId" value=(calendarData.calendarId!) />
   </#if>

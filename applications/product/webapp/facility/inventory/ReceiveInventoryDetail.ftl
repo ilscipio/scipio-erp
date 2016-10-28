@@ -367,7 +367,7 @@
                                         <@field type="input" name="ownerPartyId_o_${orderItem_index}" size="20" maxlength="20" value=(facility.ownerPartyId)/>
                                     </@td>
                                     <@td>
-                                        <#-- FIXME: Scipio: Let's see how to handle this -->
+                                        <#-- FIXME: SCIPIO: Let's see how to handle this -->
                                         <#-- <#if (currencyUomId!'') != (orderCurrencyUomId!'')>
                                             <input type="hidden" name="orderCurrencyUomId_o_${orderItem_index}" value="${orderCurrencyUomId!}" />
                                             <@field type="input" id="orderCurrencyUnitPrice_${orderItem_index}" name="orderCurrencyUnitPrice_o_${orderItem_index}" value=orderCurrencyUnitPriceMap[orderItem.orderItemSeqId] onChange="javascript:getConvertedPrice(orderCurrencyUnitPrice_${orderItem_index}, '${orderCurrencyUomId}', '${currencyUomId}', '${orderItem_index}', '${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}', '${itemCost}');" size="6" maxlength="20" />

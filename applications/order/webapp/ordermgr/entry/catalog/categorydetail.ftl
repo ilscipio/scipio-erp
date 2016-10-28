@@ -41,7 +41,7 @@ under the License.
      }
 </@script>
 
-<#-- Scipio: TODO?: convert to @paginate, but this has special AJAX (NOTE: maybe leave as-is...) -->
+<#-- SCIPIO: TODO?: convert to @paginate, but this has special AJAX (NOTE: maybe leave as-is...) -->
 <#macro paginationControls>
     <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>
       <#if (viewIndexMax?int > 0)>

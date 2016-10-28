@@ -36,7 +36,7 @@ under the License.
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </@field>
-          <#-- Scipio: make it part of menu further below, otherwise looks strange
+          <#-- SCIPIO: make it part of menu further below, otherwise looks strange
             <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
           -->
         </form>
@@ -45,7 +45,7 @@ under the License.
     </#if>
   </#if>
 
-<#-- Scipio: If we are editing an address currently selected for shipping in cart, show this warning.
+<#-- SCIPIO: If we are editing an address currently selected for shipping in cart, show this warning.
     This is mostly needed for checkout payment, but we'll just show for all cases to be safe. -->
 <#if contactMech??>
   <#if !cart?? && sessionAttributes.shoppingCart??>
@@ -56,7 +56,7 @@ under the License.
   </#if>
 </#if>
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
@@ -71,7 +71,7 @@ under the License.
 <#if !contactMech??>
   <#assign sectionTitle = uiLabelMap.PartyCreateNewContactInfo>
 <#else>
-  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.PartyEditContactInfo>-->
+  <#-- SCIPIO: duplicate: <#assign sectionTitle = uiLabelMap.PartyEditContactInfo>-->
   <#assign sectionTitle = "">
 </#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
@@ -126,7 +126,7 @@ under the License.
         </@field>
     </#if>
     
-  <#-- Scipio: NOTE: The target depends on whether creating or updating. When creating, want to return, whereas updating want to get redirected to donepage. -->  
+  <#-- SCIPIO: NOTE: The target depends on whether creating or updating. When creating, want to return, whereas updating want to get redirected to donepage. -->  
   <#if contactMech??>
     <#assign targetParamStr>&amp;targetPageResponse=redirect-done</#assign>
   <#else>
@@ -148,7 +148,7 @@ under the License.
     </#if>
 
     <#if contactMechTypeId == "POSTAL_ADDRESS">
-      <#-- Scipio: Delegated -->
+      <#-- SCIPIO: Delegated -->
         <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
             ctxVars={
               "pafFieldNamePrefix":"",
@@ -158,7 +158,7 @@ under the License.
     <#elseif contactMechTypeId == "TELECOM_NUMBER">
       <@telecomNumberField label=uiLabelMap.PartyPhoneNumber countryCode=((telecomNumberData.countryCode)!) areaCode=((telecomNumberData.areaCode)!) 
         contactNumber=((telecomNumberData.contactNumber)!) extension=((partyContactMechData.extension)!) />
-      <#-- Scipio: use tooltips
+      <#-- SCIPIO: use tooltips
       <@field type="display">
           [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
       </@field>

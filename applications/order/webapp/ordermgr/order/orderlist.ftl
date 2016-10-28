@@ -38,7 +38,7 @@ under the License.
 <#-- order list -->
 <@section>
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
-      <#-- Scipio: Use alt/simple checkboxes, currently implied by default-alt1
+      <#-- SCIPIO: Use alt/simple checkboxes, currently implied by default-alt1
         FIXME: here, manually override checkboxType for now to preserve the old look (because default-alt1 is slightly non-standard) but really it should be left to styles hash! 
             Needs to be sorted out globally... -->
       <@fields type="default-alt1" checkboxType="simple-standard"> 
@@ -138,19 +138,19 @@ under the License.
               <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
               <@td>
                   <#if filterInventoryProblems.contains(orderHeader.orderId)>
-                    Inv&nbsp;
+                    Inv 
                   </#if>
                   <#if filterAuthProblems.contains(orderHeader.orderId)>
-                   Aut&nbsp;
+                    Aut 
                   </#if>
                   <#if filterPOsOpenPastTheirETA.contains(orderHeader.orderId)>
-                    ETA&nbsp;
+                    ETA 
                   </#if>
                   <#if filterPOsWithRejectedItems.contains(orderHeader.orderId)>
-                    Rej&nbsp;
+                    Rej 
                   </#if>
                   <#if filterPartiallyReceivedPOs.contains(orderHeader.orderId)>
-                    Part&nbsp;
+                    Part 
                   </#if>
               </@td>
               <#else>

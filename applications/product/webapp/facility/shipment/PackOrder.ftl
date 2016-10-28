@@ -105,7 +105,7 @@ under the License.
     </@section>
 
     <#if showInput != "N" && ((orderHeader?exists && orderHeader?has_content))>
-        <#assign sectionTitle>${uiLabelMap.ProductOrderId} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</#assign>
+        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
         <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
             <#if orderItemShipGroup?has_content>
                 <#if (orderItemShipGroup.contactMechId)?has_content>
@@ -339,9 +339,9 @@ under the License.
                                             <@field type="textarea" name="handlingInstructions" rows="2" cols="30">${packingSession.getHandlingInstructions()!}</@field>
                                         </@td>
                                         <@td>
-                                            <#assign buttonName = "${uiLabelMap.ProductComplete}">
+                                            <#assign buttonName = uiLabelMap.ProductComplete>
                                             <#if (forceComplete!"false") == "true">
-                                                <#assign buttonName = "${uiLabelMap.ProductCompleteForce}">
+                                                <#assign buttonName = uiLabelMap.ProductCompleteForce>
                                             </#if>
                                             <@field type="submit" text=buttonName onClick="javascript:document.completePackForm.submit();"/>
                                         </@td>

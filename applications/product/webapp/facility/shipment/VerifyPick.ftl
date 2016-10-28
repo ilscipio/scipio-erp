@@ -45,7 +45,7 @@ under the License.
     </@section>
     
     <#if orderHeader?? && orderHeader?has_content && orderItemShipGroup?has_content>
-        <#assign sectionTitle>${uiLabelMap.ProductOrderId} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</#assign>
+        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
         <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
             <#if (orderItemShipGroup.contactMechId)?has_content>
                 <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>

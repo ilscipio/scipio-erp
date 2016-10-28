@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: Migrated from orderhistory.ftl -->
+<#-- SCIPIO: Migrated from orderhistory.ftl -->
 <#--<@section>-->
   <#if downloadOrderRoleAndProductContentInfoList?has_content>
     <@table type="data-list" id="availableTitleDownload" summary="This table display available title for download.">

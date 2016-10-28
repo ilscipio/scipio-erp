@@ -203,7 +203,7 @@ under the License.
 </div>
 
 <#macro rightMenu>
-      <#-- Scipio: NOTE: We must display something for the anonymous user that has a partyId
+      <#-- SCIPIO: NOTE: We must display something for the anonymous user that has a partyId
           attached (created during anon checkout), because otherwise he has no way to clear his session.
           His temporary partyId is now (and must be) kept after checkout is done, for technical reasons,
           but also it's very convenient. 

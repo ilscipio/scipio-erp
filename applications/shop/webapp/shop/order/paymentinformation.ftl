@@ -18,14 +18,14 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = "${requestParameters.paymentMethodTypeId!}">
 </#if>
 <@script>
 function shipBillAddr() {
-    <#-- Scipio: NOTE: delim here is &, NOT &amp; -->
+    <#-- SCIPIO: NOTE: delim here is &, NOT &amp; -->
     <#if (requestParameters.singleUsePayment!"N") == "Y">
       <#assign singleUse = "&singleUsePayment=Y">
     <#else>

@@ -22,7 +22,7 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productCategoryId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${uiLabelMap.ProductBackToEditCategory}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${rawLabel('ProductBackToEditCategory')}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
   </#if>
   </@menu>
 </#macro>

@@ -22,7 +22,7 @@ under the License.
   <#assign eftParams = parameters>
 </#if>
 
-<#-- Scipio: EFT account fields, originally from editeftaccount.ftl 
+<#-- SCIPIO: EFT account fields, originally from editeftaccount.ftl 
   for pre-fill, requires:
     eftAccountData 
     paymentMethodData
@@ -34,7 +34,7 @@ under the License.
 <@field type="input" label=uiLabelMap.AccountingRoutingNumber required=true size="10" maxlength="30" name="${fieldNamePrefix}routingNumber" value=(eftParams["${fieldNamePrefix}routingNumber"]!(eftAccountData.routingNumber)!(eafFallbacks.routingNumber)!) />
 <@field type="select" label=uiLabelMap.AccountingAccountType required=true name="${fieldNamePrefix}accountType">
   <#assign selectedAccountType = (eftParams["${fieldNamePrefix}accountType"]!(eftAccountData.accountType)!(eafFallbacks.accountType)!)>
-  <#-- Scipio: NOTE: These type names are very loosely defined, so we must accept others... 
+  <#-- SCIPIO: NOTE: These type names are very loosely defined, so we must accept others... 
       FIXME: Server-side may not validate these currently -->
   <#if selectedAccountType?has_content && !["Checking", "Savings"]?seq_contains(selectedAccountType)>
     <option value="${selectedAccountType}">${selectedAccountType!}</option>

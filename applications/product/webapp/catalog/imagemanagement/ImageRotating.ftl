@@ -29,7 +29,7 @@ under the License.
     }
 </style>
 <@script>
-<#-- Scipio: this breaks everything (?)
+<#-- SCIPIO: this breaks everything (?)
 jQuery.noConflict();-->
 jQuery(document).ready(function(){
     var angleHold = 0;

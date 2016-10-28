@@ -21,7 +21,7 @@ under the License.
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-      <#-- Scipio: don't enable responsive on this table, comes out wrong -->
+      <#-- SCIPIO: don't enable responsive on this table, comes out wrong -->
       <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">

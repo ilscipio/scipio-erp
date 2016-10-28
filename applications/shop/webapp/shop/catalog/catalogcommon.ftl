@@ -1,5 +1,5 @@
 
-<#-- Scipio: common shop catalog definitions and macros -->
+<#-- SCIPIO: common shop catalog definitions and macros -->
 
 <#include "../common/common.ftl">
 
@@ -122,7 +122,7 @@
         </#list>
     </#if>
 
-    <#-- Scipio: Debugging info
+    <#-- SCIPIO: Debugging info
     <@heading relLevel=+1>Debugging Info</@heading>
     <p style="font-size:0.7em;">Product ID: ${product.productId}</p>
     <p style="font-size:0.7em;">Product info map: ${product?string}</p>

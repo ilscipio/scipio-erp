@@ -21,7 +21,7 @@ under the License.
   <@section title="${rawLabel('EcommerceStep')} 1: ${rawLabel('PageTitleShoppingCart')}">
   <div id="cartSummaryPanel" style="display: none;">
     <a href="javascript:void(0);" id="openCartPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
-    <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->
+    <#-- SCIPIO: Always disable responsive on this one or it won't play nice with JS... -->
     <@table type="data-list" responsive=false id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">
       <@thead>
         <@tr>
@@ -97,7 +97,7 @@ under the License.
             <@td>&nbsp;</@td>
             </@tr>
         </#list>
-        <#--Scipio: styling issues: 
+        <#-- SCIPIO: styling issues: 
         </@tbody>
         <@tfoot>-->
         <@tr>
@@ -143,7 +143,7 @@ under the License.
            </@td>
            <@td>&nbsp;</@td>     
         </@tr>
-      <#--Scipio: styling issues: 
+      <#-- SCIPIO: styling issues: 
       </@tfoot>-->
         </@tbody>
     </@table>
@@ -157,7 +157,7 @@ under the License.
           <div id="cartFormServerError" class="errorMessage"></div>
         </@alert>
 
-        <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->
+        <#-- SCIPIO: Always disable responsive on this one or it won't play nice with JS... -->
         <@table type="data-list" responsive=false id="editCartPanel_cartItems">
           <@thead>
             <@tr>
@@ -268,7 +268,7 @@ under the License.
                 </#if>
               </@tr>
             </#list>
-            <#--Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tbody>
             <@tfoot>-->
             <@tr>
@@ -330,8 +330,7 @@ under the License.
                 <@td>&nbsp;</@td>
             </@tr>
 
-            <#--
-            Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tfoot>-->
             </@tbody>
         </@table>

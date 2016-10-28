@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
@@ -33,7 +33,7 @@ under the License.
         </#if>
       </@menu>
     </#macro>
-    <#assign sectionTitle>${uiLabelMap.OrderOrder} <#if orderHeader?has_content>${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a> </#if>${uiLabelMap.CommonInformation}</#assign>
+    <#assign sectionTitle>${getLabel('OrderOrder')} <#if orderHeader?has_content>${getLabel('CommonNbr')}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a> </#if>${getLabel('CommonInformation')}</#assign>
     <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
         <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
             <#-- placing customer information -->

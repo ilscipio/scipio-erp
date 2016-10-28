@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Scipio: WARN: 
+<#-- SCIPIO: WARN: 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 This template is no longer used by shop. If core fixes are applied to this file,
 they may need to be duplicated to:
@@ -69,7 +69,7 @@ function toggleBillingAccount(box) {
     <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
   </@menu>
 </#macro>
-<@section title="${rawLabel('OrderWhereShallWeShipIt')}?" menuContent=menuContent><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 1) ${uiLabelMap.OrderWhereShallWeShipIt}? -->
+<@section title="${rawLabel('OrderWhereShallWeShipIt')}?" menuContent=menuContent><#-- SCIPIO: No numbers for multi-page checkouts, make checkout too rigid: 1) ${uiLabelMap.OrderWhereShallWeShipIt}? -->
   <#if (cart.getShipGroupSize() > 1)>
     <@alert type="info">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</@alert>
   </#if>
@@ -83,7 +83,7 @@ function toggleBillingAccount(box) {
           <#list shippingContactMechList as shippingContactMech>
             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
             <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
-            <#-- Scipio: auto check if it's the only one -->
+            <#-- SCIPIO: auto check if it's the only one -->
             <#assign checkThisAddress = checkThisAddress || (shippingContactMechList?size == 1)>
             <#assign postfixContent></#assign>
             <#assign labelContent>
@@ -107,7 +107,7 @@ function toggleBillingAccount(box) {
 
     <#-- Party Tax Info -->
     <@section title=uiLabelMap.PartyTaxIdentification>
-      <#-- Scipio: NOTE: Can simply add this around to change the look:
+      <#-- SCIPIO: NOTE: Can simply add this around to change the look:
       <@fields type="default-compact"> -->
         <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" /> 
       <#--</@fields>-->
@@ -123,7 +123,7 @@ function toggleBillingAccount(box) {
           </@field>
       <#else>
         <#list agreements as agreement>
-          <#-- Scipio: I don't know why this was the condition: checked=checkThisAddress -->
+          <#-- SCIPIO: I don't know why this was the condition: checked=checkThisAddress -->
           <@checkoutInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=true labelContent="${agreement.description!} will be used for this order." />
         </#list>
       </#if>

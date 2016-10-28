@@ -39,7 +39,7 @@ under the License.
     <#assign eventMessageList = requestAttributes._EVENT_MESSAGE_LIST_!>
   </#if>
 
-  <#-- Scipio: FIXME: All the rawString calls here are dangerous and not right, 
+  <#-- SCIPIO: FIXME: All the rawString calls here are dangerous and not right, 
        they should be fixed in the upstream code instead! -->
 
   <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
@@ -81,7 +81,7 @@ under the License.
       </#if>
     
         
-      <#-- Scipio: only if it is gotten from context and needs to include explicit content only -->
+      <#-- SCIPIO: only if it is gotten from context and needs to include explicit content only -->
       <#if infoMessage?has_content>
             <@alert type="info">
                 <#noescape>${rawString(infoMessage)}</#noescape>

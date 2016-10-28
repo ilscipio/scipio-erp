@@ -39,7 +39,7 @@ under the License.
       <#assign lastkeyword = "">
       <#if keywordThesauruses?has_content>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
-            <#-- Scipio: TODO: rewrite this somehow without need for open/close -->
+            <#-- SCIPIO: TODO: rewrite this somehow without need for open/close -->
             <#list keywordThesauruses as keyword>
               <#assign relationship = keyword.getRelatedOne("RelationshipEnumeration", true)>
               <#if keyword.enteredKeyword == lastkeyword><#assign sameRow=true><#else><#assign lastkeyword=keyword.enteredKeyword><#assign sameRow=false></#if>

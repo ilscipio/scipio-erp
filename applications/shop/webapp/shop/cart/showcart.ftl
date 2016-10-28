@@ -51,7 +51,7 @@ function gwAll(e) {
         }
     }
     if (cartSize > passed && selectedValue != "NO^") {
-        showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.EcommerceSelectedGiftWrap}");
+        showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.EcommerceSelectedGiftWrap, 'js')}");
     }
     cform.submit();
 }
@@ -209,7 +209,7 @@ function setAlternateGwp(field) {
                         <@td>
                             <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                                 <#if fixedAssetExist == true && cartLine.getReservStart()??>
-                                  <#-- Scipio: NOTE: stock bugfixes applied here -->
+                                  <#-- SCIPIO: NOTE: stock bugfixes applied here -->
                                   <@modal id="${rawString(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>   
                                     <@fields type="default-compact"> 
                                       <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
@@ -223,7 +223,7 @@ function setAlternateGwp(field) {
                                 </#if>
                             <#else><#-- Is Promo or Shoppinglist -->
                                 <#if fixedAssetExist == true>
-                                    <#-- Scipio:FIXME?: can't put in modal easily because inputs end up outside form -->
+                                    <#-- SCIPIO:FIXME?: can't put in modal easily because inputs end up outside form -->
                                     <#if cartLine.getReservStart()??>
                                       <@fields type="default-compact"> 
                                         <@field type="datetime" dateType="date" name="reservStart_${cartLineIndex}" maxlength=10 label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) 
@@ -255,7 +255,7 @@ function setAlternateGwp(field) {
                         <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value=(cartLineIndex) onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
                     </@tr>
                 </#list>
-            <#--Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tbody>
             <@tfoot>-->
                     <@tr>
@@ -313,7 +313,7 @@ function setAlternateGwp(field) {
                     <@td>&nbsp;</@td>
                 </@tr>
 
-            <#--Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tfoot>-->
             </@tbody>
         </@table>
@@ -346,7 +346,7 @@ function setAlternateGwp(field) {
 </@section>
 
 
-<@section> <#-- Scipio: look strange: title=uiLabelMap.ProductPromotions -->
+<@section> <#-- SCIPIO: look strange: title=uiLabelMap.ProductPromotions -->
     <@row>
         <@cell columns=6>
             <@section title=uiLabelMap.ProductPromoCodes>

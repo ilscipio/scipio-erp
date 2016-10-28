@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title=uiLabelMap.ProductAdvancedSearchInCategory>
     <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
-      <#-- Scipio: don't hardcode these
+      <#-- SCIPIO: don't hardcode these
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <input type="hidden" name="PAGING" value="Y"/>-->
       <input type="hidden" name="noConditionFind" value="Y"/>
@@ -36,7 +36,7 @@ under the License.
             <@field type="select" label=uiLabelMap.ProductCatalog name="SEARCH_CATALOG_ID">
               <option value="">- ${uiLabelMap.ProductAnyCatalog} -</option>
               <#list prodCatalogs as prodCatalog>
-                <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}")>
+                  <#assign displayDesc = prodCatalog.catalogName!(uiLabelMap.ProductNoDescription)>
                   <#if 18 < displayDesc?length>
                     <#assign displayDesc = displayDesc[0..15] + "...">
                   </#if>
@@ -132,7 +132,7 @@ under the License.
           <@field type="select" label=((productFeatureType.get('description',locale))!) name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description?default("${uiLabelMap.ProductNoDescription}")} [${productFeature.productFeatureId}]</option>
+              <option value="${productFeature.productFeatureId}">${productFeature.description!(uiLabelMap.ProductNoDescription)} [${productFeature.productFeatureId}]</option>
               </#list>
           </@field>
         </#list>

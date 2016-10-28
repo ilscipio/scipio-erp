@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Scipio: WARN: 
+<#-- SCIPIO: WARN: 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 This template is no longer used by shop. If core fixes are applied to this file,
 they may need to be duplicated to:
@@ -25,7 +25,7 @@ they may need to be duplicated to:
 -->
 
 <#include "ordercommon.ftl">
-<#-- Scipio: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
+<#-- SCIPIO: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
 <#-- TODO : Need formatting -->
 <@script>
 function submitForm(form, mode, value) {
@@ -94,7 +94,7 @@ var issuerId = "";
  
 <#assign cart = shoppingCart! />
 
-<@section title="${rawLabel('OrderHowShallYouPay')}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+<@section title="${rawLabel('OrderHowShallYouPay')}?"><#-- SCIPIO: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
 
     <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
         <input type="hidden" name="checkoutpage" value="payment" />
@@ -103,7 +103,7 @@ var issuerId = "";
             <#-- Payment Method Selection -->
 
             <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-              <#macro payMethContent args={}><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#macro><#-- Scipio: Use full so clearer: OrderMoneyOrder -->
+              <#macro payMethContent args={}><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#macro><#-- SCIPIO: Use full so clearer: OrderMoneyOrder -->
               <@checkoutInvField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId) labelContent=payMethContent/>
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
@@ -138,7 +138,7 @@ var issuerId = "";
               <@alert type="warning">${uiLabelMap.AccountingNoPaymentMethods}.</@alert>
             <#else>
               <#list paymentMethodList as paymentMethodLocal>
-                <#-- Scipio: workaround for access from macros -->
+                <#-- SCIPIO: workaround for access from macros -->
                 <#assign paymentMethod = paymentMethodLocal>
               
                 <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">

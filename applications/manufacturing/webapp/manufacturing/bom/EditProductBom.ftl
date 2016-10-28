@@ -103,7 +103,7 @@ function lookupBom() {
           </@field>
           <@field type="lookup" required=true label=uiLabelMap.ProductProductId value=(productId!) formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
           <@field type="lookup" required=true label=uiLabelMap.ManufacturingProductIdTo value=(productIdTo!) formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
-          <@field type="datetime" label=uiLabelMap.CommonFromDate tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})" name="fromDate" value="" size="25" maxlength="50" id="fromDate_1"/>
+          <@field type="datetime" label=uiLabelMap.CommonFromDate tooltip="(${rawLabel('ManufacturingWillBeSetToNow')})" name="fromDate" value="" size="25" maxlength="50" id="fromDate_1"/>
     <#else>
           <@field type="display" label=uiLabelMap.ProductProductId>${productId!}</@field>
           <@field type="display" label=uiLabelMap.ManufacturingProductIdTo>${productIdTo!}</@field>

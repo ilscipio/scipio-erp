@@ -47,13 +47,13 @@ under the License.
                         <@td>
                             <div class="productsummary">
                                 <div class="smallimage">
-                                    <#-- Scipio: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
+                                    <#-- SCIPIO: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
                                     <a href="<@ofbizCatalogUrl productCategoryId=productCategoryId/>">
                                         <span class="popup_link"><img alt="Small Image" src="${categoryImageUrl}"/></span>
                                     </a>
                                 </div>
                                 <div class="productbuy">
-                                    <#-- Scipio: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
+                                    <#-- SCIPIO: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
                                     <a class="${styles.link_nav_info_name!}"  style="font-size:12px" href="<@ofbizCatalogUrl productCategoryId=productCategoryId/>">${productCategory.categoryName!productCategoryId}</a>
                                 </div>
                                 <div class="productinfo">
@@ -63,7 +63,7 @@ under the License.
                                         <#list productCategoryMembers as productCategoryMember>
                                             <#if (i > 2)>
                                                 <#if productCategoryMembers[i]?has_content>
-                                                    <#-- Scipio: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
+                                                    <#-- SCIPIO: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
                                                     <a class="${styles.link_nav!} ${styles.action_view!}" href="<@ofbizCatalogUrl productCategoryId=productCategoryId/>">
                                                         <span>More...</span>
                                                     </a>

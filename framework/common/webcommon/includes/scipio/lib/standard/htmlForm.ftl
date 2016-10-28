@@ -301,7 +301,7 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
       </#if>
       
         <#if asmSelectDefaults>
-          <#-- Scipio: get options from styles -->
+          <#-- SCIPIO: get options from styles -->
           <#local defaultAsmSelectOpts = {
             "addItemTarget": 'top',
             "sortable": sortable!false,

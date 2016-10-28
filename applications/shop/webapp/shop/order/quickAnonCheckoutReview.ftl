@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@script>
     var clicked = 0;
@@ -26,11 +26,11 @@ under the License.
         if (clicked == 0) {
             clicked++;
             //window.location.replace("<@ofbizUrl>processorder</@ofbizUrl>");
-            document.${parameters.formNameValue}.processButton.value="${uiLabelMap.OrderSubmittingOrder}";
-            document.${parameters.formNameValue}.processButton.disabled=true;
-            document.${parameters.formNameValue}.submit();
+            document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.value="${escapeVal(uiLabelMap.OrderSubmittingOrder, 'js')}";
+            document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.disabled=true;
+            document["${escapeVal(parameters.formNameValue, 'js')}"].submit();
         } else {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.YoureOrderIsBeingProcessed}");
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.YoureOrderIsBeingProcessed, 'js')}");
         }
     }
 
@@ -55,7 +55,7 @@ under the License.
   <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
     <@row>
       <@cell class="+${styles.text_right!}">
-        <#if (parameters.checkoutpage)?has_content><#-- Scipio: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
+        <#if (parameters.checkoutpage)?has_content><#-- SCIPIO: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
           <input type="hidden" name="checkoutpage" value="${parameters.checkoutpage}" /><#-- ${requestParameters.checkoutpage} -->
         </#if>
         <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />

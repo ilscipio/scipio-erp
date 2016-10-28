@@ -53,7 +53,7 @@ under the License.
             <input type="hidden" name="orderItemSeqId" value=""/>
             <input type="hidden" name="shipGroupSeqId" value=""/>
             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
-              <#-- Scipio: FIXME? why is supplierPartyId the partyId? should have a supplierPartyId explicitly in groovy script to clarify this -->
+              <#-- SCIPIO: FIXME? why is supplierPartyId the partyId? should have a supplierPartyId explicitly in groovy script to clarify this -->
               <input type="hidden" name="supplierPartyId" value="${partyId!}"/>
               <input type="hidden" name="orderTypeId" value="PURCHASE_ORDER"/>
             </#if>
@@ -110,10 +110,10 @@ under the License.
                                       </#if>
                                   </div>
                                   <#if productId??>
-                                  <#-- Scipio: these are duplicates from far right column
+                                  <#-- SCIPIO: these are duplicates from far right column
                                   <div>
                                       <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
-                                      <#- Scipio: Now points to shop ->
+                                      <#- SCIPIO: Now points to shop ->
                                       <a href="<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${getLabel("Shop", "ShopUiLabels")}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                       <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
@@ -247,7 +247,7 @@ under the License.
                               </@td>
                               <@td>
                                     <@menu type="button">
-                                        <#-- Scipio: order by ProductContent.sequenceNum -->
+                                        <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                        
                                         <#if downloadContents?has_content>
@@ -267,7 +267,7 @@ under the License.
                                           </@modal>
                                         </#if>
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
-                                        <#-- Scipio: Now points to shop -->
+                                        <#-- SCIPIO: Now points to shop -->
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
@@ -325,7 +325,7 @@ under the License.
                                 <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
                                 <@tr>
                                     <@td class="align-text">
-                                        ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
+                                        ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.OrderNotShipped)}
                                     </@td>
                                     <@td></@td>
                                     <@td align="center">
@@ -348,7 +348,7 @@ under the License.
                               <#else>
                                 <@tr>
                                     <@td class="align-text">
-                                        ${uiLabelMap.OrderQtyShipped}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
+                                        ${uiLabelMap.OrderQtyShipped}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.OrderNotShipped)}
                                     </@td>
                                     <@td align="center">
                                         ${shippedQuantity!0}<input type="hidden" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shippedQuantity?string.number}"/>

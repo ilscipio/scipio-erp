@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
@@ -29,7 +29,7 @@ under the License.
     </@menu>
 </#macro>
 <@section menuContent=menuContent menuLayoutGeneral="bottom"><#--title=uiLabelMap.PartyChangePassword-->
-    <#-- Scipio: NOTE: view-switch replaced with redirect -->
+    <#-- SCIPIO: NOTE: view-switch replaced with redirect -->
     <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@ofbizUrl>">
 
       <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label=uiLabelMap.PartyOldPassword/>

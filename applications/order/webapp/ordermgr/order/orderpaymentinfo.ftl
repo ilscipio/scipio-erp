@@ -227,7 +227,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                         </@cell>
                     </@row>
                     <#if gatewayResponses?has_content>
-                        <@modal label="(${uiLabelMap.CommonDetail})" id="modal_AccountingFinAccount">
+                        <@modal label="(${rawLabel('CommonDetail')})" id="modal_AccountingFinAccount">
                                 <#list gatewayResponses as gatewayResponse>
                                   <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration", false)>
                                   ${(transactionCode.get("description",locale))?default("Unknown")}:
@@ -363,7 +363,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     
                     
                     <#if gatewayResponses?has_content>
-                        <@modal label="(${uiLabelMap.CommonDetail})" id="modal_AccountingCC">
+                        <@modal label="(${rawLabel('CommonDetail')})" id="modal_AccountingCC">
                                   <#list gatewayResponses as gatewayResponse>
                                     <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration", false)>
                                     ${(transactionCode.get("description",locale))?default("Unknown")}:

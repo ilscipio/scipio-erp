@@ -25,7 +25,7 @@ under the License.
   </@menu>
 <#else>
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
@@ -38,7 +38,7 @@ under the License.
 <#if !eftAccount??>
   <#assign sectionTitle = uiLabelMap.AccountingAddNewEftAccount />
 <#else>
-  <#-- Scipio: duplicate: <#assign sectionTitle = uiLabelMap.PageTitleEditEFTAccount/>-->
+  <#-- SCIPIO: duplicate: <#assign sectionTitle = uiLabelMap.PageTitleEditEFTAccount/>-->
   <#assign sectionTitle = ""/>
 </#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
@@ -52,7 +52,7 @@ under the License.
     <@render resource="component://shop/widget/CustomerScreens.xml#eftAccountFields" ctxVars={"eafFieldNamePrefix":""} />
 
     <@field type="generic" label=uiLabelMap.PartyBillingAddress>
-        <#-- Scipio: Billing fields are replaced with common new defs (old defs that were here discarded) -->
+        <#-- SCIPIO: Billing fields are replaced with common new defs (old defs that were here discarded) -->
         <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
             ctxVars={"bapfUseNewAddr":true, "bapfNewAddrInline":false, "bapfFieldNamePrefix":""}/>
     </@field>

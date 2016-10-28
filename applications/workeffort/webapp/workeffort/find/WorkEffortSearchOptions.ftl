@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title=uiLabelMap.CommonAdvancedSearch>
     <form name="advToKeyWordSearchForm" method="post" action="<@ofbizUrl>WorkEffortSearchResults</@ofbizUrl>">
-        <#-- Scipio: don't hardcode
+        <#-- SCIPIO: don't hardcode
         <input type="hidden" name="VIEW_SIZE" value="25"/>-->
         <@field type="generic" label=uiLabelMap.WorkEffortKeywords>
             <@field type="input" name="SEARCH_STRING" size="40" value=(requestParameters.SEARCH_STRING!)/>&nbsp;

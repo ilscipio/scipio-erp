@@ -36,8 +36,8 @@ ${virtualJavaScript!}
 
         if (window[fieldName] == "_NONE_") {
             hack = document.createElement('span');
-            hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
+            hack.innerHTML="${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}";
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}");
             return;
         }
         window[fieldName] = window[fieldName].replace(/\&\#47;/g, "/");
@@ -163,7 +163,7 @@ ${virtualJavaScript!}
             if (element.name.substring(0, index) == fieldName) {
                  if (element.value == '' || element.value == 'NULL') {
                     option.checked = false;
-                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");
+                    showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonPleaseSelectAllFeaturesFirst, 'js')}");
                     return false;
                 }
             }

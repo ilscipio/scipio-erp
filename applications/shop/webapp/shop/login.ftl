@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Scipio: now points to shop -->
+<#-- SCIPIO: now points to shop -->
 <#assign janrainEnabled = getPropertyValue("shop.properties", "janrain.enabled")!"">
 <#assign appName = getPropertyValue("shop.properties", "janrain.appName")!"">
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
@@ -91,7 +91,7 @@ under the License.
                                         <@row>
                                             <@cell class="${styles.grid_large!}centered">
                                                 <@section title=uiLabelMap.CommonPassword>
-                                                    <#-- Scipio: WARN: Proper HTML-escaping of params high importance here -->
+                                                    <#-- SCIPIO: WARN: Proper HTML-escaping of params high importance here -->
                                                     <form method="post" action="${escapeFullUrl(makeOfbizUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
                                                         <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
                                                         <@row>
@@ -109,7 +109,7 @@ under the License.
                                 </small>
                              </@cell>
                             <@cell class="+${styles.text_right!}" columns=3>
-                                <#-- Scipio: workaround for form-within-form and form fields getting mixed up (form closed earlier):
+                                <#-- SCIPIO: workaround for form-within-form and form fields getting mixed up (form closed earlier):
                                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>-->
                                 <@field type="submit" submitType="link" href="javascript:document.loginform.submit();" widgetOnly=true value=uiLabelMap.CommonLogin class="${styles.link_run_session!} ${styles.action_login!}"/>
                             </@cell>

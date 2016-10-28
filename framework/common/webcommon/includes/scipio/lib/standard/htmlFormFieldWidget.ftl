@@ -394,7 +394,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           </#if>
         };
         
-        <#-- Scipio: How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
+        <#-- SCIPIO: How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
             This triggers onFDateChange which may transform the date and put it back in id_i18n.
             This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
         $("#${escapeVal(displayInputId, 'js')}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
@@ -607,7 +607,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <option value="">&nbsp;</option>
     </#if>
     <#list options as item>
-      <#-- Scipio: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
+      <#-- SCIPIO: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
       <#local itemValue = item.value!item.key!>
       <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
       <#if multiple>
@@ -929,7 +929,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local readonly = false>
   </#if>
 
-  <#-- Scipio: must have id on each elem or else the foundation switches break 
+  <#-- SCIPIO: must have id on each elem or else the foundation switches break 
        The first item receives the exact id passed to macro because this is what original ofbiz macros expect
        (and is logical for single items at least). -->
   <#local currentId = id>
@@ -1135,7 +1135,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local class = addClassArg(class, inlineClass)>
   <#local currentId = id>
   <#list items as item>
-    <#-- Scipio: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
+    <#-- SCIPIO: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
     <#local itemValue = item.value!item.key!>
     <#local itemClass = class>
     <#local itemAlert = alert>
@@ -1306,7 +1306,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#else>
     <#local progressArgs = {}>
   </#if>
-  <#-- Scipio: to omit button (show progress only), we use space-only title hack " " similar to what ofbiz does with hyperlinks with no label.
+  <#-- SCIPIO: to omit button (show progress only), we use space-only title hack " " similar to what ofbiz does with hyperlinks with no label.
     also support the string _NO_BTN_MARKUP_ for clarity -->
   <#if text == " " || text == "_NO_BTN_MARKUP_">
     <#local text = "">

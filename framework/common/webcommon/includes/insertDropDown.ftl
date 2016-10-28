@@ -26,7 +26,7 @@ ${topLine.textBegin!}
       <input type="hidden" name="${field.name}" value="${field.value}"/>
     </#list>
   </#if>
-  <select name="${topLine.selectionName!}" onchange="javascript:document.${topLine.action}.submit();">
+  <select name="${topLine.selectionName!}" onchange="javascript:document['${escapeVal(topLine.action, 'js-html')}'].submit();">
     <#list topLine.dropDownList as option>
       <option <#if option.key == topLine.selectedKey>selected="selected"</#if> value="${option.key!}">${option.value!}</option>
     </#list>

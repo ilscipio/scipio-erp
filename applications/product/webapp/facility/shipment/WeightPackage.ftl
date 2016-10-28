@@ -105,7 +105,7 @@ under the License.
                 </@thead>
                 <@tbody>
                 <#list packedLines as packedLine>
-                  <#-- Scipio: FIXME: form in table (invalid html) -->
+                  <#-- SCIPIO: FIXME: form in table (invalid html) -->
                   <form name="updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}" method="post" action="<@ofbizUrl>updatePackedLine</@ofbizUrl>">
                     <input type="hidden" name="orderId" value="${orderId!}"/>
                     <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
@@ -165,7 +165,7 @@ under the License.
                 <#if packedLines?has_content>
                   <hr/>
                 </#if>
-            <#-- Scipio: NOTE/FIXME?: this table is meant to align with the previous table... maybe should be part of it... -->
+            <#-- SCIPIO: NOTE/FIXME?: this table is meant to align with the previous table... maybe should be part of it... -->
             <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
                 <@tr>
                   <@td>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):

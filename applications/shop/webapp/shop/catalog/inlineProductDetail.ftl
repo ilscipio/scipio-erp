@@ -21,7 +21,7 @@ under the License.
 
 <#-- SCIPIO: FIXME: Lots of data labels can't localize (some from groovy) -->
 
-<#-- Scipio: TODO: rewrite virtual JS -->
+<#-- SCIPIO: TODO: rewrite virtual JS -->
 ${virtualJavaScript!}
 <#assign addedJavaScript = requestAttributes.addedJavaScript!"N"/>
 <#if ("N" == addedJavaScript)>
@@ -41,8 +41,8 @@ ${virtualJavaScript!}
 
         if (window[fieldName] == "_NONE_") {
             hack = document.createElement('span');
-            hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
+            hack.innerHTML="${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}";
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}");
             return;
         }
         window[fieldName] = window[fieldName].replace(/\&\#47;/g, "/");
@@ -180,7 +180,7 @@ ${virtualJavaScript!}
             if (element.name.substring(0, index) == fieldName) {
                  if (element.value == '' || element.value == 'NULL') {
                     option.checked = false;
-                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");
+                    showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonPleaseSelectAllFeaturesFirst, 'js')}");
                     return false;
                 }
             }
@@ -276,7 +276,7 @@ ${virtualJavaScript!}
 <#macro amountField>
     <#local fieldStyle = "">
     <#if (product.requireAmount!"N") != "Y">
-        <#-- Scipio: Issues with css
+        <#-- SCIPIO: Issues with css
         <#assign hiddenStyle = styles.hidden!/>-->
         <#local fieldStyle = "display: none;">
     </#if>

@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@section><#-- title=uiLabelMap.AccountingPaymentInformation-->
   <#-- initial screen show a list of options -->

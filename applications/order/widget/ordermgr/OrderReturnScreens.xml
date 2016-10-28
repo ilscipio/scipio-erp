@@ -23,7 +23,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindReturn"/>
-                <set field="activeMainMenuItem" value="return"/>
+                <set field="activeSubMenuItem" value="PARENT"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -31,10 +31,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonReturnDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <container>
+                            <link style="${styles.link_nav} ${styles.action_add}" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
+                        </container>
                         <screenlet>
-                            <container>
-                                <link style="${styles.link_nav} ${styles.action_add}" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
-                            </container>
                             <include-form name="FindReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>
                             <include-form name="ListReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>
                         </screenlet>
@@ -47,7 +47,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindQuickReturn"/>
-                <set field="activeMainMenuItem" value="return"/>
+                <set field="activeSubMenuItem" value="PARENT"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/QuickReturn.groovy"/>
             </actions>
             <widgets>
@@ -65,7 +65,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleReturnHeader"/>
-                <set field="activeMainMenuItem" value="return"/>
                 <set field="activeSubMenuItem" value="OrderReturnHeader"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/ordermgr-js/return.js" global="true"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
@@ -74,11 +73,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonReturnDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-form name="EditReturn" location="component://order/widget/ordermgr/ReturnForms.xml"/>
-                            </widgets>
-                        </section>
+                        <include-form name="EditReturn" location="component://order/widget/ordermgr/ReturnForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -88,7 +83,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleReturnList"/>
-                <set field="activeMainMenuItem" value="return"/>
+                <set field="activeSubMenuItem" value="PARENT"/>
                 <entity-condition list="returnList" entity-name="ReturnHeader"/>
             </actions>
             <widgets>
@@ -108,7 +103,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleReturnItems"/>
-                <set field="activeMainMenuItem" value="return"/>
                 <set field="activeSubMenuItem" value="OrderReturnItems"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnItems.groovy"/>
             </actions>
@@ -134,7 +128,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReturnHistory"/>
-                <set field="activeMainMenuItem" value="return"/>
                 <set field="activeSubMenuItem" value="OrderReturnHistory"/>
                 <set field="returnId" from-field="parameters.returnId"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnItems.groovy"/>

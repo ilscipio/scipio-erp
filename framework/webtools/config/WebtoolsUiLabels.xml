@@ -5961,8 +5961,8 @@
         <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
         <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
     </property>
-    <property key="WebtoolsTemplateApiDocs">
-        <value xml:lang="de">Vorlagen-API-Dok</value>
-        <value xml:lang="en">Template API Docs</value>
+    <property key="WebtoolsTemplateApiDocsTitle">
+        <value xml:lang="de">Templating Toolkit Documentation</value>
+        <value xml:lang="en">Templating Toolkit Documentation</value>
     </property>
 </resource>

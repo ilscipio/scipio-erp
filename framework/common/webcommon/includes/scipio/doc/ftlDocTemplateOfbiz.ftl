@@ -110,15 +110,15 @@
     </#if>
     
       
-    <div>
+    <div class="lib-pagetitledesc">
       <#-- duplicate
       <#if pageTitle?has_content>
         <h1 class="lib-pagetitle"><@labelText text=pageTitle /></h1>
       </#if>
       -->
       
-      <div>
-        <div style="float:left;">
+      <div class="tmpldoc-options-menu">
+        <div style="float:left;"><#-- FIXME? floats? -->
           <#-- WARN: use escapeVal on docPurpose if ever printed  -->
         <form method="get" action="<@ofbizWebappUrl uri=currPageIntraWebappUri escapeAs="html"/>">
           <@field type="select" inline=true name="docPurpose" events={"change": "jQuery(this).closest('form').submit();"}
@@ -133,7 +133,7 @@
         <div style="float:left; margin-left:1em;">
           <@render type="menu" resource="component://webtools/widget/Menus.xml#TemplateApiDocSubTabBar" />
         </div>
-        <div style="clear:both;"></div><#-- FIXME? old-style -->
+        <div style="clear:both;"></div>
       </div>
 
       <#if pageDesc?has_content>

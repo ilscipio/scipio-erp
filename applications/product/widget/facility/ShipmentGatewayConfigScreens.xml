@@ -29,7 +29,7 @@ under the License.
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFacilityAppDecorator" location="component://product/widget/facility/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>

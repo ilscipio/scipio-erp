@@ -33,7 +33,7 @@
                 <section>
                     <condition><not><if-empty field="createdPeriod"/></not></condition>
                     <widgets>                        
-                        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-screen name="CommonAssetMaintAppDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                             <decorator-section name="body">
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
@@ -103,7 +103,7 @@
                 <set field="titleProperty" value="PageTitleFindFixedAssetMaints"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAssetMaintAppDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>

@@ -28,7 +28,7 @@ under the License.
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -129,7 +129,7 @@ under the License.
                 <entity-one entity-name="PartyIcsAvsOverride" value-field="avsOverride"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>

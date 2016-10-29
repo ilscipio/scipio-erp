@@ -137,7 +137,7 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml" auto-decorator-section-include="true">
                                     <!-- NOTE: override-by-auto-include="true" allows decorators to override this pre-body manually if they need. -->
                                     <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
                                         <section>
@@ -157,7 +157,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml" auto-decorator-section-include="true">
                                     <decorator-section name="body">
                                         <label style="common-msg-error" text="${uiLabelMap.EcommerceYourShoppingCartEmpty}."/>
                                         <container>
@@ -169,7 +169,7 @@ under the License.
                         </section>
                     </widgets>
                     <fail-widgets>
-                        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                        <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml" auto-decorator-section-include="true">
                             <decorator-section name="body">
                                 <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
                             </decorator-section>
@@ -513,7 +513,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -542,7 +542,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderHistory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -571,7 +571,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderHistory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -613,7 +613,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -683,7 +683,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/RequestReturn.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>

@@ -27,7 +27,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Mrp"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonManufacturingAppDecorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->

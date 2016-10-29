@@ -64,6 +64,24 @@ under the License.
         </section>
     </screen>
 
+    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; simplifies the other decorators and screens -->
+    <screen name="CommonIsMgrAppDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="CommonSideBarMenu"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- Fixed Assets screens customized for Computer Hardware -->
     <screen name="CommonFixedAssetDecorator">
         <section>
@@ -76,7 +94,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonIsMgrAppDecorator" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section share-scope="false">
                             <condition>
@@ -170,7 +188,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonIsMgrAppDecorator" auto-decorator-section-include="true">
                     <!--
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true">
                         <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" />
@@ -253,6 +271,20 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
+        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
+    <screen name="CommonSideBarMenu">
+        <section>
+            <actions>
+                <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="fixedAssetPermissionCheck"/>
+                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

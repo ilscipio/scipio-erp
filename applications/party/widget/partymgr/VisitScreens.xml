@@ -29,7 +29,7 @@ under the License.
                 <set field="noConditionFind" value="Y"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -63,7 +63,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleListLoggedInUsers"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-screen name="LoggedInUsersScreen" />
                     </decorator-section>

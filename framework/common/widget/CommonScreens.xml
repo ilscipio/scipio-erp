@@ -1429,11 +1429,26 @@ under the License.
     
     <!-- Common SideBar Menu inclusion logic, adequate as a default in common/main decorator in most apps. 
         Accepts context fields:
+        
+        Permissions:
         * commonSideBarMenu.perm - name of single permission to check to allow showing MainSideBarMenu (default: none)
         * commonSideBarMenu.permAction - single permission action to check to allow showing MainSideBarMenu (default: none, optional for perm)
         * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (default: none)
           entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs
+        * commonSideBarMenu.permServ - single map of arguments for a permission service
+          * name - service name
+          * mainAction - main action
+          * servCtx - a map to use as source context for service call 
+            WARN: may be modified; treat as volatile
+          * resource - the resourceDescription arg of permission service interface
+        * commonSideBarMenu.permServList - list of maps for permission service calls
+          each map supports the same members as permServ
+ 
+        Conditions (Booleans):
         * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
+        * commonSideBarMenu.condList - list of extra booleans to check
+
+        Menu config:
         * commonSideBarMenu.targetMenuName - name of menu shown if all permissions and conditions pass (default: "MainSideBarMenu") 
           SPECIAL VALUE: "NONE"
         * commonSideBarMenu.fallbackMenuName - name of menu shown if permission or conditions fail (default: "DefMainSideBarMenu") 

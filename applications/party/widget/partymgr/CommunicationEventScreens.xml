@@ -33,7 +33,7 @@ under the License.
                 <set field="hasBasePermission" from-field="permResult.hasPermission"/>   
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -71,7 +71,7 @@ under the License.
                 <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -109,7 +109,7 @@ under the License.
                 <set field="entityName" value="CommunicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -839,7 +839,7 @@ under the License.
                 <!-- <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" /> -->
             </actions>
             <widgets>
-                <decorator-screen  name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen  name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-screen name="MyCommunicationEvents"/>
                     </decorator-section>

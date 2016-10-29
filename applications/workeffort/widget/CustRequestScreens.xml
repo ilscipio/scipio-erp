@@ -35,7 +35,7 @@ under the License.
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/request/RequestList.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.WorkEffortMyRequestList}">
                             <include-form name="ListRequests" location="component://workeffort/widget/CustRequestForms.xml"/>

@@ -576,49 +576,9 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                     Debug.logWarning("No permission service-name specified!", module);
                     return false;
                 }
+                // SCIPIO: refactored the main code
                 Map<String, Object> serviceContext = UtilGenerics.toMap(context.get(contextMap));
-                if (serviceContext != null) {
-                    // copy the required internal fields
-                    serviceContext.put("userLogin", context.get("userLogin"));
-                    serviceContext.put("locale", context.get("locale"));
-                } else {
-                    serviceContext = context;
-                }
-                // get the service engine objects
-                LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
-                DispatchContext dctx = dispatcher.getDispatchContext();
-                // get the service
-                ModelService permService;
-                try {
-                    permService = dctx.getModelService(serviceName);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                    return false;
-                }
-                if (permService != null) {
-                    // build the context
-                    Map<String, Object> svcCtx = permService.makeValid(serviceContext, ModelService.IN_PARAM);
-                    svcCtx.put("resourceDescription", resource);
-                    if (UtilValidate.isNotEmpty(mainAction)) {
-                        svcCtx.put("mainAction", mainAction);
-                    }
-                    // invoke the service
-                    Map<String, Object> resp;
-                    try {
-                        resp = dispatcher.runSync(permService.name, svcCtx, 300, true);
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, module);
-                        return false;
-                    }
-                    if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(resp), module);
-                        return false;
-                    }
-                    Boolean hasPermission = (Boolean) resp.get("hasPermission");
-                    if (hasPermission != null) {
-                        return hasPermission.booleanValue();
-                    }
-                }
+                return checkServicePermission(context, serviceName, mainAction, serviceContext, resource, userLogin);
             }
             return false;
         }
@@ -637,6 +597,61 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
         public FlexibleStringExpander getServiceExdr() {
             return serviceExdr;
+        }
+        
+        /**
+         * SCIPIO: Factored out from the eval method, for reuse in code that needs to emulate minilang.
+         */
+        public static boolean checkServicePermission(Map<String, Object> context, String serviceName,
+                String mainAction, Map<String, Object> serviceContext, String resource, GenericValue userLogin) {
+            // SCIPIO: extra userLogin check so safe from external calls
+            if (userLogin == null) {
+                return false;
+            }
+            
+            if (serviceContext != null) {
+                // copy the required internal fields
+                serviceContext.put("userLogin", context.get("userLogin"));
+                serviceContext.put("locale", context.get("locale"));
+            } else {
+                serviceContext = context;
+            }
+            // get the service engine objects
+            LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
+            DispatchContext dctx = dispatcher.getDispatchContext();
+            // get the service
+            ModelService permService;
+            try {
+                permService = dctx.getModelService(serviceName);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return false;
+            }
+            if (permService != null) {
+                // build the context
+                Map<String, Object> svcCtx = permService.makeValid(serviceContext, ModelService.IN_PARAM);
+                svcCtx.put("resourceDescription", resource);
+                if (UtilValidate.isNotEmpty(mainAction)) {
+                    svcCtx.put("mainAction", mainAction);
+                }
+                // invoke the service
+                Map<String, Object> resp;
+                try {
+                    resp = dispatcher.runSync(permService.name, svcCtx, 300, true);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, module);
+                    return false;
+                }
+                if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(resp), module);
+                    return false;
+                }
+                Boolean hasPermission = (Boolean) resp.get("hasPermission");
+                if (hasPermission != null) {
+                    return hasPermission.booleanValue();
+                }
+            }
+            return false;
         }
     }
 

@@ -43,9 +43,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
-                    <!-- SCIPIO: NOTE: On most of the main-decorators including this one, override-by-auto-include is left disabled and is instead implemented manually with decorator-section-include.
-                        The manual inclusion is more flexible whereas the override-by-auto-include flag is easier to use. In some cases, override-by-auto-include="true" makes the decorator a lot easier to implement.
-                        Both are valid. -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
@@ -68,6 +65,24 @@ under the License.
         </section>
     </screen>
  
+    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; simplifies the other decorators and screens -->
+    <screen name="CommonAccountingAppDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="CommonSideBarMenu"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ 
     <screen name="CommonAgreementDecorator">
         <section>
             <actions>
@@ -77,7 +92,7 @@ under the License.
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -155,11 +170,12 @@ under the License.
     <screen name="CommonFinAccountDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
                 <set field="activeMainMenuItem" value="FindFinAccount"/>
                 <entity-one value-field="finAccount" entity-name="FinAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator">
                     <decorator-section name="pre-body">
                         <section>
                             <condition>
@@ -201,7 +217,7 @@ under the License.
                 <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -260,7 +276,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -325,7 +341,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.organizationPartyId}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -393,7 +409,7 @@ under the License.
                 <set field="activeMainMenuItem" value="settings" />                
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -431,7 +447,7 @@ under the License.
             </actions>
             <widgets>
                 <!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">                    
+                <decorator-screen name="CommonAccountingAppDecorator">                    
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
@@ -497,7 +513,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#GlobalGLSettingsSideBar"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -580,6 +596,20 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
+        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
+    <screen name="CommonSideBarMenu">
+        <section>
+            <actions>
+                <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="acctgBasePermissionCheck"/>
+                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

@@ -937,7 +937,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             this.sectionMap = Collections.unmodifiableMap(sectionMap);
             
-            this.autoDecoratorSectionIncludes = "true".equals(decoratorScreenElement.getAttribute("auto-decorator-section-include"));
+            this.autoDecoratorSectionIncludes = !"false".equals(decoratorScreenElement.getAttribute("auto-decorator-section-include"));
         }
 
         @Override

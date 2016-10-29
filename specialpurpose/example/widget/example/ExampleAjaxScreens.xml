@@ -29,7 +29,7 @@ under the License.
                 <set field="exampleCtx" from-field="parameters"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonExampleAppDecorator" location="component://example/widget/example/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>

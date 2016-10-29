@@ -32,7 +32,7 @@ under the License.
                 <property-to-field resource="order" property="orderPreference.giftEnable" field="giftEnable" default="Y"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.OrderQuickFinalizeOrder}"/>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutoptions.ftl"/></html></platform-specific>
@@ -263,7 +263,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutShippingAddress.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutshippingaddress.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -282,7 +282,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutpayment.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -329,7 +329,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/cart/LookupBulkAddSupplierProducts.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -355,7 +355,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SplitShip.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/SplitShip.ftl"/></html></platform-specific>
                     </decorator-section>

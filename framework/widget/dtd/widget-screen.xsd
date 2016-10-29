@@ -470,11 +470,13 @@ Features and Modifications:
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="decorator-section" />
+                <!-- SCIPIO: 2016-10-28: Added for 1.14.2: minOccurs="0"
+                    With auto-decorator-section-include true, passing no sections is technically valid. -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="decorator-section" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" />
-            <xs:attribute name="auto-decorator-section-include" default="false">
+            <xs:attribute name="auto-decorator-section-include" default="true">
                 <xs:annotation>
                     <xs:documentation>
                         SCIPIO: If true, this decorator-screen definition will automatically inherit all decorator-sections coming from 
@@ -482,6 +484,7 @@ Features and Modifications:
                         except those having the same names as the decorator-sections explicitly defined in this decorator-screen. 
                         It can be seen as passing-through the incoming decorator-sections from a calling screen to a lower decorator,
                         in an intermediate decorator. Mainly intended for intermediate decorators.
+                        Default: true (2016-10-28: changed to true for 1.14.2)
                     </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>

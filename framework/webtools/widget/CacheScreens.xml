@@ -30,10 +30,7 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCache.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for UTIL_CACHE, _VIEW permission -->
@@ -68,7 +65,7 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCacheElements.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for UTIL_CACHE, _VIEW permission -->
@@ -101,7 +98,7 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/EditUtilCache.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for UTIL_CACHE, _EDIT permission -->

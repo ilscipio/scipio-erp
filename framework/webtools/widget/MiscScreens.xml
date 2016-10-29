@@ -106,18 +106,9 @@ under the License.
                 <set field="contentPathPrefix" value="https://ilscipio.com/images"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty parameters.showLeftColumn and parameters.showLeftColumn == 'Y'}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
+                        <include-screen name="CommonSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

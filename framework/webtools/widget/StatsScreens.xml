@@ -28,10 +28,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml" auto-decorator-section-include="true">
                     <decorator-section name="body">
                         <section>
                             <condition>

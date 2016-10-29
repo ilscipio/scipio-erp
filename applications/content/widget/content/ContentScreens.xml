@@ -61,7 +61,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentAppDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <label style="common-msg-error-perm">${uiLabelMap.ContentUpdatePermissionError}</label>
                     </decorator-section>

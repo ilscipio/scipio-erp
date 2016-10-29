@@ -168,7 +168,7 @@
                 <set field="titleProperty" value="PageTitleListValidResponsibilities"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResListValidResponsibility}">
                             <container>
@@ -187,7 +187,7 @@
                 <set field="titleProperty" value="PageTitleEditValidResponsibility"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResAddValidResponsibility}">
                             <container>

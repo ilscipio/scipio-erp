@@ -346,7 +346,7 @@
                 <set field="activeMainMenuItem" value="init"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSetupAppDecorator" location="component://commonext/widget/ofbizsetup/CommonScreens.xml">
                     <decorator-section name="body">
                         <label style="errorMessage">${uiLabelMap.SetupEventMessage}</label>
                     </decorator-section>

@@ -34,7 +34,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -67,7 +67,7 @@ under the License.
                 <service service-name="getWorkEffortAssignedTasks"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -139,7 +139,7 @@ under the License.
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -779,7 +779,7 @@ under the License.
                 <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffort}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -814,7 +814,7 @@ under the License.
                 <set field="titleProperty" value="WorkEffortICalendarFind"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>

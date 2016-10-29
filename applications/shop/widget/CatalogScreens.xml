@@ -171,7 +171,7 @@ under the License.
                 <set field="activeSubMenuItem" value="LookupProductCategories"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-screen name="breadcrumbs"/>
                         <include-screen name="category-include"/>
@@ -253,7 +253,7 @@ under the License.
                 <set field="title" value="${productTitle}"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -318,7 +318,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleProductReview"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/productreview.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -333,7 +333,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleLastViewProducts"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/lastviewedproducts.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -366,7 +366,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/QuickAdd.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/quickadd.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -396,7 +396,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/keywordsearch.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -413,7 +413,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/AdvancedSearchOptions.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/advancedsearch.ftl"/></html></platform-specific>
                     </decorator-section>

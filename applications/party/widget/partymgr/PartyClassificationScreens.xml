@@ -59,7 +59,7 @@ under the License.
                 <entity-one entity-name="PartyClassificationGroup" value-field="partyClassificationGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -103,7 +103,7 @@ under the License.
                 <entity-one entity-name="Party" value-field="party"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyClassificationGroups}">
                             <container style="button-bar"><link target="EditPartyClassificationGroup" style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.PartyCreateNewPartyClassificationGroup}"/></container>
@@ -136,7 +136,7 @@ under the License.
                 <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>

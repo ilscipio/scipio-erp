@@ -87,7 +87,7 @@ under the License.
                 <set field="titleProperty" value="AccountingNewCompany"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="AddCompany" location="component://accounting/widget/GlSetupForms.xml"/>
@@ -106,7 +106,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonImportExport}  ${uiLabelMap.CommonFor}: ${partyGroup.groupName} [${parameters.organizationPartyId}]">
                             <container style="${styles.grid_row}">

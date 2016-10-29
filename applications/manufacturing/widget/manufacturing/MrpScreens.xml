@@ -27,21 +27,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Mrp"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
+                <decorator-screen name="CommonManufacturingAppDecorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->

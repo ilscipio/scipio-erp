@@ -29,7 +29,12 @@ under the License.
             </condition>
             <link target="main"/>
         </menu-item>
-        
+        <menu-item name="findorders" title="${uiLabelMap.OrderOrders}" sort-mode="off"><!-- SCIPIO: this label was too inconsistent with the others: ${uiLabelMap.OrderFindOrder} -->
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="findorders"/>
+        </menu-item>
         <menu-item name="request" title="${uiLabelMap.OrderRequests}">
             <condition>
                 <or>
@@ -39,7 +44,6 @@ under the License.
             </condition>
             <link target="FindRequest"/>
         </menu-item>
-
         <menu-item name="quote" title="${uiLabelMap.OrderOrderQuotes}">
             <condition>
                 <or>
@@ -49,21 +53,12 @@ under the License.
             </condition>
             <link target="FindQuote"/>
         </menu-item>
-
-        <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList}">
+        <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList} / ${uiLabelMap.CommonFilter}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
             </condition>
             <link target="orderlist"/>
         </menu-item>
-
-        <menu-item name="findorders" title="${uiLabelMap.OrderFindOrder}">
-            <condition>
-                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-            </condition>
-            <link target="findorders"/>
-        </menu-item>
-
         <menu-item name="orderentry" title="${uiLabelMap.OrderOrderEntry}">
             <condition>
                 <or>
@@ -73,14 +68,12 @@ under the License.
             </condition>
             <link target="orderentry" link-type="anchor"/>
         </menu-item>
-
         <menu-item name="return" title="${uiLabelMap.OrderOrderReturns}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_RETURN"/>
             </condition>
             <link target="findreturn"/>
         </menu-item>
-
         <menu-item name="requirement" title="${uiLabelMap.OrderRequirements}">
             <condition>
                 <or>
@@ -90,7 +83,6 @@ under the License.
             </condition>
             <link target="FindRequirements"/>
         </menu-item>
-
         <!-- SCIPIO: Disabled - requires BIRT 
         <menu-item name="reports" title="${uiLabelMap.CommonReports}">
             <link target="OrderPurchaseReportOptions"/>
@@ -100,47 +92,71 @@ under the License.
             <link target="orderstats"/>
         </menu-item>
     </menu>
+    
     <menu name="OrderAppSideBar" title="${uiLabelMap.OrderManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         always-expand-selected-or-ancestor="true">
         <include-elements menu-name="OrderAppBar" recursive="full" />
+        <menu-item name="findorders">
+            <sub-menu name="Order" include="OrderSideBar"/>
+        </menu-item>
         <menu-item name="request">
             <sub-menu name="Request" include="RequestSideBar"/>
         </menu-item>
         <menu-item name="quote">
             <sub-menu name="Quote" include="QuoteSideBar"/>
         </menu-item>
-        <menu-item name="findorders">
-            <sub-menu name="Order" include="OrderSideBar"/>
-        </menu-item>
         <menu-item name="return">
             <sub-menu name="Return" include="ReturnSideBar"/>
         </menu-item>
         <menu-item name="requirement">
-            <sub-menu name="Requirement" include="RequirementSideBar"/>
+            <sub-menu name="Requirements" include="RequirementsSideBar"/>
         </menu-item>
     </menu>
 
     <menu name="OrderTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <!-- NOTE: the OrderTabBar_ prefix is in case menu is rendered with share scope (which I think currently does)  -->
+            <entity-and entity-name="OrderItemShipGroup" list="OrderTabBar_shipGroups">
+                <field-map field-name="orderId" from-field="orderId"/>
+            </entity-and>
+            <entity-one entity-name="OrderHeader" value-field="OrderTabBar_orderHeader">
+                <field-map field-name="orderId" from-field="orderId"/>
+            </entity-one>
+        </actions>
         <menu-item name="Summary" title="${uiLabelMap.CommonSummary}">
             <link target="orderview">
                 <parameter param-name="orderId"/>
             </link>
         </menu-item>
         <menu-item name="OrderShipping" title="${uiLabelMap.OrderShipmentInformation}" widget-style="+${styles.action_nav}">
-             <condition>
+            <!-- SCIPIO: this worked badly; the menu has to make a lookup on its own (in actions above) so it works consistently
+            <condition>
                 <not>
                     <if-empty field="shipGroups"/>
                 </not>              
+            </condition>-->
+            <condition>
+                <not>
+                    <if-empty field="OrderTabBar_shipGroups"/>
+                </not>              
             </condition>
             <link target="orderShipping">
-                <parameter param-name="orderId" from-field="orderId"/>
+                <parameter param-name="orderId" />
             </link>
         </menu-item>
         <menu-item name="OrderDeliveryScheduleInfo" title="${uiLabelMap.OrderViewEditDeliveryScheduleInfo}">
+            <!-- SCIPIO: this works badly, and a second lookup is required (see above)
             <condition>
                 <and>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+                </and>
+            </condition>-->
+            <condition>
+                <and>
+                    <not><if-empty field="OrderTabBar_orderHeader"/></not>
+                    <if-compare field="OrderTabBar_orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
+                    <if-compare field="OrderTabBar_orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
                 </and>
             </condition>
             <link target="OrderDeliveryScheduleInfo">
@@ -262,6 +278,7 @@ under the License.
         </menu-item>
     </menu>
      -->
+     
     <menu name="OrderShippingSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
@@ -291,7 +308,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequirementsTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequirementsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: DEV NOTE: FindRequirements looks redundant at first, but it's needed... leave here (could rename)... -->
         <menu-item name="FindRequirements" title="${uiLabelMap.OrderRequirements}">
             <link target="FindRequirements"/>
         </menu-item>
@@ -306,7 +324,14 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="RequirementTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequirementsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="RequirementsTabBar" recursive="includes-only" />
+        <menu-item name="FindRequirements">
+            <sub-menu name="Requirement" include="RequirementSideBar"/>
+        </menu-item>
+    </menu>
+
+    <menu name="RequirementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditRequirement" title="${uiLabelMap.OrderRequirement}">
             <link target="EditRequirement">
                 <parameter param-name="requirementId" from-field="requirement.requirementId"/>
@@ -623,17 +648,17 @@ under the License.
     </menu>
     
     <menu name="ReturnTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="Summary" title="${uiLabelMap.CommonSummary}">
+        <menu-item name="OrderReturnHeader" title="${uiLabelMap.CommonSummary}">
             <link target="returnMain">
                 <parameter param-name="returnId"/>
             </link>
         </menu-item>
-        <menu-item name="ReturnItems" title="${uiLabelMap.OrderReturnItems}">
+        <menu-item name="OrderReturnItems" title="${uiLabelMap.OrderReturnItems}">
             <link target="returnItems">
                 <parameter param-name="returnId"/>
             </link>
         </menu-item>
-        <menu-item name="ReturnHistory" title="${uiLabelMap.OrderReturnHistory}">
+        <menu-item name="OrderReturnHistory" title="${uiLabelMap.OrderReturnHistory}">
             <link target="ReturnHistory">
                 <parameter param-name="returnId"/>
             </link>

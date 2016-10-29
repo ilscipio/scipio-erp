@@ -18,14 +18,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- SCIPIO: added this to remove the ambiguity of CommonOrderDecorator -->
+    <screen name="CommonOrderEntryBaseDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="orderentry"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml" auto-decorator-section-include="true">
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonOrderEntryDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="CommonOrderEntryBaseDecorator" auto-decorator-section-include="true">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -51,11 +68,10 @@ under the License.
     <screen name="CommonOrderCatalogDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderEntryBaseDecorator" auto-decorator-section-include="true">
                     <!--
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true"> 
                         <include-screen name="leftbarCatalog"/>

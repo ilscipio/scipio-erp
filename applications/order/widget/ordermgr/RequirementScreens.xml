@@ -25,8 +25,9 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindRequirements"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="FindRequirements"/>
+                <!-- still need the sub-item 
+                <set field="activeSubMenuItem" value="PARENT"/>-->
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -52,7 +53,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindNotApprovedRequirements"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="ApproveRequirements"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -80,14 +80,13 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindApprovedProductRequirements"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="ApprovedProductRequirements"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
                 <set field="_rowSubmit" value="Y"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/requirement/ApprovedProductRequirements.groovy"/>
-        </actions>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonRequirementsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
@@ -156,7 +155,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindApprovedRequirementsBySupplier"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="ApprovedProductRequirementsByVendor"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -199,7 +197,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequirement"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="EditRequirement"/>
 
                 <set field="requirementId" from-field="parameters.requirementId"/>
@@ -220,7 +217,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListRequirementCustRequests"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="ListRequirementCustRequests"/>
 
                 <set field="requirementId" from-field="parameters.requirementId"/>
@@ -247,7 +243,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListRequirementOrders"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="ListRequirementOrdersTab"/>
 
                 <set field="requirementId" from-field="parameters.requirementId"/>
@@ -273,7 +268,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListRequirementRoles"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="ListRequirementRolesTab"/>
 
                 <set field="requirementId" from-field="parameters.requirementId"/>
@@ -305,7 +299,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequirementRole"/>
-                <set field="activeMainMenuItem" value="requirement"/>
                 <set field="activeSubMenuItem" value="ListRequirementRolesTab"/>
                 <set field="requirementId" from-field="parameters.requirementId"/>
                 <entity-one entity-name="Requirement" value-field="requirement" auto-field-map="true"/>

@@ -511,7 +511,7 @@ under the License.
         <menu-item name="LayoutDemo" title="Layout Demo">
             <link target="${demoTargetUrl}"/>
         </menu-item>
-        <menu-item name="templateApiDocs" title="${uiLabelMap.WebtoolsTemplateApiDocs}">
+        <menu-item name="templateApiDocs" title="${uiLabelMap.WebtoolsTemplateApiDocsTitle}">
             <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
             <sub-menu name="TemplateApiDoc" include="TemplateApiDocSideBar"/>
         </menu-item>

@@ -30,7 +30,7 @@ under the License.
                 <set field="activeMainMenuItem" value="invoices"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -77,7 +77,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>

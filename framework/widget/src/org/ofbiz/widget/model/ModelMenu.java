@@ -1397,7 +1397,7 @@ public class ModelMenu extends ModelWidget {
         } else {
             ModelSubMenu subMenu = getModelSubMenuByName(subMenuName);
             if (subMenu != null) {
-                if ("PARENT".equals(menuItemName)) {
+                if ("PARENT".equals(menuItemName) || "PARENT-NOSUB".equals(menuItemName)) {
                     return subMenu.getParentMenuItem();
                 } else {
                     return subMenu.getModelMenuItemByName(menuItemName);
@@ -1520,7 +1520,7 @@ public class ModelMenu extends ModelWidget {
      * the (sub-)menu, the parent item of the sub-menu, or null.
      * <p>
      * The (sub-)menu name supports special value "TOP". The item name supports
-     * special values "NONE" (same as null) and "PARENT".
+     * special values "NONE" (same as null), "PARENT", and "PARENT-NOSUB".
      */
     public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
@@ -1548,7 +1548,8 @@ public class ModelMenu extends ModelWidget {
         ModelSubMenu subMenu = null;
         ModelMenuItem menuItem = null;
 
-        if (UtilValidate.isNotEmpty(selItemName) && !"PARENT".equals(selItemName)) {
+        if (UtilValidate.isNotEmpty(selItemName) && !"PARENT".equals(selItemName) && !"PARENT-NOSUB".equals(selItemName)) {
+            // this is the most direct case
             menuItem = getModelMenuItemBySubName(selItemName, selMenuName);
             if (menuItem != null) {
                 subMenu = menuItem.getParentSubMenu();
@@ -1583,6 +1584,10 @@ public class ModelMenu extends ModelWidget {
                 } else if ("PARENT".equals(selItemName)) {
                     // explicit parent wanted
                     menuItem = subMenu.getParentMenuItem();
+                } else if ("PARENT-NOSUB".equals(selItemName)) {
+                    // explicit parent wanted, but WITHOUT the sub-menu itself (this is sort of a hack, but very convenient)
+                    menuItem = subMenu.getParentMenuItem();
+                    subMenu = menuItem.getParentSubMenu(); // NOTE: may return null
                 }
             } else if (isMenuNameTopMenu(selMenuName)) {
                 if (UtilValidate.isEmpty(selItemName)) { // 2016-09-28: ONLY use default if no explicit specified

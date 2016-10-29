@@ -58,10 +58,27 @@ under the License.
                                 <decorator-section-include name="left-column"/>
                             </widgets>
                             <fail-widgets>
-                                <!-- provide default column for all others -->
                                 <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; simplifies the other decorators and screens -->
+    <screen name="CommonHumanResAppDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="CommonSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -80,7 +97,7 @@ under the License.
                 <set field="employmentAppCtx" type="NewMap" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="body">
                         <!-- TODO: this looks too awful
                         <screenlet title="${uiLabelMap.HumanResResourcePlanning}">
@@ -155,7 +172,7 @@ under the License.
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.emplPosition}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -201,7 +218,7 @@ under the License.
                 <entity-one entity-name="Employment" value-field="employment"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for Employment, _VIEW permission -->
@@ -269,7 +286,7 @@ under the License.
                 <entity-one entity-name="PerfReview" value-field="perfReview"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -312,7 +329,7 @@ under the License.
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.partyId}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -369,7 +386,7 @@ under the License.
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.partyId}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -428,7 +445,7 @@ under the License.
                 <set field="activeMainMenuItem" value="GlobalHRSettings"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -447,7 +464,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -467,7 +484,7 @@ under the License.
                 <set field="activeMainMenuItem" value="Training"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -486,7 +503,7 @@ under the License.
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -530,6 +547,20 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
+        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
+    <screen name="CommonSideBarMenu">
+        <section>
+            <actions>
+                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="HUMANRES"/>
+                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

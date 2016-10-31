@@ -30,7 +30,7 @@ under the License.
                 <set field="activeSubMenuItem" value="ListFixedAssets"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -85,7 +85,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.fixedAssetId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

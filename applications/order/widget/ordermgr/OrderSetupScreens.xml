@@ -21,7 +21,7 @@ under the License.
     <screen name="CommonOrderSetupDecorator">
         <section>
             <widgets>
-                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>

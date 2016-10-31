@@ -74,7 +74,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/cart/ShowPromoText.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/cart/showcart.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -92,7 +92,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/cart/ShowPromoText.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/showAllPromotions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -108,7 +108,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/cart/ShowPromotionDetails.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="promotion" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
                     </decorator-section>

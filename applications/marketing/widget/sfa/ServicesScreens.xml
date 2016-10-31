@@ -30,7 +30,7 @@ under the License.
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/services/FindMyCommunication.groovy"/>
             </actions>
             <widgets>
-                <!-- <decorator-screen name="CommonSfaAppDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
+                <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="MyCommunicationEvents"/>
                     </decorator-section>

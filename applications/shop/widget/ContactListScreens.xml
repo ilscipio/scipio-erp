@@ -25,7 +25,7 @@ under the License.
     <screen name="DefaultOptOutScreen">
         <section>            
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="Opt-Out Results">
                             <label style="common-msg-info-important" text="You have been successfully removed from the ${contactList.contactListName} mailing list!"/>                                            

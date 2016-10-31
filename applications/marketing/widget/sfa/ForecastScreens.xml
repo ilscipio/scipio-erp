@@ -27,7 +27,7 @@ under the License.
                 <set field="activeMainMenuItem" value="Forecast"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSfaAppDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">                 
+                <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">                 
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -55,7 +55,7 @@ under the License.
                 <set field="activeMainMenuItem" value="Forecast"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSfaAppDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">            
+                <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">            
                     <decorator-section name="body">
                         <section>
                             <widgets>

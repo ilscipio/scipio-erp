@@ -28,7 +28,7 @@ under the License.
                 <set field="activeMainMenuItem" value="facility"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilityAppDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -132,7 +132,7 @@ under the License.
                         </decorator-screen>
                     </widgets>
                     <fail-widgets>
-                        <decorator-screen name="CommonFacilityAppDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                        <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <section>
                                     <condition>

@@ -30,7 +30,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindPortalPage"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -62,7 +62,7 @@ under the License.
           <set field="targetPortalPage" value="createPortalPageAdm"/>
         </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <actions>
@@ -86,7 +86,7 @@ under the License.
                 <entity-one entity-name="PortalPage" value-field="portalPage"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

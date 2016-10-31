@@ -37,7 +37,7 @@
                 <set field="hasAdminPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonHumanResAppDecorator" location="component://humanres/widget/CommonScreens.xml">
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -85,7 +85,7 @@
                 <set field="approverPartyId" from-field="parameters.userLogin.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonHumanResAppDecorator" location="component://humanres/widget/CommonScreens.xml">
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -129,7 +129,7 @@
                 </entity-one>
             </actions>
             <widgets>
-                 <decorator-screen name="CommonHumanResAppDecorator" location="component://humanres/widget/CommonScreens.xml">
+                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section>
@@ -168,7 +168,7 @@
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonHumanResAppDecorator" location="component://humanres/widget/CommonScreens.xml">
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <screenlet id="EditEmplLeaveStatus" title="${uiLabelMap.HumanResEditLeaveApprovalStatus}" collapsible="true">

@@ -31,7 +31,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.billingAccountId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ACCOUNTING, _VIEW permission -->
@@ -57,7 +57,7 @@ under the License.
                 <set field="activeMainMenuItem" value="billingaccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

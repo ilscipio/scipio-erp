@@ -27,7 +27,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="orderentry"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>

@@ -65,15 +65,15 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; wrapper around main-decorator; simplifies the other decorators and screens -->
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
     <screen name="CommonContentAppDecorator">
         <section>
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="CommonSideBarMenu"/>
+                        <include-screen name="CommonContentAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -91,7 +91,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CMS"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -127,7 +127,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -183,7 +183,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -223,7 +223,7 @@ under the License.
                 <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -269,7 +269,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CompDoc"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-menu name="${menuName}" location="component://content/widget/compdoc/CompDocMenus.xml"/>
@@ -290,7 +290,7 @@ under the License.
                 <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -326,7 +326,7 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -372,7 +372,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty parameters.webSiteId}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -420,7 +420,7 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -457,7 +457,7 @@ under the License.
                 <set field="titleProperty" value="ContentMain"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <container><label text="${uiLabelMap.ContentWelcome}"/></container>
@@ -573,7 +573,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>
@@ -599,9 +599,9 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
-        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
-    <screen name="CommonSideBarMenu">
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonContentAppSideBarMenu">
         <section>
             <actions>
                 <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="CONTENTMGR"/>

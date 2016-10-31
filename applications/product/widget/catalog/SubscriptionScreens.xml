@@ -45,7 +45,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindSubscription"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>                    

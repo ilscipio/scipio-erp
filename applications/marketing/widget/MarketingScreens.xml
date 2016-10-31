@@ -38,7 +38,7 @@ under the License.
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonMarketingAppDecorator" location="component://marketing/widget/CommonScreens.xml">
+                <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             do check for MARKETING, _VIEW permission

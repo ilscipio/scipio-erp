@@ -9,7 +9,7 @@
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonDemoSuiteAppDecorator" location="component://demosuite/widget/CommonScreens.xml">
+                <decorator-screen name="CommonDemoSuiteAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     </decorator-section>
                 </decorator-screen>

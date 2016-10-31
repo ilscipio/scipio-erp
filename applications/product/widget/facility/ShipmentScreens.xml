@@ -28,7 +28,7 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/FindShipment.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilityAppDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -59,7 +59,7 @@ under the License.
                 <get-related-one value-field="shipment" to-value-field="facility" relation-name="DestinationFacility"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilityAppDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -367,7 +367,7 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentRouteSegments.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilityAppDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/facility/shipment/QuickShipOrder.ftl"/></html>
@@ -432,7 +432,7 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/WeightPackage.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilityAppDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/facility/shipment/WeightPackage.ftl"/></html>

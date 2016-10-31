@@ -29,7 +29,7 @@ under the License.
                 <set field="pageTitle" value="${uiLabelMap.${titleProperty}}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.tabBar}" override-by-auto-include="true">
                         <section>
                             <condition>

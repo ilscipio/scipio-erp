@@ -28,7 +28,7 @@ under the License.
                 <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -120,7 +120,7 @@ under the License.
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -490,7 +490,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/FindInvoicesByDueDate.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSearchOptions}">
                             <include-form name="FindSalesInvoicesByDueDate" location="component://accounting/widget/PaymentForms.xml"/>
@@ -522,7 +522,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/FindInvoicesByDueDate.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSearchOptions}">
                             <include-form name="FindPurchaseInvoicesByDueDate" location="component://accounting/widget/PaymentForms.xml"/>

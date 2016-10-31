@@ -105,7 +105,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

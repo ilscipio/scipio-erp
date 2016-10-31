@@ -247,7 +247,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; wrapper around main-decorator; simplifies the other decorators and screens -->
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
     <screen name="CommonShopAppDecorator">
         <section>
             <actions>
@@ -332,7 +332,7 @@ under the License.
                 <set field="titleProperty" value=""/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-content">
                         <include-screen name="ScipioDashboardImage"/>
                     </decorator-section>
@@ -380,7 +380,7 @@ under the License.
                 <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!--
                     <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
                         <section> 
@@ -420,7 +420,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Login.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -443,7 +443,7 @@ under the License.
     <screen name="policies">
         <section>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <sub-content content-id="WebStoreCONTENT" map-key="policies"/>
                         <sub-content content-id="WebStoreCONTENT" map-key="policies2"/>
@@ -459,7 +459,7 @@ under the License.
                  <set field="titleProperty" value="CommonLicense"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://shop/webapp/shop/license.ftl"/></html>

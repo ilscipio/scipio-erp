@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonRequestDecorator">
         <section>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -49,7 +49,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonShopAppDecorator" location="component://shop/widget/CommonScreens.xml">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

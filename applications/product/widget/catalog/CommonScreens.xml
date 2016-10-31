@@ -84,7 +84,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; wrapper around main-decorator; simplifies the other decorators and screens -->
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
     <screen name="CommonCatalogAppDecorator">
         <section>
             <actions>
@@ -92,7 +92,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="CommonSideBarMenu"/>
+                        <include-screen name="CommonCatalogAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -117,7 +117,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -200,7 +200,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -293,7 +293,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/SetProductLastProduct.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -407,7 +407,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/SetProductLastProduct.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -479,7 +479,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/SetProductLastProduct.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -558,7 +558,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">                
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">                
                     <decorator-section name="body">
                         <section>
                             <!-- do check for CATALOG, _VIEW permission -->
@@ -642,7 +642,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <actions>          
@@ -727,7 +727,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <!--<include-screen name="ProductStoreGroupTree"/>-->
                         <section>
@@ -795,7 +795,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -844,7 +844,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!-- SCIPIO: delegate to common decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
@@ -912,7 +912,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -984,7 +984,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -1120,7 +1120,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/ChooseTopCategory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="leftbar"/>
                     </decorator-section>                    
@@ -1143,7 +1143,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/FastLoadCache.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="leftbar"/>
                     </decorator-section>                    
@@ -1194,7 +1194,7 @@ under the License.
                 <set field="titleProperty" value="ProductCatalogManager"/>
             </actions>
             <widgets>            
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
@@ -1240,7 +1240,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Imagemanagement"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar"/>
@@ -1272,7 +1272,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="reviews"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!-- SCIPIO: delegate to common decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
@@ -1304,7 +1304,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="thesaurus"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!-- SCIPIO: delegate to common decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
@@ -1342,7 +1342,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!-- SCIPIO: delegate to common decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
@@ -1412,7 +1412,7 @@ under the License.
                 <set field="title" value="${title} ${${extraFunctionName}}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!-- SCIPIO: delegate to common decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
@@ -1482,7 +1482,7 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!-- SCIPIO: delegate to common decorator
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
@@ -1596,7 +1596,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>
@@ -1622,9 +1622,9 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
-        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
-    <screen name="CommonSideBarMenu">
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonCatalogAppSideBarMenu">
         <section>
             <actions>
                 <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="CATALOG"/>

@@ -53,6 +53,8 @@ public class FtlDocCompiler {
 
     public static boolean DEBUG = false;
     
+    public static final String EXTENSION_NONE = "_NONE_";
+    
     public static final String SCIPIO_LIB_FORMAT = "scipio-lib";
     public static final Charset DEFAULT_FILE_ENCODING = StandardCharsets.UTF_8;
 
@@ -112,6 +114,10 @@ public class FtlDocCompiler {
             String templatePath = args[5];
             List<String> libFilenames = Arrays.asList(args).subList(6, args.length);
 
+            if (EXTENSION_NONE.equals(outFileExtension)) {
+                outFileExtension = "";
+            }
+                    
             try {
                 FtlDocCompiler compiler = FtlDocCompiler.getInstance();
                 compiler.setMsgHandler(msgHandler);

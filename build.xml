@@ -856,7 +856,7 @@ under the License.
             <arg value="templating"/> <!-- doc purpose -->
             <arg value="framework/common/webcommon/includes/scipio/lib"/> <!-- base source folder -->
             <arg value="doc/scipio-website/templating/ftl/lib"/> <!-- base output folder -->
-            <arg value=""/> <!-- output file extension -->
+            <arg value="_NONE_"/> <!-- output file extension -->
             <arg value="framework/common/webcommon/includes/scipio/doc/ftlDocTemplateWebsite.ftl"/> <!-- doc template -->
             <!-- source files to process -->
             <arg value="utilities.ftl"/>

@@ -79,7 +79,7 @@ under the License.
       <field name="secondaryGeoId" type="id">
           <description>for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within)</description>
       </field>
-      <field name="exemptAmount" type="currency-amount">
+      <field name="exemptAmount" type="currency-precise"><!-- SCIPIO: Updated for included VAT calculation. Applies to customers with VatId-->
           <description>an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been</description>
       </field>
       <field name="taxAuthGeoId" type="id">

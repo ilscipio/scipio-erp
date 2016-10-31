@@ -95,7 +95,7 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainquoteDecoratorLocation}">
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditQuoteWorkEffort" location="component://order/widget/ordermgr/QuoteWorkEffortForms.xml"/>

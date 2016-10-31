@@ -5962,7 +5962,7 @@
         <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
     </property>
     <property key="WebtoolsTemplateApiDocsTitle">
-        <value xml:lang="de">Templating Toolkit Documentation</value>
+        <value xml:lang="de">Templating Toolkit Dokumentation</value>
         <value xml:lang="en">Templating Toolkit Documentation</value>
     </property>
 </resource>

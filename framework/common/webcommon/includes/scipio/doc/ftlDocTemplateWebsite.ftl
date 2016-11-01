@@ -13,8 +13,12 @@
 *
 * See ftlDocTemplate.ftl for more information.
 -->
+<#assign hasContainer=false><#-- hasContainer overrides the default wrapping HTML to make the generated pages easier for parsing. When set to true, full pages will be generated. Default: false -->
+
+<#if hasContainer>
 <!DOCTYPE html>
 <html lang="en-US">
+</#if>
 <#if (libFormat!"") == "scipio-lib">
 
 <#-- 
@@ -82,7 +86,7 @@
 * HEAD *
 *************************************
 -->
-
+<#if hasContainer>
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <#if pageTitle?has_content>
@@ -137,7 +141,7 @@
 
   </head>
   <body>
-
+</#if>
 <#-- 
 *************************************
 * MAIN PAGE *
@@ -146,8 +150,10 @@
 <div class="tmpldoc-content">
   <div class="lib-page-intro">
     <div>
-      <#if pageTitle?has_content>
-        <h1 class="lib-pagetitle"><@labelText text=pageTitle /></h1>
+      <#if hasContainer>
+          <#if pageTitle?has_content>
+            <h1 class="lib-pagetitle"><@labelText text=pageTitle /></h1>
+          </#if>
       </#if>
     <#--  not present on website version; "templating" implied I guess
       <#if docPurpose == "templating">
@@ -459,7 +465,7 @@
     </#if>
   </#list>
 </div>
-
+<#if hasContainer>
     <footer id="footer">
       <div>
         <hr />
@@ -470,8 +476,10 @@
     </footer>
 
   </body>
+</#if>
 <#else>
   <head><title>ERROR</title></head>
   <body><p>ERROR: This doc template can only render scipio-lib format FTL lib docs.</p></body>
 </#if>
-</html>
+<#if hasContainer>
+</html></#if>

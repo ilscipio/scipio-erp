@@ -144,7 +144,7 @@ Makes an attrib map container a magellan-destination attribute.
 ************
 Creates a single step - to be used with {{{<@nav type="steps" />}}}.
 
-* Parameters *
+  * Parameters *
     name                    = Step name, for auto-matching purposes (optional if not using auto active matching)
     icon                    = Generates icon inside the step  
     disabled                = ((boolean)) step is disabled (override)

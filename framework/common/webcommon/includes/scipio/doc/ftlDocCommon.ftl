@@ -207,9 +207,9 @@
     <#if entry?is_string>
       <#if entry?has_content>
         <#-- just text -->
-        <#if paragraphs><p><#else><span></#if>
-          <@descText text=entry />
-        <#if paragraphs></p><#else></span></#if>
+        <#if paragraphs><p><#else><span></#if><#t>
+          <@descText text=entry /><#t>
+        <#if paragraphs></p><#else></span></#if><#t>
       </#if>
     <#else>
       <#if entry.type == "title">

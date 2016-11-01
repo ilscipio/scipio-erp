@@ -632,4 +632,23 @@ public final class WidgetWorker {
         return encoder;
     }
 
+    private static final int minWidgetFolderPathLength = 
+            ("component://".length() + 1 + "/widget/".length());
+    
+    /**
+     * Returns base widget folder from component:// path, including terminating slash.
+     */
+    public static String getBaseWidgetFolderFromComponentPath(String path) throws IllegalArgumentException {
+        if (!path.startsWith("component://")) {
+            throw new IllegalArgumentException("Path '" + path + "' is not a valid component path");
+        }
+        if (path.length() < minWidgetFolderPathLength) {
+            throw new IllegalArgumentException("Path '" + path + "' is not a valid widget folder component path");
+        }
+        int i = path.indexOf("/widget/", "component://".length());
+        if (i < 0) {
+            throw new IllegalArgumentException("Path '" + path + "' is not a valid widget folder component path");
+        }
+        return path.substring(0, i + "/widget/".length());
+    }
 }

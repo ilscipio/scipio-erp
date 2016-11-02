@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#ShipmentGatewayConfig" />
-                <set field="activeMainMenuItem" value="ShipmentGatewayConfig"/> 
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ShipmentGatewayConfig"/> 
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->

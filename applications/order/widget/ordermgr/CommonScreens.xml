@@ -113,7 +113,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Quote" />
-                <set field="activeMainMenuItem" value="quote"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="quote"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
             </actions>
             <widgets>

@@ -287,7 +287,7 @@ under the License.
     <screen name="CommonEntityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="entity"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="entity"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
@@ -316,7 +316,7 @@ under the License.
     <screen name="CommonServiceDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="service"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="service"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="service" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
@@ -344,7 +344,7 @@ under the License.
     <screen name="CommonImportExportDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="importExport"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="importExport"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="importExport" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
@@ -374,7 +374,7 @@ under the License.
     <screen name="CommonArtifactDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="artifact" />
  
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
@@ -405,13 +405,13 @@ under the License.
     <screen name="CommonLabelDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="labels"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="labels"/>
                 <!-- SCIPIO: this sub-menu had only one entry, so omit. if adding more, uncomment this
                     and the submenu include in WebtoolsAppSideBar.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="label" />-->
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
                 <!-- SCIPIO: force this item -->
-                <set field="activeSubMenuItem" value="labels"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="labels"/>
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
             </actions>
             <widgets>
@@ -438,7 +438,7 @@ under the License.
     <screen name="CommonConfigurationDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="configuration" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
@@ -468,7 +468,7 @@ under the License.
     <screen name="CommonGeoManagementDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="geoManagement"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="geoManagement"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="geoManagement" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
@@ -497,7 +497,7 @@ under the License.
     <screen name="CommonDemoDataGeneratorDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="demoDataGeneratorServiceList"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="demoDataGeneratorServiceList"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
@@ -527,7 +527,7 @@ under the License.
     <screen name="StatsDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="stats"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="stats"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
             </actions>
             <widgets>
@@ -553,7 +553,7 @@ under the License.
     <screen name="TemporalExpressionDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItem" value="tempexpr"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="tempexpr"/>
                 <property-map resource="TemporalExpressionUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap[titleProperty]}" global="true"/>
             </actions>
@@ -581,7 +581,7 @@ under the License.
     <screen name="SecurityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
                 <!-- SCIPIO: NOTE: activeSubMenu still supports a location prefix. It is still wanted in this case, in case
                     the complex nested menu (which doesn't use the location prefix) render fails, because here the fallback menu's location is not in the default Admin menus file.
                     Also note that "SideBar" suffix is automatically added to the name (SecurityGroupSideBar), so it's not needed here. -->

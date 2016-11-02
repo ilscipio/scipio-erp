@@ -176,7 +176,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#Invoice" />
-                <set field="activeMainMenuItem" value="invoices"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
                 
                 <!-- sidebar additional perm check -->
                 <set field="permServ" value=""/>
@@ -246,7 +246,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
-                <set field="activeMainMenuItem" value="PaymentGroup"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
@@ -302,7 +302,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#ApReport" />
-                <set field="activeMainMenuItem" value="reports"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="reports"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title=uiLabelMap.PartyVisitDetail>
+<@section><#-- redundant: title=uiLabelMap.PartyVisitDetail -->
       <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td>${uiLabelMap.PartyVisitIDSessionID}</@td>

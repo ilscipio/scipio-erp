@@ -108,7 +108,7 @@ under the License.
             screen and decorator. -->
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="ExampleMenuItem"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ExampleMenuItem"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-field="example"/>
             </actions>
@@ -187,7 +187,7 @@ under the License.
     <screen name="CommonExampleFeatureDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="ExampleFeature"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ExampleFeature"/>
                 <set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
                 <entity-one entity-name="ExampleFeature" value-field="exampleFeature"/>
             </actions>
@@ -256,7 +256,7 @@ under the License.
     <screen name="CommonExampleGeoLocationDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ExampleGeoLocation"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_GOOGLE"/>
                 <set field="geoChart.width" value="600px"/>
                 <set field="geoChart.height" value="500px"/>
@@ -280,7 +280,7 @@ under the License.
     <screen name="CommonExampleOsmGeoLocationDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ExampleGeoLocation"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_OSM"/>
                 <set field="geoChart.width" value="600px"/>
                 <set field="geoChart.height" value="500px"/>
@@ -304,7 +304,7 @@ under the License.
     <screen name="CommonExampleChartsDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="ExampleCharts"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ExampleCharts"/>
                 <entity-condition entity-name="ExampleCountByType" list="chartData">
                     <order-by field-name="exampleTypeId"/>
                 </entity-condition>

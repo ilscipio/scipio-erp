@@ -102,8 +102,8 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/ContactListMenus.xml#ContactList" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="ContactList"/>
-                <set field="activeSubMenuItem" value="ContactList"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ContactList"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
             </actions>

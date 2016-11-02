@@ -196,7 +196,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#CommEvent" />
-                <set field="activeMainMenuItem" value="comm"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="comm"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
                 
                 <service service-name="partyBasePermissionCheck" result-map="permResult">

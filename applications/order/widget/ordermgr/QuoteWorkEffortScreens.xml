@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonQuoteDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="quote"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="quote"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">

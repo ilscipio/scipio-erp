@@ -113,7 +113,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#WorkEffort" />
-                <set field="activeMainMenuItem" value="workeffort"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="workeffort"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
@@ -175,7 +175,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/TimesheetMenus.xml#Timesheet" />
-                <set field="activeMainMenuItem" value="timesheet"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="timesheet"/>
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
             </actions>
@@ -221,7 +221,7 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="calendar" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="calendar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -253,7 +253,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />
-                <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="WorkEffortICalendar"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">

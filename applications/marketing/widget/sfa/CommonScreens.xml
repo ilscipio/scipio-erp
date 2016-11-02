@@ -236,7 +236,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Segment"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
-                <set field="activeSubMenuItem" value="Segment"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Segment"/>
 
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
                 <entity-one entity-name="SegmentGroup" value-field="segmentGroup"/>
@@ -349,7 +349,7 @@ under the License.
                         </or>
                     </condition>
                     <actions>
-                        <set field="activeSubMenuItem" value="Leads"/>
+                        <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Leads"/>
                         <set field="currentCommonDecorator" value="CommonLeadDecorator"/>
                     </actions>
                     <widgets/>

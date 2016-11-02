@@ -589,7 +589,7 @@ under the License.
     <screen name="CommonForumDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Forum"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Forum"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="pageTitle" value="${uiLabelMap.${titleProperty}}"/>
             </actions>

@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#PartyInvitation" />
-                <set field="activeMainMenuItem" value="partyinv"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="partyinv"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
                 <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>
                 

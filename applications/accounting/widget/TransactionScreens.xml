@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Transactions" />
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="transaction"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="transaction"/>
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->

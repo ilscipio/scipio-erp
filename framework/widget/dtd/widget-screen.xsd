@@ -549,7 +549,16 @@ Features and Modifications:
         <xs:annotation>
             <xs:documentation>
                 Renders the named screen and includes the children of this elements at the point where it finds the decorator-section-include tag.
-                Note that because of the recursive nature of this tag the share-scope attribute is not availalbe.
+                Note that because of the recursive nature of this tag the share-scope attribute is not available.
+                SCIPIO: NOTE: This directive is highly enhanced from stock ofbiz, and further for Scipio 1.14.2.
+                It now supports passing through and conditionally defining decorator-sections.
+                For 1.14.2, the default for Scipio's new auto-decorator-section-include attribute has been
+                changed to true, and the language now allows omitting children elements. As a result,
+                it can fully substitute for and is preferable (for decorators) to include-screen directive using the simple form:
+                    &lt;decorator-screen name="SomeDecorator" location="component//..." /&gt;
+                In addition, this directive now supports a fallback-location reference used when the main
+                location#name resolve to a missing decorator; this can be used together with the new
+                screen-settings element to setup application-wide fallback behavior with few code changes.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -564,7 +573,7 @@ Features and Modifications:
                 <xs:annotation>
                     <xs:documentation>
                         SCIPIO: Name of a fallback decorator to use if the decorator specified
-                        by name#location resolves to a missing screen.
+                        by location#name resolves to a missing screen.
                         Default: (none) OR (if fallback-location specified) same value as 'name' attribute
                         2016-10-30: Added for 1.14.2.
                     </xs:documentation>
@@ -574,7 +583,7 @@ Features and Modifications:
                 <xs:annotation>
                     <xs:documentation>
                         SCIPIO: Location of a fallback decorator to use if the decorator specified
-                        by name#location resolves to a missing screen.
+                        by location#name resolves to a missing screen.
                         Default: (none) OR (if fallback-name specified) same value as 'location'
                         2016-10-30: Added for 1.14.2.
                     </xs:documentation>

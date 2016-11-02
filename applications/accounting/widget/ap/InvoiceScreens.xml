@@ -110,7 +110,7 @@ under the License.
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonApAppDecorator" location="component://accounting/widget/ap/CommonScreens.xml">
+                <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewPurchaseInvoice" location="component://accounting/widget/InvoiceForms.xml"/>

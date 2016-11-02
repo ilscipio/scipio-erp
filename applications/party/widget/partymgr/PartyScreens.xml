@@ -34,7 +34,7 @@ under the License.
                 <set field="searchPerformed" type="Boolean" value="${groovy: parameters.lookupFlag == 'Y'}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -710,7 +710,7 @@ under the License.
                 <set field="activeMainMenuItem" value="find"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -743,7 +743,7 @@ under the License.
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -789,7 +789,7 @@ under the License.
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -834,7 +834,7 @@ under the License.
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -1387,7 +1387,7 @@ under the License.
                 <set field="activeMainMenuItem" value="importexport"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyAppDecorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <label text="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs" />

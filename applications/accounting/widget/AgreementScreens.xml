@@ -8,8 +8,8 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- Custom apps can use their own agreement decorator by specifying its location in parameters.agreementDecoratorLocation -->
-    
+    <!-- SCIPIO: NOTE: The old parameters.agreementDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
 
     <!-- Agreement -->
     <screen name="FindAgreement">

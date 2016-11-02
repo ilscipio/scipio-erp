@@ -27,7 +27,7 @@ under the License.
                 <set field="activeMainMenuItem" value="quote"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderAppDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ORDERMGR, _VIEW permission -->
@@ -95,7 +95,7 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainquoteDecoratorLocation}">
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditQuoteWorkEffort" location="component://order/widget/ordermgr/QuoteWorkEffortForms.xml"/>

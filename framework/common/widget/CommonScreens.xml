@@ -1427,7 +1427,11 @@ under the License.
         </section>
     </screen>
     
-    <!-- Common SideBar Menu inclusion logic, adequate as a default in common/main decorator in most apps. 
+    <!-- Common SideBar Menu inclusion logic, adequate as a default in common decorators in most apps.
+        In most apps this will be invoked from CommonXxxAppSideBarMenu wrappers, which implement application-specific logic,
+        notably permission checks (this is in contrast to the MainAppSideBarMenu/DefMainAppSideBarMenu wrappers, which
+        are more explicitly designed to be overridable through parameters.mainDecoratorLocation by extending applications).
+    
         Accepts context fields:
         
         Permissions:

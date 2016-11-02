@@ -31,7 +31,7 @@ under the License.
                 <set field="year" from-field="parameters.year" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.PageTitleFinancialSummaryReportOptions}"/>
                         <screenlet title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">

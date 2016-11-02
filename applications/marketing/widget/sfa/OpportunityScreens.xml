@@ -28,7 +28,7 @@ under the License.
                 <set field="activeSubMenuItem" value="Opportunities"/>
             </actions>
             <widgets>
-                <!-- <decorator-screen name="CommonSfaAppDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"> --> 
+                <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}"> --> 
                 <decorator-screen name="CommonOpportunityDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">            
                     <decorator-section name="body">
                         <section>

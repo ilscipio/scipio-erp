@@ -30,7 +30,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditComputerHardware" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -75,7 +75,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonComputerSoftwareDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonComputerSoftwareDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditComputerSoftware" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -149,7 +149,7 @@ under the License.
                 <set field="fixedAssetTypeId" value="COMPUTER_HARDWARE"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ChildrenFixedAssets" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -168,7 +168,7 @@ under the License.
                 <set field="fixedAssetTypeId" value="COMPUTER_SOFTWARE"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ChildrenFixedAssets" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>

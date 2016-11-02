@@ -21,46 +21,6 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="CommonForumDecorator">
-        <section>
-            <actions>
-                <set field="activeMainMenuItem" value="Forum"/>
-                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="pageTitle" value="${uiLabelMap.${titleProperty}}"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonContentAppDecorator" location="component://content/widget/CommonScreens.xml">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.tabBar}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-menu name="${tabBar}" location="component://content/widget/forum/ForumMenus.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <label style="heading" text="${pageTitle}"/>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="FindForumGroups">
         <section>
             <actions>
@@ -73,7 +33,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ForumGroupPanel" title="${uiLabelMap.ContentForumGroupCreate}" collapsible="true">
                             <include-form name="AddForumGroup" location="component://content/widget/forum/ForumForms.xml"/>
@@ -102,7 +62,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddForumToForumGroupPanel" title="${uiLabelMap.ContentForumAddTo} ${forumGroup.contentName}" collapsible="true">
                             <include-form name="AddForum" location="component://content/widget/forum/ForumForms.xml"/>
@@ -131,7 +91,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ForumGroupRolePanel" title="${uiLabelMap.ContentForumAddRoleTo} ${forumGroup.contentName} [${forumGroup.contentId}]" collapsible="true">
                             <include-form name="AddForumGroupRole" location="component://content/widget/forum/ForumForms.xml"/>
@@ -160,7 +120,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ForumGroupPurposePanel" title="${uiLabelMap.ContentForumAddPurposeTo} ${forumGroup.contentName} [${forumGroup.contentId}]" collapsible="true">
                             <include-form name="AddForumGroupPurpose" location="component://content/widget/forum/ForumForms.xml"/>
@@ -193,7 +153,7 @@ under the License.
                 <set field="parameters.forumMessageIdTo" from-field="parameters.forumId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListForumMessages" location="component://content/widget/forum/ForumForms.xml"/>
                         <screenlet title="${uiLabelMap.ContentForumAddThreadTo} ${forum.description}">
@@ -244,7 +204,7 @@ under the License.
                 <set field="trail" from-field="parameters.trail" default-value="${contentId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-tree name="MessageTree" location="component://content/widget/forum/ForumTrees.xml"/>
                         <section>
@@ -284,7 +244,7 @@ under the License.
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentForumAddResponseToMessage} ${contentData.resultData.content.description}">
                             <include-form name="EditForumMessage" location="component://content/widget/forum/ForumForms.xml"/>
@@ -309,7 +269,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentForumAddResponseToMessage} ${forumMessage.description}">
                             <include-form name="AddForumMessage" location="component://content/widget/forum/ForumForms.xml"/>
@@ -334,7 +294,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonForumDecorator" location="${parameters.forumDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentForumAddResponseToMessage} ${forumMessage.description} [${forumMessage.contentId}]">
                             <include-form name="AddForumThreadMessage" location="component://content/widget/forum/ForumForms.xml"/>

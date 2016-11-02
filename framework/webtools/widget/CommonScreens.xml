@@ -20,6 +20,37 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: NOTE: The Admin app screen and related definitions have the double-purpose of providing app implementation
+        examples; to this end it also frequently contains descriptions of many patterns used throughout the backend.
+        Some descriptions are also found instead in the common component files such as component://common/widget/CommonScreens.xml and CommonMenus.xml.
+        For more elemental widget language definitions, see corresponding component://widget/dtd/widget-*.xsd files. -->
+        
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <!-- When a decorator-screen lookup fails to find a decorator using parameters.mainDecoratorLocation (or other), it will look in our CommonScreens.xml file here instead. 
+            This prevents the worst application extensibility issues related to the heavy use of mainDecoratorLocation, so that extending applications
+            can safely include screens from our app without having to worry about missing decorators in its own CommonScreens.xml file (which otherwise crashes).
+            It also mitigates the versatility loss that comes from using a generic parameters.mainDecoratorLocation rather than hundreds of specific 
+            parameters.commonXxxDecoratorLocation fields (this is the compromise: mainDecoratorLocation with default-fallback-location is slightly less versatile, 
+            but it makes overriding decorators easier, with no need to edit web.xml).
+            NOTE: For mainDecoratorLocation overriding to work correctly (with or without this fallback) w.r.t. application extensibility, the decorators referenced through 
+                parameters.mainDecoratorLocation should have globally unique names across all CommonScreens.xml files, so apps should take
+                care to avoid too generic names in their CommonScreens.xml files, or if they share names,
+                it means the decorators would be interchangeable.
+             -->
+        <decorator-screen-settings default-fallback-location="component://webtools/widget/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <!-- Every *Screens.xml file in same folder should include our common-settings defined above -->
+            <include-settings as-name="local-settings" name="common-settings" location="component://webtools/widget/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -78,7 +109,10 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; wrapper around main-decorator; simplifies the other decorators and screens -->
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name.
+        This wrapper simplifies the other decorators and screens, and allows extending apps that extend multiple
+        applications to specifically override screen code for this specific application only (important for permissions to
+        be re-implemented correctly by the extending app).  -->
     <screen name="CommonWebtoolsAppDecorator">
         <section>
             <actions>
@@ -86,7 +120,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="CommonSideBarMenu"/>
+                        <include-screen name="CommonWebtoolsAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -106,7 +140,7 @@ under the License.
                 <set field="infoMessage" value="&lt;strong&gt;Developer Info:&lt;/strong&gt; You can use the &lt;a href='ListDemoDataGeneratorServices'&gt;demo generator&lt;/a&gt;, to generate test-data" type="PlainString" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                      <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
@@ -241,7 +275,7 @@ under the License.
                 <set field="titleProperty" value="WebtoolsCertsX509"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://webtools/webapp/webtools/cert/viewbrowsercerts.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -259,7 +293,7 @@ under the License.
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -287,7 +321,7 @@ under the License.
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -317,7 +351,7 @@ under the License.
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -348,7 +382,7 @@ under the License.
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -381,7 +415,7 @@ under the License.
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -411,7 +445,7 @@ under the License.
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -440,7 +474,7 @@ under the License.
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -470,7 +504,7 @@ under the License.
                 <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
@@ -490,8 +524,60 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: cloned from component://common/widget/SecurityScreens.xml#SecurityDecorator 
-        This is invoked through parameters.securityDecoratorLocation (web.xml) -->
+    <screen name="StatsDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="stats"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="SERVER_STATS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="TemporalExpressionDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="tempexpr"/>
+                <property-map resource="TemporalExpressionUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap[titleProperty]}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonConfigurationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="tempExprPermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: cloned from component://common/widget/SecurityScreens.xml#SecurityDecorator -->
     <screen name="SecurityDecorator">
         <section>
             <actions>
@@ -506,7 +592,7 @@ under the License.
                 <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
                         <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupTabBar"/>
                     </decorator-section>
@@ -536,7 +622,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -558,7 +644,12 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) 
+        This (along with DefMainSideBarMenu) is a generalized pattern meant to support overriding by apps extending this one; 
+        inclusions of this widget should be done using parameters.mainDecoratorLocation, mirroring the main-decorator pattern.
+        An extending application can provide a different menu as long as it provides names and hooks in its complex menu (XxxAppSideBar)
+        which satisfy the activeSubMenu/activeSubMenuItem/activeMainMenuItem values that are set by the screens it is reusing.
+        Permissions are handled outside of this, in app-specific logic (see CommonXxxAppSideBarMenu pattern below). -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>
@@ -584,9 +675,11 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
-        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
-    <screen name="CommonSideBarMenu">
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
+        This is especially responsible for checking the base permissions before showing any sub-menus (this is completely application-specific).
+        This contrasts with MainSideBarMenu/DefMainSideBarMenu which are more generic in nature. -->
+    <screen name="CommonWebtoolsAppSideBarMenu">
         <section>
             <actions>
                 <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="WEBTOOLS"/>

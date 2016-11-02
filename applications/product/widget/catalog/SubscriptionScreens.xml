@@ -21,21 +21,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="CommonSubscriptionDecorator">
-        <section>
-            <widgets>   
-                <include-screen name="CommonSubscriptionDecorator" location="${parameters.mainDecoratorLocation}"/>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="CommonSubscriptionResourceDecorator">
-        <section>
-            <widgets>   
-                <include-screen name="CommonSubscriptionResourceDecorator" location="${parameters.mainDecoratorLocation}"/>
-            </widgets>
-        </section>
-    </screen>
+    <!-- SCIPIO: NOTE: The old parameters.subscriptionDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
 
     <!-- Subscription Screens -->
     <screen name="FindSubscription">
@@ -45,7 +32,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindSubscription"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>                    
@@ -95,7 +82,7 @@ under the License.
                     <actions><set field="titleProperty" value="ProductNewSubscription"/></actions>
                     <widgets/>
                 </section>
-                <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.subscriptionDecoratorLocation}">
+                <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="editSubscription" collapsible="true">
                             <include-form name="EditSubscription" location="component://product/widget/catalog/SubscriptionForms.xml"/>
@@ -118,7 +105,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.subscriptionDecoratorLocation}">
+                <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="addSubscriptionAttribute" title="${uiLabelMap.PageTitleAddSubscriptionAttributes}" collapsible="true">
                             <include-form name="AddSubscriptionAttribute" location="component://product/widget/catalog/SubscriptionForms.xml"/>
@@ -138,7 +125,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindSubscriptionResource"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSubscriptionResourceDecorator" location="${parameters.subscriptionDecoratorLocation}">
+                <decorator-screen name="CommonSubscriptionResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -175,7 +162,7 @@ under the License.
                     <actions><set field="titleProperty" value="ProductNewSubscriptionResource"/></actions>
                     <widgets/>
                 </section>
-                <decorator-screen name="CommonSubscriptionResourceDecorator" location="${parameters.subscriptionResourceDecoratorLocation}">
+                <decorator-screen name="CommonSubscriptionResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="EditSubscriptionResource" collapsible="true">
                             <include-form name="EditSubscriptionResource" location="component://product/widget/catalog/SubscriptionForms.xml"/>
@@ -194,7 +181,7 @@ under the License.
                 <set field="subscriptionResourceId" from-field="parameters.subscriptionResourceId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSubscriptionResourceDecorator" location="${parameters.subscriptionResourceDecoratorLocation}">
+                <decorator-screen name="CommonSubscriptionResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="addSubscriptionResourceProduct" title="${uiLabelMap.PageTitleAddSubscriptionResourceProducts}" collapsible="true">
                             <include-form name="AddSubscriptionResourceProduct" location="component://product/widget/catalog/SubscriptionForms.xml"/>
@@ -217,7 +204,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.subscriptionDecoratorLocation}">
+                <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="addSubscriptionCommEvent" title="${uiLabelMap.PageTitleAddSubscriptionCommEvent}" collapsible="true">
                             <include-form name="createSubscriptionCommEvent" location="component://product/widget/catalog/SubscriptionForms.xml"/>

@@ -90,7 +90,7 @@ under the License.
                 <set field="labelTitleProperty" value="ProductCatalog"/>
             </actions>
             <widgets>
-            <decorator-screen name="CommonCatalogAppDecorator" location="component://product/widget/catalog/CommonScreens.xml">
+            <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                 <decorator-section name="body">
                     <!-- <include-menu name="CatalogTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                     <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/> -->

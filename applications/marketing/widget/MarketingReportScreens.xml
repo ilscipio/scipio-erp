@@ -25,7 +25,7 @@ under the License.
                 <set field="activeMainMenuItem" value="Reports"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonMarketingAppDecorator" location="component://marketing/widget/CommonScreens.xml">
+                <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->

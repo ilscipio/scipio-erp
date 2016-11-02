@@ -30,7 +30,7 @@ under the License.
                 <set field="exampleFeatureCtx" from-field="parameters"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonExampleAppDecorator" location="component://example/widget/example/CommonScreens.xml">
+                <decorator-screen name="CommonExampleAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

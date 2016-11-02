@@ -44,14 +44,6 @@ under the License.
         <param-name>mainDecoratorLocation</param-name>
         <param-value>component://webtools/widget/CommonScreens.xml</param-value>
     </context-param>
-    <!-- SCIPIO: need security decorator -->
-    <context-param>
-        <description>The location of the security-decorator screen to use for this webapp; referred to as a context variable
-            in screen def XML files.
-        </description>
-        <param-name>securityDecoratorLocation</param-name>
-        <param-value>component://webtools/widget/CommonScreens.xml</param-value>
-    </context-param>
 
   <context-param>
     <param-name>GeronimoMultiOfbizInstances</param-name>

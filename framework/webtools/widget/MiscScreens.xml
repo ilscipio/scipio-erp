@@ -20,6 +20,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: include-screens test -->
+    <include-screens location="component://webtools/widget/MiscExtraScreens.xml"/>
 
     <screen name="viewdatafile">
         <section>
@@ -106,10 +108,7 @@ under the License.
                 <set field="contentPathPrefix" value="https://ilscipio.com/images"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty parameters.showLeftColumn and parameters.showLeftColumn == 'Y'}" override-by-auto-include="true">
-                        <include-screen name="CommonSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
-                    </decorator-section>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -286,6 +285,11 @@ under the License.
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="1"/>
                         <label text="sub-menus 'none' filter (same as max-depth 1)" style="heading"/>
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1" sub-menus="none"/>
+                    </screenlet>
+                    
+                    <screenlet title="Screen widget include-screens directive test">
+                        <include-screen name="DemoExtraWidget1"/>
+                        <include-screen name="DemoExtraWidget2"/>
                     </screenlet>
                 </screenlet>
             </widgets>

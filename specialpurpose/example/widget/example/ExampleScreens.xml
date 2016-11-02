@@ -30,7 +30,7 @@ under the License.
                 <set field="exampleCtx" from-field="parameters"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonExampleAppDecorator" location="component://example/widget/example/CommonScreens.xml">
+                <decorator-screen name="CommonExampleAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -231,7 +231,7 @@ under the License.
                 <set field="geoChart.center" from-field="geoCenter"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonExampleAppDecorator" location="component://example/widget/example/CommonScreens.xml">
+                <decorator-screen name="CommonExampleAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
                         <include-menu name="ExampleGeoLocation" location="component://example/widget/example/ExampleMenus.xml"/>
                     </decorator-section>
@@ -305,7 +305,7 @@ under the License.
                 <set field="pointAddress" value="${address.address1} ${address.address2} ${address.postalCode} ${address.city} ${address.stateProvinceGeoId} ${address.countryGeoId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonExampleAppDecorator" location="component://example/widget/example/CommonScreens.xml">
+                <decorator-screen name="CommonExampleAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
                         <include-menu name="ExampleGeoLocation" location="component://example/widget/example/ExampleMenus.xml"/>
                     </decorator-section>
@@ -419,7 +419,7 @@ under the License.
                 <set field="geoChart.center" from-field="geoCenter"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonExampleAppDecorator" location="component://example/widget/example/CommonScreens.xml">
+                <decorator-screen name="CommonExampleAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
                         <include-menu name="ExampleGeoLocation" location="component://example/widget/example/ExampleMenus.xml"/>
                     </decorator-section>

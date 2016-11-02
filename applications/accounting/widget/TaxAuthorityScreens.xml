@@ -21,71 +21,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-
-    <screen name="CommonTaxAuthorityDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthority" />
-                <set field="activeMainMenuItem" value="TaxAuthorities"/>
-
-                <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
-                <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
-                <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>
-                <entity-one entity-name="PartyNameView" value-field="taxAuthPartyName" auto-field-map="false">
-                    <field-map field-name="partyId" from-field="taxAuthority.taxAuthPartyId"/>
-                </entity-one>
-                <get-related-one value-field="taxAuthority" relation-name="TaxAuthGeo" to-value-field="taxAuthGeo" use-cache="true"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW" />
-                                    <not>
-                                        <if-empty field="taxAuthority" />
-                                    </not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <and>
-                                            <not><if-empty field="taxAuthPartyId"/></not>
-                                            <not><if-empty field="taxAuthGeoId"/></not>
-                                        </and>
-                                    </condition>
-                                    <widgets>
-                                        <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                        <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}"/>
-                                    </widgets>
-                                </section>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    <!-- SCIPIO: NOTE: The old parameters.taxAuthDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
 
     <screen name="FindTaxAuthority">
         <section>
@@ -94,7 +31,7 @@ under the License.
                 <set field="activeSubMenuItem" value="FindTaxAuthority"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -135,7 +72,7 @@ under the License.
                 <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditTaxAuthority" location="component://accounting/widget/TaxAuthorityForms.xml"/>
@@ -157,7 +94,7 @@ under the License.
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="TaxAuthorityCategoriesPanel" title="${uiLabelMap.PageTitleAddTaxAuthorityCategory}" collapsible="true">
                             <include-form name="AddTaxAuthorityCategory" location="component://accounting/widget/TaxAuthorityForms.xml"/>
@@ -179,7 +116,7 @@ under the License.
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="TaxAuthorityAssocsPanel" title="${uiLabelMap.PageTitleAddTaxAuthorityAssoc}" collapsible="true">
                             <include-form name="AddTaxAuthorityAssoc" location="component://accounting/widget/TaxAuthorityForms.xml"/>
@@ -201,7 +138,7 @@ under the License.
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="TaxAuthorityGlAccountPanel" title="${uiLabelMap.PageTitleAddTaxAuthorityGlAccount}" collapsible="true">
                             <include-form name="AddTaxAuthorityGlAccount" location="component://accounting/widget/TaxAuthorityForms.xml"/>
@@ -223,7 +160,7 @@ under the License.
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="TaxAuthorityCategoryPanel" title="${uiLabelMap.PageTitleAddTaxAuthorityCategory}" collapsible="true">
                             <label>${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>
@@ -248,7 +185,7 @@ under the License.
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet> <!-- title="${uiLabelMap.PageTitleListTaxAuthorityParties}" -->
                             <container>
@@ -281,7 +218,7 @@ under the License.
                 <entity-one entity-name="PartyTaxAuthInfo" value-field="partyTaxAuthInfo"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
+                <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <container>

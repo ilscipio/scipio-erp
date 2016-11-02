@@ -32,7 +32,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>

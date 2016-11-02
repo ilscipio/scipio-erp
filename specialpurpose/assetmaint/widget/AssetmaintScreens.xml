@@ -33,7 +33,7 @@
                 <section>
                     <condition><not><if-empty field="createdPeriod"/></not></condition>
                     <widgets>                        
-                        <decorator-screen name="CommonAssetMaintAppDecorator" location="component://assetmaint/widget/CommonScreens.xml">
+                        <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
@@ -76,26 +76,6 @@
         </section>
     </screen>
 
-    <screen name="CommonFixedAssetMaintDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAssetMaint" />
-                <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
-                <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true"> <!-- SCIPIO: let callers override -->
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="FindFixedAssetMaints">
         <section>
             <actions>
@@ -103,7 +83,7 @@
                 <set field="titleProperty" value="PageTitleFindFixedAssetMaints"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAssetMaintAppDecorator" location="component://assetmaint/widget/CommonScreens.xml">
+                <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

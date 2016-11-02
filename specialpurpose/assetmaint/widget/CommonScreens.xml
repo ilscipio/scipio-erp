@@ -21,6 +21,19 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://assetmaint/widget/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://assetmaint/widget/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+
     <screen name="main-decorator">
         <section>
             <actions>
@@ -64,7 +77,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; wrapper around main-decorator; simplifies the other decorators and screens -->
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
     <screen name="CommonAssetMaintAppDecorator">
         <section>
             <actions>
@@ -72,7 +85,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="CommonSideBarMenu"/>
+                        <include-screen name="CommonAssetMaintAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -91,7 +104,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAssetMaintAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
@@ -135,7 +148,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAssetMaintAppDecorator" auto-decorator-section-include="true">
+                <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true"> <!-- SCIPIO: quick setting lets callers override this section -->
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <!--<decorator-section-include name="pre-body"/>-->
@@ -190,7 +203,27 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <screen name="CommonFixedAssetMaintDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAssetMaint" />
+                <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true"> <!-- SCIPIO: let callers override -->
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>
@@ -216,23 +249,9 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
-        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
-    <screen name="CommonSideBarMenu">
-        <section>
-            <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="WORKEFFORTMGR"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
-            </actions>
-            <widgets>
-                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
-        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
-    <screen name="CommonSideBarMenu">
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonAssetMaintAppSideBarMenu">
         <section>
             <actions>
                 <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="fixedAssetPermissionCheck"/>

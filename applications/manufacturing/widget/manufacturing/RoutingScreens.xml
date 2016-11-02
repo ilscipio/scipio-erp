@@ -32,7 +32,7 @@ under the License.
                 <set field="titleFormat" value="\${finalTitle} ${routing.workEffortName} [${routing.workEffortId}]"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonManufacturingAppDecorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
+                <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <!-- override left-column for routing field check -->
                         <section>
@@ -91,7 +91,7 @@ under the License.
                 <set field="titleFormat" value="\${finalTitle} ${routingTask.workEffortName} [${routingTask.workEffortId}]"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonManufacturingAppDecorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
+                <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <!-- override left-column for routingTask field check -->
                         <section>

@@ -20,6 +20,20 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://workeffort/widget/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://workeffort/widget/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -69,7 +83,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: App-wide common decorator for DIRECT inclusion using hardcoded location, NOT mainDecoratorLocation; wrapper around main-decorator; simplifies the other decorators and screens -->
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
     <screen name="CommonWorkEffortAppDecorator">
         <section>
             <actions>
@@ -77,7 +91,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="CommonSideBarMenu"/>
+                        <include-screen name="CommonWorkEffortAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -104,7 +118,7 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortAppDecorator">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffortId}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -166,7 +180,7 @@ under the License.
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortAppDecorator">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -210,7 +224,7 @@ under the License.
                 <set field="activeMainMenuItem" value="calendar" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortAppDecorator">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -235,6 +249,41 @@ under the License.
         </section>
     </screen>
 
+    <screen name="iCalendarDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />
+                <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffort}" override-by-auto-include="true">
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-service-permission service-name="workEffortICalendarPermission" main-action="CREATE" context-map="parameters"/>
+                                    <if-service-permission service-name="workEffortICalendarPermission" main-action="UPDATE" context-map="parameters"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <container style="h2">
+                                    <label text="${title}"/>
+                                </container>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="main">
         <section>
             <actions>
@@ -243,7 +292,7 @@ under the License.
                 <set field="titleProperty" value="WorkEffort"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortAppDecorator">
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/main.ftl"/></html>
@@ -254,7 +303,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>
@@ -280,9 +329,9 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments)
-        NOTE: Unlike MainSideBarMenu and DefMainSideBarMenu, should always be DIRECT-included using hardcoded location, NOT mainDecoratorLocation -->
-    <screen name="CommonSideBarMenu">
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonWorkEffortAppSideBarMenu">
         <section>
             <actions>
                 <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="WORKEFFORTMGR"/>

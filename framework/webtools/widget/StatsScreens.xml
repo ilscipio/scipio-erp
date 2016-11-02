@@ -21,31 +21,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="StatsDecorator">
-        <section>
-            <actions>
-                <set field="activeMainMenuItem" value="stats"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="component://webtools/widget/CommonScreens.xml" auto-decorator-section-include="true">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="SERVER_STATS" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    <!-- SCIPIO: NOTE: The old parameters.statsDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
 
     <screen name="StatsSinceStart">
         <section>
@@ -55,7 +32,7 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/stats/StatsSinceStart.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="StatsDecorator" location="${parameters.statsDecoratorLocation}">
+                <decorator-screen name="StatsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -89,7 +66,7 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/stats/StatBinsHistory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="StatsDecorator" location="${parameters.statsDecoratorLocation}">
+                <decorator-screen name="StatsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -114,7 +91,7 @@ under the License.
                 <set field="activeSubMenuItem" value="metrics"/>
             </actions>
             <widgets>
-                <decorator-screen name="StatsDecorator" location="${parameters.statsDecoratorLocation}">
+                <decorator-screen name="StatsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>

@@ -880,10 +880,13 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="share-scope">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: If set to explicit false, any actions in the submenu will
-                        not affect the parent's context. If true, the scope is shared.
-                        Default: true (NOTE: this is unlike most other share-scope attributes on other
-                            elements, which are usually false by default)</xs:documentation>
+                    <xs:documentation>SCIPIO: If false (default), any actions in the sub-menu will
+                        not affect the parent's context. If set to true, the scope is shared.
+                        This setting is regardless of whether the sub-menu is inlined or populated from separate include.
+                        Default: false (2016-11-02: CHANGED to false for 1.14.2) - overridable by
+                            default-sub-menu-share-scope on menu element.
+                        NOTE: 2016-11-02: The default has been changed to false for 1.14.2 to prevent
+                            variable leakage across sub-menus in complex menus.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

@@ -20,12 +20,13 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- SCIPIO: Mostly here to test the include-screens directive -->
+    <!-- SCIPIO: Mostly here to test the include-screens directive (also decorator-screen) -->
     
     <screen name="DemoExtraWidget1">
         <section>
             <widgets>
-                <label text="This is an extra widget (1) included with include-screens directive"/>
+                <label text="This is an extra widget (1) included with include-screens directive. Also tests decorator-screen with no decorator-sections defined."/>
+                <decorator-screen name="DemoExtraWidgetMidDecorator"/>
             </widgets>
         </section>
     </screen>
@@ -33,7 +34,33 @@ under the License.
     <screen name="DemoExtraWidget2">
         <section>
             <widgets>
-                <label text="This is an extra widget (2) included with include-screens directive"/>
+                <label text="This is an extra widget (2) included with include-screens directive. Also tests decorator-screen with only-passthrough decorator-sections."/>
+                <decorator-screen name="DemoExtraWidgetMidDecorator">
+                    <decorator-section name="section-1">
+                        <label text="decorator section 1"/>
+                    </decorator-section>
+                    <decorator-section name="section-2">
+                        <label text="decorator section 2"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DemoExtraWidgetMidDecorator">
+        <section>
+            <widgets>
+                <!-- New in SCIPIO this fully substitutes for include-screen -->
+                <decorator-screen name="DemoExtraWidgetLowDecorator"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DemoExtraWidgetLowDecorator">
+        <section>
+            <widgets>
+                <decorator-section-include name="section-1"/>
+                <decorator-section-include name="section-2"/>
             </widgets>
         </section>
     </screen>

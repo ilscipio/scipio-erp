@@ -20,6 +20,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: include-screens test -->
+    <include-screens location="component://webtools/widget/MiscExtraScreens.xml"/>
 
     <screen name="viewdatafile">
         <section>
@@ -283,6 +285,11 @@ under the License.
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="1"/>
                         <label text="sub-menus 'none' filter (same as max-depth 1)" style="heading"/>
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1" sub-menus="none"/>
+                    </screenlet>
+                    
+                    <screenlet title="Screen widget include-screens directive test">
+                        <include-screen name="DemoExtraWidget1"/>
+                        <include-screen name="DemoExtraWidget2"/>
                     </screenlet>
                 </screenlet>
             </widgets>

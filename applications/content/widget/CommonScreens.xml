@@ -586,6 +586,46 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonForumDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="Forum"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="pageTitle" value="${uiLabelMap.${titleProperty}}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.tabBar}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-menu name="${tabBar}" location="component://content/widget/forum/ForumMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <label style="heading" text="${pageTitle}"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>

@@ -524,8 +524,60 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: cloned from component://common/widget/SecurityScreens.xml#SecurityDecorator 
-        This is invoked through parameters.securityDecoratorLocation (web.xml) -->
+    <screen name="StatsDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="stats"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="SERVER_STATS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="TemporalExpressionDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="tempexpr"/>
+                <property-map resource="TemporalExpressionUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap[titleProperty]}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonConfigurationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="tempExprPermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: cloned from component://common/widget/SecurityScreens.xml#SecurityDecorator -->
     <screen name="SecurityDecorator">
         <section>
             <actions>

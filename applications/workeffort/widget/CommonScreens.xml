@@ -249,6 +249,41 @@ under the License.
         </section>
     </screen>
 
+    <screen name="iCalendarDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />
+                <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffort}" override-by-auto-include="true">
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-service-permission service-name="workEffortICalendarPermission" main-action="CREATE" context-map="parameters"/>
+                                    <if-service-permission service-name="workEffortICalendarPermission" main-action="UPDATE" context-map="parameters"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <container style="h2">
+                                    <label text="${title}"/>
+                                </container>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="main">
         <section>
             <actions>

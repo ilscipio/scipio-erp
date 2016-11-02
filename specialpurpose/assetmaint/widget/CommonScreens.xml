@@ -203,6 +203,26 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonFixedAssetMaintDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAssetMaint" />
+                <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true"> <!-- SCIPIO: let callers override -->
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>

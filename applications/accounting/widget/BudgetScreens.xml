@@ -21,6 +21,9 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: NOTE: The old parameters.budgetDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
+
     <screen name="ListBudgets">
         <section>
             <actions>
@@ -72,45 +75,6 @@ under the License.
         </section>
     </screen>
 
-    <screen name="CommonBudgetDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Budget" />
-                <set field="activeMainMenuItem" value="ListBudgets"/>
-                <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
-                <entity-one entity-name="Budget" value-field="budget"/>
-                <entity-and list="budgetStatus" entity-name="BudgetStatus">
-                    <field-map field-name="budgetId" from-field="budgetId"/>
-                    <order-by field-name="-statusDate"/>
-                </entity-and>
-                <set field="statusId" from-field="budgetStatus[0].statusId"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.budgetId}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="budgetId"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="BudgetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="heading" text="Budget : [${budgetId}]"/>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <!-- create and/or update a budget -->
     <screen name="EditBudget">
         <section>
@@ -121,7 +85,7 @@ under the License.
                 <entity-one entity-name="Budget" value-field="budget"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -173,7 +137,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -225,7 +189,7 @@ under the License.
                 <entity-condition entity-name="BudgetItemType" list="budgetItemTypes"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingBudgetItemsAdd}">
                             <include-form name="EditBudgetItem" location="component://accounting/widget/BudgetForms.xml"/>
@@ -251,7 +215,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PartyBudgetRolePanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
                             <include-form name="EditBudgetRole" location="component://accounting/widget/BudgetForms.xml"/>
@@ -275,7 +239,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="BudgetReviewPanel" title="${uiLabelMap.AccountingBudgetReviewAdd}" collapsible="true">
                             <include-form name="EditBudgetReview" location="component://accounting/widget/BudgetForms.xml"/>

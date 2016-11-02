@@ -20,6 +20,10 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: NOTE: The old parameters.iCalendarDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
+
     <screen name="UserJobs">
         <section>
             <actions>
@@ -772,41 +776,6 @@ under the License.
         </section>
     </screen>
 
-    <screen name="iCalendarDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />
-                <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffort}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-service-permission service-name="workEffortICalendarPermission" main-action="CREATE" context-map="parameters"/>
-                                    <if-service-permission service-name="workEffortICalendarPermission" main-action="UPDATE" context-map="parameters"/>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <container style="h2">
-                                    <label text="${title}"/>
-                                </container>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="FindICalendars">
         <section>
             <actions>
@@ -859,7 +828,7 @@ under the License.
                     </actions>
                     <widgets/>
                 </section>
-                <decorator-screen name="iCalendarDecorator" location="${parameters.iCalendarDecoratorLocation}">
+                <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -899,7 +868,7 @@ under the License.
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarEditData} - ${workEffort.workEffortName}"/>
             </actions>
             <widgets>
-                <decorator-screen name="iCalendarDecorator" location="${parameters.iCalendarDecoratorLocation}">
+                <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -923,7 +892,7 @@ under the License.
                 <set field="title" value="${uiLabelMap.PageTitleTreeWorkEfforts} - ${workEffort.workEffortName}"/>
             </actions>
             <widgets>
-                <decorator-screen name="iCalendarDecorator" location="${parameters.iCalendarDecoratorLocation}">
+                <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -946,7 +915,7 @@ under the License.
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarAddParty} - ${workEffort.workEffortName}"/>
             </actions>
             <widgets>
-                <decorator-screen name="iCalendarDecorator" location="${parameters.iCalendarDecoratorLocation}">
+                <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -970,7 +939,7 @@ under the License.
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarAddFixedAsset} - ${workEffort.workEffortName}"/>
             </actions>
             <widgets>
-                <decorator-screen name="iCalendarDecorator" location="${parameters.iCalendarDecoratorLocation}">
+                <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -998,7 +967,7 @@ under the License.
                 <set field="wikiContent" from-field="dom:toHtmlString(wikiDivList[0], 'UTF-8', true, 2)"/>
             </actions>
             <widgets>
-                <decorator-screen name="iCalendarDecorator" location="${parameters.iCalendarDecoratorLocation}">
+                <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>

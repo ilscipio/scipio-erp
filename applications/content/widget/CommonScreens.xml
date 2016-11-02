@@ -53,7 +53,7 @@ under the License.
                 <set field="applicationTitle" value="${uiLabelMap.ContentContentManagerApplication}"/>
             </actions>
             <widgets>
-                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
@@ -84,7 +84,7 @@ under the License.
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonContentAppSideBarMenu"/>
                     </decorator-section>

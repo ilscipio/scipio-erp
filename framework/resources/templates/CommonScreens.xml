@@ -32,7 +32,7 @@
                 <set field="applicationTitle" value="${uiLabelMap.@component-resource-name@Application}" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>

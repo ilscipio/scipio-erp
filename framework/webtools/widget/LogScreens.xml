@@ -27,7 +27,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

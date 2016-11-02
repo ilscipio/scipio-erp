@@ -177,7 +177,7 @@ under the License.
                 <set field="geoCenter.zoom" value="13"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>
@@ -196,7 +196,7 @@ under the License.
                 <set field="geoCenter.zoom" value="12"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>
@@ -215,7 +215,7 @@ under the License.
                 <set field="geoCenter.zoom" value="11"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>
@@ -333,7 +333,7 @@ under the License.
                 <set field="chartId" value="pieChartDiv"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleChartsDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleChartsDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>
@@ -345,7 +345,7 @@ under the License.
                 <set field="chartId" value="barChartDiv"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleChartsDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleChartsDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>
@@ -365,7 +365,7 @@ under the License.
                 <set field="geoCenter.zoom" value="13"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleOsmGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleOsmGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>
@@ -384,7 +384,7 @@ under the License.
                 <set field="geoCenter.zoom" value="12"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleOsmGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleOsmGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>
@@ -403,7 +403,7 @@ under the License.
                 <set field="geoCenter.zoom" value="11"/>
             </actions>
             <widgets>
-                <include-screen name="CommonExampleOsmGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
+                <decorator-screen name="CommonExampleOsmGeoLocationDecorator" location="${parameters.mainDecoratorLocation}"/>
             </widgets>
         </section>
     </screen>

@@ -84,7 +84,7 @@ under the License.
                  -->
             </actions>
             <widgets>
-                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
                     <!-- SCIPIO: NOTE: On most of the main-decorators including this one, override-by-auto-include is left disabled and is instead implemented manually with decorator-section-include.
                         The manual inclusion is more flexible whereas the override-by-auto-include flag is easier to use. In some cases, override-by-auto-include="true" makes the decorator a lot easier to implement.
                         Both are valid. -->
@@ -118,7 +118,7 @@ under the License.
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonWebtoolsAppSideBarMenu"/>
                     </decorator-section>
@@ -531,7 +531,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

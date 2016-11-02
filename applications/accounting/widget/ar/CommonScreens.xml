@@ -245,57 +245,6 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: PLACEHOLDER decorators to prevent ${parameters.mainDecoratorLocation} crashes on non-AP/AR-specific requests -->
-    <screen name="CommonAgreementDecorator">
-        <section>
-            <widgets>
-                <include-screen name="CommonAgreementDecorator" location="component://accounting/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CommonFinAccountDecorator">
-        <section>
-            <widgets>
-                <include-screen name="CommonFinAccountDecorator" location="component://accounting/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CommonPartyDecorator">
-        <section>
-            <widgets>
-                <include-screen name="CommonPartyDecorator" location="component://accounting/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CommonOrganizationAccountingReportsDecorator">
-        <section>
-            <widgets>
-                <include-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CommonAdminChecksDecorator">
-        <section>
-            <widgets>
-                <include-screen name="CommonAdminChecksDecorator" location="component://accounting/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CommonSettingsDecorator">
-        <section>
-            <widgets>
-                <include-screen name="CommonSettingsDecorator" location="component://accounting/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="GlobalGLSettingsDecorator">
-        <section>
-            <widgets>
-                <include-screen name="GlobalGLSettingsDecorator" location="component://accounting/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    
     <!-- SCIPIO: Form migration -->
     <screen name="ArPastDueInvoices">
         <section>

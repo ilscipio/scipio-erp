@@ -66,7 +66,7 @@ under the License.
                 <set field="applicationTitle" value="${uiLabelMap.Party}" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
                     <!-- note: multiple ways to write this -->
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
@@ -94,24 +94,42 @@ under the License.
     <screen name="CommonPartyAppDecorator">
         <section>
             <actions>
+                <service service-name="partyBasePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonPartyAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
     
+    <!-- SCIPIO: Primarily intended for screens that actually focus on displaying a Party.
+        For compatibility (and logical) reasons, the Party sub-menu is only selected if there is parameters.partyId specified OR if activeSubMenuItem was set;
+        however screens/decorators that don't focus on a party should now usually use CommonPartyAppDecorator instead. -->
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#Profile" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="${groovy: (parameters.partyId || context.activeSubMenuItem) ? 'component://party/widget/partymgr/PartyMenus.xml#Profile' : ''}" />
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
@@ -147,6 +165,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="CommonRequestDecorator">
         <section>
             <actions/>
@@ -159,6 +178,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="CommonOpportunityDecorator">
         <section>
             <actions/>

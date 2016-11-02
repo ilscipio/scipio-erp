@@ -53,6 +53,8 @@ import org.ofbiz.widget.model.CommonWidgetModels.AutoServiceParameters;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.CommonWidgetModels.Link;
 import org.ofbiz.widget.model.CommonWidgetModels.Parameter;
+import org.ofbiz.widget.model.ScreenFallback.FlexibleScreenFallbackSettings;
+import org.ofbiz.widget.model.ScreenFallback.SimpleFlexibleScreenFallbackSettings;
 import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
@@ -922,6 +924,17 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander locationExdr;
         private final Map<String, ModelScreenWidget> sectionMap;
         
+        // SCIPIO: fallback decorator
+        private final FlexibleScreenFallbackSettings fallbackSettings;
+        
+        // SCIPIO: FIXME: Terrible ThreadLocal-based hack to propagate default values from screen-group
+        // NOTE: the initial value for this is NULL and must be set back to NULL before the construction is over (use a stack-like idiom).
+        private static ThreadLocal<FlexibleScreenFallbackSettings> overridingDefaultFallbackSettings = new ThreadLocal<>();
+
+        private static final FlexibleScreenFallbackSettings defaultFallbackSettings = 
+                new SimpleFlexibleScreenFallbackSettings("", "", Boolean.FALSE);
+               
+        
         // SCIPIO: if true, automatically include sections defined in higher screens
         private final boolean autoDecoratorSectionIncludes;
 
@@ -936,6 +949,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 sectionMap.put(decoratorSection.getName(), decoratorSection);
             }
             this.sectionMap = Collections.unmodifiableMap(sectionMap);
+            
+            FlexibleScreenFallbackSettings defFallbackSettings = getOverridingDefaultFallbackSettings();
+            if (defFallbackSettings == null) {
+                defFallbackSettings = DecoratorScreen.defaultFallbackSettings;
+            }
+            this.fallbackSettings = new SimpleFlexibleScreenFallbackSettings(defFallbackSettings, 
+                FlexibleStringExpander.getInstance(decoratorScreenElement.getAttribute("fallback-name")),
+                FlexibleStringExpander.getInstance(decoratorScreenElement.getAttribute("fallback-location")),
+                UtilMisc.booleanValue(decoratorScreenElement.getAttribute("fallback-if-empty"))
+                );
             
             this.autoDecoratorSectionIncludes = !"false".equals(decoratorScreenElement.getAttribute("auto-decorator-section-include"));
         }
@@ -1017,8 +1040,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
             String name = this.getName(context);
             String location = this.getLocation(context);
-
-            ScreenFactory.renderReferencedScreen(name, location, this, writer, context, screenStringRenderer);
+            
+            // SCIPIO: fallback added
+            ScreenFactory.renderReferencedScreen(name, location, this, writer, context, screenStringRenderer,
+                    true, this.fallbackSettings.getResolvedForScreenLogic(context));
 
             contextMs.pop();
         }
@@ -1046,6 +1071,21 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getLocationExdr() {
             return locationExdr;
+        }
+
+        // SCIPIO: new
+        public FlexibleScreenFallbackSettings getFallbackLocation() {
+            return fallbackSettings;
+        }
+
+        // SCIPIO: FIXME: Terrible ThreadLocal-based methods, used during construction only
+
+        static FlexibleScreenFallbackSettings getOverridingDefaultFallbackSettings() {
+            return overridingDefaultFallbackSettings.get();
+        }
+
+        static void setOverridingDefaultFallbackSettings(FlexibleScreenFallbackSettings defaultFallbackSettings) {
+            DecoratorScreen.overridingDefaultFallbackSettings.set(defaultFallbackSettings);
         }
 
     }

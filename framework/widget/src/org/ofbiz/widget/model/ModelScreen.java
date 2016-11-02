@@ -18,10 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -38,23 +40,25 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  */
 @SuppressWarnings("serial")
-public class ModelScreen extends ModelWidget {
+public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry {
 
     public static final String module = ModelScreen.class.getName();
 
     private final String sourceLocation;
     private final FlexibleStringExpander transactionTimeoutExdr;
-    private final Map<String, ModelScreen> modelScreenMap;
+    // SCIPIO: generalized
+    //private final Map<String, ModelScreen> modelScreenMap;
+    private final ModelScreenGroup modelScreenGroup;
     private final boolean useTransaction;
     private final boolean useCache;
     private final ModelScreenWidget.Section section;
 
     /** XML Constructor */
-    public ModelScreen(Element screenElement, Map<String, ModelScreen> modelScreenMap, String sourceLocation) {
+    public ModelScreen(Element screenElement, ModelScreenGroup modelScreenGroup, String sourceLocation) {
         super(screenElement);
         this.sourceLocation = sourceLocation;
         this.transactionTimeoutExdr = FlexibleStringExpander.getInstance(screenElement.getAttribute("transaction-timeout"));
-        this.modelScreenMap = modelScreenMap;
+        this.modelScreenGroup = modelScreenGroup;
         this.useTransaction = "true".equals(screenElement.getAttribute("use-transaction"));
         this.useCache = "true".equals(screenElement.getAttribute("use-cache"));
 
@@ -75,8 +79,23 @@ public class ModelScreen extends ModelWidget {
         return transactionTimeoutExdr.getOriginal();
     }
 
-    public Map<String, ModelScreen> getModelScreenMap() {
-        return modelScreenMap;
+    /**
+     * Returns model screen map.
+     * <p>
+     * SCIPIO: return value changed to ModelScreens, which implements Map<String, ModelScreen> and should work
+     * with all existing code.
+     */
+    public ModelScreens getModelScreenMap() {
+        // SCIPIO: get from parent group
+        //return modelScreenMap;
+        return modelScreenGroup.getModelScreens();
+    }
+    
+    /**
+     * SCIPIO: new
+     */
+    public ModelScreenGroup getModelScreenGroup() {
+        return modelScreenGroup;
     }
 
     public boolean getUseTransaction() {
@@ -194,6 +213,11 @@ public class ModelScreen extends ModelWidget {
     public Delegator getDelegator(Map<String, Object> context) {
         Delegator delegator = (Delegator) context.get("delegator");
         return delegator;
+    }
+
+    @Override
+    public List<ModelScreen> getScreenList() { // SCIPIO: new
+        return UtilMisc.toList(this);
     }
 
 }

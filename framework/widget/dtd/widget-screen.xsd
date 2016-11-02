@@ -32,11 +32,70 @@ Features and Modifications:
     <xs:element name="screens">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="screen" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-settings" /><!-- SCIPIO: new -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" /><!-- SCIPIO: new -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-screens" /><!-- SCIPIO: new -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllScreenEntries" /><!-- SCIPIO: minOccurs="0" needed to allow new element combinations -->
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="screen">
+    <xs:element name="AllScreenEntries" abstract="true" /><!-- SCIPIO: new -->
+    <xs:element name="include-screens">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Includes all screens from the specified location using the mechanism specified by mode,
+                    optionally filtering by group-name or name.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:attribute type="xs:string" name="location" use="required">
+                <xs:annotation>
+                    <xs:documentation>Location to include files from. MUST be different than the current file.
+                        </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="group-name" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Group filter. Include only screens from this group.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="name" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Name filter. Include only screen having this name.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="recursive">
+                <xs:annotation>
+                    <xs:documentation>Whether to include recursively or not. Default: full</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="no" />
+                        <xs:enumeration value="full" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mode" default="delegate">
+                <xs:annotation>
+                    <xs:documentation>
+                        Manner in which the include is implemented.
+                        * delegate: dynamically creates placeholder screens that delegate to the screens of 
+                          same names in the target location; produces a trivial screen
+                          definition consisting of screen/section/widgets/include-screen elements.
+                        Default: delegate
+                        TODO?: textual mode (usefulness unclear)
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="delegate" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="screen" substitutionGroup="AllScreenEntries">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="section" />
@@ -62,6 +121,31 @@ Features and Modifications:
                         <xs:enumeration value="false" />
                     </xs:restriction>
                 </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="screen-group" substitutionGroup="AllScreenEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Screen grouping element that can be used to apply defaults and settings
+                    to a specific group of screens within a file. NOTE: This does not function as a namespace.
+                    2016-10-30: New element, added for 1.14.2.
+                    WARN: EXPERIMENTAL: At current time (2016-10-30), screen-group should be considered untested
+                        and is not used in any Scipio files.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-settings" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-screens" />
+                <xs:element maxOccurs="unbounded" ref="AllScreenEntries" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name">
+                <xs:annotation>
+                    <xs:documentation>Group name; should be unique within a file.
+                        Reserved names: root-screens (for the group representing the root screens).</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -476,6 +560,44 @@ Features and Modifications:
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" />
+            <xs:attribute type="xs:string" name="fallback-name">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: Name of a fallback decorator to use if the decorator specified
+                        by name#location resolves to a missing screen.
+                        Default: (none) OR (if fallback-location specified) same value as 'name' attribute
+                        2016-10-30: Added for 1.14.2.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="fallback-location">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: Location of a fallback decorator to use if the decorator specified
+                        by name#location resolves to a missing screen.
+                        Default: (none) OR (if fallback-name specified) same value as 'location'
+                        2016-10-30: Added for 1.14.2.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="fallback-if-empty" default="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: If true, the fallback decorator will be used if the 'location' attribute
+                        is empty, missing or contains an expression that evaluates to empty, checked
+                        in addition to the case where name#location resolves to a missing screen.
+                        If false, only the latter case applies.
+                        Default: false
+                        2016-10-30: Added for 1.14.2.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="auto-decorator-section-include" default="true">
                 <xs:annotation>
                     <xs:documentation>
@@ -784,4 +906,167 @@ Features and Modifications:
     <xs:element name="swing">
         <xs:complexType />
     </xs:element>
+    
+    <!-- ============== Configuration Elements (SCIPIO) =============== -->
+    <xs:element name="include-settings">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: New include-settings element, used to include screen-settings definitions from other screens.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location"/>
+            <xs:attribute type="xs:string" name="as-name">
+                <xs:annotation>
+                    <xs:documentation>
+                        Name to give the settings in the target (this) file.
+                        Default: same as name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="active" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        Whether the settings apply to the current file (true) or they are only there for
+                        reuse by other screens (false).
+                        Default: true - included settings, even if false in the original file, are
+                        included as active unless false is specified.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="screen-settings">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: New generic screen-settings element, as first child of screen and screen-group elements.
+                    Multiple screen settings are possible. 
+                    Multiple sections with same names are merged in the given order, such that screen-settings
+                    may override settings from include-settings.
+                    If multiple settings elements are active (do not have active="false"), they are merged together to produce the effective settings.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllScreenSettingEntries" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the screen settings, for referencing and reuse purposes.
+                        Must be unique in a file.
+                        By convention, the main settings in a file are named "main-settings".
+                        Reserved names: default-settings (used when no active settings exist).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="active" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        Whether the settings apply to the current file (true) or they are only there for
+                        reuse by other screens (false).
+                        When defining common definitions for other screens to use but not for the current file,
+                        this should be set to false.
+                        When multiple settings elements have true set, they are merged (in given order) to produce the effective settings.
+                        Default: true
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="AllScreenSettingEntries" abstract="true" />
+    <xs:element name="decorator-screen-settings" substitutionGroup="AllScreenSettingEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Used to override decorator-screen include settings and defaults, for either
+                    all screens (when child of screens element) or a group of screens (when child of screen-group element).
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:attribute type="xs:string" name="default-fallback-name">
+                <xs:annotation>
+                    <xs:documentation>
+                        Custom default value for decorator-screen element's 'fallback-name' attribute
+                        for all decorator-screen elements which are children of this group, within this file only
+                        (file scope; does not affect decorator-screen elements of externally referenced screens).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="default-fallback-location">
+                <xs:annotation>
+                    <xs:documentation>
+                        Custom default value for decorator-screen element's 'fallback-location' attribute
+                        for all decorator-screen elements which are children of this group, within this file only
+                        (file scope; does not affect decorator-screen elements of externally referenced screens).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="default-fallback-if-empty">
+                <xs:annotation>
+                    <xs:documentation>
+                        Custom default value for decorator-screen element's 'fallback-name' attribute
+                        for all decorator-screen elements which are children of this group, within this file only
+                        (file scope; does not affect decorator-screen elements of externally referenced screens).
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="auto-include-settings" substitutionGroup="AllScreenSettingEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Used to automatically include settings from THIS CommonScreens.xml file INTO OTHER screen files.
+                    This is only valid when done from the file having the exact name "CommonScreens.xml"; this 
+                    element is ignored if found in any other file.
+                    The children include directives are essentially copied into the other screen files,
+                    into the root screens element, before the file's own settings (if any).
+                    When a screen file is rendered, it will first look for this section in the CommonScreens.xml
+                    file residing in the same folder; if not found, it will look in the parent directory,
+                    recursively, until the top component://componentname/widget/ folder is reached.
+                    This powerful directive helps avoid error-prone redundancy in screen files.
+                    NOTE: Does not work with screen-groups; only inserts into root screens/group.
+                    2016-10-30: New element, added for 1.14.2.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-settings" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="file-pattern">
+                <xs:annotation>
+                    <xs:documentation>
+                        A regular expression that determines which screen files these auto settings
+                        should be included into. It is relative to the directory in which the CommonScreens.xml
+                        file resides, and never starts with a /.
+                        Default: "^.*Screens\.xml$" - the CommonScreens.xml will take care of all *Screens.xml 
+                        files in all subfolders except those in subfolders containing a CommonScreens.xml file of their own.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
 </xs:schema>

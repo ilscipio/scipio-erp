@@ -268,7 +268,7 @@ under the License.
         <@td>${partyDate.createdDate!}</@td>
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
-          <@menu type="button">
+          <@menu type="button-dropdown" title=uiLabelMap.CommonActions><#-- SCIPIO: too many actions, so made into dropdown: type="button" -->
           <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text=uiLabelMap.CommonDetails class="+${styles.action_nav!}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text=uiLabelMap.OrderOrders class="+${styles.action_run_sys!} ${styles.action_find!}">

@@ -360,10 +360,8 @@
     <menu name="NewPartySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="create-new-party"/>
     </menu>
-    <!-- SCIPIO: TODO: the main button misses the "+${styles.action_nav} ${styles.action_add}" style currently due to widgets limitation
-        (see htmlMenuTemplateLibrary.ftl) - needs a title-style attribute... -->
     <menu name="NewPartyButtonDropdown" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        title="${uiLabelMap.CommonNew}">
+        title="${uiLabelMap.CommonNew}" title-style="+${styles.action_nav} ${styles.action_add}">
         <include-elements menu-name="create-new-party"/>
     </menu>
 

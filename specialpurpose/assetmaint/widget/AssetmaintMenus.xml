@@ -36,7 +36,10 @@
             <sub-menu name="FixedAsset" include="FixedAssetSideBar"/>
         </menu-item>
         <menu-item name="fixedAssetMaints">
-            <sub-menu name="FixedAssetMaint" include="FixedAssetMaintSideBar"/>
+            <!-- SCIPIO: already included as a sub-menu of FixedAssetSideBar (see below)...
+                here fixedAssetMaints provides a convenient Find screen and it sends into 
+                FixedAssetSideBar's sub-menu once something selected.
+            <sub-menu name="FixedAssetMaint" include="FixedAssetMaintSideBar"/> -->
         </menu-item>
         <menu-item name="facility">
             <sub-menu name="Facility" include="FacilitySideBar"/>
@@ -54,6 +57,10 @@
     </menu>
     <menu name="FixedAssetSideBar" extends="FixedAssetSideBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
         <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />
+        <!-- SCIPIO: we must override the FixedAssetMaint we inherited from accounting here...  -->
+        <menu-item name="ListFixedAssetMaints">
+            <sub-menu name="FixedAssetMaint" include="FixedAssetMaintSideBar"/>
+        </menu-item>
     </menu>
 
     <menu name="FixedAssetMaintTabBar" extends="FixedAssetMaintTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
@@ -87,7 +94,7 @@
     </menu>
     
     <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="FixedAssetMaintTabBar" recursive="includes-only" />
+        <include-elements menu-name="FixedAssetMaintTabBar" recursive="full" />
     </menu>
     
     <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

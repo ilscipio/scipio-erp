@@ -339,6 +339,9 @@
     <menu name="RecruitmentTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="JobRequisition">
         <include-elements menu-name="RecruitmentTypeMenu" recursive="includes-only" />
+        <menu-item name="InternalJobPosting">
+            <sub-menu name="InternalJobPosting" include="InternalJobPostingSideBar"/>
+        </menu-item>
     </menu>
     
     <menu name="InternalJobPostingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -360,6 +363,10 @@
         </menu-item>
     </menu>
     
+    <menu name="InternalJobPostingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
+        <include-elements menu-name="InternalJobPostingTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="TrainingTypeMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
         <menu-item name="TrainingCalendar" title="${uiLabelMap.HumanResTraining} ${uiLabelMap.WorkEffortCalendar}">
             <link target="TrainingCalendar"/>
@@ -377,7 +384,6 @@
     <menu name="TrainingTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
         <include-elements menu-name="TrainingTypeMenu" recursive="includes-only" />
     </menu>
-    
     
     <menu name="EmplLeaveReasonTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave Reason Type">

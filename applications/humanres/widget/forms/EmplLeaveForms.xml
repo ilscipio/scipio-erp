@@ -76,8 +76,8 @@
             </display-entity>
         </field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="updateLeave" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_nav} ${styles.action_update}" use-when="hasAdminPermission">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}" target="EditEmplLeave">
+        <field name="updateLeave" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav} ${styles.action_update}" use-when="hasAdminPermission">
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditEmplLeave">
                 <parameter param-name="partyId"/>
                 <parameter param-name="leaveTypeId"/>
                 <parameter param-name="fromDate"/>
@@ -156,8 +156,8 @@
             </display-entity>
         </field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_nav_info_id} ${styles.action_update}">
-            <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonUpdate}" >
+        <field name="UpdateStatus" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav} ${styles.action_update}">
+            <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonEdit}" >
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>
                 <parameter param-name="leaveTypeId"/>

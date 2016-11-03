@@ -265,7 +265,7 @@ under the License.
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}">
             <text/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -651,7 +651,8 @@ under the License.
             <display-entity entity-name="ElectronicText" key-field-name="dataResourceId" description="${textData}"></display-entity>
         </field>
         <field name="workEffortContentTypeId"><drop-down><entity-options description="${description}" entity-name="WorkEffortContentType"></entity-options></drop-down></field>
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
+        <!-- SCIPIO: 2016-10: this was pre-coded into the multi form logic...
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field> -->
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ProductionRunTaskFixedAssets" type="list" target="updateWorkEffortFixedAssetAssign" paginate-target="" title="" list-name="records"

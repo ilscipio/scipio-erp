@@ -206,14 +206,21 @@ under the License.
     <screen name="CommonFixedAssetMaintDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAssetMaint" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="FixedAssetMaint" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListFixedAssetMaints"/>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListFixedAssetMaints"/>
+                <!--<set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListFixedAssetMaints"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true"> <!-- SCIPIO: let callers override -->
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>

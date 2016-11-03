@@ -212,7 +212,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarDay"/>
-                        <set field="activeSubMenuItem" value="day"/>
+                        <!-- TODO?<set field="activeSubMenuItem" value="day"/>-->
                     </actions>
                     <widgets/>
                 </section>
@@ -225,7 +225,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarWeek"/>
-                        <set field="activeSubMenuItem" value="week"/>
+                        <!-- <set field="activeSubMenuItem" value="week"/>-->
                     </actions>
                     <widgets/>
                 </section>
@@ -235,7 +235,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarMonth"/>
-                        <set field="activeSubMenuItem" value="month"/>
+                        <!-- <set field="activeSubMenuItem" value="month"/>-->
                     </actions>
                     <widgets/>
                 </section>
@@ -301,13 +301,17 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetMaintenance"/>
+                <!--
                 <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMaint"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMaint"/> -->
+                
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
                 <entity-one entity-name="FixedAssetMaint" value-field="fixedAssetMaint"/>
+                
+                <set field="activeSubMenuItem" value="${groovy: context.fixedAssetMaint ? 'EditFixedAssetMaint':'PARENT-NOSUB'}"/>
             </actions>
             <widgets>
                 <section>
@@ -343,8 +347,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetMeters"/>
+                
                 <set field="activeSubMenuItem" value="EditFixedAssetMeters"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMeters"/>
+                <!-- <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMeters"/>-->
+                
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -390,8 +396,10 @@ under the License.
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditFixedAssetMaintOrders"/>
+                <!-- 
                 <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMaintOrders"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMaintOrders"/>-->
+                <set field="activeSubMenuItem" value="EditFixedAssetMaintOrders"/>
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>

@@ -93,6 +93,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="AccountingNewPaymentIncoming"/>
+                <set field="activeSubMenuItem" value="PARENT"/>
             </actions>
             <widgets>
                <decorator-screen name="CommonArPaymentDecorator" location="${parameters.mainDecoratorLocation}">

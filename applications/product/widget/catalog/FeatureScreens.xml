@@ -111,9 +111,8 @@
                 <set field="isCreateFeatureType" type="Boolean" value="${groovy: !(context.productFeatureType || (parameters.productFeatureTypeId &amp;&amp; parameters.isCreate != 'true'))}"/>
                 <set field="labelTitleProperty" value="${groovy: isCreateFeatureType ? 'ProductNewFeatureType' : 'ProductFeatureType' }"/>
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productFeatureTypeId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productFeatureTypeId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
@@ -174,9 +173,8 @@
                 <set field="isCreateFeatureInterAction" type="Boolean" value="${groovy: !(context.productFeatureIactn || (parameters.productFeatureId &amp;&amp; parameters.productFeatureIdTo &amp;&amp; parameters.isCreate != 'true'))}"/>
                 <set field="labelTitleProperty" value="${groovy: isCreateFeatureInterAction ? 'ProductNewFeatureInterAction' : 'ProductFeatureInterAction'}"/>
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productFeatureTypeId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productFeatureTypeId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">

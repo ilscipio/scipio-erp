@@ -55,6 +55,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingNewPaymentOutgoing"/>
+                <set field="activeSubMenuItem" value="PARENT"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApPaymentDecorator" location="${parameters.mainDecoratorLocation}">

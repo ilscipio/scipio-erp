@@ -29,7 +29,8 @@ under the License.
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="routing"/>
                 
-                <set field="titleFormat" value="\${finalTitle} ${routing.workEffortName} [${routing.workEffortId}]"/>
+                <set field="workEffortNameStr" value=" ${routing.workEffortName} [${routing.workEffortId}]"/>
+                <set field="titleFormat" value="\${finalTitle}${groovy: context.routing ? context.workEffortNameStr : ''}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -88,7 +89,8 @@ under the License.
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="routingTask"/>
                 
-                <set field="titleFormat" value="\${finalTitle} ${routingTask.workEffortName} [${routingTask.workEffortId}]"/>
+                <set field="workEffortNameStr" value=" ${routingTask.workEffortName} [${routingTask.workEffortId}]"/>
+                <set field="titleFormat" value="\${finalTitle}${groovy: context.routingTask ? context.workEffortNameStr : ''}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -391,7 +393,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditRoutingTaskAssoc}">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleEditRoutingTaskAssoc}" -->
                             <platform-specific>
                                 <html><html-template location="component://manufacturing/webapp/manufacturing/routing/EditRoutingTaskAssoc.ftl"/></html>
                             </platform-specific>

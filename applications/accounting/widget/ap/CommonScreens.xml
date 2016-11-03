@@ -128,7 +128,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonEdit} ${uiLabelMap.PartyVendor}">
+                        <screenlet>
                             <include-form name="EditVendor" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
                         </screenlet>
                     </decorator-section>

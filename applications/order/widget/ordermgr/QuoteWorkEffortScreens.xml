@@ -43,7 +43,7 @@ under the License.
                                         <include-menu name="QuoteTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                                     </widgets>
                                 </section>
-                                <label style="heading">[${uiLabelMap.CommonId}:${quote.quoteId}] ${quote.description}</label>
+                                <label style="heading">[${quote.quoteId}] ${quote.description}</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

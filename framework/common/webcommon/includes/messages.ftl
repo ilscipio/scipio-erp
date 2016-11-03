@@ -44,9 +44,9 @@ under the License.
   <#-- SCIPIO: FIXME: All the rawString calls here are dangerous and not right, 
        they should be fixed in the upstream code instead! -->
 
-  <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
   <#-- display the error messages -->
   <div id="main-${styles.alert_wrap!}">
+  <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
       <#if (errorMessage?has_content || errorMessageList?has_content)>
                 <@alert type="alert">
           <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
@@ -64,7 +64,7 @@ under the License.
           </#noescape>
                 </@alert>
       </#if>
-      </#if>
+  </#if>
       <#-- display the event messages -->
       <#if (eventMessage?has_content || eventMessageList?has_content)>
             <@alert type="info">

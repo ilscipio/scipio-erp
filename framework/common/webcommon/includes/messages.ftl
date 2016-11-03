@@ -47,9 +47,9 @@ under the License.
 <#assign hasEventMsg = (eventMessage?has_content || eventMessageList?has_content)>
 <#assign msgPresAttrStr> has-scipio-errormsg="${hasErrorMsg?string}" has-scipio-eventmsg="${hasEventMsg?string}"</#assign>
   
-<div id="content-messages"${msgPresAttrStr}><#-- SCIPIO: need container always, to locate this via js -->
+<div id="content-messages"<#noescape>${msgPresAttrStr}</#noescape>><#-- SCIPIO: need container always, to locate this via js -->
   <#-- display the error messages -->
-  <div id="main-${styles.alert_wrap!}"${msgPresAttrStr}>
+  <div id="main-${styles.alert_wrap!}"<#noescape>${msgPresAttrStr}</#noescape>>
   <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
       <#if (errorMessage?has_content || errorMessageList?has_content)>
                 <@alert type="alert">

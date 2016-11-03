@@ -485,7 +485,7 @@ under the License.
             </condition>
             <link target="${basePageInterWebappUri}/${targetLibPath}?docWidePage=${sideBarShown}#extLoginKey=OFF" url-mode="inter-app"/>
         </menu-item>-->
-        <menu-item name="reloadDataModel" title="${uiLabelMap.CommonReload}" widget-style="+${styles.action_run_session} ${styles.action_update}">
+        <menu-item name="reloadDataModel" title="Reload from source" widget-style="+${styles.action_run_session} ${styles.action_update}"><!--${uiLabelMap.CommonReload}-->
             <condition>
                 <and>
                     <not><if-empty field="targetLibPath"/></not>

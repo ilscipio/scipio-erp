@@ -398,7 +398,6 @@ function ScipioUploadProgress(options) {
                     if (iframeErrorContent.length > 0) {
                         // 2016-11-02: check for custom has-scipio-errormsg attribute
                         var flagAttr = jQuery(iframeErrorContent).attr("has-scipio-errormsg");
-                        alert(flagAttr);
                         if (!flagAttr || flagAttr == "true") {
                             uploadInfo.finished = true;
                             timerId.stop();

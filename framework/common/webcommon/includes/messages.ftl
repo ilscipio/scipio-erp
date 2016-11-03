@@ -44,7 +44,7 @@ under the License.
        they should be fixed in the upstream code instead! -->
   
 <#assign hasErrorMsg = (errorMessage?has_content || errorMessageList?has_content)>
-<#assign hasEventMsg = (eventMessage?has_content || eventMessageList?has_content || infoMessage?has_content)>
+<#assign hasEventMsg = (eventMessage?has_content || eventMessageList?has_content)>
 <#assign msgPresAttrStr> has-scipio-errormsg="${hasErrorMsg?string}" has-scipio-eventmsg="${hasEventMsg?string}"</#assign>
   
 <div id="content-messages"${msgPresAttrStr}><#-- SCIPIO: need container always, to locate this via js -->

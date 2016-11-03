@@ -2549,7 +2549,7 @@ TODO: This (and @field args) do not currently provide enough control over large 
 Returns an appropriate field value (typically for use with @field) based on current values in request
 and context, following a certain scheme type specified directly or previously through globals.
 
-WARN: NOT FULLY IMPLEMENTED (2016-07-15)
+WARN: NOT FULLY IMPLEMENTED (2016-07-15) - EXPERIMENTAL
 
 Typically the value is looked up in a set of global maps (parameters, a record or entity, defaults, etc.)
 following some predefined priority.

@@ -158,6 +158,7 @@ TODO/FIXME:
     </#if>
   </#if>
   
+  <#-- TODO: WAY TO SPECIFY mainButtonClass FROM WIDGETS -->
   <#local mainButtonClass = "">
   <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
   

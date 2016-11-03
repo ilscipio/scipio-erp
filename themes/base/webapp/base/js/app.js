@@ -97,6 +97,7 @@ function ScipioUploadProgress(options) {
     this.iframeParentSel = options.iframeParentSel; // optional, default is html body, if specified should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result
     this.expectedResultContainerSel = options.expectedResultContainerSel; // required; id of an elem to test existence in upload page result; was originally same as resultContentContainerSel
     this.errorResultContainerSel = options.errorResultContainerSel; // required; if this elem in upload page result exists, treat it as error and use its content as error message (required to help against forever-uploading bug)
+                                                                    // 2016-11-02: if the elem has a "has-scipio-errormsg" html attribute (true/false string value) it is consulted to check if should consider errors present
     this.errorResultAddWrapper = options.errorResultAddWrapper; // optional, default false; if true, errorResultContainerSel contents will be wrapped like other errors; else it must supply its own; does not apply to ajax and other errors (always get wrapper, needed)
     
     this.resultContentReplace = options.resultContentReplace; // boolean, default false; if true replace some content in this page with content from upload page result (iframe)
@@ -395,9 +396,14 @@ function ScipioUploadProgress(options) {
                 if (prog.errorResultContainerSel && !uploadInfo.finished) {
                     iframeErrorContent = jQuery("#"+uploadInfo.iframeId).contents().find(prog.errorResultContainerSel);
                     if (iframeErrorContent.length > 0) {
-                        uploadInfo.finished = true;
-                        timerId.stop();
-                        prog.processError(uploadInfo, iframeErrorContent.html(), prog.errorResultAddWrapper);
+                        // 2016-11-02: check for custom has-scipio-errormsg attribute
+                        var flagAttr = jQuery(iframeErrorContent).attr("has-scipio-errormsg");
+                        alert(flagAttr);
+                        if (!flagAttr || flagAttr == "true") {
+                            uploadInfo.finished = true;
+                            timerId.stop();
+                            prog.processError(uploadInfo, iframeErrorContent.html(), prog.errorResultAddWrapper);
+                        }
                     }
                 }
                 

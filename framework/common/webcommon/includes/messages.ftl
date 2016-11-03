@@ -19,7 +19,6 @@ under the License.
 <#--<#include rawString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
 
 <#assign contentMsgContentClass = "content-message-content"><#-- SCIPIO: especially used by JS, cannot put in global styles unless do same in JS -->
-<div id="content-messages"><#-- SCIPIO: need container always, to locate this via js -->
 <#escape x as x?html>
   <#-- SCIPIO: FIXME: THESE ASSIGNS ARE DUPLICATED IN commonHeadScripts.ftl; KEEP IN SYNC 
     NOTE: SEE commonHeadScripts.ftl FOR JS-OUTPUTTED ERROR MESSAGES -->
@@ -43,10 +42,15 @@ under the License.
 
   <#-- SCIPIO: FIXME: All the rawString calls here are dangerous and not right, 
        they should be fixed in the upstream code instead! -->
-
-  <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
+  
+<#assign hasErrorMsg = (errorMessage?has_content || errorMessageList?has_content)>
+<#assign hasEventMsg = (eventMessage?has_content || eventMessageList?has_content || infoMessage?has_content)>
+<#assign msgPresAttrStr> has-scipio-errormsg="${hasErrorMsg?string}" has-scipio-eventmsg="${hasEventMsg?string}"</#assign>
+  
+<div id="content-messages"${msgPresAttrStr}><#-- SCIPIO: need container always, to locate this via js -->
   <#-- display the error messages -->
-  <div id="main-${styles.alert_wrap!}">
+  <div id="main-${styles.alert_wrap!}"${msgPresAttrStr}>
+  <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
       <#if (errorMessage?has_content || errorMessageList?has_content)>
                 <@alert type="alert">
           <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
@@ -64,7 +68,7 @@ under the License.
           </#noescape>
                 </@alert>
       </#if>
-      </#if>
+  </#if>
       <#-- display the event messages -->
       <#if (eventMessage?has_content || eventMessageList?has_content)>
             <@alert type="info">
@@ -90,9 +94,9 @@ under the License.
             </@alert>
       </#if>
   </div>
+</div>
 </#escape>
 
-</div>
 
 <#-- SCIPIO: this alert TEMPLATES for JS. JS can copy their inner markup, insert a message and add elsewhere. -->
 <div id="content-messages-templates" style="display:none;">

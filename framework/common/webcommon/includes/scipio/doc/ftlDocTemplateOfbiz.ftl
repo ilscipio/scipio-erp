@@ -109,6 +109,12 @@
       </#if>
     </#if>
     
+    <#if libName == "standard/htmlTemplate">
+      <p><em><#-- Version: -->${getPropertyValue('scipiometainfo', 'scipio.release.desc')!"Scipio ERP"} 
+        ${getPropertyValue('scipiometainfo', 'scipio.release.version')!"v?"} 
+        (${getPropertyValue('scipiometainfo', 'scipio.release.branch')}!), 
+        Freemarker ${.version}</em></p>
+    </#if>
       
     <div class="lib-pagetitledesc">
       <#-- duplicate

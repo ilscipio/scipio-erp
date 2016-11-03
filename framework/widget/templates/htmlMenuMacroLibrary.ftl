@@ -65,7 +65,7 @@ TODO/FIXME:
   
   TODO?: menu-container-style does not currently fully support the standard Scipio +/= class prefix; generally, "+" will be assumed.
 -->
-<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] selected=false selectedAncestor=false extraArgs...>
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] selected=false selectedAncestor=false titleStyle="" extraArgs...>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -158,8 +158,8 @@ TODO/FIXME:
     </#if>
   </#if>
   
-  <#local mainButtonClass = "">
-  <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
+  <#-- NOTE: DEPRECATED mainButtonClass (was never documented) -->
+  <#local titleClass = addClassArgDefault(titleStyle, styles["menu_" + styleName + "_title"]!styles["menu_" + styleName + "_mainbutton"]!styles["menu_default_title"]!"")>
   
   <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, 
     "menuIdNum":menuIdNum, "menuCtxRole":menuCtxRole, "inlineEntries":inlineEntries, "htmlwrap":htmlwrap,
@@ -176,7 +176,7 @@ TODO/FIXME:
     </#list>
   <#else>
     <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs 
-        excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title 
+        excludeAttribs=["class", "id", "style"] inlineItems=false titleClass=titleClass mainButtonClass=titleClass title=title 
         htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType
         isNestedMenu=isNestedMenu menuLevel=menuLevel active=active activeTarget=activeTarget>
       <#list items as item>

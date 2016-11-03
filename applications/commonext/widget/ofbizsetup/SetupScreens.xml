@@ -313,7 +313,7 @@
     <screen name="CommonFirstProductDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" value="firstproduct"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="firstproduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">

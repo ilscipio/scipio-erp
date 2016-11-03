@@ -170,9 +170,7 @@ under the License.
     </@field>
   </@section>
 <#else>
-  <@section>
     <@field type="submitarea">
       <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text=uiLabelMap.CommonGoBack class="+${styles.link_nav_cancel!}" />
     </@field>
-  </@section>
 </#if>

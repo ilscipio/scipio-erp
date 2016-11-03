@@ -62,7 +62,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
@@ -90,7 +90,7 @@ under the License.
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonHumanResAppSideBarMenu"/>
                     </decorator-section>
@@ -181,7 +181,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmplPosition" />
-                <set field="activeMainMenuItem" value="EmplPosition"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="EmplPosition"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
             </actions>
@@ -289,7 +289,7 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="EmploymentApp"/>
             </actions>
             <widgets>
-                <include-screen name="CommonEmploymentDecorator"/>
+                <decorator-screen name="CommonEmploymentDecorator"/>
             </widgets>
         </section>
     </screen>    
@@ -337,7 +337,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmployeeProfile" />
-                <set field="activeMainMenuItem" value="Employees"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Employees"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
@@ -456,7 +456,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#GlobalHRSetting" />
-                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="GlobalHRSettings"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -474,7 +474,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#RecruitmentType" />
-                <set field="activeMainMenuItem" value="Recruitment"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Recruitment"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -495,7 +495,7 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#TrainingType" />
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="Training"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Training"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">

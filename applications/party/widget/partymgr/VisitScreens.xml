@@ -31,25 +31,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindVisits"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListVisits"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindVisits"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListVisits"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -65,7 +54,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-screen name="LoggedInUsersScreen" />
+                        <screenlet>
+                            <include-form name="ListLoggedInUsers"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -74,17 +65,11 @@ under the License.
 
     <screen name="LoggedInUsersScreen">
         <section>
-            <condition>
-                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-            </condition>
             <widgets>
                 <screenlet title="${uiLabelMap.PageTitleListLoggedInUsers}">
                     <include-form name="ListLoggedInUsers"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
                 </screenlet>
             </widgets>
-            <fail-widgets>
-                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-            </fail-widgets>
         </section>
     </screen>
     
@@ -93,27 +78,16 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleVisitDetail"/>
                 <set field="activeMainMenuItem" value="visits"/>
-                <set field="activeSubMenuItem" value="visitdetail"/>
+                <!--<set field="activeSubMenuItem" value="visitdetail"/>-->
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/VisitDetails.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://party/webapp/partymgr/visit/visitdetail.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/visit/visitdetail.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

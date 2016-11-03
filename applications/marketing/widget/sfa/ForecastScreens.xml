@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonSalesForecastDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Forecast"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Forecast"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">                 

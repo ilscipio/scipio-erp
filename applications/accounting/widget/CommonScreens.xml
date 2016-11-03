@@ -56,7 +56,7 @@ under the License.
                 <set field="applicationTitle" value="${uiLabelMap.AccountingManagerApplication}" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
@@ -85,7 +85,7 @@ under the License.
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonAccountingAppSideBarMenu"/>
                     </decorator-section>
@@ -101,7 +101,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Agreement" />
-                <set field="activeMainMenuItem" value="agreements" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="agreements" />
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true" />
             </actions>
@@ -214,7 +214,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Budget" />
-                <set field="activeMainMenuItem" value="ListBudgets"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListBudgets"/>
                 <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
                 <entity-and list="budgetStatus" entity-name="BudgetStatus">
@@ -253,7 +253,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FinAccount" />
-                <set field="activeMainMenuItem" value="FindFinAccount"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="FindFinAccount"/>
                 <entity-one value-field="finAccount" entity-name="FinAccount"/>
             </actions>
             <widgets>
@@ -296,7 +296,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAsset" />
-                <set field="activeMainMenuItem" value="ListFixedAssets"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListFixedAssets"/>
                 <set field="fixedAssetId" from-field="fixedAsset.fixedAssetId" default-value="${parameters.fixedAssetId}"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
                 
@@ -361,7 +361,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAssetMaint" />
-                <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListFixedAssetMaints"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
@@ -380,7 +380,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Payment" />
-                <set field="activeMainMenuItem" value="payments"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -421,7 +421,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
-                <set field="activeMainMenuItem" value="PaymentGroup"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
@@ -490,7 +490,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Organization" />
-                <set field="activeMainMenuItem" value="companies"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="companies"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
             </actions>
             <widgets>
@@ -516,7 +516,7 @@ under the License.
     <screen name="CommonPartyGlDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" value="PartyAccounts"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="PartyAccounts"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
                 </entity-one>
@@ -556,7 +556,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PartyAdmin" />
-                <set field="activeSubMenuItemTop" value="Admin"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Admin"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
                 </entity-one>
@@ -584,7 +584,7 @@ under the License.
     <screen name="CommonOrganizationAccountingReportsDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" value="PartyAccounts"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="PartyAccounts"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
                 </entity-one>
@@ -605,7 +605,7 @@ under the License.
     <screen name="CommonAdminChecksDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" value="PartyAccounts"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="PartyAccounts"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
                 </entity-one>
@@ -627,7 +627,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Settings" />
-                <set field="activeMainMenuItem" value="settings" />                
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="settings" />                
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -661,7 +661,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthority" />
-                <set field="activeMainMenuItem" value="TaxAuthorities"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="TaxAuthorities"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
@@ -795,7 +795,7 @@ under the License.
     <screen name="GlobalGLSettingsDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="GlobalGLSettings"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="GlobalGLSettings"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#GlobalGLSettingsSideBar"/>
             </actions>
             <widgets>
@@ -815,7 +815,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Invoice" />                
-                <set field="activeMainMenuItem" value="invoices"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">

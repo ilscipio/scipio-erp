@@ -137,7 +137,7 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                                     <!-- NOTE: override-by-auto-include="true" allows decorators to override this pre-body manually if they need. -->
                                     <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
                                         <section>
@@ -157,7 +157,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
                                         <label style="common-msg-error" text="${uiLabelMap.EcommerceYourShoppingCartEmpty}."/>
                                         <container>
@@ -169,7 +169,7 @@ under the License.
                         </section>
                     </widgets>
                     <fail-widgets>
-                        <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                        <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
                             </decorator-section>

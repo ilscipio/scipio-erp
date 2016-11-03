@@ -17,7 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- begin editcreditcard.ftl -->
 <#if !creditCard??>
   <#assign sectionTitle = uiLabelMap.AccountingAddNewCreditCard>
 <#else>
@@ -31,7 +30,7 @@ under the License.
       </@menu>
     </#macro>
     
-    <@saveCancelMenu />
+    <#--<@saveCancelMenu />-->
 
     <#if !creditCard??>
       <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
@@ -146,4 +145,3 @@ under the License.
       <@saveCancelMenu />
 
 </@section>
-<!-- end editcreditcard.ftl -->

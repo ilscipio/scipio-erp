@@ -324,11 +324,21 @@ The submenu's main class may be set as altnested in global styles.
                               If true, implies active. If explicit false, means active ancestor. If not set, unknown or unspecified by template.
                               NOTE(2016-09-01): currently this is NOT determined automatically except for menu widgets.
                               NOTE: "active target" translates to "selected" item in menu widget terminology (see CommonMenus.xml)
+    title                   = Menu title (abstract)
+                              This has a generic/abstract meaning and semantics meaning use will depend on
+                              the specific menu type and implementation.
+                              Currently mostly needed for {{{button-dropdown}}}.
+    titleClass              = ((css-class), default: -based on menu type-) CSS classes for title (abstract)
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              NOTE: Previously this was named "mainButtonClass"; mainButtonClass is deprecated, and
+                                  will get the same value as titleClass now.                
 -->
 <#assign menu_defaultArgs = {
   "type":"", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
-  "nestedFirst":false, "title":"", "specialType":"", "mainButtonClass":"", "htmlwrap":true, 
+  "nestedFirst":false, "title":"", "specialType":"", "titleClass":"", "mainButtonClass":"", "htmlwrap":true, 
   "isNestedMenu":"", "parentMenuType":"", "active":"", "activeTarget":"", "menuLevel":"", "passArgs":{}
 }>
 <#macro menu args={} inlineArgs...>
@@ -339,6 +349,7 @@ The submenu's main class may be set as altnested in global styles.
   <#else>
     <#local class = args.class!"">
   </#if>
+  <#local explArgs = args>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.menu_defaultArgs, {
     <#-- parameters: overrides -->
     "class" : class
@@ -435,8 +446,11 @@ The submenu's main class may be set as altnested in global styles.
   <#else>
     <#local specialType = styles["menu_" + styleName + "_specialtype"]!"">
   </#if>
-  <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
-  
+
+  <#-- NOTE: DEPRECATED mainButtonClass (was never documented) -->
+  <#local titleClass = inlineArgs.mainButtonClass!explArgs.mainButtonClass!titleClass>
+  <#local titleClass = addClassArgDefault(titleClass, styles["menu_" + styleName + "_title"]!styles["menu_" + styleName + "_mainbutton"]!styles["menu_default_title"]!"")>
+
   <#if activeTarget?is_boolean>
     <#if activeTarget>
       <#local active = true>
@@ -448,7 +462,7 @@ The submenu's main class may be set as altnested in global styles.
   <#local class = menuAppendActiveStyle(class, styleName, "_active", active activeTarget)>
   
   <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, 
-    "inlineItems":inlineItems, "class":class, "id":id, "style":style, "attribs":attribs,
+    "inlineItems":inlineItems, "class":class, "id":id, "style":style, "attribs":attribs, "titleClass":titleClass,
     "preItems":preItems, "postItems":postItems, "sort":sort, "sortBy":sortBy, "sortDesc":sortDesc, 
     "nestedFirst":nestedFirst, "isNestedMenu":isNestedMenu, 
     "parentMenuType":parentMenuType, "parentMenuSpecialType":parentMenuSpecialType, "parentStyleName":parentStyleName,
@@ -458,7 +472,7 @@ The submenu's main class may be set as altnested in global styles.
   <#local dummy = setRequestVar("scipioCurrentMenuItemIndex", 0)>
   
   <@menu_markup type=type specialType=specialType class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] 
-    inlineItems=inlineItems htmlwrap=htmlwrap title=title mainButtonClass=mainButtonClass isNestedMenu=isNestedMenu 
+    inlineItems=inlineItems htmlwrap=htmlwrap title=title titleClass=titleClass mainButtonClass=titleClass isNestedMenu=isNestedMenu 
     parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType 
     active=active activeTarget=activeTarget menuLevel=menuLevel origArgs=origArgs passArgs=passArgs>
   <#if !(preItems?is_boolean && preItems == false)>
@@ -532,7 +546,7 @@ The submenu's main class may be set as altnested in global styles.
 <#-- @menu container main markup - theme override 
     DEV NOTE: This is called directly from both @menu and widgets @renderMenuFull -->
 <#macro menu_markup type="" specialType="" class="" id="" style="" attribs={} excludeAttribs=[] 
-    inlineItems=false mainButtonClass="" title="" htmlwrap="ul" isNestedMenu=false parentMenuType="" parentMenuSpecialType=""
+    inlineItems=false titleClass="" title="" htmlwrap="ul" isNestedMenu=false parentMenuType="" parentMenuSpecialType=""
     active=false activeTarget="" menuLevel=1
     origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems && htmlwrap?has_content>
@@ -548,7 +562,7 @@ The submenu's main class may be set as altnested in global styles.
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
         <#if navigation?has_content><h2>${escapeVal(navigation, 'htmlmarkup')}</h2></#if>
     <#elseif specialType == "button-dropdown">
-      <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" aria-expanded="false"<@compiledClassAttribStr class=mainButtonClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
+      <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
     <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>

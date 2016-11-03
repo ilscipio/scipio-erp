@@ -24,7 +24,6 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleListContactList"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="ContactList"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set field="entityName" value="ContactListParty"/>

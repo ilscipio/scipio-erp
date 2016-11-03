@@ -233,8 +233,7 @@
         <include-elements menu-name="ProfileTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+    <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="updatePerson" title="${uiLabelMap.CommonEdit}" widget-style="+${styles.action_nav} ${styles.action_update}">
             <condition>
                 <not>
@@ -334,14 +333,18 @@
         </menu-item>
     </menu>
     <menu name="create-new-party" type="simple" menu-container-style="+basic-nav">
+        <!-- SCIPIO: added extra params: lastName, firstName, groupName -->
         <menu-item name="create-party-group" title="${uiLabelMap.PartyCreateNewPartyGroup}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="editpartygroup">
                 <parameter param-name="create_new" value="Y"/>
+                <parameter param-name="groupName" from-field="parameters.groupName"/>
             </link>
         </menu-item>
         <menu-item name="create-person" title="${uiLabelMap.PartyCreateNewPerson}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="editperson">
                 <parameter param-name="create_new" value="Y"/>
+                <parameter param-name="lastName" from-field="parameters.lastName"/>
+                <parameter param-name="firstName" from-field="parameters.firstName"/>
             </link>
         </menu-item>
         <menu-item name="create-customer" title="${uiLabelMap.PartyCreateNewCustomer}" widget-style="+${styles.action_nav} ${styles.action_add}">
@@ -353,6 +356,13 @@
         <menu-item name="create-employee" title="${uiLabelMap.PartyCreateNewEmployee}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewEmployee"/>
         </menu-item>
+    </menu>
+    <menu name="NewPartySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="create-new-party"/>
+    </menu>
+    <menu name="NewPartyButtonDropdown" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        title="${uiLabelMap.CommonNew}" title-style="+${styles.action_nav} ${styles.action_add}">
+        <include-elements menu-name="create-new-party"/>
     </menu>
 
     <menu name="PartyInvitationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -618,42 +628,50 @@
     </menu>
     
     <menu name="CommEventTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <!-- SCIPIO: this lookup needed so the menu is consistent on all screens -->
+            <!-- FIXME?: no perm checks on this lookup, but not important like those in the target screens/decorator -->
+            <!-- NOTE: CommEventTabBar_ prefix is so this works with or without share-scope -->
+            <!-- FIXME: forced to use globalContext for this right now... nasty -->
+            <set field="dummy" value="${groovy: globalContext.CommEventTabBar_communicationEvent = context.communicationEvent ?: 
+                (parameters.communicationEventId ? delegator.findOne('CommunicationEvent', [communicationEventId: parameters.communicationEventId], false): null); return '';}"/>
+        </actions>
         <!-- SCIPIO: redundant
         <menu-item name="Find" title="${uiLabelMap.CommonFind}">
             <link target="FindCommunicationEvents"/>
         </menu-item>-->
         <menu-item name="OverView" title="${uiLabelMap.CommonOverview}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
         <menu-item name="CommunicationEvent" title="${uiLabelMap.PartyCommEvent}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="EditCommunicationEvent">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
         <menu-item name="UpdateCommPurposes" title="${uiLabelMap.PartyEventPurpose}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="UpdateCommPurposes">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
         <menu-item name="UpdateCommRoles" title="${uiLabelMap.PartyRoles}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="UpdateCommRoles">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
         <menu-item name="UpdateCommWorkEfforts" title="${uiLabelMap.PartyCommWorkEfforts}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="ListCommWorkEfforts">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
         <menu-item name="CommContent" title="${uiLabelMap.CommonContent}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="ListCommContent">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
@@ -667,19 +685,25 @@
             </menu-item>
         -->
         <menu-item name="ListUnknownPartyComms" title="${uiLabelMap.PartyEmailFromUnknownParties}">
-            <link target="listUnknownPartyComms"/>
+            <!-- SCIPIO: NOTE: pass communicationEventId here only so the other menu items don't disappear -->
+            <link target="listUnknownPartyComms">
+                <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
+            </link>
         </menu-item>
         <menu-item name="FindCommunicationByOrder" title="${uiLabelMap.PartyFindCommunicationsByOrder}">
-            <link target="FindCommunicationByOrder"/>
+            <!-- SCIPIO: NOTE: pass communicationEventId here only so the other menu items don't disappear -->
+            <link target="FindCommunicationByOrder">
+                <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
+            </link>
         </menu-item>
         <menu-item name="UpdateCommOrders" title="${uiLabelMap.OrderOrders}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="UpdateCommOrders">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
         <menu-item name="UpdateCommProducts" title="${uiLabelMap.ProductProducts}">
-            <condition><not><if-empty field="communicationEvent"/></not></condition>
+            <condition><not><if-empty field="CommEventTabBar_communicationEvent"/></not></condition>
             <link target="UpdateCommProducts">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>

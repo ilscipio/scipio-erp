@@ -91,7 +91,7 @@ under the License.
             <widgets>
                 <!-- FIXME?: there is a pattern issue here where fields and resources set by GlobalDecorator are not accessible to us here (notably, including the include-screen calls below);
                     requires either more global="true" in GlobalActions/GlobalDecorator (not very reusable) or maybe refactoring this decorator-screen include in a new way -->
-                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="pre-content">
                         <decorator-section-include name="pre-content"/>
                     </decorator-section>                
@@ -267,7 +267,7 @@ under the License.
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>

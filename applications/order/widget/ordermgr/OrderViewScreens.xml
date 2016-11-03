@@ -309,7 +309,8 @@ under the License.
                 <!-- SCIPIO: run the query from groovy -->
                 <set field="rsleArgs" type="NewMap" />
                 <set field="rsleArgs.serviceName" value="findOrders" />
-                <set field="rsleArgs.doExec" type="Boolean" value="${groovy: (parameters.doFindQuery == 'Y')}" />
+                <set field="rsleArgs.doExec" type="Boolean" 
+                    value="${groovy: (parameters.doFindQuery == 'Y' || (parameters.doFindQuery != 'Y' &amp;&amp; context.requestMethod == 'POST'))}" />
                 <script location="component://common/webcommon/WEB-INF/actions/includes/runServiceLikeEvent.groovy"/>
                 <set field="isFindQueryExec" type="Boolean" from-field="rsleRes.isExec" />
                 <set field="isFindQueryError" type="Boolean" from-field="rsleRes.isError" />

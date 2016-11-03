@@ -27,17 +27,22 @@ under the License.
 <#else>
   <#assign hideFields = "N">
 </#if>
+
+<#-- SCIPIO: use more helpful drop-down instead, to do away with the intermediate screen which is clumsy
 <#if (parameters.firstName?has_content || parameters.lastName?has_content)>
-  <#assign createUrl = "editperson?create_new=Y&amp;lastName=${parameters.lastName!}&amp;firstName=${parameters.firstName!}"/>
+  <#assign createUrl = makeOfbizUrl("editperson?create_new=Y&lastName=${rawString(parameters.lastName!)}&firstName=${rawString(parameters.firstName!)}")/>
 <#elseif (parameters.groupName?has_content)>
-  <#assign createUrl = "editpartygroup?create_new=Y&amp;groupName=${parameters.groupName!}"/>
+  <#assign createUrl = "editpartygroup?create_new=Y&groupName=${rawString(parameters.groupName!)}"/>
 <#else>
   <#assign createUrl = "createnew"/>
-</#if>
+</#if>-->
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="generic">
+        <#-- NOTE: this produces its own button. asString required otherwise rendering will not output this where you'd expect. -->
+        <@render type="menu" resource="component://party/widget/partymgr/PartyMenus.xml#NewPartyButtonDropdown" asString=true/>
+    </@menuitem>
 <#if partyList?has_content>    
   <#if hideFields == "Y">
     <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&sortField=${sortField!}${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!} ${styles.collapsed!}" />
@@ -139,7 +144,7 @@ under the License.
   </#if>      
       
   <#if partyList?has_content>
-    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": hideFields!"", "sortField" : sortField!""}, "&amp;", false)>
+    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": hideFields!"", "sortField" : sortField!""}, "&", false)>
     <@paginate mode="content" url=makeOfbizUrl("findparty") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
     
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
@@ -263,7 +268,7 @@ under the License.
         <@td>${partyDate.createdDate!}</@td>
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
-          <@menu type="button">
+          <@menu type="button-dropdown" title=uiLabelMap.CommonActions><#-- SCIPIO: too many actions, so made into dropdown: type="button" -->
           <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text=uiLabelMap.CommonDetails class="+${styles.action_nav!}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text=uiLabelMap.OrderOrders class="+${styles.action_run_sys!} ${styles.action_find!}">

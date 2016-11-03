@@ -26,7 +26,7 @@ under the License.
     </@menuitem>
   </@menu>
 </#macro>
-<@section title=uiLabelMap.PartyShoppingLists menuContent=menuContent>
+<@section menuContent=menuContent><#--  title=uiLabelMap.PartyShoppingLists -->
     <#if shoppingLists?has_content>
       <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
         <@fields type="default-nolabelarea">

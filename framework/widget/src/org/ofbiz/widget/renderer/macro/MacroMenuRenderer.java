@@ -590,6 +590,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("id", menu.getId());
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
+        parameters.put("titleStyle", menu.getTitleStyle(context)); // SCIPIO: new
         parameters.put("inlineEntries", renderState.isInlineEntries());
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
         

@@ -328,7 +328,7 @@ under the License.
             <set field="periodTypeId" value="RATE_HOUR"/>
         </actions>
         <field name="partyId"><hidden/></field>
-        <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}">
+        <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}" required-field="true">
             <drop-down no-current-selected-key="STANDARD" allow-empty="false">
                 <entity-options entity-name="RateType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -1058,10 +1058,15 @@ under the License.
 
     <form name="listPartyIdentification" type="list" list-name="listIt"
                  target="updatePartyIdentification"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <entity-and entity-name="PartyIdentificationAndParty">
+                <field-map field-name="partyId" from-field="partyId"/>
+            </entity-and>
+        </actions>
         <field name="partyIdentificationTypeId"><hidden /></field>
         <field name="partyId"><hidden /></field>
         <field name="partyIdentTypeDesc"><display /></field>
-        <field name="idValue"><display /></field>
+        <field name="idValue"><text/></field><!-- SCIPIO: changed to editable for quick update: <display /> -->
         <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
              <hyperlink target="deletePartyIdentification" description="${uiLabelMap.CommonDelete}">
                  <parameter param-name="partyId"/>
@@ -1073,8 +1078,8 @@ under the License.
     
     <form name="editPartyIdentification" type="single" list-name="partyIdents"
                  target="createPartyIdentification" focus-field-name="idValue"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <alt-target use-when="partyIdentification !=null" target="updatePartyIdentification"/>
-        <field name="partyIdentificationTypeId" use-when="partyIdentification == null">
+        <alt-target use-when="partyIdentification != null" target="updatePartyIdentification"/>
+        <field name="partyIdentificationTypeId" use-when="partyIdentification == null" required-field="true">
             <drop-down>
                 <entity-options description="${description}" entity-name="PartyIdentificationType">
                     <entity-order-by field-name="description"/>
@@ -1085,7 +1090,7 @@ under the License.
             <display-entity entity-name="PartyIdentificationType"/>
         </field>
         <field name="partyId"><hidden /></field>
-        <field name="idValue"><text /></field>
+        <field name="idValue" required-field="true"><text /></field>
         <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="partyIdentification == null"><submit /></field>
         <field name="submit" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="partyIdentification != null"><submit /></field>
     </form>

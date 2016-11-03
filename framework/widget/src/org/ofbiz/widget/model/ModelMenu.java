@@ -143,6 +143,8 @@ public class ModelMenu extends ModelWidget {
     
     private final boolean alwaysExpandSelectedOrAncestor; // SCIPIO: new
     
+    private final FlexibleStringExpander titleStyle; // SCIPIO: new
+    
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
@@ -182,6 +184,7 @@ public class ModelMenu extends ModelWidget {
         FlexibleMapAccessor<String> selectedMenuContextFieldName = FlexibleMapAccessor.getInstance("");
         String target = "";
         FlexibleStringExpander title = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander titleStyle = FlexibleStringExpander.getInstance(""); // SCIPIO: new
         String tooltip = "";
         String type = "";
         String itemsSortMode = "";
@@ -203,6 +206,7 @@ public class ModelMenu extends ModelWidget {
                 target = parent.target;
                 id = parent.id;
                 title = parent.title;
+                titleStyle = parent.titleStyle;
                 tooltip = parent.tooltip;
                 defaultEntityName = parent.defaultEntityName;
                 defaultTitleStyle = parent.defaultTitleStyle;
@@ -250,6 +254,8 @@ public class ModelMenu extends ModelWidget {
             id = menuElement.getAttribute("id");
         if (!menuElement.getAttribute("title").isEmpty())
             title = FlexibleStringExpander.getInstance(menuElement.getAttribute("title"));
+        if (!menuElement.getAttribute("title-style").isEmpty())
+            titleStyle = FlexibleStringExpander.getInstance(menuElement.getAttribute("title-style"));
         if (!menuElement.getAttribute("tooltip").isEmpty())
             tooltip = menuElement.getAttribute("tooltip");
         if (!menuElement.getAttribute("default-entity-name").isEmpty())
@@ -354,6 +360,7 @@ public class ModelMenu extends ModelWidget {
         this.selectedMenuContextFieldName = selectedMenuContextFieldName;
         this.target = target;
         this.title = title;
+        this.titleStyle = titleStyle;
         this.tooltip = tooltip;
         this.type = type;
         this.itemsSortMode = itemsSortMode;
@@ -1618,6 +1625,17 @@ public class ModelMenu extends ModelWidget {
 
     public String getTitle(Map<String, Object> context) {
         return title.expandString(context);
+    }
+    
+    /**
+     * SCIPIO: special title style for some kinds of menus (has versatile/generic meaning).
+     */
+    public FlexibleStringExpander getTitleStyle() {
+        return titleStyle;
+    }
+
+    public String getTitleStyle(Map<String, Object> context) {
+        return titleStyle.expandString(context);
     }
 
     public String getTooltip() {

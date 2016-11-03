@@ -24,7 +24,7 @@ under the License.
     <screen name="GenericDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="chartofaccounts"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="chartofaccounts"/>
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->

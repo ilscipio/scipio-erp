@@ -27,7 +27,7 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${activeDataSourceSubMenuItem}" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="DataSource"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="DataSource"/>
                 <set field="dataSourceId" from-field="parameters.dataSourceId"/>
                 <entity-one entity-name="DataSource" value-field="dataSource"/>
             </actions>

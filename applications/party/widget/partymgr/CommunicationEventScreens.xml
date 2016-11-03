@@ -281,7 +281,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCommunicationEvents"/>
-                <set field="activeMainMenuItem" value="comm"/>
                 <!--<set field="activeSubMenuItem" value="Find"/>-->
                 <set field="entityName" value="CommunicationEventAndRole"/>
             </actions>
@@ -613,7 +612,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCommContent"/>
-                <set field="activeMainMenuItem" value="comm"/>
                 <set field="activeSubMenuItem" value="CommContent"/>
                 <set field="parameters.partyId" value="${parameters.partyId}" default-value="${userLogin.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -652,7 +650,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyNewCommContent"/>
-                <set field="activeMainMenuItem" value="comm"/>
                 <set field="activeSubMenuItem" value="CommContent"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>

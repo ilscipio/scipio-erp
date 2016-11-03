@@ -65,10 +65,10 @@ under the License.
                 <set field="customerDetailLink" value="/partymgr/control/viewprofile?partyId=" global="true"/>
             </actions>
             <widgets>
-                <!--<include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>-->
-                <!-- with auto-decorator-section-include="true", the decorator-sections not declared here like "pre-body" will still be passed and not lost,
+                <!--<decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>-->
+                <!-- with auto-decorator-section-include="true" (2016-10-30: true now default, may be omitted), the decorator-sections not declared here like "pre-body" will still be passed and not lost,
                      so free to use main-decorator to insert sections and elements without forcing whole-page structure. use-when also available on decorator-section. -->
-                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
@@ -97,7 +97,7 @@ under the License.
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonOrderAppSideBarMenu"/>
                     </decorator-section>
@@ -113,7 +113,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Quote" />
-                <set field="activeMainMenuItem" value="quote"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="quote"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
             </actions>
             <widgets>

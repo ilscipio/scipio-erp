@@ -17,7 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- begin editgiftcard.ftl -->
 <#if !giftCard??>
   <#assign sectionTitle = uiLabelMap.AccountingCreateNewGiftCard>
 <#else>
@@ -31,7 +30,7 @@ under the License.
       </@menu>
     </#macro>
         
-    <@saveCancelMenu />
+    <#--<@saveCancelMenu />-->
      
     <#if !giftCard??>
       <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
@@ -82,4 +81,3 @@ under the License.
       
       <@saveCancelMenu />
 </@section>
-<!-- end editgiftcard.ftl -->

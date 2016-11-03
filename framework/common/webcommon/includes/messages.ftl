@@ -21,6 +21,8 @@ under the License.
 <#assign contentMsgContentClass = "content-message-content"><#-- SCIPIO: especially used by JS, cannot put in global styles unless do same in JS -->
 <div id="content-messages"><#-- SCIPIO: need container always, to locate this via js -->
 <#escape x as x?html>
+  <#-- SCIPIO: FIXME: THESE ASSIGNS ARE DUPLICATED IN commonHeadScripts.ftl; KEEP IN SYNC 
+    NOTE: SEE commonHeadScripts.ftl FOR JS-OUTPUTTED ERROR MESSAGES -->
   <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
   <#if requestAttributes.eventMessageList?has_content><#assign eventMessageList=requestAttributes.eventMessageList></#if>
   <#if requestAttributes.serviceValidationException??><#assign serviceValidationException = requestAttributes.serviceValidationException></#if>
@@ -104,3 +106,4 @@ under the License.
     <@alert type="info" class=("+"+contentMsgContentClass)></@alert>
   </div>
 </div>
+

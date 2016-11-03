@@ -303,14 +303,14 @@ under the License.
     <screen name="SecurityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
                 <service service-name="securityPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>
                 <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
                         <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupSideBar"/>
                     </decorator-section>

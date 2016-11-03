@@ -112,14 +112,14 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false id="" extraArgs...>
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
   <#local progressOptions = "">
   <#if !(showProgress?is_boolean && showProgress == false) && 
      ((showProgress?is_boolean && showProgress == true) ||
-      ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
-    <#local baseId = rawString(htmlFormRenderFormInfo.name!"") + "_scipiouplprogform">       
+      ((formInfo.formType)! == "upload" && (formInfo.showProgress)! == true))>
+    <#local baseId = rawString(formInfo.name!"") + "_scipiouplprogform">       
     <#local progressOptions = {
-      "formSel" : "form[name=${rawString(htmlFormRenderFormInfo.name)}]",<#-- NOTE: escaped later -->
+      "formSel" : "form[name=${rawString(formInfo.name)}]",<#-- NOTE: escaped later -->
       "progBarId" : "${rawString(baseId)}_progbar",
       "progTextBoxId" : "${rawString(baseId)}_textbox",
       
@@ -127,8 +127,8 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
       "errorResultAddWrapper" : false
     }>
-    <#if htmlFormRenderFormInfo.progressSuccessAction?has_content>
-      <#local action = compileProgressSuccessAction(htmlFormRenderFormInfo.progressSuccessAction)>
+    <#if formInfo.progressSuccessAction?has_content>
+      <#local action = compileProgressSuccessAction(formInfo.progressSuccessAction)>
     <#else>
       <#local action = "">
     </#if>
@@ -140,9 +140,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       <#local progressOptions = concatMaps(progressOptions, { "successReloadWindow" : true })>
     </#if>
     
-    <#if htmlFormRenderFormInfo.progressOptions?has_content>
+    <#if formInfo.progressOptions?has_content>
       <#-- json is valid freemarker map -->
-      <#local addOpts = evalToSimpleMap(htmlFormRenderFormInfo.progressOptions)>
+      <#local addOpts = evalToSimpleMap(formInfo.progressOptions)>
       <#if addOpts?has_content>
         <#local progressOptions = progressOptions + addOpts>  
       </#if>
@@ -188,7 +188,8 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
 <#macro renderSingleFormFieldTitle extraArgs...></#macro>
 
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" extraArgs...>
+<#-- SCIPIO: formScope values: general, item; formSpread values: general, single-cell (html ok), multi-cell (may be bad html) -->
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" formScope="general" formSpread="general" extraArgs...>
   <#if !method?has_content>
     <#local method = "post">
   </#if>
@@ -209,9 +210,19 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   </#if>
   <#local progressOptions = (attribs.progressOptions)!{}><#-- NOTE: this may be a string repr of a map! -->
   <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
-  <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : progressOptions, "progressSuccessAction" : progressSuccessAction, "attribs":attribs}>
-  <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
-  <form method="${escapeVal(method, 'html')}" action="${escapeFullUrl(linkUrl, 'html')}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if> class=<#if containerStyle?has_content>"${escapeVal(containerStyle, 'html')}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${escapeVal(autocomplete, 'html')}"</#if> name="${escapeVal(name, 'html')}"><#lt/>
+  <#local formInfo = {"name":name, "formType":formType, "formScope":formScope, "formSpread":formSpread,
+    "showProgress":showProgress, "progressOptions":progressOptions, "progressSuccessAction":progressSuccessAction, "attribs":attribs}>
+  <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
+<#-- SCIPIO: TODO/FIXME: prevent invalid html; (SHOULD BE) handled by renderSubmitForm
+    CURRENTLY PROBLEMATIC; adding this condition prevents <form> between cells,
+    BUT the form MAY be currently still needed for jQuery validate (see renderFormClose) and untold other lookups
+    based on form name/id and presence of form element.
+<#if !(formType == "list" && formScope == "item" && formSpread == "multi-cell")>
+-->
+  <form method="${escapeVal(method, 'html')}" action="${escapeFullUrl(linkUrl, 'html')}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#rt/>
+      <#lt/><#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if>
+      <#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if> class=<#if containerStyle?has_content>"${escapeVal(containerStyle, 'html')}"<#else>"basic-form"</#if>
+      <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${escapeVal(autocomplete, 'html')}"</#if> name="${escapeVal(name, 'html')}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
     </#if>
@@ -222,13 +233,19 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
       <input type="hidden" name="${escapeVal(viewSizeField, 'html')}" value="${viewSize}"/>
     </#if>
+<#-- 
+</#if>
+-->
 </#macro>
 <#-- SCIPIO: WARN: also exists renderMultiFormClose below -->
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField extraArgs...>
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#local formInfo = popRequestStack("htmlFormRenderFormStack")>
+<#-- SCIPIO: TODO/FIXME: prevent invalid html; (SHOULD BE) handled by renderSubmitForm
+<#if !((formInfo.formType!) == "list" && (formInfo.formScope!) == "item" && (formInfo.formSpread!) == "multi-cell")>
+-->
   </form><#lt/>
-  <#if (htmlFormRenderFormInfo.attribs.fieldsType)?has_content>
-    <@fields type=htmlFormRenderFormInfo.attribs.fieldsType open=false close=true />
+  <#if (formInfo.attribs.fieldsType)?has_content>
+    <@fields type=formInfo.attribs.fieldsType open=false close=true />
   </#if>
   <#if focusFieldName?has_content>
     <@script>
@@ -251,22 +268,27 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       });
     </@script>
   </#if>
-  <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
+<#--
+<#else>
+  <#- SCIPIO: TODO/FIXME: in this case we have to omit the <form> element, but are then missing
+    the .validate call (also TODO: recheck the validate call above) ->
+</#if>
+-->
 </#macro>
 <#macro renderMultiFormClose extraArgs...>
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#local formInfo = popRequestStack("htmlFormRenderFormStack")!{}>
   </form><#lt/>
-  <#if (htmlFormRenderFormInfo.attribs.fieldsType)?has_content>
-    <@fields type=htmlFormRenderFormInfo.attribs.fieldsType open=false close=true />
+  <#if (formInfo.attribs.fieldsType)?has_content>
+    <@fields type=formInfo.attribs.fieldsType open=false close=true />
   </#if>
 </#macro>
 
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} extraArgs...>
   <#-- SCIPIO: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
-  <#if !htmlFormRenderFormInfo?has_content>
-    <#local htmlFormRenderFormInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
-    <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
+  <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
+  <#if !formInfo?has_content>
+    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
+    <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
   </#if>
 
   <#-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
@@ -322,9 +344,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local dummy = setRequestVar("renderFormLastTableInfo", stackValues)>
   <#-- TABLE ID: ${escapeVal(stackValues.tableId, 'html')}, ${escapeVal(getRequestVar("scipioLastTableInfo").id, 'html')} -->
   <#-- SCIPIO: unset form info, but only if it was the list wrapper that set it -->
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
-  <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>
-    <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
+  <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
+  <#if (formInfo.setByListWrapper!false) == true>
+    <#local dummy = popRequestStack("htmlFormRenderFormStack")>
   </#if>
 </#macro>
 
@@ -836,7 +858,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
                 var id = $("[id^=${submitFieldIdJs}]");
                 $(id).click(function(e) {
                     e.preventDefault();
-                    
+
                     <#-- makeHiddenFieldsForHiddenForm -->
                     $(this).closest("tr").find("input[type=text], input[type=hidden], input[type=radio],"+ 
                             "input[type=checkbox], select, textarea").each(function (i, e) {

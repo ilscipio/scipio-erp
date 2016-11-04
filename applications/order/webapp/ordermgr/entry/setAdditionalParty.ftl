@@ -43,15 +43,15 @@ under the License.
     <@section>
       <@heading>1) ${uiLabelMap.OrderSelectPartyToOrder}</@heading>
 
-      <@partyCheckRow label="${uiLabelMap.CommonPerson}" id="additionalPartyType_Person">
+      <@partyCheckRow label=uiLabelMap.CommonPerson id="additionalPartyType_Person">
         <input type="radio" id="additionalPartyType_Person" name="additionalPartyType" value="Person" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if (additionalPartyType?? && additionalPartyType == "Person")> checked="checked"</#if> />
       </@partyCheckRow>
 
-      <@partyCheckRow label="${uiLabelMap.CommonGroup}" id="additionalPartyType_Group">
+      <@partyCheckRow label=uiLabelMap.CommonGroup id="additionalPartyType_Group">
         <input type="radio" id="additionalPartyType_Group" name="additionalPartyType" value="Group" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if additionalPartyType?? && additionalPartyType == "Group"> checked="checked"</#if> />
       </@partyCheckRow>
 
-      <@partyCheckRow label="${uiLabelMap.OrderPartyDontWish}" id="additionalPartyType_None">
+      <@partyCheckRow label=uiLabelMap.OrderPartyDontWish id="additionalPartyType_None">
         <input type="radio" id="additionalPartyType_None" name="additionalPartyType" value="None" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if !additionalPartyType??> checked="checked"</#if> />
       </@partyCheckRow>
     </@section>
@@ -66,7 +66,7 @@ under the License.
     <@section>
       <@heading>2) ${uiLabelMap.PartyFindParty}</@heading>
   
-      <@field type="lookup" label=uiLabelMap.CommonIdentifier value=(additionalPartyId!) formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
+      <@field type="lookup" label=uiLabelMap.CommonIdentifier value=(additionalPartyId!) formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName=lookupPartyView/>
       <@field type="submit" submitType="link" href="javascript:document.quickAddPartyForm.submit()" class="+${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonApply />
     </@section>
 
@@ -85,7 +85,7 @@ under the License.
               <option value="${role.roleTypeId}">${role.get("description",locale)}</option>
               </#list>
           </@field>
-          <@field type="submit" class="+${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} "/>
+          <@field type="submit" class="+${styles.link_run_session!} ${styles.action_add!}" text=uiLabelMap.CommonAdd/>
           </@fields>
         </form>
     </@section>

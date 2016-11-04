@@ -80,7 +80,7 @@
     </menu>
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu"
-        extends-resource="component://common/widget/CommonMenus.xml">
+        extends-resource="component://common/widget/CommonMenus.xml" always-expand-selected-or-ancestor="true">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
         <menu-item name="invoices">
             <sub-menu name="Invoice" include="InvoiceSideBar"/>
@@ -160,7 +160,7 @@
         </menu-item>
     </menu>
     
-    <!-- Scipio: New settings sidebar -->
+    <!-- SCIPIO: New settings sidebar -->
     <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
@@ -433,9 +433,10 @@
     </menu>
     
     <menu name="BillingAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="FindBillingAccount" title="${uiLabelMap.CommonFind}">
             <link target="FindBillingAccount" />
-        </menu-item>
+        </menu-item> -->
         <menu-item name="EditBillingAccount" title="${uiLabelMap.CommonAccount}">
             <link target="EditBillingAccount">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
@@ -474,9 +475,11 @@
 
     <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="EditBudget">
+        <!-- SCIPIO: redundant
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
             <link target="ListBudgets" />
         </menu-item>
+        -->
         <menu-item name="BudgetOverview" title="${uiLabelMap.AccountingBudgetOverview}">
             <link target="BudgetOverview">
                 <parameter param-name="budgetId" />
@@ -523,7 +526,7 @@
         <include-elements menu-name="BudgetTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="BudgetSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="BudgetSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditBudget" title="${uiLabelMap.CommonEdit}">
             <condition>
@@ -641,7 +644,7 @@
         <include-elements menu-name="FinAccountTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="FinAccountSubTabBar" menu-container-style="+${styles.menu_buttonstyle_alt2}" extends="CommonTabBarMenu"
+    <menu name="FinAccountSubTabBar" menu-container-style="+${styles.menu_buttonstyle_alt2}" extends="CommonSubTabBarMenu"
         extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="createNew" title="${uiLabelMap.CommonNew} ${uiLabelMap.AccountingFinAccount}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditFinAccount" />
@@ -737,7 +740,7 @@
     </menu>
 
     <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
+        ><!-- selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint" -->
         <include-elements menu-name="FixedAssetMaintTabBar" recursive="includes-only" />
     </menu>
 
@@ -779,11 +782,12 @@
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
+        <!-- SCIPIO: Makes navigation problematic; TODO: REVIEW
         <menu-item name="EditFixedAssetMeters" title="${uiLabelMap.AccountingFixedAssetMeters}">
             <link target="EditFixedAssetMeters">
                 <parameter param-name="fixedAssetId" />
             </link>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="ListFixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}">
             <link target="ListFixedAssetMaints">
                 <parameter param-name="fixedAssetId" />
@@ -821,7 +825,7 @@
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
-        <!-- Scipio: Commented out for now. Will need to relocate it to a proper place at some point   -->
+        <!-- SCIPIO: Commented out for now. Will need to relocate it to a proper place at some point   -->
         <!-- <menu-item name="EditCustomTimePeriod" title="${uiLabelMap.AccountingEditCustomTimePeriods}">
             <condition>
                 <if-has-permission permission="PERIOD_MAINT" />
@@ -884,6 +888,23 @@
             <link target="findInvoices" />
         </menu-item>
         -->
+        <!-- SCIPIO: this is needed to reach "edit" again -->
+        <menu-item name="editInvoice" title="${uiLabelMap.AccountingInvoice}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="editInvoice">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
             <condition>
                 <not>
@@ -936,7 +957,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <!-- Scipio: TODO: REVIEW IF NEEDED (came from upstream)
+        <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
         <menu-item name="invoiceTerms" title="${uiLabelMap.PartyTerms}">
             <condition>
                 <and>
@@ -1029,7 +1050,7 @@
          -->
     </menu>
 
-    <menu name="InvoiceSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="InvoiceSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="newInvoice" />
@@ -1192,7 +1213,7 @@
                 <parameter param-name="statusId" value="INVOICE_CANCELLED" />
             </link>
         </menu-item>
-        <!-- Scipio: Disabled feature for now (how useful is this?!
+        <!-- SCIPIO: Disabled feature for now (how useful is this?!
         <menu-item name="saveInvoiceAsTemplate" title="${uiLabelMap.AccountingInvoiceSaveAsTemplate}" widget-style="+${styles.action_run_sys} ${styles.action_copy}">
             <condition>
                 <and>
@@ -1246,7 +1267,7 @@
         </menu-item>
     </menu>
 
-    <menu name="OrganizationSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="OrganizationSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="addCompany" title="${uiLabelMap.AccountingNewCompany}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
@@ -1605,7 +1626,7 @@
         <include-elements menu-name="PaymentTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="PaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="PaymentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <actions>
             <set field="isDisbursement" value="${groovy:if(context.payment != null) return org.ofbiz.accounting.util.UtilAccounting.isDisbursement(context.payment)}" />
@@ -1708,6 +1729,7 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
+        <!-- SCIPIO: FIXME: link target PaymentAcctgTransEntriesPdf does not exist...??
         <menu-item name="acctgTransEntriesPDF" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <and>
@@ -1724,18 +1746,20 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
+          -->
     </menu>
 
     <menu name="PaymentGroupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant/problematic
         <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}" sort-mode="off">
-            <link target="FindPaymentsGroup" />
-        </menu-item>
+            <link target="FindPaymentGroup" />
+        </menu-item>-->
         <menu-item name="PaymentGroupOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup} ${uiLabelMap.AccountingPaymentTabOverview}">
             <link target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId" from-field="paymentGroup.paymentGroupId" />
             </link>
         </menu-item>
-        <menu-item name="EditPaymentGroup" title="${uiLabelMap.CommonEdit} ${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}">
+        <menu-item name="EditPaymentGroup" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}"><!--${uiLabelMap.CommonEdit} -->
             <condition>
                 <not>
                     <if-empty field="paymentGroup.paymentGroupId" />
@@ -1761,7 +1785,7 @@
         <include-elements menu-name="PaymentGroupTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="PaymentGroupSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="PaymentGroupSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewPaymentGroup}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>

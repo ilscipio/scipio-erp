@@ -18,7 +18,7 @@ under the License.
 -->
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
-    <#-- Scipio: this breaks everything (?)
+    <#-- SCIPIO: this breaks everything (?)
     jQuery.noConflict();-->
 
     var host = document.location.host;

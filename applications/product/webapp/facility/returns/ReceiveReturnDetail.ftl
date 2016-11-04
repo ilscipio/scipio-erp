@@ -145,7 +145,7 @@ under the License.
                                                                 <#else>
                                                                     <#assign LookupFacilityLocationView="LookupFacilityLocation">
                                                                 </#if>
-                                                                <@field type="lookup" formName="selectAllForm" name="locationSeqId_o_${rowCount}" id="locationSeqId_o_${rowCount}" fieldFormName="${LookupFacilityLocationView}"/>
+                                                                <@field type="lookup" formName="selectAllForm" name="locationSeqId_o_${rowCount}" id="locationSeqId_o_${rowCount}" fieldFormName=LookupFacilityLocationView/>
                                                             </span>
                                                         </#if>
                                                     </@td>

@@ -448,7 +448,8 @@ public class TaxAuthorityServices {
                 }
                 GenericValue taxAdjValue = delegator.makeValue("OrderAdjustment");
 
-                if (productPrice != null && "Y".equals(productPrice.getString("taxInPrice"))) {
+                // SCIPIO: Added fix for VAT calculation
+                if ((productPrice != null && "Y".equals(productPrice.getString("taxInPrice"))) || "Y".equals(productStore.getString("showPricesWithVatTax"))) {
                     // tax is in the price already, so we want the adjustment to be a VAT_TAX adjustment to be subtracted instead of a SALES_TAX adjustment to be added
                     taxAdjValue.set("orderAdjustmentTypeId", "VAT_TAX");
 
@@ -562,7 +563,12 @@ public class TaxAuthorityServices {
             adjValue.set("customerReferenceId", partyTaxInfo.get("partyTaxId"));
             if ("Y".equals(partyTaxInfo.getString("isExempt"))) {
                 adjValue.set("amount", BigDecimal.ZERO);
-                adjValue.set("exemptAmount", taxAmount);
+                // SCIPIO: Added fix for included VAT calculation
+                if (adjValue.getBigDecimal("amountAlreadyIncluded").compareTo(BigDecimal.ZERO) != 0) {
+                    adjValue.set("exemptAmount", adjValue.getBigDecimal("amountAlreadyIncluded"));
+                } else {
+                    adjValue.set("exemptAmount", taxAmount);
+                }
                 foundExemption = true;
             }
         }

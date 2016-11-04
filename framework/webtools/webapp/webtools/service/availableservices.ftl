@@ -26,18 +26,18 @@ under the License.
 <#if selectedServiceMap??>
 
   <#if showWsdl?? && showWsdl == true>
-    <@section title="${uiLabelMap.WebtoolsServiceWSDL} - ${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
+    <@section title="${rawLabel('WebtoolsServiceWSDL')} - ${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
         <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
         <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
     </@section>
 
   <#else>
-    <@section title="${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
+    <@section title="${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
         <@menu type="button">
           <@menuitem type="link" href=makeOfbizUrl("${url}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
           <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
-          <@menuitem type="link" href=makeOfbizUrl("setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
+          <@menuitem type="link" href=makeOfbizUrl("setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
         </@menu>
 
     <#-- Show a little form for exportServiceEoModelBundle -->

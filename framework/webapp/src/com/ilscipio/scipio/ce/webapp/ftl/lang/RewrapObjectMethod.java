@@ -41,28 +41,30 @@ public class RewrapObjectMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 2 ) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
+        if (args == null || args.size() < 1 || args.size() > 3 ) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1-3)");
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
         
+        String wrapperStr = null;
         String modeStr = null;
-        TemplateScalarModel modeModel = (TemplateScalarModel) args.get(1);
-        if (modeModel != null) {
-            modeStr = modeModel.getAsString();
-        }
-        RewrapMode mode;
-        if (modeStr == null || modeStr.length() <= 0) {
-            mode = RewrapMode.SIMPLE;
-        } else {
-            mode = RewrapMode.fromString(modeStr);
-            if (mode == null) {
-                throw new TemplateModelException("Unrecognized mode: " + modeStr);
+        if (args.size() >= 2) {        
+            TemplateScalarModel wrapperModel = (TemplateScalarModel) args.get(1);
+            if (wrapperModel != null) {
+                wrapperStr = wrapperModel.getAsString();
+            }
+            
+            if (args.size() >= 3) {
+                TemplateScalarModel modeModel = (TemplateScalarModel) args.get(2);
+                if (modeModel != null) {
+                    modeStr = modeModel.getAsString();
+                }
             }
         }
 
-        return LangFtlUtil.rewrapObject(object, mode, env, LangFtlUtil.getCurrentObjectWrapper());
+        Object res = LangFtlUtil.rewrapObject(object, WrappingOptions.makeOptions(wrapperStr, modeStr, env), env);
+        return res;
     }
     
 }

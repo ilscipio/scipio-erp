@@ -43,7 +43,7 @@
     <ProductStorePaymentSetting productStoreId="${productStoreId}" paymentMethodTypeId="EXT_COD" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
     <ProductStorePaymentSetting productStoreId="${productStoreId}" paymentMethodTypeId="EXT_BILLACT" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
     
-    <!-- Scipio: WARN: If you create a new store from this template, you MUST change all the productStoreShipMethId below! The productStoreId is not part of this entity's PK. -->
+    <!-- SCIPIO: WARN: If you create a new store from this template, you MUST change all the productStoreShipMethId below! The productStoreId is not part of this entity's PK. -->
     <ProductStoreShipmentMeth productStoreShipMethId="9000" productStoreId="${productStoreId}" partyId="_NA_" includeNoChargeItems="Y" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="NO_SHIPPING" sequenceNumber="6"/>
     <ProductStoreShipmentMeth productStoreShipMethId="9001" productStoreId="${productStoreId}" partyId="UPS" includeNoChargeItems="N" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" sequenceNumber="3"/>
     <ProductStoreShipmentMeth productStoreShipMethId="9002" productStoreId="${productStoreId}" partyId="UPS" includeNoChargeItems="N" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="AIR" sequenceNumber="2"/>

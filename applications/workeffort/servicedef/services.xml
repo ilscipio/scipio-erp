@@ -253,7 +253,7 @@ under the License.
         <attribute name="groupActivities" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     
-    <!-- Scipio: New services for finding completed WorkEfforts -->
+    <!-- SCIPIO: New services for finding completed WorkEfforts -->
     <service name="getWorkEffortCompletedTasks" engine="java"
             location="org.ofbiz.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortCompletedTasks">
         <description>Get WorkEffort Completed Tasks : workEffort assign to userLogin.partyId and with

@@ -21,7 +21,7 @@ under the License.
 <#list taskInfos as taskInfo>
   <#assign task = taskInfo.task>
   <#assign taskForm = taskInfo.taskForm>
-  <@section title="${task.workEffortName!} [${task.workEffortId}]">
+  <@section title="${rawString(task.workEffortName!)} [${rawString(task.workEffortId)}]">
     ${taskForm.renderFormString(context)}
   </@section>
 </#list>

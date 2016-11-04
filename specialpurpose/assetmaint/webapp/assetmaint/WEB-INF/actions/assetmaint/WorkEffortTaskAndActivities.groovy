@@ -25,7 +25,7 @@ workEffortList.each { workEffortPartyAssignment ->
     if (statusItem)
         workEffort.put("statusDescription", statusItem.description);
     workEffortFixedAssetAssign = EntityUtil.getFirst(delegator.findByAnd("WorkEffortFixedAssetAssign", ["workEffortId" : workEffort.workEffortId, "fromDate" : workEffort.createdDate], null, true));
-    fixedAsset = workEffortFixedAssetAssign.getRelatedOne("FixedAsset", true);
+    fixedAsset = workEffortFixedAssetAssign?.getRelatedOne("FixedAsset", true);
     if (fixedAsset) {
         workEffort.put("assetName", fixedAsset.fixedAssetName);
         fixedAssetType = fixedAsset.getRelatedOne("FixedAssetType", true);

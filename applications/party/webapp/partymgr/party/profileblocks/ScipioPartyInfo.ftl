@@ -6,8 +6,7 @@
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.FormFieldTitle_personalImage}
                   </@td>
-                  <#assign imgSrc><@ofbizInterWebappUrl>/content/control/stream?contentId=${pc.contentId!}</@ofbizInterWebappUrl></#assign>
-                  <@td colspan="3"><@img src=imgSrc!"" height="150px" width="100px" type="contain"/></@td>
+                  <@td colspan="3"><@img src=makeOfbizInterWebappUrl('/content/control/stream?contentId=${pc.contentId!}') height="150px" width="100px" type="contain"/></@td>
                 </@tr>
                 <#break>
             </#list> 
@@ -16,7 +15,7 @@
         <#if lookupGroup?has_content && lookupParty.logoImageUrl?has_content>
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.CommonOrganizationLogo}</@td>
-                  <@td colspan="3"><@img src="${lookupParty.logoImageUrl!}" height="150px" width="100px" type="contain"/></@td>
+                  <@td colspan="3"><@img src=(lookupParty.logoImageUrl!) height="150px" width="100px" type="contain"/></@td>
                 </@tr>
         </#if>
 
@@ -36,7 +35,7 @@
                         </#if>
                     </#assign>
                     <#if partyNameHistoryList?has_content>
-                        <@modal id="modal_info_${parameters.partyId!}" label="${partyName!}">
+                        <@modal id="modal_info_${parameters.partyId!}" label=wrapAsRaw(partyName, 'htmlmarkup')>
                             <#if partyNameHistoryList?has_content>
                               <@heading>${uiLabelMap.PartyHistoryWas}</@heading>
                               <ul class="no-bullet">
@@ -57,7 +56,7 @@
                             </#if>
                         </@modal>
                     <#else>
-                        ${partyName!}
+                        ${partyName}
                     </#if>
                 </@td>
         </@tr>
@@ -116,13 +115,13 @@
               </@td>
               <@td colspan="3">
                   <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
-                      <@modal id="modal_avsstring_${parameters.partyId}" label="${(avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal}">
+                      <@modal id="modal_avsstring_${parameters.partyId}" label=((avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal)>
                          <@heading>${uiLabelMap.PartyAvsOver}</@heading>
                          <form name="updateAvsOverride" method="post" action="<@ofbizUrl>updateAvsOverride</@ofbizUrl>">
                          <input type="hidden" name="partyId" value="${parameters.partyId}"/>
                         <@row>
                             <@cell columns=6>
-                                <@field type="input" name="avsDeclineString" title="${uiLabelMap.PartyAvsString}" size="60" maxlength="250"/>
+                                <@field type="input" name="avsDeclineString" title=uiLabelMap.PartyAvsString size="60" maxlength="250"/>
                             </@cell>
                             <@cell columns=6>
                                 <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonSave}"/>

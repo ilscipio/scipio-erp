@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.ContentSearchContents}, ${uiLabelMap.ProductSearchFor}:">
+<@section title="${rawLabel('ContentSearchContents')}, ${rawLabel('ProductSearchFor')}:">
     <#list searchConstraintStrings as searchConstraintString>
         <div><a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
@@ -28,7 +28,7 @@ under the License.
     </#if>
     
   <#if contentIds?has_content>
-    <#-- Scipio: FIXME: see ContentSearchEvents.java -->
+    <#-- SCIPIO: FIXME: see ContentSearchEvents.java -->
     <p>NOTE: This search currently only shows the first ${listSize!0} results and supports no pagination.</p>
     <@paginate mode="content" url=makeOfbizUrl("ContentSearchResults") paramStr="/~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <@table type="data-complex" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->

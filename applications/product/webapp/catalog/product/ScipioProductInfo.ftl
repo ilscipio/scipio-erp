@@ -31,7 +31,7 @@ under the License.
         <#if product.largeImageUrl?has_content>
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.ProductLargeImage}</@td>
-                  <@td colspan="3"><@img src="${product.largeImageUrl!}" height="150px" width="100px" type="contain"/></@td>
+                  <@td colspan="3"><@img src=(product.largeImageUrl!) height="150px" width="100px" type="contain"/></@td>
                 </@tr>
         </#if>
 

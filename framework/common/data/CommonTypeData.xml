@@ -87,7 +87,7 @@ under the License.
     <UserPreference userLoginId="_NA_" userPrefTypeId="VISUAL_THEME" userPrefGroupTypeId="GLOBAL_PREFERENCES" userPrefValue="DEFAULT"/><!-- will be overruled by the setting in general.properties (if present) -->
 
     <!-- Visual Themes seed data -->
-    <!-- Scipio: MOVED to CommonVisualThemeTypeData.xml -->
+    <!-- SCIPIO: MOVED to CommonVisualThemeTypeData.xml -->
     
     <!-- Uom Conversion Purposes -->
     <EnumerationType enumTypeId="CONVERSION_PURPOSE" description="Conversion Purpose"/>

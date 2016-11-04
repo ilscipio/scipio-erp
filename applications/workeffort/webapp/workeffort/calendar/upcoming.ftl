@@ -19,7 +19,7 @@ under the License.
 <#include 'calendarcommon.ftl'>
 
 <#-- SCIPIO: FTL now includes the title -->
-<@section title="${uiLabelMap.WorkEffortUpComingEvents}"><#--title="${uiLabelMap.WorkEffortCalendarUpComingEventsView}"-->
+<@section title=uiLabelMap.WorkEffortUpComingEvents><#--title=uiLabelMap.WorkEffortCalendarUpComingEventsView-->
 
 <#-- SCIPIO: have to pre-check if any content using this -->
   <#assign hasEvents = false>

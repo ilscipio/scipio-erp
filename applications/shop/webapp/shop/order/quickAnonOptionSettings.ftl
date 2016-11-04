@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@script>
 
@@ -47,7 +47,7 @@ function aroundOptSubmitOrder(invocation) {
             }
         });
     } else {
-        document.getElementById("noShippingMethodSelectedError").innerHTML = "${uiLabelMap.EcommerceMessagePleaseSelectShippingMethod}";
+        document.getElementById("noShippingMethodSelectedError").innerHTML = "${escapeVal(uiLabelMap.EcommerceMessagePleaseSelectShippingMethod, 'js')}";
     }
 }
 
@@ -79,7 +79,7 @@ function onClickShippingMethod(e) {
            <#assign fieldLabel><#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}<#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign>
            
            <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value="${shippingMethod}" checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=fieldLabel/>
+           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>
         </#list>
         <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value="Default" checked=true label=uiLabelMap.OrderUseDefault />
@@ -89,7 +89,7 @@ function onClickShippingMethod(e) {
     <@cell columns=6>
         <@field type="textarea" label=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</@field>
         <#--<hr />-->
-        <@field type="input" label=uiLabelMap.OrderPoNumber name="correspondingPoId" size="15" value="${shoppingCart.getPoNumber()!}"/>
+        <@field type="input" label=uiLabelMap.OrderPoNumber name="correspondingPoId" size="15" value=(shoppingCart.getPoNumber()!)/>
 
       <#if (productStore.showCheckoutGiftOptions!) != "N">
         <#--<hr />-->
@@ -107,7 +107,7 @@ function onClickShippingMethod(e) {
 
   <@row>
     <@cell columns=6>
-      <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+      <@field type="generic" label="${rawLabel('OrderShipAllAtOnce')}?">
         <@field type="radio" checked=((shoppingCart.getMaySplit()!"N") == "N") name="may_split" value="false" label=uiLabelMap.OrderPleaseWaitUntilBeforeShipping />
         <@field type="radio" checked=((shoppingCart.getMaySplit()!"N") == "Y") name="may_split" value="true" label=uiLabelMap.OrderPleaseShipItemsBecomeAvailable />
       </@field>

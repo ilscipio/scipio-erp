@@ -82,7 +82,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
-    <!-- Scipio: AddCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioAddCategoryAssociation (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: AddCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioAddCategoryAssociation (can't be removed yet, still references I haven't covered) -->
     <form name="AddCategoryChild" type="single" target="addProductCategoryToCategory">
         <field name="showProductCategoryId"><hidden/></field>
         <field name="parentProductCategoryId"><hidden value="${showProductCategoryId}"/></field>
@@ -95,7 +95,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
-    <!-- Scipio: AddCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioAddCategoryAssociation (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: AddCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioAddCategoryAssociation (can't be removed yet, still references I haven't covered) -->
     <form name="AddCategoryParent" type="single" target="addProductCategoryToCategory">
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId"><hidden/></field>
@@ -157,7 +157,7 @@ under the License.
         </field>
     </form>
     
-    <!-- Scipio: UpdateCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioCategoryAssociationList (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: UpdateCategoryChild form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioCategoryAssociationList (can't be removed yet, still references I haven't covered) -->
     <form name="UpdateCategoryChild" type="list" target="updateProductCategoryToCategory" list-name="parentProductCategoryRollups"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
@@ -186,7 +186,7 @@ under the License.
         </field>
     </form>
     
-    <!-- Scipio: UpdateCategoryParent form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioCategoryAssociationParent (can't be removed yet, still references I haven't covered) -->
+    <!-- SCIPIO: UpdateCategoryParent form moved to ./applications/product/widget/category/CategoryScreens.xml#ScipioCategoryAssociationParent (can't be removed yet, still references I haven't covered) -->
     <form name="UpdateCategoryParent" type="list" target="updateProductCategoryToCategory" list-name="currentProductCategoryRollups"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>

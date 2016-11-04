@@ -27,7 +27,7 @@ under the License.
   <#assign externalOrder = "(" + orderHeader.externalId + ")"/>
 </#if>
 
-<#-- Scipio: NOTE: This is used for checkout review and order summaries 
+<#-- SCIPIO: NOTE: This is used for checkout review and order summaries 
     Check orderHeader?has_content to see if is in-progress or placed order. -->
 
 <#assign maySelect = ((maySelectItems!"N") == "Y")>
@@ -35,16 +35,16 @@ under the License.
 
 <#if (orderHeader.orderId)??>
   <@heading level=1>
-    <#-- Scipio: This page doesn't actually show a full invoice - only the PDF is a full invoice (with tax information) - so "PDF" beside title is misleading -->
+    <#-- SCIPIO: This page doesn't actually show a full invoice - only the PDF is a full invoice (with tax information) - so "PDF" beside title is misleading -->
     ${orderHeader.orderId}<#--<#if !maySelect && !printable> (<a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.action_export!}">${uiLabelMap.CommonPdf} ${uiLabelMap.CommonInvoice}</a>)</#if>-->
   </@heading>
 </#if>
 
 <#macro menuContent menuArgs={}>
-<#if (orderHeader.orderId)?has_content><#-- Scipio: Only if order not yet placed -->
+<#if (orderHeader.orderId)?has_content><#-- SCIPIO: Only if order not yet placed -->
   <#if !printable>
     <@menu args=menuArgs>
-      <#-- Scipio: No reason to hide it: 
+      <#-- SCIPIO: No reason to hide it: 
       <#if maySelect>-->
       <@menuitem type="link" href=makeOfbizUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       <#--</#if>-->
@@ -53,12 +53,12 @@ under the License.
         <@menuitem type="link" href=makeOfbizUrl({"uri":"orderviewonly?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       </#if>
       -->
-      <#-- Scipio: Always show it here: <#if maySelect>-->
+      <#-- SCIPIO: Always show it here: <#if maySelect>-->
       <#-- NOTE: The order may actually have more than one invoice available. On this page, show only this one for now, because the
           others don't become available until after order is completed and stuff. -->
-      <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${uiLabelMap.CommonInvoice} (${uiLabelMap.CommonPdf})" />
+      <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + escapeVal((orderHeader.orderId)!, 'js'), "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${rawLabel('CommonInvoice')} (${rawLabel('CommonPdf')})" />
       <#--</#if>-->
-      <#-- Scipio: TODO: Uncomment once converted/tested
+      <#-- SCIPIO: TODO: Uncomment once converted/tested
       <#if maySelect && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">
         <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") text=uiLabelMap.OrderRequestReturn />
       </#if>-->
@@ -74,7 +74,7 @@ under the License.
             <@section title=uiLabelMap.CommonOverview>
                 <@table type="fields">
                   <#if placingParty?has_content && orderDate?has_content>
-                    <#-- Scipio: screen finds it -->
+                    <#-- SCIPIO: screen finds it -->
                     <#--<#assign displayParty = localOrderReadHelper.getPlacingParty()!/>-->
                     <#assign displayParty = placingParty/>
                     <#assign displayPartyNameResult = {}/>
@@ -88,7 +88,7 @@ under the License.
                         </@tr>
                     </#if>
                   </#if>
-                    <#-- Scipio: Show the emails (from placing party + additional, combined due to schema) -->
+                    <#-- SCIPIO: Show the emails (from placing party + additional, combined due to schema) -->
                   <#if orderEmailList?has_content>
                     <@tr>
                       <@td class="${styles.grid_large!}2">${uiLabelMap.CommonEmail}</@td>
@@ -110,7 +110,7 @@ under the License.
                         </#if>
                       </@td>
                     </@tr>
-                  <#if orderHeader?has_content><#-- Scipio: Show only for placed orders (for non-placed, context.orderDate is not the actual placing time) -->
+                  <#if orderHeader?has_content><#-- SCIPIO: Show only for placed orders (for non-placed, context.orderDate is not the actual placing time) -->
                     <@tr>
                       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDateOrdered}</@td>
                       <@td colspan="3">
@@ -178,7 +178,7 @@ under the License.
 
                                     <@td class="${styles.grid_large!}2">${offPayTitle}</@td>
                                     <@td colspan="3">
-                                      <#-- Scipio: only show alert after placed and not printable -->
+                                      <#-- SCIPIO: only show alert after placed and not printable -->
                                       <#if orderHeader?has_content && !printable>
                                         <@alert type="info" closable=false>
                                           ${offPayDesc}
@@ -198,7 +198,7 @@ under the License.
                             </#if>
                         </#if>
 
-                        <#-- Scipio: changed: <#elseif paymentMethods?has_content>-->
+                        <#-- SCIPIO: changed: <#elseif paymentMethods?has_content>-->
                         <#if paymentMethods?has_content>
                             <#list paymentMethods as paymentMethod>
                                 <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
@@ -223,7 +223,7 @@ under the License.
 
                                 <#-- Gift Card info -->
                                 <#if "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
-                                    <#-- Scipio: TODO: SHOW GIFT CARD BALANCE -->
+                                    <#-- SCIPIO: TODO: SHOW GIFT CARD BALANCE -->
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}
                                           <@paymentMethodAmount paymentMethodId=paymentMethod.paymentMethodId/></@td>
@@ -268,7 +268,8 @@ under the License.
                                 </@tr>
                             </#if>
                         </#if>
-                        <#-- extra payment information (Scipio: This from separated out from billing account) -->
+                        <#-- extra payment information 
+                            SCIPIO: This form separated out from billing account -->
                         <#if paymentMethods?has_content || paymentMethodType?has_content>
                           <#if customerPoNumberSet?has_content>
                             <@tr>
@@ -337,7 +338,7 @@ under the License.
                                 </@td>
                             </@tr>
                               
-                          <#-- Scipio: Make no sense if no shipping! -->    
+                          <#-- SCIPIO: Make no sense if no shipping! -->    
                           <#if (shipmentMethodType.shipmentMethodTypeId)?has_content && shipmentMethodType.shipmentMethodTypeId != "NO_SHIPPING">
                             <#-- tracking number -->
                             <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
@@ -400,7 +401,7 @@ under the License.
                                 <#assign isGift = cart.getIsGift(groupIdx)!"N">
                                 <#assign giftMessage = cart.getGiftMessage(groupIdx)!>
                               </#if>
-                              <#-- Scipio: Only show if gift -->
+                              <#-- SCIPIO: Only show if gift -->
                               <#if (isGift!"N") == "Y">
                                 <#if ((productStore.showCheckoutGiftOptions)!) != "N">
                                 <@tr>

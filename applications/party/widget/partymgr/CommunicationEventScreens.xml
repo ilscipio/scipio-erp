@@ -20,82 +20,8 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="CommonCommunicationEventDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#CommEvent" />
-                <set field="activeMainMenuItem" value="comm"/>
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
-                
-                <service service-name="partyBasePermissionCheck" result-map="permResult">
-                    <field-map field-name="mainAction" value="VIEW"/>
-                </service>
-                <set field="hasBasePermission" from-field="permResult.hasPermission"/>   
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://party/widget/partymgr/CommonScreens.xml"/>
-                    </decorator-section>
-                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}">
-                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="CommonMyCommunicationEventDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#CommEvent" />
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
-                
-                <service service-name="partyBasePermissionCheck" result-map="permResult">
-                    <field-map field-name="mainAction" value="VIEW"/>
-                </service>
-                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://party/widget/partymgr/CommonScreens.xml"/>
-                    </decorator-section>
-                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}">
-                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    <!-- SCIPIO: NOTE: The old parameters.communicationEventDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
 
     <screen name="PendingCommunications">
         <section>
@@ -109,7 +35,7 @@ under the License.
                 <set field="entityName" value="CommunicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -172,7 +98,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -297,7 +223,7 @@ under the License.
                 <set field="activeSubMenuItem" value="ListUnknownPartyComms"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -325,7 +251,7 @@ under the License.
                 <set field="entityName" value="CommunicationEventAndOrder"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -355,12 +281,11 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCommunicationEvents"/>
-                <set field="activeMainMenuItem" value="comm"/>
-                <set field="activeSubMenuItem" value="Find"/>
+                <!--<set field="activeSubMenuItem" value="Find"/>-->
                 <set field="entityName" value="CommunicationEventAndRole"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -400,7 +325,7 @@ under the License.
             <widgets>
                 <section>
                     <widgets>
-                        <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                        <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <include-screen name="commOverview"/>
                             </decorator-section>
@@ -526,7 +451,7 @@ under the License.
                 <set field="contactMechIdTo" from-field="parameters.contactMechIdTo" default-value="${communicationEvent.contactMechIdTo}"/>
             </actions>
             <widgets>
-                <decorator-screen name="Common${my}CommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="Common${my}CommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="editCommEvent"/>
                     </decorator-section>
@@ -542,7 +467,7 @@ under the License.
                 <set field="my" from-field="parameters.my"/>
             </actions>
             <widgets>
-                <decorator-screen name="Common${my}CommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="Common${my}CommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet  title="${uiLabelMap.PartyEditCustomerRequest}">
                             <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="EditRequestFromCommEvent"/>
@@ -570,7 +495,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommEventRoles}">
                             <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommRoles"/>
@@ -600,7 +525,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                             <screenlet title="${uiLabelMap.PartyCommEventPurposes}">
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="AddEventPurpose"/>
@@ -624,7 +549,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommWorkEfforts}">
                             <container style="button-bar">
@@ -653,7 +578,7 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommWorkEfforts}">
                             <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="AddCommEventWorkEffort"/>
@@ -673,7 +598,7 @@ under the License.
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommWorkEfforts}">
                             <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="AddCommEventWorkEffort"/>
@@ -687,7 +612,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCommContent"/>
-                <set field="activeMainMenuItem" value="comm"/>
                 <set field="activeSubMenuItem" value="CommContent"/>
                 <set field="parameters.partyId" value="${parameters.partyId}" default-value="${userLogin.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -696,7 +620,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen  name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen  name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -726,7 +650,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyNewCommContent"/>
-                <set field="activeMainMenuItem" value="comm"/>
                 <set field="activeSubMenuItem" value="CommContent"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -735,7 +658,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen  name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen  name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -772,7 +695,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen  name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen  name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -839,7 +762,7 @@ under the License.
                 <!-- <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" /> -->
             </actions>
             <widgets>
-                <decorator-screen  name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="MyCommunicationEvents"/>
                     </decorator-section>
@@ -992,7 +915,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommEventOrders}">
                             <include-form name="ListCommOrders" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
@@ -1017,7 +940,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommEventProducts}">
                             <include-form name="ListCommProducts" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
@@ -1142,7 +1065,7 @@ under the License.
                                             <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                             <section>
                                                 <actions>          
-                                                    <!-- Scipio: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
+                                                    <!-- SCIPIO: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
                                                     <set field="showProgress" type="Boolean" value="false" /> 
                                                     <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=EMAIL_COMMUNICATION&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
                                                     <set field="progressOptions" value="{}" />
@@ -1200,7 +1123,7 @@ under the License.
                                             <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                             <section>
                                                 <actions>          
-                                                    <!-- Scipio: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
+                                                    <!-- SCIPIO: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
                                                     <set field="showProgress" type="Boolean" value="false" /> 
                                                     <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=COMMENT_NOTE&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
                                                     <set field="progressOptions" value="{}" />

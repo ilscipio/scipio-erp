@@ -65,8 +65,16 @@ under the License.
       <@tr><@td>&nbsp;</@td></@tr>
       <@tr>
         <@td>&nbsp;</@td>
-        <#-- Scipio: FIXME: This must be reviewed for escaping issues, real security risk here -->
-        <@td>${htmlContentString(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}
+        
+        <@td>
+            <#-- SCIPIO: NOTE: 2016-10-20: this content markup is subject to serious security concerns.
+                Strict filter is used, and whether any markup is allowed at all is dependent on
+                and centralized in the escapeVal call. -->
+            <#if (communicationEvent.content)??>
+              ${escapeVal(communicationEvent.content, 'htmlmarkup', {"allow":"external"})}
+            <#else>
+              ${uiLabelMap.EcommerceEmptyBody}
+            </#if>
         </@td>
       </@tr>
     </@table>

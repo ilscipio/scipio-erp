@@ -21,7 +21,6 @@ package org.ofbiz.widget.model;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,6 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -37,22 +35,15 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
-import org.ofbiz.webapp.ftl.EscapingModel;
-import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
+import org.ofbiz.webapp.ftl.ExtendedWrapper;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
 import org.w3c.dom.Element;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.CollectionModel;
-import freemarker.ext.beans.StringModel;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import freemarker.template.Version;
 
 /**
  * Widget Library - Screen model HTML class.
@@ -62,51 +53,12 @@ public class HtmlWidget extends ModelScreenWidget {
     public static final String module = HtmlWidget.class.getName();
 
     private static final UtilCache<String, Template> specialTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.general", 0, 0, false);
-    protected static Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version));
+    protected static final Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version, "html")); // SCIPIO: generalized, must pass "html"
 
-    // not sure if this is the best way to get FTL to use my fancy MapModel derivative, but should work at least...
-    public static class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapper { // SCIPIO: Now implements EscapingObjectWrapper for identification purposes
-        public ExtendedWrapper(Version version) {
-            super(version);
-        }
-
-        @Override
-        public TemplateModel wrap(Object object) throws TemplateModelException {
-            // This StringHtmlWrapperForFtl option seems to be the best option
-            // and handles most things without causing too many problems
-            if (object instanceof String) {
-                return new StringHtmlWrapperForFtl((String) object, this);
-            } else if (object instanceof Collection && !(object instanceof Map)) {
-                // An additional wrapper to ensure ${aCollection} is properly encoded for html
-                return new CollectionHtmlWrapperForFtl((Collection<?>) object, this);
-            }
-            return super.wrap(object);
-        }
-    }
-
-    public static class StringHtmlWrapperForFtl extends StringModel implements EscapingModel { // SCIPIO: special interface
-        public StringHtmlWrapperForFtl(String str, BeansWrapper wrapper) {
-            super(str, wrapper);
-        }
-        @Override
-        public String getAsString() {
-            return UtilCodec.getEncoder("html").encode(super.getAsString());
-        }
-    }
-
-    public static class CollectionHtmlWrapperForFtl extends CollectionModel implements EscapingModel { // SCIPIO: special interface
-
-        public CollectionHtmlWrapperForFtl(Collection<?> collection, BeansWrapper wrapper) {
-            super(collection, wrapper);
-        }
-
-        @Override
-        public String getAsString() {
-            return UtilCodec.getEncoder("html").encode(super.getAsString());
-        }
-
-    }
-
+    // SCIPIO: NOTE: 2016-10-17: Exceptionally, the Ofbiz ExtendedWrapper that was present here
+    // was so generic and needed elsewhere, that it has been MOVED to:
+    // org.ofbiz.webapp.ftl.ExtendedWrapper
+    
     // End Static, begin class section
 
     private final List<ModelScreenWidget> subWidgets;
@@ -132,6 +84,15 @@ public class HtmlWidget extends ModelScreenWidget {
         }
     }
 
+    /**
+     * SCIPIO: Gets the Freemarker config used by this class to render HTML templates.
+     * <p>
+     * It <em>may</em> need to be shared.
+     */
+    public static Configuration getFtlConfig() {
+        return specialConfig;
+    }
+    
     public List<ModelScreenWidget> getSubWidgets() {
         return subWidgets;
     }

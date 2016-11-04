@@ -23,7 +23,7 @@ under the License.
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://common/webcommon/WEB-INF/security-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
-    <!-- Scipio: FIXME?: The content controller may need to be split up so as not to have to
+    <!-- SCIPIO: FIXME?: The content controller may need to be split up so as not to have to
         include its full main controller here (redefinitions, breakage/security risks) -
         content has both its own public interface and a common interface for other apps, 
         which are not (should not be assumed) equal. NOTE: This was a stock include. -->

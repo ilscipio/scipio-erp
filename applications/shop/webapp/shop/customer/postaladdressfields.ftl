@@ -18,9 +18,9 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Scipio: TODO?: Review if can merge with order/genericaddress.ftl -->
+<#-- SCIPIO: TODO?: Review if can merge with order/genericaddress.ftl -->
 
-<#-- Scipio: migrated from editcontactmech.ftl -->
+<#-- SCIPIO: migrated from editcontactmech.ftl -->
 
 <#if !pafParams??>
   <#assign pafParams = parameters>
@@ -43,9 +43,9 @@ under the License.
 
 jQuery(document).ready(function() {
 
-    <#assign fieldIdPrefixJs = escapePart(fieldIdPrefix, 'js')>
+    <#assign fieldIdPrefixJs = escapeVal(fieldIdPrefix, 'js')>
 
-    <#-- Scipio: NOTE: the container IDs can be omitted because the js doesn't make proper use of them anyhow -->
+    <#-- SCIPIO: NOTE: the container IDs can be omitted because the js doesn't make proper use of them anyhow -->
     <#-- TODO?: getAssociatedStateList may be out of date compared to getDependentDropdownValues?  -->
     var errorMsgContainerId = null;
     var containerId = null;
@@ -60,13 +60,13 @@ jQuery(document).ready(function() {
 
 </#if>
 
-  <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="${fieldNamePrefix}toName" value=(pafParams["${fieldNamePrefix}toName"]!(postalAddressData.toName)!(pafFallbacks.toName)!) />
-  <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(pafParams["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) containerClass="+${styles.field_extra!}"/>
-  <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="${fieldNamePrefix}address1" value=(pafParams["${fieldNamePrefix}address1"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
-  <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="${fieldNamePrefix}address2" value=(pafParams["${fieldNamePrefix}address2"]!(postalAddressData.address2)!(pafFallbacks.address2)!) />
-  <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(pafParams["${fieldNamePrefix}city"]!(postalAddressData.city)!(pafFallbacks.city)!) />    
-  <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(pafParams["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
-  <@field type="select" label="${uiLabelMap.CommonCountry}" name="${fieldNamePrefix}countryGeoId" id="${fieldIdPrefix}countryGeoId">
+  <@field type="input" label=uiLabelMap.PartyToName size="30" maxlength="60" name="${fieldNamePrefix}toName" value=(pafParams["${fieldNamePrefix}toName"]!(postalAddressData.toName)!(pafFallbacks.toName)!) />
+  <@field type="input" label=uiLabelMap.PartyAttentionName size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(pafParams["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) containerClass="+${styles.field_extra!}"/>
+  <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true size="30" maxlength="30" name="${fieldNamePrefix}address1" value=(pafParams["${fieldNamePrefix}address1"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
+  <@field type="input" label=uiLabelMap.PartyAddressLine2 size="30" maxlength="30" name="${fieldNamePrefix}address2" value=(pafParams["${fieldNamePrefix}address2"]!(postalAddressData.address2)!(pafFallbacks.address2)!) />
+  <@field type="input" label=uiLabelMap.PartyCity required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(pafParams["${fieldNamePrefix}city"]!(postalAddressData.city)!(pafFallbacks.city)!) />    
+  <@field type="input" label=uiLabelMap.PartyZipCode required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(pafParams["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
+  <@field type="select" label=uiLabelMap.CommonCountry name="${fieldNamePrefix}countryGeoId" id="${fieldIdPrefix}countryGeoId">
       <#if pafParams["${fieldNamePrefix}countryGeoId"]??>    
         <#assign currentCountryGeoId = pafParams["${fieldNamePrefix}countryGeoId"]>
       <#elseif (postalAddress??) && (postalAddress.countryGeoId??)>
@@ -78,7 +78,7 @@ jQuery(document).ready(function() {
         <#assign currentCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">-->
         <#assign currentCountryGeoId = "">
       </#if>
-    <#-- Scipio: there's no reason for this; allow countries ftl to select the right one
+    <#-- SCIPIO: there's no reason for this; allow countries ftl to select the right one
       <option selected="selected" value="${currentCountryGeoId}">
       <#assign countryGeo = delegator.findOne("Geo",{"geoId":currentCountryGeoId}, false)>
         ${countryGeo.get("geoName",locale)}
@@ -87,8 +87,8 @@ jQuery(document).ready(function() {
     -->
       <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":currentCountryGeoId}/>   
   </@field>
-  <@field type="select" label="${uiLabelMap.PartyState}" name="${fieldNamePrefix}stateProvinceGeoId" id="${fieldIdPrefix}stateProvinceGeoId">
-    <#-- Scipio: NOTE: This was empty in stock; supposed to load via JS; for now, put the current if this is empty -->
+  <@field type="select" label=uiLabelMap.PartyState name="${fieldNamePrefix}stateProvinceGeoId" id="${fieldIdPrefix}stateProvinceGeoId">
+    <#-- SCIPIO: NOTE: This was empty in stock; supposed to load via JS; for now, put the current if this is empty -->
     <#if defaultStateProvinceGeoId?has_content>
       <option value="${defaultStateProvinceGeoId}">${defaultStateProvinceGeoId}</option>
     </#if>

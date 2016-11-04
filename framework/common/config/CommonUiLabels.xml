@@ -2983,7 +2983,7 @@
         <value xml:lang="zh">显示${lowCount} - ${highCount}，共${total}</value>
         <value xml:lang="zh_TW">顯示${lowCount} - ${highCount},共${total}</value>
     </property>
-    <property key="CommonDisplayingShort"> <!-- Scipio: new -->
+    <property key="CommonDisplayingShort"> <!-- SCIPIO: new -->
         <value xml:lang="ar">${lowCount} إلى ${highCount} من ${total}</value>
         <value xml:lang="cs">${lowCount} - ${highCount} z ${total}</value>
         <value xml:lang="de">${lowCount} - ${highCount} von ${total}</value>
@@ -8679,7 +8679,7 @@
         <value xml:lang="zh_CN">人员</value>
         <value xml:lang="zh_TW">人員</value>
     </property>
-    <!-- Scipio: TODO: Localize (was this from stock?) -->
+    <!-- SCIPIO: TODO: Localize (was this from stock?) -->
     <property key="CommonPersons">
         <value xml:lang="de">Personen</value>
         <value xml:lang="en">Persons</value>
@@ -15556,7 +15556,7 @@
         <value xml:lang="en">Document</value>
         <value xml:lang="fr">Document</value>
     </property>
-    <!-- Scipio: Default lookup titles for xxxAction field names. -->
+    <!-- SCIPIO: Default lookup titles for xxxAction field names. -->
     <property key="FormFieldTitle_addAction">
         <value xml:lang="ar">إضافة</value>
         <value xml:lang="cs">Přidat</value>
@@ -16129,7 +16129,7 @@
         <value xml:lang="zh">${dateLabel} (${dateFormatString})</value>
         <value xml:lang="zh_TW">${dateLabel} (${dateFormatString})</value>
     </property>
-    <!-- Scipio: TODO: better localize -->
+    <!-- SCIPIO: TODO: better localize -->
     <property key="CommonNoRecordFoundSentence">
         <value xml:lang="ar">لم يتم العثور على سجلات</value>
         <value xml:lang="da">Der er ikke fundet nogen registreringer/</value>
@@ -16150,7 +16150,7 @@
         <value xml:lang="zh">没有找到记录</value>
         <value xml:lang="zh_TW">沒有找到記錄</value>
     </property>
-    <!-- Scipio: TODO: localize -->
+    <!-- SCIPIO: TODO: localize -->
     <property key="CommonMedia">
         <value xml:lang="de">Medien</value>
         <value xml:lang="en">Media</value>
@@ -16278,5 +16278,47 @@
     <property key="CommonNoRowSelected">
         <value xml:lang="de">Keine Zeile ausgewählt</value>
         <value xml:lang="en">No row selected</value>
+    </property>
+    <property key="CommonDev">
+        <value xml:lang="de">Dev</value>
+        <value xml:lang="en">Dev</value>
+    </property>
+    <property key="CommonDevDocs">
+        <value xml:lang="de">Dev Docs</value>
+        <value xml:lang="en">Dev Docs</value>
+    </property>
+    <property key="CommonDeveloper">
+        <value xml:lang="de">Entwickler</value>
+        <value xml:lang="en">Developer</value>
+    </property>
+    <property key="CommonDevelopment">
+        <value xml:lang="en">Development</value>
+        <value xml:lang="es">Desarrollo</value>
+        <value xml:lang="fr">Développement</value>
+        <value xml:lang="it">Sviluppo</value>
+        <value xml:lang="ja">開発</value>
+        <value xml:lang="nl">Ontwikkeling</value>
+        <value xml:lang="ro">Dezvoltare</value>
+        <value xml:lang="ru">Совершенствование</value>
+        <value xml:lang="th">การพัฒนา</value>
+        <value xml:lang="vi">Phát triển</value>
+        <value xml:lang="zh">开发</value>
+        <value xml:lang="zh_TW">開發</value>
+    </property>
+    <property key="CommonReload">
+        <value xml:lang="de">Laden</value>
+        <value xml:lang="en">Reload</value>
+        <value xml:lang="es">Recargar</value>
+        <value xml:lang="fr">Recharger</value>
+        <value xml:lang="pt_BR">Recarregar</value>
+        <value xml:lang="ru">Перезагрузка</value>
+    </property>
+    <property key="CommonSideBar">
+        <value xml:lang="de">SideBar</value>
+        <value xml:lang="en">SideBar</value>
+    </property>
+    <property key="CommonOff">
+        <value xml:lang="de">Aus</value>
+        <value xml:lang="en">Off</value>
     </property>
 </resource>

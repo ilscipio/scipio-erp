@@ -38,11 +38,11 @@ under the License.
     ];*/
     /* End Example */
 
-    var labelsAsText = "${labelsText}";
+    var labelsAsText = "${escapeVal(labelsText, 'js')}";
     var labels = [];
     labels = labelsAsText.split(",");
 
-    var dataAsText = "${dataText}";
+    var dataAsText = "${escapeVal(dataText, 'js')}";
     var chartData = [];
     chartData = dataAsText.split(',');
 

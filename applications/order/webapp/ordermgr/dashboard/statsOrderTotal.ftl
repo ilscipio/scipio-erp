@@ -33,11 +33,11 @@ under the License.
 <@section title=title!"">
   <@chart type=chartType library=library xlabel=xlabel ylabel=ylabel label1=label1 label2=label2>
     <#if ((currData.isEmpty())!true) == false>
-        <#list currData.keySet() as key>
+        <#list mapKeys(currData) as key>
           <#if chartType=="bar" || chartType=="line">
-            <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].count)!0}" title="${key}"/>
+            <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].count)!0}" title=key/>
           <#else>
-            <@chartdata value="${(currData[key][chartValue])!0}" title="${key}"/>
+            <@chartdata value="${(currData[key][chartValue])!0}" title=key/>
           </#if>
         </#list>
     </#if>  

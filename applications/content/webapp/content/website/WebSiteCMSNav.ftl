@@ -152,43 +152,43 @@ var rawdata_errors = [
                     'rename' : false,
                     'remove' : false,
                     'create1' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceLongText}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceLongText, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'ELECTRONIC_TEXT');
                         }
                     },
                     'create2' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceShortText}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceShortText, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'SHORT_TEXT');
                         }
                     },
                     'create3' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceUrlResource}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceUrlResource, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'URL_RESOURCE');
                         }
                     },
                     'create4' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentDataResourceImage}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${uiLabelMap.ContentDataResourceImage}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'IMAGE_OBJECT');
                         }
                     },
                     'create5' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceVideo}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceVideo, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'VIDEO_OBJECT');
                         }
                     },
                     'create6' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceAudio}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceAudio, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'AUDIO_OBJECT');
                         }
                     },
                     'create7' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceOther}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceOther, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'OTHER_OBJECT');
                         }
@@ -217,43 +217,43 @@ var rawdata_errors = [
                     'rename' : false,
                     'remove' : false,
                     'create1' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceLongText}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceLongText, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'ELECTRONIC_TEXT');
                         }
                     },
                     'create2' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceShortText}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceShortText, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'SHORT_TEXT');
                         }
                     },
                     'create3' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceUrlResource}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceUrlResource, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'URL_RESOURCE');
                         }
                     },
                     'create4' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentDataResourceImage}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${uiLabelMap.ContentDataResourceImage}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'IMAGE_OBJECT');
                         }
                     },
                     'create5' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceVideo}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceVideo, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'VIDEO_OBJECT');
                         }
                     },
                     'create6' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceAudio}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceAudio, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'AUDIO_OBJECT');
                         }
                     },
                     'create7' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceOther}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceOther, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'OTHER_OBJECT');
                         }
@@ -282,43 +282,43 @@ var rawdata_errors = [
                     'rename' : false,
                     'remove' : false,
                     'create1' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceLongText}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceLongText, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'ELECTRONIC_TEXT');
                         }
                     },
                     'create2' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceShortText}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceShortText, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'SHORT_TEXT');
                         }
                     },
                     'create3' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceUrlResource}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceUrlResource, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'URL_RESOURCE');
                         }
                     },
                     'create4' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentDataResourceImage}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${uiLabelMap.ContentDataResourceImage}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'IMAGE_OBJECT');
                         }
                     },
                     'create5' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceVideo}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceVideo, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'VIDEO_OBJECT');
                         }
                     },
                     'create6' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceAudio}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceAudio, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'AUDIO_OBJECT');
                         }
                     },
                     'create7' : {
-                        'label' : "${uiLabelMap.CommonNew} ${uiLabelMap.ContentResourceOther}",
+                        'label' : "${escapeVal(uiLabelMap.CommonNew, 'js')} ${escapeVal(uiLabelMap.ContentResourceOther, 'js')}",
                         'action' : function(obj) {
                             callDocument(true, obj.attr('id'), '', 'OTHER_OBJECT');
                         }
@@ -359,7 +359,7 @@ var rawdata_errors = [
             type: 'POST',
             data: ctx,
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#cmscontent').html(msg);
@@ -393,7 +393,7 @@ function callMetaInfo(contentId) {
             type: 'POST',
             data: ctx,
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#cmscontent').html(msg);
@@ -411,7 +411,7 @@ function callMetaInfo(contentId) {
             type: 'POST',
             data: ctx,
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#cmscontent').html(msg);
@@ -448,7 +448,7 @@ function callMetaInfo(contentId) {
                 type: 'POST',
                 data: jQuery(form).serialize(),
                 error: function(msg) {
-                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonUnspecifiedErrorOccurred}");
+                    showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonUnspecifiedErrorOccurred, 'js')}");
                 },
                 success: function(msg) {
                     callPathAlias(contentId);
@@ -466,7 +466,7 @@ function callMetaInfo(contentId) {
                 type: 'POST',
                 data: {"pathAlias" : pathAlias, "webSiteId" : webSiteId},
                 error: function(msg) {
-                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonUnspecifiedErrorOccurred} : " + msg);
+                    showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonUnspecifiedErrorOccurred, 'js')} : " + msg);
                 },
                 success: function(msg) {
                     callPathAlias(contentId);
@@ -490,7 +490,7 @@ function callMetaInfo(contentId) {
                     }
                 },
                 error: function(msg) {
-                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonErrorSubmittingForm} : " + msg);
+                    showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonErrorSubmittingForm, 'js')} : " + msg);
                 }
             });
         }

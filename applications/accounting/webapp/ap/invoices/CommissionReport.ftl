@@ -20,7 +20,7 @@ under the License.
 <#if commissionReportList?has_content>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}") text=uiLabelMap.AccountingInvoicePDF target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+      <@menuitem type="link" href=makeOfbizUrl("CommissionReport.pdf?isSearch=Y&productId=${parameters.productId!}&partyId=${parameters.partyId!}&fromDate=${parameters.fromDate!}&thruDate=${parameters.thruDate!}") text=uiLabelMap.AccountingInvoicePDF target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
     </@menu>
   </#macro>
   <@section menuContent=menuContent>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.SfaMergingFollowing} ${uiLabelMap.SfaMergeLeads}">
+<@section title="${rawLabel('SfaMergingFollowing')} ${rawLabel('SfaMergeLeads')}">
   <form method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
   <@fields type="default-manual">
     <#if contactInfoList?has_content >

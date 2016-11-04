@@ -32,7 +32,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shoppinglist/EditShoppingList.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

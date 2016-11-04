@@ -95,11 +95,7 @@ under the License.
                     <widgets/>
                 </section>
                 <!--<include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>-->
-                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
+                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" />
             </widgets>
         </section>
     </screen>

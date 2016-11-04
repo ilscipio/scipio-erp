@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Scipio: WARN: 
+<#-- SCIPIO: WARN: 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 This template is no longer used by shop. If core fixes are applied to this file,
 they may need to be duplicated to:
@@ -25,7 +25,7 @@ they may need to be duplicated to:
 -->
 
 <#include "ordercommon.ftl">
-<#-- Scipio: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
+<#-- SCIPIO: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
 <#-- TODO : Need formatting -->
 <@script>
 function submitForm(form, mode, value) {
@@ -94,7 +94,7 @@ var issuerId = "";
  
 <#assign cart = shoppingCart! />
 
-<@section title="${uiLabelMap.OrderHowShallYouPay}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+<@section title="${rawLabel('OrderHowShallYouPay')}?"><#-- SCIPIO: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
 
     <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
         <input type="hidden" name="checkoutpage" value="payment" />
@@ -103,7 +103,7 @@ var issuerId = "";
             <#-- Payment Method Selection -->
 
             <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-              <#macro payMethContent args={}><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#macro><#-- Scipio: Use full so clearer: OrderMoneyOrder -->
+              <#macro payMethContent args={}><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#macro><#-- SCIPIO: Use full so clearer: OrderMoneyOrder -->
               <@checkoutInvField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId) labelContent=payMethContent/>
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
@@ -138,7 +138,7 @@ var issuerId = "";
               <@alert type="warning">${uiLabelMap.AccountingNoPaymentMethods}.</@alert>
             <#else>
               <#list paymentMethodList as paymentMethodLocal>
-                <#-- Scipio: workaround for access from macros -->
+                <#-- SCIPIO: workaround for access from macros -->
                 <#assign paymentMethod = paymentMethodLocal>
               
                 <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
@@ -165,7 +165,7 @@ var issuerId = "";
                     <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>
                     <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                     <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                    <#assign fieldValue><#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
+                    <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
                     <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
                   </#macro>
                   <@checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent />
@@ -177,7 +177,7 @@ var issuerId = "";
                       <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingCreditCard}: ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</label>
                       <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                       <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                      <#assign fieldValue><#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
+                      <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
                       <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
                     </#macro>
                     <@checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent/>
@@ -226,9 +226,9 @@ var issuerId = "";
             </#if>
 
             <@menu type="button">
-                <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
-                <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
-                <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=EFT&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
+                <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
+                <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
+                <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=EFT&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
             </@menu>
 
             <#-- End Payment Method Selection -->

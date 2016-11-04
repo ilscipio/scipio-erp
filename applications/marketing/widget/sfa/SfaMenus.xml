@@ -42,26 +42,55 @@ under the License.
         <menu-item name="Calendar" title="${uiLabelMap.SfaCalendar}"><link target="Calendar"/></menu-item>
         <menu-item name="Analytics" title="${uiLabelMap.SfaAnalytics}"><link target="AnalyticsSales"/></menu-item>
         <menu-item name="Settings" title="${uiLabelMap.SfaSettings}"><link target="DataSources"/></menu-item>
+
+        <menu-item name="Contacts" title="${uiLabelMap.SfaContacts}">
+            <condition>
+                <not><if-empty field="_NON_EXISTENT_FIELD_"/></not>
+            </condition>
+            <link target="FindContacts"/>
+        </menu-item>
+        <menu-item name="Leads" title="${uiLabelMap.SfaLeads}">
+            <condition>
+                <not><if-empty field="_NON_EXISTENT_FIELD_"/></not>
+            </condition>
+            <link target="FindLeads"/>
+        </menu-item>
+        <menu-item name="Opportunities" title="${uiLabelMap.SfaOpportunities}">
+            <condition>
+                <not><if-empty field="_NON_EXISTENT_FIELD_"/></not>
+            </condition>
+            <link target="FindSalesOpportunity"/>
+        </menu-item>
     </menu>
-    <menu name="SfaAppSideBar" title="${uiLabelMap.SfaManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="SfaAppSideBar" title="${uiLabelMap.SfaManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="SfaAppBar" recursive="full" />
         <menu-item name="Services">
             <sub-menu name="Services" include="component://marketing/widget/ServicesMenus.xml#ServicesSideBar"/>
         </menu-item>
         <menu-item name="Marketing">
-            <!-- TODO <sub-menu name="" include=""/> -->
+            <sub-menu name="Marketing" include="component://marketing/widget/MarketingMenus.xml#MarketingSideBar"/>
         </menu-item>
         <menu-item name="Sales">
             <sub-menu name="Sales" include="component://marketing/widget/SalesMenus.xml#SalesSideBar"/>
         </menu-item>
         <menu-item name="Calendar">
-            <!-- TODO <sub-menu name="" include=""/> -->
+            <!-- TODO? <sub-menu name="" include=""/> -->
         </menu-item>
         <menu-item name="Analytics">
             <sub-menu name="Analytics" include="component://marketing/widget/AnalyticsMenus.xml#AnalyticsSideBar"/>
         </menu-item>
         <menu-item name="Settings">
-            <!-- TODO <sub-menu name="" include=""/> -->
+            <sub-menu name="DataSource" include="component://marketing/widget/DataSourceMenus.xml#DataSourceSideBar"/>
+        </menu-item>
+        <menu-item name="Contacts">
+            <sub-menu name="Contact" include="ContactSideBar"/>
+        </menu-item>
+        <menu-item name="Leads">
+            <sub-menu name="Lead" include="LeadSideBar"/>
+        </menu-item>
+        <menu-item name="Opportunities">
+            <sub-menu name="Opportunity" include="OpportunitySideBar"/>
         </menu-item>
     </menu>
     
@@ -89,7 +118,7 @@ under the License.
         <include-elements menu-name="SfaAppSideBar" recursive="includes-only" />
     </menu>
     
-    <menu name="AccountSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="AccountSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="NewAccounts" title="${uiLabelMap.PageTitleCreateAccount}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewAccount"/>
@@ -150,7 +179,7 @@ under the License.
         <include-elements menu-name="ContactTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="ContactSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="ContactSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="NewContact" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewContact"/>
@@ -195,7 +224,7 @@ under the License.
         <menu-item name="find" title="${uiLabelMap.CommonFind}"><link target="Events"/></menu-item>
     </menu>
     
-    <menu name="EventSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="EventSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="NewEvent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}"><link target="EditEvent"/></menu-item>
     </menu>
@@ -244,7 +273,7 @@ under the License.
         <include-elements menu-name="LeadTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="LeadSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="LeadSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="NewLead" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewLead"/>
@@ -330,7 +359,7 @@ under the License.
         <include-elements menu-name="OpportunityTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="OpportunitySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="OpportunitySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="NewCommEvent" title="${uiLabelMap.PartyNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="/partymgr/control/NewDraftCommunicationEvent" url-mode="inter-app" link-type="hidden-form">

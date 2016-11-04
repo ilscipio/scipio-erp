@@ -44,20 +44,40 @@ under the License.
         <param-name>mainDecoratorLocation</param-name>
         <param-value>component://webtools/widget/CommonScreens.xml</param-value>
     </context-param>
-    <!-- SCIPIO: need security decorator -->
-    <context-param>
-        <description>The location of the security-decorator screen to use for this webapp; referred to as a context variable
-            in screen def XML files.
-        </description>
-        <param-name>securityDecoratorLocation</param-name>
-        <param-value>component://webtools/widget/CommonScreens.xml</param-value>
-    </context-param>
 
   <context-param>
     <param-name>GeronimoMultiOfbizInstances</param-name>
     <param-value>true</param-value>
     <description>This is only used in case of Geronimo or WASCE using OFBiz multi-instances. It allows to retrieve ofbiz.home value set in JVM env</description>
   </context-param>
+  
+    <!-- SCIPIO: docs redirects (FIXME?: heavy... but works)-->
+    <filter>
+        <display-name>WebDocsRedirect</display-name>
+        <filter-name>WebDocsRedirect</filter-name>
+        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
+        <init-param>
+            <param-name>matchPattern</param-name>
+            <!-- never access ViewTemplateApiDocPage directly. redirect /admin/docs and /admin/docs/templating -->
+            <param-value>^/admin/(control/ViewTemplateApiDocPage(/.*)?|docs(/?|/templating/?))([?;#].*)?$</param-value>
+        </init-param>
+        <init-param>
+            <param-name>matchFullPath</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>replacement</param-name>
+            <param-value>/admin/docs/templating/ftl/lib/standard/htmlTemplate.html</param-value>
+        </init-param>
+        <init-param>
+            <param-name>usePermanentRedirect</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebDocsRedirect</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
   
     <filter>
         <display-name>ContextFilter</display-name>
@@ -70,7 +90,7 @@ under the License.
         <init-param>
             <param-name>allowedPaths</param-name>
             <param-value>
-                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css
+                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs
             </param-value>
         </init-param>
         <init-param>
@@ -91,7 +111,6 @@ under the License.
         <filter-name>ContextFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
 
     <listener>
         <listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class>
@@ -112,6 +131,16 @@ under the License.
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/control/*</url-pattern>
+    </servlet-mapping>
+    
+    <!-- SCIPIO: Templating API documentation forwarding page -->
+    <servlet>
+        <servlet-name>templateApiDocPage.jsp</servlet-name>
+        <jsp-file>/docs/templating/ftl/lib/templateApiDocPage.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>templateApiDocPage.jsp</servlet-name>
+        <url-pattern>/docs/templating/ftl/lib/*</url-pattern>
     </servlet-mapping>
 
     <session-config>

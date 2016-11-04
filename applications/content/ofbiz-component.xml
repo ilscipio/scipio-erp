@@ -34,7 +34,7 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/MimeTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/MimeTypeTemplate.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/DataCategoryData.xml"/>
-    <!-- Scipio: Unneeded
+    <!-- SCIPIO: Unneeded
     <entity-resource type="data" reader-name="seed" loader="main" location="data/BlogSeedData.xml"/>
     -->
     <entity-resource type="data" reader-name="seed" loader="main" location="data/TemplateData.xml"/>
@@ -49,14 +49,14 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WebtoolsHelpData.xml"/>
 
     <entity-resource type="data" reader-name="demo" loader="main" location="data/UsersDemoData.xml"/>
-    <!-- Scipio: Unneeded
+    <!-- SCIPIO: Unneeded
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBlogPubPtData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBlogUsersData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBlogEntryData.xml"/>
     -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/WebSitePublishPointData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CompDocData.xml"/>
-    <!-- Scipio: Unneeded
+    <!-- SCIPIO: Unneeded
     <entity-resource type="data" reader-name="demo" loader="main" location="data/ForumDemoData.xml"/>
     -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
@@ -70,7 +70,7 @@ under the License.
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="mca" loader="main" location="servicedef/mca.xml"/>
     
-    <!-- Scipio: NOTE: Even if hidden, this webapp must never be removed because it hosts some
+    <!-- SCIPIO: NOTE: Even if hidden, this webapp must never be removed because it hosts some
         essential application-agnostic content access requests (such as streaming) part of common rendering -->
     <webapp name="content"
         title="Content"

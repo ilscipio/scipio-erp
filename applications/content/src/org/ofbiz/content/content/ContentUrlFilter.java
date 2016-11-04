@@ -104,7 +104,13 @@ public class ContentUrlFilter extends ContextFilter {
         chain.doFilter(request, response);
     }
     
-    public static String makeContentAltUrl(HttpServletRequest request, HttpServletResponse response, String contentId, String viewContent) {
+    /**
+     * Builds an alt content URL.
+     * <p>
+     * SCIPIO: added a urlDecode boolean and changed the default behavior to NOT url-decode (FALSE);
+     * it should be done before storing in the database - if/when needed.
+     */
+    public static String makeContentAltUrl(HttpServletRequest request, HttpServletResponse response, String contentId, String viewContent, Boolean urlDecode) {
         if (UtilValidate.isEmpty(contentId)) {
             return null;
         }
@@ -121,7 +127,12 @@ public class ContentUrlFilter extends ContextFilter {
                     .queryFirst();
             if (contentAssocDataResource != null) {
                 url = contentAssocDataResource.getString("drObjectInfo");
-                url = UtilCodec.getDecoder("url").decode(url);
+                
+                // SCIPIO: by default, don't url-decode here anymore.
+                if (Boolean.TRUE.equals(urlDecode)) {
+                    url = UtilCodec.getUrlDecoder().decode(url);
+                }
+                
                 String mountPoint = request.getContextPath();
                 if (!(mountPoint.equals("/")) && !(mountPoint.equals(""))) {
                     url = mountPoint + url;
@@ -138,6 +149,10 @@ public class ContentUrlFilter extends ContextFilter {
             url = makeContentUrl(request, response, contentId, viewContent);
         }
         return url;
+    }
+    
+    public static String makeContentAltUrl(HttpServletRequest request, HttpServletResponse response, String contentId, String viewContent) {
+        return makeContentAltUrl(request, response, contentId, viewContent, null);
     }
     
     public static String makeContentUrl(HttpServletRequest request, HttpServletResponse response, String contentId, String viewContent) {

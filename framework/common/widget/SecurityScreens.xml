@@ -21,6 +21,13 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: NOTE: The old parameters.mainDecoratorLocation pattern that existed here is
+        changed to a simpler lookup using parameters.mainDecoratorLocation. -->
+
+    <screen-settings name="local-settings">
+        <decorator-screen-settings default-fallback-location="component://common/widget/SecurityScreens.xml"/>
+    </screen-settings>
+
     <screen name="CreateSecurityGroup">
         <section>
             <actions>
@@ -28,7 +35,7 @@ under the License.
                 <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="FindSecurityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="CreateSecurityGroup" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
@@ -46,7 +53,7 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddUserLogin" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
@@ -64,7 +71,7 @@ under the License.
                 <entity-one entity-name="SecurityGroup" value-field="securityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!-- duplicate info: <container style="page-title">
                             <label text="${uiLabelMap.PageTitleEditSecurityGroup} - ${groupId}"/>
@@ -88,7 +95,7 @@ under the License.
                 <entity-one entity-name="SecurityGroup" value-field="securityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="page-title">
                             <label text="${uiLabelMap.PageTitleEditSecurityGroupPermissions} - ${groupId}"/>
@@ -117,7 +124,7 @@ under the License.
                 <entity-one entity-name="SecurityGroup" value-field="securityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="page-title">
                             <label text="${uiLabelMap.ProtectedViews} - ${groupId}"/>
@@ -141,7 +148,7 @@ under the License.
                 <entity-one entity-name="SecurityGroup" value-field="securityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="page-title">
                             <label text="${uiLabelMap.UserLogins} - ${groupId}"/>
@@ -167,7 +174,7 @@ under the License.
                 <entity-one entity-name="UserLogin" value-field="editUserLogin"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="updateUserLoginSecurity"/>
                         <screenlet title="${uiLabelMap.UserLoginChangePassword}">
@@ -207,7 +214,7 @@ under the License.
                 <entity-one entity-name="UserLogin" value-field="editUserLogin"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="page-title">
                             <label text="${uiLabelMap.PageTitleEditUserLoginSecurityGroups} - ${userLoginId}"/>
@@ -232,7 +239,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="page-title">
                             <label text="${uiLabelMap.PageTitleEditIssuerProvisions}"/>
@@ -259,7 +266,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="CreateNewSecurityGroup" style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.CommonCreateNew}"/>
@@ -281,7 +288,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="createnewlogin" style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.CommonCreateNew}"/>
@@ -296,14 +303,14 @@ under the License.
     <screen name="SecurityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
                 <service service-name="securityPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>
                 <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
                         <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupSideBar"/>
                     </decorator-section>
@@ -336,7 +343,7 @@ under the License.
                 <script location="component://common/webcommon/WEB-INF/actions/includes/ViewCertificate.groovy" />
             </actions>
             <widgets>
-                <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
+                <decorator-screen name="SecurityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="widget-container">
                             <platform-specific>

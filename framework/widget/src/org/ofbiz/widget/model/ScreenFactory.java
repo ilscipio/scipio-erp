@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.widget.model.ScreenFallback.ScreenFallbackSettings;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,8 +49,11 @@ public class ScreenFactory {
 
     public static final String module = ScreenFactory.class.getName();
 
-    public static final UtilCache<String, Map<String, ModelScreen>> screenLocationCache = UtilCache.createUtilCache("widget.screen.locationResource", 0, 0, false);
-    public static final UtilCache<String, Map<String, ModelScreen>> screenWebappCache = UtilCache.createUtilCache("widget.screen.webappResource", 0, 0, false);
+    // SCIPIO: NOTE: 2016-10-30: instead of Map<String, ModelScreen>, we now have a dedicated ModelScreens model.
+    // it maintains backward-compat by implementing Map, so all old code should still work.
+    
+    public static final UtilCache<String, ModelScreens> screenLocationCache = UtilCache.createUtilCache("widget.screen.locationResource", 0, 0, false);
+    public static final UtilCache<String, ModelScreens> screenWebappCache = UtilCache.createUtilCache("widget.screen.webappResource", 0, 0, false);
 
     public static boolean isCombinedName(String combinedName) {
         int numSignIndex = combinedName.lastIndexOf("#");
@@ -104,10 +108,22 @@ public class ScreenFactory {
         }
         return modelScreen;
     }
-
-    public static Map<String, ModelScreen> getScreensFromLocation(String resourceName)
+    
+    /**
+     * SCIPIO: Returns the specified screen, or null if the name does not exist in the given location.
+     * <p>
+     * NOTE: the resource must exist, however.
+     */
+    public static ModelScreen getScreenFromLocationOrNull(String resourceName, String screenName)
             throws IOException, SAXException, ParserConfigurationException {
-        Map<String, ModelScreen> modelScreenMap = screenLocationCache.get(resourceName);
+        Map<String, ModelScreen> modelScreenMap = getScreensFromLocation(resourceName);
+        return modelScreenMap.get(screenName);
+    }
+
+    // SCIPIO: new: ModelScreens
+    public static ModelScreens getScreensFromLocation(String resourceName)
+            throws IOException, SAXException, ParserConfigurationException {
+        ModelScreens modelScreenMap = screenLocationCache.get(resourceName);
         if (modelScreenMap == null) {
             synchronized (ScreenFactory.class) {
                 modelScreenMap = screenLocationCache.get(resourceName);
@@ -119,6 +135,10 @@ public class ScreenFactory {
                         throw new IllegalArgumentException("Could not resolve location to URL: " + resourceName);
                     }
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (screenFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
+                    }
                     modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenLocationCache.put(resourceName, modelScreenMap);
                     double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
@@ -139,7 +159,7 @@ public class ScreenFactory {
         String cacheKey = webappName + "::" + resourceName;
 
 
-        Map<String, ModelScreen> modelScreenMap = screenWebappCache.get(cacheKey);
+        ModelScreens modelScreenMap = screenWebappCache.get(cacheKey); // SCIPIO: new: ModelScreens
         if (modelScreenMap == null) {
             synchronized (ScreenFactory.class) {
                 modelScreenMap = screenWebappCache.get(cacheKey);
@@ -148,6 +168,10 @@ public class ScreenFactory {
 
                     URL screenFileUrl = servletContext.getResource(resourceName);
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (screenFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
+                    }
                     modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenWebappCache.put(cacheKey, modelScreenMap);
                 }
@@ -161,33 +185,84 @@ public class ScreenFactory {
         return modelScreen;
     }
 
-    public static Map<String, ModelScreen> readScreenDocument(Document screenFileDoc, String sourceLocation) {
-        Map<String, ModelScreen> modelScreenMap = new HashMap<String, ModelScreen>();
+    // SCIPIO: new: ModelScreens
+    public static ModelScreens readScreenDocument(Document screenFileDoc, String sourceLocation) {
         if (screenFileDoc != null) {
-            // read document and construct ModelScreen for each screen element
-            Element rootElement = screenFileDoc.getDocumentElement();
-            List<? extends Element> screenElements = UtilXml.childElementList(rootElement, "screen");
-            for (Element screenElement: screenElements) {
-                ModelScreen modelScreen = new ModelScreen(screenElement, modelScreenMap, sourceLocation);
-                //Debug.logInfo("Read Screen with name: " + modelScreen.getName(), module);
-                modelScreenMap.put(modelScreen.getName(), modelScreen);
-            }
+            // SCIPIO: all the old code here delegated to ModelScreens
+            return new ModelScreens(screenFileDoc.getDocumentElement(), sourceLocation);
+        } else {
+            return new ModelScreens();
         }
-        return modelScreenMap;
     }
 
-    public static void renderReferencedScreen(String name, String location, ModelScreenWidget parentWidget, Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
-        // check to see if the name is a composite name separated by a #, if so split it up and get it by the full loc#name
-        if (ScreenFactory.isCombinedName(name)) {
-            String combinedName = name;
-            location = ScreenFactory.getResourceNameFromCombined(combinedName);
-            name = ScreenFactory.getScreenNameFromCombined(combinedName);
+    /**
+     * Renders referenced screen, with fallback support, optionally taking care of checking 
+     * the screen name for combined loc#name format.
+     * <p>
+     * SCIPIO: modified to support fallback and make name parsing optional.
+     * NOTE: fallbackSettings methods isEnabled and getFallbackIfEmpty are checked BEFORE resolution (getResolved).
+     * Default for fallbackIfEmpty is currently FALSE.
+     */
+    public static void renderReferencedScreen(String name, String location, ModelScreenWidget parentWidget, Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer,
+            boolean parseRefs, ScreenFallbackSettings fallbackSettings) throws GeneralException, IOException {
+        if (parseRefs) { // SCIPIO: this is optional; caller may also handle
+            // check to see if the name is a composite name separated by a #, if so split it up and get it by the full loc#name
+            if (ScreenFactory.isCombinedName(name)) {
+                String combinedName = name;
+                location = ScreenFactory.getResourceNameFromCombined(combinedName);
+                name = ScreenFactory.getScreenNameFromCombined(combinedName);
+            }
         }
 
         ModelScreen modelScreen = null;
         if (UtilValidate.isNotEmpty(location)) {
             try {
-                modelScreen = ScreenFactory.getScreenFromLocation(location, name);
+                // SCIPIO: fallback possible, so support null
+                modelScreen = ScreenFactory.getScreenFromLocationOrNull(location, name);
+                if (modelScreen == null) {
+                    if (fallbackSettings != null && fallbackSettings.isEnabled()) {
+                        fallbackSettings = fallbackSettings.getResolved(); // optimization
+                        // SCIPIO: DEV NOTE: DUPLICATED below; keep in sync
+                        String fallbackName = fallbackSettings.getName();
+                        String fallbackLocation = fallbackSettings.getLocation();
+                        if (parseRefs) { // SCIPIO: this is optional; caller may also handle
+                            // SCIPIO: parsing for fallbacks
+                            if (fallbackName != null && ScreenFactory.isCombinedName(fallbackName)) {
+                                String combinedName = fallbackName;
+                                fallbackLocation = ScreenFactory.getResourceNameFromCombined(combinedName);
+                                fallbackName = ScreenFactory.getScreenNameFromCombined(combinedName);
+                            }
+                        }
+                        if (UtilValidate.isEmpty(fallbackName)) {
+                            fallbackName = name;
+                        }
+                        
+                        if (UtilValidate.isNotEmpty(fallbackLocation)) {
+                            try {
+                                modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
+                            } catch (IOException e) {
+                                String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
+                                Debug.logError(e, errMsg, module);
+                                throw new RuntimeException(errMsg);
+                            } catch (SAXException e) {
+                                String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
+                                Debug.logError(e, errMsg, module);
+                                throw new RuntimeException(errMsg);
+                            } catch (ParserConfigurationException e) {
+                                String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
+                                Debug.logError(e, errMsg, module);
+                                throw new RuntimeException(errMsg);
+                            }
+                        } else {
+                            modelScreen = parentWidget.getModelScreen().getModelScreenMap().get(fallbackName);
+                            if (modelScreen == null) {
+                                throw new IllegalArgumentException("Could not find (fallback) screen with name [" + fallbackName + "] in the same file as the screen with name [" + parentWidget.getModelScreen().getName() + "]");
+                            }
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Could not find screen with name [" + name + "] in class resource [" + location + "]");
+                    }
+                }
             } catch (IOException e) {
                 String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -202,12 +277,62 @@ public class ScreenFactory {
                 throw new RuntimeException(errMsg);
             }
         } else {
-            modelScreen = parentWidget.getModelScreen().getModelScreenMap().get(name);
-            if (modelScreen == null) {
-                throw new IllegalArgumentException("Could not find screen with name [" + name + "] in the same file as the screen with name [" + parentWidget.getModelScreen().getName() + "]");
+            if (fallbackSettings != null && fallbackSettings.isEnabledForEmptyLocation()) { // SCIPIO: fallback if empty
+                // SCIPIO: DEV NOTE: DUPLICATED above; keep in sync
+                fallbackSettings = fallbackSettings.getResolved(); // optimization
+                String fallbackName = fallbackSettings.getName();
+                String fallbackLocation = fallbackSettings.getLocation();
+                if (parseRefs) { // SCIPIO: this is optional; caller may also handle
+                    // SCIPIO: parsing for fallbacks
+                    if (fallbackName != null && ScreenFactory.isCombinedName(fallbackName)) {
+                        String combinedName = fallbackName;
+                        fallbackLocation = ScreenFactory.getResourceNameFromCombined(combinedName);
+                        fallbackName = ScreenFactory.getScreenNameFromCombined(combinedName);
+                    }
+                }
+                if (UtilValidate.isEmpty(fallbackName)) {
+                    fallbackName = name;
+                }
+                
+                if (UtilValidate.isNotEmpty(fallbackLocation)) {
+                    try {
+                        modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
+                    } catch (IOException e) {
+                        String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
+                        Debug.logError(e, errMsg, module);
+                        throw new RuntimeException(errMsg);
+                    } catch (SAXException e) {
+                        String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
+                        Debug.logError(e, errMsg, module);
+                        throw new RuntimeException(errMsg);
+                    } catch (ParserConfigurationException e) {
+                        String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
+                        Debug.logError(e, errMsg, module);
+                        throw new RuntimeException(errMsg);
+                    }
+                } else {
+                    modelScreen = parentWidget.getModelScreen().getModelScreenMap().get(fallbackName);
+                    if (modelScreen == null) {
+                        throw new IllegalArgumentException("Could not find (fallback) screen with name [" + fallbackName + "] in the same file as the screen with name [" + parentWidget.getModelScreen().getName() + "]");
+                    }
+                }
+            } else {
+                modelScreen = parentWidget.getModelScreen().getModelScreenMap().get(name);
+                if (modelScreen == null) {
+                    throw new IllegalArgumentException("Could not find screen with name [" + name + "] in the same file as the screen with name [" + parentWidget.getModelScreen().getName() + "]");
+                }
             }
         }
         //Debug.logInfo("parent(" + parentWidget + ") rendering(" + modelScreen + ")", module);
         modelScreen.renderScreenString(writer, context, screenStringRenderer);
+    }
+    
+    /**
+     * Renders referenced screen, taking care of checking the screen name for combined loc#name format.
+     * <p>
+     * SCIPIO: delegating.
+     */
+    public static void renderReferencedScreen(String name, String location, ModelScreenWidget parentWidget, Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        renderReferencedScreen(name, location, parentWidget, writer, context, screenStringRenderer, true, null);
     }
 }

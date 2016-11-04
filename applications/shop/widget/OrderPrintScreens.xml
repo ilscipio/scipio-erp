@@ -23,12 +23,12 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- Scipio: Original: component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF -->
+    <!-- SCIPIO: Original: component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF -->
     <!-- generate a PDF for the order, sharing the same BSH file as the HTML page for viewing the order -->
     <screen name="OrderPDF">
         <section>
             <actions>
-                <!-- Scipio: FIXME!!!: This screen does not properly do permission checks!!!
+                <!-- SCIPIO: FIXME!!!: This screen does not properly do permission checks!!!
                     It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value)
                     and not allow viewing other people's orders!!!
                     See component://order/widget/ordermgr/OrderPrintScreens.xml -->
@@ -51,12 +51,12 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Original: component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF -->
+    <!-- SCIPIO: Original: component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF -->
     <!-- generate a PDF for the invoice.  sharing the same BSH file as the HTML page for viewing invoice -->
     <screen name="InvoicePDF">
         <section>
             <actions>
-                <!-- Scipio: FIXME!!!: This screen MAY not properly do permission checks!!!
+                <!-- SCIPIO: FIXME!!!: This screen MAY not properly do permission checks!!!
                     It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value)
                     and not allow viewing other people's orders!!!
                     See component://accounting/widget/AccountingPrintScreens.xml -->

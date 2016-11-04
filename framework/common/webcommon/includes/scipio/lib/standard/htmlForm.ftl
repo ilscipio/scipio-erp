@@ -26,6 +26,8 @@
 ************
 Defines a form. Analogous to <form> HTML element.
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/fields.png" alt="" style="height:400px"/>]]]
+
   * Usage Examples *  
     <@form name="myform">
       <@fields>
@@ -45,8 +47,10 @@ Defines a form. Analogous to <form> HTML element.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
     attribs                 = ((map)) Extra attributes for HTML <form> element 
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra attributes for HTML <form> element
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign form_defaultArgs = {
   "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, 
@@ -80,8 +84,8 @@ Defines a form. Analogous to <form> HTML element.
 <#-- @form main markup - theme override -->
 <#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-      <#lt><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+      <#lt><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -109,6 +113,7 @@ for getFileUploadProgressStatus controller AJAX calls.
                                 * {{{validate}}}: Use jquery validate
                                 * {{{none}}}: Caller does manually 
                               * {{{validateObjScript}}}: If submitHook is "validate", add this script text to jquery validate({...}) object body
+                                WARN: this is NOT js-escaped by the macro - caller is responsible for escaping.
                               See ScipioUploadProgress javascript class for available options.
     htmlwrap                = ((boolean), default: true) If true, wrap in @script
 -->
@@ -136,7 +141,7 @@ for getFileUploadProgressStatus controller AJAX calls.
               });
               
             <#if (progressOptions.submitHook!) == "validate">
-              jQuery("${progressOptions.formSel}").validate({
+              jQuery("${escapeVal(progressOptions.formSel, 'js')}").validate({
                   submitHandler: function(form) {
                       var goodToGo = uploadProgress.initUpload();
                       if (goodToGo) {
@@ -146,7 +151,7 @@ for getFileUploadProgressStatus controller AJAX calls.
                   ${progressOptions.validateObjScript!""}
               });
             <#elseif (progressOptions.submitHook!) != "none" >
-              jQuery("${progressOptions.formSel}").submit(function(event) {
+              jQuery("${escapeVal(progressOptions.formSel, 'js')}").submit(function(event) {
                   var goodToGo = uploadProgress.initUpload();
                   if (!goodToGo) {
                       event.preventDefault();
@@ -164,6 +169,8 @@ for getFileUploadProgressStatus controller AJAX calls.
 * Progress Bar 
 ************
 A progress bar.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/progress.png" alt=""/>]]]
 
 Can be animated using Javascript manually or by using progressOptions argument.  
 Presence of progressOptions activates use of ScipioUploadProgress script for this progress bar by linking it 
@@ -223,7 +230,7 @@ to a form submit.
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
     <#if explicitId>
-      <#local opts = concatMaps(opts, {"progBarId":"${id}"})>
+      <#local opts = concatMaps(opts, {"progBarId":id})>
     </#if>
     <#-- inlines always override args map -->
     <@progressScript progressOptions=opts htmlwrap=true args=progressArgs passArgs=passArgs />
@@ -234,9 +241,9 @@ to a form submit.
 <#macro progress_markup value=0 id="" class="" showValue=false containerClass="" stateClass="" origArgs={} passArgs={} catchArgs...>
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
-  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if stateClass?has_content> ${stateClass}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
-    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
+  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${escapeVal(classes, 'html')}</#if><#if stateClass?has_content> ${escapeVal(stateClass, 'html')}</#if><#if containerClasses?has_content> ${escapeVal(containerClasses, 'html')}</#if>"<#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
+    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${escapeVal(classes, 'html')}</#if>"<#if id?has_content> id="${escapeVal(id, 'html')}_meter"</#if> role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></#if>
+      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value}%"<#if id?has_content> id="${escapeVal(id, 'html')}_meter"</#if></#if>><#if showValue>${value}</#if></span>
     <#if styles.progress_wrap?has_content></div></#if>
   </div>
 </#macro>
@@ -283,18 +290,18 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
     <#if id?has_content>
     <@script htmlwrap=htmlwrap>
     jQuery(document).ready(function() {
-        multiple = jQuery("#${id!}");
+        multiple = jQuery("#${escapeVal(id, 'js')}");
     
       <#if !(title?is_boolean && title == false)>
         <#if title?is_boolean>
           <#local title = "">
         </#if>
-        // set the dropdown "title" if??
-        multiple.attr('title', '${title}');
+        <#-- set the dropdown "title" if?? -->
+        multiple.attr('title', '${escapeVal(title, 'js')}');
       </#if>
       
         <#if asmSelectDefaults>
-          <#-- Scipio: get options from styles -->
+          <#-- SCIPIO: get options from styles -->
           <#local defaultAsmSelectOpts = {
             "addItemTarget": 'top',
             "sortable": sortable!false,
@@ -311,14 +318,14 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
       <#if relatedFieldId?has_content> <#-- can be used without related field -->
         // track possible relatedField changes
         // on initial focus (focus-field-name must be relatedFieldId) or if the field value changes, select related multi values. 
-        typeValue = jQuery('#${relatedTypeFieldId}').val();
-        jQuery("#${relatedFieldId}").one('focus', function() {
-          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        typeValue = jQuery('#${escapeVal(relatedTypeFieldId, 'js')}').val();
+        jQuery("#${escapeVal(relatedFieldId, 'js')}").one('focus', function() {
+          selectMultipleRelatedValues('${escapeVal(requestName, 'js')}', '${escapeVal(paramKey, 'js')}', '${escapeVal(relatedFieldId, 'js')}', '${escapeVal(id, 'js')}', '${escapeVal(relatedTypeName, 'js')}', typeValue, '${escapeVal(responseName, 'js')}');
         });
-        jQuery("#${relatedFieldId}").change(function() {
-          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        jQuery("#${escapeVal(relatedFieldId, 'js')}").change(function() {
+          selectMultipleRelatedValues('${escapeVal(requestName, 'js')}', '${escapeVal(paramKey, 'js')}', '${escapeVal(relatedFieldId, 'js')}', '${escapeVal(id, 'js')}', '${escapeVal(relatedTypeName, 'js')}', typeValue, '${escapeVal(responseName, 'js')}');
         });
-        selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        selectMultipleRelatedValues('${escapeVal(requestName, 'js')}', '${escapeVal(paramKey, 'js')}', '${escapeVal(relatedFieldId, 'js')}', '${escapeVal(id, 'js')}', '${escapeVal(relatedTypeName, 'js')}', typeValue, '${escapeVal(responseName, 'js')}');
       </#if>
       });  
     </@script>
@@ -376,7 +383,7 @@ A visible fieldset, including the HTML element.
   <#local origArgs = args>
 
   <#if id?has_content>
-    <#local containerId = "${id}_container">
+    <#local containerId = rawString(id) + "_container">
   <#else>
     <#local containerId = "">
   </#if>
@@ -409,24 +416,24 @@ A visible fieldset, including the HTML element.
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
     <@row open=true close=false />
       <@cell open=true close=false class=containerClasses id=containerId />
-        <fieldset<#if classes?has_content> class="${classes!}"</#if><#if id?has_content> id="${id}"</#if>>
+        <fieldset<#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapeVal(collapsibleAreaId, 'js-html')}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');">
                     <#else>expanded">
-                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${escapeVal(collapsibleAreaId, 'js-html')}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');">
                     </#if>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${title}</#if></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${escapeVal(title, 'htmlmarkup')}</#if></a>
           </li>
         </ul>
       <#else>
-        <#if title?has_content>${title}</#if>
+        <#if title?has_content>${escapeVal(title, 'htmlmarkup')}</#if>
       </#if><#rt/>
     </div>
-    <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
+    <div id="${escapeVal(collapsibleAreaId, 'html')}" class="fieldgroup-body"<#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${title}</legend></#if>
+          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapeVal(title, 'htmlmarkup')}</legend></#if>
   </#if>
           <#nested>
   <#if close>
@@ -933,9 +940,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               WARN: Currently (2016-04-12), unlike the {{{label}}} arg, {{{labelContent}}} will not follow any label inlining logic and
                                   is only used by the label area markup. 
                               FIXME?: May want to have labelContent follow label more closely.
-    labelDetail             = ((string)|(macro)) Extra content (HTML) inserted with label (normally after label, but theme may decide)
+                              NOTE: Not escaped by macro.
+    labelDetail             = ((string)|(macro)) Extra content markup inserted with label (normally after label, but theme may decide)
                               2016-04-12: This may also be a macro used to generate the label, which must accept a single {{{args}}} map parameter.
                               NOTE: If need to guarantee post-markup label content, may also use {{{postLabelContent}}} (lower-level control).
+                              NOTE: Not escaped by macro.
     labelContentArgs        = ((map)) Optional map of args to be passed to {{{labelContent}}} and {{{labelDetail}}} in cases where they are macros
                               NOTE: In addition to these values, all the parameters of the theme-implementing @field_markup_labelarea macros
                                   are also passed.
@@ -1053,26 +1062,33 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     postfixColumns          = ((int), default: 1) Manual postfix size, in (large) grid columns
     postfixContent          = ((string)|(macro)) Manual postfix markup/content - set to boolean false to prevent any content (but not area container)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Not escaped by macro.
     postfixContentArgs      = ((map)) Optional map of arguments to pass to {{{postfixContent}}} macro, if macro
     preWidgetContent        = ((string)|(macro)) Text or text-generating macro that will be inserted in the widget area before widget content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     postWidgetContent       = ((string)|(macro)) Text or text-generating macro that will be inserted in the widget area after widget content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     preLabelContent         = ((string)|(macro)) Text or text-generating macro that will be inserted in the label area before label content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     postLabelContent        = ((string)|(macro)) Text or text-generating macro that will be inserted in the label area after label content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
                               NOTE: This is almost the same as labelDetail, except postLabelContent is lower level and will always occur at the specified position.
+                              NOTE: Not escaped by macro.
     prePostfixContent       = ((string)|(macro)) Text or text-generating macro that will be inserted in the postfix area before postfix content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     postPostfixContent      = ((string)|(macro)) Text or text-generating macro that will be inserted in the postfix area after postfix content (low-level control)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: Not escaped by macro.
     prePostContentArgs      = ((map)) Optional map of extra user-supplied args to be passed to the {{{prePostXxx}}} content macros as the {{{args}}} parameter.
     inverted                = ((boolean), default: false) If true, invert the widget and label area content and user-supplied and identifying classes
                               If this is set to true, the widget area content is swapped with the label area content and the user-supplied
@@ -1808,7 +1824,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     preWidgetContent=preWidgetContent postWidgetContent=postWidgetContent preLabelContent=preLabelContent postLabelContent=postLabelContent prePostfixContent=prePostfixContent postPostfixContent=postPostfixContent
     labelAreaContentArgs=labelAreaContentArgs postfixContentArgs=postfixContentArgs prePostContentArgs=prePostContentArgs
     widgetAreaClass=widgetAreaClass labelAreaClass=labelAreaClass postfixAreaClass=postfixAreaClass widgetPostfixAreaClass=widgetPostfixAreaClass
-    inverted=inverted labelSmallDiffColumns=labelSmallDiffColumns origArgs=origArgs passArgs=passArgs>
+    inverted=inverted labelSmallDiffColumns=labelSmallDiffColumns origArgs=origArgs required=required passArgs=passArgs>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1829,6 +1845,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               placeholder=placeholder 
                               tooltip=tooltip
                               inlineLabel=effInlineLabel
+                              required=required
                               passArgs=passArgs/>
         <#break>
       <#case "textarea">
@@ -1846,7 +1863,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               inlineLabel=effInlineLabel
                               maxlength=maxlength
                               wrap=wrap
-                              passArgs=passArgs>${text}${value}<#nested></@field_textarea_widget>
+                              required=required
+                              passArgs=passArgs>${escapeVal(text, 'htmlmarkup')}${escapeVal(value, 'htmlmarkup')}<#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date" || dateType == "time" || dateType == "month">
@@ -1873,6 +1891,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               postfix=datePostfix
                               postfixColumns=datePostfixColumns
                               inlineLabel=effInlineLabel
+                              required=required
                               passArgs=passArgs/>                
         <#break>
       <#case "datefind">
@@ -1902,6 +1921,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               tooltip=tooltip
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
+                              required=required
                               passArgs=passArgs/>                 
         <#break>
       <#case "textfind">
@@ -1923,6 +1943,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               titleClass=titleClass
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
+                              required=required
                               passArgs=passArgs/>                 
         <#break>
       <#case "rangefind">
@@ -1942,6 +1963,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               titleClass=titleClass
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
+                              required=required
                               passArgs=passArgs/>                 
         <#break>
       <#case "select">
@@ -1992,6 +2014,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                 currentDescription=currentDescription
                                 asmSelectArgs=asmSelectArgs
                                 inlineLabel=effInlineLabel
+                                required=required
                                 passArgs=passArgs><#nested></@field_select_widget>
         <#break>
       <#case "option">
@@ -1999,7 +2022,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#break>
       <#case "lookup">
         <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert="false" value=value 
-          size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip passArgs=passArgs/>
+          size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip required=required passArgs=passArgs/>
       <#break>
       <#case "checkbox">
         <#if valueType?is_string && valueType == "indicator">
@@ -2029,12 +2052,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local items=[{"value":value, "altValue":altValue, "useHidden":useHidden, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType 
-                readonly=readonly passArgs=passArgs/>
+                readonly=readonly required=required passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType 
             value=value altValue=altValue useHidden=useHidden
-            readonly=readonly passArgs=passArgs/>
+            readonly=readonly required=required passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">
@@ -2061,21 +2084,21 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel type=radioType 
-            readonly=readonly passArgs=passArgs/>
+            readonly=readonly required=required passArgs=passArgs/>
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=radioType 
-            readonly=readonly passArgs=passArgs/>
+            readonly=readonly required=required passArgs=passArgs/>
         </#if>
         <#break>
       <#case "file">
         <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel style=style passArgs=passArgs/>
+          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel style=style required=required passArgs=passArgs/>
         <#break>
       <#case "password">
         <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel style=style passArgs=passArgs/>
+          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs/>
         <#break> 
       <#case "reset">                    
         <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel style=style passArgs=passArgs/>
@@ -2120,25 +2143,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#else>
           <#local displayType = valueType>
         </#if>
-        <#if !value?has_content>
-          <#local value><#nested></#local>
-        </#if>
-        <#if displayType == "image">
-          <#local imageLocation = value>
-          <#local desc = "">
-        <#else>
-          <#local imageLocation = "">
-          <#local desc = value>
-        </#if>
-        <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
+        <@field_display_widget type=displayType value=value idName="" 
           title=title class=class id=id alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" style=style 
-          imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel passArgs=passArgs/>
+          imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel required=required passArgs=passArgs><#nested></@field_display_widget>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>
-          <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel style=style passArgs=passArgs/>
+          <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs/>
         <#else>
-          <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel style=style passArgs=passArgs><#nested /></@field_generic_widget>
+          <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs><#nested /></@field_generic_widget>
         </#if>
     </#switch>
   </@field_markup_container>
@@ -2172,7 +2185,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
     labelAreaContentArgs={} postfixContentArgs={} prePostContentArgs={}
     widgetAreaClass="" labelAreaClass="" postfixAreaClass="" widgetPostfixAreaClass="" inverted=false labelSmallDiffColumns=""
-    origArgs={} passArgs={} catchArgs...>
+    origArgs={} passArgs={} required=false catchArgs...>
   <#local rowClass = containerClass>
 
   <#local labelInRow = (labelType != "vertical")>
@@ -2320,7 +2333,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     WARN: origArgs may be empty -->
 <#macro field_markup_labelarea labelType="" labelPosition="" label="" labelContent=false labelDetail=false fieldType="" fieldsType="" fieldId="" collapse="" 
     required=false labelContentArgs={} norows=false nocells=false container=true origArgs={} passArgs={} catchArgs...>
-  <#local label = label?trim>
+  <#-- the label must be escaped by default. caller can prevent using #wrapAsRaw
+  <#local label = label?trim>-->
+  <#local label = escapeVal(label, 'htmlmarkup')?trim>
   <#if !labelContent?is_boolean>
     <@contentArgRender content=labelContent args=labelContentArgs doTrim=true />
     <#-- don't show this here, let macro handle it
@@ -2329,7 +2344,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#if collapse>
       <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
     <#else>
-      <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
+      <label class="form-field-label"<#if fieldId?has_content> for="${escapeVal(fieldId, 'html')}"</#if>>${label}<#if required> *</#if></label>
     </#if>
   <#-- only show this if there's a label, otherwise affects inline fields too in ugly way, and there are other indications anyhow
   <#else>
@@ -2534,7 +2549,7 @@ TODO: This (and @field args) do not currently provide enough control over large 
 Returns an appropriate field value (typically for use with @field) based on current values in request
 and context, following a certain scheme type specified directly or previously through globals.
 
-WARN: NOT FULLY IMPLEMENTED (2016-07-15)
+WARN: NOT FULLY IMPLEMENTED (2016-07-15) - EXPERIMENTAL
 
 Typically the value is looked up in a set of global maps (parameters, a record or entity, defaults, etc.)
 following some predefined priority.

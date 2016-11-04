@@ -38,7 +38,7 @@ under the License.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
       <@td colspan="3">
          
-        <@modal id="${orderId}_info" label="${currentStatus.get('description',locale)}">
+        <@modal id="${orderId}_info" label=currentStatus.get('description',locale)>
         <#if orderHeaderStatuses?has_content>
           <ul class="no-bullet">
             <#list orderHeaderStatuses as orderHeaderStatus>
@@ -143,7 +143,7 @@ under the License.
     </@tr>
   </#if>
  
-  <#if orderContentWrapper.get("IMAGE_URL", "url")!?string?trim?has_content>
+  <#if orderContentWrapper.get("IMAGE_URL", "url")!?trim?has_content>
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">
@@ -157,15 +157,14 @@ under the License.
       <@td>${uiLabelMap.FormFieldTitle_priority}</@td>
       <@td colspan="3">
          
-         <#assign priorityLabel>
-            <#switch orderHeader.priority!>
-                <#case "1">${uiLabelMap.CommonHigh}<#break>
-                <#case "2">${uiLabelMap.CommonNormal}<#break>
-                <#case "3">${uiLabelMap.CommonLow}<#break>
-                <#default>${uiLabelMap.CommonNormal}
-            </#switch>
-         </#assign>
-         <@modal id="${orderId}_priority" label="${priorityLabel!}">
+         
+         <#switch orderHeader.priority!>
+            <#case "1"><#assign priorityLabel = uiLabelMap.CommonHigh><#break>
+            <#case "2"><#assign priorityLabel = uiLabelMap.CommonNormal><#break>
+            <#case "3"><#assign priorityLabel = uiLabelMap.CommonLow><#break>
+            <#default><#assign priorityLabel = uiLabelMap.CommonNormal>
+         </#switch>
+         <@modal id="${orderId}_priority" label=priorityLabel>
              <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
              <input type="hidden" name="orderId" value="${orderId}"/>
             <@row>
@@ -188,19 +187,17 @@ under the License.
     <@tr>
       <@td>${uiLabelMap.AccountingInvoicePerShipment}</@td>
       <@td colspan="3">
-         <#assign invoicePerShipmentLabel>
-             <#switch orderHeader.invoicePerShipment!>
-                <#case "Y">${uiLabelMap.CommonYes!}<#break>
-                <#case "N">${uiLabelMap.CommonNo!}<#break>
-                <#default>${uiLabelMap.CommonYes!}
-            </#switch>
-         </#assign>
-         <@modal id="${orderId}_invoicePerShipment" label="${invoicePerShipmentLabel!}">
+         
+         <#switch orderHeader.invoicePerShipment!>
+            <#case "Y"><#assign invoicePerShipmentLabel = uiLabelMap.CommonYes><#break>
+            <#case "N"><#assign invoicePerShipmentLabel = uiLabelMap.CommonNo><#break>
+            <#default><#assign invoicePerShipmentLabel = uiLabelMap.CommonYes>
+         </#switch>
+         <@modal id="${orderId}_invoicePerShipment" label=invoicePerShipmentLabel>
              <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <@row>
                     <@cell columns=6>
-        
                         <select name="invoicePerShipment">
                           <option value="Y" <#if ((orderHeader.invoicePerShipment)!) == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
                           <option value="N" <#if ((orderHeader.invoicePerShipment)!) == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>

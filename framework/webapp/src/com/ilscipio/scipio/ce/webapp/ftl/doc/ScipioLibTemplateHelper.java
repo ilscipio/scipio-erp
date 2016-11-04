@@ -15,7 +15,10 @@ import java.util.regex.Pattern;
 public class ScipioLibTemplateHelper extends TemplateHelper {
     // NOTE: some of the Parser methods could actually be moved here, but don't need for now
     
-    
+    public ScipioLibTemplateHelper(String inFileExtension, String outFileExtension) {
+        super(inFileExtension, outFileExtension);
+    }
+
     private static final Pattern bulletPat = Pattern.compile(
             "^([ ]*)[*]"
             , Pattern.DOTALL + Pattern.MULTILINE);
@@ -131,7 +134,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             // FIXME?: Currently only support href==label
             String value = (String) linkInfo.get("value");
             
-            if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("file://")) {
+            if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("file://") || value.startsWith("//")) {
                 // absolute, do nothing
                 linkInfo.put("text", value);
             }
@@ -143,19 +146,33 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
                 // relative to current, just strip the prefix
                 value = value.substring(2);
                 linkInfo.put("text", value);
+                
+                // 2016-10-27: check if this is a valid doc link, so template can process it
+                if (libMap.containsKey(value) || 
+                        (value.endsWith(inFileExtension) && libMap.containsKey(value.substring(0, value.length() - inFileExtension.length())))) {
+                    linkInfo.put("isDocLink", Boolean.TRUE);
+                }
             }
             else if (value.startsWith("../")) {
                 // relative to current
+                // WARN: this currently bypasses the auto-doc stuff
                 linkInfo.put("text", value);
             }
             else {
-                String libDocPath = (String) libInfo.get("libDocPath");
+                //String libDocPath = (String) libInfo.get("libDocPath");
                 linkInfo.put("text", value);
+                // 2016-10-27: let the template process the link instead
                 // relative to doc root. need to adjust the link.
-                value = getTargetRelLibDocPath(value, libDocPath);
+                //value = getTargetRelLibDocPath(value, libDocPath);
+                
+                // 2016-10-27: check if this is a valid doc link, so template can process it
+                if (libMap.containsKey(value) || 
+                        (value.endsWith(inFileExtension) && libMap.containsKey(value.substring(0, value.length() - inFileExtension.length())))) {
+                    linkInfo.put("isDocLink", Boolean.TRUE);
+                }
             }
-            if (value.endsWith(".ftl")) {
-                value = value.substring(0, value.length() - 4) + ".html";
+            if (value.endsWith(inFileExtension)) {
+                value = value.substring(0, value.length() - inFileExtension.length()) + outFileExtension;
             }
             linkInfo.put("value", value);
             return linkInfo;

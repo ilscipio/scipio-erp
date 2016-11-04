@@ -5,7 +5,7 @@
 
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
-        <@section title="${uiLabelMap.ProductReceiptPurchaseOrder} ${purchaseOrder.orderId}">
+        <@section title="${rawLabel('ProductReceiptPurchaseOrder')} ${rawString(purchaseOrder.orderId)}">
             <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@thead>
                     <@tr class="header-row">
@@ -146,7 +146,7 @@
                         <#else>
                             <#assign LookupFacilityLocationView="LookupFacilityLocation">
                         </#if>
-                        <@field type="lookup" formName="selectAllForm" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
+                        <@field type="lookup" formName="selectAllForm" name="locationSeqId" id="locationSeqId" fieldFormName=LookupFacilityLocationView/>
                     </#if>
                 </@field>
                 <@field type="select" label=uiLabelMap.ProductRejectedReason name="rejectionId" size="1">
@@ -214,9 +214,9 @@
     <#-- Multi-Item PO Receiving -->
     <#elseif purchaseOrder?has_content>
         <#if shipment?has_content>
-            <#assign sectionTitle>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId} / ${uiLabelMap.ProductShipmentId} #${shipment.shipmentId}</#assign>
+            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${rawString(purchaseOrder.orderId)} / ${rawLabel('ProductShipmentId')} #${rawString(shipment.shipmentId)}</#assign>
         <#else>
-            <#assign sectionTitle>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</#assign>
+            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${rawString(purchaseOrder.orderId)}</#assign>
         </#if>
         <@section title=sectionTitle>
             <input type="hidden" id="getConvertedPrice" value="<@ofbizUrl>getConvertedPrice"</@ofbizUrl> />
@@ -285,7 +285,7 @@
                                             <input type="hidden" name="productId_o_${orderItem_index}" value="${product.productId}"/>                                                            
                                             <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a>                                                            
                                         <#else>
-                                            <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${orderItemType.get('description',locale)} ${orderItem.itemDescription!}">
+                                            <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${rawString(orderItemType.get('description',locale))} ${rawString(orderItem.itemDescription!)}">
                                                 <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                                             </@field>
                                         </#if>
@@ -309,7 +309,7 @@
                                             <#else>
                                                 <#assign LookupFacilityLocationView="LookupFacilityLocation">
                                             </#if>
-                                            <@field type="lookup" formName="receiveMultiPO" name="locationSeqId_o_${orderItem_index}" id="locationSeqId_o_${orderItem_index}" fieldFormName="${LookupFacilityLocationView}"/>
+                                            <@field type="lookup" formName="receiveMultiPO" name="locationSeqId_o_${orderItem_index}" id="locationSeqId_o_${orderItem_index}" fieldFormName=LookupFacilityLocationView/>
                                         </#if>        
                                     </@td>                                                
                                     <@td>          
@@ -364,10 +364,10 @@
                                         <@field type="input" name="quantityOrdered" value=orderItem.quantity size="6" maxlength="20" disabled="disabled"/>
                                     </@td>
                                     <@td>
-                                        <@field type="input" name="ownerPartyId_o_${orderItem_index}" size="20" maxlength="20" value="${facility.ownerPartyId}"/>
+                                        <@field type="input" name="ownerPartyId_o_${orderItem_index}" size="20" maxlength="20" value=(facility.ownerPartyId)/>
                                     </@td>
                                     <@td>
-                                        <#-- FIXME: Scipio: Let's see how to handle this -->
+                                        <#-- FIXME: SCIPIO: Let's see how to handle this -->
                                         <#-- <#if (currencyUomId!'') != (orderCurrencyUomId!'')>
                                             <input type="hidden" name="orderCurrencyUomId_o_${orderItem_index}" value="${orderCurrencyUomId!}" />
                                             <@field type="input" id="orderCurrencyUnitPrice_${orderItem_index}" name="orderCurrencyUnitPrice_o_${orderItem_index}" value=orderCurrencyUnitPriceMap[orderItem.orderItemSeqId] onChange="javascript:getConvertedPrice(orderCurrencyUnitPrice_${orderItem_index}, '${orderCurrencyUomId}', '${currencyUomId}', '${orderItem_index}', '${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}', '${itemCost}');" size="6" maxlength="20" />

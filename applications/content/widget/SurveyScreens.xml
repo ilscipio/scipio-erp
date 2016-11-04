@@ -36,7 +36,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <!-- Scipio: Duplicate
+                                    <!-- SCIPIO: Duplicate
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar"><link text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="${styles.link_nav} ${styles.action_add}"/></container>
                                     </decorator-section>
@@ -64,10 +64,10 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/SurveyMenus.xml#Survey" />
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="survey"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="survey"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.surveyId}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -76,7 +76,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://content/widget/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>

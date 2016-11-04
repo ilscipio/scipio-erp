@@ -32,36 +32,26 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <section>
-                                            <condition>
-                                                <if-has-permission permission="HUMANRES" action="_ADMIN"/>
-                                            </condition>
-                                            <widgets>
-                                                <container style="button-bar">
-                                                    <link target="EditJobRequisition" text="${uiLabelMap.HumanResNewJobRequisition}" style="${styles.link_nav} ${styles.action_add}"/>
-                                                </container>
-                                            </widgets>
-                                        </section>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindJobRequisitions" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListJobRequisitions" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-has-permission permission="HUMANRES" action="_ADMIN"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditJobRequisition" text="${uiLabelMap.HumanResNewJobRequisition}" style="${styles.link_nav} ${styles.action_add}"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindJobRequisitions" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListJobRequisitions" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -110,36 +100,25 @@ under the License.
                 <set field="partyId" from-field="parameters.userLogin.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInternalJobPostingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <section>
-                                            <widgets>
-                                                <container style="button-bar">
-                                                    <link target="EditInternalJobPosting" text="${uiLabelMap.HumanResNewInternalJobPosting}" style="${styles.link_nav} ${styles.action_add}"/>
-                                                </container>
-                                            </widgets>
-                                        </section>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindInternalJobPosting" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListInternalJobPosting" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditInternalJobPosting" text="${uiLabelMap.HumanResNewInternalJobPosting}" style="${styles.link_nav} ${styles.action_add}"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindInternalJobPosting" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListInternalJobPosting" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -148,17 +127,16 @@ under the License.
     <screen name="EditInternalJobPosting">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditInternalJobPosting"/>
                 <set field="activeSubMenuItem" value="InternalJobPosting"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
                 <set field="partyId" from-field="parameters.userLogin.partyId"/>
+                <set field="titleProperty" value="${groovy: context.employmentApp ? 'PageTitleEditInternalJobPosting' : 'HumanResNewInternalJobPosting'}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInternalJobPostingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <screenlet id="EditInternalJobPosting" title="${uiLabelMap.HumanResNewInternalJobPosting}" collapsible="true">
+                        <screenlet id="EditInternalJobPosting" collapsible="true"><!-- title="${uiLabelMap.HumanResNewInternalJobPosting}"  -->
                             <include-form name="EditInternalJobPosting" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -173,9 +151,8 @@ under the License.
                 <set field="activeSubMenuItem" value="JobInterview"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInternalJobPostingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="HUMANRES" action="_VIEW"/>
@@ -183,13 +160,9 @@ under the License.
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
-                                        <section>
-                                            <widgets>
-                                                <container style="button-bar">
-                                                    <link target="EditJobInterview" text="${uiLabelMap.HumanResNewJobInterview}" style="${styles.link_nav} ${styles.action_add}"/>
-                                                </container>
-                                            </widgets>
-                                        </section>
+                                        <container style="button-bar">
+                                            <link target="EditJobInterview" text="${uiLabelMap.HumanResNewJobInterview}" style="${styles.link_nav} ${styles.action_add}"/>
+                                        </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindJobInterview" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
@@ -217,16 +190,11 @@ under the License.
                 <entity-one entity-name="JobInterview" value-field="JobInterview"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInternalJobPostingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <section>
-                            <widgets>
-                                <screenlet>
-                                    <include-form name="EditJobInterview" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet>
+                            <include-form name="EditJobInterview" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -244,27 +212,16 @@ under the License.
                 <set field="partyId" from-field="parameters.userLogin.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInternalJobPostingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindApprovals" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListApprovals" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindApprovals" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListApprovals" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -279,9 +236,8 @@ under the License.
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInternalJobPostingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <screenlet id="EditApprovalStatus" collapsible="true">
                             <include-form name="EditApprovalStatus" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
                         </screenlet>
@@ -297,27 +253,16 @@ under the License.
                 <set field="activeSubMenuItem" value="Relocation"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInternalJobPostingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="InternalJobPostingTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindRelocation" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListRelocation" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindRelocation" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListRelocation" location="component://humanres/widget/forms/RecruitmentForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

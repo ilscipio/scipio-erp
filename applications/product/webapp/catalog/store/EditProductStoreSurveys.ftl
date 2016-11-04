@@ -37,8 +37,8 @@ under the License.
                 <@td>${surveyType.get("description",locale)}</@td>
                 <@td>${storeSurvey.groupName!}</@td>
                 <@td><a href="<@ofbizInterWebappUrl>/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
-                <@td>${storeSurvey.productId?default("${uiLabelMap.CommonNA}")}</@td>
-                <@td>${storeSurvey.productCategoryId?default("${uiLabelMap.CommonNA}")}</@td>
+                <@td>${storeSurvey.productId!(uiLabelMap.CommonNA)}</@td>
+                <@td>${storeSurvey.productCategoryId!(uiLabelMap.CommonNA)}</@td>
                 <@td>${storeSurvey.fromDate!?string}</@td>
                 <@td>${storeSurvey.sequenceNum!}</@td>
                 <@td>
@@ -61,7 +61,7 @@ under the License.
                       <option value="${type.surveyApplTypeId}">${type.get("description",locale)}</option>
                     </#list>
               </@field>
-              <@field type="input" label="${uiLabelMap.CommonGroup} ${uiLabelMap.CommonName}" size="20" name="groupName" />
+              <@field type="input" label="${rawLabel('CommonGroup')} ${rawLabel('CommonName')}" size="20" name="groupName" />
               <@field type="select" label=uiLabelMap.CommonSurveys name="surveyId">
                     <#list surveys as survey>
                       <option value="${survey.surveyId}">${survey.description?default("[" + survey.surveyId + "]")}</option>

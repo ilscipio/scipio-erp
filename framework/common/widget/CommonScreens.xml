@@ -168,7 +168,28 @@ under the License.
                 <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
                 <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
                 <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
-                <set field="headerTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
+
+                <!-- Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these -->
+                <set field="origTitle" from-field="title" />
+                <set field="origTitleProperty" from-field="titleProperty" />
+
+                <set field="finalTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
+                <!-- 2016-10-26: support titleFormatString to simplify screens 
+                    use backslash to delay the evaluation of expression to here -->
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}" />
+
+                <set field="resolvedTitle" value="${groovy: org.ofbiz.base.util.string.FlexibleStringExpander.expandString(titleFormat, context)}" />
+
+                <!-- OVERWRITE the title field with resolved so automatically works with existing themes -->
+                <!-- NOTE: 2016-10-26: This now means that themes only need to check the "title" field; don't need to check titleProperty anymore (shouldn't be their job) -->
+                <set field="title" from-field="resolvedTitle"/>
+
+                <!-- GLOBAL version of the title so top-level templates can also access it
+                    (NOTE: due to language issues, must be a different field name) -->
+                <set field="globalTitle" from-field="resolvedTitle" global="true"/>
+
+                <set field="headerTitle" from-field="resolvedTitle"/>
+
                 <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
             </actions>
             <widgets />
@@ -862,7 +883,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Locales Screen (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- Locales Screen (SCIPIO: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocales">
         <section>
             <actions>
@@ -892,7 +913,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Compact version of list locales (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- SCIPIO: Compact version of list locales (Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocalesCompact">
         <section>
             <actions>
@@ -924,7 +945,7 @@ under the License.
         </section>
     </screen>  
 
-    <!-- Timezones Screen (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- Timezones Screen (SCIPIO: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListTimezones">
         <section>
             <actions>
@@ -954,7 +975,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- List visual themes (Scipio: Note there is also a lookup version in LookupScreens) -->
+    <!-- List visual themes (SCIPIO: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListVisualThemes">
         <section>
             <actions>
@@ -1130,7 +1151,7 @@ under the License.
     <screen name="states">
         <section>
             <actions>
-                <!-- Scipio: we now support currentStateProvinceGeoId -->
+                <!-- SCIPIO: we now support currentStateProvinceGeoId -->
                 <!--<set field="currentStateProvinceGeoId" from-field="currentStateProvinceGeoId" default-value="${''}"/>-->
                 <set field="statesPreselect" from-field="statesPreselect" type="Boolean" default-value="true"/>
                 <set field="statesPreselectFirst" from-field="statesPreselectFirst" type="Boolean" default-value="false"/>
@@ -1145,7 +1166,7 @@ under the License.
     <screen name="countries">
         <section>
             <actions>
-                <!-- Scipio: we now support currentCountryGeoId -->
+                <!-- SCIPIO: we now support currentCountryGeoId -->
                 <!--<set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>-->
                 <property-to-field field="defaultSystemCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
                 <set field="defaultCountryGeoId" from-field="defaultCountryGeoIdOverride" default-value="${defaultSystemCountryGeoId}"/>
@@ -1216,7 +1237,7 @@ under the License.
     </screen>
     
     <!-- 
-        Scipio: WIP - Common decorator for dashboards 
+        SCIPIO: WIP - Common decorator for dashboards 
         Render all child sections in a grid. Grid size may be overriden by passing a 'columns' argument. 
         Although, dashboard grids have size constraints (min col/max col size), defined in widget.properties, 
         in order to force screens that use this decorator to look like as a dashboard.           
@@ -1297,9 +1318,19 @@ under the License.
           simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
           but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
           In fallback mode, a suffix (by default "Menu", or "SideBar" if you use ComplexSideBarMenu) is added to the activeSubMenu value before performing the lookup.
-        * activeSubMenuItem - Name of a menu item that is child of the menu/sub-menu designated/implied by activeSubMenu.
+        * activeSubMenuItem - Name of a menu item that is child (or parent) of the menu/sub-menu designated/implied by activeSubMenu.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
-          on the menu/sub-menu designated/implied by activeSubMenu.
+          on the menu/sub-menu designated/implied by activeSubMenu, or otherwise will consider the parent item of the sub-menu as the target.
+          SPECIAL VALUES:
+          * "PARENT" - can be used to explicitly request that the selected item be the parent item of the sub-menu (same effect as empty item when menu has no default).
+            Does not affect which sub-menu is considered selected, so it will (usually, by default) still show the sub-menu (unless something else blocks it).
+            Here, the sub-menu remains the deepest selected target (deeper than the selected parent item!).
+          * "PARENT-NOSUB" - similar to "PARENT" except the sub-menu will not be considered selected and will (usually) be hidden.
+            In other words, internally, the selected sub menu (activeSubMenu) is switched to the parent menu.
+            Here, the parent item becomes the deepest selected target.
+          * "NONE" - same as empty.
+          NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
+              pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
           specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default). 
         
@@ -1314,6 +1345,7 @@ under the License.
         Additionally, activeMainMenuItem is used in some themes to highlight items in a separate non-complex "main" menu.
         
         menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
+        
         Complex menu location:
         * location (required) - Complex menu location
         * name (required) - Complex menu name
@@ -1390,6 +1422,56 @@ under the License.
                     <fail-widgets>
                         <include-menu location="${smplLoc}" name="${smplName}"/>
                     </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Common SideBar Menu inclusion logic, adequate as a default in common decorators in most apps.
+        In most apps this will be invoked from CommonXxxAppSideBarMenu wrappers, which implement application-specific logic,
+        notably permission checks (this is in contrast to the MainAppSideBarMenu/DefMainAppSideBarMenu wrappers, which
+        are more explicitly designed to be overridable through parameters.mainDecoratorLocation by extending applications).
+    
+        Accepts context fields:
+        
+        Permissions:
+        * commonSideBarMenu.perm - name of single permission to check to allow showing MainSideBarMenu (default: none)
+        * commonSideBarMenu.permAction - single permission action to check to allow showing MainSideBarMenu (default: none, optional for perm)
+        * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (default: none)
+          entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs
+        * commonSideBarMenu.permServ - single map of arguments for a permission service
+          * name - service name
+          * mainAction - main action
+          * servCtx - a map to use as source context for service call 
+            WARN: may be modified; treat as volatile
+          * resource - the resourceDescription arg of permission service interface
+        * commonSideBarMenu.permServList - list of maps for permission service calls
+          each map supports the same members as permServ
+ 
+        Conditions (Booleans):
+        * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
+        * commonSideBarMenu.condList - list of extra booleans to check
+
+        Menu config:
+        * commonSideBarMenu.targetMenuName - name of menu shown if all permissions and conditions pass (default: "MainSideBarMenu") 
+          SPECIAL VALUE: "NONE"
+        * commonSideBarMenu.fallbackMenuName - name of menu shown if permission or conditions fail (default: "DefMainSideBarMenu") 
+          SPECIAL VALUE: "NONE"
+        * commonSideBarMenu.menuLoc - location of menus (default: parameters.mainDecoratorLocation)
+    -->
+    <screen name="CommonSideBarMenu">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonSideBarMenu.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare field="hasTargetMenu" operator="equals" type="Boolean" value="true"/>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${targetMenuName}" location="${targetMenuLoc}"/>
+                    </widgets>
                 </section>
             </widgets>
         </section>

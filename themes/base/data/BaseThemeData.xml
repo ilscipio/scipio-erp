@@ -31,16 +31,16 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://base-theme/includes/appbarOpen.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://base-theme/includes/appbarClose.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/base-theme/images/favicon.ico" sequenceId="01"/>
-    <!-- Scipio: Set custom logo
+    <!-- SCIPIO: Set custom logo
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/base-theme/images/scipio-logo.svg" sequenceId="01"/>-->  
     
-    <!-- Scipio: The following includes can be used to override specific default pages
+    <!-- SCIPIO: The following includes can be used to override specific default pages
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://base-theme/includes/login.ftl" sequenceId="01"/> // Custom Login Page
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://base-theme/includes/error.ftl" sequenceId="01"/> // Custom Error Page
      -->
     
     <!-- 
-    Scipio: Optional renderer stock macro library and scipio library location overrides 
+    SCIPIO: Optional renderer stock macro library and scipio library location overrides 
     
     Each of these can specify a simple template location (format: "component://...") 
     or a mapping of rendering platforms to template locations (format: "[html=component://...,xsl-fo=component://...]"; intermediate spaces are automatically 

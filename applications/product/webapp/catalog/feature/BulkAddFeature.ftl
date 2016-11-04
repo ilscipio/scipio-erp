@@ -16,12 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.ProductAddProductFeatureInBulk} ${uiLabelMap.CommonFor} ${featureCategory.description}">
+<@section title="${rawLabel('ProductAddProductFeatureInBulk')} ${rawLabel('CommonFor')} ${rawString(featureCategory.description)}">
       <form method="post" action="<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-      <#-- Scipio: don't enable responsive on this table, comes out wrong -->
+      <#-- SCIPIO: don't enable responsive on this table, comes out wrong -->
       <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">

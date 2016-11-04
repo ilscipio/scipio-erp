@@ -59,7 +59,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ArAppSideBar" title="${uiLabelMap.AccountingArManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ArAppSideBar" title="${uiLabelMap.AccountingArManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <menu-item name="accountingMain" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}" >
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="/accounting/control/main" link-type="anchor" url-mode="inter-app" />
@@ -70,13 +71,15 @@ under the License.
         </menu-item>
         <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}">
             <link target="findInvoices"/>
+            <sub-menu name="Invoice" include="ArInvoiceSideBar"/>
         </menu-item>
         <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
             <link target="findPayments"/>
-            <sub-menu name="ArPayment" include="ArPaymentSideBar"/>
+            <sub-menu name="Payment" include="ArPaymentSideBar"/>
         </menu-item>
         <menu-item name="paymentGroups" title="${uiLabelMap.AccountingArPaymentGroupMenu}">
             <link target="FindArPaymentGroups"/>
+            <sub-menu name="PaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/>
         </menu-item>
         <menu-item name="reports" title="${uiLabelMap.AccountingReports}">
             <link target="ListReports"/>
@@ -84,6 +87,7 @@ under the License.
     </menu>
     
     <menu name="ArPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="PaymentTabBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
         <!-- SCIPIO: redundant
         <menu-item name="findPayments" title="${uiLabelMap.PageTitleFindPayment}">
             <link target="findPayments"/>
@@ -96,6 +100,18 @@ under the License.
     
     <menu name="ArPaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ArPaymentTabBar" recursive="includes-only" />
+        <include-elements menu-name="PaymentSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+    </menu>
+    
+    <menu name="ArInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="viewInvoices">
+        <include-elements menu-name="InvoiceTabBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+    </menu>
+    
+    <menu name="ArInvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="viewInvoices">
+        <include-elements menu-name="ArInvoiceTabBar" recursive="includes-only" />
+        <include-elements menu-name="InvoiceSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
     </menu>
     
 </menus>

@@ -32,7 +32,7 @@ under the License.
                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindContactList"/>
            </actions>
            <widgets>
-               <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+               <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
                    <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -449,7 +449,7 @@ under the License.
     <screen name="DefaultOptOutScreen">
         <section>            
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="Opt-Out Results">
                             <container>

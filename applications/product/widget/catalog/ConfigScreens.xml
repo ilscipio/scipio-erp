@@ -25,17 +25,15 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindConfigItems"/>
-                <set field="activeMainMenuItem" value="configs"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonConfigDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <!-- SCIPIO: done in decorator
                             <decorator-section name="menu-bar">
-                                <container style="button-bar">
-                                    <link target="EditProductConfigItem" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}"/>
-                                </container>
-                            </decorator-section>
+                                <include-menu name="ConfigItemSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                            </decorator-section>-->
                             <decorator-section name="search-options">
                                 <include-form location="component://product/widget/catalog/ConfigForms.xml" name="FindProductConfigItems"/>
                             </decorator-section>
@@ -53,12 +51,13 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditConfigItem"/>
-                <set field="activeMainMenuItem" value="configs"/>
                 <set field="activeSubMenuItem" value="EditProductConfigItem"/>
-                <set field="labelTitleProperty" value="ProductConfigItem"/>
+                <!--<set field="labelTitleProperty" value="ProductConfigItem"/>-->
 
                 <set field="configItemId" from-field="parameters.configItemId"/>
                 <entity-one entity-name="ProductConfigItem" value-field="configItem" auto-field-map="true"/>
+                <set field="isCreateConfigItem" type="Boolean" value="${groovy: !(context.configItem || (parameters.configItemId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateConfigItem ? 'ProductNewConfigItem' : 'ProductConfigItem'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonConfigDecorator" location="${parameters.mainDecoratorLocation}">
@@ -76,7 +75,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditConfigOptions"/>
-                <set field="activeMainMenuItem" value="configs"/>
                 <set field="activeSubMenuItem" value="EditProductConfigOptions"/>
                 <set field="labelTitleProperty" value="ProductConfigOptions"/>
 
@@ -179,9 +177,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
-                <set field="activeMainMenuItem" value="configs"/>
                 <set field="activeSubMenuItem" value="EditProductConfigItemContent"/>
-                <set field="labelTitleProperty" value="ProductContent"/>
+                <set field="labelTitleProperty" value="ProductConfigItemContent"/><!-- ProductContent -->
 
                 <set field="configItemId" from-field="parameters.configItemId"/>
                 <entity-one entity-name="ProductConfigItem" value-field="configItem" auto-field-map="true"/>
@@ -204,9 +201,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
-                <set field="activeMainMenuItem" value="configs"/>
                 <set field="activeSubMenuItem" value="EditProductConfigItemContent"/>
-                <set field="labelTitleProperty" value=""/>
+                <set field="labelTitleProperty" value="ProductConfigItemContent"/>
 
                 <set field="configItemId" from-field="parameters.configItemId"/>
                 <entity-one entity-name="ProductConfigItem" value-field="configItem" auto-field-map="true"/>
@@ -231,9 +227,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
-                <set field="activeMainMenuItem" value="configs"/>
                 <set field="activeSubMenuItem" value="ProductConfigItemArticle"/>
-                <set field="labelTitleProperty" value=""/>
+                <set field="labelTitleProperty" value="ProductConfigItemContent"/>
                 <set field="configItemId" from-field="parameters.configItemId"/>
                 <entity-one entity-name="ProductConfigItem" value-field="configItem" auto-field-map="true"/>
             </actions>

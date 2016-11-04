@@ -24,11 +24,11 @@ under the License.
     <screen name="GenericDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="chartofaccounts"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="chartofaccounts"/>
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                 <!-- body is the primary display for this page and is called recursively -->
                     <decorator-section name="body">
                         <section>
@@ -57,7 +57,7 @@ under the License.
                 <entity-one entity-name="GlAccount" value-field="glAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for CATALOG, _VIEW permission -->
@@ -146,7 +146,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet> <!-- title="${uiLabelMap.PageTitleViewGlAccountEntries}" -->
                             <include-tree name="ListGlAccountTree" location="component://accounting/widget/AccountingTrees.xml"/>
@@ -171,7 +171,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <screenlet> <!-- title="${uiLabelMap.PageTitleViewAccountingTransaction}" -->
@@ -196,7 +196,7 @@ under the License.
             </actions>
 
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet> <!-- title="${uiLabelMap.PageTitleAddGlAccount}" -->
                             <include-form name="EditGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>

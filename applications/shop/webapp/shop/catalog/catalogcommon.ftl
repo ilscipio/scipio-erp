@@ -1,28 +1,30 @@
 
-<#-- Scipio: common shop catalog definitions and macros -->
+<#-- SCIPIO: common shop catalog definitions and macros -->
 
 <#include "../common/common.ftl">
 
 <#-- TODO: params instead of context vars -->
 <#macro productDetailImages>
+    <#-- FIXME: these ?trim should be removed and handled elsewhere or differently because
+        they cause coercion to string -->
     <#--
-    <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","url")!?string?trim />
-    <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","url")!?string?trim />
-    <#assign productAdditionalSmallImage3 = productContentWrapper.get("XTRA_IMG_3_SMALL","url")?string?trim />
-    <#assign productAdditionalSmallImage4 = productContentWrapper.get("XTRA_IMG_4_SMALL","url")!?string?trim />-->
+    <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","url")! />
+    <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","url")! />
+    <#assign productAdditionalSmallImage3 = productContentWrapper.get("XTRA_IMG_3_SMALL","url")! />
+    <#assign productAdditionalSmallImage4 = productContentWrapper.get("XTRA_IMG_4_SMALL","url")! />-->
 
-    <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1","url")!?string?trim />
-    <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2","url")!?string?trim />
-    <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3","url")?string?trim />
-    <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4","url")!?string?trim />
-    <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","url")!?string?trim /> 
-    <#assign productOriginalImage = productContentWrapper.get("ORIGINAL_IMAGE_URL","url")!?string?trim />
+    <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1","url")! />
+    <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2","url")! />
+    <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3","url")! />
+    <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4","url")! />
+    <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","url")! /> 
+    <#assign productOriginalImage = productContentWrapper.get("ORIGINAL_IMAGE_URL","url")! />
     
     <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage />
     </#if>
-    <#if productLargeImageUrl?string?has_content>
-        <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl></#assign>
+    <#if productLargeImageUrl?has_content>
+        <#assign largeImage = makeOfbizContentCtxPrefixUrl(productLargeImageUrl)/>
     <#else>
         <#assign largeImage = "https://placehold.it/800x300">
     </#if>
@@ -33,20 +35,20 @@
       <div class="product-image-thumbs">
         <ul class="clearing-thumbs" data-clearing>
             <#if productAdditionalImage1?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage1!}</@ofbizContentUrl></#assign>
-                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover" class=""/></li>
+                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage1)/>
+                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover" class=""/></li>
             </#if>
             <#if productAdditionalImage2?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage2!}</@ofbizContentUrl></#assign>
-               <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage2)/>
+               <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage3?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage3!}</@ofbizContentUrl></#assign>
-                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage3)/>
+                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage4?has_content>
-                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix!}${productAdditionalImage4!}</@ofbizContentUrl></#assign>
-                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage4)/>
+                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
         </ul>
       </div>
@@ -56,7 +58,7 @@
 <#macro productDetailLongDescContent>
     <#-- Long description of product -->
     <p>${prodLongDescr!""}</p>
-    <#if warnings?has_content><@alert type="warning">${prodWarnings!""}</@alert></#if>
+    <#if prodWarnings?has_content><@alert type="warning">${prodWarnings!""}</@alert></#if>
 
     <#-- Digital Download Files Associated with this Product -->
     <#if downloadProductContentAndInfoList?has_content>            
@@ -120,7 +122,7 @@
         </#list>
     </#if>
 
-    <#-- Scipio: Debugging info
+    <#-- SCIPIO: Debugging info
     <@heading relLevel=+1>Debugging Info</@heading>
     <p style="font-size:0.7em;">Product ID: ${product.productId}</p>
     <p style="font-size:0.7em;">Product info map: ${product?string}</p>
@@ -140,7 +142,7 @@
         <#assign targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
-        <#assign assocTitle>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</#assign>
+        <#assign assocTitle>${rawString(beforeName)}<#if showName == "Y">${rawString(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${rawString(afterName)}</#assign>
         <@section title=assocTitle>
             <@grid columns=5>
                 <#list assocProducts as productAssoc>
@@ -203,15 +205,15 @@
     <#assign dummy = setRequestAttribute("productValue", productValue)>
 
     <#-- also bought -->
-    <@associatedProducts assocProducts=alsoBoughtProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductAlsoBought}" formNamePrefix="albt" targetRequestName="" />
+    <@associatedProducts assocProducts=alsoBoughtProducts beforeName="" showName="N" afterName="${rawLabel('ProductAlsoBought')}" formNamePrefix="albt" targetRequestName="" />
     <#-- obsolete -->
-    <@associatedProducts assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolete}" formNamePrefix="obs" targetRequestName="" />
+    <@associatedProducts assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolete')}" formNamePrefix="obs" targetRequestName="" />
     <#-- cross sell -->
-    <@associatedProducts assocProducts=crossSellProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductCrossSell}" formNamePrefix="cssl" targetRequestName="crosssell" />
+    <@associatedProducts assocProducts=crossSellProducts beforeName="" showName="N" afterName="${rawLabel('ProductCrossSell')}" formNamePrefix="cssl" targetRequestName="crosssell" />
     <#-- up sell -->
-    <@associatedProducts assocProducts=upSellProducts beforeName="${uiLabelMap.ProductUpSell} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell" />
+    <@associatedProducts assocProducts=upSellProducts beforeName="${rawLabel('ProductUpSell')} " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell" />
     <#-- obsolescence -->
-    <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolescense}" formNamePrefix="obce" targetRequestName="" />
+    <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolescense')}" formNamePrefix="obce" targetRequestName="" />
 </#macro>
 
 

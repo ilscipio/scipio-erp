@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section> <#--  title="${uiLabelMap.OrderReturnItems}" -->
+<@section> <#--  title=uiLabelMap.OrderReturnItems -->
         <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
         <#assign selectAllFormName = "selectAllForm"/>
         <form name="selectAllForm" method="post" action="<@ofbizUrl>makeQuickReturn</@ofbizUrl>">
@@ -63,8 +63,12 @@ under the License.
               </#if>
           </@field>
         </#if>
-          <#assign label><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></#assign>
-          <@field type="generic" label=label>
+          <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
+            <#assign fieldLabel = uiLabelMap.OrderReturnShipFromAddress>
+          <#else>
+            <#assign fieldLabel = uiLabelMap["checkhelper.select_shipping_destination"]>
+          </#if>
+          <@field type="generic" label=fieldLabel>
             <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
               <@tbody>
               <#list shippingContactMechList as shippingContactMech>

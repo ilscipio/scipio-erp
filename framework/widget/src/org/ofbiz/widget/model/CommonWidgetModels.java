@@ -45,6 +45,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.widget.WidgetWorker;
 import org.w3c.dom.Element;
 
 /**
@@ -245,11 +246,7 @@ public final class CommonWidgetModels {
         public String getAlt(Map<String, Object> context) {
             String alt = this.alt.expandString(context);
             // FIXME: Encoding should be done by the renderer, not by the model.
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                alt = simpleEncoder.encode(alt);
-            }
-            return alt;
+            return WidgetWorker.getEarlyEncoder(context).encode(alt); // SCIPIO: simplified
         }
 
         public String getBorder(Map<String, Object> context) {
@@ -527,12 +524,7 @@ public final class CommonWidgetModels {
         }
 
         public String getTarget(Map<String, Object> context) {
-            Map<String, Object> expanderContext = context;
-            UtilCodec.SimpleEncoder simpleEncoder = context == null ? null : (UtilCodec.SimpleEncoder) context
-                    .get("simpleEncoder");
-            if (simpleEncoder != null) {
-                expanderContext = UtilCodec.HtmlEncodingMapWrapper.getHtmlEncodingMapWrapper(context, simpleEncoder);
-            }
+            Map<String, Object> expanderContext = UtilCodec.EncodingMapWrapper.getEncodingMapWrapper(context, WidgetWorker.getEarlyEncoder(context)); // SCIPIO: simplified
             return this.targetExdr.expandString(expanderContext);
         }
 
@@ -550,12 +542,7 @@ public final class CommonWidgetModels {
 
         public String getText(Map<String, Object> context) {
             String text = this.textExdr.expandString(context);
-            // FIXME: Encoding should be done by the renderer, not by the model.
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                text = simpleEncoder.encode(text);
-            }
-            return text;
+            return WidgetWorker.getEarlyEncoder(context).encode(text); // SCIPIO: simplified
         }
 
         public FlexibleStringExpander getTextExdr() {

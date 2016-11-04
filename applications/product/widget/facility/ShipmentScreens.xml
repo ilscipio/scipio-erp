@@ -28,7 +28,7 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/FindShipment.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -59,9 +59,9 @@ under the License.
                 <get-related-one value-field="shipment" to-value-field="facility" relation-name="DestinationFacility"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-screen name="MainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -134,7 +134,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- Scipio: Deprecated in favor to EditShipment -->
+    <!-- SCIPIO: Deprecated in favor to EditShipment -->
    <!--  <screen name="ViewShipment">
         <section>
             <actions>
@@ -246,7 +246,7 @@ under the License.
                 <decorator-screen name="CommonShipmentDecorator">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductShipmentPlan}">
-                            <include-form name="findOrderItems" location="component://product/widget/facility//ShipmentForms.xml"/>
+                            <include-form name="findOrderItems" location="component://product/widget/facility/ShipmentForms.xml"/>
                         </screenlet>
                         <section>
                             <condition>
@@ -254,12 +254,12 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.ProductShipmentPlanAdd}">
-                                    <include-form name="addToShipmentPlan" location="component://product/widget/facility//ShipmentForms.xml"/>
+                                    <include-form name="addToShipmentPlan" location="component://product/widget/facility/ShipmentForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
                         <screenlet title="${uiLabelMap.ProductShipmentPlanList}">
-                            <include-form name="listShipmentPlan" location="component://product/widget/facility//ShipmentForms.xml"/>
+                            <include-form name="listShipmentPlan" location="component://product/widget/facility/ShipmentForms.xml"/>
                             <label style="heading" text="${uiLabelMap.ProductShipmentTotalWeight}: ${totWeight} ${uiLabelMap.ProductShipmentTotalVolume}: ${totVolume}"/>
                         </screenlet>
                         <section>
@@ -367,7 +367,7 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentRouteSegments.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/facility/shipment/QuickShipOrder.ftl"/></html>
@@ -386,7 +386,7 @@ under the License.
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="VerifyPick"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/VerifyPick.groovy"/>
-                <set field="facilityMenu" value="FacilityPickingSideBar" />
+                <set field="activeSubMenu" value="FacilityPicking"/>
                 <set field="title" value="${uiLabelMap.ProductVerifyPick} ${facilityId}"/>
             </actions>
             <widgets>
@@ -409,7 +409,7 @@ under the License.
                 <set field="title" value="${uiLabelMap.ProductPackOrder} ${facilityId}"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PackOrder"/>
-                <set field="facilityMenu" value="FacilityPackOrderSideBar"/>
+                <!-- <set field="facilityMenu" value="FacilityPackOrderSideBar"/>-->
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/PackOrder.groovy"/>
             </actions>
             <widgets>
@@ -428,11 +428,15 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductWeighPackageOnly"/>
-                <set field="activeMainMenuItem" value="shipment"/>
+                <!--
+                <set field="activeMainMenuItem" value="shipment"/>  -->
+                <set field="activeMainMenuItem" value="facility"/>
+                <set field="activeSubMenuItem" value="PackOrder"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/WeightPackage.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- CommonFacilityAppDecorator -->
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/facility/shipment/WeightPackage.ftl"/></html>

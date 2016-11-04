@@ -95,7 +95,7 @@ under the License.
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx3512M"/>
     <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
-    <!-- Scipio: New properties -->
+    <!-- SCIPIO: New properties -->
     <property name="solr.home" value="applications/solr/"/>
 
     <import file="framework/build.xml" optional="false"/>
@@ -805,13 +805,15 @@ under the License.
         <echo message="[docs-all] ========== Done Building (JavaDocs) =========="/>
     </target>
 
-    <!-- Scipio: Main FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. -->
+    <!-- SCIPIO: Main FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. 
+        NOTE: 2016-10-27: The output of this is no longer committed to repo. -->
     <target name="docs-ftl-scipio" depends="build">
         <antcall target="docs-ftl-scipio-ftlonly"/>
     </target>
     
-    <!-- Scipio: FIXME?: This is currently standard-Scipio-specific and quite hardcoded. May even belong in a separate project.
-        Or could also integrate this better with other "docs" builds in future (delegate to component build.xml) -->
+    <!-- SCIPIO: FIXME?: This is currently standard-Scipio-specific and quite hardcoded. May even belong in a separate project.
+        Or could also integrate this better with other "docs" builds in future (delegate to component build.xml).
+        NOTE: 2016-10-27: The output of this is no longer committed to repo.  -->
     <target name="docs-ftl-scipio-ftlonly">
         <echo message="[docs-ftl-scipio] ========== Start Building (FTL docs) =========="/>
         <echo message="[docs-ftl-scipio] Building Scipio template-writer-friendly FTL lib docs..."/>
@@ -820,6 +822,7 @@ under the License.
             <arg value="templating"/> <!-- doc purpose -->
             <arg value="framework/common/webcommon/includes/scipio/lib"/> <!-- base source folder -->
             <arg value="doc/scipio/templating/ftl/lib"/> <!-- base output folder -->
+            <arg value=".html"/> <!-- output file extension -->
             <arg value="framework/common/webcommon/includes/scipio/doc/ftlDocTemplate.ftl"/> <!-- doc template -->
             <!-- source files to process -->
             <arg value="utilities.ftl"/>
@@ -839,6 +842,59 @@ under the License.
             theme creators need to look at the FTL files in depth anyway, even with markup separation -->
         <echo message="[docs-ftl-scipio] ========== Done Building (FTL docs) =========="/>
     </target>
+    
+    <!-- SCIPIO: Website FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. -->
+    <target name="docs-ftl-scipio-website" depends="build">
+        <antcall target="docs-ftl-scipio-website-ftlonly"/>
+    </target>
+
+    <target name="docs-ftl-scipio-website-ftlonly">
+        <echo message="[docs-ftl-scipio-website] ========== Start Building (FTL docs) =========="/>
+        <echo message="[docs-ftl-scipio-website] Building Scipio template-writer-friendly FTL lib docs..."/>
+        <java classname="com.ilscipio.scipio.ce.webapp.ftl.doc.FtlDocCompiler" fork="true">
+            <arg value="scipio-lib"/> <!-- lib format -->
+            <arg value="templating"/> <!-- doc purpose -->
+            <arg value="framework/common/webcommon/includes/scipio/lib"/> <!-- base source folder -->
+            <arg value="doc/scipio-website/templating/ftl/lib"/> <!-- base output folder -->
+            <arg value="_NONE_"/> <!-- output file extension -->
+            <arg value="framework/common/webcommon/includes/scipio/doc/ftlDocTemplateWebsite.ftl"/> <!-- doc template -->
+            <!-- source files to process -->
+            <arg value="utilities.ftl"/>
+            <arg value="standard/htmlContent.ftl"/>
+            <arg value="standard/htmlForm.ftl"/>
+            <arg value="standard/htmlInfo.ftl"/>
+            <arg value="standard/htmlNav.ftl"/>
+            <arg value="standard/htmlScript.ftl"/>
+            <arg value="standard/htmlStructure.ftl"/>
+            <arg value="standard/htmlTemplate.ftl"/>
+            <classpath>
+                <path location="framework/webapp/build/lib/ofbiz-webapp.jar"/> <!-- the compiler class currently lives in here -->
+                <path location="framework/base/lib/*"/> <!-- includes Freemarker (and some others: log4j) -->
+            </classpath>
+        </java>
+        <!-- NOTE: the following warning could be fixed in the java but it's not worth it, just deal with it -->
+        <echo message="[docs-ftl-scipio-website] WARN: The output files may not be browsable locally, because the generated URLs for website may differ from the local paths (for both absolute and relative URLs)"/>
+        <echo message="[docs-ftl-scipio-website] ========== Done Building (FTL docs) =========="/>
+    </target>
+    
+    <!-- SCIPIO: these would have been used to deploy html files or intermediate FTLs (highly complex,
+        but now we do dynamic renders which are much easier to handle
+    <target name="docs-ftl-scipio-deploylocal" depends="docs-ftl-scipio">
+        <antcall target="docs-ftl-scipio-deploylocalonly"/>
+    </target>
+    
+    <target name="docs-ftl-scipio-deploylocalonly">
+        <echo message="[docs-ftl-scipio] ========== Deploying Locally (FTL docs) =========="/>
+        <copy todir="${basedir}/framework/webtools/webapp/webtools/docs/html/templating/ftl/lib" overwrite="true" verbose="true">
+            <fileset dir="${basedir}/doc/scipio/templating/ftl/lib"/>
+        </copy>
+        <echo message="[docs-ftl-scipio] ========== Done Deploying (FTL docs) =========="/>
+    </target>
+    
+    <target name="docs-ftl-scipio-ftldeploylocalonly">
+        <antcall target="docs-ftl-scipio-ftlonly"/>
+        <antcall target="docs-ftl-scipio-deploylocalonly"/>
+    </target>-->
     
     <!-- ================================================================== -->
     <!-- Contrib Targets                                                    -->
@@ -911,7 +967,7 @@ under the License.
 
     <target name="start"
             description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
-        <!-- Scipio: -->
+        <!-- SCIPIO: -->
         <property name="currentTarget" value="start"/>
         <condition property="spawn" else="false" >
             <isset property="scipio.start.spawn"/>
@@ -920,7 +976,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr home -->
+            <!-- SCIPIO: solr home -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -935,7 +991,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- Scipio: solr home -->
+            <!-- SCIPIO: solr home -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -947,7 +1003,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -962,7 +1018,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -978,7 +1034,7 @@ under the License.
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start-debug"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -990,7 +1046,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
@@ -1005,7 +1061,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
@@ -1017,7 +1073,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1032,7 +1088,7 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1041,7 +1097,7 @@ under the License.
     <target name="stop"
             description="Stop OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <java jar="ofbiz.jar" fork="true">
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="-shutdown"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1050,7 +1106,7 @@ under the License.
     <target name="status"
             description="Display status of OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <java jar="ofbiz.jar" fork="true">
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="-status"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1068,7 +1124,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
         </java>
@@ -1079,7 +1135,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
         </java>
@@ -1087,7 +1143,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO1"/>
@@ -1096,7 +1152,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO2"/>
@@ -1108,7 +1164,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=seed"/>
@@ -1120,7 +1176,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext"/>
@@ -1132,7 +1188,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
@@ -1144,7 +1200,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
@@ -1157,7 +1213,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
@@ -1175,7 +1231,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
@@ -1218,7 +1274,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
@@ -1229,7 +1285,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
@@ -1256,7 +1312,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
@@ -1268,7 +1324,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
@@ -1288,7 +1344,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
@@ -1311,7 +1367,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
@@ -1322,7 +1378,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
@@ -1561,7 +1617,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
@@ -1600,7 +1656,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="test"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1634,7 +1690,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="testlist"/>
             <arg file="runtime/test-list-build.xml"/>
@@ -1650,7 +1706,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
@@ -1682,7 +1738,7 @@ under the License.
         <jvmarg value="-Djava.compiler=NONE"/>
         <jvmarg value="-Xdebug"/>
         <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8091"/>
-        <!-- Scipio: solr path -->
+        <!-- SCIPIO: solr path -->
         <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
         <arg value="test"/>
         <arg value="-component=${test.component}"/>
@@ -1710,7 +1766,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- Scipio: solr path -->
+            <!-- SCIPIO: solr path -->
             <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
@@ -1985,9 +2041,10 @@ under the License.
         <copy file="${basedir}/framework/resources/templates/index.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/index.jsp" encoding="iso-8859-1">
             <filterset refid="replacePlaceholders"/>
         </copy>
+        <!-- SCIPIO: gone
         <copy file="${basedir}/framework/resources/templates/error.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error/error.jsp" encoding="iso-8859-1">
             <filterset refid="replacePlaceholders"/>
-        </copy>
+        </copy>-->
         <copy file="${basedir}/framework/resources/templates/controller.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/controller.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>

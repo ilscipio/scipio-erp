@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@section><#-- title=uiLabelMap.OrderShippingInformation -->
   <form id="shipOptionsAndShippingInstructions" method="post" action="<@ofbizUrl>processShipOptions</@ofbizUrl>" name="${parameters.formNameValue}">
@@ -34,14 +34,14 @@ under the License.
               <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if>
              </#if>
           </#assign>
-          <@field type="radio" inlineItems=false id="shipping_method_${shippingMethod}" name="shipping_method" value="${shippingMethod}" checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=fieldLabel/>
+          <@field type="radio" inlineItems=false id="shipping_method_${shippingMethod}" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>
       </#list>
       <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
-          <@field type="radio" name="shipping_method" value="Default" checked=true label="${uiLabelMap.OrderUseDefault}."/>
+          <@field type="radio" name="shipping_method" value="Default" checked=true label="${rawLabel('OrderUseDefault')}."/>
       </#if>
       </@field>
 
-        <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+        <@field type="generic" label="${rawLabel('OrderShipAllAtOnce')}?">
           <@field type="radio" inlineItems=false id="maySplit_N" checked=((shoppingCart.getMaySplit()!"N") == "N") name="may_split" value="false" label=uiLabelMap.OrderPleaseWaitUntilBeforeShipping />
           <@field type="radio" inlineItems=false id="maySplit_Y" checked=((shoppingCart.getMaySplit()!"N") == "Y") name="may_split" value="true" label=uiLabelMap.OrderPleaseShipItemsBecomeAvailable />
         </@field>

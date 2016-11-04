@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Scipio: TODO: SHOW GIFT CARD BALANCE -->
+<#-- SCIPIO: TODO: SHOW GIFT CARD BALANCE -->
 
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
@@ -27,11 +27,11 @@ under the License.
   </@menu>
 <#else>
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
-<#-- Scipio: FIXME -->
+<#-- SCIPIO: FIXME -->
 <@commonMsg type="warning">${uiLabelMap.CommonWarning}: This form currently bypasses gift card product store settings and validation (for testing purposes).</@commonMsg>
 
 <#macro menuContent menuArgs={}>
@@ -40,13 +40,13 @@ under the License.
     <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle>
-  <#if !giftCard??>
-    ${uiLabelMap.AccountingAddNewGiftCard}
-  <#else>
-    <#-- Scipio: duplicate: ${uiLabelMap.AccountingEditGiftCard} -->
-  </#if>
-</#assign>
+
+<#if !giftCard??>
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewGiftCard/>
+<#else>
+  <#-- SCIPIO: duplicate: <#assign sectionTitle = uiLabelMap.AccountingEditGiftCard/> -->
+  <#assign sectionTitle = ""/>
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
   <form method="post" action="<@ofbizUrl><#if !giftCard??>createGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editgiftcardform">
     <#if giftCard??>
@@ -68,10 +68,10 @@ under the License.
         </#if>
       </#if>
     </#if>
-    <@field type="input" label="${uiLabelMap.AccountingCardNumber}" size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
-    <@field type="password" label="${uiLabelMap.AccountingPINNumber}" size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!) />
+    <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
+    <@field type="password" label=uiLabelMap.AccountingPINNumber size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!) />
 
-    <@field type="generic" label="${uiLabelMap.AccountingExpirationDate}">
+    <@field type="generic" label=uiLabelMap.AccountingExpirationDate>
         <#assign expMonth = "">
         <#assign expYear = "">
         <#if giftCardData?? && giftCardData.expireDate??>
@@ -104,7 +104,7 @@ under the License.
           <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
         </@field>
     </@field>
-    <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
+    <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
   </form>  
 </@section>
  

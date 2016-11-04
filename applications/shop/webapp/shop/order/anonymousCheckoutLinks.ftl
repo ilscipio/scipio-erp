@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 
-<#-- Scipio: DEPRECATED old (preserve for links) Superseded by checkoutstepsfull.ftl
+<#-- SCIPIO: DEPRECATED old (preserve for links) Superseded by checkoutstepsfull.ftl
 <@script>
 function submitForm(form) {
    form.submit();
 }
 </@script>
 <@menu type="button">
-    <#assign submitFormOnClick><#if callSubmitForm??>javascript:submitForm(document.${parameters.formNameValue!});</#if></#assign>
+    <#assign submitFormOnClick><#if callSubmitForm??>javascript:submitForm(document['${escapeVal(parameters.formNameValue!, 'js')}']);</#if></#assign>
     <@menuitem type="link" href=makeOfbizUrl("setCustomer") onClick=submitFormOnClick text="Personal Info" />
     <@menuitem type="link" href=makeOfbizUrl("setShipping") class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enableShippingAddress??)) text="Shipping Address" />
     <@menuitem type="link" href=makeOfbizUrl("setShipOptions")class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enableShipmentMethod??)) text="Shipping Options" />

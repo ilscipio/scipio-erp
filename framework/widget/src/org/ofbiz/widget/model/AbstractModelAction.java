@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -45,6 +47,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.finder.ByAndFinder;
@@ -57,9 +60,11 @@ import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.widget.WidgetWorker;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Abstract base class for the action models.
@@ -111,6 +116,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return new GetRelatedOne(modelWidget, actionElement);
         } else if ("get-related".equals(actionElement.getNodeName())) {
             return new GetRelated(modelWidget, actionElement);
+        } else if (IncludeActions.isIncludeActions(actionElement)) { // SCIPIO: new
+            return IncludeActions.newInstance(modelWidget, actionElement);
         } else {
             throw new IllegalArgumentException("Action element not supported with name: " + actionElement.getNodeName());
         }
@@ -600,14 +607,17 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * @see <code>widget-common.xsd</code>
      */
     public static class Script extends AbstractModelAction {
-        private final String location;
-        private final String method;
+        // SCIPIO: these are patched for dynamic location support
+        //private final String location;
+        //private final String method;
+        private final FlexibleStringExpander locationExdr;
 
         public Script(ModelWidget modelWidget, Element scriptElement) {
             super(modelWidget, scriptElement);
             String scriptLocation = scriptElement.getAttribute("location");
-            this.location = WidgetWorker.getScriptLocation(scriptLocation);
-            this.method = WidgetWorker.getScriptMethodName(scriptLocation);
+            //this.location = WidgetWorker.getScriptLocation(scriptLocation);
+            //this.method = WidgetWorker.getScriptMethodName(scriptLocation);
+            this.locationExdr = FlexibleStringExpander.getInstance(scriptLocation);
         }
 
         @Override
@@ -617,6 +627,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
+            String scriptLocation = this.locationExdr.expandString(context);
+            String location = WidgetWorker.getScriptLocation(scriptLocation);
+            String method = WidgetWorker.getScriptMethodName(scriptLocation);
+            
             if (location.endsWith(".xml")) {
                 Map<String, Object> localContext = new HashMap<String, Object>();
                 localContext.putAll(context);
@@ -629,16 +643,18 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     throw new GeneralException("Error running simple method at location [" + location + "]", e);
                 }
             } else {
-                ScriptUtil.executeScript(this.location, this.method, context);
+                ScriptUtil.executeScript(location, method, context);
             }
         }
 
         public String getLocation() {
-            return location;
+            //return location;
+            return WidgetWorker.getScriptLocation(locationExdr.getOriginal());
         }
 
         public String getMethod() {
-            return method;
+            //return method;
+            return WidgetWorker.getScriptMethodName(locationExdr.getOriginal());
         }
     }
 
@@ -946,6 +962,267 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         public FlexibleStringExpander getValueExdr() {
             return valueExdr;
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-xxx-actions&gt; elements.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static abstract class IncludeActions extends AbstractModelAction {
+        private static final Map<String, String> elemTypeMap;
+        static {
+            Map<String, String> map = new HashMap<>();
+            map.put("include-screen-actions", "screen");
+            map.put("include-form-actions", "form");
+            map.put("include-form-row-actions", "form-row");
+            map.put("include-menu-actions", "menu");
+            map.put("include-tree-actions", "tree");
+            elemTypeMap = map;
+        }
+        
+        private final FlexibleStringExpander nameExdr;
+        private final FlexibleStringExpander locationExdr;
+        private final String defaultLocation; // the file where this action was originally defined
+
+        public IncludeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            this.nameExdr = FlexibleStringExpander.getInstance(element.getAttribute("name"));
+            this.locationExdr = FlexibleStringExpander.getInstance(element.getAttribute("location"));
+
+            String defaultLocation = WidgetDocumentInfo.retrieveAlways(element).getResourceLocation();
+            if (defaultLocation == null || !defaultLocation.startsWith("component://")) {
+                if (UtilValidate.isEmpty(this.locationExdr.getOriginal())) {
+                    Debug.logError("include-xxx-actions: Could not determine an original/default document location (in component:// format) " +
+                            "for actions include directive (found: " + defaultLocation + "), and the location " +
+                            "attribute expression is empty; the include directive will fail", module);
+                } else {
+                    Debug.logWarning("include-xxx-actions: Could not determine an original/default document location (in component:// format) " +
+                            "for actions include directive (found: " + defaultLocation + "); " +
+                            "relative locations for the location attribute expression are unsupported in this case and will fail if used", module);
+                }
+                if (defaultLocation == null) {
+                    defaultLocation = "";
+                }
+            }
+            this.defaultLocation = defaultLocation;
+        }
+        
+        public static IncludeActions newInstance(ModelWidget modelWidget, Element element, String type) {
+            if ("screen".equals(type)) {
+                return new IncludeScreenActions(modelWidget, element);
+            } else if ("form".equals(type)) {
+                return new IncludeFormActions(modelWidget, element);
+            } else if ("form-row".equals(type)) {
+                return new IncludeFormRowActions(modelWidget, element);    
+            } else if ("menu".equals(type)) {
+                return new IncludeMenuActions(modelWidget, element);
+            } else if ("tree".equals(type)) {
+                return new IncludeTreeActions(modelWidget, element);
+            } else {
+                throw new IllegalArgumentException("include-xxx-actions: Unrecognized actions include type: " + type);
+            }
+        }
+        
+        public static IncludeActions newInstance(ModelWidget modelWidget, Element element) {
+            return newInstance(modelWidget, element, getIncludeActionsType(element));
+        }
+        
+        public static String getIncludeActionsType(Element element) {
+            return elemTypeMap.get(element.getTagName());
+        }
+        
+        public static boolean isIncludeActions(Element element) {
+            return elemTypeMap.containsKey(element.getTagName());
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        public FlexibleStringExpander getNameExdr() {
+            return this.nameExdr;
+        }
+        
+        public String getName(Map<String, Object> context) {
+            return this.nameExdr.expandString(context);
+        }
+
+        public FlexibleStringExpander getLocationExdr() {
+            return this.locationExdr;
+        }
+
+        public String getDefaultLocation() {
+            return this.defaultLocation;
+        }
+        
+        public String getLocation(Map<String, Object> context) {
+            String location = this.locationExdr.expandString(context);
+            if (UtilValidate.isEmpty(location)) {
+                location = this.getDefaultLocation();
+            }
+            return location;
+        }
+        
+        protected void runIncludedActions(List<ModelAction> actions, Map<String, Object> context) throws GeneralException {
+            //if (actions != null) {
+            //    for(ModelAction action: actions) {
+            //        action.runAction(context);
+            //    }
+            //}
+            AbstractModelAction.runSubActions(actions, context); // NOTE: wraps in RunTimeExceptions
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-screen-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeScreenActions extends IncludeActions {
+
+        public IncludeScreenActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            String name = getName(context);
+            String location = getLocation(context);
+            ModelScreen widget;
+            try {
+                widget = ScreenFactory.getScreenFromLocation(location, name);
+            } catch (IOException e) {
+                throw new GeneralException(e);
+            } catch (SAXException e) {
+                throw new GeneralException(e);
+            } catch (ParserConfigurationException e) {
+                throw new GeneralException(e);
+            }
+            runIncludedActions(widget.getSection().getActions(), context);
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-form-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeFormActions extends IncludeActions {
+
+        public IncludeFormActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            String name = getName(context);
+            String location = getLocation(context);
+            ModelForm widget;
+            try {
+                widget = FormFactory.getFormFromLocation(location, name, 
+                        ((Delegator) context.get("delegator")).getModelReader(), 
+                        ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
+            } catch (IOException e) {
+                throw new GeneralException(e);
+            } catch (SAXException e) {
+                throw new GeneralException(e);
+            } catch (ParserConfigurationException e) {
+                throw new GeneralException(e);
+            }
+            runIncludedActions(widget.getActions(), context);
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-form-row-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeFormRowActions extends IncludeActions {
+
+        public IncludeFormRowActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            String name = getName(context);
+            String location = getLocation(context);
+            ModelForm widget;
+            try {
+                widget = FormFactory.getFormFromLocation(location, name, 
+                        ((Delegator) context.get("delegator")).getModelReader(), 
+                        ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());            
+            } catch (IOException e) {
+                throw new GeneralException(e);
+            } catch (SAXException e) {
+                throw new GeneralException(e);
+            } catch (ParserConfigurationException e) {
+                throw new GeneralException(e);
+            }
+            runIncludedActions(widget.getRowActions(), context);
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-menu-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeMenuActions extends IncludeActions {
+
+        public IncludeMenuActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            String name = getName(context);
+            String location = getLocation(context);
+            ModelMenu widget;
+            try {
+                widget = MenuFactory.getMenuFromLocation(location, name);
+            } catch (IOException e) {
+                throw new GeneralException(e);
+            } catch (SAXException e) {
+                throw new GeneralException(e);
+            } catch (ParserConfigurationException e) {
+                throw new GeneralException(e);
+            }
+            runIncludedActions(widget.getActions(), context);
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-tree-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeTreeActions extends IncludeActions {
+
+        public IncludeTreeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            String name = getName(context);
+            String location = getLocation(context);
+            ModelTree widget;
+            try {
+                widget = TreeFactory.getTreeFromLocation(location, name, 
+                        (Delegator) context.get("delegator"), (LocalDispatcher) context.get("dispatcher"));
+            } catch (IOException e) {
+                throw new GeneralException(e);
+            } catch (SAXException e) {
+                throw new GeneralException(e);
+            } catch (ParserConfigurationException e) {
+                throw new GeneralException(e);
+            }
+            runIncludedActions(widget.getNodeMap().get(widget.getRootNodeName()).getActions(), context);
         }
     }
 }

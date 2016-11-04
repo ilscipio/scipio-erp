@@ -69,8 +69,8 @@ under the License.
 
         if (detailImageUrl == "_NONE_") {
             hack = document.createElement('span');
-            hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
+            hack.innerHTML="${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}";
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}");
             return;
         }
         detailImageUrl = detailImageUrl.replace(/\&\#47;/g, "/");
@@ -179,9 +179,12 @@ function getConfigDetails() {
 
   <hr class="sepbar"/>
 
-  <#-- Scipio: open form earlier than stock code so don't produce invalid html... -->
-  <#assign action><@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl></#assign>
-  <@form method="post" action=action name="addform">
+  <#-- SCIPIO: open form earlier than stock code so don't produce invalid html... -->
+  <#assign viewSwitch = "">
+  <#if requestAttributes._CURRENT_VIEW_??>
+    <#assign viewSwitch = "/" + rawString(requestAttributes._CURRENT_VIEW_)>
+  </#if>
+  <@form method="post" action=makeOfbizUrl('additem'+viewSwitch) name="addform">
 
   <#-- Product image/name/price -->
   <@row>
@@ -192,12 +195,12 @@ function getConfigDetails() {
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?string?has_content>
-        <a href="javascript:popupDetail();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
+        <a href="javascript:popupDetail();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl ctxPrefix=true>${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
     </@cell>
     <@cell columns=8>
-      <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
-      <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>
+      <div>${productContentWrapper.get("DESCRIPTION")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
@@ -330,11 +333,11 @@ function getConfigDetails() {
             <#else>
               <#assign hiddenStyle = styles.hidden!>
             </#if>
-            <#-- Scipio: NOTE: amount is kg or either; quantity is the number of units buying -->
+            <#-- SCIPIO: NOTE: amount is kg or either; quantity is the number of units buying -->
             <@field type="input" containerId="add_amount" label=uiLabelMap.OrderAmount containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
             <#if !configwrapper.isCompleted()>
               <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
-              <@field type="input" label="${uiLabelMap.ProductQuantity} (${uiLabelMap.OrderUnits})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
+              <@field type="input" label="${rawLabel('ProductQuantity')} (${rawLabel('OrderUnits')})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
             <#else>
               <@field type="input" label=uiLabelMap.ProductQuantity size="5" name="quantity" value="1" />
               <@field type="submit" submitType="link" href="javascript:addItem()" class="+${styles.link_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddToCart />
@@ -369,7 +372,7 @@ function getConfigDetails() {
               <option value="">${uiLabelMap.OrderNewShoppingList}</option>
           </@field>
           <@field type="input" label=uiLabelMap.ProductQuantity size="5" name="quantity" value="1" />
-          <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="+${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />
+          <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="+${styles.link_run_sys!} ${styles.action_add!}" text="[${rawLabel('OrderAddToShoppingList')}]" />
         </form>
       <#else> 
         ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
@@ -401,7 +404,7 @@ function getConfigDetails() {
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}">les.<img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgStandard" alt="" /></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}">les.<img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" class="cssImgStandard" alt="" /></a>
                   <br />
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>
@@ -418,8 +421,8 @@ function getConfigDetails() {
   </@row>
 
   <#-- Long description of product -->
-  <#assign longDesc = productContentWrapper.get("LONG_DESCRIPTION", "html")!?string?trim>
-  <#if longDesc?has_content>
+  <#assign longDesc = escapeVal(productContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})>
+  <#if longDesc?trim?has_content>
     <hr class="sepbar"/>
     <@row>
       <@cell>${longDesc}</@cell>
@@ -452,20 +455,20 @@ function getConfigDetails() {
           <@row>
             <@cell columns=4>${question.question}</@cell>
             <@cell columns=8 class="+${styles.text_right!}">
-              <#-- Scipio: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
+              <#-- SCIPIO: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 
-                <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
+                <#assign instructions = question.content.get("INSTRUCTIONS")!>
                 <#assign instructionsHtml = "">
                 <#if instructions?has_content>
-                  <#assign instructionsHtml> <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a></#assign>
+                  <#assign instructionsHtml> <a href="javascript:showErrorAlert('${escapeVal(uiLabelMap.CommonErrorMessage2, 'js-html')}','${escapeVal(instructions, 'js-html')}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a></#assign>
                 </#if>
                 <div>${question.description!}${instructionsHtml}</div>
 
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
-                  <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgSmall" align="left" alt="" />
+                  <img src="<@ofbizContentUrl ctxPrefix=true>${image}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgSmall" align="left" alt="" />
                 </#if>
               <#else>
                 <a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav!} ${styles.action_view!}">Details</a>
@@ -497,7 +500,7 @@ function getConfigDetails() {
                 <#if renderSingleChoiceWithRadioButtons?? && "Y" == renderSingleChoiceWithRadioButtons>
                 <#-- This is the radio button implementation -->
                 <#if !question.isMandatory()>
-                  <@field type="radio" name="${counter}" value="" checked=(!question.isSelected()) label="No option" />
+                  <@field type="radio" name=counter?string value="" checked=(!question.isSelected()) label="No option" />
                 </#if>
                 <#assign optionComment = "">
                 <#assign optionCounter = 0>
@@ -516,7 +519,7 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
-                        <@field type="radio" name="${counter}" id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
+                        <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
@@ -530,12 +533,12 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                           <#assign fieldLabel>
-                            ${option.description}&nbsp;
+                            ${option.description!}&nbsp;
                             <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
                             <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
                             <#if !option.isAvailable()> (*)</#if>
                           </#assign>
-                          <@field type="radio" name="${counter}" value=optionCounter checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())) label=fieldLabel />
+                          <@field type="radio" name=counter?string value=optionCounter checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())) label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                         </@cell>
                       </@row>
                     </#if>
@@ -544,7 +547,7 @@ function getConfigDetails() {
                   <@field type="input" name="comments_${counter}_0" id="comments_${counter}_0" value=(optionComment!) label=uiLabelMap.CommonComments />
                 <#else>
                 <#-- And this is the select box implementation -->
-                <@field type="select" name="${counter}">
+                <@field type="select" name=counter?string>
                 <#if !question.isMandatory()>
                   <option value="">---</option>
                 </#if>
@@ -583,7 +586,7 @@ function getConfigDetails() {
                       <@row>
                         <@cell>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
-                        <@field type="checkbox" name="${counter}" id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
+                        <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
 
                         <#assign components = option.getComponents()>
                         <#list components as component>
@@ -596,7 +599,7 @@ function getConfigDetails() {
                       </@row>
                     <#else>
                       <#assign fieldLabel>${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if></#assign>
-                      <@field type="checkbox" name="${counter}" value=optionCounter checked=option.isSelected() label=fieldLabel />
+                      <@field type="checkbox" name=counter?string value=optionCounter checked=option.isSelected() label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                     </#if>
                     <@field type="input" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value=(option.comments!) label=uiLabelMap.CommonComments/>
                   <#assign optionCounter = optionCounter + 1>
@@ -624,7 +627,7 @@ function getConfigDetails() {
   </#if>
   <#if assocProducts?has_content>
   <@row><@cell>&nbsp;</@cell></@row>
-  <#assign title>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</#assign>
+  <#assign title>${rawString(beforeName)}<#if showName == "Y">${rawString(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${rawString(afterName)}</#assign>
   <@section title=title>
     <hr />
     <#list assocProducts as productAssoc>

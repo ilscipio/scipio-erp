@@ -20,7 +20,7 @@ under the License.
 <#if taskCosts?has_content>
 <#list taskCosts as taskCost>
   <#assign task = taskCost.task!>
-  <@section title="${uiLabelMap.ManufacturingActualCosts} ${task.workEffortName!} [${task.workEffortId}]">
+  <@section title="${rawLabel('ManufacturingActualCosts')} ${rawString(task.workEffortName!)} [${rawString(task.workEffortId)}]">
       <#assign costsForm = taskCost.costsForm>
       ${costsForm.renderFormString(context)}
   </@section>

@@ -28,7 +28,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/combobox.js" global="true" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonExampleAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

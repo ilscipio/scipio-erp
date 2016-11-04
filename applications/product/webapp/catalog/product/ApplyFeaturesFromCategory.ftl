@@ -21,7 +21,7 @@ under the License.
 <#if curProductFeatureCategory??>
   <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
 <#elseif productFeatureGroup??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+  <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${rawLabel('CommonEdit')} ${rawString(productFeatureGroup.description!)}" class="+${styles.action_nav!} ${styles.action_add!}"/>
 </#if>
 <#if productId?has_content>
   <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}") text=uiLabelMap.ProductReturnToEditProduct class="+${styles.action_nav!} ${styles.action_cancel!}" />
@@ -33,7 +33,7 @@ under the License.
 <#if (listSize > 0)>
 
 <#assign selectedFeatureApplTypeId = selFeatureApplTypeId!>
-<#-- Scipio: NOTE: productFeatureGroupId was not in stock; has been added by us. 
+<#-- SCIPIO: NOTE: productFeatureGroupId was not in stock; has been added by us. 
     NOTE: we added a productFeaturesPaginated flag because pagination only partly implemented by stock depending on search options (productFeatures list only paginated if productFeatureGroupId is not set) -->
 <#assign paramStr = addParamsToStr("", {"productFeatureCategoryId": productFeatureCategoryId!"", "productFeatureApplTypeId": selectedFeatureApplTypeId!"", "productId": productId!"", "productFeatureGroupId": productFeatureGroupId!""}, "&amp;", false)>
 <@paginate mode="content" url=makeOfbizUrl("ApplyFeaturesFromCategory") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateOn=((productFeaturesPaginated!true)==true)>

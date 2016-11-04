@@ -26,13 +26,13 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Transactions" />
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="transaction"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="transaction"/>
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
 
                     <!-- body is the primary display for this page and is called recursively -->

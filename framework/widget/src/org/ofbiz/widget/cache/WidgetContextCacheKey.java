@@ -85,6 +85,8 @@ public final class WidgetContextCacheKey {
         fieldNamesToSkip.add("menuStringRenderer"); 
         fieldNamesToSkip.add("screenStringRenderer"); 
         
+        fieldNamesToSkip.add("requestMethod"); 
+        
         return Collections.unmodifiableSet(fieldNamesToSkip);
     }
 

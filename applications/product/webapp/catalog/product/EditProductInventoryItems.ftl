@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign externalKeyParam = "&amp;externalLoginKey=" + requestAttributes.externalLoginKey!>
-<#assign sectionTitle>${uiLabelMap.ProductInventoryItems} ${uiLabelMap.CommonFor} <#if product??>${(product.internalName)!} </#if> [${uiLabelMap.CommonId}:${productId!}]</#assign>
+<#assign sectionTitle>${rawLabel('ProductInventoryItems')} ${rawLabel('CommonFor')} <#if product??>${rawString((product.internalName)!)} </#if> [${rawString(productId!)}]</#assign>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productId?has_content>
@@ -25,7 +25,7 @@ under the License.
     <#if showEmpty>
       <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}") text=uiLabelMap.ProductHideEmptyItems class="+${styles.action_run_sys!} ${styles.action_hide!}" />
     <#else>
-      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}&amp;showEmpty=true") text=uiLabelMap.ProductShowEmptyItems class="+${styles.action_run_sys!} ${styles.action_show!}" />
+      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}&showEmpty=true") text=uiLabelMap.ProductShowEmptyItems class="+${styles.action_run_sys!} ${styles.action_show!}" />
     </#if>
   </#if>
   </@menu>

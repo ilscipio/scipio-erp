@@ -19,7 +19,7 @@ under the License.
 
 <#macro updateOrderContactMech orderHeader contactMechTypeId contactMechList contactMechPurposeTypeId contactMechAddress>
   <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-    <@modal label="(${uiLabelMap.CommonEdit})" id="modal_updateOrderContactMech_${contactMechTypeId}">
+    <@modal label="(${rawLabel('CommonEdit')})" id="modal_updateOrderContactMech_${contactMechTypeId}">
         <form name="updateOrderContactMech" method="post" action="<@ofbizUrl>updateOrderContactMech</@ofbizUrl>">
           <input type="hidden" name="orderId" value="${orderId!}" />
           <input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurpose.contactMechPurposeTypeId!}" />
@@ -78,7 +78,7 @@ under the License.
  <#-- The usefulness of this information is limited. Uncomment and add as menuContent to section in order to add these functions back in
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("orderentry?partyId=${partyId}&amp;orderTypeId=${orderHeader.orderTypeId}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
+        <@menuitem type="link" href=makeOfbizUrl("orderentry?partyId=${partyId}&orderTypeId=${orderHeader.orderTypeId}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
         <@menuitem type="link" href="javascript:document.searchOtherOrders.submit()" text=uiLabelMap.OrderOtherOrders class="+${styles.action_nav!} ${styles.action_find!}" />
     </@menu>
   </#macro>

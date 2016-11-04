@@ -26,11 +26,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
+
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -57,6 +61,9 @@ import freemarker.template.utility.DeepUnwrap;
  * <li>fullPath (boolean)</li>
  * <li>secure (boolean)</li>
  * <li>encode (boolean)</li>
+ * <li>rawParams (boolean)</li>
+ * <li>strict (boolean)</li>
+ * <li>escapeAs (string)</li>
  * </ul>
  * <p>
  * In addition, it now supports inter-webapp links. If either of the parameters
@@ -70,38 +77,28 @@ import freemarker.template.utility.DeepUnwrap;
  * <p>
  * It is also now possible to specify a string of parameters (with or without starting "?") using:
  * <ul>
- * <li>params</li>
+ * <li>params (TODO: support map of parameters)</li>
  * </ul>
  */
 public class OfbizCatalogUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizCatalogUrlTransform.class.getName();
-    
-    @SuppressWarnings("unchecked")
-    public String getStringArg(Map args, String key) {
-        Object o = args.get(key);
-        if (o instanceof SimpleScalar) {
-            return ((SimpleScalar) o).getAsString();
-        } else if (o instanceof StringModel) {
-            return ((StringModel) o).getAsString();
-        }
-        return null;
-    }
-
-    // SCIPIO: Added and modified to support Boolean
-    @SuppressWarnings("unchecked")
-    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // SCIPIO: NOTE: can now return null
-        return OfbizUrlTransform.checkBooleanArg(args, key, defaultValue);
-    }
     
     @Override
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, final Map args) throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
         
+        // SCIPIO: various changes here
+        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+        
         // SCIPIO: new flags
-        final Boolean fullPath = checkBooleanArg(args, "fullPath", null);
-        final Boolean secure = checkBooleanArg(args, "secure", null);
-        final Boolean encode = checkBooleanArg(args, "encode", null);
+        final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath");
+        final Boolean secure = TransformUtil.getBooleanArg(args, "secure");
+        final Boolean encode = TransformUtil.getBooleanArg(args, "encode");
         
         return new Writer(out) {
 
@@ -121,16 +118,16 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     BeanModel req = (BeanModel) env.getVariable("request");
                     
-                    String productId = getStringArg(args, "productId");
-                    String currentCategoryId = getStringArg(args, "currentCategoryId");
-                    String previousCategoryId = getStringArg(args, "previousCategoryId");
+                    String productId = TransformUtil.getStringArg(args, "productId", rawParams);
+                    String currentCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
+                    String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
                     
                     // SCIPIO: webSiteId
-                    String webSiteId = getStringArg(args, "webSiteId");
+                    String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
                     
-                    String prefix = getStringArg(args, "prefix");
+                    String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
                     
-                    Object urlParams = DeepUnwrap.unwrap((TemplateModel) args.get("params"));
+                    Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
                     
                     if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
@@ -144,7 +141,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
 
                         // SCIPIO: no null
                         if (url != null) {
-                            out.write(url);
+                            out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }
                     } else if (webSiteId != null || prefix != null) {
                         // SCIPIO: New: Handle non-request cases
@@ -157,7 +154,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
 
                         // SCIPIO: no null
                         if (url != null) {
-                            out.write(url);
+                            out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }
                     }
                 } catch (TemplateModelException e) {

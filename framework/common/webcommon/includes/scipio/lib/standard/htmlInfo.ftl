@@ -18,6 +18,8 @@
 ************
 Creates a modal UI element.
 
+[[[<img src="http://www.scipioerp.com/files/2016/05/modal.png" alt=""/>]]]
+
 FIXME: Needs parameter to control injection and location of hidden modal content so can inject
     within forms
 
@@ -58,8 +60,8 @@ FIXME: Needs parameter to control injection and location of hidden modal content
 
 <#-- @modal main markup - theme override -->
 <#macro modal_markup id="" label="" href="" class="" icon="" origArgs={} passArgs={} catchArgs...>
-  <a href="#" data-reveal-id="modal_${id}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
-  <div id="modal_${id}" class="${styles.modal_wrap!}" data-reveal>
+  <a href="#" data-reveal-id="modal_${escapeVal(id, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
+  <div id="modal_${escapeVal(id, 'html')}" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>
   </div>
@@ -70,6 +72,9 @@ FIXME: Needs parameter to control injection and location of hidden modal content
 * Alert box
 ************
 Alert box for messages that must grab user attention.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/alerts.png" alt=""/>]]]
+
 
 NOTE: Should avoid using this for regular, common inlined message results such as "No records found." unless
     it's an unexpected result, error or one that requires user action.
@@ -98,7 +103,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.alert_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#local typeClass = "alert_type_${type!}"/>
+  <#local typeClass = "alert_type_" + rawString(type)/>
   <#if type == "error">
     <#local type = "alert">
   </#if>
@@ -119,11 +124,11 @@ NOTE: Should avoid using this for regular, common inlined message results such a
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
   <#local containerClass = addClassArg(containerClass, styles.grid_row!)>
-  <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#if containerStyle?has_content> style="${containerStyle}"</#if>>
+  <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#if containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if>>
     <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
-      <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
+      <div data-alert class="${styles.alert_wrap!} ${styles[rawString(typeClass)]!}">
         <div class="${styles.grid_row!}">
-          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
+          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>>
             <#if closable><a href="#" class="${styles.closable!}" data-dismiss="alert">&times;</a></#if>
             <#nested>
           </div>
@@ -138,6 +143,8 @@ NOTE: Should avoid using this for regular, common inlined message results such a
 * Panel box
 ************
 Creates a panel box.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/panel.png" alt=""/>]]]
 
   * Usage Examples *  
     <@panel type="">
@@ -154,8 +161,10 @@ Creates a panel box.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     style                   = Legacy HTML style attribute for outermost container (for compatibility)
     topContent              = ((directive)|(string)) Additional content directly inside panel container at top (before title)
+                              NOTE: Not escaped by macro.
     topContentArgs          = ((map)) Additional args for topContent
     bottomContent           = ((directive)|(string)) Additional content directly inside panel container at bottom (after body)
+                              NOTE: Not escaped by macro.
     bottomContentArgs       = ((map)) Additional args for bottomContent
 -->
 <#assign panel_defaultArgs = {
@@ -176,9 +185,9 @@ Creates a panel box.
     topContent=false topContentArgs={}  bottomContent=false bottomContentArgs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.panel_wrap!"")>
   <#local class = addClassArg(class, type)>
-  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
+  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>>
     <#if !topContent?is_boolean><@contentArgRender content=topContent args=topContentArgs /></#if>
-    <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
+    <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${escapeVal(title, 'htmlmarkup')}</h5></#if></div>
     <div<@compiledClassAttribStr class=(styles.panel_body!)/>><#nested></div>
     <#if !bottomContent?is_boolean><@contentArgRender content=bottomContent args=bottomContentArgs /></#if>
   </div>
@@ -254,18 +263,18 @@ translates to:
   <#local styleNamePrefix = "commonmsg_" + type?replace("-", "_")>
   <#local defaultClass = styles[styleNamePrefix]!styles["commonmsg_default"]>
   <#local class = addClassArgDefault(class, defaultClass)>
-  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id closable=closable origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${text}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
+  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id closable=closable origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${escapeVal(text, 'htmlmarkup')}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
 </#macro>
 
 <#-- @commonMsg main markup - theme override -->
 <#macro commonMsg_markup type="" styleNamePrefix="" class="" id="" closable="" origArgs={} passArgs={} catchArgs...>
   <#if type == "result" || type?starts_with("result-") || type == "info">
     <#local nestedContent><#nested></#local>
-    <#local nestedContent = nestedContent?trim> <#-- helpful in widgets -->
+    <#local nestedContent = nestedContent?trim><#-- helpful in widgets -->
     <#if !nestedContent?has_content>
       <#local nestedContent = uiLabelMap[styles.commonmsg_result_norecord_prop!"CommonNoRecordFoundSentence"]>
     </#if>
-    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>${nestedContent}</p>
+    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>${nestedContent}</p>
   <#elseif type == "error" || type?starts_with("error-")>
     <#-- NOTE: here we must resolve class arg before passing to @alert and make additive only -->
     <@alert type="error" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
@@ -276,7 +285,7 @@ translates to:
   <#elseif type == "info-important">
     <@alert type="info" class=("+"+compileClassArg(class)) id=id closable=closable><#nested></@alert>
   <#else>
-    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
+    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>><#nested></p>
   </#if>
 </#macro>
 

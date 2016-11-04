@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductIssueInventoryItemsToShipment}: [${shipmentId!}]">
+<@section title="${rawLabel('ProductIssueInventoryItemsToShipment')}: [${rawString(shipmentId!)}]">
   <@fields type="default-manual">
     <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
      <@thead>

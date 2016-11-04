@@ -21,11 +21,11 @@ under the License.
     <@section title=uiLabelMap.PageTitleLookupBulkAddProduct/>
   <#else>
     <#assign sectionTitle>
-        ${uiLabelMap.CommonCreate}
+        ${rawLabel('CommonCreate')}
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-            ${uiLabelMap.OrderPurchaseOrder}
+            ${rawLabel('OrderPurchaseOrder')}
         <#else>
-            ${uiLabelMap.OrderSalesOrder}
+            ${rawLabel('OrderSalesOrder')}
         </#if>
     </#assign>
     <#macro menuContent menuArgs={}>

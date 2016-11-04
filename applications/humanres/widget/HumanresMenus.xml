@@ -35,7 +35,8 @@
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.CommonSettings}"><link target="globalHRSettings"/></menu-item><!-- ${uiLabelMap.HumanResGlobalHRSettings} -->
     </menu>    
-    <menu name="HumanResAppSideBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="HumanResAppSideBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="HumanResAppBar" recursive="full" />
         <menu-item name="Employees">
             <sub-menu name="EmployeeProfile" include="EmployeeProfileSideBar"/>
@@ -338,6 +339,9 @@
     <menu name="RecruitmentTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="JobRequisition">
         <include-elements menu-name="RecruitmentTypeMenu" recursive="includes-only" />
+        <menu-item name="InternalJobPosting">
+            <sub-menu name="InternalJobPosting" include="InternalJobPostingSideBar"/>
+        </menu-item>
     </menu>
     
     <menu name="InternalJobPostingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -359,6 +363,10 @@
         </menu-item>
     </menu>
     
+    <menu name="InternalJobPostingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
+        <include-elements menu-name="InternalJobPostingTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="TrainingTypeMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
         <menu-item name="TrainingCalendar" title="${uiLabelMap.HumanResTraining} ${uiLabelMap.WorkEffortCalendar}">
             <link target="TrainingCalendar"/>
@@ -376,7 +384,6 @@
     <menu name="TrainingTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
         <include-elements menu-name="TrainingTypeMenu" recursive="includes-only" />
     </menu>
-    
     
     <menu name="EmplLeaveReasonTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave Reason Type">

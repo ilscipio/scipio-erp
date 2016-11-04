@@ -1,7 +1,7 @@
 <input type="hidden" name="facilityId" value="${facilityId!}" />        
 
 <#if !(inventoryTransfer??)>
-    <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true value="${inventoryItemId!}" />   
+    <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true value=(inventoryItemId!) />   
 <#else>
     <@field type="display" label=uiLabelMap.ProductInventoryItemId>
         ${inventoryItemId!}

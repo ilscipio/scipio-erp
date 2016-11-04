@@ -54,9 +54,13 @@ import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+
 import freemarker.core.Environment;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
 
 public class MacroMenuRenderer implements MenuStringRenderer {
 
@@ -103,7 +107,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
      * SCIPIO: modified to require name.
      */
     public MacroMenuRenderer(String name, String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
-        this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
+        // SCIPIO: use abstracted template build
+        this.macroLibrary = MacroScreenRenderer.getTemplate(name, macroLibraryPath);
         this.request = request;
         this.response = response;
         this.rendererName = name; // SCIPIO: new
@@ -324,6 +329,8 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if(menuItem.getModelMenu().getExtraIndex(context) != null){
             uniqueItemName += "_" + menuItem.getModelMenu().getExtraIndex(context);
         }
+        // SCIPIO: make uniqueItemName actually globally unique; is NOT unique in stock ofbiz!
+        uniqueItemName += "_" + MacroScreenRenderer.getNextUniqueItemNameIdNum(context);
         parameters.put("uniqueItemName", uniqueItemName);
         String linkType = "";
         if (UtilValidate.isNotEmpty(target)) {
@@ -429,7 +436,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         MenuItemState menuItemState = renderState.getItemState();
         
         boolean selected = menuItemState.isSelected();
-        boolean selectedAncestor = false;
+        boolean selectedAncestor = menuItemState.isSelectedAncestor();
         if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
             // SCIPIO: Must use new combination logic
@@ -447,7 +454,6 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             style = ModelMenu.combineExtraStyle(style, selectedStyle);
         } else {
             // SCIPIO: support selected-ancestor
-            selectedAncestor = menuItemState.isSelectedAncestor();
             if (selectedAncestor) {
                 String selectedStyle = menuItem.getSelectedAncestorStyle();
                 // SCIPIO: fallback default does not work well here anymore, so now managed by ftl impl.
@@ -489,10 +495,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             linkStr = sw.toString();
         } else {
             linkStr = menuItem.getTitle(context);
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                linkStr = simpleEncoder.encode(linkStr);
-            }
+            linkStr = WidgetWorker.getEarlyEncoder(context).encode(linkStr); // SCIPIO: simplified
         }
         parameters.put("linkStr", linkStr);
         // SCIPIO: we have a better check now
@@ -587,14 +590,16 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("id", menu.getId());
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
+        parameters.put("titleStyle", menu.getTitleStyle(context)); // SCIPIO: new
         parameters.put("inlineEntries", renderState.isInlineEntries());
         parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
         
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
+        ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
         
-        boolean selected = menu.isParentOf(selectedMenuItem);
-        boolean selectedAncestor = !selected && (selectedMenuItem != null || selectedMenuAndItem.getSubMenu() != null);
+        boolean selected = selectedSubMenu == null && menu.isParentOf(selectedMenuItem);
+        boolean selectedAncestor = !selected && (selectedSubMenu != null || (selectedMenuItem != null && !menu.isParentOf(selectedMenuItem)));
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
         

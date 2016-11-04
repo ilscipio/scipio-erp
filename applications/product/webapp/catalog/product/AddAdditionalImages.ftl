@@ -39,7 +39,7 @@ under the License.
       </#if>
       <@row>
         <@cell>
-          <@field type="file" id=id size="20" name="${name}" norows=true nocells=true />
+          <@field type="file" id=id size="20" name=name norows=true nocells=true />
         </@cell>
       </@row>
     </#macro>

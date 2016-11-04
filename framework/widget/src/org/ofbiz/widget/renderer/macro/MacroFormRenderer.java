@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URLEncoder;
 import java.rmi.server.UID;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -111,7 +110,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public static final String module = MacroFormRenderer.class.getName();
     private final Template macroLibrary;
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
-    private final UtilCodec.SimpleEncoder internalEncoder;
+    //private final UtilCodec.SimpleEncoder internalEncoder; // SCIPIO: better off without this
     private final RequestHandler rh;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
@@ -130,13 +129,15 @@ public final class MacroFormRenderer implements FormStringRenderer {
      * SCIPIO: modified to require name.
      */
     public MacroFormRenderer(String name, String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
-        macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
+        // SCIPIO: use abstracted template build
+        this.macroLibrary = MacroScreenRenderer.getTemplate(name, macroLibraryPath);
         this.request = request;
         this.response = response;
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         this.rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         this.javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
-        internalEncoder = UtilCodec.getEncoder("string");
+        // SCIPIO: better off without this
+        //internalEncoder = UtilCodec.getEncoder("string");
         this.rendererName = name; // SCIPIO: new
     }
 
@@ -201,11 +202,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isEmpty(value)) {
             return value;
         }
-        UtilCodec.SimpleEncoder encoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-        if (modelFormField.getEncodeOutput() && encoder != null) {
+        // SCIPIO: simplified
+        // NOTE: 2016-08-30: this and most other calls have been changed to use early encoder, which can then be disabled in widget.properties.
+        UtilCodec.SimpleEncoder encoder = WidgetWorker.getEarlyEncoder(context);
+        if (modelFormField.getEncodeOutput()) { // && encoder != null
             value = encoder.encode(value);
-        } else {
-            value = internalEncoder.encode(value);
+        //} else {
+        //    value = internalEncoder.encode(value);
         }
         return value;
     }
@@ -335,6 +338,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             inPlaceEditorParams.append("}");
             sr.append(ftlFmt.makeStringLiteral(inPlaceEditorParams.toString()));
         }
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         if (displayField instanceof DisplayEntityField) {
@@ -441,6 +445,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(placeholder));
         sr.append(" tooltip="); // SCIPIO: new arg
         sr.append(ftlFmt.makeStringLiteral(tooltip));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = textField.getSubHyperlink();
@@ -526,6 +531,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // SCIPIO: maxlength added
         sr.append(" maxlength=");
         sr.append(ftlFmt.makeStringLiteral(maxlength));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -631,10 +637,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 value = value.substring(0, maxlength);
             }
             // SCIPIO: NOW do escaping TODO: review encoding in general
-            UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-            if (simpleEncoder != null) {
-                value = simpleEncoder.encode(value);
-            }
+            value = WidgetWorker.getEarlyEncoder(context).encode(value); // SCIPIO: simplified
         }
         
         String id = modelFormField.getCurrentContainerId(context);
@@ -671,12 +674,21 @@ public final class MacroFormRenderer implements FormStringRenderer {
             isTwelveHour = "12".equals(dateTimeField.getClock());
             // set the Calendar to the default time of the form or now()
             Calendar cal = null;
-            try {
-                Timestamp defaultTimestamp = Timestamp.valueOf(contextValue);
-                cal = Calendar.getInstance();
-                cal.setTime(defaultTimestamp);
-            } catch (IllegalArgumentException e) {
-                Debug.logWarning("Form widget field [" + paramName + "] with input-method=\"time-dropdown\" was not able to understand the default time [" + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), module);
+            // SCIPIO: WORKAROUND: the default date may be in short date format; extend if so
+            String timeDropDownValue = contextValue;
+            if (timeDropDownValue != null && timeDropDownValue.length() == 10) {
+                timeDropDownValue += " 00:00:00.000";
+            }
+            // SCIPIO: don't print warn if empty
+            if (UtilValidate.isNotEmpty(timeDropDownValue)){
+                try {
+                    Timestamp defaultTimestamp = Timestamp.valueOf(timeDropDownValue);
+                    cal = Calendar.getInstance();
+                    cal.setTime(defaultTimestamp);
+                } catch (IllegalArgumentException e) {
+                    Debug.logWarning("Form widget field [" + paramName + "] with input-method=\"time-dropdown\" was not able to understand the default time [" + 
+                            timeDropDownValue + "]. The parsing error was: " + e.getMessage(), module);
+                }
             }
             timeHourName = UtilHttp.makeCompositeParam(paramName, "hour");
             if (cal != null) {
@@ -785,6 +797,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(formName));
         sr.append(" mask=");
         sr.append(ftlFmt.makeStringLiteral(formattedMask));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -1014,6 +1027,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(ignoreCase));
         sr.append(" fullSearch=");
         sr.append(ftlFmt.makeStringLiteral(fullSearch));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = dropDownField.getSubHyperlink();
@@ -1075,6 +1089,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -1129,6 +1144,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -1321,7 +1337,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
                 String requiredStyle = modelFormField.getRequiredFieldStyle();
                 if (UtilValidate.isNotEmpty(requiredStyle)) {
-                    style = requiredStyle;
+                    // SCIPIO: add, don't replace
+                    //style = requiredStyle;
+                    if (UtilValidate.isEmpty(style))
+                        style = requiredStyle;
+                    else
+                        style = requiredStyle + " " + style;
                 }
             }
             StringWriter sr = new StringWriter();
@@ -1392,6 +1413,16 @@ public final class MacroFormRenderer implements FormStringRenderer {
         
         // SCIPIO: form method
         String method = modelForm.getMethod(context);
+        
+        // SCIPIO: special flags
+        String formScope = (String) context.get("renderForm_formScope");
+        if (UtilValidate.isEmpty(formScope)) {
+            formScope = "general";
+        }
+        String formSpread = (String) context.get("renderForm_formSpread");
+        if (UtilValidate.isEmpty(formSpread)) {
+            formSpread = "general";
+        }
 
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormOpen ");
@@ -1423,6 +1454,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(attribs);
         sr.append(") method=");
         sr.append(ftlFmt.makeStringLiteral(method));
+        sr.append(" formScope=");
+        sr.append(ftlFmt.makeStringLiteral(formScope));
+        sr.append(" formSpread=");
+        sr.append(ftlFmt.makeStringLiteral(formSpread));
         sr.append(" />");
         
         executeMacro(writer, sr.toString());
@@ -1939,6 +1974,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // SCIPIO: new args
         sr.append(" hideOptions=");
         sr.append(Boolean.toString(hideOptions));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -2018,6 +2054,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(value2));
         sr.append(" defaultOptionThru=");
         sr.append(ftlFmt.makeStringLiteral(defaultOptionThru));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -2157,6 +2194,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(opUpThruDay));
         sr.append(" opIsEmpty=");
         sr.append(ftlFmt.makeStringLiteral(opIsEmpty));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -2346,6 +2384,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(lastViewName));
         sr.append(" tooltip=");
         sr.append(ftlFmt.makeStringLiteral(tooltip)); // SCIPIO: new arg
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -2681,6 +2720,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(maxlength));
         sr.append(" autocomplete=");
         sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.makeHyperlinkString(writer, textField.getSubHyperlink(), context);
@@ -2744,6 +2784,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(id));
         sr.append(" autocomplete=");
         sr.append(ftlFmt.makeStringLiteral(autocomplete));
+        appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -2996,8 +3037,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
             String newQueryString = sb.toString();
             String urlPath = UtilHttp.removeQueryStringFromTarget(paginateTarget);
             linkUrl = rh.makeLink(this.request, this.response, urlPath.concat(newQueryString));
-            // SCIPIO: known issues; if needed the macros will handle
-            //linkUrl = URLEncoder.encode(linkUrl, "UTF-8");
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderSortField ");
@@ -3341,7 +3380,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             parameters.append("{'name':");
             parameters.append(ftlFmt.makeStringLiteralSQ(parameter.getName()));
             parameters.append(",'value':");
-            parameters.append(ftlFmt.makeStringLiteralSQ(UtilCodec.getEncoder("html").encode(parameter.getValue(context))));
+            parameters.append(ftlFmt.makeStringLiteralSQ(encode(parameter.getValue(context), modelFormField, context))); // SCIPIO: unhardcoded html encode call here
             parameters.append("}");
         }
         parameters.append("]");
@@ -3435,8 +3474,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 modelForm.getSubmitHiddenFormName(Integer.toString(getNextRenderSubmitFormIdNum(writer, context, modelForm)))); 
         
         StringWriter targetUrlSw = new StringWriter();
-        WidgetWorker.buildHyperlinkUrl(targetUrlSw, modelForm.getTarget(context, modelForm.getTargetType()), 
+        String target = modelForm.getTarget(context, modelForm.getTargetType());
+        if (UtilValidate.isNotEmpty(target)) {
+            WidgetWorker.buildHyperlinkUrl(targetUrlSw, target, 
                 modelForm.getTargetType(), null, null, null, null, null, request, response, context);
+        }
         String targetUrl = targetUrlSw.toString();
         
         List<Map<String, Object>> submitEntries = new ArrayList<>();
@@ -3528,4 +3570,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         executeMacro(writer, sr.toString());
     }
     
+    /**
+     * SCIPIO: helper to append requiredField param.
+     * @throws IOException 
+     */
+    protected void appendRequiredFieldParam(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
+        sr.append(" requiredField=" + (modelFormField.getRequiredField() ? "\"true\"" : "\"false\""));
+    }
 }

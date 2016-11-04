@@ -620,13 +620,13 @@ under the License.
         <response name="success" type="view" value="WebtoolsLayoutDemo"/>
     </request-map>
     
-    <!-- Scipio: EntityUtilityServices -->
+    <!-- SCIPIO: EntityUtilityServices -->
     <request-map uri="EntityUtilityServices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EntityUtilityServices"/>
     </request-map>    
     
-    <!-- Scipio: Demo data generator -->
+    <!-- SCIPIO: Demo data generator -->
     <request-map uri="ListDemoDataGeneratorServices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListDemoDataGeneratorServices"/>
@@ -645,6 +645,12 @@ under the License.
     <request-map uri="ListDemoDataGeneratorProviders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListDemoDataGeneratorProviders"/>
+    </request-map>
+    
+    <!-- SCIPIO: Template API docs render -->
+    <request-map uri="ViewTemplateApiDocPage">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="TemplateApiDocPage"/>
     </request-map>
 
     <!-- end of request mappings -->
@@ -750,12 +756,14 @@ under the License.
     
     
     <view-map name="EntityUtilityServices" type="screen" page="component://webtools/widget/EntityScreens.xml#EntityUtilityServices"/>
-    <!-- Scipio: Demo data generator -->    
+    <!-- SCIPIO: Demo data generator -->    
     <view-map name="ListDemoDataGeneratorServices" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorServices"/>
     <view-map name="RunDemoDataGeneratorService" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#RunDemoDataGeneratorService"/>
     <view-map name="DemoDataGeneratorResult" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#DemoDataGeneratorResult"/>
     <view-map name="ListDemoDataGeneratorProviders" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorProviders"/>
   
+    <!-- SCIPIO: Templating API docs -->
+    <view-map name="TemplateApiDocPage" type="screen" page="component://webtools/widget/DocScreens.xml#TemplateApiDocPage"/>
 
     <!-- end of view mappings -->
 </site-conf>

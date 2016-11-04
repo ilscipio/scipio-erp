@@ -20,7 +20,7 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productCategoryId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${uiLabelMap.ProductBackToEditCategory}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${rawLabel('ProductBackToEditCategory')}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
   </#if>
   </@menu>
 </#macro>
@@ -36,7 +36,7 @@ under the License.
         </#list>
     </#if>
 </#assign>
-<@section title=sectionTitle menuContent=menuContent>
+<@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
       <#if products?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
@@ -69,7 +69,7 @@ under the License.
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
                 <#assign productFeature = productFeatureAndTypeData.productFeature>
                 <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
-                <@field type="display" label="${productFeatureType.description}">
+                <@field type="display" label=(productFeatureType.description)>
                     ${productFeature.description}
                     <#if requestParameters["pftsel_" + productFeatureTypeId]??>
                         <input type="hidden" name="pftsel_${productFeatureTypeId}" value="Y"/>

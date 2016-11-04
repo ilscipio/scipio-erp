@@ -125,7 +125,7 @@ if (product) {
     context.productContentWrapper = productContentWrapper;
 
     // get the main detail image (virtual or single product)
-    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "raw"); // SCIPIO: changed to raw (let templating escape)
+    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "url");
     if (mainDetailImage) {
         mainDetailImageUrl = ContentUrlTag.getContentPrefix(request) + mainDetailImage;
         context.mainDetailImageUrl = mainDetailImageUrl.toString();

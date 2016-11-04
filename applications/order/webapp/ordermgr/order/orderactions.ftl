@@ -1,5 +1,5 @@
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
-  <@section> <#-- title="${uiLabelMap.OrderActions}" -->
+  <@section> <#-- title=uiLabelMap.OrderActions -->
       <@menu type="button">
         <#if security.hasEntityPermission("FACILITY", "_CREATE", session) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
           <#-- Special shipment options -->

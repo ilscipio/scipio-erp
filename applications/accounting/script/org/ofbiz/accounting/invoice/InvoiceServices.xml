@@ -285,7 +285,7 @@ under the License.
         <if-empty field="parameters.amount">
             <if-not-empty field="parameters.productId">
                 <entity-one entity-name="Product" value-field="product"/>
-                <!-- Scipio: FIXME?: description should probably be product name first and/or gotten from content wrapper DESCRIPTION instead (english locale)...
+                <!-- SCIPIO: FIXME?: description should probably be product name first and/or gotten from content wrapper DESCRIPTION instead (english locale)...
                     so add a fallback to use name for now below, even though this may also be found only as content! -->
                 <set from-field="product.description" field="newEntity.description"/>
                 <if-empty field="newEntity.description">

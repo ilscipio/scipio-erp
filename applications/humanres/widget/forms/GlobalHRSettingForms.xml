@@ -184,7 +184,7 @@ under the License.
             </drop-down>
         </field>
         <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}" position="2"><lookup target-form-name="LookupSalaryStep"/></field>
-        <field name="rateAmount"><text/></field>
+        <field name="rateAmount" required-field="true"><text/></field>
         <field name="rateCurrencyUomId" position="2">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
@@ -318,6 +318,7 @@ under the License.
         <field name="workEffortName" title="${uiLabelMap.HumanHolidayName}" required-field="true"><text size="50"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="estimatedCompletionDate" title="${uiLabelMap.CommonTo}"><date-time type="date"/></field><!-- SCIPIO: added; makes little sense without this -->
         <field name="addAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="workEffort==null"><submit/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="workEffort!=null"><submit/></field>
     </form>
@@ -341,6 +342,7 @@ under the License.
         <field name="workEffortName" title="${uiLabelMap.HumanHolidayName}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="estimatedCompletionDate" title="${uiLabelMap.CommonTo}"><display type="date"/></field><!-- SCIPIO: added; makes little sense without this -->
         <field name="partyId" title="${uiLabelMap.CommonBy}">
             <display-entity entity-name="PartyNameView" description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field>

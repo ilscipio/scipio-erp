@@ -95,10 +95,10 @@ under the License.
                 <field-map field-name="productCategoryId" from-field="product.primaryProductCategoryId"/>
             </entity-one>
         </row-actions>
-        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));}">
+        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName} [${productId}] - ${productCategory.categoryName}" also-hidden="false"/>
         </field>
-        <field name="statusProductId" title="${uiLabelMap.ProductStatus}" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));}">
+        <field name="statusProductId" title="${uiLabelMap.ProductStatus}" position="1" use-when="String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));">
             <radio no-current-selected-key="${checkRadio}">
                 <option key="IM_APPROVED__${productId}" description="${uiLabelMap.FormFieldTitle_approve}"/>
                 <option key="IM_REJECTED__${productId}" description="${uiLabelMap.FormFieldTitle_rejectButton}"/>
@@ -150,7 +150,7 @@ under the License.
                 <field-map field-name="productCategoryId" from-field="product.primaryProductCategoryId"/>
             </entity-one>
         </row-actions>
-        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));}">
+        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName} [${productId}] - ${productCategory.categoryName}" also-hidden="false"/>
         </field>
         <field name="drObjectInfo" position="2" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
@@ -189,7 +189,7 @@ under the License.
                 <field-map field-name="productCategoryId" from-field="product.primaryProductCategoryId"/>
             </entity-one>
         </row-actions>
-        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));}">
+        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName} [${productId}] - ${productCategory.categoryName}" also-hidden="false"/>
         </field>
         <field name="_rowSubmit" position="2" title=" " widget-style="hidden"><check all-checked="true"/></field>
@@ -244,7 +244,7 @@ under the License.
                 <field-map field-name="productCategoryId" from-field="product.primaryProductCategoryId"/>
             </entity-one>
         </row-actions>
-        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));}">
+        <field name="productId" title="${uiLabelMap.ProductProductName} [${uiLabelMap.ProductProductId}] - ${uiLabelMap.FormFieldTitle_categoryName}" entry-name="productId" position="1" use-when="String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName} [${productId}] - ${productCategory.categoryName}" also-hidden="false"/>
         </field>
         <field name="drObjectInfo" position="2" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
@@ -509,7 +509,7 @@ under the License.
         <field name="imageY"><hidden/></field>
         <field name="imageW"><hidden/></field>
         <field name="imageH"><hidden/></field>
-        Scipio: widget-area-style here creates an extra div
+        SCIPIO: widget-area-style here creates an extra div
         <field name="imageCropp" widget-area-style=";container:cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}"/></field>
         <field name="imageCropp" use-when="imageURL == null" title="${uiLabelMap.CommonImage}" ><image value="/images/defaultImage.jpg" style="cssImgXLarge"/></field>
     </form>
@@ -535,7 +535,7 @@ under the License.
         <field name="dataResourceId"><hidden/></field>
         <field name="angle"><hidden/></field>
         <field name="imageName"><hidden value="${contentDataResource.drDataResourceName}"/></field>
-        Scipio: widget-area-style here creates an extra div
+        SCIPIO: widget-area-style here creates an extra div
         <field name="imageRotate" widget-area-style=";container:cropbox" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" /></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}" position="1"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">

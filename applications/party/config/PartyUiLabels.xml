@@ -5176,7 +5176,7 @@
         <value xml:lang="zh">缺少上传文件...</value>
         <value xml:lang="zh_TW">缺少上傳檔...</value>
     </property>
-    <!-- Scipio: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
+    <!-- SCIPIO: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
     <property key="PartyCreateNewBillingAddress">
         <value xml:lang="cs">Zložte novou fakturační adresu</value>
         <value xml:lang="de">Legen Sie eine neue Rechnungsadresse</value>
@@ -13200,5 +13200,9 @@
         <value xml:lang="de">Address-Karte erstellen</value>
         <value xml:lang="en">Create Address Match Map</value>
         <value xml:lang="fr">Créer couples clefs-valeurs d'addresses comparables</value>
+    </property>
+    <property key="PartySelectTypePartyToCreate">
+        <value xml:lang="de">Wählen Sie den zu erstellenden Benutzertyp aus</value>
+        <value xml:lang="en">Please select the type of user to create</value>
     </property>
 </resource>

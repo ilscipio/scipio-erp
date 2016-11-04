@@ -21,32 +21,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="TemporalExpressionDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenuItem" value="tempexpr"/>
-                <property-map resource="TemporalExpressionUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap[titleProperty]}" global="true"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonConfigurationDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="tempExprPermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    <!-- SCIPIO: NOTE: The old parameters.tempExprDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
 
     <screen name="FindTemporalExpression">
         <section>
@@ -55,7 +31,7 @@ under the License.
                 <set field="titleProperty" value="${titleProperty}" default-value="TemporalExpressionFind"/>
             </actions>
             <widgets>
-                <decorator-screen name="TemporalExpressionDecorator" location="${parameters.tempExprDecoratorLocation}">
+                <decorator-screen name="TemporalExpressionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -95,7 +71,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="TemporalExpressionDecorator" location="${parameters.tempExprDecoratorLocation}">
+                <decorator-screen name="TemporalExpressionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="TempExprTabBar" location="component://webtools/widget/Menus.xml"/>
                         <platform-specific>

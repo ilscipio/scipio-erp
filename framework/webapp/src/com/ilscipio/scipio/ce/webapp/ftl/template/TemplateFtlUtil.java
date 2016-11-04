@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.ftl.template;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.control.RequestHandler;
 
 import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
@@ -27,7 +29,14 @@ import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.ext.beans.BooleanModel;
+import freemarker.template.SimpleScalar;
+import freemarker.template.Template;
+import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 import javolution.util.FastMap;
 
 /**
@@ -43,6 +52,11 @@ public abstract class TemplateFtlUtil {
     
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
+
+    private static volatile Template escapeVal2ArgFunctionCall = null;
+    private static volatile Template escapeVal3ArgFunctionCall = null;
+    private static volatile Template escapeFullUrl2ArgFunctionCall = null;
+    private static volatile Template escapeFullUrl3ArgFunctionCall = null;
     
     /**
      * Keep this private, implied unmodifiable.
@@ -308,11 +322,20 @@ public abstract class TemplateFtlUtil {
      * noValToken is similar but prevents values altogether.
      * <p>
      * NOTE (2016-08-30):  emptyValToken and noValToken should be avoided in favor of {@link com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue}.
+     * @throws IOException 
+     * @throws TemplateException 
      */
     public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, String noValToken,
             Collection<String> exclude, String attribNamePrefix, boolean alwaysAddPrefix,
-            String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes, boolean camelCaseToDashLowerNames) {
+            String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes, boolean camelCaseToDashLowerNames, String escapeLang) throws TemplateModelException {
         StringBuilder sb = new StringBuilder();
+        
+        Environment env = null;
+        if (escapeLang != null && !escapeLang.isEmpty() && !"none".equals(escapeLang)) {
+            env = FreeMarkerWorker.getCurrentEnvironment();
+        } else {
+            escapeLang = null;
+        }
         
         if (emptyValToken == null) {
             emptyValToken = "";
@@ -375,6 +398,9 @@ public abstract class TemplateFtlUtil {
                     if (!AttribSpecialValue.isNoneValue(val) && (noValToken == null || !noValToken.equals(valStr))) {
                         sb.append("=\"");
                         if (!valStr.equals(emptyValToken)) {
+                            if (escapeLang != null && env != null && !RawScript.isRawScript(val)) {
+                                valStr = execEscapeValFunction(new SimpleScalar(valStr), new SimpleScalar(escapeLang), env).getAsString();
+                            }
                             sb.append(valStr);
                         }
                         sb.append("\"");
@@ -502,4 +528,75 @@ public abstract class TemplateFtlUtil {
             return "";
         }
     }
+    
+    public static TemplateScalarModel execEscapeValFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
+        if (escapeVal2ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapeVal2ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeVal", 2, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeVal2ArgFunctionCall, new TemplateModel[] { arg1, arg2}, env);
+    }
+
+    public static TemplateScalarModel execEscapeValFunction(TemplateModel arg1, TemplateModel arg2, TemplateModel arg3, Environment env) throws TemplateModelException {
+        if (escapeVal3ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapeVal3ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeVal", 3, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeVal3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
+    }
+    
+    public static String escapeVal(String value, String lang, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+    }
+    
+    public static String escapeVal(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        if (strict != null) {
+            return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), 
+                    strict ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE, env).getAsString();
+        } else {
+            return execEscapeValFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+        }
+    }
+    
+    public static TemplateScalarModel execEscapeFullUrlFunction(TemplateModel arg1, TemplateModel arg2, Environment env) throws TemplateModelException {
+        if (escapeFullUrl2ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapeFullUrl2ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeFullUrl", 2, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeFullUrl2ArgFunctionCall, new TemplateModel[] { arg1, arg2}, env);
+    }
+
+    public static TemplateScalarModel execEscapeFullUrlFunction(TemplateModel arg1, TemplateModel arg2, TemplateModel arg3, Environment env) throws TemplateModelException {
+        if (escapeFullUrl3ArgFunctionCall == null) {
+            // NOTE: no real need for synchronize here
+            escapeFullUrl3ArgFunctionCall = LangFtlUtil.getFunctionCall("escapeFullUrl", 3, env);
+        }
+        return (TemplateScalarModel) LangFtlUtil.execFunction(escapeFullUrl3ArgFunctionCall, new TemplateModel[] { arg1, arg2, arg3}, env);
+    }
+    
+    public static String escapeFullUrl(String value, String lang, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+    }
+    
+    public static String escapeFullUrl(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+            return value;
+        }
+        if (strict != null) {
+            return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), 
+                    strict ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE, env).getAsString();
+        } else {
+            return execEscapeFullUrlFunction(new SimpleScalar(value), new SimpleScalar(lang), env).getAsString();
+        }
+    }
+
 }

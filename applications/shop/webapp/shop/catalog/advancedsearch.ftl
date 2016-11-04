@@ -22,7 +22,7 @@ under the License.
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)/>
 <@heading>${uiLabelMap.ProductAdvancedSearchInCategory}</@heading>
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
-  <#-- Scipio: don't hardcode these
+  <#-- SCIPIO: don't hardcode these
   <input type="hidden" name="VIEW_SIZE" value="10"/>
   <input type="hidden" name="PAGING" value="Y"/>-->
   <@table type="fields">
@@ -89,7 +89,7 @@ under the License.
 
   <#if searchOptionsHistoryList?has_content>
     
-    <@section title="${uiLabelMap.OrderLastSearches}...">
+    <@section title="${rawLabel('OrderLastSearches')}...">
       <div>
         <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
         ${uiLabelMap.OrderClearSearchHistoryNote}

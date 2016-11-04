@@ -25,7 +25,7 @@ under the License.
   </@menu>
 <#else>
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
@@ -35,13 +35,12 @@ under the License.
     <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle>
-  <#if !eftAccount??>
-    ${uiLabelMap.AccountingAddNewEftAccount}
-  <#else>
-    <#-- Scipio: duplicate: ${uiLabelMap.PageTitleEditEFTAccount}-->
-  </#if>
-</#assign>
+<#if !eftAccount??>
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewEftAccount />
+<#else>
+  <#-- SCIPIO: duplicate: <#assign sectionTitle = uiLabelMap.PageTitleEditEFTAccount/>-->
+  <#assign sectionTitle = ""/>
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
   <form method="post" action="<@ofbizUrl><#if !eftAccount??>createEftAccount?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateEftAccount?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editeftaccountform">
@@ -53,7 +52,7 @@ under the License.
     <@render resource="component://shop/widget/CustomerScreens.xml#eftAccountFields" ctxVars={"eafFieldNamePrefix":""} />
 
     <@field type="generic" label=uiLabelMap.PartyBillingAddress>
-        <#-- Scipio: Billing fields are replaced with common new defs (old defs that were here discarded) -->
+        <#-- SCIPIO: Billing fields are replaced with common new defs (old defs that were here discarded) -->
         <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
             ctxVars={"bapfUseNewAddr":true, "bapfNewAddrInline":false, "bapfFieldNamePrefix":""}/>
     </@field>

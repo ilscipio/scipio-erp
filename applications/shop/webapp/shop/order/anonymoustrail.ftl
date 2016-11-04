@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
-<#-- Scipio: NOTE: this omits the top @menu; the including template must provide its own -->
+<#-- SCIPIO: NOTE: this omits the top @menu; the including template must provide its own -->
 <#if shipAddr??>
   <#if anontrailMenuArgs?has_content>
     <#--<p><@objectAsScript lang="raw" object=anontrailMenuArgs /></p>-->
-    <#-- Scipio: WARN: Although @menu will in theory support args maps from groovy context, at current
+    <#-- SCIPIO: WARN: Although @menu will in theory support args maps from groovy context, at current
         time it is not well tested and could be a source of errors here... -->
     <@menu args=anontrailMenuArgs>
       <@menuitem type="link" href=makeOfbizUrl("setShipping") class="+${styles.action_nav!} ${trailClass.shipAddr}" text=uiLabelMap.EcommerceChangeShippingAddress />

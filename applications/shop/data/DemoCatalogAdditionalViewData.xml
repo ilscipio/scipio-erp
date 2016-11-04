@@ -19,7 +19,7 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <!-- Scipio: TODO: the alt camera nikon images -->
+    <!-- SCIPIO: TODO: the alt camera nikon images -->
     <DataResource dataResourceId="CAM-2644-Add1" dataResourceTypeId="IMAGE_OBJECT" dataTemplateTypeId="NONE" dataResourceName="web_browser2.png" objectInfo="/images/products/CAM-2644/web_browser2.png" isPublic="Y"/>
     <Content contentId="CAM-2644-Add1-CTNT" contentTypeId="DOCUMENT" contentName="web_browser2.png" dataResourceId="CAM-2644-Add1" statusId="IM_APPROVED"/>
     <ProductContent productId="CAM-2644" contentId="CAM-2644-Add1-CTNT" productContentTypeId="IMAGE" fromDate="2001-05-13 12:00:00.0"/>

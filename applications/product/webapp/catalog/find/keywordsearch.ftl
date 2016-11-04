@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.ProductSearchProducts}, ${uiLabelMap.ProductSearchFor}">
+<@section title="${rawLabel('ProductSearchProducts')}, ${rawLabel('ProductSearchFor')}">
     <#list searchConstraintStrings as searchConstraintString>
       <div>&nbsp;<a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N&amp;SEARCH_CATEGORY_ID=${parameters.SEARCH_CATEGORY_ID!}</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
@@ -61,7 +61,7 @@ under the License.
         }
     </@script>
   
-  <#-- Scipio: NOTE: actual keyword search params are stored in session -->
+  <#-- SCIPIO: NOTE: actual keyword search params are stored in session -->
   <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
     <#assign paramStr = "~clearSearch=N/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}">
   <#else>

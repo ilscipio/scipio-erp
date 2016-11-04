@@ -79,8 +79,7 @@ if (category) {
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request);
     
-    // SCIPIO: Do NOT HTML-escape this here
-    categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
+    categoryDescription = categoryContentWrapper.get("DESCRIPTION");
 
     // SCIPIO: don't want page title overridden/forced by groovy
     if (pageTitle) {
@@ -88,8 +87,8 @@ if (category) {
         context.categoryTitle = pageTitle.textData;
     } else {
         // SCIPIO: Do NOT HTML-escape this here
-        //context.title = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
-        context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "raw".toString());
+        //context.title = categoryContentWrapper.get("CATEGORY_NAME");
+        context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME");
     }
 
     if (metaDescription) {

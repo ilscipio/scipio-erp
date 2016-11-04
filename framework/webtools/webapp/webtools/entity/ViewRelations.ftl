@@ -18,7 +18,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.WebtoolsRelations>

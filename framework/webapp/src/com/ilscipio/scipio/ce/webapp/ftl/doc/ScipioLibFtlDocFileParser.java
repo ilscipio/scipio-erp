@@ -20,11 +20,13 @@ import com.ilscipio.scipio.ce.webapp.ftl.doc.FtlDocException.ParseException;
  */
 public class ScipioLibFtlDocFileParser extends FtlDocFileParser {
 
-    protected final ScipioLibTemplateHelper tmplHelper = new ScipioLibTemplateHelper();
+    protected final ScipioLibTemplateHelper tmplHelper;
     protected String advancedArgDefaultArgsSuffix = "_defaultArgs";
     
-    public ScipioLibFtlDocFileParser(String libFilename, File srcFile) {
-        super(libFilename, srcFile);
+    public ScipioLibFtlDocFileParser(String libFilename, File srcFile, 
+            String inFileExtension, String outFileExtension) {
+        super(libFilename, srcFile, inFileExtension, outFileExtension);
+        tmplHelper = new ScipioLibTemplateHelper(inFileExtension, outFileExtension);
         tmplHelper.setMsgHandler(this.msgHandler);
     }
     

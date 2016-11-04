@@ -51,7 +51,7 @@ function gwAll(e) {
         }
     }
     if (cartSize > passed && selectedValue != "NO^") {
-        showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.EcommerceSelectedGiftWrap}");
+        showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.EcommerceSelectedGiftWrap, 'js')}");
     }
     cform.submit();
 }
@@ -100,7 +100,7 @@ function setAlternateGwp(field) {
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
-                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value="${uiLabelMap.CommonY}" onClick="javascript:toggleAll(this, 'cartform', 'selectedItem');" /></@th>
+                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value=(uiLabelMap.CommonY) onClick="javascript:toggleAll(this, 'cartform', 'selectedItem');" /></@th>
                 </@tr>
             </@thead>
             <@tbody>
@@ -209,8 +209,8 @@ function setAlternateGwp(field) {
                         <@td>
                             <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                                 <#if fixedAssetExist == true && cartLine.getReservStart()??>
-                                  <#-- Scipio: NOTE: stock bugfixes applied here -->
-                                  <@modal id="${cartLine.productId}_q" label="${cartLine.getQuantity()?string.number}">   
+                                  <#-- SCIPIO: NOTE: stock bugfixes applied here -->
+                                  <@modal id="${rawString(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>   
                                     <@fields type="default-compact"> 
                                       <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
                                       <@field type="display" label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
@@ -223,17 +223,17 @@ function setAlternateGwp(field) {
                                 </#if>
                             <#else><#-- Is Promo or Shoppinglist -->
                                 <#if fixedAssetExist == true>
-                                    <#-- Scipio:FIXME?: can't put in modal easily because inputs end up outside form -->
+                                    <#-- SCIPIO:FIXME?: can't put in modal easily because inputs end up outside form -->
                                     <#if cartLine.getReservStart()??>
                                       <@fields type="default-compact"> 
                                         <@field type="datetime" dateType="date" name="reservStart_${cartLineIndex}" maxlength=10 label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) 
                                           postfix=false datePostfix=false/><#-- FIXME: not enough space for postfix right now -->
                                         <@field type="input" name="reservLength_${cartLineIndex}"  label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
                                         <@field type="input" name="reservPersons_${cartLineIndex}" label=uiLabelMap.CommonPersons value=(cartLine.getReservPersons()?string.number) />
-                                        <@field type="input" name="update_${cartLineIndex}" label=uiLabelMap.CommonQuantity value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
+                                        <@field type="input" name="update_${cartLineIndex}" label=uiLabelMap.CommonQuantity value=(cartLine.getQuantity()?string.number) onChange="javascript:this.form.submit();"/> 
                                       </@fields>
                                     <#else>
-                                      <@field type="input" widgetOnly=true name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
+                                      <@field type="input" widgetOnly=true name="update_${cartLineIndex}" value=(cartLine.getQuantity()?string.number) onChange="javascript:this.form.submit();"/> 
                                     </#if>
                                 <#else><#-- fixedAssetExist -->
                                     <@field type="select" widgetOnly=true name="update_${cartLineIndex}" onChange="javascript:this.form.submit();">
@@ -243,7 +243,7 @@ function setAlternateGwp(field) {
                                             <#else>
                                                 <#assign selected = false/>
                                             </#if>
-                                            <@field type="option" value="${x}" selected=selected>${x}</@field>
+                                            <@field type="option" value=(x) selected=selected>${x}</@field>
                                         </#list>
                                     </@field>
                                 </#if>
@@ -252,10 +252,10 @@ function setAlternateGwp(field) {
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
-                        <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value="${cartLineIndex}" onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
+                        <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value=(cartLineIndex) onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
                     </@tr>
                 </#list>
-            <#--Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tbody>
             <@tfoot>-->
                     <@tr>
@@ -313,7 +313,7 @@ function setAlternateGwp(field) {
                     <@td>&nbsp;</@td>
                 </@tr>
 
-            <#--Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tfoot>-->
             </@tbody>
         </@table>
@@ -346,7 +346,7 @@ function setAlternateGwp(field) {
 </@section>
 
 
-<@section> <#-- Scipio: look strange: title=uiLabelMap.ProductPromotions -->
+<@section> <#-- SCIPIO: look strange: title=uiLabelMap.ProductPromotions -->
     <@row>
         <@cell columns=6>
             <@section title=uiLabelMap.ProductPromoCodes>
@@ -386,7 +386,7 @@ function setAlternateGwp(field) {
 </@section>
 
 <#if associatedProducts?has_content>
-  <@section title="${uiLabelMap.EcommerceYouMightAlsoIntrested}:">
+  <@section title="${rawLabel('EcommerceYouMightAlsoIntrested')}:">
     <@grid columns=5>
         <#list associatedProducts as assocProduct>
             <li>

@@ -1,8 +1,8 @@
 <#--
-Scipio: Local order template common defs
+SCIPIO: Local order template common defs
 -->
 
-<#-- Scipio: local macro where cells of label and widget areas are inverted and tweaked 
+<#-- SCIPIO: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType-->
 <#macro checkoutInvField type="generic" labelContentFieldsType="default-compact" postfixColumns="" labelContent="" labelContentArgs={} widgetAreaClass="" labelColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--

@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Scipio: Factors out the framework-level definitions common to most stores.
+SCIPIO: Factors out the framework-level definitions common to most stores.
 This is based on common-controller but is specifically tailored
 to frontend stores/shops.
 NOTE: This should only contain framework-level definitions, and not business-related logic,
@@ -28,7 +28,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
-    <description>Scipio: Common Framework-level Store Configuration File</description>
+    <description>SCIPIO: Common Framework-level Store Configuration File</description>
 
     <errorpage>/control/error</errorpage> <!-- /error/error.jsp -->
 
@@ -38,13 +38,13 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 
     <preprocessor>
         <!-- Events to run on every request before security (chains exempt) -->
-        <!-- Scipio: Not for frontend stores for now
+        <!-- SCIPIO: Not for frontend stores for now
         <event name="check509CertLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="check509CertLogin"/>
         <event name="checkRequestHeaderLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkRequestHeaderLogin"/>
         <event name="checkServletRequestRemoteUserLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkServletRequestRemoteUserLogin"/>
         -->
         <event name="checkExternalLoginKey" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkExternalLoginKey"/>
-        <!-- Scipio: Not for frontend stores for now
+        <!-- SCIPIO: Not for frontend stores for now
         <event name="checkProtectedView" type="java" path="org.ofbiz.webapp.control.ProtectViewWorker" invoke="checkProtectedView"/>
         <event name="extensionConnectLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="extensionConnectLogin"/>
         -->
@@ -61,7 +61,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view-last"/>
         <response name="error" type="view" value="login"/>
     </request-map>
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="ajaxCheckLogin" edit="false">
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
@@ -81,7 +81,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view" value="error"/>
     </request-map>
     <request-map uri="logout">
-        <!-- Scipio: CHANGED TO AUTH FALSE because request handler doesn't recognize need
+        <!-- SCIPIO: CHANGED TO AUTH FALSE because request handler doesn't recognize need
             to logout anonymous user in some cases -->
         <security https="true" auth="false"/><!-- auth="true" -->
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
@@ -112,7 +112,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="error" type="view" value="changepassword"/>
     </request-map>
     
-    <!-- Scipio: Do NOT allow this for frontend stores for now 
+    <!-- SCIPIO: Do NOT allow this for frontend stores for now 
     <request-map uri="view">
         <security https="false" auth="false"/>
         <response name="success" type="request" value="main"/>
@@ -124,7 +124,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <!-- Common Mappings used for locales and timezones -->
-    <!-- Scipio: Not for frotend for now
+    <!-- SCIPIO: Not for frotend for now
     <request-map uri="ListLocales"><security https="true" auth="true"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
     -->
     <request-map uri="setSessionLocale">
@@ -133,7 +133,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view-last" value="main"/>     
         <response name="error" type="view" value="main"/>
     </request-map>
-    <!-- Scipio: Not for frotend for now
+    <!-- SCIPIO: Not for frotend for now
     <request-map uri="ListTimezones"><security https="true" auth="false"/><response name="success" type="view" value="ListTimezones" save-last-view="true"/></request-map>
     <request-map uri="setSessionTimeZone">
         <security https="true" auth="false"/>
@@ -145,7 +145,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 
 
     <!-- User preference mapping -->
-    <!-- Scipio: Not for frotend for now
+    <!-- SCIPIO: Not for frotend for now
     <request-map uri="setUserPreference">
         <security https="true" auth="true"/>
         <event type="service" invoke="setUserPreference"/>
@@ -166,7 +166,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <!-- Online help system mapping -->
-    <!-- Scipio: Not for frotend for now
+    <!-- SCIPIO: Not for frotend for now
     <request-map uri="help">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="help"/>
@@ -174,7 +174,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <!-- Visual theme mapping -->
-    <!-- Scipio: Not for frotend for now
+    <!-- SCIPIO: Not for frotend for now
     <request-map uri="ListVisualThemes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListVisualThemes" save-last-view="true"/>
@@ -186,7 +186,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view" value="main"/>
     </request-map>
 
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="viewBlocked">
         <response name="success" type="view" value="viewBlocked"/>
     </request-map>
@@ -197,7 +197,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <!-- home/last/current mappings -->
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="backHome">
         <security https="true" auth="true"/>
         <response name="success" type="view-home"/>
@@ -216,7 +216,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="none"/>
     </request-map>
 
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="showHelp">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="showHelp"/>
@@ -234,7 +234,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <!-- Common captcha image request, the captcha code is stored in the session using _CAPTCHA_CODE_ as the key -->
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="captcha.jpg">
         <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="getCaptcha"/>
@@ -243,7 +243,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <!-- Lookup requests -->
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="LookupGeo"><security https="true" auth="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
     <request-map uri="LookupGeoName"><security https="true" auth="true"/><response name="success" type="view" value="LookupGeoName"/></request-map>
     <request-map uri="LookupLocale"><security https="true" auth="true"/><response name="success" type="view" value="LookupLocale"/></request-map>
@@ -251,7 +251,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     
     <!--========================== AJAX events =====================-->
     <!-- Get states related to a country -->
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="getAssociatedStateList">
         <security https="true" auth="false"/>
         <event type="service" invoke="getAssociatedStateList"/>
@@ -268,7 +268,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <!-- Common JavaScript uiLabel Request, to receive uiLabels within regular JS Code -->
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="getJSONuiLabelArray">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="getJSONuiLabelArray"/>
@@ -284,7 +284,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
      -->
 
     <!-- Check if an UomConversion exists -->
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="checkUomConversion">
         <security https="true" auth="false"/>
         <event type="service" invoke="checkUomConversion"/>
@@ -324,42 +324,42 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     <!--========================== AJAX events =====================-->
 
     <!-- View Mappings -->
-    <!-- Scipio: NOTE: the store should override most of these -->
+    <!-- SCIPIO: NOTE: the store should override most of these -->
     <view-map name="error" type="screen" page="component://common/widget/CommonScreens.xml#error"/>
     <view-map name="main" type="none"/>
     <view-map name="login" type="screen" page="component://common/widget/CommonScreens.xml#login"/>
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <view-map name="ajaxLogin" type="screen" page="component://common/widget/CommonScreens.xml#ajaxNotLoggedIn"/>
     -->
     <view-map name="requirePasswordChange" type="screen" page="component://common/widget/CommonScreens.xml#requirePasswordChange"/>
     <view-map name="forgotPassword" type="screen" page="component://common/widget/CommonScreens.xml#forgotPassword"/>
     <view-map name="changepassword" type="none" />
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <view-map name="EventMessages" type="screen" page="component://common/widget/CommonScreens.xml#EventMessages"/>
     -->
     
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <view-map name="ListLocales" type="screen" page="component://common/widget/CommonScreens.xml#ListLocales"/>
     <view-map name="LookupTimeDuration" type="screen" page="component://common/widget/LookupScreens.xml#TimeDuration"/>
     <view-map name="ListTimezones" type="screen" page="component://common/widget/CommonScreens.xml#ListTimezones"/>
     <view-map name="ListVisualThemes" type="screen" page="component://common/widget/CommonScreens.xml#ListVisualThemes"/>
     -->
     
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <view-map name="ajaxAutocompleteOptions" type="screen" page="component://common/widget/CommonScreens.xml#ajaxAutocompleteOptions"/>
     -->
     
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <view-map name="help" type="screen" page="component://common/widget/CommonScreens.xml#help"/>
     <view-map name="showHelp" type="screen" page="component://common/widget/HelpScreens.xml#ShowHelp"/>
     <view-map name="ShowDocument" type="screen" page="component://common/widget/HelpScreens.xml#showDocument"/>
     -->
     
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <view-map name="viewBlocked" type="screen" page="component://common/widget/CommonScreens.xml#viewBlocked"/>
     -->
     
-    <!-- Scipio: Not for frontend stores for now
+    <!-- SCIPIO: Not for frontend stores for now
     <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
     <view-map name="LookupGeoName" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeoName"/>
     <view-map name="LookupLocale" type="screen" page="component://common/widget/LookupScreens.xml#LookupLocale"/>

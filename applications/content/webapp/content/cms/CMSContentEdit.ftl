@@ -28,7 +28,7 @@ under the License.
 ${menuWrapper.renderMenuString()}
 -->
 
-<#-- Scipio: TODO? this should probably be converted but it may be a special case due to formatting content special way? -->
+<#-- SCIPIO: TODO? this should probably be converted but it may be a special case due to formatting content special way? -->
 <#-- Main Heading -->
 <@table type="generic" width="100%" cellpadding="0" cellspacing="0" border="0">
   <@tr>

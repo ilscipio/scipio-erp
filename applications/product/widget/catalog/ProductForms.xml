@@ -1392,8 +1392,11 @@
         </field>
     </form>
 
-    <!-- UNUSED FORMS -->
+    <!-- UNUSED FORMS --> <!-- SCIPIO: Bugfix https://apache.googlesource.com/ofbiz/+/daf8983c0ce0354518dcc5d9dd6e18ebcf836af2/applications/product/webapp/catalog/product/EditProductAssoc.ftl -->
     <form name="AddProductAssoc" type="single" target="UpdateProductAssoc">
+        <field name="UPDATE_MODE">
+            <hidden value="CREATE"/>
+        </field>
         <field name="productId">
             <display />
         </field>
@@ -1430,7 +1433,10 @@
         </field>
     </form>
 
-    <form name="EditProductAssoc" type="single" target="UpdateProductAssoc">
+    <form name="EditProductAssoc" type="single" target="UpdateProductAssoc"><!-- SCIPIO: Bugfix https://apache.googlesource.com/ofbiz/+/daf8983c0ce0354518dcc5d9dd6e18ebcf836af2/applications/product/webapp/catalog/product/EditProductAssoc.ftl -->
+        <field name="UPDATE_MODE">
+            <hidden value="UPDATE"/>
+        </field>
         <field name="productId">
             <display />
         </field>
@@ -2788,7 +2794,7 @@
         </field>
         <field name="organizationPartyId" title="${uiLabelMap.CommonOrganisation}">
             <display
-                description="${bsh: org.ofbiz.party.party.PartyHelper.getPartyName(delegator, organizationPartyId, true);} [${organizationPartyId}]" />
+                description="${groovy: org.ofbiz.party.party.PartyHelper.getPartyName(delegator, organizationPartyId, true);} [${organizationPartyId}]" />
         </field>
         <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">

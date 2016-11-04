@@ -39,17 +39,17 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     use #attribSpecialVal instead.
 -->
 <#macro fieldElemAttribStr attribs includeEmpty=false emptyValToken="_EMPTY_VALUE_" noValToken="_NO_VALUE_" exclude=[] noExclude=[]
-  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>
+  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true escapeLang="html">
   <#t/><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken noValToken=noValToken exclude=exclude
     attribNamePrefix=attribNamePrefix alwaysAddPrefix=alwaysAddPrefix attribNamePrefixStrip=attribNamePrefixStrip 
-    attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames /><#t/>
+    attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames escapeLang=escapeLang/><#t/>
 </#macro>
 
 <#-- migrated from @renderTextField form widget macro -->
 <#assign field_input_widget_defaultArgs = {
   "name":"", "class":"", "style":"", "alert":"", "value":"", "textSize":"", "maxlength":"", "id":"", "events":{}, "disabled":false, "ajaxUrl":"", 
   "ajaxEnabled":false, "mask":false, "clientAutocomplete":"", "placeholder":"", "tooltip":"", "title":"", "collapse":false, "readonly":false, 
-  "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "fieldTitleBlank":false, "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_input_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_input_widget_defaultArgs)>
@@ -77,42 +77,45 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
   </#if>
   <@field_input_markup_widget name=name class=class style=style alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
-    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip title=title collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_input_markup_widget>
+    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip title=title collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_input_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_input_markup_widget name="" class="" style="" alert="" value="" textSize="" maxlength="" id="" events={} disabled=false ajaxUrl="" ajaxEnabled=false 
-    mask=false clientAutocomplete=true placeholder="" tooltip="" title="" collapse=false readonly=false fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    mask=false clientAutocomplete=true placeholder="" tooltip="" title="" collapse=false readonly=false required=false fieldTitleBlank=false inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_input_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
     <#local attribs = attribs + styles.field_input_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
-  <#if mask?has_content && mask>
+  <#if mask?has_content && !(mask?is_boolean)>
     <@script>
-      jQuery(function($){jQuery("#${id}").mask("${mask!}");});
+      jQuery(function($){jQuery("#${escapeVal(id, 'js')}").mask("${escapeVal(mask, 'js')}");});<#-- FIXME: something wrong here -->
     </@script>
   </#if>
-  <input type="text" name="${name?html}"<#t/>
+  <input type="text" name="${escapeVal(name, 'html')}"<#t/>
     <@fieldElemAttribStr attribs=attribs /><#t/>
-    <#if title?has_content> title="${title}"</#if><#t/>
+    <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
     <@fieldClassAttribStr class=class alert=alert /><#t/>
-    <#if value?has_content> value="${value}"</#if><#t/>
+    <#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#t/>
     <#if textSize?has_content> size="${textSize}"</#if><#t/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
     <#if disabled> disabled="disabled"</#if><#t/>
     <#if readonly> readonly="readonly"</#if><#t/>
-    <#if id?has_content> id="${id}"</#if><#t/>
+    <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
     <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
     <#if !clientAutocomplete> autocomplete="off"</#if><#t/>
-    <#if style?has_content> style="${style}"</#if><#t/>
-    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
+    <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
+    <#if placeholder?has_content> placeholder="${escapeVal(placeholder, 'html')}"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   /><#t/>
   <#if ajaxUrl?has_content>
     <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
     <#local defaultDelay = getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")!300>
-    <@script>ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength}, ${defaultDelay});</@script><#lt/>
+    <@script>ajaxAutoCompleter('${escapeFullUrl(ajaxUrl, 'js')}', false, ${defaultMinLength}, ${defaultDelay});</@script><#lt/>
   </#if>
 </#macro>
 
@@ -121,7 +124,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "name":"", "class":"", "style":"", "alert":"", "cols":"", "rows":"", "id":"", "readonly":"", "value":"", "visualEditorEnable":true, 
   "buttons":"", "language":"", "placeholder":"", "tooltip":"", "title":"", "fieldTitleBlank":false, "collapse":false, 
   "maxlength":"",
-  "inlineLabel":false, "wrap":"", "passArgs":{}
+  "inlineLabel":false, "wrap":"", "required":false, "passArgs":{}
 }>
 <#macro field_textarea_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_textarea_widget_defaultArgs)>
@@ -135,50 +138,53 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
   </#if>
   <@field_textarea_markup_widget name=name class=class style=style alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
-    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title maxlength=maxlength fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
+    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title maxlength=maxlength fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textarea_markup_widget name="" class="" style="" alert="" cols="" rows="" id="" readonly=false value="" visualEditorEnable=true 
-    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" maxlength="" origArgs={} passArgs={} catchArgs...>
+    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" maxlength="" 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textarea_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
     <#local attribs = attribs + styles.field_textarea_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
-  <textarea name="${name}"<#t/>
+  <textarea name="${escapeVal(name, 'html')}"<#t/>
     <@fieldElemAttribStr attribs=attribs /><#t/>
     <@fieldClassAttribStr class=class alert=alert /><#t/>
-    <#if title?has_content> title="${title}"</#if><#t/>
+    <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
     <#if cols?has_content> cols="${cols}"</#if><#t/>
     <#if rows?has_content> rows="${rows}"</#if><#t/>
-    <#if id?has_content> id="${id}"</#if><#t/>
+    <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
     <#if readonly> readonly="readonly"</#if><#t/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
     <#if wrap?has_content> wrap="${wrap}"</#if><#t/>
-    <#if style?has_content> style="${style}"</#if><#t/>
-    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
+    <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
+    <#if placeholder?has_content> placeholder="${escapeVal(placeholder, 'html')}"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   ><#t/>
-    <#if value?has_content>${value}<#else><#nested></#if><#t/>
+    <#if value?has_content>${escapeVal(value, 'htmlmarkup')}<#else><#nested></#if><#t/>
   </textarea><#lt/>
   <#--
   TODO: Remove
   <#if visualEditorEnable?has_content>
     <@script src="/images/jquery/plugins/elrte-1.3/js/elrte.min.js" /><#rt/>
     <#if language?has_content && language != "en">
-      <@script src="/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!'en'}.js" /><#rt/>
+      <@script src="/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${escapeVal(language, 'html')}.js" /><#rt/>
     </#if>
     <link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
     <@script>
       var opts = {
          cssClass : 'el-rte',
-         lang     : '${language!"en"}',
-         toolbar  : '${buttons!"maxi"}',
+         lang     : '${escapeVal(language, 'js')}',
+         toolbar  : '${escapeVal(buttons, 'js')}',
          doctype  : '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">', //'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">',
          cssfiles : ['/images/jquery/plugins/elrte-1.3/css/elrte-inner.css']
       }
-      jQuery('#${id!""}').elrte(opts);
+      jQuery('#${escapeVal(id, 'js')}').elrte(opts);
     </@script>
   </#if>
   -->
@@ -191,7 +197,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":"", "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
   "collapse":false, "fieldTitleBlank":false, "origLabel":"", "postfix":"", "postfixColumns":"", 
-  "manualInput":"", "inlineLabel":false, "passArgs":{}
+  "manualInput":"", "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_datetime_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datetime_widget_defaultArgs)>
@@ -215,14 +221,15 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
     alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel postfix=postfix 
-    postfixColumns=postfixColumns manualInput=manualInput origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
+    postfixColumns=postfixColumns manualInput=manualInput required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datetime_markup_widget name="" class="" style="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
@@ -239,14 +246,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>
   <#local inputId = "">
   <#if id?has_content>
-    <#local displayInputId = "${id}_i18n">
-    <#local inputId = "${id}">
+    <#local displayInputId = rawString(id) + "_i18n">
+    <#local inputId = id>
   </#if>
   <#local displayInputName = "">
   <#local inputName = "">
   <#if name?has_content>
-    <#local displayInputName = "${name?html}_i18n">
-    <#local inputName = "${name?html}">
+    <#local displayInputName = rawString(name) + "_i18n">
+    <#local inputName = name>
   </#if>
   <#local attribs = {}>
   <#if !postfix?is_boolean>
@@ -274,14 +281,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#-- FIXME: as above
           <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
           -->
-          <#local dateFormatString = "${uiLabelMap.CommonFormat}: ${dateDisplayFormat}">
+          <#local dateFormatString = rawString(uiLabelMap.CommonFormat) + ": " + rawString(dateDisplayFormat)>
           <#if title == "FORMAT">
             <#local title = dateFormatString>
           <#elseif title == "LABEL">
             <#local title = origLabel>
           <#elseif title == "LABEL+FORMAT">
             <#if origLabel?has_content>
-              <#local title = origLabel + " (" + dateFormatString + ")">
+              <#local title = rawString(origLabel) + " (" + rawString(dateFormatString) + ")">
             <#else>
               <#local title = dateFormatString>
             </#if>
@@ -291,19 +298,33 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         </#if>
       </#if>
       <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
-      <input type="text" name="${displayInputName}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
+      <input type="text" name="${escapeVal(displayInputName, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
         <@fieldElemAttribStr attribs=attribs /><#t/>
         <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
-        <#if title?has_content> title="${title}"</#if><#t/>
-        <#if value?has_content> value="${value}"</#if><#t/>
-        <#if style?has_content> style="${style}"</#if><#t/>
+        <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
+        <#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#t/>
+        <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
         <#if size?has_content> size="${size}"</#if><#t/>
         <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
         <#if !manualInput> readonly="readonly"</#if><#t/>
-        <#if displayInputId?has_content> id="${displayInputId}"</#if><#t/>
+        <#if displayInputId?has_content> id="${escapeVal(displayInputId, 'html')}"</#if><#t/>
+        <#if required> required="required"</#if><#t/>
         <#--don't set this stuff here anymore, because fdatepicker has bugs with this and also it's better to factor out the fdatepicker-specific stuff into the script macro:
-            data-date="" data-date-format="${dateFormatPicker}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
-      <input type="hidden"<#if inputName?has_content> name="${inputName}"</#if><#if inputId?has_content> id="${inputId}"</#if><#if value?has_content> value="${value}"</#if> />
+            data-date="" data-date-format="${escapeVal(dateFormatPicker, 'html')}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
+      <input type="hidden"<#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if> />
+      <#-- TODO?: we don't handle this case yet - only show date (renderer already passed dateType="date" for this). but we must submit zero values for the event to pass. -->
+      <#if timeDropdown == "time-dropdown">
+        <#if timeHourName?has_content>
+          <input type="hidden" name="${escapeVal(timeHourName, 'html')}" value="0"/>
+        </#if>
+        <#if timeMinutesName?has_content>
+          <input type="hidden" name="${escapeVal(timeMinutesName, 'html')}" value="0"/>
+        </#if>
+      </#if>
+      <#-- NOTE: this is still needed in general (but mostly for timeDropdown). only one value supported by events currenlty (Timestamp). -->
+      <#if compositeType?has_content>
+        <input type="hidden" name="${escapeVal(compositeType, 'html')}" value="Timestamp"/>
+      </#if>
     </div>
   <#if postfix>
     <div class="${styles.grid_small!}${postfixColumns} ${styles.grid_cell!}">
@@ -311,16 +332,17 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </div>
   </#if>
   </div>
+  
   <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName 
-    dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
+    dateType=dateType dateDisplayType=dateDisplayType required=required origArgs=origArgs passArgs=passArgs />
 </#macro>
 
 <#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" 
-    dateDisplayType="" dateFormatPicker="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
+    dateDisplayType="" dateFormatPicker="" htmlwrap=true required=false origArgs={} passArgs={} catchArgs...>
   <#if !dateFormatPicker?has_content>
     <#local dateFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
   </#if>
-  <#local fdatepickerOptions>{format:"${dateFormatPicker}" <#rt/>
+  <#local fdatepickerOptions>{format:"${escapeVal(dateFormatPicker, 'js')}" <#rt/>
     <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
     , forceParse:false}</#local><#lt/><#--redundant, don't do this here: format:"yyyy-mm-dd", -->
   <@script htmlwrap=htmlwrap>
@@ -340,15 +362,15 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             return date;
         };
     
-        jQuery("#${displayInputId}").change(function() {
+        jQuery("#${escapeVal(displayInputId, 'js')}").change(function() {
           <#if dateType == "timestamp">
-            jQuery("#${inputId}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
+            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
           <#elseif dateType == "date">
-            jQuery("#${inputId}").val(convertToDateNorm(dateI18nToNorm(this.value)));
+            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateNorm(dateI18nToNorm(this.value)));
           <#elseif dateType == "time">
-            jQuery("#${inputId}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
+            jQuery("#${escapeVal(inputId, 'js')}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
           <#elseif dateType == "month">
-            jQuery("#${inputId}").val(convertToMonthNorm(dateI18nToNorm(this.value)));
+            jQuery("#${escapeVal(inputId, 'js')}").val(convertToMonthNorm(dateI18nToNorm(this.value)));
           </#if>
         });
         
@@ -360,23 +382,23 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       
         var oldDate = "";
         var onFDatePopup = function(ev) {
-            oldDate = dateI18nToNorm(jQuery("#${displayInputId}").val());
+            oldDate = dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val());
         };
         var onFDateChange = function(ev) {
           <#if dateDisplayType == "timestamp">
-            jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
+            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
           <#elseif dateDisplayType == "date">
-            jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
+            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
           <#elseif dateDisplayType == "month">
-            jQuery("#${displayInputId}").val(dateNormToI18n(convertToMonthNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
+            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToMonthNorm(dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
           </#if>
         };
         
-        <#-- Scipio: How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
+        <#-- SCIPIO: How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
             This triggers onFDateChange which may transform the date and put it back in id_i18n.
             This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
-        $("#${displayInputId}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
-        <#-- Cannot use name, must use ID, this is invalid (will break multiple forms per page): $("input[name='${displayInputName}']")-->
+        $("#${escapeVal(displayInputId, 'js')}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
+        <#-- Cannot use name, must use ID, this is invalid (will break multiple forms per page): $("input[name='${escapeVal(displayInputName, 'js')}']")-->
 
       </#if>
     });
@@ -389,7 +411,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleClass":"", "defaultOptionFrom":"", 
   "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"",
   "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", 
-  "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "passArgs":{}
+  "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "required":false, "passArgs":{}
 }>
 <#macro field_datefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datefind_widget_defaultArgs)>
@@ -434,52 +456,53 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleClass defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
     opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty 
-    title=title tooltip=tooltip inlineLabel=inlineLabel origLabel=origLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
+    title=title tooltip=tooltip inlineLabel=inlineLabel origLabel=origLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datefind_markup_widget id="" class="" style="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
-    title="" tooltip="" inlineLabel=false origLabel=origLabel origArgs={} passArgs={} catchArgs...>
+    title="" tooltip="" inlineLabel=false origLabel=origLabel required=false origArgs={} passArgs={} catchArgs...>
   <#-- NOTE: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local displayInputId = "">
   <#local inputId = "">
   <#if id?has_content>
-    <#local displayInputId = "${id}_i18n">
-    <#local inputId = "${id}">
+    <#local displayInputId = rawString(id) + "_i18n">
+    <#local inputId = id>
   </#if>
   <#local displayInputName = "">
   <#local inputName = "">
   <#if name?has_content>
-    <#local displayInputName = "${name?html}_fld0_i18n">
-    <#local inputName = "${name?html}_fld0_value">
+    <#local displayInputName = rawString(name) + "_fld0_i18n">
+    <#local inputName = rawString(name) + "_fld0_value">
   </#if>
   <#local opSelectName = "">
   <#if name?has_content>
-    <#local opSelectName = "${name?html}_fld0_op">
+    <#local opSelectName = rawString(name) + "_fld0_op">
   </#if>
-  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${escapeVal(dateDisplayFormat, 'html')}">
     <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
       <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
-      <input type="text"<#if displayInputId?has_content> id="${displayInputId}"</#if><#if displayInputName?has_content> name="${displayInputName}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt/>
-        <#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#lt/>
-      <input type="hidden"<#if inputId?has_content> id="${inputId}"</#if><#if inputName?has_content> name="${inputName}"</#if><#if value?has_content> value="${value}"</#if>/>
+      <input type="text"<#if displayInputId?has_content> id="${escapeVal(displayInputId, 'html')}"</#if><#if displayInputName?has_content> name="${escapeVal(displayInputName, 'html')}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt/>
+        <#if localizedInputTitle?has_content> title="${escapeVal(localizedInputTitle, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>/><#lt/>
+      <input type="hidden"<#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if>/>
     </div>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
       <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
     </div>
     <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
-      <select<#if opSelectName?has_content> name="${opSelectName}"</#if><#-- class="selectBox"-->>
-        <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${opEquals}</option>
-        <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${opSameDay}</option>
-        <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option>
-        <option value="greaterThan"<#if defaultOptionFrom == "greaterThan"> selected="selected"</#if>>${opGreaterThan}</option>
+      <select<#if opSelectName?has_content> name="${escapeVal(opSelectName, 'html')}"</#if><#-- class="selectBox"-->>
+        <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
+        <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${escapeVal(opSameDay, 'htmlmarkup')}</option>
+        <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${escapeVal(opGreaterThanFromDayStart, 'htmlmarkup')}</option>
+        <option value="greaterThan"<#if defaultOptionFrom == "greaterThan"> selected="selected"</#if>>${escapeVal(opGreaterThan, 'htmlmarkup')}</option>
       </select>
     </div>
   </div>
-  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />  
+  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType 
+    required=required origArgs=origArgs passArgs=passArgs />  
 </#macro>
 
 <#-- migrated from @renderDropDownField form widget macro -->
@@ -489,7 +512,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "otherValue":"", "otherFieldSize":"", "dDFCurrent":"", "defaultValue":"", "ajaxOptions":"", "frequency":"", "minChars":"",
   "choices":"", "autoSelect":"", "partialSearch":"", "partialChars":"", "ignoreCase":"", "fullSearch":"", "events":{}, 
   "ajaxEnabled":false, "title":"", "tooltip":"", "description":"", "manualItems":false, "manualItemsOnly":false, "collapse":false, 
-  "fieldTitleBlank":false, "inlineSelected":true, "disabled":false, "asmSelectArgs":{}, "inlineLabel":false, "passArgs":{}
+  "fieldTitleBlank":false, "inlineSelected":true, "disabled":false, "required":false, "asmSelectArgs":{}, "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_select_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_select_widget_defaultArgs)>
@@ -547,7 +570,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent defaultValue=defaultValue ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
-    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel disabled=disabled origArgs=origArgs passArgs=passArgs><#nested></@field_select_markup_widget>
+    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel disabled=disabled required=required origArgs=origArgs passArgs=passArgs><#nested></@field_select_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -555,64 +578,67 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" events={} ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false inlineSelected=true disabled=false asmSelectArgs={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    collapse=false fieldTitleBlank=false inlineSelected=true disabled=false asmSelectArgs={} inlineLabel=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_select_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
     <#local attribs = attribs + styles.field_select_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
-  <select name="${name}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
+  <select name="${escapeVal(name, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
     <@fieldElemAttribStr attribs=attribs /><#t/>
-    <#if id?has_content> id="${id}"</#if><#t/>
+    <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
     <#if multiple> multiple="multiple"</#if><#t/>
     <#-- FIXME: this onchange may conflict with the other events -->
-    <#if (otherFieldSize > 0)> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#t/>
+    <#if (otherFieldSize > 0)> onchange="process_choice(this, document['${escapeVal(formName, 'js-html')}']['${escapeVal(otherFieldName, 'js-html')}'])"</#if><#t/>
     <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
     <#--<#if size?has_content> size="${size}"</#if>-->
-    <#if title?has_content> title="${title}"</#if><#t/>
-    <#if style?has_content> style="${style}"</#if><#t/>
+    <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
+    <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
     <#if disabled> disabled="disabled"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   ><#lt/>
   <#if !manualItemsOnly>  
     <#if currentFirst && currentValue?has_content && !multiple>
-      <option selected="selected" value="${currentValue}">${currentDescription}</option>
-      <option value="${currentValue}">---</option>
+      <option selected="selected" value="${escapeVal(currentValue, 'html')}">${escapeVal(currentDescription, 'htmlmarkup')}</option>
+      <option value="${escapeVal(currentValue, 'html')}">---</option>
     </#if>
     <#if allowEmpty || (!manualItems && !options?has_content)>
       <option value="">&nbsp;</option>
     </#if>
     <#list options as item>
-      <#-- Scipio: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
+      <#-- SCIPIO: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
       <#local itemValue = item.value!item.key!>
       <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
       <#if multiple>
         <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#rt/>
-          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#lt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapeVal(itemValue, 'html')}">${escapeVal(item.description!, 'htmlmarkup')}</option><#lt/>
       <#else>
         <option<#if currentValue?has_content && currentValue == itemValue && inlineSelected> selected="selected"<#rt/>
-          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#lt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapeVal(itemValue, 'html')}">${escapeVal(item.description!, 'htmlmarkup')}</option><#lt/>
       </#if>
     </#list>
   </#if>
     <#nested>
   </select>
   <#if otherFieldName?has_content>
-    <noscript><input type="text" name="${otherFieldName}" /></noscript>
+    <noscript><input type="text" name="${escapeVal(otherFieldName, 'html')}" /></noscript>
     <@script>
       disa = ' disabled';
-      if(other_choice(document.${formName}.${fieldName}))
+      if(other_choice(document['${escapeVal(formName, 'js')}']['${escapeVal(fieldName, 'js')}'])) {
         disa = '';
-      document.write('<input type="text" name="${otherFieldName}" value="${otherValue?js_string}" size="${otherFieldSize}"'+disa+' onfocus="check_choice(document.${formName}.${fieldName})" />');
-      if(disa && document.styleSheets)
-      document.${formName}.${otherFieldName}.styles.visibility  = 'hidden';
+      }
+      document.write('<input type="text" name="${escapeVal(otherFieldName, 'html-js')}" value="${escapeVal(otherValue, 'html-js')}" size="${escapeVal(otherFieldSize, 'html-js')}"'+disa+' onfocus="check_choice(document['${escapeVal(formName, 'html-js')}']['${escapeVal(fieldName, 'html-js')}'])" />');
+      if(disa && document.styleSheets) {
+        document['${escapeVal(formName, 'js')}']['${escapeVal(otherFieldName, 'js')}'].styles.visibility  = 'hidden';
+      }
     </@script>
   </#if>
   <#if ajaxEnabled>
     <@script>
       ajaxAutoCompleteDropDown();
       jQuery(function() {
-        jQuery("#${id}").combobox();
+        jQuery("#${escapeVal(id, 'js')}").combobox();
       });
     </@script>
   </#if>
@@ -648,7 +674,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- field markup - theme override -->
 <#macro field_option_markup_widget text="" value="" selected=false style="" origArgs={} passArgs={} catchArgs...>
-   <option value="${value}"<#if selected> selected="selected"</#if><#if style?has_content> style="${style}"</#if>>${text}</option><#t/>
+   <option value="${escapeVal(value, 'html')}"<#if selected> selected="selected"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>>${escapeVal(text, 'htmlmarkup')}</option><#t/>
 </#macro>    
 
 <#-- migrated from @renderLookupField form widget macro -->
@@ -657,7 +683,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
   "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
-  "inlineLabel":false, "tooltip":"", "passArgs":{}
+  "inlineLabel":false, "tooltip":"", "required":false, "passArgs":{}
 }>
 <#macro field_lookup_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_lookup_widget_defaultArgs)>
@@ -674,7 +700,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
     height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed 
-    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel tooltip=tooltip origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
+    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel tooltip=tooltip required=required origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -682,7 +708,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     maxlength="" id="" events={} readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=false presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
-    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false tooltip="" origArgs={} passArgs={} catchArgs...>
+    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false tooltip="" required=false origArgs={} passArgs={} catchArgs...>
   <#--<#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   </#if>-->
   <#local attribs = {}>
@@ -692,8 +718,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local attribs = attribs + styles.field_input_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
   <#if (!ajaxUrl?has_content) && ajaxEnabled>
-    <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, fieldFormName)/>
-    <#local ajaxUrl = id + "," + ajaxUrl + ",ajaxLookup=Y" />
+    <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, rawString(fieldFormName))/>
+    <#local ajaxUrl = rawString(id) + "," + rawString(ajaxUrl) + ",ajaxLookup=Y" />
   </#if>
   <#if (!showDescription?has_content)>
     <#local showDescriptionProp = getPropertyValue("widget.properties", "widget.lookup.showDescription")!"N">
@@ -706,7 +732,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#if ajaxEnabled>
     <@script>
       jQuery(document).ready(function(){
-        if (!jQuery('form[name="${escapePart(formName, 'js')}"]').length) {
+        if (!jQuery('form[name="${escapeVal(formName, 'js')}"]').length) {
           alert("Developer: for lookups to work you must provide a form name!")
         }
       });
@@ -714,27 +740,30 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>
   <span class="field-lookup">
     <#if size?has_content && size=="0">
-      <input type="hidden" <#if name?has_content> name="${name}"/></#if>
+      <input type="hidden" <#if name?has_content> name="${escapeVal(name, 'html')}"/></#if>
     <#else>
-      <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if style?has_content> style="${style}"</#if><#rt/>
-        <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#t/>
+      <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#rt/>
+        <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
-        <#if autocomplete?has_content> autocomplete="off"</#if><#rt/>
-        <#if title?has_content> title="${title}"</#if>/></#if><#t/>
+        <#if autocomplete?has_content> autocomplete="off"</#if><#t/>
+        <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
+        <#if required> required="required"</#if><#t/>
+        /></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
-      <a href="javascript:call_fieldlookup3(document.${escapePart(formName, 'js-html')}.${escapePart(name, 'js-html')}, <#rt/>
-          document.${escapePart(formName, 'js-html')}.${escapePart(descriptionFieldName, 'js-html')},'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#t/>
+      <#-- FIXME: dangerous form lookups -->
+      <a href="javascript:call_fieldlookup3(document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'], <#rt/>
+          document['${escapeVal(formName, 'js-html')}']['${escapeVal(descriptionFieldName, 'js-html')}'], '${escapeVal(fieldFormName, 'js-html')}', '${escapeVal(presentation, 'js-html')}'<#t/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.${escapePart(formName, 'js-html')}.${escapePart(item, 'js-html')}.value <#t/>
+          ,document['${escapeVal(formName, 'js-html')}']['${escapeVal(item, 'js-html')}'].value <#t/>
         </#list>
       </#if>
       );"></a><#rt/>
     <#elseif presentation?has_content && presentation == "window">
-      <a href="javascript:call_fieldlookup2(document.${escapePart(formName, 'js-html')}.${escapePart(name, 'js-html')},'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#rt/>
+      <a href="javascript:call_fieldlookup2(document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'], '${escapeVal(fieldFormName, 'js-html')}', '${escapeVal(presentation, 'js-html')}'<#rt/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.${escapePart(formName, 'js-html')}.${escapePart(item, 'js-html')}.value<#t/>
+          ,document['${escapeVal(formName, 'js-html')}']['${escapeVal(item, 'js-html')}'].value<#t/>
         </#list>
       </#if>
       );"></a><#rt/>
@@ -754,18 +783,18 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <@script>
         jQuery(document).ready(function(){
           var options = {
-            requestUrl : "${fieldFormName}",
-            inputFieldId : "${id}",
-            dialogTarget : document.${formName?html}.${name?html},
-            dialogOptionalTarget : <#if descriptionFieldName?has_content>document.${formName?html}.${descriptionFieldName}<#else>null</#if>,
-            formName : "${formName?html}",
+            requestUrl : "${escapeVal(fieldFormName, 'js')}",
+            inputFieldId : "${escapeVal(id, 'js')}",
+            dialogTarget : document['${escapeVal(formName, 'js')}']['${escapeVal(name, 'js')}'],
+            dialogOptionalTarget : <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js')}']['${escapeVal(descriptionFieldName, 'js')}']<#else>null</#if>,
+            formName : "${escapeVal(formName, 'js')}",
             width : "${width}",
             height : "${height}",
-            position : "${position}",
-            modal : "${fadeBackground}",
-            ajaxUrl : <#if ajaxEnabled>"${ajaxUrl}"<#else>""</#if>,
+            position : "${escapeVal(position, 'js')}",
+            modal : "${escapeVal(fadeBackground, 'js')}",
+            ajaxUrl : <#if ajaxEnabled>"${escapeFullUrl(ajaxUrl, 'js')}"<#else>""</#if>,
             showDescription : <#if ajaxEnabled>"${showDescription}"<#else>false</#if>,
-            presentation : "${presentation!}",
+            presentation : "${escapeVal(presentation, 'js')}",
             defaultMinLength : "${defaultMinLength}",
             defaultDelay : "${defaultDelay}",
             args :
@@ -774,10 +803,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
                   [<#t/>
                   <#list targetParameterIter as item>
                     <#if isFirst>
-                      document.${formName}.${item}<#t/>
+                      document['${escapeVal(formName, 'js')}']['${escapeVal(item, 'js')}']<#t/>
                       <#local isFirst = false>
                     <#else>
-                      ,document.${formName}.${item}<#t/>
+                      ,document['${escapeVal(formName, 'js')}']['${escapeVal(item, 'js')}']<#t/>
                     </#if>
                   </#list>
                   ]<#t/>
@@ -789,14 +818,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       </@script>
     </#if>
     <#if readonly?has_content && readonly>
-      <a id="${id}_clear" 
+      <a id="${escapeVal(id, 'html')}_clear" 
         style="background:none;margin-left:5px;margin-right:15px;" 
         class="clearField" 
         href="javascript:void(0);" 
-        onclick="javascript:document.${formName}.${name}.value='';
-          jQuery('#' + jQuery('#${id}_clear').next().attr('id').replace('_button','') + '_${id}_lookupDescription').html('');
-          <#if descriptionFieldName?has_content>document.${formName}.${escapePart(descriptionFieldName, 'js-html')}.value='';</#if>">
-          <#if clearText?has_content>${clearText}<#else>${uiLabelMap.CommonClear}</#if>
+        onclick="javascript:document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'].value='';
+          jQuery('#' + jQuery('#${escapeVal(id, 'js-html')}_clear').next().attr('id').replace('_button','') + '_${escapeVal(id, 'js-html')}_lookupDescription').html('');
+          <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js-html')}']['${escapeVal(descriptionFieldName, 'js-html')}'].value='';</#if>">
+          <#if clearText?has_content>${escapeVal(clearText, 'htmlmarkup')}<#else>${escapeVal(uiLabelMap.CommonClear, 'htmlmarkup')}</#if>
       </a>
     </#if>
   </span>
@@ -804,7 +833,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
       <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
     </#if>
-    <@script>ajaxAutoCompleter('${ajaxUrl}', ${showDescription}, ${defaultMinLength}, ${defaultDelay});</@script><#t/>
+    <@script>ajaxAutoCompleter('${escapeFullUrl(ajaxUrl, 'js')}', ${showDescription}, ${defaultMinLength}, ${defaultDelay});</@script><#t/>
   </#if>
 </#macro>
 
@@ -812,7 +841,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
   "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
-  "value":"", "altValue":"", "useHidden":"",
+  "value":"", "altValue":"", "useHidden":"", "required":false, 
   "readonly":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
@@ -868,7 +897,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
     labelType=labelType labelPosition=labelPosition readonly=readonly 
-    value=value altValue=altValue origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    value=value altValue=altValue required=required origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
@@ -877,13 +906,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
      NOTE: "value", "altValue" and "useHidden" are only fallbacks/common/defaults; the ones in items maps have priority -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" readonly="" value="" altValue="" useHidden="" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" value="" altValue="" useHidden="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
 
   <#if multiMode>
-    <div<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}_multi"</#if>>
+    <div<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapeVal(id, 'html')}_multi"</#if>>
     <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
   </#if>
 
@@ -900,7 +929,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local readonly = false>
   </#if>
 
-  <#-- Scipio: must have id on each elem or else the foundation switches break 
+  <#-- SCIPIO: must have id on each elem or else the foundation switches break 
        The first item receives the exact id passed to macro because this is what original ofbiz macros expect
        (and is logical for single items at least). -->
   <#local currentId = id>
@@ -961,16 +990,16 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#local inputClass = addClassArg(inputClass, styles.disabled!)>
     </#if>
 
-    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>>
+    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${escapeVal(currentId, 'html')}_item"</#if><#if itemStyle?has_content> style="${escapeVal(itemStyle, 'html')}"</#if>>
       <#local labelMarkup>
         <#if labelType == "extralabel">
-          <label<#if currentId?has_content> for="${currentId}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${labelTitle}"</#if><@fieldClassAttribStr class=labelClass/>></label>
+          <label<#if currentId?has_content> for="${escapeVal(currentId, 'html')}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${escapeVal(labelTitle, 'html')}"</#if><@fieldClassAttribStr class=labelClass/>></label>
           <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
-          <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
+          <#if item.description?has_content><span class="checkbox-label-local">${escapeVal(item.description, 'htmlmarkup')}</span></#if>
         <#elseif labelType == "spanonly">
-          <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
+          <#if item.description?has_content><span class="checkbox-label-local">${escapeVal(item.description, 'htmlmarkup')}</span></#if>
         <#else> <#-- labelType == "standard" -->
-          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${currentId}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${labelTitle}"</#if><@fieldClassAttribStr class=labelClass/>>${item.description}</label></#if>
+          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${escapeVal(currentId, 'html')}"</#if><@fieldElemAttribStr attribs=labelAttribs /><#if labelTitle?has_content> title="${escapeVal(labelTitle, 'html')}"</#if><@fieldClassAttribStr class=labelClass/>>${escapeVal(item.description, 'htmlmarkup')}</label></#if>
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
@@ -989,7 +1018,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#local inputChecked = true>
       </#if>
       <#if itemUseHidden>
-        <input type="hidden" name="${name?html}" value="<#if inputChecked>${itemValue?html}<#else>${itemAltValue?html}</#if>"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
+        <input type="hidden" name="${escapeVal(name, 'html')}" value="<#if inputChecked>${escapeVal(itemValue, 'html')}<#else>${escapeVal(itemAltValue, 'html')}</#if>"<#if currentId?has_content> id="${escapeVal(currentId, 'html')}_hidden"</#if> />
       <#else>
         <#-- 2016-07-13: IMPORTANT ADDITION: 
             Even if hidden input is technically disabled and not handled by a page,
@@ -1001,16 +1030,20 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             and templates rely on the traditional HTML behavior.
         
             UPDATE: 2016-08-03: Re-removed this because it is not generic enough solution. see auto value functions.
-        <input type="hidden" name="${name?html}_submitted" value="Y"<#if currentId?has_content> id="${currentId}_hidden"</#if> />
+        <input type="hidden" name="${escapeVal(name, 'html')}_submitted" value="Y"<#if currentId?has_content> id="${escapeVal(currentId, 'html')}_hidden"</#if> />
         -->
       </#if>
       <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
-        <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
-        <#if currentId?has_content> id="${currentId}"</#if><#t/>
+        <#if inputTitle?has_content> title="${escapeVal(inputTitle, 'html')}"</#if><#t/>
+        <#if currentId?has_content> id="${escapeVal(currentId, 'html')}"</#if><#t/>
         <#if itemReadonly> readonly="readonly"</#if><#t/>
         <#if inputChecked> checked="checked"</#if><#t/>
-        <#if name?has_content> name="${name?html}<#if itemUseHidden>_visible</#if>"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#lt/>
+        <#if name?has_content> name="${escapeVal(name, 'html')}<#if itemUseHidden>_visible</#if>"</#if><#t/>
+        <#t/> value="${escapeVal(itemValue, 'html')}"
+        <@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) /><#t/>
+        <#if required> required="required"</#if><#t/>
+        /><#lt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
       <#-- FIXME: Should really have a better way to do this -->
       <#-- NOTE: Currently, the br must be inside the span, as long as this is not fixed -->
@@ -1023,11 +1056,11 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#-- NOTE: it might be better somehow to do this on form submit, but this way there is no need to know the form name/id 
             it should work as long as template doesn't try anything funny with JS -->
         jQuery(document).ready(function() {
-            jQuery('#${currentId?js_string}').change(function() {
-                if (jQuery('#${currentId?js_string}').is(':checked')) {
-                    jQuery('#${currentId?js_string}_hidden').val("${itemValue?js_string}");
+            jQuery('#${escapeVal(currentId, 'js')}').change(function() {
+                if (jQuery('#${escapeVal(currentId, 'js')}').is(':checked')) {
+                    jQuery('#${escapeVal(currentId, 'js')}_hidden').val("${escapeVal(itemValue, 'js')}");
                 } else {
-                    jQuery('#${currentId?js_string}_hidden').val("${itemAltValue?js_string}");
+                    jQuery('#${escapeVal(currentId, 'js')}_hidden').val("${escapeVal(itemAltValue, 'js')}");
                 }
             });
         });
@@ -1035,7 +1068,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
     </span>
     <#if id?has_content>
-      <#local currentId = id + "_" + (item_index + 2)?string>
+      <#local currentId = rawString(id) + "_" + (item_index + 2)?string>
     </#if>
   </#list>
   <#if multiMode>
@@ -1046,7 +1079,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
   "items":"", "id":"", "class":"", "style":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
-  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "readonly":"", "passArgs":{}
+  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "required":false, "type":"", "readonly":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_radio_widget_defaultArgs)>
@@ -1072,14 +1105,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <@field_radio_markup_widget items=items id=id class=class style=style alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     events=events tooltip=tooltip title=title multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
     type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition readonly=readonly
-    origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
     FIXME: this markup macro is too overloaded with logic -->
 <#macro field_radio_markup_widget items="" id="" class="" style="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
-    labelType="standard" labelPosition="after" readonly="" origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -1089,7 +1122,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>
 
   <#if multiMode>
-    <div<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}_multi"</#if>>
+    <div<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapeVal(id, 'html')}_multi"</#if>>
     <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
   </#if>
   <#if inlineItems>
@@ -1102,7 +1135,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local class = addClassArg(class, inlineClass)>
   <#local currentId = id>
   <#list items as item>
-    <#-- Scipio: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
+    <#-- SCIPIO: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
     <#local itemValue = item.value!item.key!>
     <#local itemClass = class>
     <#local itemAlert = alert>
@@ -1132,10 +1165,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#local inputClass = addClassArg(inputClass, styles.disabled!)>
     </#if>
 
-    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if><#if itemStyle?has_content> style="${itemStyle}"</#if>><#rt/>
+    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${escapeVal(currentId, 'html')}_item"</#if><#if itemStyle?has_content> style="${escapeVal(itemStyle, 'html')}"</#if>><#rt/>
       <#local labelMarkup>
         <#if item.description?has_content>
-          <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label>
+          <label class="radio-label-local"<#if currentId?has_content> for="${escapeVal(currentId, 'html')}"</#if>>${escapeVal(item.description, 'htmlmarkup')}</label>
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
@@ -1153,10 +1186,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       </#if>
       <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
-        <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
-        <#if currentId?has_content> id="${currentId}"</#if><#t/>
-        <#if inputChecked> checked="checked"</#if><#t/>
-        name="${name?html}" value="${(itemValue!"")?html}"<@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) />/><#rt/>
+        <#if inputTitle?has_content> title="${escapeVal(inputTitle, 'html')}"</#if><#t/>
+        <#if currentId?has_content> id="${escapeVal(currentId, 'html')}"</#if><#t/>
+        <#if inputChecked> checked="checked"</#if> <#t/>
+        <#t/> name="${escapeVal(name, 'html')}"
+        <#t/> value="${escapeVal(itemValue!"", 'html')}"
+        <@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) /><#t/>
+        <#if required> required="required"</#if><#t/>
+        /><#t/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">
@@ -1164,7 +1201,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local sepClass = addClassArg(sepClass, inlineClass)>
     <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
     <#if id?has_content>
-      <#local currentId = id + "_" + (item_index + 2)?string>
+      <#local currentId = rawString(id) + "_" + (item_index + 2)?string>
     </#if>    
   </#list>
   <#if multiMode>
@@ -1175,19 +1212,22 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#-- migrated from @renderFileField form widget macro -->
 <#assign field_file_widget_defaultArgs = {
   "class":"", "alert":"", "name":"", "value":"", "size":"", "style":"", "maxlength":"", "autocomplete":"", "id":"", "title":"", 
-  "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "fieldTitleBlank":false, "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_file_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_file_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_file_markup_widget class=class alert=alert name=name style=style value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_file_markup_widget>
+  <@field_file_markup_widget class=class alert=alert name=name style=style value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank 
+    inlineLabel=inlineLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_file_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#rt/>
-    <#lt/><#if style?has_content> style="${style}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+<#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
+  <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#rt/>
+    <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#t/>
+    <#if required> required="required"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#t/>
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
@@ -1199,23 +1239,26 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_password_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_password_markup_widget class=class alert=alert name=name value=value style=style size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_password_markup_widget>
+  <@field_password_markup_widget class=class alert=alert name=name value=value style=style size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank 
+    tooltip=tooltip inlineLabel=inlineLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_password_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_password_markup_widget class="" alert="" style="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_password_markup_widget class="" alert="" style="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false 
+    tooltip="" inlineLabel=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_password_tooltip!styles.field_default_tooltip!"")>
     <#local attribs = attribs + styles.field_password_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
     <#local title = tooltip>
   </#if>
-  <input type="password"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#rt/>
-    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if><#rt/>
-    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
+  <input type="password"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#rt/>
+    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if autocomplete?has_content> autocomplete="off"</#if><#rt/>
+    <#if placeholder?has_content> placeholder="${escapeVal(placeholder, 'html')}"</#if><#t/>
     <@fieldElemAttribStr attribs=attribs /><#t/>
-    <#if style?has_content> style="${style}"</#if><#t/>
-    <#if title?has_content> title="${title}"</#if><#t/>
+    <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
+    <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
+    <#if required> required="required"</#if><#t/>
   /><#t/>
 </#macro>
 
@@ -1227,12 +1270,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_reset_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_reset_markup_widget class=class alert=alert name=name id=id style=style text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs/>
+  <@field_reset_markup_widget class=class alert=alert name=name id=id style=style text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
+    origArgs=origArgs passArgs=passArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_reset_markup_widget class="" alert="" name="" id="" style="" text="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <input type="reset"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if text?has_content> value="${text}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>/>
+  <input type="reset"<@fieldClassAttribStr class=class alert=alert /> name="${escapeVal(name, 'html')}"<#if text?has_content> value="${escapeVal(text, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>/>
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro 
@@ -1262,7 +1306,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#else>
     <#local progressArgs = {}>
   </#if>
-  <#-- Scipio: to omit button (show progress only), we use space-only title hack " " similar to what ofbiz does with hyperlinks with no label.
+  <#-- SCIPIO: to omit button (show progress only), we use space-only title hack " " similar to what ofbiz does with hyperlinks with no label.
     also support the string _NO_BTN_MARKUP_ for clarity -->
   <#if text == " " || text == "_NO_BTN_MARKUP_">
     <#local text = "">
@@ -1301,19 +1345,21 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if !text?has_content><#-- NOTE: don't use trim here! -->  
           <#local text = getTextLabelFromExpr(styles.field_submit_default_text!"")>
         </#if>
+        <#-- SCIPIO: NOTE: IMPORTANT: 2016-11-03: javascript:document[formName] in the href here MUST be
+            passed through jQuery() - otherwise jQuery.validate is not triggered, and text-link everywhere will fail to trigger validation  -->
         <a<@fieldClassAttribStr class=class alert=alert /> <#rt>
-          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:document.forms['${escapeFullUrl(formName, 'js-html')}'].submit()<#else>javascript:void(0)</#if>"<#t/>
-          <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#t/>
-          <#if id?has_content> id="${id}"</#if><#t/>
-          <#if style?has_content> style="${style}"</#if><#t/>
-          <#lt>><#if text?has_content>${text}</#if></a>
+          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:jQuery(document['${escapeVal(formName, 'js-html')}']).submit()<#else>javascript:void(0)</#if>"<#t/>
+          <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}');"</#if></#if><#t/>
+          <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
+          <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
+          <#lt>><#if text?has_content>${escapeVal(text, 'htmlmarkup')}</#if></a>
       <#elseif buttonType == "image">
-        <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if id?has_content> id="${id}"</#if><#rt>
-        <#if description?has_content> alt="${description}"</#if><#t/>
+        <input type="<#if inputType?has_content>${escapeVal(inputType, 'html')}<#else>image</#if>" src="${escapeFullUrl(imgSrc, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+        <#if description?has_content> alt="${escapeVal(description, 'html')}"</#if><#t/>
         <#if disabled> disabled="disabled"<#else><#t/>
-          <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t/>
+          <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}');"</#if><#t/>
         </#if><#t/>
-        <#if style?has_content> style="${style}"</#if><#t/>
+        <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
         <#lt>/>
       <#else>
         <#-- FIXME?: slow, very specific check to test if link already has an action class.
@@ -1325,16 +1371,16 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#local text = getTextLabelFromExpr(styles.field_submit_default_text!"")>
         </#if>
         <#-- TODO?: here there is no case to generate <button> (instead of <input type="button">) in case template needs... -->
-        <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#rt>
-        <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if><#t/>
+        <input type="<#if inputType?has_content>${escapeVal(inputType, 'html')}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+        <#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if text?has_content> value="${escapeVal(text, 'html')}"</#if><#t/>
         <#if disabled> disabled="disabled"<#else><#t/>
           <#if events?has_content><@commonElemEventAttribStr events=events /><#else><#t/>
-            <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else><#t/>
-            <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t/>
+            <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${escapeVal(confirmation, 'js-html')}')) </#if>ajaxSubmitFormUpdateAreas('${escapeVal(containerId, 'js-html')}', '${escapeFullUrl(ajaxUrl, 'js-html')}')"<#else><#t/>
+            <#if confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}');"</#if><#t/>
             </#if><#t/>
           </#if><#t/>
         </#if><#t/>
-        <#if style?has_content> style="${style}"</#if><#t/>
+        <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
         <#lt>/>
       </#if>
     </#local>
@@ -1410,7 +1456,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_textfind_widget_defaultArgs = {
   "name":"", "formName":"", "value":"", "defaultOption":"", "opEquals":"", "opBeginsWith":"", "opContains":"", "opIsEmpty":"", "opNotEqual":"", "opLike":"",
   "class":"", "id":"", "style":"", "alert":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "hideIgnoreCase":false, "ignoreCase":"", 
-  "ignoreCaseMsg":"", "title":"", "tooltip":"", "fieldTitleBlank":false, "hideOptions":false, "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
+  "ignoreCaseMsg":"", "title":"", "tooltip":"", "fieldTitleBlank":false, "hideOptions":false, "required":false, "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
 }>
 <#macro field_textfind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_textfind_widget_defaultArgs)>
@@ -1450,13 +1496,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <@field_textfind_markup_widget name=name formName=formName value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains 
     opIsEmpty=opIsEmpty opNotEqual=opNotEqual opLike=opLike class=class id=id style=style alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleClass 
     hideIgnoreCase=hideIgnoreCase ignoreCase=ignoreCase ignoreCaseMsg=ignoreCaseMsg title=title tooltip=tooltip fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions 
-    inlineLabel=inlineLabel origLabel=origLabel collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@field_textfind_markup_widget>
+    inlineLabel=inlineLabel origLabel=origLabel collapse=collapse required=required origArgs=origArgs passArgs=passArgs><#nested></@field_textfind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textfind_markup_widget name="" formName="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
     opIsEmpty="" opNotEqual="" opLike="" class="" id="" style="" alert="" size="" maxlength="" autocomplete=true titleClass="" 
-    hideIgnoreCase="" ignoreCase=false ignoreCaseMsg="" title="" tooltip="" fieldTitleBlank=false hideOptions=false inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
+    hideIgnoreCase="" ignoreCase=false ignoreCaseMsg="" title="" tooltip="" fieldTitleBlank=false hideOptions=false inlineLabel=false 
+    origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textfind_tooltip!styles.field_default_tooltip!"")>
@@ -1501,34 +1548,34 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#local class2 = "${styles.grid_small!}12 ${styles.grid_large!}12"/>
         </#if>      
         <#if !hideOptions>
-          <#local newName = "${name}"/>
-          <@cell class="${class1!}">
-            <select<#if name?has_content> name="${name}_op"</#if><#-- class="selectBox"-->>
-              <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${opEquals}</option>
-              <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${opContains}</option>
-              <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${opIsEmpty}</option>
-              <option value="notEqual"<#if defaultOption == "notEqual"> selected="selected"</#if>>${opNotEqual}</option>
-              <option value="like"<#if defaultOption == "like"> selected="selected"</#if>>${opBeginsWith} (${opLike})</option>
+          <#local newName = name/>
+          <@cell class=class1>
+            <select<#if name?has_content> name="${escapeVal(name, 'html')}_op"</#if><#-- class="selectBox"-->>
+              <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
+              <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${escapeVal(opContains, 'htmlmarkup')}</option>
+              <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${escapeVal(opIsEmpty, 'htmlmarkup')}</option>
+              <option value="notEqual"<#if defaultOption == "notEqual"> selected="selected"</#if>>${escapeVal(opNotEqual, 'htmlmarkup')}</option>
+              <option value="like"<#if defaultOption == "like"> selected="selected"</#if>>${escapeVal(opBeginsWith, 'htmlmarkup')} (${escapeVal(opLike, 'htmlmarkup')})</option>
             </select>
           </@cell>
         <#else>
-          <input type="hidden"<#if name?has_content> name="${name}_op"</#if> value="${defaultOption}"/><#rt/>
+          <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}_op"</#if> value="${escapeVal(defaultOption, 'html')}"/><#rt/>
         </#if>
-        <@cell class="${class2!}">
-          <input type="text"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#rt/>
+        <@cell class=class2>
+          <input type="text"<@fieldClassAttribStr class=class alert=alert /> name="${escapeVal(name, 'html')}"<#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#rt/>
             <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if !autocomplete> autocomplete="off"</#if><#t/>
             <@fieldElemAttribStr attribs=attribs /><#t/>
-            <#if title?has_content> title="${title}"</#if>/><#t/>
+            <#if title?has_content> title="${escapeVal(title, 'html')}"</#if>/><#t/>
         </@cell>
       </@row>
     </@cell>
     <@cell class=classOuter2>
         <#if hideIgnoreCase>
-          <input type="hidden" name="${name}_ic" value="<#if ignoreCase>Y<#else></#if>"/><#rt/> 
+          <input type="hidden" name="${escapeVal(name, 'html')}_ic" value="<#if ignoreCase>Y<#else></#if>"/><#rt/> 
         <#else>
           <div>
-            <label for="${name}_ic"><input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y"<#if ignoreCase> checked="checked"</#if>/>
-            ${ignoreCaseMsg}</label>
+            <label for="${escapeVal(name, 'html')}_ic"><input type="checkbox" id="${escapeVal(name, 'html')}_ic" name="${escapeVal(name, 'html')}_ic" value="Y"<#if ignoreCase> checked="checked"</#if>/>
+            ${escapeVal(ignoreCaseMsg, 'htmlmarkup')}</label>
             <#rt/>
           </div>
         </#if>
@@ -1540,7 +1587,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_rangefind_widget_defaultArgs = {
   "class":"", "id":"", "style":"", "alert":"", "name":"", "formName":"", "value":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "defaultOptionFrom":"", 
   "opEquals":"", "opGreaterThan":"", "opGreaterThanEquals":"", "opLessThan":"", "opLessThanEquals":"", "opIsEmpty":"", "value2":"", 
-  "defaultOptionThru":"", "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
+  "defaultOptionThru":"", "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "required":false, "collapse":false, "passArgs":{}
 }>
 <#macro field_rangefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_rangefind_widget_defaultArgs)>
@@ -1575,13 +1622,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       autocomplete=autocomplete titleClass=titleClass defaultOptionFrom=defaultOptionFrom opEquals=opEquals 
       opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals opIsEmpty=opIsEmpty
       value2=value2 defaultOptionThru=defaultOptionThru title=title tooltip=tooltip
-      inlineLabel=inlineLabel origLabel=origLabel collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@field_rangefind_markup_widget>
+      inlineLabel=inlineLabel origLabel=origLabel collapse=collapse required=required origArgs=origArgs passArgs=passArgs><#nested></@field_rangefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_rangefind_markup_widget class="" id="" style="" alert="" name="" formName="" value="" size="" maxlength="" autocomplete=true titleClass="" 
     defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" opIsEmpty="" value2="" 
-    defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
+    defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_rangefind_tooltip!styles.field_default_tooltip!"")>
@@ -1592,20 +1639,20 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse>
     <@cell class=class1>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld0_value"</#if><#rt/>
-        <#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}_fld0_value"</#if><#rt/>
+        <#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
         <#if !autocomplete> autocomplete="off"</#if><#t/>
         <@fieldElemAttribStr attribs=attribs /><#t/>
-        <#if title?has_content> title="${title}"</#if>/><#t/>
+        <#if title?has_content> title="${escapeVal(title, 'html')}"</#if>/><#t/>
     </@cell>
     <@cell class=class2>
       <#if titleClass?has_content>
-        <span class="${titleClass}"><#rt/>
+        <span class="${escapeVal(titleClass, 'html')}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${name}_fld0_op"</#if><#-- class="selectBox"-->>
-        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option>
-        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option>
-        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option>
+      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld0_op"</#if>><#-- class="selectBox"-->
+        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
+        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${escapeVal(opGreaterThan, 'htmlmarkup')}</option>
+        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${escapeVal(opGreaterThanEquals, 'htmlmarkup')}</option>
       </select><#rt/>
       <#if titleClass?has_content>
         </span><#rt/>
@@ -1614,19 +1661,19 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </@row><#rt/>
   <@row>
     <@cell class=class1>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld1_value"</#if><#rt/>
-        <#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}_fld1_value"</#if><#rt/>
+        <#if value2?has_content> value="${escapeVal(value2, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
         <#if !autocomplete> autocomplete="off"</#if><#t/>
         <@fieldElemAttribStr attribs=attribs /><#t/>
-        <#if title?has_content> title="${title}"</#if>/><#t/>
+        <#if title?has_content> title="${escapeVal(title, 'html')}"</#if>/><#t/>
     </@cell>
     <@cell class=class2>
       <#if titleClass?has_content>
-        <span class="${titleClass}"><#rt/>
+        <span class="${escapeVal(titleClass, 'html')}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${name}_fld1_op"</#if><#-- class="selectBox"-->>
-        <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${opLessThan?html}</option>
-        <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option>
+      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld1_op"</#if>><#-- class="selectBox"-->
+        <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${escapeVal(opLessThan, 'htmlmarkup')}</option>
+        <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${escapeVal(opLessThanEquals, 'htmlmarkup')}</option>
       </select>
       <#if titleClass?has_content>
         </span>
@@ -1648,29 +1695,62 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- field markup - theme override -->
 <#macro field_hidden_markup_widget name="" value="" id="" events={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <input type="hidden" name="${name}"<#if value?has_content> value="${value}"</#if><#if id?has_content> id="${id}"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if>/>
+  <input type="hidden" name="${escapeVal(name, 'html')}"<#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if>/>
 </#macro>
 
-<#-- migrated from @renderDisplayField form widget macro -->
+<#-- migrated from @renderDisplayField form widget macro 
+  2016-10-03: this now accept either value or description/imageLocation combo; handles both 
+      behavior depends on whether value was part of the arguments or not -->
 <#assign field_display_widget_defaultArgs = {
-  "type":"", "imageLocation":"", "idName":"", "description":"", "style":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
+  "type":"", "value":"", "imageLocation":"", "idName":"", "description":"", "style":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
   "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, 
-  "formatText":"", "passArgs":{}
+  "formatText":"", "required":false, "passArgs":{}
 }>
 <#macro field_display_widget args={} inlineArgs...>
+  <#local valuePresent = args.value?? || inlineArgs.value??>
+  <#local descPresent = args.description?? || inlineArgs.description??>
+  <#local imageLocPresent = args.imageLocation?? || inlineArgs.imageLocation??>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_display_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#if !formatText?is_boolean>
     <#local formatText = true>
   </#if>
-  <@field_display_markup_widget type=type imageLocation=imageLocation id=id style=style idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
-    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel formatText=formatText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
+  <#if valuePresent>
+    <#if type == "image">
+      <#if !imageLocPresent>
+        <#local imageLocation = value>
+      </#if>
+      <#local description = "">
+    <#else>
+      <#local imageLocation = "">
+      <#if !descPresent>
+        <#local description = value>
+      </#if>
+    </#if>
+  <#else>
+    <#-- reverse logic -->
+    <#if type == "image">
+      <#if imageLocPresent>
+        <#local value = imageLocation>
+      </#if>
+    <#else>
+      <#if descPresent>
+        <#local value = description>
+      </#if>
+    </#if>
+  </#if>
+  <@field_display_markup_widget type=type imageLocation=imageLocation id=id style=style idName=idName description=description value=value title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
+    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel formatText=formatText required=required 
+    origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
 </#macro>
 
-<#-- field markup - theme override -->
-<#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false formatText=true origArgs={} passArgs={} catchArgs...>
+<#-- field markup - theme override 
+    NOTE: for legacy reasons, #nested is passed both as #nested and captured the description attributed, on top of nestedContent param. nestedContent must not be escaped.
+    NOTE: value is only meaningful for non-image, and will be same as description. 
+    This is contrived due to being based on the original ofbiz display widget. -->
+<#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" value="" nestedContent="" title="" class="" alert="" inPlaceEditorUrl="" 
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false formatText=true required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_display_tooltip!styles.field_default_tooltip!"")>
@@ -1680,21 +1760,31 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local classes = compileClassArg(class)>
   <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
   <#if hasWrapper>
-    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title?html}"</#if><#if style?has_content> style="${style}"</#if>><#rt/>
+    <div<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt/>
   </#if>
+  <#local nestedContent><#nested></#local>
   <#if type?has_content && type == "image">
-    <img src="${imageLocation}" alt="${imageAlt}"/><#lt/>
+    <#if !imageLocation?has_content>
+      <#local imageLocation = nestedContent><#-- wrapAsRaw(nestedContent) - no? because is attribute... -->
+    </#if>
+    <img src="${escapeFullUrl(imageLocation, 'html')}" alt="${escapeVal(imageAlt, 'html')}"/><#lt/>
   <#else>
     <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
-      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassAttribStr class=class alert=alert />><#t/>
+      <span<#if idName?has_content> id="cc_${escapeVal(idName, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><@fieldClassAttribStr class=class alert=alert />><#t/>
     </#if>
     -->
     <#if description?has_content>
       <#if formatText>
-        ${description?replace("\n", "<br />")}<#t/>
+        ${escapeVal(description, 'htmlmarkup')?replace("\n", "<br />")}<#t/>
       <#else>
-        ${description}<#t/>
+        ${escapeVal(description, 'htmlmarkup')}<#t/>
+      </#if>
+    <#elseif nestedContent?has_content>
+      <#if formatText>
+        ${nestedContent?replace("\n", "<br />")}<#t/>
+      <#else>
+        ${nestedContent}<#t/>
       </#if>
     <#else>
       &nbsp;<#t/>
@@ -1704,7 +1794,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       </span><#lt/>
     </#if>
     <#if inPlaceEditorUrl?has_content && idName?has_content>
-      <@script>ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});</@script>
+      <@script>ajaxInPlaceEditDisplayField('cc_${escapeVal(idName, 'html')}', '${escapeFullUrl(inPlaceEditorUrl, 'js')}', ${inPlaceEditorParams});</@script>
     </#if>-->
   </#if>
   <#if hasWrapper>
@@ -1714,17 +1804,19 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- migrated from @renderField form widget macro -->
 <#assign field_generic_widget_defaultArgs = {
-  "text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "passArgs":{}
+  "text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_generic_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_generic_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_generic_markup_widget text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
+  <@field_generic_markup_widget text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_generic_tooltip!styles.field_default_tooltip!"")>
@@ -1734,10 +1826,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local classes = compileClassArg(class)>
   <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
   <#if hasWrapper>
-    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title}"</#if><#if style?has_content> style="${style}"</#if>><#rt/>
+    <div<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt/>
   </#if>
     <#if text?has_content>
-      ${text}<#t/>
+      ${escapeVal(text, 'htmlmarkup')}<#t/>
     <#else>
       <#nested><#t/>
     </#if>

@@ -40,7 +40,7 @@ under the License.
   </#if>
 </@menu>
 
-<@section title="${uiLabelMap.CommonCreate} ${uiLabelMap.OrderOrder}">
+<@section title="${rawLabel('CommonCreate')} ${rawLabel('OrderOrder')}">
       <#if shoppingCart.getOrderType() == "SALES_ORDER">
           <#if quantityOnHandTotal?? && availableToPromiseTotal?? && (productId)??>
             <@row>
@@ -83,7 +83,7 @@ under the License.
       
       <@row>
         <@cell>
-          <#-- Scipio: NOTE (2016-02-03): default-alt1 automatically expresses alternate checkbox style. see styles hash. -->
+          <#-- SCIPIO: NOTE (2016-02-03): default-alt1 automatically expresses alternate checkbox style. see styles hash. -->
           <@fields type="default-alt1">
             <form name="qohAtpForm" method="post" action="<@ofbizUrl>${target}</@ofbizUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>

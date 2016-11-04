@@ -1,0 +1,68 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- SCIPIO: Mostly here to test the include-screens directive (also decorator-screen) -->
+    
+    <screen name="DemoExtraWidget1">
+        <section>
+            <widgets>
+                <label text="This is an extra widget (1) included with include-screens directive. Also tests decorator-screen with no decorator-sections defined."/>
+                <decorator-screen name="DemoExtraWidgetMidDecorator"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DemoExtraWidget2">
+        <section>
+            <widgets>
+                <label text="This is an extra widget (2) included with include-screens directive. Also tests decorator-screen with only-passthrough decorator-sections."/>
+                <decorator-screen name="DemoExtraWidgetMidDecorator">
+                    <decorator-section name="section-1">
+                        <label text="decorator section 1"/>
+                    </decorator-section>
+                    <decorator-section name="section-2">
+                        <label text="decorator section 2"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DemoExtraWidgetMidDecorator">
+        <section>
+            <widgets>
+                <!-- New in SCIPIO this fully substitutes for include-screen -->
+                <decorator-screen name="DemoExtraWidgetLowDecorator"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DemoExtraWidgetLowDecorator">
+        <section>
+            <widgets>
+                <decorator-section-include name="section-1"/>
+                <decorator-section-include name="section-2"/>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

@@ -18,9 +18,9 @@ under the License.
 -->
 
 <#if techDataCalendar?has_content>
-<#assign sectionTitle>${uiLabelMap.ManufacturingEditCalendarExceptionWeekFor}&nbsp;
-    <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description",locale))}"</#if>
-    [${uiLabelMap.CommonId} ${techDataCalendar.calendarId!}]</#assign>
+<#assign sectionTitle>${rawLabel('ManufacturingEditCalendarExceptionWeekFor')} 
+    <#if (techDataCalendar.description)?has_content>"${rawString(techDataCalendar.get("description",locale))}"</#if>
+    [${rawString(techDataCalendar.calendarId!)}]</#assign>
 <@section title=sectionTitle>
     ${listCalendarExceptionWeekWrapper.renderFormString(context)}
 </@section>

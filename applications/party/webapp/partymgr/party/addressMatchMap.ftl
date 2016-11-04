@@ -34,9 +34,8 @@ under the License.
   
   <@section id="addressmatchmap_import">
   <form name="importaddrmap" method="post" enctype="multipart/form-data" action="<@ofbizUrl>importAddressMatchMapCsv</@ofbizUrl>">
-    <@field type="file" name="uploadedFile" label="CSV ${uiLabelMap.CommonDocument}" size=14 />
+    <@field type="file" name="uploadedFile" label="CSV ${rawLabel('CommonDocument')}" size=14 />
     
-    <#assign successUrl><@ofbizUrl>addressMatchMap</@ofbizUrl></#assign>
     <#assign progressOptions = {
         "formSel" : "form[name=importaddrmap]",
         "progBarId" : "importaddrmap_progress_bar",
@@ -49,7 +48,7 @@ under the License.
         "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
         "errorResultAddWrapper" : false,
 
-        "successRedirectUrl" : "${successUrl}"
+        "successRedirectUrl" : "${makeOfbizUrl('addressMatchMap')}"
     }>
     <@field type="submitarea" progressOptions=progressOptions>
       <input type="submit" value="${uiLabelMap.CommonUpload} CSV" class="${styles.link_run_sys!} ${styles.action_import!}"/>    

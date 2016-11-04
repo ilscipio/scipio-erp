@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -80,12 +81,24 @@ public class ProductContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
-    public StringUtil.StringWrapper get(String productContentTypeId, String encoderType) {
+    // SCIPIO: changed return type, parameter, and encoding largely removed
+    public String get(String productContentTypeId, String encoderType) {
         if (this.product == null) {
             Debug.logWarning("Tried to get ProductContent for type [" + productContentTypeId + "] but the product field in the ProductContentWrapper is null", module);
             return null;
         }
-        return StringUtil.makeStringWrapper(getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, encoderType));
+        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, encoderType);
+    }
+    
+    /**
+     * SCIPIO: get overload that does no encoding. The templates should do the encoding, and screens have auto-escaping.
+     */
+    public String get(String productContentTypeId) {
+        if (this.product == null) {
+            Debug.logWarning("Tried to get ProductContent for type [" + productContentTypeId + "] but the product field in the ProductContentWrapper is null", module);
+            return null;
+        }
+        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, "raw");
     }
 
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, HttpServletRequest request, String encoderType) {
@@ -103,7 +116,7 @@ public class ProductContentWrapper implements ContentWrapper {
             return null;
         }
 
-        UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
         /* caching: there is one cache created, "product.content"  Each product's content is cached with a key of
          * contentTypeId::locale::mimeType::productId, or whatever the SEPARATOR is defined above to be.

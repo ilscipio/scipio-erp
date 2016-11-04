@@ -26,7 +26,7 @@ under the License.
                     <#assign last = true>
                 </#if>
                 <@cell columns=4 last=last>            
-                    <@section title="${payrolGroup.description}">                        
+                    <@section title=payrolGroup.description>                        
                         <@row>
                             <@cell columns=6><strong>Description</strong></@cell>
                             <@cell columns=3><strong>Quantity</strong></@cell>
@@ -37,8 +37,8 @@ under the License.
                                 <#if (payrolList.parentTypeId!) == (payrolGroup.invoiceItemTypeId!)>
                                     <@row>
                                         <@cell columns=6>${payrolList.description}</@cell>
-                                        <@cell columns=3><@field type="input" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></@cell>
-                                        <@cell columns=3 last=true><@field type="input" size=10 name="${payrolList.invoiceItemTypeId}_Amount"/></@cell>                                
+                                        <@cell columns=3><@field type="input" size=10 name="${rawString(payrolList.invoiceItemTypeId)}_Quantity"/></@cell>
+                                        <@cell columns=3 last=true><@field type="input" size=10 name="${rawString(payrolList.invoiceItemTypeId)}_Amount"/></@cell>                                
                                     </@row>
                                 </#if>
                             </#list>

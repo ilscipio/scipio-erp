@@ -25,7 +25,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReports"/>
-                <set field="activeMainMenuItem" value="reports"/>
                 <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -236,7 +235,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReportOpenOrderItems"/>
-                <set field="activeMainMenuItem" value="reports"/>
                 <set field="viewSize" value="${parameters.VIEW_SIZE}" default-value="20" type="Integer"/>
                 <set field="viewIndex" value="${parameters.VIEW_INDEX}" default-value="0" type="Integer"/>
                 <set field="fromOrderDate" from-field="parameters.fromOrderDate" type="Timestamp"/>
@@ -244,7 +242,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/OpenOrderItemsReport.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonReportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderReportOpenOrderItems} - ${productStore.storeName}">
                             <include-form name="OpenOrderItemsList" location="component://order/widget/ordermgr/ReportForms.xml"/>

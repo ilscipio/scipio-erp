@@ -35,14 +35,14 @@ under the License.
       <#assign linkUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, "category/~category_id=" + productCategoryLink.linkInfo) + "/~pcategory=" + productCategoryId/>
       <#assign linkProductCategory = delegator.findOne("ProductCategory", {"productCategoryId":productCategoryLink.linkInfo}, true)/>
       <#assign linkCategoryContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(linkProductCategory, request)/>
-      <#assign titleText = productCategoryLink.titleText!(linkCategoryContentWrapper.get("CATEGORY_NAME", "html"))!?string/>
+      <#assign titleText = productCategoryLink.titleText!(linkCategoryContentWrapper.get("CATEGORY_NAME"))!/>
       <#assign imageUrl = productCategoryLink.imageUrl!(linkCategoryContentWrapper.get("CATEGORY_IMAGE_URL", "url"))!/>
-      <#assign detailText = productCategoryLink.detailText!(linkCategoryContentWrapper.get("DESCRIPTION", "html"))!?string/>
+      <#assign detailText = productCategoryLink.detailText!(linkCategoryContentWrapper.get("DESCRIPTION"))!/>
     </#if>
 
     <div class="productcategorylink">
       <#if imageUrl?string?has_content>
-        <div class="smallimage"><a href="${linkUrl}"><img src="<@ofbizContentUrl>${imageUrl}</@ofbizContentUrl>" alt="${titleText?default("Link Image")}"/></a></div>
+        <div class="smallimage"><a href="${linkUrl}"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" alt="${titleText!"Link Image"}"/></a></div>
       </#if>
       <#if titleText?has_content>
         <a href="${linkUrl}" class="${styles.link_nav_info_name!}">${titleText}</a>

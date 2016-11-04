@@ -19,7 +19,7 @@ under the License.
 <@section title=uiLabelMap.CommonAdvancedSearch>
 
     <form name="advToKeyWordSearchForm" method="post" action="<@ofbizUrl>ContentSearchResults</@ofbizUrl>">
-      <#-- Scipio: don't hardcode this... use sys default -->
+      <#-- SCIPIO: don't hardcode this... use sys default -->
       <#--<input type="hidden" name="VIEW_SIZE" value="25"/>-->
         <@field type="generic" label=uiLabelMap.ContentKeywords>
             <@field type="input" label="hey" name="SEARCH_STRING" size="40" value=(requestParameters.SEARCH_STRING!)/>

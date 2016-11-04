@@ -44,9 +44,9 @@ under the License.
     <ProductAssoc productId="MOTHER_BOARD_ASS" productIdTo="CPU-586" productAssocTypeId="MANUF_COMPONENT" fromDate="2007-01-01 12:00:00.0" quantity="1.000000"/>
     
 
-    <ProductConfigItem configItemId="IT0000" configItemTypeId="SINGLE" configItemName="RAM (brand)" description="Memory configuration"/><!-- Scipio: consistency: description="Select the memory configuration:" -->
-    <ProductConfigItem configItemId="IT0001" configItemTypeId="SINGLE" configItemName="HD (brand)" description="Hard Disk"/><!-- Scipio: consistency: description="Select the Hard Disk:" -->
-    <ProductConfigItem configItemId="IT0002" configItemTypeId="MULTIPLE" configItemName="PCI slot" description="PCI cards"/><!-- Scipio: consistency: description="Select the PCI cards:" -->
+    <ProductConfigItem configItemId="IT0000" configItemTypeId="SINGLE" configItemName="RAM (brand)" description="Memory configuration"/><!-- SCIPIO: consistency: description="Select the memory configuration:" -->
+    <ProductConfigItem configItemId="IT0001" configItemTypeId="SINGLE" configItemName="HD (brand)" description="Hard Disk"/><!-- SCIPIO: consistency: description="Select the Hard Disk:" -->
+    <ProductConfigItem configItemId="IT0002" configItemTypeId="MULTIPLE" configItemName="PCI slot" description="PCI cards"/><!-- SCIPIO: consistency: description="Select the PCI cards:" -->
     <ProductConfigItem configItemId="IT0003" configItemTypeId="SINGLE" configItemName="Standard Items" description="Standard Items"/>
     
     <ProductConfigOption configItemId="IT0000" configOptionId="OP000" configOptionName="OPT001" description="1GB Dual Channel DDR2 SDRAM at 667MHz" sequenceNum="10"/>
@@ -92,8 +92,8 @@ under the License.
     <ProductPrice productId="FAJITA_BEEF" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2007-12-27 12:00:00.0" price="8" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
     <ProductPrice productId="JALAPENOS" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2007-12-27 12:00:00.0" price="0.75" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
 
-    <ProductConfigItem configItemId="TEXMEX0000" configItemTypeId="SINGLE" configItemName="Enchiladas type" description="Cheese or beef (default: cheese)"/><!-- Scipio: consistency:  description="Select cheese or beef (default to cheese):" -->
-    <ProductConfigItem configItemId="TEXMEX0001" configItemTypeId="MULTIPLE" configItemName="Peppers" description="Jalapenos"/><!-- Scipio: consistency: Add jalapenos : -->
+    <ProductConfigItem configItemId="TEXMEX0000" configItemTypeId="SINGLE" configItemName="Enchiladas type" description="Cheese or beef (default: cheese)"/><!-- SCIPIO: consistency:  description="Select cheese or beef (default to cheese):" -->
+    <ProductConfigItem configItemId="TEXMEX0001" configItemTypeId="MULTIPLE" configItemName="Peppers" description="Jalapenos"/><!-- SCIPIO: consistency: Add jalapenos : -->
 
     <ProductConfigOption configItemId="TEXMEX0000" configOptionId="OP010" configOptionName="OPT001" description="Cheese enchiladas" sequenceNum="10"/>
     <ProductConfigOption configItemId="TEXMEX0000" configOptionId="OP011" configOptionName="OPT002" description="Fajita beef" sequenceNum="20"/>
@@ -191,8 +191,8 @@ under the License.
     <ProductPrice productId="PEPPERS-R" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.5" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="PEPPERS-R" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.5" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
-    <ProductConfigItem configItemId="PZ0000" configItemTypeId="SINGLE" configItemName="Dough" description="Type"/><!-- Scipio: consistency: description="Select type:" -->
-    <ProductConfigItem configItemId="PZ0001" configItemTypeId="MULTIPLE" configItemName="Toppings" description="Toppings"/><!-- Scipio: consistency: description="Select the Toppings:" -->
+    <ProductConfigItem configItemId="PZ0000" configItemTypeId="SINGLE" configItemName="Dough" description="Type"/><!-- SCIPIO: consistency: description="Select type:" -->
+    <ProductConfigItem configItemId="PZ0001" configItemTypeId="MULTIPLE" configItemName="Toppings" description="Toppings"/><!-- SCIPIO: consistency: description="Select the Toppings:" -->
 
     <ProductConfigOption configItemId="PZ0000" configOptionId="PZOP000" configOptionName="PZOPT001" description="Small Pizza" sequenceNum="10"/>
     <ProductConfigOption configItemId="PZ0000" configOptionId="PZOP001" configOptionName="PZOPT002" description="Large Pizza" sequenceNum="20"/>

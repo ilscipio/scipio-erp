@@ -61,7 +61,7 @@ under the License.
       </form>
       
       <#if locationSeqId??>    
-          <#assign sectionTitle>${uiLabelMap.ProductLocationProduct}</#assign>
+          <#assign sectionTitle = uiLabelMap.ProductLocationProduct/>
           <@section title=sectionTitle>
                 <#-- ProductFacilityLocation stuff -->
                 <@table type="data-list"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
@@ -91,7 +91,7 @@ under the License.
                 </@table>
           </@section>
         
-          <#assign sectionTitle>${uiLabelMap.ProductAddProduct}</#assign>
+          <#assign sectionTitle = uiLabelMap.ProductAddProduct/>
           <@section title=sectionTitle>
                 <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" name="createProductFacilityLocationForm">
                     <input type="hidden" name="facilityId" value="${facilityId!}" />

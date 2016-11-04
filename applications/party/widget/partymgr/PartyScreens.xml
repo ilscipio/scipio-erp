@@ -26,15 +26,14 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindParty"/>
-                <set field="activeMainMenuItem" value="find"/>
-                <set field="activeSubMenuItem" value="findparty"/>
-
+                <!--<set field="activeSubMenuItem" value="findparty"/>-->
+                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
                 <service service-name="findParty" auto-field-map="parameters"/>
                 
                 <set field="searchPerformed" type="Boolean" value="${groovy: parameters.lookupFlag == 'Y'}" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -188,7 +187,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyRole"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="viewroles"/>
                 <set field="labelTitleProperty" value="PartyMemberRoles"/>
                 <entity-condition entity-name="RoleTypeAndParty" list="partyRoles">
@@ -259,7 +257,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyLink"/>
-                <set field="activeMainMenuItem" value="link"/>
                 <set field="activeSubMenuItem" value="linkparty"/>
             </actions>
             <widgets>
@@ -291,7 +288,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditPartyRelationships"/>
                 <set field="activeSubMenuItem" value="EditPartyRelationships"/>
                 <set field="labelTitleProperty" value="PartyRelationships"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-condition entity-name="RoleType" list="roleTypes">
@@ -352,7 +348,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewVendorParty"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="viewvendor"/>
 
                 <set field="labelTitleProperty" value="PartyVendorInformation"/>
@@ -364,7 +359,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PartyVendorInformation}">
+                        <screenlet><!--  title="${uiLabelMap.PartyVendorInformation}" -->
                             <include-form name="EditVendor" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -377,7 +372,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyAttribute"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="viewvendor"/>
 
                 <set field="labelTitleProperty" value="PartyAttribute"/>
@@ -404,7 +398,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyTaxAuthInfos"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="EditPartyTaxAuthInfos"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
 
@@ -433,7 +426,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleShoppingList"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="editShoppingList"/>
 
                 <set field="labelTitleProperty" value="PartyShoppingLists"/>
@@ -456,7 +448,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactMech"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="editcontactmech"/>
 
                 <set field="labelTitleProperty" value="PageTitleEditContactMech"/>
@@ -513,14 +504,13 @@ under the License.
     <screen name="EditPerson">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditPersonalInformation"/>
-                <set field="activeSubMenuItem" value="viewprofile"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PageTitleEditPersonalInformation"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyAndPerson" value-field="personInfo"/>
+                <set field="activeSubMenuItem" value="${groovy: context.personInfo ? 'viewprofile' : 'PARENT-NOSUB'}"/>
+                <set field="titleProperty" value="${groovy: context.personInfo ? 'PageTitleEditPersonalInformation' : 'PartyCreateNewPerson'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -536,14 +526,14 @@ under the License.
     <screen name="EditPartyGroup">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditGroupInformation"/>
-                <set field="activeSubMenuItem" value="viewprofile"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
+                
+                <set field="activeSubMenuItem" value="${groovy: context.partyGroup ? 'viewprofile' : 'PARENT-NOSUB'}"/>
+                <set field="titleProperty" value="${groovy: context.partyGroup ? 'PageTitleEditGroupInformation' : 'PartyCreateNewPartyGroup'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -658,7 +648,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRates"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="EditPartyRates"/>
                 <set field="labelTitleProperty" value="PageTitleEditPartyRates"/>
 
@@ -667,7 +656,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AddPartyRatesPanel" title="${uiLabelMap.PageTitleEditPartyRates}" collapsible="true">
+                        <screenlet id="AddPartyRatesPanel" collapsible="true"><!--  title="${uiLabelMap.PageTitleEditPartyRates}" -->
                             <include-form name="AddPartyRate" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
                         <include-form name="ListPartyRates" location="component://party/widget/partymgr/PartyForms.xml"/>
@@ -681,7 +670,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="ViewSegmentRoles"/>
 
                 <set field="labelTitleProperty" value="ViewSegmentRoles"/>
@@ -710,16 +698,22 @@ under the License.
                 <set field="activeMainMenuItem" value="find"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet navigation-menu-name="create-new-party"><!-- title="${uiLabelMap.PartyCreateNewParty}" -->
+                                <screenlet>
+                                    <label text="${uiLabelMap.PartySelectTypePartyToCreate}:"/>
                                     <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="create-new-party"/>
                                 </screenlet>
+                                <!--
+                                <screenlet navigation-menu-name="create-new-party">
+                                    <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="create-new-party"/>
+                                </screenlet>
+                                -->
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.PartyMgrCreatePermissionError}</label>
@@ -736,14 +730,14 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewCustomer"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="target" value="createCustomer"/>
                 <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
+                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -783,13 +777,13 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewProspect"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createProspect"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
+                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -827,14 +821,14 @@ under the License.
     <screen name="NewEmployee">
         <section>
             <actions>
-                <set field="titleProperty" value="PartyCreateNewCustomer"/>
-                <set field="activeMainMenuItem" value="find"/>
+                <set field="titleProperty" value="PartyCreateNewEmployee"/>
+                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createEmployee"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -854,7 +848,7 @@ under the License.
                             </actions>
                             <widgets>
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
-                                <screenlet title="${uiLabelMap.PartyCreateNewEmployee}">
+                                <screenlet>
                                     <include-form name="NewUser" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -879,7 +873,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://party/webapp/partymgr/party/addressMatchMap.ftl"/></html>
@@ -898,7 +892,7 @@ under the License.
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/FindMatches.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://party/webapp/partymgr/party/findMatches.ftl"/></html>
@@ -914,7 +908,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListContent"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="PartyContents"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
@@ -923,7 +916,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListContent}">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleListContent}"-->
                             <!-- links to same page
                             <container>
                                 <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
@@ -976,7 +969,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyResume"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="EditPartyResumes"/>
                 <set field="resumeId" from-field="parameters.resumeId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -999,7 +991,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyFinancialHistory"/>
-                <set field="activeMainMenuItem" value="accountsMain"/>
                 <set field="activeSubMenuItem" value="FinancialHistory"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
@@ -1172,7 +1163,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyPreferences"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="preferences"/>
                 <set field="partyId"  from-field="parameters.partyId"/>
                 <entity-and entity-name="EnumTypeChildAndEnum" list="enumTypeChildAndEnums">
@@ -1292,24 +1282,33 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListPartyIdentifications"/>
-                <set field="activeMainMenuItem" value="find"/>
                 <set field="activeSubMenuItem" value="viewidentifications"/>
 
                 <set field="labelTitleProperty" value="PartyIdentification"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="Party" value-field="party" use-cache="true"/>
+                <entity-one entity-name="Party" value-field="party" /><!-- SCIPIO: why risk it? use-cache="true" -->
                 <entity-one entity-name="PartyIdentification" value-field="partyIdentification"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PartyPartyIdentificationList}">
+                        <screenlet><!-- produces same as page title: title="${uiLabelMap.PartyPartyIdentificationList}" -->
                              <include-form name="listPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PartyPartyIdentification}" navigation-menu-name="newPartyIdentification" id="PartyIdentificationCreationPanel">
-                             <include-menu name="newPartyIdentification" location="component://party/widget/partymgr/PartyMenus.xml"/>
-                             <include-form name="editPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        <screenlet title="${uiLabelMap.PartyPartyIdentification}" id="PartyIdentificationCreationPanel"><!-- was removed: navigation-menu-name="newPartyIdentification"  -->
+                             <!-- was removed (now crash): <include-menu name="newPartyIdentification" location="component://party/widget/partymgr/PartyMenus.xml"/>-->
+                             <section share-scope="false">
+                                <actions>
+                                    <!-- SCIPIO: null to force form create-only, because listPartyIdentification already provides update -->
+                                    <set field="partyIdentification" value="${null}"/>
+                                    <!-- false so ignores parameters coming from a successful create/update -->
+                                    <set field="useRequestParameters" type="Boolean" value="false"/>
+                                </actions>
+                                <widgets>
+                                    <include-form name="editPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </widgets>
+                             </section>
                          </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -1321,8 +1320,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductStoreRoles"/>
+                <!-- SCIPIO: ???
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="activeSubMenuItem" value="FindProductStoreRoles"/>
+                <set field="activeSubMenuItem" value="FindProductStoreRoles"/>-->
+                <set field="activeSubMenuItem" value="productStoreRoles"/>
                 <set field="labelTitleProperty" value="ProductProductStoreRoles"/>
                 <set field="parameters.fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <entity-one entity-name="ProductStoreRole" value-field="productStoreRole" auto-field-map="true"/>
@@ -1387,7 +1388,7 @@ under the License.
                 <set field="activeMainMenuItem" value="importexport"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <label text="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs" />

@@ -33,7 +33,7 @@ under the License.
         </#if>
     </@menu>
 </#macro>
-<@section title="${pageHeader!}" menuContent=menuContent menuLayoutTitle="inline-title">
+<@section title=(pageHeader!) menuContent=menuContent menuLayoutTitle="inline-title">
       <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>">
         <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>

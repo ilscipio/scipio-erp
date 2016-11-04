@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = (requestParameters.paymentMethodTypeId!"")?string>
@@ -45,11 +45,11 @@ function aroundSubmitOrder(invocation) {
         data: jQuery("#setPaymentInformation").serialize(),
         success: function(data) {
             if (paymentMethodTypeOption != "EXT_OFFLINE"){
-                   if(paymentMethodTypeOption == "none"){
-                       document.getElementById("noPaymentMethodSelectedError").innerHTML = "${uiLabelMap.EcommerceMessagePleaseSelectPaymentMethod}";
-                   } else {
-                       document.getElementById("paymentInfoSection").innerHTML = data;
-                   }
+                if(paymentMethodTypeOption == "none"){
+                    document.getElementById("noPaymentMethodSelectedError").innerHTML = "${escapeVal(uiLabelMap.EcommerceMessagePleaseSelectPaymentMethod, 'js')}";
+                } else {
+                    document.getElementById("paymentInfoSection").innerHTML = data;
+                }
             }
         }
     }).done(function() {
@@ -140,7 +140,7 @@ function getPaymentInformation() {
            <option value="EXT_OFFLINE"<#if (parameters.paymentMethodTypeId!"") == "EXT_OFFLINE"> selected="selected"</#if>>${uiLabelMap.OrderPaymentOfflineCheckMoney}</option>
          </#if>
       </@field>
-      <#-- Scipio: Loaded using javascript... -->
+      <#-- SCIPIO: Loaded using javascript... -->
       <div id="paymentInfoSection"></div>
       
       <#--<hr />-->
@@ -148,7 +148,7 @@ function getPaymentInformation() {
         <#-- gift card fields -->
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
           <@field type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" onClick="javascript:getGCInfo();" label=uiLabelMap.AccountingCheckGiftCard />
-          <#-- Scipio: Loaded using javascript... -->
+          <#-- SCIPIO: Loaded using javascript... -->
           <div id="giftCardSection"></div>
         </#if>
     </form>

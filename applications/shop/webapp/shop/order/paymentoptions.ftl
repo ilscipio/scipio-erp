@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@section><#-- title=uiLabelMap.AccountingPaymentInformation-->
   <#-- initial screen show a list of options -->
@@ -51,7 +51,7 @@ under the License.
     <#--</@field>-->
 
     <#--
-    <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}"/>
+    <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonContinue/>
     -->
     
   </form>

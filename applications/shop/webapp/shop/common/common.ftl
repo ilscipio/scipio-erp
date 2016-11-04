@@ -1,5 +1,5 @@
 
-<#-- Scipio: common shop-wide helper definitions and macros -->
+<#-- SCIPIO: common shop-wide helper definitions and macros -->
 
 <#macro addressUpdateLink address updateLink class="">
   <#local class = addClassArg(class, styles.action_update!)>
@@ -178,11 +178,11 @@ if (typeof getScipioFieldCheckElems === 'undefined') {
 }  
   
 jQuery(document).ready(function() {
-    var allItems = getScipioFieldCheckElemsByClass('${escapePart(itemFieldClass, 'js')}');
+    var allItems = getScipioFieldCheckElemsByClass('${escapeVal(itemFieldClass, 'js')}');
     
     var contentItemMap = {
       <#list contentItems as item>
-        "${escapePart(item.fieldId, 'js')}" : <@objectAsScript lang="js" object=item />,
+        "${escapeVal(item.fieldId, 'js')}" : <@objectAsScript lang="js" object=item />,
       </#list>
     };
     
@@ -252,7 +252,7 @@ jQuery(document).ready(function() {
 
 </#macro>
 
-<#-- Scipio: local macro where cells of label and widget areas are inverted and tweaked 
+<#-- SCIPIO: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: You can set labelContentFieldsType="default-compact" for a different default look
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType -->
 <#macro commonInvField args={} inlineArgs...>
@@ -342,10 +342,10 @@ jQuery(document).ready(function() {
   <#local contactNumberName = fieldNamePrefix + (args.contactNumberName)!"contactNumber">
   <#local extensionName = fieldNamePrefix + (args.extensionName)!"extension">
   <@field type="generic" label=label tooltip=tooltip required=required args=args>
-      <@field type="input" inline=true size="1" maxlength="10" name="${countryCodeName}" value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name="${areaCodeName}" value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name="${contactNumberName}" value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
-      <#if showExt>&nbsp;<span style="white-space: nowrap;">${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="${extensionName}" 
+      <@field type="input" inline=true size="1" maxlength="10" name=countryCodeName value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name=areaCodeName value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name=contactNumberName value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
+      <#if showExt>&nbsp;<span style="white-space: nowrap;">${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="4" maxlength="10" name=extensionName 
         value=((params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension /></span></#if>
     <#nested>
   </@field>
@@ -356,7 +356,7 @@ jQuery(document).ready(function() {
     <#local params = parameters>
   </#if>
   <#local args = inlineArgs>
-  <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name=name args=args>
+  <@field type="select" label="${rawLabel('PartyAllowSolicitation')}?" name=name args=args>
     <option></option><#-- NOTE: Empty must be allowed? -->
     <option value="Y"<#if (params[name]!(args.allowSolicitation)!) == "Y"> selected="selected"</#if>>${uiLabelMap.CommonYes}</option>
     <option value="N"<#if (params[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
@@ -369,7 +369,7 @@ jQuery(document).ready(function() {
   </#if>
     <#local args = inlineArgs>
     <@field type="select" name=name label=label>
-        <#-- Scipio: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+        <#-- SCIPIO: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
             This is probably an error because the values read from DB become hard to re-localize.
             It is better to store these as values coded in english (and localize on print only). -->
         <#assign personalTitle = params[name]!(args.personalTitle)!"">
@@ -403,7 +403,7 @@ jQuery(document).ready(function() {
 
 
 <#function getLocalizedPersonalTitle personalTitle>
-    <#-- Scipio: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+    <#-- SCIPIO: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
         This is probably an error because the values read from DB become hard to re-localize.
         It is better to store these as values coded in english (and localize on print only). 
         But otherwise, this function is a best-effort only. -->

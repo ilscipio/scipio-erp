@@ -17,23 +17,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign selected = activeMainMenuItem!"void">
+<#assign selected = rawString(activeMainMenuItem)!"void">
 <div id="app-navigation">
   <ul>
     <li>
       <@heading>${uiLabelMap.ExampleApplication}</@heading>
       <@menu type="main">
       <#if userLogin?has_content>
-        <@menuitem type="link" href=makeOfbizUrl("FindExample?portalPageId=${uiLabelMap.ExampleExample}") text=uiLabelMap.ExampleExample selected=(selected=="${uiLabelMap.ExampleExample}") class="+${styles.action_nav!} ${styles.action_find!}" />
-        <@menuitem type="link" href=makeOfbizUrl("FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}") text=uiLabelMap.ExampleFeature selected=(selected=="${uiLabelMap.ExampleFeature}") class="+${styles.action_nav!}" />
-        <@menuitem type="link" href=makeOfbizUrl("FormWidgetExamples?portalPageId=${uiLabelMap.ExampleFormWidgetExamples}") text=uiLabelMap.ExampleFormWidgetExamples selected=(selected=="${uiLabelMap.ExampleFormWidgetExamples}") class="+${styles.action_nav!}" />
-        <@menuitem type="link" href=makeOfbizUrl("authview/findExampleAjax?portalPageId=${uiLabelMap.ExampleAjaxExamples}") text=uiLabelMap.ExampleAjaxExamples selected=(selected=="${uiLabelMap.ExampleAjaxExamples}") class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindExample?portalPageId=${rawLabel('ExampleExample')}") text=uiLabelMap.ExampleExample selected=(selected=="${rawLabel('ExampleExample')}") class="+${styles.action_nav!} ${styles.action_find!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindExampleFeature?portalPageId=${rawLabel('ExampleFeature')}") text=uiLabelMap.ExampleFeature selected=(selected=="${rawLabel('ExampleFeature')}") class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FormWidgetExamples?portalPageId=${rawLabel('ExampleFormWidgetExamples')}") text=uiLabelMap.ExampleFormWidgetExamples selected=(selected=="${rawLabel('ExampleFormWidgetExamples')}") class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makeOfbizUrl("authview/findExampleAjax?portalPageId=${rawLabel('ExampleAjaxExamples')}") text=uiLabelMap.ExampleAjaxExamples selected=(selected=="${rawLabel('ExampleAjaxExamples')}") class="+${styles.action_nav!}" />
 
         <#if portalPages?has_content>
             <#list portalPages as page>
               <#if page.portalPageName?has_content>
-                <#assign text><#if page.portalPageName??>${page.portalPageName}<#else>?</#if></#assign>
-                <@menuitem type="link" href=makeOfbizUrl("showPortalPage?portalPageId=${page.portalPageId}") text=text selected=(selected=="${page.portalPageId}") class="+${styles.action_nav!}" />
+                <@menuitem type="link" href=makeOfbizUrl("showPortalPage?portalPageId=${rawString(page.portalPageId)}") text=(page.portalPageName!"?") selected=(selected=="${rawString(page.portalPageId)}") class="+${styles.action_nav!}" />
               </#if>
             </#list>
         </#if>

@@ -47,7 +47,7 @@ function ShowTab(lname) {
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
+      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
       <#if !enableEdit>
         <#if hasCreatePermission>          
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
@@ -63,7 +63,7 @@ function ShowTab(lname) {
     </@menu>
 </#macro>
 
-<@section menuContent=menuContent><#-- redundant:  title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}" -->
+<@section menuContent=menuContent><#-- redundant:  title="${rawLabel('WebtoolsViewValue')} ${rawLabel('WebtoolsForEntity')} ${rawString(entityName)}" -->
 
     <@nav type="magellan">
         <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>
@@ -150,28 +150,28 @@ function ShowTab(lname) {
                         <@td>${entityField.name}</@td>
                         <@td>
                           <#if entityField.fieldType == 'DateTime'>
-                            <#-- Scipio: NOTE: when using default-manual, there is no label area, and label="xxx" arg won't turn on label area. label="xxx" is specified so it gets picked up by title/tooltip. -->
-                            <@field type="datetime" label="${entityField.name}" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                            <#-- SCIPIO: NOTE: when using default-manual, there is no label area, and label="xxx" arg won't turn on label area. label="xxx" is specified so it gets picked up by title/tooltip. -->
+                            <@field type="datetime" label=(entityField.name) name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                           <#elseif entityField.fieldType == 'Date'>
-                            <@field type="datetime" label="${entityField.name}" dateType="date" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                            <@field type="datetime" label=(entityField.name) dateType="date" name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                           <#elseif entityField.fieldType == 'Time'>
-                            <@field type="datetime" label="${entityField.name}" dateType="time" name="${entityField.name}" size="6" maxlength="10" value=entityField.value />
+                            <@field type="datetime" label=(entityField.name) dateType="time" name=entityField.name size="6" maxlength="10" value=entityField.value />
                           <#elseif entityField.fieldType == 'Integer'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Long'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Double'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Float'>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'StringOneRow'>
-                            <@field type="input" size="${entityField.stringLength}" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size=entityField.stringLength maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'String'>
-                            <@field type="input" size="80" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="80" maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                           <#elseif entityField.fieldType == 'Textarea'>
-                            <@field type="textarea" cols="60" rows="3" maxlength="${entityField.stringLength}" name="${entityField.name}">${entityField.value}</@field>
+                            <@field type="textarea" cols="60" rows="3" maxlength=entityField.stringLength name=entityField.name>${entityField.value}</@field>
                           <#else>
-                            <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                            <@field type="input" size="20" name=entityField.name value=entityField.value />
                           </#if>
                         </@td>
                       </@tr>
@@ -189,27 +189,27 @@ function ShowTab(lname) {
                       <@td>${entityField.name}</@td>
                       <@td>
                         <#if entityField.fieldType == 'DateTime'>
-                          <@field type="datetime" label="${entityField.name}" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                          <@field type="datetime" label=(entityField.name) name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                         <#elseif entityField.fieldType == 'Date'>
-                          <@field type="datetime" label="${entityField.name}" dateType="date" name="${entityField.name}" value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
+                          <@field type="datetime" label=(entityField.name) dateType="date" name=entityField.name value=entityField.value size="25" maxlength="30" id="${entityField.name}" />
                         <#elseif entityField.fieldType == 'Time'>
-                          <@field type="datetime" label="${entityField.name}" dateType="time" size="6" maxlength="10" name="${entityField.name}" value=entityField.value />
+                          <@field type="datetime" label=(entityField.name) dateType="time" size="6" maxlength="10" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Integer'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Long'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Double'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Float'>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'StringOneRow'>
-                          <@field type="input" size="${entityField.stringLength}" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size=entityField.stringLength maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'String'>
-                          <@field type="input" size="80" maxlength="${entityField.stringLength}" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="80" maxlength=entityField.stringLength name=entityField.name value=entityField.value />
                         <#elseif entityField.fieldType == 'Textarea'>
-                          <@field type="textarea" cols="60" rows="3" maxlength="${entityField.stringLength}" name="${entityField.name}">${entityField.value}</@field>
+                          <@field type="textarea" cols="60" rows="3" maxlength=entityField.stringLength name=entityField.name>${entityField.value}</@field>
                         <#else>
-                          <@field type="input" size="20" name="${entityField.name}" value=entityField.value />
+                          <@field type="input" size="20" name=entityField.name value=entityField.value />
                         </#if>
                       </@td>
                     </@tr>
@@ -220,9 +220,9 @@ function ShowTab(lname) {
                     <@td>
                       <@field type="submitarea">
                           <#if value?has_content>
-                            <#assign button = "${uiLabelMap.CommonUpdate}">
+                            <#assign button = uiLabelMap.CommonUpdate>
                           <#else>
-                            <#assign button = "${uiLabelMap.CommonCreate}">
+                            <#assign button = uiLabelMap.CommonCreate>
                           </#if>
                           <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
                           <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${curFindString}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
@@ -249,7 +249,7 @@ function ShowTab(lname) {
                     <@th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</@th>
                   </@tr>
                   </@thead>
-                  <#list context.fields as entityField> <#-- Scipio: WARN: name clash with macros if don't use context. map -->
+                  <#list context.fields as entityField> <#-- SCIPIO: WARN: name clash with macros if don't use context. map -->
                     <@tr>
                       <@td>${entityField.name}</@td>
                       <@td>${entityField.value}</@td>
@@ -257,7 +257,11 @@ function ShowTab(lname) {
                   </#list>
                 </@table>
               <#else>
-                <@commonMsg type="error">${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</@commonMsg>
+                <@commonMsg type="error">
+                    <#--SCIPIO: this makes no sense
+                    ${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.-->
+                    ${uiLabelMap.WebtoolsSpecifiedEntityValueDoesNotExist} (${entityName})
+                </@commonMsg>
               </#if>
             </@cell>
         </@row>

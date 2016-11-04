@@ -120,7 +120,7 @@ function runAction() {
 }
 </@script>
 
-<#if invoices?has_content >
+<#if invoices?has_content>
   <div>
     <span>${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
     <span id="showInvoiceRunningTotal"></span>
@@ -168,6 +168,7 @@ function runAction() {
       <span>${uiLabelMap.AccountingCheckNumber}</span>
       <input type="text" name="checkStartNumber"/>
     </div>
+    <#-- TODO: @paginate -->
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
       <@thead>
       <@tr class="header-row-2">

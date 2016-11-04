@@ -313,7 +313,7 @@
     <screen name="CommonFirstProductDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" value="firstproduct"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="firstproduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
@@ -346,7 +346,7 @@
                 <set field="activeMainMenuItem" value="init"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="errorMessage">${uiLabelMap.SetupEventMessage}</label>
                     </decorator-section>

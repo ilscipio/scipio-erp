@@ -118,7 +118,7 @@ public abstract class ContextFtlUtil {
         }
         return res;
     }
-
+    
     /**
      * Removes the whole request vars map.
      */

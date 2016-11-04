@@ -203,7 +203,7 @@ under the License.
 </div>
 
 <#macro rightMenu>
-      <#-- Scipio: NOTE: We must display something for the anonymous user that has a partyId
+      <#-- SCIPIO: NOTE: We must display something for the anonymous user that has a partyId
           attached (created during anon checkout), because otherwise he has no way to clear his session.
           His temporary partyId is now (and must be) kept after checkout is done, for technical reasons,
           but also it's very convenient. 
@@ -292,8 +292,8 @@ under the License.
           <li class="divider"></li>
           <@render resource="component://shop/widget/CartScreens.xml#microcart" ctxVars={"microCartMenuItem":true}/>
           <#--
-          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>  
+          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
+          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makeOfbizUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li> 
           <#-- language select
           <li>
             <div id="lang-select">

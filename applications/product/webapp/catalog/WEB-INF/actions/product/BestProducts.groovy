@@ -74,7 +74,7 @@ for (int i = 0; i < iCount; i++) {
             product = from("Product").where("productId", orderHeaderItem.productId).queryOne()
             contentWrapper = new ProductContentWrapper(product, request);
             // Scipo: Do NOT HTML-escape this here
-            orderItemDetail.productName = contentWrapper.get("PRODUCT_NAME", "raw").toString();
+            orderItemDetail.productName = contentWrapper.get("PRODUCT_NAME");
             orderItemDetail.amount = amount;
             orderItemDetail.qtyOrdered = qtyOrdered;
             orderItemDetail.currencyUom = orderHeaderItem.currencyUom;

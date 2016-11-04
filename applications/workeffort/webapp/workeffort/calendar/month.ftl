@@ -25,7 +25,7 @@ under the License.
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="month"/>
 </#macro>
-<@section title="${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)}"
+<@section title=Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)
     menuContent=menuContent menuLayoutTitle="inline-title"> <#--${uiLabelMap.WorkEffortMonthView}: -->
 
 <#if periods?has_content>
@@ -249,10 +249,10 @@ under the License.
     </@td>
 -->
     <#if !period_has_next && indexMod7 != 6>
-    <@td colspan="${6 - (indexMod7)}">&nbsp;</@td>
+    <@td colspan=(6 - indexMod7)>&nbsp;</@td>
     </#if>
   <#if indexMod7 == 6 || !period_has_next>
-  <#-- Scipio: FIXME: don't want open/close -->
+  <#-- SCIPIO: FIXME: don't want open/close -->
   <@tr close=true open=false />
   </#if>
   </#list>

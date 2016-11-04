@@ -24,7 +24,7 @@ under the License.
   <#if (lastViewedCategories?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedCategories?size-1)/></#if>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${uiLabelMap.CommonClear}]" />
+        <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${rawLabel('CommonClear')}]" />
     </@menu>      
   </#macro>
   <@section title=uiLabelMap.EcommerceLastCategories menuContent=menuContent id="minilastviewedcategories">
@@ -33,11 +33,11 @@ under the License.
           <#assign category = delegator.findOne("ProductCategory", {"productCategoryId":categoryId}, true)!>
           <#if category?has_content>
             <li class="browsecategorytext">
-              <#-- Scipio: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
-              <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")??>
-                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")}</a>
-              <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")??>
-                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")}</a>
+              <#-- SCIPIO: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
+              <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")??>
+                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")}</a>
+              <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION")??>
+                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")}</a>
               <#else>
                 <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${category.description!}</a>
               </#if>

@@ -403,6 +403,9 @@ public class ScreenRenderer {
             context.put("isError", Boolean.TRUE);
         }
 
+        // SCIPIO: set the request method for easy access. it is UPPERCASE.
+        context.put("requestMethod", request.getMethod().toUpperCase());
+        
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
         

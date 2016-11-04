@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
-    <!-- Scipio: FIXME?: The content controller may need to be split up so as not to have to
+    <!-- SCIPIO: FIXME?: The content controller may need to be split up so as not to have to
         include its full main controller here (redefinitions, breakage/security risks) -
         content has both its own public interface and a common interface for other apps, 
         which are not (should not be assumed) equal. NOTE: This was a new (non-stock) include. -->
@@ -1156,7 +1156,9 @@ under the License.
     <request-map uri="createProductFeature">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductFeature"/>
-        <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
+        <!-- SCIPIO: too confusing, just go back
+        <response name="success" type="view" value="EditFeatureCategoryFeatures"/> -->
+        <response name="success" type="view" value="EditFeature"/>
         <response name="error" type="view" value="EditFeature"/>
     </request-map>
     <request-map uri="updateProductFeature">
@@ -2401,20 +2403,32 @@ under the License.
     <request-map uri="addProductStoreFacility">
         <security https="true" auth="true"/>
         <event type="service" invoke="createProductStoreFacility"/>
+        <!-- SCIPIO: no longer ajax
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
+        -->
+        <response name="success" type="view" value="ProductStoreFacilities"/>
+        <response name="error" type="view" value="ProductStoreFacilities"/>
     </request-map>
     <request-map uri="updateProductStoreFacility">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateProductStoreFacility"/>
+        <!-- SCIPIO: no longer ajax
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
+        -->
+        <response name="success" type="view" value="ProductStoreFacilities"/>
+        <response name="error" type="view" value="ProductStoreFacilities"/>
     </request-map>
     <request-map uri="deleteProductStoreFacility">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteProductStoreFacility"/>
+        <!-- SCIPIO: no longer ajax
         <response name="success" type="view" value="ListProductStoreFacility"/>
         <response name="error" type="view" value="ListProductStoreFacility"/>
+        -->
+        <response name="success" type="view" value="ProductStoreFacilities"/>
+        <response name="error" type="view" value="ProductStoreFacilities"/>
     </request-map>
 
     <!-- ================ Keyword Thesaurus Requests ================= -->

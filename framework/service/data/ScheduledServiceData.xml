@@ -28,7 +28,7 @@ under the License.
     <StatusItem description="Crashed" sequenceId="40" statusCode="CRASHED" statusId="SERVICE_CRASHED" statusTypeId="SERVICE_STATUS"/>
     <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="SERVICE_CANCELLED" statusTypeId="SERVICE_STATUS"/>
     
-    <!-- Scipio: Scheduler Event Types -->
+    <!-- SCIPIO: Scheduler Event Types -->
     <EnumerationType description="Scheduling Event Type" enumTypeId="SCH_EVENT_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Ofbiz startup" enumCode="STARTUP" enumId="SCH_EVENT_STARTUP" sequenceId="01" enumTypeId="SCH_EVENT_TYPE"/>
 

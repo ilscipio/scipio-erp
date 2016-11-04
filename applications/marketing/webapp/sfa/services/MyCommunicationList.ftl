@@ -20,8 +20,8 @@
                     <#assign commEventType = commEvent.getRelatedOne("CommunicationEventType", true)>
                     <@tr>                        
                         <@td>
-                            <@field name="partyId" type="hidden" value="${commEvent.partyId}" />
-                            <@field name="roleTypeId" type="hidden" value="${commEvent.roleTypeId}" />
+                            <@field name="partyId" type="hidden" value=(commEvent.partyId) />
+                            <@field name="roleTypeId" type="hidden" value=(commEvent.roleTypeId) />
                             ${commEvent.partyIdFrom!uiLabelMap.PartyUnknown}
                         </@td>
                         <@td>

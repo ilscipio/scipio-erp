@@ -54,7 +54,7 @@ under the License.
         <field name="age"><hidden/></field>
         <field name="durationMonths"><hidden/></field>
         <field name="noOfResources"><hidden/></field>
-        <!-- Scipio: added dates -->
+        <!-- SCIPIO: added dates -->
         <field name="jobRequisitionDate"><date-find type="date"/></field>
         <field name="requiredOnDate"><date-find type="date"/></field>
         <field name="qualification"><hidden/></field>
@@ -86,7 +86,7 @@ under the License.
         <field name="jobLocation"><display/></field>
         <field name="experienceYears"><display/></field>
         <field name="experienceMonths"><display/></field>
-        <!-- Scipio: added dates -->
+        <!-- SCIPIO: added dates -->
         <field name="jobRequisitionDate"><display/></field>
         <field name="requiredOnDate"><display/></field>
         <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_nav} ${styles.action_update}">
@@ -104,8 +104,8 @@ under the License.
         <alt-target use-when="jobRequisition==null" target="createJobRequisition"/>
         <field name="jobRequisitionId" use-when="jobRequisition==null"><ignored/></field>
         <field use-when="jobRequisition!=null" name="jobRequisitionId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field name="jobDescription" title="${uiLabelMap.CommonDescription}" title-area-style="group-label"><text/></field><!-- Scipio: why this? <display description=" " also-hidden="false"/> -->
-        <!-- Scipio: Added dates -->
+        <field name="jobDescription" title="${uiLabelMap.CommonDescription}" title-area-style="group-label"><text/></field><!-- SCIPIO: why this? <display description=" " also-hidden="false"/> -->
+        <!-- SCIPIO: Added dates -->
         <field name="jobRequisitionDate"><date-time default-value="${nowTimestamp}" type="date"/></field>
         <field name="requiredOnDate"><date-time type="date"/></field>
         <field name="jobLocation" required-field="true"><text/></field>
@@ -146,7 +146,7 @@ under the License.
         <field name="experienceMonths" required-field="true"><text/></field>
         <field name="experienceYears" required-field="true"><text/></field>
         <field name="jobPostingTypeEnumId"><hidden value="JOB_POSTING_INTR"/></field>
-        <!-- Scipio: new field 
+        <!-- SCIPIO: new field 
             NOTE: emplPositionId was not in original Ofbiz schema and was never required to make a job requisition,
             but it will simply prevent confusion if we require it in this form -->
         <field name="emplPositionId" required-field="true"><lookup target-form-name="LookupEmplPosition"/></field>

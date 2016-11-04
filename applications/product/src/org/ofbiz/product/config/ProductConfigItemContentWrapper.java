@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -90,10 +91,18 @@ public class ProductConfigItemContentWrapper implements ContentWrapper, Serializ
         this.mimeTypeId = "text/html";
     }
 
-    public StringWrapper get(String confItemContentTypeId, String encoderType) {
-        return StringUtil.makeStringWrapper(getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), encoderType));
+    // SCIPIO: changed return type, parameter, and encoding largely removed
+    public String get(String confItemContentTypeId, String encoderType) {
+        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), encoderType);
     }
 
+    /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
+     */
+    public String get(String confItemContentTypeId) {
+        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), "raw");
+    }
+    
     public Delegator getDelegator() {
         if (delegator == null) {
             delegator = DelegatorFactory.getDelegator(delegatorName);
@@ -118,7 +127,7 @@ public class ProductConfigItemContentWrapper implements ContentWrapper, Serializ
     }
 
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
-        UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(confItemContentTypeId);
         try {
             Writer outWriter = new StringWriter();

@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: TODO: Convert and review -->
+<#-- SCIPIO: TODO: Convert and review -->
 
 <@script>
 function submitForm(form, mode, value) {
@@ -172,12 +172,12 @@ function submitForm(form, mode, value) {
                 <#if cartLine.getProductId()??>
                   <#-- product item -->
                   <#-- start code to display a small image of the product -->
-                  <#-- Scipio: Uncomment to display image
+                  <#-- SCIPIO: Uncomment to display image
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")!>
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                   <#if smallImageUrl?string?has_content>
                     <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
-                      <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" />
+                      <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" />
                     </a>
                   </#if>
                   -->

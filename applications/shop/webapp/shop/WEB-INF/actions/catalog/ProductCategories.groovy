@@ -60,17 +60,17 @@ List fillTree(rootCat ,CatLvl, parentCategoryId) {
                 categoryContentWrapper = new CategoryContentWrapper(category, request);
                 // SCIPIO: don't want page title overridden/forced by groovy
                 // SCIPIO: Do NOT HTML-escape this here
-                //context.title = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
-                context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
-                categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
+                //context.title = categoryContentWrapper.get("CATEGORY_NAME");
+                context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME");
+                categoryDescription = categoryContentWrapper.get("DESCRIPTION");
                 
-                if(categoryContentWrapper.get("CATEGORY_NAME", "raw").toString())
-                    rootMap["categoryName"] = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
+                if(categoryContentWrapper.get("CATEGORY_NAME"))
+                    rootMap["categoryName"] = categoryContentWrapper.get("CATEGORY_NAME");
                 else
                     rootMap["categoryName"] = root.categoryName;
                 
-                if(categoryContentWrapper.get("DESCRIPTION", "raw").toString())
-                    rootMap["categoryDescription"] = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
+                if(categoryContentWrapper.get("DESCRIPTION"))
+                    rootMap["categoryDescription"] = categoryContentWrapper.get("DESCRIPTION");
                 else
                     rootMap["categoryDescription"] = root.description;
                 

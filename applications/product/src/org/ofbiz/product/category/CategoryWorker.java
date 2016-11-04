@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil.StringWrapper;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
@@ -629,7 +628,7 @@ public class CategoryWorker {
                 Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
                         UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
                 if (UtilValidate.isNotEmpty(productCategoryMembers) && UtilValidate.isNotEmpty(productCategoryMembers.get("categoryMembers"))) {
-                    treeDataItemList.addAll(getTreeProducts(dispatcher, locale, (List<GenericValue>) productCategoryMembers.get("categoryMembers"), library,
+                    treeDataItemList.addAll(getTreeProducts(dispatcher, locale, UtilGenerics.<GenericValue>checkList(productCategoryMembers.get("categoryMembers")), library,
                             productCategory.getString("productCategoryId")));
                 }
 
@@ -637,18 +636,10 @@ public class CategoryWorker {
                 
                 String categoryName = null;
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
-                // SCIPIO: Do NOT HTML-escape this here
-                StringWrapper categoryNameWrapper = wrapper.get("CATEGORY_NAME", "raw");
-                if (categoryNameWrapper != null) {
-                    categoryName = categoryNameWrapper.toString();
-                }
+                categoryName = wrapper.get("CATEGORY_NAME");
                 if (UtilValidate.isEmpty(categoryName)) {
                     // 2016-03-22: Some categories don't have a name but have description
-                    // SCIPIO: Do NOT HTML-escape this here
-                    categoryNameWrapper = wrapper.get("DESCRIPTION", "raw");
-                    if (categoryNameWrapper != null) {
-                        categoryName = categoryNameWrapper.toString();
-                    }
+                    categoryName = wrapper.get("DESCRIPTION");
                     if (UtilValidate.isEmpty(categoryName)) {
                         categoryName = category.getString("productCategoryId");
                     }
@@ -690,9 +681,8 @@ public class CategoryWorker {
                 if (UtilValidate.isEmpty(productName)) {
                     productName = productId;
                     ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null);
-                    // SCIPIO: Do NOT HTML-escape this here
-                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME", "raw").toString()))
-                        productName = wrapper.get("CATEGORY_NAME", "raw").toString();
+                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME")))
+                        productName = wrapper.get("PRODUCT_NAME");
                 }
 
                 if (library.equals("jsTree")) {

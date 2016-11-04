@@ -26,7 +26,7 @@ under the License.
     </@menuitem>
   </@menu>
 </#macro>
-<@section title=uiLabelMap.PartyShoppingLists menuContent=menuContent>
+<@section menuContent=menuContent><#--  title=uiLabelMap.PartyShoppingLists -->
     <#if shoppingLists?has_content>
       <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
         <@fields type="default-nolabelarea">
@@ -63,7 +63,7 @@ under the License.
       <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text=uiLabelMap.OrderNewOrder class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuContent=menuContent>
+<@section title="${rawLabel('PartyShoppingListDetail')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
@@ -79,7 +79,7 @@ under the License.
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
               </#list>
         </@field>
-        <@field type="select" label="${uiLabelMap.PartyPublic}?" name="isPublic" disabled=isAutoSave>
+        <@field type="select" label="${rawLabel('PartyPublic')}?" name="isPublic" disabled=isAutoSave>
               <option>${shoppingList.isPublic}</option>
               <option value="${shoppingList.isPublic}">--</option>
               <option>${uiLabelMap.CommonYes}</option>
@@ -108,10 +108,10 @@ under the License.
 <#if childShoppingListDatas?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuContent=menuContent>
+<@section title="${rawLabel('PartyChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>
         <@tr class="header-row">
@@ -140,10 +140,10 @@ under the License.
 <#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text=uiLabelMap.PartyAddListToCart class="+${styles.action_run_session!} ${styles.action_add!}" /> -->
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuContent=menuContent>
+<@section title="${rawLabel('PartyListItems')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
   <#if shoppingListItemDatas?has_content>
 
-    <#assign paramStr = "partyId=" + partyId + "&amp;shoppingListId=" + (shoppingListId!)/>
+    <#assign paramStr = "partyId=" + partyId + "&shoppingListId=" + (shoppingListId!)/>
     <@paginate mode="content" url=makeOfbizUrl("editShoppingList") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>
@@ -167,7 +167,7 @@ under the License.
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
           <@tr valign="middle">
             <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>">${shoppingListItem.productId} -
-              ${productContentWrapper.get("PRODUCT_NAME", "html")!"No Name"}</a> : ${productContentWrapper.get("DESCRIPTION", "html")!}
+              ${productContentWrapper.get("PRODUCT_NAME")!"No Name"}</a> : ${productContentWrapper.get("DESCRIPTION")!}
             </@td>
             <form method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>" name="removeform_${shoppingListItem.shoppingListItemSeqId}">
               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}" />

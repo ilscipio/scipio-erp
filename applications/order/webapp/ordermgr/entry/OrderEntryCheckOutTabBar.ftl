@@ -23,11 +23,11 @@ under the License.
 
 <#assign sectionTitle>
     <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-        ${uiLabelMap.OrderPurchaseOrder}
+        ${rawLabel('OrderPurchaseOrder')}
     <#else>
-        ${uiLabelMap.OrderSalesOrder}
+        ${rawLabel('OrderSalesOrder')}
     </#if>
-    :&nbsp;${stepTitle!}
+    : ${rawString(stepTitle!)}
 </#assign>
 
 <@section title=sectionTitle>
@@ -35,9 +35,9 @@ under the License.
       <#list checkoutSteps?reverse as checkoutStep>
         <#assign stepUiLabel = uiLabelMap.get(checkoutStep.label)>
         <#if checkoutStep.enabled == "N">
-            <@menuitem type="link" text="${stepUiLabel}" disabled=true class="+${styles.action_nav!}" />
+            <@menuitem type="link" text=stepUiLabel disabled=true class="+${styles.action_nav!}" />
         <#else>
-            <@menuitem type="link" href=makeOfbizUrl("${checkoutStep.uri}") text="${stepUiLabel}" class="+${styles.action_nav!}" />
+            <@menuitem type="link" href=makeOfbizUrl("${checkoutStep.uri}") text=stepUiLabel class="+${styles.action_nav!}" />
         </#if>
       </#list>
       <#if isLastStep == "N">

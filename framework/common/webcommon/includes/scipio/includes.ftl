@@ -89,10 +89,11 @@
     
     <#-- Include and cache the global variables -->
     <#if scipioVariablesLibraryPath?ends_with(".groovy")>
-        <#-- NOTE: Here we can do simple-raw-deep OR simple-raw-deep-copy. simple-raw-deep will make faster screenwidget access,
-            while simple-raw-deep-copy will make faster FTL access. We'll simply do both for now. -->
-        <#assign scipioTmplGlobalVarsAdapted = rewrapMap(Static["org.ofbiz.base.util.GroovyUtil"].runScriptAtLocationNewEmptyContext(scipioVariablesLibraryPath, ""), "simple-raw-deep")>
-        <#assign scipioTmplGlobalVars = rewrapMap(scipioTmplGlobalVarsAdapted, "simple-raw-deep-force-copy")>
+        <#-- NOTE: Here we can do adapters OR copies. adapters will make faster screenwidget access,
+            while copying will make faster FTL access. We'll simply do both for now, in advance. 
+            NOTE: we use the simplest Freemarker ObjectWrapper here (basic), but templates are best to use the current-derived ones. -->
+        <#assign scipioTmplGlobalVarsAdapted = rewrapMap(Static["org.ofbiz.base.util.GroovyUtil"].runScriptAtLocationNewEmptyContext(scipioVariablesLibraryPath, ""), "basic-adapter", "always-deep")>
+        <#assign scipioTmplGlobalVars = rewrapMap(scipioTmplGlobalVarsAdapted, "basic-copy", "always-deep")>
         <#assign dummy = varsPutAll(scipioTmplGlobalVars)>
     <#elseif scipioVariablesLibraryPath?ends_with(".ftl")>
         <#-- DEPRECATED -->

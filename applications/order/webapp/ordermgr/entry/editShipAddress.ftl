@@ -44,8 +44,8 @@ under the License.
         </#if>
         <@field type="input" label=uiLabelMap.CommonToName size="30" maxlength="60" name="toName" value=toName/>
         <@field type="input" label=uiLabelMap.CommonAttentionName size="30" maxlength="60" name="attnName" value=(parameters.attnName!)/>
-        <@field type="input" label="${uiLabelMap.CommonAddressLine} 1" required=true size="30" maxlength="30" name="address1" value=(parameters.address1!)/>
-        <@field type="input" label="${uiLabelMap.CommonAddressLine} 2" size="30" maxlength="30" name="address2" value=(parameters.address2!)/>
+        <@field type="input" label="${rawLabel('CommonAddressLine')} 1" required=true size="30" maxlength="30" name="address1" value=(parameters.address1!)/>
+        <@field type="input" label="${rawLabel('CommonAddressLine')} 2" size="30" maxlength="30" name="address2" value=(parameters.address2!)/>
         <@field type="input" label=uiLabelMap.CommonCity required=true size="30" maxlength="30" name="city" value=(parameters.city!)/>
         <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId" id="checkoutsetupform_stateProvinceGeoId">
               <#if parameters.stateProvinceGeoId?has_content>

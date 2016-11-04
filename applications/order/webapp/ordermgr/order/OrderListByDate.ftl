@@ -17,12 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if intervalDates?has_content>
-    <#assign intervalDateTitle = Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateBegin']) + " to " + Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateEnd'])>
+    <#assign intervalDateTitle = rawString(Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateBegin'])) + 
+        " to " + 
+        rawString(Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateEnd']))>
 <#elseif fromDate?has_content>
     <#assign intervalDateTitle = Static['org.ofbiz.base.util.UtilDateTime'].toDateString(fromDate)>
 </#if>
 
-<@section title="${uiLabelMap.OrderOrdersReceivedFrom} ${intervalDateTitle!}">
+<@section title="${rawLabel('OrderOrdersReceivedFrom')} ${rawString(intervalDateTitle!)}">
       <#assign listSize = state.getSize()>
       <#-- FIXME: Do we need this? -->
       <#--if (listSize > 10)>

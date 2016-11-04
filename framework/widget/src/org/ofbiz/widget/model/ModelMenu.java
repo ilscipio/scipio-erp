@@ -143,6 +143,8 @@ public class ModelMenu extends ModelWidget {
     
     private final boolean alwaysExpandSelectedOrAncestor; // SCIPIO: new
     
+    private final FlexibleStringExpander titleStyle; // SCIPIO: new
+    
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
@@ -182,6 +184,7 @@ public class ModelMenu extends ModelWidget {
         FlexibleMapAccessor<String> selectedMenuContextFieldName = FlexibleMapAccessor.getInstance("");
         String target = "";
         FlexibleStringExpander title = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander titleStyle = FlexibleStringExpander.getInstance(""); // SCIPIO: new
         String tooltip = "";
         String type = "";
         String itemsSortMode = "";
@@ -196,13 +199,14 @@ public class ModelMenu extends ModelWidget {
         String parentResource = menuElement.getAttribute("extends-resource");
         String parentMenu = menuElement.getAttribute("extends");
         if (!parentMenu.isEmpty()) {
-            parent = getMenuDefinition(parentResource, parentMenu, menuLocation, menuElement, genBuildArgs);
+            parent = getMenuDefinition(parentResource, parentMenu, menuElement, genBuildArgs); // SCIPIO: this is now gotten from menuElement in safer way: menuLocation
             if (parent != null) {
                 type = parent.type;
                 itemsSortMode = parent.itemsSortMode;
                 target = parent.target;
                 id = parent.id;
                 title = parent.title;
+                titleStyle = parent.titleStyle;
                 tooltip = parent.tooltip;
                 defaultEntityName = parent.defaultEntityName;
                 defaultTitleStyle = parent.defaultTitleStyle;
@@ -250,6 +254,8 @@ public class ModelMenu extends ModelWidget {
             id = menuElement.getAttribute("id");
         if (!menuElement.getAttribute("title").isEmpty())
             title = FlexibleStringExpander.getInstance(menuElement.getAttribute("title"));
+        if (!menuElement.getAttribute("title-style").isEmpty())
+            titleStyle = FlexibleStringExpander.getInstance(menuElement.getAttribute("title-style"));
         if (!menuElement.getAttribute("tooltip").isEmpty())
             tooltip = menuElement.getAttribute("tooltip");
         if (!menuElement.getAttribute("default-entity-name").isEmpty())
@@ -354,6 +360,7 @@ public class ModelMenu extends ModelWidget {
         this.selectedMenuContextFieldName = selectedMenuContextFieldName;
         this.target = target;
         this.title = title;
+        this.titleStyle = titleStyle;
         this.tooltip = tooltip;
         this.type = type;
         this.itemsSortMode = itemsSortMode;
@@ -408,9 +415,19 @@ public class ModelMenu extends ModelWidget {
 
     /**
      * SCIPIO: Menu loading factored out of main constructor and modified for reuse.
+     * <p>
+     * NOTE: 2016-09-30: the menuLocation argument was removed and replaced with more physical check
+     * using the anyMenuElement (via WidgetDocumentInfo).
      */
-    static ModelMenu getMenuDefinition(String resource, String name, String menuLocation, Element anyMenuElement, GeneralBuildArgs genBuildArgs) {
+    static ModelMenu getMenuDefinition(String resource, String name, Element anyMenuElement, GeneralBuildArgs genBuildArgs) {
         ModelMenu modelMenu = null;
+        
+        // SCIPIO: 2016-09-30: OVERRIDE this completely now
+        String menuLocation = WidgetDocumentInfo.retrieveAlways(anyMenuElement).getResourceLocation();
+        if (UtilValidate.isEmpty(menuLocation)) {
+            // important to know when this fails now
+            throw new IllegalStateException("Unable to get menu widget file original location. Error in code somewhere...");
+        }
         
         final String fullLoc;
         if (resource != null && !resource.isEmpty()) {
@@ -497,7 +514,7 @@ public class ModelMenu extends ModelWidget {
 
                     // WARN: we're forced to load this menu model even though we were support to avoid it
                     // because we need some resolved attributes off it
-                    ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, currResource, parentElement, genBuildArgs);
+                    ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, parentElement, genBuildArgs); // currResource
                     CurrentMenuDefBuildArgs includedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(includedMenuModel != null ? includedMenuModel : this);
                     
                     if (includedMenuElem != null) {
@@ -511,7 +528,7 @@ public class ModelMenu extends ModelWidget {
                                         includedMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                                 if (extendedMenuElem != null) {
                                     
-                                    ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, nextResource, includedMenuElem, genBuildArgs);
+                                    ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, includedMenuElem, genBuildArgs); // nextResource
                                     CurrentMenuDefBuildArgs extendedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(extendedMenuModel != null ? extendedMenuModel : this);
                                     
                                     processIncludeActions(extendedMenuElem, null, null, actions, 
@@ -630,7 +647,7 @@ public class ModelMenu extends ModelWidget {
                         // WARN: we're forced to load this menu model even though we were support to avoid it
                         // because we need some resolved attributes off it
                         // NOTE: this is not meant to be used for any backreferences; we want them all to point to 'this' menu
-                        ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, currResource, parentElement, genBuildArgs);
+                        ModelMenu includedMenuModel = getMenuDefinition(inclResource, inclMenuName, parentElement, genBuildArgs); // currResource
                         CurrentMenuDefBuildArgs includedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(includedMenuModel != null ? includedMenuModel : this);
                         
                         String includedForceSubMenuModelScope = forceSubMenuModelScope;
@@ -647,7 +664,7 @@ public class ModelMenu extends ModelWidget {
                                 Element extendedMenuElem = loadIncludedMenu(extendedMenuName, extendedResource, 
                                         includedMenuElem, nextResource, genBuildArgs.menuElemCache, useCache, cacheConsume);
                                 
-                                ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, nextResource, includedMenuElem, genBuildArgs);
+                                ModelMenu extendedMenuModel = getMenuDefinition(extendedResource, extendedMenuName, includedMenuElem, genBuildArgs); // nextResource
                                 CurrentMenuDefBuildArgs extendedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(extendedMenuModel != null ? extendedMenuModel : this);
                                 
                                 String extendedForceSubMenuModelScope = includedForceSubMenuModelScope;
@@ -836,6 +853,10 @@ public class ModelMenu extends ModelWidget {
                 try {
                     URL menuFileUrl = FlexibleLocation.resolveLocation(targetResource);
                     Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (menuFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(targetResource);
+                    }
                     inclRootElem = menuFileDoc.getDocumentElement();
                 } catch (Exception e) {
                     Debug.logError(e, "Failed to load include-menu-items resource: " + resource, module);
@@ -1383,7 +1404,11 @@ public class ModelMenu extends ModelWidget {
         } else {
             ModelSubMenu subMenu = getModelSubMenuByName(subMenuName);
             if (subMenu != null) {
-                return subMenu.getModelMenuItemByName(menuItemName);
+                if ("PARENT".equals(menuItemName) || "PARENT-NOSUB".equals(menuItemName)) {
+                    return subMenu.getParentMenuItem();
+                } else {
+                    return subMenu.getModelMenuItemByName(menuItemName);
+                }
             } else {
                 return null;
             }
@@ -1497,6 +1522,13 @@ public class ModelMenu extends ModelWidget {
         return this.selectedMenuContextFieldName.getOriginalName();
     }
     
+    /**
+     * SCIPIO: returns selected menu and item. The item will be either a child of
+     * the (sub-)menu, the parent item of the sub-menu, or null.
+     * <p>
+     * The (sub-)menu name supports special value "TOP". The item name supports
+     * special values "NONE" (same as null), "PARENT", and "PARENT-NOSUB".
+     */
     public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
         
@@ -1516,17 +1548,22 @@ public class ModelMenu extends ModelWidget {
             selItemName = null;
         }
         
+        if ("NONE".equals(selItemName)) {
+            selItemName = null;
+        }
+        
         ModelSubMenu subMenu = null;
         ModelMenuItem menuItem = null;
 
-        if (UtilValidate.isNotEmpty(selItemName)) {
+        if (UtilValidate.isNotEmpty(selItemName) && !"PARENT".equals(selItemName) && !"PARENT-NOSUB".equals(selItemName)) {
+            // this is the most direct case
             menuItem = getModelMenuItemBySubName(selItemName, selMenuName);
             if (menuItem != null) {
                 subMenu = menuItem.getParentSubMenu();
             } else {
                 // NOTE: if there was a screen coding error, it's possible the selItemName returns nothing.
                 // in this case we'll fall back to the sub-menu-name-only check below so the coder can
-                // better see the error.
+                // better see the error (though the selections will still be wrong - but this is OK because it's a coding error).
                 Debug.logWarning("Menu-item name '" + selItemName + "' was not found within menu "
                         + "or sub-menu ('" + selMenuName + "'), under top menu '" + this.getMenuLocation() + "#" + 
                         this.getName() + "'", module);
@@ -1541,13 +1578,30 @@ public class ModelMenu extends ModelWidget {
             // if there's no item name, we have to do something special to dig up
             // the default-menu-item-name
             if (subMenu != null) {
-                // ok, have a sub-menu
-                String defaultMenuItemName = subMenu.getDefaultMenuItemName();
-                menuItem = subMenu.getModelMenuItemByName(defaultMenuItemName);
+                if (UtilValidate.isEmpty(selItemName)) { // 2016-09-28: ONLY use default if no explicit specified
+                    // ok, have a sub-menu
+                    String defaultMenuItemName = subMenu.getDefaultMenuItemName();
+                    if (UtilValidate.isNotEmpty(defaultMenuItemName)) {
+                        menuItem = subMenu.getModelMenuItemByName(defaultMenuItemName);
+                    } else {
+                        // 2016-09-28: EXTRA FALLBACK: here we will return the parent item of the
+                        // sub-menu as target (same as "PARENT")
+                        menuItem = subMenu.getParentMenuItem();
+                    }
+                } else if ("PARENT".equals(selItemName)) {
+                    // explicit parent wanted
+                    menuItem = subMenu.getParentMenuItem();
+                } else if ("PARENT-NOSUB".equals(selItemName)) {
+                    // explicit parent wanted, but WITHOUT the sub-menu itself (this is sort of a hack, but very convenient)
+                    menuItem = subMenu.getParentMenuItem();
+                    subMenu = menuItem.getParentSubMenu(); // NOTE: may return null
+                }
             } else if (isMenuNameTopMenu(selMenuName)) {
-                // use top menu (us), though only if it was intended for us
-                if (UtilValidate.isNotEmpty(this.defaultMenuItemName)) {
-                    menuItem = getModelMenuItemByName(this.defaultMenuItemName);
+                if (UtilValidate.isEmpty(selItemName)) { // 2016-09-28: ONLY use default if no explicit specified
+                    // use top menu (us), though only if it was intended for us
+                    if (UtilValidate.isNotEmpty(this.defaultMenuItemName)) {
+                        menuItem = getModelMenuItemByName(this.defaultMenuItemName);
+                    }
                 }
             }
         }
@@ -1571,6 +1625,17 @@ public class ModelMenu extends ModelWidget {
 
     public String getTitle(Map<String, Object> context) {
         return title.expandString(context);
+    }
+    
+    /**
+     * SCIPIO: special title style for some kinds of menus (has versatile/generic meaning).
+     */
+    public FlexibleStringExpander getTitleStyle() {
+        return titleStyle;
+    }
+
+    public String getTitleStyle(Map<String, Object> context) {
+        return titleStyle.expandString(context);
     }
 
     public String getTooltip() {

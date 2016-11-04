@@ -56,10 +56,10 @@ Features and Modifications:
     <xs:element name="menu">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-elements" />
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-actions" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="include-elements" type="menu-elements-include"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="include-actions" type="menu-actions-include" />
                 <xs:element minOccurs="0" ref="actions" />
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="include-menu-items" type="menu-items-include" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
@@ -77,6 +77,14 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute type="xs:string" name="id" />
             <xs:attribute type="xs:string" name="title" />
+            <xs:attribute type="xs:string" name="title-style">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Loosely-defined title style that will be passed
+                        to any macros that place the menu element's title into an element
+                        that supports a style. e.g., some kinds of dropdown menus.
+                        2016-11-2: Added for 1.14.2.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="tooltip" />
             <xs:attribute type="xs:string" name="default-entity-name" />
             <xs:attribute type="xs:string" name="default-title-style" />
@@ -288,219 +296,215 @@ Features and Modifications:
             </xs:attribute>
         </xs:complexType>
     </xs:element>
-    <xs:element name="include-elements">
+    <xs:complexType name="menu-elements-include"><!-- SCIPIO: Element name: "include-elements" -->
         <xs:annotation>
             <xs:documentation>SCIPIO: Includes another menu's elements (actions and menu items) into this one. Works on a textual xml level.
                 This is a convenience directive and same as declaring all the other include-* directives individually.
                 Can use to include all elements from another menu at first, then later split into more precise directives as needed.
                 The more precise directives will override this one for a given menu.</xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="exclude-item" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation>SCIPIO: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
-                    </xs:annotation>
-                    <xs:complexType>
-                        <xs:attribute type="xs:string" name="name" use="required" />
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-            <xs:attribute type="xs:string" name="menu-name">
+        <xs:sequence>
+            <xs:element name="exclude-item" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: The target menu name.
-                        Required if ref is not specified.</xs:documentation>
+                    <xs:documentation>SCIPIO: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
                 </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="resource" />
-            <xs:attribute name="menu-ref">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Special reference to another menu to modify.
-                        Required if menu-name not specified.
-                        Possible values:
-                        sub-menu-model: When this include is child of a menu-item (as sub-menu), the special value
-                            'sub-menu-model' may be used to invoke the sub-menu-model or sub-menu-include specified
-                            on the enclosing menu item; this allows reusing the sub-menu-model location and/or modifying 
-                            the sub-menu-include behavior (without retyping the menu name and location).</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="sub-menu-model" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="recursive">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes, to find elements.
-                        'includes-only' means it will follow includes in the target menu. 
-                        'extends-only' means it will follow extends directives in the target menu.
-                        'full' means will follow all of the above.
-                        'no' means will follow none.
-                        Default: 'full'</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="no" />
-                        <xs:enumeration value="includes-only" />
-                        <xs:enumeration value="extends-only" />
-                        <xs:enumeration value="full" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="sub-menus">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Filter for which sub-menus to include (from menu-items).
-                        Possible values:
-                        'none': no sub-menus are retained whatsoever. This is the highest priority setting.
-                        'all': sub-menus are retained from the target menu-items. Note however recursive includes
-                            marked with 'none' retain priority.
-                        Default: 'all'
-                        Note that currently (2016-08-28) there is no support for sub-menu merging like there is for menu-items.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="none" />
-                        <xs:enumeration value="all" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="force-sub-menu-model-scope">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
-                        of all menu items included with this directive, recursively.
-                        The 'func' or 'none' value can be useful (though limited) to duplicate a complex menu without
-                        inheriting any of its styles.
-                        NOTE: this also forces the include attribute scope.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="style" />
-                        <xs:enumeration value="func" />
-                        <xs:enumeration value="full" />
-                        <xs:enumeration value="none" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="include-actions">
+                <xs:complexType>
+                    <xs:attribute type="xs:string" name="name" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="menu-name">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: The target menu name.
+                    Required if ref is not specified.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="resource" />
+        <xs:attribute name="menu-ref">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Special reference to another menu to modify.
+                    Required if menu-name not specified.
+                    Possible values:
+                    sub-menu-model: When this include is child of a menu-item (as sub-menu), the special value
+                        'sub-menu-model' may be used to invoke the sub-menu-model or sub-menu-include specified
+                        on the enclosing menu item; this allows reusing the sub-menu-model location and/or modifying 
+                        the sub-menu-include behavior (without retyping the menu name and location).</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="sub-menu-model" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="recursive">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes, to find elements.
+                    'includes-only' means it will follow includes in the target menu. 
+                    'extends-only' means it will follow extends directives in the target menu.
+                    'full' means will follow all of the above.
+                    'no' means will follow none.
+                    Default: 'full'</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="no" />
+                    <xs:enumeration value="includes-only" />
+                    <xs:enumeration value="extends-only" />
+                    <xs:enumeration value="full" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="sub-menus">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Filter for which sub-menus to include (from menu-items).
+                    Possible values:
+                    'none': no sub-menus are retained whatsoever. This is the highest priority setting.
+                    'all': sub-menus are retained from the target menu-items. Note however recursive includes
+                        marked with 'none' retain priority.
+                    Default: 'all'
+                    Note that currently (2016-08-28) there is no support for sub-menu merging like there is for menu-items.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="none" />
+                    <xs:enumeration value="all" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="force-sub-menu-model-scope">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
+                    of all menu items included with this directive, recursively.
+                    The 'func' or 'none' value can be useful (though limited) to duplicate a complex menu without
+                    inheriting any of its styles.
+                    NOTE: this also forces the include attribute scope.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="style" />
+                    <xs:enumeration value="func" />
+                    <xs:enumeration value="full" />
+                    <xs:enumeration value="none" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="menu-actions-include"><!-- SCIPIO: Element name: "include-actions" -->
         <xs:annotation>
             <xs:documentation>SCIPIO: Includes another menu's actions into this one. Works on a textual xml level.
-                Warning: diamond-like include+extends patterns can result in duplicate actions; use recursive with care.
-                Usually "includes-only" or "no" for recursive option is safest.</xs:documentation>
+                WARN: diamond-like include+extends patterns can result in duplicate actions; use recursive with care.
+                Usually "includes-only" or "no" for recursive option is safest.
+                NOTE: This directive is static and fully resolved at build time; not to be confused with the 
+                    dynamic/runtime include-menu-actions action directive defined in widget-common.xsd.</xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:attribute type="xs:string" name="menu-name">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: The target menu name.
-                        See include-elements documentation.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="resource" />
-            <xs:attribute name="menu-ref">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Special reference to another menu to modify.
-                        See include-elements documentation.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="sub-menu-model" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="recursive">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
-                        See include-elements documentation.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="no" />
-                        <xs:enumeration value="includes-only" />
-                        <xs:enumeration value="extends-only" />
-                        <xs:enumeration value="full" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="include-menu-items">
+        <xs:attribute type="xs:string" name="menu-name">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: The target menu name.
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="resource" />
+        <xs:attribute name="menu-ref">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Special reference to another menu to modify.
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="sub-menu-model" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="recursive">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="no" />
+                    <xs:enumeration value="includes-only" />
+                    <xs:enumeration value="extends-only" />
+                    <xs:enumeration value="full" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="menu-items-include"><!-- SCIPIO: Element name: "include-menu-items" -->
         <xs:annotation>
             <xs:documentation>SCIPIO: Includes another menu's items into this one. Works on a textual xml level.
                 Note: duplicates are not concern as menu items are keyed by name.</xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="exclude-item" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation>SCIPIO: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
-                    </xs:annotation>
-                    <xs:complexType>
-                        <xs:attribute type="xs:string" name="name" use="required" />
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-            <xs:attribute type="xs:string" name="menu-name">
+        <xs:sequence>
+            <xs:element name="exclude-item" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: The target menu name.
-                        See include-elements documentation.</xs:documentation>
+                    <xs:documentation>SCIPIO: Menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
                 </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="resource" />
-            <xs:attribute name="menu-ref">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Special reference to another menu to modify.
-                        See include-elements documentation.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="sub-menu-model" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="recursive">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
-                        See include-elements documentation.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="no" />
-                        <xs:enumeration value="includes-only" />
-                        <xs:enumeration value="extends-only" />
-                        <xs:enumeration value="full" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="sub-menus">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Filter for which sub-menus to include (from menu-items).
-                        See include-elements documentation.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="none" />
-                        <xs:enumeration value="all" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="force-sub-menu-model-scope">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
-                        of all menu items included with this directive, recursively.
-                        See include-elements documentation.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="style" />
-                        <xs:enumeration value="func" />
-                        <xs:enumeration value="full" />
-                        <xs:enumeration value="none" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
+                <xs:complexType>
+                    <xs:attribute type="xs:string" name="name" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="menu-name">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: The target menu name.
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="resource" />
+        <xs:attribute name="menu-ref">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Special reference to another menu to modify.
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="sub-menu-model" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="recursive">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: If and what to recurse when included menus have their own extends and includes.
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="no" />
+                    <xs:enumeration value="includes-only" />
+                    <xs:enumeration value="extends-only" />
+                    <xs:enumeration value="full" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="sub-menus">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Filter for which sub-menus to include (from menu-items).
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="none" />
+                    <xs:enumeration value="all" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="force-sub-menu-model-scope">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Brutally forces the sub-menu model scope of all sub-menus
+                    of all menu items included with this directive, recursively.
+                    See include-elements documentation.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="style" />
+                    <xs:enumeration value="func" />
+                    <xs:enumeration value="full" />
+                    <xs:enumeration value="none" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
     <xs:element name="menu-item">
         <xs:complexType>
             <xs:sequence>
@@ -618,12 +622,13 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="sort-mode" default="auto">
+            <xs:attribute name="sort-mode"><!-- implied: default="auto" -->
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Controls whether sorting applies to this item or
                         not. Only meaningful when items-sort-mode is enabled.
                         If set to off, item will try to remain at the same index of the menu items
                         in which it was declared.
+                        Default: auto
                         NOTE: 'override-mode' can influence the final display order when combined with 'soft-mode' off.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
@@ -650,6 +655,21 @@ Features and Modifications:
                     <xs:documentation>SCIPIO: DEPRECATED: Use sub-menu element's model attribute instead.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="always-expand-selected-or-ancestor">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Per-menu-item override of the top menu always-expand-selected-or-ancestor setting.
+                        This can be used to create exceptions to the resolved top menu always-expand-selected-or-ancestor setting.
+                        WARN/FIXME: Currently the overrides only work on menu items. Overrides won't work if set on sub menu definitions.
+                        Default: (empty/unset)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="" />
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -768,10 +788,10 @@ Features and Modifications:
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-elements" />
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-actions" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="include-elements" type="menu-elements-include"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="include-actions" type="menu-actions-include" />
                 <xs:element minOccurs="0" ref="actions" />
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="include-menu-items" type="menu-items-include" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name">
@@ -868,10 +888,13 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="share-scope">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: If set to explicit false, any actions in the submenu will
-                        not affect the parent's context. If true, the scope is shared.
-                        Default: true (NOTE: this is unlike most other share-scope attributes on other
-                            elements, which are usually false by default)</xs:documentation>
+                    <xs:documentation>SCIPIO: If false (default), any actions in the sub-menu will
+                        not affect the parent's context. If set to true, the scope is shared.
+                        This setting is regardless of whether the sub-menu is inlined or populated from separate include.
+                        Default: false (2016-11-02: CHANGED to false for 1.14.2) - overridable by
+                            default-sub-menu-share-scope on menu element.
+                        NOTE: 2016-11-02: The default has been changed to false for 1.14.2 to prevent
+                            variable leakage across sub-menus in complex menus.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

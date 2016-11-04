@@ -49,19 +49,22 @@ under the License.
         </div>
     <#elseif ProductReceiveInventoryAgainstPurchaseOrderProductNotFound??>
         <div class="errorMessage">
+            <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
             <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderProductNotFound?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${uiLabelMap.CommonErrorMessage2}","<@uiLabelWithVar/>");};</@script>
+            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
         </div>
     <#elseif ProductReceiveInventoryAgainstPurchaseOrderQuantityExceedsAvailableToReceive??>
         <div class="errorMessage">
+            <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
             <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderQuantityExceedsAvailableToReceive?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${uiLabelMap.CommonErrorMessage2}","<@uiLabelWithVar/>");};</@script>
+            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
         </div>
     </#if>
     <#if ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder??>
         <div class="errorMessage" class="${styles.text_color_success!}">
+            <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
             <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${uiLabelMap.CommonErrorMessage2}","<@uiLabelWithVar/>");};</@script>
+            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
         </div>
     </#if>
 </#if>
@@ -176,7 +179,7 @@ under the License.
                                     </@field>
                                 </@td>
                                 <@td align="right">
-                                    <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
+                                    <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
                                 </@td>
                                 <@td align="right">
                                   <@field type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onClick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
@@ -189,7 +192,7 @@ under the License.
                       <@tfoot>
                         <@tr>
                             <@td colspan="11" align="right">
-                                <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClearAll />
+                                <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&clearAll=Y") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClearAll />
                             </@td>
                             <@td align="right">
                                 <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_receive!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();" text=uiLabelMap.ProductReceiveItem />
@@ -197,7 +200,7 @@ under the License.
                         </@tr>
                         <@tr>
                             <@td colspan="12" align="right">
-                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_update!}" href=makeOfbizUrl("completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}") text=uiLabelMap.OrderForceCompletePurchaseOrder />
+                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_update!}" href=makeOfbizUrl("completePurchaseOrder?orderId=${orderId}&facilityId=${facilityId}&shipmentId=${shipmentId}") text=uiLabelMap.OrderForceCompletePurchaseOrder />
                             </@td>
                         </@tr>
                       </@tfoot>
@@ -213,7 +216,7 @@ under the License.
             <form name="addProductToReceive" method="post" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
-                <@field type="generic" label="${uiLabelMap.ProductProductId}/${uiLabelMap.ProductGoodIdentification}">
+                <@field type="generic" label="${rawLabel('ProductProductId')}/${rawLabel('ProductGoodIdentification')}">
                     <@field type="input" inline=true size="20" id="productId" name="productId" value=""/>
                         @
                     <@field type="input" inline=true  name="quantity" size="6" maxlength="6" value="1" tabindex="0"/>

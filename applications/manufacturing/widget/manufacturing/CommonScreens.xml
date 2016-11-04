@@ -20,6 +20,20 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://manufacturing/widget/manufacturing/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://manufacturing/widget/manufacturing/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -45,7 +59,7 @@ under the License.
                 <set field="applicationTitle" value="${uiLabelMap.Manufacturing}" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
@@ -56,7 +70,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://manufacturing/widget/manufacturing/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -68,7 +82,25 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
+    <screen name="CommonManufacturingAppDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="CommonManufacturingAppSideBarMenu"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>
@@ -90,6 +122,20 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonManufacturingAppSideBarMenu">
+        <section>
+            <actions>
+                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="MANUFACTURING"/>
+                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

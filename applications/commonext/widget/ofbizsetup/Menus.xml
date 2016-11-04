@@ -28,11 +28,12 @@
             <link target="EntityExportAll"/>
         </menu-item>
     </menu>
-    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="SetupAppBar" recursive="full" />
     </menu>
     
-    <menu name="SetupSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="SetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="activeSubMenuItemTop">
         <menu-item name="organization" title="${uiLabelMap.SetupOrganization}">
             <condition>
@@ -80,9 +81,9 @@
         </menu-item>
     </menu>
     
-    <menu name="SetupSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="SetupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="activeSubMenuItemTop">
-        <include-elements menu-name="SetupSubTabBar" recursive="includes-only" />
+        <include-elements menu-name="SetupTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="FirstProductTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

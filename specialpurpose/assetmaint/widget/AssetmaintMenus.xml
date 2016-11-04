@@ -27,10 +27,23 @@
         <menu-item name="fixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}"><link target="findFixedAssetMaints"/></menu-item>
         <menu-item name="facility" title="${uiLabelMap.ProductFacility}"><link target="FindFacility"/></menu-item>
     </menu>
-    <menu name="AssetMaintAppSideBar" title="${uiLabelMap.AssetMaintManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="AssetMaintAppSideBar" title="${uiLabelMap.AssetMaintManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <!-- Already included in CommonSidebar 
         <menu-item name="dashboard" title="${uiLabelMap.CommonDashboard}" sort-mode="off"><link target="main"/></menu-item>-->
         <include-elements menu-name="AssetMaintAppBar" recursive="full" />
+        <menu-item name="ListFixedAssets">
+            <sub-menu name="FixedAsset" include="FixedAssetSideBar"/>
+        </menu-item>
+        <menu-item name="fixedAssetMaints">
+            <!-- SCIPIO: already included as a sub-menu of FixedAssetSideBar (see below)...
+                here fixedAssetMaints provides a convenient Find screen and it sends into 
+                FixedAssetSideBar's sub-menu once something selected.
+            <sub-menu name="FixedAssetMaint" include="FixedAssetMaintSideBar"/> -->
+        </menu-item>
+        <menu-item name="facility">
+            <sub-menu name="Facility" include="FacilitySideBar"/>
+        </menu-item>
     </menu>
 
     <menu name="FixedAssetTabBar" extends="FixedAssetTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
@@ -44,6 +57,10 @@
     </menu>
     <menu name="FixedAssetSideBar" extends="FixedAssetSideBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
         <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />
+        <!-- SCIPIO: we must override the FixedAssetMaint we inherited from accounting here...  -->
+        <menu-item name="ListFixedAssetMaints">
+            <sub-menu name="FixedAssetMaint" include="FixedAssetMaintSideBar"/>
+        </menu-item>
     </menu>
 
     <menu name="FixedAssetMaintTabBar" extends="FixedAssetMaintTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
@@ -77,7 +94,7 @@
     </menu>
     
     <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="FixedAssetMaintTabBar" recursive="includes-only" />
+        <include-elements menu-name="FixedAssetMaintTabBar" recursive="full" />
     </menu>
     
     <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -87,7 +104,7 @@
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <!-- Scipio: To be removed -->
+        <!-- SCIPIO: To be removed -->
         <!-- <menu-item name="FacilityChildren" title="${uiLabelMap.CommonEntityChildren}">
             <link target="FacilityChildren">
                 <parameter param-name="facilityId"/>

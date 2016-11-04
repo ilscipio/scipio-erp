@@ -43,27 +43,27 @@ var autocomp = [
             <#assign displayString = ""/>
             <#assign returnField = ""/>
             <#list displayFieldsSet as key>
-              <#assign field = autocompleteOption.get(key)!>
+              <#assign field = rawString(autocompleteOption.get(key)!)>
               <#if field?has_content>
                   <#if (key == context.returnField)>
                       <#assign returnField = field/>
                   <#else>
-                      <#assign displayString = displayString + rawString(field?string) + " ">
+                      <#assign displayString = displayString + rawString(field) + " ">
                   </#if>
               </#if>
             </#list>
             <#if ("Y" == displayReturnField)>
                 <#assign displayString = displayString +  "[" + returnField + "]">
             </#if>
-            "id": "${returnField?json_string}",
-            "label": "<#if (displayString?trim?has_content )>${displayString?trim?json_string}<#else>${returnField?json_string}</#if>",
-            "value": "${returnField?json_string}"
+            "id": "${escapeVal(returnField, 'js')}",
+            "label": "<#if (displayString?trim?has_content)>${escapeVal(displayString?trim, 'js')}<#else>${escapeVal(returnField, 'js')}</#if>",
+            "value": "${escapeVal(returnField, 'js')}"
             }<#if autocompleteOption_has_next>,</#if>
         </#list>
     <#else>
       {
          "id": "",
-         "label": "${uiLabelMap.CommonNoRecordFound}",
+         "label": "${escapeVal(uiLabelMap.CommonNoRecordFound, 'js')}",
          "value": ""
       }
     </#if>

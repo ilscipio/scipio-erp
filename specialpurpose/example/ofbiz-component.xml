@@ -60,6 +60,6 @@ under the License.
         server="default-server"
         location="webapp/example"
         base-permission="OFBTOOLS,EXAMPLE"
-        mount-point="/example"/><!-- Scipio: don't display in menu -->
+        mount-point="/example"/><!-- SCIPIO: don't display in menu -->
 
 </ofbiz-component>

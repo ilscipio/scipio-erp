@@ -37,10 +37,7 @@
                 <set field="hasAdminPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://humanres/widget/CommonScreens.xml"/>
-                    </decorator-section>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -74,7 +71,7 @@
     <screen name="FindLeaveApprovals">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmplLeave" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="EmplLeave" />
                 <set field="titleProperty" value="PageTitleFindApprovals"/>
                 <set field="activeSubMenuItem" value="Approval"/>
                 <set field="activeMainMenuItem" value="Leave"/>
@@ -85,10 +82,7 @@
                 <set field="approverPartyId" from-field="parameters.userLogin.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://humanres/widget/CommonScreens.xml"/>
-                    </decorator-section>
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -127,15 +121,14 @@
                     <field-map field-name="leaveTypeId" from-field="leaveTypeId"/>
                     <field-map field-name="fromDate" from-field="fromDate"/>
                 </entity-one>
+                <set field="activeSubMenu" value="EmplLeave"/>
             </actions>
             <widgets>
-                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section>
                             <condition>
                                 <if-empty field="leaveApp" />
-                            
                             </condition>
                             <widgets>
                                 <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
@@ -166,12 +159,12 @@
                     <field-map field-name="leaveTypeId" from-field="leaveTypeId"/>
                     <field-map field-name="fromDate" from-field="fromDate"/>
                 </entity-one>
+                <set field="activeSubMenu" value="EmplLeave"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <screenlet id="EditEmplLeaveStatus" title="${uiLabelMap.HumanResEditLeaveApprovalStatus}" collapsible="true">
+                        <screenlet id="EditEmplLeaveStatus" collapsible="true"><!-- title="${uiLabelMap.HumanResEditLeaveApprovalStatus}"  -->
                             <include-form name="EditEmplLeaveStatus" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
                         </screenlet>
                     </decorator-section>

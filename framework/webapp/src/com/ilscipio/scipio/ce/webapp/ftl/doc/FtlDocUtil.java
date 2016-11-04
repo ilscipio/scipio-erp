@@ -21,7 +21,8 @@ public abstract class FtlDocUtil {
     public static String replaceExtension(String filePath, String newExt) {
         Matcher m = Pattern.compile("^.*([.][a-zA-Z0-9]+)$").matcher(filePath);
         if (!m.matches()) {
-            throw new IllegalArgumentException("Can't replace file extension, has none");
+            return filePath + newExt;
+            //throw new IllegalArgumentException("Can't replace file extension, has none");
         }
         String ext = m.group(1);
         return filePath.substring(0, filePath.length() - ext.length()) + newExt;

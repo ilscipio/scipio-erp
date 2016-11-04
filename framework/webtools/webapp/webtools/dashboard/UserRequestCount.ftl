@@ -4,12 +4,12 @@
 
 <#if userRequestCount?has_content> 
     <#if chartType == "line" || chartType == "bar">
-        <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"" label2=label2!"">
-            <#list userRequestCount.keySet() as key>        
+        <@chart type=chartType library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>
+            <#list mapKeys(userRequestCount) as key>        
                 <#assign currData = userRequestCount[key] />
                 <#if currData?has_content>
                     <#if datasets == 1>
-                        <@chartdata value="${currData!0}"  title="${key!}"/>
+                        <@chartdata value="${currData!0}" title=key/>
                     </#if>                
                 </#if>
             </#list>

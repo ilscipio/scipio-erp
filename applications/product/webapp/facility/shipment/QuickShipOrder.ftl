@@ -32,7 +32,7 @@ function setWeight(weight) {
     </#if>
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.ProductQuickShipOrderFrom} ${facility.facilityName!} [${uiLabelMap.CommonId}:${facilityId!}]">
+<@section title="${rawLabel('ProductQuickShipOrderFrom')} ${rawString(facility.facilityName!)} [${rawLabel('CommonId')}:${rawString(facilityId!)}]">
 
   <#if shipment??>
     <#if 1 < shipmentPackages.size()>
@@ -91,7 +91,7 @@ function setWeight(weight) {
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submit" submitType="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y") class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductReWeighPackage />
+                <@field type="submit" submitType="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}&shipmentId=${shipmentId}&reweigh=Y") class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductReWeighPackage />
               </@cell>
             </@row>
             <@row>
@@ -123,7 +123,7 @@ function setWeight(weight) {
             <input type="hidden" name="facilityId" value="${facilityId!}"/>
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-              <@field type="generic" label="${uiLabelMap.ProductPackage} ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}">
+              <@field type="generic" label="${rawLabel('ProductPackage')} ${rawString(shipmentPackage.shipmentPackageSeqId)} ${rawLabel('ProductWeight')}">
                   <@field type="input" name="weight" />
                   <@field type="select" name="weightUomId">
                     <#if weightUom?has_content>

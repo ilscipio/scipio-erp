@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<@section title="${survey.surveyName}">
+<@section title=((survey.surveyName)!)>
     <#-- Render the survey -->
     <#if surveyWrapper?has_content>
         <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>">

@@ -18,10 +18,10 @@ under the License.
 -->
 
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
-  <@section title="${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}">
+  <@section title="${rawLabel('EcommerceStep')} 1: ${rawLabel('PageTitleShoppingCart')}">
   <div id="cartSummaryPanel" style="display: none;">
     <a href="javascript:void(0);" id="openCartPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
-    <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->
+    <#-- SCIPIO: Always disable responsive on this one or it won't play nice with JS... -->
     <@table type="data-list" responsive=false id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">
       <@thead>
         <@tr>
@@ -48,7 +48,7 @@ under the License.
                 <#-- SCIPIO: Uncomment if you want to use the image placeholders
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
-                  <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
+                  <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
                 -->
                 <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
                 <#-- For configurable products, the selected options are shown -->
@@ -97,7 +97,7 @@ under the License.
             <@td>&nbsp;</@td>
             </@tr>
         </#list>
-        <#--Scipio: styling issues: 
+        <#-- SCIPIO: styling issues: 
         </@tbody>
         <@tfoot>-->
         <@tr>
@@ -143,7 +143,7 @@ under the License.
            </@td>
            <@td>&nbsp;</@td>     
         </@tr>
-      <#--Scipio: styling issues: 
+      <#-- SCIPIO: styling issues: 
       </@tfoot>-->
         </@tbody>
     </@table>
@@ -157,7 +157,7 @@ under the License.
           <div id="cartFormServerError" class="errorMessage"></div>
         </@alert>
 
-        <#-- Scipio: Always disable responsive on this one or it won't play nice with JS... -->
+        <#-- SCIPIO: Always disable responsive on this one or it won't play nice with JS... -->
         <@table type="data-list" responsive=false id="editCartPanel_cartItems">
           <@thead>
             <@tr>
@@ -191,7 +191,7 @@ under the License.
                         <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                         <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
                         <#if smallImageUrl?string?has_content>
-                          <#assign imgUrl><@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl></#assign>
+                          <#assign imgUrl><@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl></#assign>
                           <@img src=imgUrl width="150px;" height="75px"/>
                         </#if>
                       -->
@@ -248,7 +248,7 @@ under the License.
                                     <#else>
                                         <#assign selected = false/>
                                     </#if>
-                                    <@field type="option" value="${x}" selected=selected>${x}</@field>
+                                    <@field type="option" value=(x) selected=selected>${x}</@field>
                                 </#list>
                             </@field>
                             <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
@@ -268,7 +268,7 @@ under the License.
                 </#if>
               </@tr>
             </#list>
-            <#--Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tbody>
             <@tfoot>-->
             <@tr>
@@ -330,8 +330,7 @@ under the License.
                 <@td>&nbsp;</@td>
             </@tr>
 
-            <#--
-            Scipio: styling issues: 
+            <#-- SCIPIO: styling issues: 
             </@tfoot>-->
             </@tbody>
         </@table>
@@ -341,8 +340,8 @@ under the License.
       <#--</fieldset>-->
       <#--<fieldset>-->
         <@field type="submitarea">
-          <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${uiLabelMap.EcommerceContinueToStep} 2"/>
-          <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${uiLabelMap.EcommercePleaseWait}..."/>
+          <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${rawLabel('EcommerceContinueToStep')} 2"/>
+          <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${rawLabel('EcommercePleaseWait')}..."/>
         </@field>
       <#--</fieldset>-->
     </form>

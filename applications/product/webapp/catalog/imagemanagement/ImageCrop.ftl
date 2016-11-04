@@ -21,7 +21,7 @@ under the License.
 <#-- FIXME: probably don't want this css here (not sure how to manage js files above) -->
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/imagemanagement/jquery.Jcrop.css</@ofbizContentUrl>" type="text/css" />
 <@script>
-<#-- Scipio: this breaks everything (?)
+<#-- SCIPIO: this breaks everything (?)
 jQuery.noConflict();-->
 
 var imgWidth = null;
@@ -86,7 +86,7 @@ function showPreview(coords){
 }
 </@script>
 
-<#-- Scipio: custom form based on component://applications/product/widget/catalog/ImageManagementForms.xml#ImageCropping
+<#-- SCIPIO: custom form based on component://applications/product/widget/catalog/ImageManagementForms.xml#ImageCropping
      re-enabled the form widget temporarily instead
 <@form id="ImageCropping" name="ImageCropping" action=makeOfbizUrl("CropImage")
   method="post" onsubmit="javascript:submitFormDisableSubmits(this);"> 

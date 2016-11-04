@@ -451,11 +451,11 @@ under the License.
     <!-- ======== Anonymous Checkout Events ======== -->
     <!-- =========================================== -->
 
-    <!-- Scipio: This is currently a simple wrapper around processCustomerSettings. 
+    <!-- SCIPIO: This is currently a simple wrapper around processCustomerSettings. 
         It will enable if the form contained an input createUpdateAnonUser with value "Y".
         It should work as long as there are no field name conflicts with the form being submitted
         (whose real target may be another event). -->
-    <simple-method method-name="checkCreateUpdateAnonUser" short-description="Scipio: Check and Update Basic Anon Customer Settings; to be called as a Request Event" login-required="false">
+    <simple-method method-name="checkCreateUpdateAnonUser" short-description="SCIPIO: Check and Update Basic Anon Customer Settings; to be called as a Request Event" login-required="false">
         <if-compare field="parameters.createUpdateAnonUser" operator="equals" value="Y" >
             <!-- WARN: Field name conflicts are possible; if needed, override them to null here  -->
             <call-simple-method method-name="processCustomerSettings"/>
@@ -524,13 +524,13 @@ under the License.
         </if-empty>
         <check-errors/>
         <log level="info" message="If anonymous, user-login has been activated"/>
-        <!-- Scipio: Don't show a success message, it only looks odd during checkout -->
+        <!-- SCIPIO: Don't show a success message, it only looks odd during checkout -->
         <set field="_event_message_" value="" set-if-empty="true" set-if-null="true"/>
         <field-to-result field="_event_message_" result-name="_event_message_"/>
         <set field="_event_message_list_" type="List" value="" set-if-empty="true" set-if-null="true"/>
         <field-to-result field="_event_message_list_" result-name="_event_message_list_"/>
         <call-bsh><![CDATA[
-            // Scipio: Also have to clear the previous request attribs manually because the above is not enough (both required)
+            // SCIPIO: Also have to clear the previous request attribs manually because the above is not enough (both required)
             request.removeAttribute("_EVENT_MESSAGE_");
             request.removeAttribute("_EVENT_MESSAGE_LIST_");
         ]]></call-bsh>

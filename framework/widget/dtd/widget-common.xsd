@@ -329,7 +329,12 @@ under the License.
     </xs:element>
     <xs:element name="script" substitutionGroup="AllActions">
         <xs:complexType>
-            <xs:attribute type="xs:string" name="location" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required">
+                <xs:annotation>
+                    <xs:documentation>Script location.
+                        SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, evaluated at runtime.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="entity-one" substitutionGroup="AllActions">
@@ -374,6 +379,62 @@ under the License.
             <xs:attribute type="xs:string" name="order-by-list" />
             <xs:attribute type="xs:string" name="use-cache" default="false" />
             <xs:attribute type="xs:string" name="list" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-screen-actions" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Includes a screen's top section actions in this widget's actions where the directive appears.
+                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
+                    name and location support flexible expressions and are resolved at runtime.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-form-actions" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Includes a form's top section actions in this widget's actions where the directive appears.
+                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
+                    name and location support flexible expressions and are resolved at runtime.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-form-row-actions" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Includes a form's top section row-actions in this widget's actions where the directive appears.
+                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
+                    name and location support flexible expressions and are resolved at runtime.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-menu-actions" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Includes a menu's top section actions in this widget's actions where the directive appears.
+                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
+                    name and location support flexible expressions and are resolved at runtime.
+                NOTE: Not to be confused with the static/build-time include-actions directive available as child of menu/sub-menu elements from widget-menu.xsd.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-tree-actions" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Includes a tree's top section actions in this widget's actions where the directive appears.
+                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
+                    name and location support flexible expressions and are resolved at runtime.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location" />
         </xs:complexType>
     </xs:element>
     <xs:element name="condition-list">
@@ -590,7 +651,16 @@ under the License.
         <xs:attribute type="xs:string" name="name" />
         <xs:attribute type="xs:string" name="title" />
         <xs:attribute type="xs:nonNegativeInteger" name="size" /><!-- Text size limit -->
-        <xs:attribute type="xs:string" name="target" />
+        <xs:attribute type="xs:string" name="target">
+            <xs:annotation>
+                <xs:documentation>
+                    Link target (href).
+                    SCIPIO: 2016-10-21: enhanced: if url-mode is "inter-app" and target ends with exactly the string
+                    "#extLoginKey=OFF", then no external login key is added, and the 
+                    "#extLoginKey=OFF" string is stripped. It must be the last part of the string to work (ends with).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="target-window" />
         <xs:attribute type="xs:string" name="prefix" />
         <xs:attribute type="xs:string" name="width" />
@@ -624,7 +694,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="full-path"><!-- Scipio: default removed - default is null: default="false" -->
+        <xs:attribute name="full-path"><!-- SCIPIO: default removed - default is null: default="false" -->
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true" />
@@ -632,7 +702,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="secure"><!-- Scipio: default removed - default is null: default="false" -->
+        <xs:attribute name="secure"><!-- SCIPIO: default removed - default is null: default="false" -->
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true" />
@@ -640,7 +710,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="encode"><!-- Scipio: default removed - default is null (should be true, not false!): default="false" -->
+        <xs:attribute name="encode"><!-- SCIPIO: default removed - default is null (should be true, not false!): default="false" -->
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true" />

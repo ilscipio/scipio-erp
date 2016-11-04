@@ -41,7 +41,7 @@ under the License.
      }
 </@script>
 
-<#-- Scipio: TODO?: convert to @paginate, but this has special AJAX (NOTE: maybe leave as-is...) -->
+<#-- SCIPIO: TODO?: convert to @paginate, but this has special AJAX (NOTE: maybe leave as-is...) -->
 <#macro paginationControls>
     <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>
       <#if (viewIndexMax?int > 0)>
@@ -70,8 +70,8 @@ under the License.
 
 
 <#if productCategory??>
-    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!?string/>
-    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html")!?string/>
+    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME")!/>
+    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION")!/>
     <#if categoryName?has_content>
         <@heading>${categoryName}</@heading>
     </#if>
@@ -92,7 +92,7 @@ under the License.
     <#if searchInCategory?default("Y") == "Y">
         <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.ProductSearchInCategory}</a>
     </#if>
-    <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION", "html")!?string/>
+    <#assign longDescription = escapeVal(categoryContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})/>
     <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>
     <#if categoryImageUrl?string?has_content || longDescription?has_content>
       <div>

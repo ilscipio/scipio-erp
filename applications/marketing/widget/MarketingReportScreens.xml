@@ -22,10 +22,10 @@ under the License.
     <screen name="CommonMarketReportDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Reports"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Reports"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
@@ -122,7 +122,7 @@ under the License.
             </widgets>
         </section>
     </screen>    
-    <screen name= "EmailStatusReport">
+    <screen name="EmailStatusReport">
         <section>
             <actions>
                 <set field="title" value="${uiLabelMap.MarketingEmailStatusReport}"/>
@@ -145,7 +145,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name= "PartyStatusReport">
+    <screen name="PartyStatusReport">
         <section>
             <actions>
                 <set field="title" value="${uiLabelMap.MarketingPartyStatusReport}"/>

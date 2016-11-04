@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Scipio: TODO?: Review what is still using this, if any, generalize 
+<#-- SCIPIO: TODO?: Review what is still using this, if any, generalize 
     may be redundant with customer/postaladdressfields.ftl -->
 
 

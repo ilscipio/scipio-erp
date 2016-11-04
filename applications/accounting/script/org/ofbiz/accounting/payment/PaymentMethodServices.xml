@@ -34,7 +34,7 @@ under the License.
             </if-compare-field>
         </if-compare>
         <if-compare field="lookedUpValue.paymentMethodTypeId" operator="equals" value="EFT_ACCOUNT">
-            <!-- Scipio: Bugfix!
+            <!-- SCIPIO: Bugfix!
             <find-by-primary-key entity-name="CreditCard" map="lookupPKMap" value-field="mainValue"/> -->
             <find-by-primary-key entity-name="EftAccount" map="lookupPKMap" value-field="mainValue"/>
             <clone-value value-field="mainValue" new-value-field="savedValue"/>

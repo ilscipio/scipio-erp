@@ -23,7 +23,7 @@ under the License.
 <@script>
 function lookupOrders(click) {
     orderIdValue = document.lookuporder.orderId.value;
-    <#-- Scipio: don't lookup if ID contains search wildcards -->
+    <#-- SCIPIO: don't lookup if ID contains search wildcards -->
     if (orderIdValue.length > 1 && !orderIdValue.match(/[%*]/)) {
         document.lookuporder.action = "<@ofbizUrl>orderview</@ofbizUrl>";
         document.lookuporder.method = "get";
@@ -244,13 +244,13 @@ function submitFindForm(val){
           <@field type="select" label=uiLabelMap.OrderSelectShippingMethod name="shipmentMethod">
               <#if currentCarrierShipmentMethod?has_content>
                 <#assign currentShipmentMethodType = currentCarrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
-                <@field type="option" value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">---</@field>
+                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
+                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">---</@field>
               </#if>
               <@field type="option" value="">${uiLabelMap.OrderSelectShippingMethod}</@field>
               <#list carrierShipmentMethods as carrierShipmentMethod>
                 <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${carrierShipmentMethod.partyId}@${carrierShipmentMethod.shipmentMethodTypeId}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
+                <@field type="option" value="${rawString(carrierShipmentMethod.partyId)}@${rawString(carrierShipmentMethod.shipmentMethodTypeId)}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
               </#list>
           </@field>
           <@field type="select" label=uiLabelMap.OrderViewed name="isViewed">
@@ -267,9 +267,9 @@ function submitFindForm(val){
           <@field type="input" label=uiLabelMap.OrderScore name="gatewayScoreResult" value=(findParams.gatewayScoreResult!)/>
           
           <@field type="generic" label=uiLabelMap.CommonFilter inlineItems=false> <#-- NOTE: inlineItems setting propagates to child elements here -->
-              <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=((findParams.filterInventoryProblems!"N")=="Y") label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}" /> 
-              <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=((findParams.filterPOsOpenPastTheirETA!"N")=="Y") label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}" /> 
-              <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=((findParams.filterPOsWithRejectedItems!"N")=="Y") label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}" /> 
+              <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=((findParams.filterInventoryProblems!"N")=="Y") label="${rawLabel('OrderFilterOn')} ${rawLabel('OrderFilterInventoryProblems')}" /> 
+              <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=((findParams.filterPOsOpenPastTheirETA!"N")=="Y") label="${rawLabel('OrderFilterOn')} ${rawLabel('OrderFilterPOs')} ${rawLabel('OrderFilterPOsOpenPastTheirETA')}" /> 
+              <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=((findParams.filterPOsWithRejectedItems!"N")=="Y") label="${rawLabel('OrderFilterOn')} ${rawLabel('OrderFilterPOs')} ${rawLabel('OrderFilterPOsWithRejectedItems')}" /> 
           </@field>
 
           <@field type="select" label=uiLabelMap.OrderShipToCountry name="countryGeoId">

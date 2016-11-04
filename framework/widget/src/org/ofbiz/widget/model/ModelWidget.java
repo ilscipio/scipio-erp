@@ -58,10 +58,13 @@ public abstract class ModelWidget implements Serializable {
 
     /**
      * Derived classes must call this constructor.
+     * <p>
+     * SCIPIO: now supports explicit/custom name override; use empty string for explicit empty.
+     * 
      * @param widgetElement The XML Element for the widget
      */
-    protected ModelWidget(Element widgetElement) {
-        this.name = widgetElement.getAttribute("name");
+    protected ModelWidget(Element widgetElement, String name) {
+        this.name = (name != null) ? name : widgetElement.getAttribute("name");
         // SCIPIO: workarounds for cases where userData not defined
         //this.systemId = (String) widgetElement.getUserData("systemId");
         //this.startColumn = ((Integer) widgetElement.getUserData("startColumn")).intValue();
@@ -72,6 +75,15 @@ public abstract class ModelWidget implements Serializable {
         this.startColumn = (startColumn != null) ? startColumn.intValue() : 0;
         Integer startLine = (Integer) widgetElement.getUserData("startLine");
         this.startLine = (startLine != null) ? startLine.intValue() : 0;
+    }
+    
+    /**
+     * Derived classes must call this constructor.
+     * @param widgetElement The XML Element for the widget
+     */
+    protected ModelWidget(Element widgetElement) {
+        // SCIPIO: delegating:
+        this(widgetElement, widgetElement.getAttribute("name"));
     }
 
     public abstract void accept(ModelWidgetVisitor visitor) throws Exception;

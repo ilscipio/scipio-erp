@@ -54,6 +54,10 @@ public class FormFactory {
             throws IOException, SAXException, ParserConfigurationException {
         URL formFileUrl = FlexibleLocation.resolveLocation(resourceName);
         Document formFileDoc = UtilXml.readXmlDocument(formFileUrl, true, true);
+        // SCIPIO: New: Save original location as user data in Document
+        if (formFileDoc != null) {
+            WidgetDocumentInfo.retrieveAlways(formFileDoc).setResourceLocation(resourceName);
+        }
         return readFormDocument(formFileDoc, entityModelReader, dispatchContext, resourceName);
     }
 
@@ -68,6 +72,10 @@ public class FormFactory {
             Document formFileDoc = UtilXml.readXmlDocument(formFileUrl, true, true);
             if (formFileDoc == null) {
                 throw new IllegalArgumentException("Could not find resource [" + resourceName + "]");
+            }
+            // SCIPIO: New: Save original location as user data in Document
+            if (formFileDoc != null) {
+                WidgetDocumentInfo.retrieveAlways(formFileDoc).setResourceLocation(resourceName);
             }
             modelForm = createModelForm(formFileDoc, entityModelReader, dispatchContext, resourceName, formName);
             modelForm = formLocationCache.putIfAbsentAndGet(cacheKey, modelForm);
@@ -89,6 +97,10 @@ public class FormFactory {
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             URL formFileUrl = servletContext.getResource(resourceName);
             Document formFileDoc = UtilXml.readXmlDocument(formFileUrl, true, true);
+            // SCIPIO: New: Save original location as user data in Document
+            if (formFileDoc != null) {
+                WidgetDocumentInfo.retrieveAlways(formFileDoc).setResourceLocation(resourceName);
+            }
             Element formElement = UtilXml.firstChildElement(formFileDoc.getDocumentElement(), "form", "name", formName);
             modelForm = createModelForm(formElement, delegator.getModelReader(), dispatcher.getDispatchContext(), resourceName, formName);
             modelForm = formWebappCache.putIfAbsentAndGet(cacheKey, modelForm);

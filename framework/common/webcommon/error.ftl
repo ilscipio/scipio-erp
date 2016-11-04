@@ -19,7 +19,7 @@ under the License.
 <#assign errorMessage = requestAttributes._ERROR_MESSAGE_!>
 <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
 
-  <#-- Scipio: FIXME: All the rawString calls here are dangerous and not right, 
+  <#-- SCIPIO: FIXME: All the rawString calls here are dangerous and not right, 
        they should be fixed in the upstream code instead! -->
 
 <@row>

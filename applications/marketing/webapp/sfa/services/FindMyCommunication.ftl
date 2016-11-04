@@ -3,21 +3,21 @@
     
         <@field type="lookup" name="partyIdTo" formName="MyCommunicationEvents" id="partyIdTo" fieldFormName="LookupPartyName" label=uiLabelMap.PartyPartyTo />
     
-        <@field type="select" name="comEventStatus" label="${uiLabelMap.MarketingCommunicationStatusId}">
+        <@field type="select" name="comEventStatus" label=uiLabelMap.MarketingCommunicationStatusId>
             <option value=""></value>
             <#list comEventStatusList as comEventStatus>
                 <option value="${comEventStatus.statusId}">${comEventStatus.description}</option>
             </#list>
        </@field>
 
-        <@field type="select" name="comEventRoleStatus" label="${uiLabelMap.MarketingCommunicationRoleStatusId}">
+        <@field type="select" name="comEventRoleStatus" label=uiLabelMap.MarketingCommunicationRoleStatusId>
             <option value=""></value>   
             <#list comEventRoleStatusList as comEventRoleStatus>
                 <option value="${comEventRoleStatus.statusId}">${comEventRoleStatus.description}</option>
             </#list>
        </@field>
 
-       <@field type="select" name="communicationEventTypeId" label="${uiLabelMap.MarketingContactListCommEventTypeId}">
+       <@field type="select" name="communicationEventTypeId" label=uiLabelMap.MarketingContactListCommEventTypeId>
             <option value=""></value>           
             <#list communicationEventTypeList as communicationEventType>
                 <option value="${communicationEventType.communicationEventTypeId}">${communicationEventType.description}</option>

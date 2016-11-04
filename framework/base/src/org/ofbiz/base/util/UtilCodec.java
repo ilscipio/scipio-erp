@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import org.owasp.esapi.codecs.CSSCodec;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.HTMLEntityCodec;
 import org.owasp.esapi.codecs.PercentCodec;
@@ -27,8 +28,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,10 @@ public class UtilCodec {
     private static final HtmlEncoder htmlEncoder = new HtmlEncoder();
     private static final XmlEncoder xmlEncoder = new XmlEncoder();
     private static final StringEncoder stringEncoder = new StringEncoder();
+    /**
+     * SCIPIO: Css encoder (new).
+     */
+    private static final CssEncoder cssEncoder = new CssEncoder();
     /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
@@ -52,6 +59,20 @@ public class UtilCodec {
         tmpCodecs.add(new PercentCodec());
         codecs = Collections.unmodifiableList(tmpCodecs);
     }
+    
+    /**
+     * SCIPIO: list of available encoder names.
+     */
+    private static final Set<String> encoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+            "raw", "url", "xml", "html", "css", "string"
+    })));
+    
+    /**
+     * SCIPIO: list of available decoder names.
+     */
+    private static final Set<String> decoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+            "url"
+    })));
 
     public static class IntrusionException extends GeneralRuntimeException {
         public IntrusionException(String message) {
@@ -120,6 +141,20 @@ public class UtilCodec {
     }
 
     /**
+     * SCIPIO: CSS part encoder.
+     */
+    public static class CssEncoder implements SimpleEncoder {
+        private static final char[] IMMUNE_CSS = {',', '.', '-', '_', ' '}; // safe?: , '%'
+        private CSSCodec cssCodec = new CSSCodec();
+        public String encode(String original) {
+            if (original == null) {
+                return null;
+            }
+            return cssCodec.encode(IMMUNE_CSS, original);
+        }
+    }
+    
+    /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     public static class RawEncoder implements SimpleEncoder {
@@ -132,7 +167,7 @@ public class UtilCodec {
     // ================== Begin General Functions ==================
 
     public static SimpleEncoder getEncoder(String type) {
-        // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
+        // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
         if ("raw".equals(type)) {
             return rawEncoder;
         } else if ("url".equals(type)) {
@@ -141,11 +176,65 @@ public class UtilCodec {
             return xmlEncoder;
         } else if ("html".equals(type)) {
             return htmlEncoder;
+        } else if ("css".equals(type)) { // SCIPIO: new
+            return cssEncoder;
         } else if ("string".equals(type)) {
             return stringEncoder;
         } else {
             return null;
         }
+    }
+    
+    /**
+     * SCIPIO: Returns raw/dummy encoder (quick method).
+     * <p>
+     * NOTE: Generic SimpleEncoder type is returned as opposed to RawEncoder in order to 
+     * preserve the abstraction provided by {@link #getEncoder(String)}.
+     */
+    public static SimpleEncoder getRawEncoder() {
+        return rawEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns html encoder (quick method).
+     */
+    public static SimpleEncoder getHtmlEncoder() {
+        return htmlEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns xml encoder (quick method).
+     */
+    public static SimpleEncoder getXmlEncoder() {
+        return xmlEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns url encoder (quick method).
+     */
+    public static SimpleEncoder getUrlEncoder() {
+        return urlCodec;
+    }
+    
+    /**
+     * SCIPIO: Returns css encoder (quick method).
+     */
+    public static SimpleEncoder getCssEncoder() {
+        return cssEncoder;
+    }
+    
+    /**
+     * SCIPIO: Checks if encoder is raw encoder (abstraction).
+     */
+    public static boolean isRawEncoder(SimpleEncoder encoder) {
+        return (encoder instanceof RawEncoder);
+    }
+    
+    /**
+     * SCIPIO: Checks if encoder is null or raw encoder (abstraction).
+     */
+    public static boolean isRawOrNullEncoder(SimpleEncoder encoder) {
+        return (encoder == null) || (encoder instanceof RawEncoder);
     }
 
     public static SimpleDecoder getDecoder(String type) {
@@ -154,6 +243,41 @@ public class UtilCodec {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * SCIPIO: Returns url decoder (quick method).
+     */
+    public static SimpleDecoder getUrlDecoder() {
+        return urlCodec;
+    }
+    
+    /**
+     * SCIPIO: Returns all available encoder names.
+     */
+    public static Set<String> getEncoderNames() {
+        return encoderNames;
+    }
+    
+    /**
+     * SCIPIO: Returns all available decoder names.
+     */
+    public static Set<String> getDecoderNames() {
+        return decoderNames;
+    }
+    
+    /**
+     * SCIPIO: Quick encoding method.
+     */
+    public static String encode(String lang, String value) {
+        return getEncoder(lang).encode(value);
+    }
+    
+    /**
+     * SCIPIO: Quick decoding method.
+     */
+    public static String decode(String lang, String value) {
+        return getDecoder(lang).decode(value);
     }
 
     public static String canonicalize(String value) throws IntrusionException {
@@ -278,19 +402,21 @@ public class UtilCodec {
 
     /**
      * A simple Map wrapper class that will do HTML encoding. To be used for passing a Map to something that will expand Strings with it as a context, etc.
+     * <p>
+     * SCIPIO: changed from HtmlEncodingMapWrapper to EncodingMapWrapper to remove bias.
      */
-    public static class HtmlEncodingMapWrapper<K> implements Map<K, Object> {
-        public static <K> HtmlEncodingMapWrapper<K> getHtmlEncodingMapWrapper(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
+    public static class EncodingMapWrapper<K> implements Map<K, Object> {
+        public static <K> EncodingMapWrapper<K> getEncodingMapWrapper(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
             if (mapToWrap == null) return null;
 
-            HtmlEncodingMapWrapper<K> mapWrapper = new HtmlEncodingMapWrapper<K>();
+            EncodingMapWrapper<K> mapWrapper = new EncodingMapWrapper<K>();
             mapWrapper.setup(mapToWrap, encoder);
             return mapWrapper;
         }
 
         protected Map<K, Object> internalMap = null;
         protected SimpleEncoder encoder = null;
-        protected HtmlEncodingMapWrapper() { }
+        protected EncodingMapWrapper() { }
 
         public void setup(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
             this.internalMap = mapToWrap;
@@ -311,10 +437,12 @@ public class UtilCodec {
                 if (this.encoder != null) {
                     return encoder.encode((String) theObject);
                 } else {
-                    return UtilCodec.getEncoder("html").encode((String) theObject);
+                    // SCIPIO: removed HTML bias
+                    //return UtilCodec.getEncoder("html").encode((String) theObject);
+                    return (String) theObject;
                 }
             } else if (theObject instanceof Map<?, ?>) {
-                return HtmlEncodingMapWrapper.getHtmlEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
+                return EncodingMapWrapper.getEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
             }
             return theObject;
         }
@@ -327,6 +455,35 @@ public class UtilCodec {
         public Set<Map.Entry<K, Object>> entrySet() { return this.internalMap.entrySet(); }
         @Override
         public String toString() { return this.internalMap.toString(); }
+    }
+    
+    /**
+     * SCIPIO: the original HtmlEncodingMapWrapper, as a specialization.
+     */
+    public static class HtmlEncodingMapWrapper<K> extends EncodingMapWrapper<K> {
+        public static <K> HtmlEncodingMapWrapper<K> getHtmlEncodingMapWrapper(Map<K, Object> mapToWrap, SimpleEncoder encoder) {
+            if (mapToWrap == null) return null;
+
+            HtmlEncodingMapWrapper<K> mapWrapper = new HtmlEncodingMapWrapper<K>();
+            mapWrapper.setup(mapToWrap, encoder);
+            return mapWrapper;
+        }
+
+        public Object get(Object key) {
+            Object theObject = this.internalMap.get(key);
+            if (theObject instanceof String) {
+                if (this.encoder != null) {
+                    return encoder.encode((String) theObject);
+                } else {
+                    // SCIPIO: go direct
+                    //return UtilCodec.getEncoder("html").encode((String) theObject);
+                    return UtilCodec.getHtmlEncoder().encode((String) theObject);
+                }
+            } else if (theObject instanceof Map<?, ?>) {
+                return HtmlEncodingMapWrapper.getHtmlEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
+            }
+            return theObject;
+        }
     }
 
 }

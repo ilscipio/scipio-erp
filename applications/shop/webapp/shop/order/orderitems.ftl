@@ -40,7 +40,7 @@ under the License.
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 
 
-<#-- Scipio: extra dummy column by default
+<#-- SCIPIO: extra dummy column by default
 <#assign numColumns = 8>-->
 <#assign numColumns = 9>
 <#if maySelect && (roleTypeId!) == "PLACING_CUSTOMER">
@@ -52,8 +52,8 @@ under the License.
       <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddCheckedToCart />
-          <#-- Scipio: TODO?: At current time this is the only link to shopping list we had, makes no sense to show while user menu provides no other shopping list management options
-          <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
+          <#-- SCIPIO: TODO?: At current time this is the only link to shopping list we had, makes no sense to show while user menu provides no other shopping list management options
+          <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
       </#if>
     </@menu>
 </#macro>
@@ -62,7 +62,7 @@ under the License.
     <@thead>
     <@tr>
       <#if maySelect>
-        <#-- Scipio: TODO? could want to omit some these when showDetailed==false -->
+        <#-- SCIPIO: TODO? could want to omit some these when showDetailed==false -->
         <@th width="25%">${uiLabelMap.OrderProduct}</@th>
         <@th width="10%">${uiLabelMap.OrderQtyOrdered}</@th>
         <@th width="10%">${uiLabelMap.OrderQtyPicked}</@th>
@@ -82,7 +82,7 @@ under the License.
       <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
         <@th colspan="3"></@th>
       <#else>
-        <#-- Scipio: even if maySelect false, add extra column to standardize look -->
+        <#-- SCIPIO: even if maySelect false, add extra column to standardize look -->
         <@th>&nbsp;</@th>
       </#if>
     </@tr>
@@ -112,17 +112,17 @@ under the License.
       <#--<@tr><@td colspan="${numColumns}"></@td></@tr>-->
 
       <@tr>
-        <#-- Scipio: Workaround for access from macros -->
+        <#-- SCIPIO: Workaround for access from macros -->
         <#assign orderItem = orderItem>
 
-        <#-- Scipio: Use a cancel link form toggle to prevent cluttering up things by default -->
+        <#-- SCIPIO: Use a cancel link form toggle to prevent cluttering up things by default -->
         <#assign cancelItemLabel = getLabel("StatusValidChange.transitionName.ITEM_APPROVED.ITEM_CANCELLED", "CommonEntityLabels")?replace(" ", "&nbsp;")>
         <#macro cancelItemForm>
-            <#-- Scipio: FIXME: -->
+            <#-- SCIPIO: FIXME: -->
             <@alert type="warning">${uiLabelMap.CommonWarning}: Cancel may fail for some payment methods</@alert>
             
             <@field type="select" name="irm_${orderItem.orderItemSeqId}" label=uiLabelMap.OrderReturnReason>
-              <#-- Scipio: Usually stores want a reason...<option value=""></option>-->
+              <#-- SCIPIO: Usually stores want a reason...<option value=""></option>-->
               <#list orderItemChangeReasons as reason>
                 <option value="${reason.enumId}"<#if (parameters["irm_${orderItem.orderItemSeqId}"]!) == reason.enumId> selected="selected"</#if>>${reason.get("description",locale)!(reason.enumId)}</option>
               </#list>
@@ -131,15 +131,15 @@ under the License.
             <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
                 class="${styles.link_run_sys!} ${styles.action_terminate!}" text=cancelItemLabel />
             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-            <#-- Scipio: Extra hidden input to help with hide/show logic -->
+            <#-- SCIPIO: Extra hidden input to help with hide/show logic -->
             <input type="hidden" name="cancelitem_${orderItem.orderItemSeqId}" value="Y"/>
         </#macro>
 
         <#macro cancelLinkContent>
-          <#-- Scipio: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
+          <#-- SCIPIO: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
           <a href="javascript:jQuery('#row_orderitem_cancel_${orderItem.orderItemSeqId}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
           <#--<@modal id="row_orderitem_cancel_${orderItem.orderItemSeqId}" label="[${cancelItemLabel}]">
-            <@section title="${cancelItemLabel}: ${orderItem.itemDescription!}">
+            <@section title="${rawString(cancelItemLabel)}: ${rawString(orderItem.itemDescription!)}">
               <@cancelItemForm />
             </@section>
           </@modal>-->
@@ -152,7 +152,7 @@ under the License.
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
           <#-- non-product item -->
           <@td>
-            ${htmlContentString(orderItem.itemDescription!"")} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
+            ${escapeVal(orderItem.itemDescription!"", 'htmlmarkup', {"allow":"internal"})} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
             <#if orderItemAttributes?has_content>
                 <ul>
@@ -169,7 +169,7 @@ under the License.
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
           <@td>
             <#if !printable><a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
-            <#-- Scipio: Link to downloads to consume -->
+            <#-- SCIPIO: Link to downloads to consume -->
             <#-- TODO: delegate status tests -->
             <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
               <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
@@ -179,7 +179,7 @@ under the License.
               </#if>
             </#if>
 
-            <#-- Scipio: TODO: LIST CONFIG OPTIONS HERE -->
+            <#-- SCIPIO: TODO: LIST CONFIG OPTIONS HERE -->
 
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
             <#if orderItemAttributes?has_content>
@@ -197,23 +197,23 @@ under the License.
               </#if>
               <#if (product.quantityIncluded?? && product.quantityIncluded != 0) || product.quantityUomId?has_content>
                 <#assign quantityUom = product.getRelatedOne("QuantityUom", true)!/>
-                  [${uiLabelMap.CommonQuantity}: ${product.quantityIncluded!} ${((quantityUom.abbreviation)?default(product.quantityUomId))!}]
+                  [${uiLabelMap.CommonQuantity}: ${product.quantityIncluded!} ${((quantityUom.abbreviation)!(product.quantityUomId))!}]
               </#if>
               <#if (product.weight?? && product.weight != 0) || product.weightUomId?has_content>
                 <#assign weightUom = product.getRelatedOne("WeightUom", true)!/>
-                  [${uiLabelMap.CommonWeight}: ${product.weight!} ${((weightUom.abbreviation)?default(product.weightUomId))!}]
+                  [${uiLabelMap.CommonWeight}: ${product.weight!} ${((weightUom.abbreviation)!(product.weightUomId))!}]
               </#if>
               <#if (product.productHeight?? && product.productHeight != 0) || product.heightUomId?has_content>
                 <#assign heightUom = product.getRelatedOne("HeightUom", true)!/>
-                  [${uiLabelMap.CommonHeight}: ${product.productHeight!} ${((heightUom.abbreviation)?default(product.heightUomId))!}]
+                  [${uiLabelMap.CommonHeight}: ${product.productHeight!} ${((heightUom.abbreviation)!(product.heightUomId))!}]
               </#if>
               <#if (product.productWidth?? && product.productWidth != 0) || product.widthUomId?has_content>
                 <#assign widthUom = product.getRelatedOne("WidthUom", true)!/>
-                  [${uiLabelMap.CommonWidth}: ${product.productWidth!} ${((widthUom.abbreviation)?default(product.widthUomId))!}]
+                  [${uiLabelMap.CommonWidth}: ${product.productWidth!} ${((widthUom.abbreviation)!(product.widthUomId))!}]
               </#if>
               <#if (product.productDepth?? && product.productDepth != 0) || product.depthUomId?has_content>
                 <#assign depthUom = product.getRelatedOne("DepthUom", true)!/>
-                  [${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}]
+                  [${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)!(product.depthUomId))!}]
               </#if>
             </#if>
             <#if maySelect>
@@ -330,8 +330,7 @@ under the License.
             <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
             ${uiLabelMap.EcommerceAdjustment}: ${adjustmentType.get("description",locale)!}
             
-            <#-- Scipio: WARN: description here potentially unsafe, but may contain HTML, allow for now -->
-            <#if orderItemAdjustment.description?has_content>: ${htmlContentString(orderItemAdjustment.get("description",locale))}</#if>
+            <#if orderItemAdjustment.description?has_content>: ${escapeVal(orderItemAdjustment.get("description",locale), 'htmlmarkup', {"allow":"internal"})}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
               <#if orderItemAdjustment.primaryGeoId?has_content>
                 <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
@@ -346,6 +345,11 @@ under the License.
               <#if orderItemAdjustment.sourcePercentage??>${uiLabelMap.EcommerceRate}: ${orderItemAdjustment.sourcePercentage}</#if>
               <#if orderItemAdjustment.customerReferenceId?has_content>${uiLabelMap.OrderCustomerTaxId}: ${orderItemAdjustment.customerReferenceId}</#if>
               <#if orderItemAdjustment.exemptAmount??>${uiLabelMap.EcommerceExemptAmount}: ${orderItemAdjustment.exemptAmount}</#if>
+            </#if>
+            <#if orderItemAdjustment.orderAdjustmentTypeId == "VAT_TAX"> <#-- European VAT support (VAT included) -->
+                <#if orderItemAdjustment.amountAlreadyIncluded?has_content><#-- TODO: Check for missing label. -->
+                  : <@ofbizCurrency amount=orderItemAdjustment.amountAlreadyIncluded isoCode=currencyUomId/>
+                </#if>
             </#if>
           </@td>
           <@td colspan="5"></@td>
@@ -369,7 +373,7 @@ under the License.
               ${uiLabelMap.OrderShipGroup}: [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.CommonNA)}
             </@td>
             <@td>
-              <#-- Scipio: Don't show this if maySelect false because in that case there's no header and the quantity comes out of thin air. -->
+              <#-- SCIPIO: Don't show this if maySelect false because in that case there's no header and the quantity comes out of thin air. -->
             <#if maySelect>
               ${shipGroupAssoc.quantity?string.number}
             </#if>
@@ -384,7 +388,7 @@ under the License.
     </#if>
     <@tr><@td colspan="${numColumns}"></@td></@tr>
 
-    <#-- Scipio: styling issues
+    <#-- SCIPIO: styling issues
     </@tbody>
     <@tfoot>-->
 

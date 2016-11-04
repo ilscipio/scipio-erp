@@ -3010,7 +3010,7 @@ under the License.
     <view-map name="GlAccountBalanceByCostCenterPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenterPdf" content-type="application/pdf" encoding="none"/>
 
       
-    <!-- Scipio: Accounting Settings (Not sure we need one for now, leaving it commented -->
+    <!-- SCIPIO: Accounting Settings (Not sure we need one for now, leaving it commented -->
     <!-- <view-map name="settings" type="screen" page="component://accounting/widget/CommonScreens.xml#settings"/> -->
     <!-- end of view mappings -->
 </site-conf>

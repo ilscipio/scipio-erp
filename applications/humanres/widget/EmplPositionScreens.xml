@@ -24,20 +24,16 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
-                <set field="activeMainMenuItem" value="EmplPosition"/>
+                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="EditEmplPosition" text="${uiLabelMap.HumanResNewEmplPosition}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <link target="EditEmplPosition" text="${uiLabelMap.HumanResNewEmplPosition}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindEmplPositions" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
@@ -168,7 +164,7 @@
                 <set field="titleProperty" value="PageTitleListValidResponsibilities"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResListValidResponsibility}">
                             <container>
@@ -187,7 +183,7 @@
                 <set field="titleProperty" value="PageTitleEditValidResponsibility"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResAddValidResponsibility}">
                             <container>
@@ -211,25 +207,19 @@
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="${styles.grid_large}6">
-                                    <screenlet title="${uiLabelMap.HumanResEmployeePosition} ${uiLabelMap.CommonInformation}">
-                                        <section>
-                                            <widgets>
-                                                <include-form name="EmplPositionInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </screenlet>
-                                    <include-screen name="EmplPositionFulfilmentView"/>
-                                    <include-screen name="EmplPositionResponsibilityView"/>
-                                </container>
-                                <container style="${styles.grid_large}6">
-                                    <include-screen name="EmplPositionReportsToView"/>
-                                    <include-screen name="EmplPositionReportedToView"/>
-                                </container>
-                            </widgets>
-                        </section>
+                        <container style=" ${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <screenlet><!-- SCIPIO: too redundant: title="${uiLabelMap.HumanResEmployeePosition} ${uiLabelMap.CommonInformation}" -->
+                                    <include-form name="EmplPositionInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
+                                </screenlet>
+                                <include-screen name="EmplPositionFulfilmentView"/>
+                                <include-screen name="EmplPositionResponsibilityView"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="EmplPositionReportsToView"/>
+                                <include-screen name="EmplPositionReportedToView"/>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -301,7 +291,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.HumanResEmplPositionReportingStruct}:${uiLabelMap.HumanResReportedTo}">
+                <screenlet title="${uiLabelMap.HumanResEmplPositionReportingStruct}: ${uiLabelMap.HumanResReportedTo}">
                     <section>
                         <widgets>
                             <include-form name="ListEmplPositionReportedToInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>

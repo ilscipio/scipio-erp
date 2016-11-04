@@ -20,41 +20,12 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="CommonFindDecorator">
-        <section>
-            <actions>
-                <set field="showMainExtendedBar" type="Boolean" value="true" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Scipio: delegate to main-decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->                    
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+
     <screen name="advancedsearch">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
-                <set field="activeMainMenuItem" value="Advanced Search"/>
+                <!--<set field="activeMainMenuItem" value="AdvancedSearch"/>-->
 
                 <entity-condition entity-name="ProductCategory" list="productCategories">
                     <condition-expr field-name="showInSelect" operator="not-equals" value="N"/>
@@ -66,7 +37,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/find/advancedsearchoptions.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFindDecorator">
+                <decorator-screen name="CommonFindDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/find/advancedsearch.ftl"/></html>
@@ -83,7 +54,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/find/keywordsearch.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFindDecorator">
+                <decorator-screen name="CommonFindDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/find/keywordsearch.ftl"/></html>
@@ -103,7 +74,7 @@ under the License.
                 <set field="productExportList" from-field="parameters.productExportList"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFindDecorator">
+                <decorator-screen name="CommonFindDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/find/exportproducts.ftl"/></html>
@@ -130,7 +101,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>

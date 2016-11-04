@@ -54,7 +54,7 @@ under the License.
     </context-param>
     <context-param>
         <description>
-            Scipio: Enables or disables controller target view overrides (/control/requestname/viewname) in request handler. Default: true (enabled - stock behavior).
+            SCIPIO: Enables or disables controller target view overrides (/control/requestname/viewname) in request handler. Default: true (enabled - stock behavior).
         </description>
         <param-name>allowOverrideViewUri</param-name>
         <param-value>true</param-value>
@@ -178,13 +178,13 @@ under the License.
     </servlet-mapping>
 
     <session-config>
-        <!-- Scipio: Increase shop session timeout to 24 hours. If more frequent logins are desired (as in some shops - for security),
+        <!-- SCIPIO: Increase shop session timeout to 24 hours. If more frequent logins are desired (as in some shops - for security),
             they would need to be coded in a less brute way, because by default this method will destroy the cart, which is rarely desired.
         <session-timeout>60</session-timeout>-->
         <session-timeout>1440</session-timeout>
         <cookie-config>
           <http-only>true</http-only>
-          <!-- Scipio: FIXME?: Currently can't enable this, it is causing secure flag even for HTTP requests and
+          <!-- SCIPIO: FIXME?: Currently can't enable this, it is causing secure flag even for HTTP requests and
               causing a new session to be recreated at every non-HTTPS request
           <secure>true</secure>-->
         </cookie-config>

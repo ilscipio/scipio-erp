@@ -529,8 +529,8 @@ public class CategoryServices {
 
                         String title = null;
                         // SCIPIO: Do NOT HTML-escape this here
-                        if (UtilValidate.isNotEmpty(categoryContentWrapper.get(catNameField, "raw").toString())) {
-                            title = new StringBuffer(categoryContentWrapper.get(catNameField, "raw").toString()).append(" [").append(catId).append("]")
+                        if (UtilValidate.isNotEmpty(categoryContentWrapper.get(catNameField))) {
+                            title = new StringBuffer(categoryContentWrapper.get(catNameField)).append(" [").append(catId).append("]")
                                     .toString();
                             dataMap.put("title", title);
                         } else {

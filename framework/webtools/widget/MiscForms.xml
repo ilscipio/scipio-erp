@@ -77,4 +77,16 @@ under the License.
         </field>
     </form>
 
+    <form name="LayoutDemoActionsIncludeTest1" type="single">
+        <actions>
+            <set field="commonActionField2" value="This value 2 was set in LayoutDemoActionsIncludeTest1 screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
+            <set field="commonActionField3" value="This value 3 was set in LayoutDemoActionsIncludeTest1 screen actions included using the new include-actions screen widget directive, but should be overridden child. [ERROR]"/>
+        </actions>
+    </form>
+    <form name="LayoutDemoActionsIncludeTest2" type="single" extends="LayoutDemoActionsIncludeTest1">
+        <actions>
+            <set field="commonActionField3" value="This value 3 was set in LayoutDemoActionsIncludeTest2 screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
+        </actions>
+    </form>
+    
 </forms>

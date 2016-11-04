@@ -60,7 +60,7 @@
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="addProductMaint" title="${uiLabelMap.PageTitleAddProductMaintenance}" collapsible="true">
                             <include-form name="AddProductMaint" location="component://assetmaint/widget/forms/ProductForms.xml"/>

@@ -74,7 +74,8 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
 
     public MacroTreeRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
-        this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
+        // SCIPIO: use abstracted template build
+        this.macroLibrary = MacroScreenRenderer.getTemplate(name, macroLibraryPath);
         this.rendererName = name; // SCIPIO: new
     }
     

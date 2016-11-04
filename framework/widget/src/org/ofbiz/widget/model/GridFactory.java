@@ -54,6 +54,10 @@ public class GridFactory {
             throws IOException, SAXException, ParserConfigurationException {
         URL gridFileUrl = FlexibleLocation.resolveLocation(resourceName);
         Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
+        // SCIPIO: New: Save original location as user data in Document
+        if (gridFileDoc != null) {
+            WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);
+        }
         return readGridDocument(gridFileDoc, entityModelReader, dispatchContext, resourceName);
     }
 
@@ -68,6 +72,10 @@ public class GridFactory {
             Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
             if (gridFileDoc == null) {
                 throw new IllegalArgumentException("Could not find resource [" + resourceName + "]");
+            }
+            // SCIPIO: New: Save original location as user data in Document
+            if (gridFileDoc != null) {
+                WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);
             }
             modelGrid = createModelGrid(gridFileDoc, entityModelReader, dispatchContext, resourceName, gridName);
             modelGrid = gridLocationCache.putIfAbsentAndGet(cacheKey, modelGrid);
@@ -89,6 +97,10 @@ public class GridFactory {
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             URL gridFileUrl = servletContext.getResource(resourceName);
             Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
+            // SCIPIO: New: Save original location as user data in Document
+            if (gridFileDoc != null) {
+                WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);
+            }
             Element gridElement = UtilXml.firstChildElement(gridFileDoc.getDocumentElement(), "grid", "name", gridName);
             modelGrid = createModelGrid(gridElement, delegator.getModelReader(), dispatcher.getDispatchContext(), resourceName, gridName);
             modelGrid = gridWebappCache.putIfAbsentAndGet(cacheKey, modelGrid);

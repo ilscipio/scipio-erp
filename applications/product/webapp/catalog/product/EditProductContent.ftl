@@ -45,10 +45,10 @@ under the License.
             <@field type="input" label=uiLabelMap.ProductProductName name="productName" value=((product.productName?html)!) size="30" maxlength="60"/>
             <@field type="textarea" label=uiLabelMap.ProductProductDescription name="description" cols="60" rows="2">${(product.description)!}</@field>
             <@field type="textarea" label=uiLabelMap.ProductLongDescription class="+dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</@field>
-            <#-- Scipio: Now points to shop -->
-            <#assign fieldTooltip>${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://shop/widget/CatalogScreens.xml#productdetail&quot;</#assign>
+            <#-- SCIPIO: Now points to shop -->
+            <#assign fieldTooltip>${rawLabel('ProductIfNotSpecifiedDefaultsIsProductdetail')} "productdetail", ${rawLabel('ProductDetailScreenMessage')}: "component://shop/widget/CatalogScreens.xml#productdetail"</#assign>
             <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" value=((product.detailScreen)!) size="60" maxlength="250" tooltip=fieldTooltip/>
-            <#-- Scipio: FIXME: same pattern copy-pasted... -->
+            <#-- SCIPIO: FIXME: same pattern copy-pasted... -->
             <#assign labelDetail>
               <#if (product.smallImageUrl)??>
                 <a href="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Small Image" src="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall"/></a>
@@ -145,11 +145,11 @@ under the License.
             <p><em>${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</em></p><#-- orig: <span class="tooltip"> -->
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
-                <@field type="radio" name="upload_file_type_bogus" value="small" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=small')}');" label=uiLabelMap.CommonSmall/>
-                <@field type="radio" name="upload_file_type_bogus" value="medium" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=medium')}');" label=uiLabelMap.CommonMedium/>
-                <@field type="radio" name="upload_file_type_bogus" value="large" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=large')}');" label=uiLabelMap.CommonLarge/>
-                <@field type="radio" name="upload_file_type_bogus" value="detail" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=detail')}');" label=uiLabelMap.CommonDetail/>
-                <@field type="radio" name="upload_file_type_bogus" value="original" checked=true onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=original')}');" label=uiLabelMap.ProductOriginal/>
+                <@field type="radio" name="upload_file_type_bogus" value="small" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=small'), 'js')}');" label=uiLabelMap.CommonSmall/>
+                <@field type="radio" name="upload_file_type_bogus" value="medium" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=medium'), 'js')}');" label=uiLabelMap.CommonMedium/>
+                <@field type="radio" name="upload_file_type_bogus" value="large" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=large'), 'js')}');" label=uiLabelMap.CommonLarge/>
+                <@field type="radio" name="upload_file_type_bogus" value="detail" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=detail'), 'js')}');" label=uiLabelMap.CommonDetail/>
+                <@field type="radio" name="upload_file_type_bogus" value="original" checked=true onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=original'), 'js')}');" label=uiLabelMap.ProductOriginal/>
             </@field>
             <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_import!}" text=uiLabelMap.ProductUploadImage/>
           </@fields>

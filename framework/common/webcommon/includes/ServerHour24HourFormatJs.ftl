@@ -22,7 +22,7 @@ jQuery(document).ready(function() {
   var serverTimestamp = 0;
   var date;
   function clock() {
-    if (jQuery("#${clockField}").text() === "${uiLabelMap.CommonServerHour}:") {
+    if (jQuery("#${escapeVal(clockField, 'js')}").text() === "${escapeVal(uiLabelMap.CommonServerHour, 'js')}:") {
       waitSpinnerShow();
       serverTimestamp = getServiceResult("getServerTimestampAsLong")['serverTimestamp'];
       serverTimeZone = getServiceResult("getServerTimeZone")['serverTimeZone'];;
@@ -33,8 +33,8 @@ jQuery(document).ready(function() {
       date.setSeconds(date.getSeconds() + 1);
     }
     // dateFormat does not respect the timezone :/ Fortunately toString is what we want :)
-    //jQuery("#${clockField}").text("${uiLabelMap.CommonServerHour}: "  + dateFormat(date, "yyyy-mm-dd HH:MM:ss"));
-    jQuery("#${clockField}").text("${uiLabelMap.CommonServerHour}: "  + date.toString());
+    //jQuery("#${escapeVal(clockField, 'js')}").text("${escapeVal(uiLabelMap.CommonServerHour, 'js')}: "  + dateFormat(date, "yyyy-mm-dd HH:MM:ss"));
+    jQuery("#${escapeVal(clockField, 'js')}").text("${escapeVal(uiLabelMap.CommonServerHour, 'js')}: "  + date.toString());
   }
 })
 </@script>

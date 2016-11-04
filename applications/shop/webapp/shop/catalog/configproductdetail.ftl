@@ -147,7 +147,7 @@ ${virtualJavaScript!}
             },
             error: function(data) {
                 <#-- FIXME: better message -->
-                alert("${uiLabelMap.CommonError?js_string}");
+                alert("${escapeVal(uiLabelMap.CommonError, 'js')}");
                 <#-- SCIPIO: prevent connection fail causing weirdness -->
                 event.preventDefault();
             }
@@ -181,15 +181,16 @@ ${virtualJavaScript!}
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 <div>${question.description!}</div>
-                <#assign instructions = question.content.get("INSTRUCTIONS", "html")!?string>
+                <#assign instructions = escapeVal(question.content.get("INSTRUCTIONS")!, 'htmlmarkup', {"allow":"internal"})>
                 <#if instructions?has_content>
-                  <#-- SCIPIO: dont understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
-                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a> -->
+                  <#-- SCIPIO: don't understand why this is always "error" message in stock ofbiz. just use a modal and leave out title to keep generic...
+                      also, FIXME: js escaping for instructions
+                  <a href="javascript:showErrorAlert('${escapeVal(uiLabelMap.CommonErrorMessage2, 'js-html')}','${escapeVal(question.content.get("INSTRUCTIONS")!, 'js-html'}');" class="${styles.link_run_local_inline!} ${styles.action_view!}">Instructions</a> -->
                   <@modal label=uiLabelMap.OrderInstructions><p>${instructions}</p></@modal>
                 </#if>
-                <#assign image = question.content.get("IMAGE_URL", "url")!?string>
+                <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
-                  <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
+                  <img src="<@ofbizContentUrl ctxPrefix=true>${image}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
                 </#if>
               <#else>
                 <#-- SCIPIO: FIXME?: this does nothing in ecommerce
@@ -233,8 +234,8 @@ ${virtualJavaScript!}
                           <div>
                           <#assign inlineCounter = counter+ "_" +optionCounter + "_"+componentCounter>
                             <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if> <span id="variant_price_display${inlineCounter}"> </span></#assign>
-                            <@field type="radio" name="${counter}" id="${counter}_${optionCounter}" value=optionCounter?string
-                                onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
+                            <@field type="radio" name=counter?string id="${counter}_${optionCounter}" value=optionCounter?string
+                                onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                             
                           <@fields type="default">
                             <#assign components = option.getComponents()>
@@ -254,13 +255,13 @@ ${virtualJavaScript!}
                         <#else>
                           <div>
                             <#assign fieldLabel>
-                              ${option.description}&nbsp;<#rt/>
+                              ${option.description!}&nbsp;<#rt/>
                               <#t/><#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
                               <#t/><#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
                               <#if !option.isAvailable()> (*)</#if>
                             </#assign>
                             <@field type="radio" name=counter?string value=optionCounter?string checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory()))
-                                label=fieldLabel />
+                                label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                           </div>
                         </#if>
                       <#assign optionCounter = optionCounter + 1>
@@ -304,7 +305,7 @@ ${virtualJavaScript!}
                       <#assign inlineCounter = counter+ "_" +optionCounter + "_"+componentCounter>
                         <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if> <span id="variant_price_display${inlineCounter}"> </span></#assign>
                         <@field type="checkbox" name=counter?string id="${counter}_${optionCounter}" value=optionCounter?string onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" 
-                            label=fieldLabel />
+                            label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
 
                      <@fields type="default">
                         <#assign components = option.getComponents()>
@@ -324,7 +325,7 @@ ${virtualJavaScript!}
                     <#else>
                     <div>
                       <#assign fieldLabel>${option.description!}&nbsp;+<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if></#assign>
-                      <@field type="checkbox" name=counter?string value=optionCounter?string checked=option.isSelected() label=fieldLabel />
+                      <@field type="checkbox" name=counter?string value=optionCounter?string checked=option.isSelected() label=wrapAsRaw(fieldLabel, 'htmlmarkup') />
                     </div>
                     </#if>
                   <#assign optionCounter = optionCounter + 1>
@@ -360,13 +361,13 @@ ${virtualJavaScript!}
         <@cell columns=4>
           <@panel>
             <div id="product-info"> 
-              <#assign hasDesc = productContentWrapper.get("DESCRIPTION","html")!?string?has_content>
+              <#assign hasDesc = productContentWrapper.get("DESCRIPTION")?has_content>
               <#if hasDesc><p></#if>
-                <#if hasDesc>${productContentWrapper.get("DESCRIPTION","html")!}</#if>
+                <#if hasDesc>${productContentWrapper.get("DESCRIPTION")}</#if>
               <#if hasDesc></p></#if>
 
               <#-- example of showing a certain type of feature with the product -->
-              <#-- Scipio: not now
+              <#-- SCIPIO: not now
               <#if sizeProductFeatureAndAppls?has_content>
                 <div>
                   <#if (sizeProductFeatureAndAppls?size == 1)>
@@ -457,7 +458,7 @@ ${virtualJavaScript!}
             <#macro amountField>
                 <#local fieldStyle = "">
                 <#if (product.requireAmount!"N") != "Y">
-                    <#-- Scipio: Issues with css
+                    <#-- SCIPIO: Issues with css
                     <#assign hiddenStyle = styles.hidden!/>-->
                     <#local fieldStyle = "display: none;">
                 </#if>
@@ -469,7 +470,7 @@ ${virtualJavaScript!}
                 <#assign inStock = true>
                 <#-- Variant Selection -->
                 <#if (product.isVirtual!?upper_case) == "Y">
-                  <#-- Scipio: TODO: support for virtual products -->
+                  <#-- SCIPIO: TODO: support for virtual products -->
                   <#if variantTree?? && (0 < variantTree.size())>
                     <#list featureSet as currentType>
                       <@field type="select" name="FT${currentType}" onChange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
@@ -591,7 +592,7 @@ ${virtualJavaScript!}
                           <#assign imageUrl = "/images/defaultImage.jpg">
                         </#if>
                         <@td align="center" valign="bottom">
-                          <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
+                          <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                           <br />
                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_info_name!}">${key}</a>
                         </@td>
@@ -613,17 +614,11 @@ ${virtualJavaScript!}
 
 <@section>
 
-    <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")!?string?trim/>
+    <#assign prodLongDescr = escapeVal(productContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})/>
     <#if !prodLongDescr?has_content>
-      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")!?string?trim/>
+      <#assign prodLongDescr = productContentWrapper.get("DESCRIPTION")!?trim/>
     </#if>
-    <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
-
-    <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")!?string?trim/>
-    <#if !prodLongDescr?has_content>
-      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")!?string?trim/>
-    </#if>
-    <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
+    <#assign prodWarnings = escapeVal(productContentWrapper.get("WARNINGS")!, 'htmlmarkup', {"allow":"internal"})/>
 
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
@@ -648,7 +643,7 @@ ${virtualJavaScript!}
 
 </@section>
 
-  <#-- Scipio: Not for now
+  <#-- SCIPIO: Not for now
   <#- Product Reviews ->
   <@tr>
     <@td colspan="2">

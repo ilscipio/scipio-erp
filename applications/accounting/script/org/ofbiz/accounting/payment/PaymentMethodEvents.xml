@@ -78,7 +78,7 @@ under the License.
         <call-service service-name="createEftAccount" in-map-name="context">
             <default-message resource="AccountingUiLabels" property="AccountingEFTAccountCreatedSuccessfully"/>
             <result-to-request result-name="paymentMethodId"/></call-service>
-        <!-- Scipio: Patch to allow createEftAccount the same functionality as createCreditCard -->
+        <!-- SCIPIO: Patch to allow createEftAccount the same functionality as createCreditCard -->
         <if-compare field="parameters.contactMechId" operator="equals" value="_NEW_">
             <set value="address" field="_response_code_"/>
             <set value="POSTAL_ADDRESS" field="preContactMechTypeId"/>

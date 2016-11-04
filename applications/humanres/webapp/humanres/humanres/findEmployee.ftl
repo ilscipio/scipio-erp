@@ -31,7 +31,7 @@ under the License.
 -->
   </@menu>
 </#macro>
-<@section id="findEmployee"><#--Scipio: no entries:  menuContent=menuContent --><#-- Scipio: duplicate: title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" -->
+<@section id="findEmployee"><#-- SCIPIO: no entries:  menuContent=menuContent -->
     <#if parameters.hideFields?default("N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:
@@ -82,7 +82,7 @@ under the License.
                 <#--<hr />-->
                 <@field type="submitarea">
                     <@field type="submit" text=uiLabelMap.PartyLookupParty onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
-                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
+                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&hideFields=Y&lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
 
                   <#if parameters.hideFields?default("N") == "Y">
                     <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=N${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.link_run_sys!} ${styles.action_show!}"/>
@@ -118,7 +118,7 @@ under the License.
         <@commonMsg type="error">${lookupErrorMessage}</@commonMsg>
     </#if>
     <#if partyList?has_content>
-      <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&amp;", false)>
+      <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&", false)>
       <@paginate mode="content" url=makeOfbizUrl("findEmployees") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>

@@ -20,6 +20,20 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://shop/widget/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://shop/widget/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+        
     <screen name="ShopDecorator">
         <section>
             <actions>
@@ -34,7 +48,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 
                 <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
-                <set field="layoutSettings.companyName" value="SCIPIO Store" global="true"/>
+                <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="SCIPIO Store" global="true"/>
                 <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" /> -->
                 <!-- these execute at the wrong time (and redundant)
                 <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]"/>
@@ -66,7 +80,9 @@ under the License.
                 </entity-and>
                
                 <!-- Default setup --> 
-                <script location="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy"/>
+                <!-- SCIPIO: NOTE: Scipio now supports parametrized script locations, making the following possible -->
+                <set field="shopSetupScriptLocation" from-field="shopSetupScriptLocation" default-value="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy" />
+                <script location="${shopSetupScriptLocation}"/>
                
                 <!-- Common scripts relevant to any/all screens -->
                 <set field="permChecksSetGlobal" type="Boolean" value="true" />
@@ -75,7 +91,7 @@ under the License.
             <widgets>
                 <!-- FIXME?: there is a pattern issue here where fields and resources set by GlobalDecorator are not accessible to us here (notably, including the include-screen calls below);
                     requires either more global="true" in GlobalActions/GlobalDecorator (not very reusable) or maybe refactoring this decorator-screen include in a new way -->
-                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="pre-content">
                         <decorator-section-include name="pre-content"/>
                     </decorator-section>                
@@ -191,7 +207,7 @@ under the License.
     <screen name="main-decorator">
         <section>
             <actions>
-                <!-- Scipio: NOTE: Here we set defaults in the parameters maps. It is okay because it is run once
+                <!-- SCIPIO: NOTE: Here we set defaults in the parameters maps. It is okay because it is run once
                     for the main request, but other screens with local scopes should usually set context vars instead (which have priority) -->
                 <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="12"/> <!-- Number of items to be displayed on a page -->
                 <set field="parameters.INDEX_SIZE" from-field="parameters.INDEX_SIZE" default-value="0"/> <!-- View index for a list of items-->
@@ -235,7 +251,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <!-- Scipio: now points to shop -->
+                                <!-- SCIPIO: now points to shop -->
                                 <label style="warning" text="A Product Store has not been defined for this shop."/>
                             </fail-widgets>
                         </section>
@@ -245,6 +261,20 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
+    <screen name="CommonShopAppDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <!-- Side Columns -->
     <screen name="leftbar">
@@ -316,14 +346,14 @@ under the License.
                 <set field="titleProperty" value=""/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-content">
                         <include-screen name="ScipioDashboardImage"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <actions>
-                                <!-- Scipio: TODO: This category ID should be configurable -->
+                                <!-- SCIPIO: TODO: This category ID should be configurable -->
                                 <set field="productCategoryId" value="PROMOTIONS"/> <!-- value="ELTRN-100" -->
                                 <set field="viewSize" value="12"/>
                                 <set field="viewIndex" value="0"/>
@@ -337,7 +367,7 @@ under the License.
                         <include-screen name="ScipioDashboardSlider"/>
                         <section>
                             <actions>
-                                <!-- Scipio: TODO: This category ID should be configurable -->
+                                <!-- SCIPIO: TODO: This category ID should be configurable -->
                                 <set field="productCategoryId" value="ELTRN-100"/>
                                 <set field="viewSize" value="6"/>
                                 <set field="viewIndex" value="0"/>
@@ -364,7 +394,7 @@ under the License.
                 <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <!--
                     <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
                         <section> 
@@ -404,7 +434,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Login.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -427,7 +457,7 @@ under the License.
     <screen name="policies">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <sub-content content-id="WebStoreCONTENT" map-key="policies"/>
                         <sub-content content-id="WebStoreCONTENT" map-key="policies2"/>
@@ -443,7 +473,7 @@ under the License.
                  <set field="titleProperty" value="CommonLicense"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://shop/webapp/shop/license.ftl"/></html>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title=uiLabelMap.PartyVisitDetail>
+<@section><#-- redundant: title=uiLabelMap.PartyVisitDetail -->
       <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td>${uiLabelMap.PartyVisitIDSessionID}</@td>
@@ -25,7 +25,7 @@ under the License.
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyVisitorId}</@td>
-          <@td>${visit.visitorId?default("${uiLabelMap.CommonNot} ${uiLabelMap.CommonFound}")}</@td>
+          <@td>${visit.visitorId!(uiLabelMap.CommonNot)} ${uiLabelMap.CommonFound}")}</@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyPartyIDUserLoginID}</@td>

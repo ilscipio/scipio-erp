@@ -71,7 +71,9 @@
         <call-class-method method-name="getDayEnd" class-name="org.ofbiz.base.util.UtilDateTime" ret-field="dateEnd">
             <field field="dateValue" type="java.sql.Timestamp"/>
         </call-class-method>
-        <set field="parameters.estimatedCompletionDate" from-field="dateEnd"/>
+        <if-empty field="parameters.estimatedCompletionDate"><!-- SCIPIO: added ability to pass completion date -->
+            <set field="parameters.estimatedCompletionDate" from-field="dateEnd"/>
+        </if-empty>
         <entity-and list="workEffortList" entity-name="WorkEffort">
             <field-map field-name="workEffortTypeId" value="PUBLIC_HOLIDAY"/>
             <field-map field-name="estimatedStartDate" from-field="parameters.estimatedStartDate"/>

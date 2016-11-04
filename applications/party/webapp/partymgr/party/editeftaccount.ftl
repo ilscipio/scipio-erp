@@ -17,11 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- begin editeftaccount.ftl -->
 <#if !eftAccount??>
-  <#assign sectionTitle = "${uiLabelMap.AccountingAddNewEftAccount}">
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewEftAccount>
 <#else>
-  <#assign sectionTitle = "${uiLabelMap.PageTitleEditEftAccount}">
+  <#assign sectionTitle = uiLabelMap.PageTitleEditEftAccount>
 </#if>
 <@section title=sectionTitle>
     <#macro saveCancelMenu>
@@ -33,7 +32,7 @@ under the License.
       </@menu>
     </#macro>
     
-    <@saveCancelMenu />
+    <#--<@saveCancelMenu />-->
         
     <#if !eftAccount??>
       <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
@@ -139,4 +138,3 @@ under the License.
       
       <@saveCancelMenu />
 </@section>
-<!-- end editeftaccount.ftl -->

@@ -77,7 +77,7 @@ var rawdata = [
             type: 'POST',
             data: {"dataCategoryId" : dataCategoryId},
             error: function(msg) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.ErrorLoadingContent, 'js')} : " + msg);
             },
             success: function(msg) {
                 jQuery('#cmscontent').html(msg);

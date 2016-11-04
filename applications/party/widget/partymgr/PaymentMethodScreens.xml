@@ -21,14 +21,19 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: FIXME?: 2016-11-02: these don't have profile menu entries currently, so
+        for now they just highlight profile -->
+
     <screen name="PaymentMethodDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="find"/>
+                <!-- FIXME: this overrides the ones set in the screens cause they dont have entries-->
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- SCIPIO: NOTE: using CommonPartyDecorator causes the sub-menu to open -->
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -129,7 +134,7 @@ under the License.
                 <entity-one entity-name="PartyIcsAvsOverride" value-field="avsOverride"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -155,7 +160,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccount"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
+                <!-- SCIPIO: doesn't exist...?
+                <set field="activeMainMenuItem" value="billingaccount"/>-->
                 <set field="activeSubMenuItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>

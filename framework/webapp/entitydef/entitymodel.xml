@@ -228,10 +228,10 @@ under the License.
       <field name="cookieDomain" type="long-varchar"></field>
       <field name="visualThemeSetId" type="id"></field>
       <field name="visualThemeSelectorScript" type="long-varchar">
-        <description>Scipio: Location of a script tasked with selecting a visual theme at every new render</description>
+        <description>SCIPIO: Location of a script tasked with selecting a visual theme at every new render</description>
       </field>
       <field name="visualThemeId" type="id">
-        <description>Scipio: Specific visual theme ID override; may be used to override the product store 
+        <description>SCIPIO: Specific visual theme ID override; may be used to override the product store 
             visualThemeId when set (and WebSite is available)</description>
       </field>
       <prim-key field="webSiteId"/>

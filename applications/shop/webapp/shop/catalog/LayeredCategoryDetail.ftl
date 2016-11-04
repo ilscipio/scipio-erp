@@ -45,21 +45,21 @@ under the License.
 
 
 <#if productCategory??>
-    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!?string/>
-    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html")!?string/>
+    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME")!/>
+    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION")!/>
     <#if categoryName?has_content>
         <@heading>${categoryName}</@heading>
     </#if>
     <#if categoryDescription?has_content>
         <p>${categoryDescription}</p>
     </#if>
-    <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION", "html")!?string/>
+    <#assign longDescription = escapeVal(categoryContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})/>
     <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>
     <#if categoryImageUrl?string?has_content || longDescription?has_content>
       <div>
         <#if categoryImageUrl?string?has_content>
           <#assign height=100/>
-          <img src="<@ofbizContentUrl>${categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
+          <img src="<@ofbizContentUrl ctxPrefix=true>${categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
         </#if>
         <#if longDescription?has_content>
           ${longDescription}

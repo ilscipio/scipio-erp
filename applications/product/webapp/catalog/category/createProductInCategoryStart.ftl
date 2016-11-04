@@ -22,7 +22,7 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productCategoryId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${uiLabelMap.ProductBackToEditCategory}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${rawLabel('ProductBackToEditCategory')}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
   </#if>
   </@menu>
 </#macro>
@@ -33,7 +33,7 @@ under the License.
                 <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
                 <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
                 <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-                <@field type="generic" label="${productFeatureType.description}">
+                <@field type="generic" label=(productFeatureType.description)>
                     <@field type="select" name="pft_${productFeatureTypeId}">
                         <option value="">- ${uiLabelMap.CommonNone} -</option>
                         <#list productFeatures as productFeature>

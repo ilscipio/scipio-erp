@@ -51,7 +51,8 @@ under the License.
                 <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <!-- orig: ProductProductStore -->
-                <set field="labelTitleProperty" value="${groovy: (context.productStore || (parameters.productStoreId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductStore' : 'ProductNewProductStore'}"/>
+                <set field="isCreateProductStore" type="Boolean" value="${groovy: !(context.productStore || (parameters.productStoreId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateProductStore ? 'ProductNewProductStore' : 'ProductStore'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
@@ -316,7 +317,15 @@ under the License.
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListProductStorePaySetup}">
-                            <include-form name="ListProductStorePaymentSettings" location="component://product/widget/catalog/ProductStoreForms.xml"/>
+                            <section>
+                                <actions>
+                                    <!-- SCIPIO: hack to trigger the "no records found" message -->
+                                    <set field="productStorePaymentSettings" type="NewList" />
+                                </actions>
+                                <widgets>
+                                    <include-form name="ListProductStorePaymentSettings" location="component://product/widget/catalog/ProductStoreForms.xml"/>
+                                </widgets>
+                            </section>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditProductStorePaySetup}">
                             <section>
@@ -539,13 +548,12 @@ under the License.
                 <entity-one entity-name="ProductStore" value-field="productStore"/>
                 <set field="activeSubMenuItem" value="EditProductStoreFacilities"/>
                 <set field="labelTitleProperty" value="ProductProductStoreFacilities"/><!-- ProductFacility -->
-                <set field="activeMainMenuItem" value="store"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                 <!-- 
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://product/widget/catalog/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                         <include-screen name="leftbar"/>
                     </decorator-section>
                 -->
@@ -553,7 +561,32 @@ under the License.
                         <section>
                             <condition><not><if-empty field="productStore"/></not></condition>
                             <widgets>
-                                <include-portal-page id="ProductStoreFacility"/>
+                                <!-- SCIPIO: this does AJAX stuff that adds NOTHING over standard screens
+                                <include-portal-page id="ProductStoreFacility"/>-->
+                                <screenlet title="${uiLabelMap.ProductStoreFacilityAssocList}" navigation-menu-name="ProductStoreFacility">
+                                    <include-menu name="ProductStoreFacility" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                    <include-form name="ListProductStoreFacility" location="component://product/widget/catalog/StoreForms.xml"/>
+                                </screenlet>
+                                <section share-scope="false">
+                                    <condition>
+                                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                                    </condition>
+                                    <actions>
+                                        <set field="facilityId" from-field="parameters.facilityId"/>
+                                        <set field="fromDate" from-field="parameters.fromDate"/>
+                                        <!-- SCIPIO: if successful update, sabotage the lookup so get add form back again.  -->
+                                        <set field="isSuccessfulUpdate" type="Boolean" value="${groovy: (context.requestMethod=='POST' &amp;&amp; !context.isError)}"/>
+                                        <set field="facilityId" value="${groovy: (isSuccessfulUpdate ? '' : context.facilityId)}"/>
+                                        <set field="fromDate" value="${groovy: (isSuccessfulUpdate ? '' : context.fromDate)}"/>
+                                        <entity-one entity-name="ProductStoreFacility" value-field="productStoreFacility"/>
+                                        <set field="sectionTitleProp" value="${groovy: context.productStoreFacility ? 'ProductEditFacility' : 'ProductAddFacility'}"/>
+                                    </actions>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap[sectionTitleProp]}">
+                                            <include-form name="EditProductStoreFacility" location="component://product/widget/catalog/StoreForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -585,7 +618,7 @@ under the License.
     <screen name="EditProductStoreFacility">
         <section>
             <condition>
-                <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                <if-has-permission permission="CATALOG" action="_UPDATE"/>
             </condition>
             <actions>
                 <entity-one entity-name="ProductStoreFacility" value-field="productStoreFacility"/>

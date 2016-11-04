@@ -44,10 +44,10 @@
                             <@td>${prodCatalogCategoryType.description}</@td>
                             <@td>${prodCatalogCategory.fromDate?string('yyyy-MM-dd')}</@td>
                             <@td>
-                                <@field type="datetime" name="thruDate_o_${prodCatalogCategory_index}" value="${prodCatalogCategory.thruDate!}" size=13 />
+                                <@field type="datetime" name="thruDate_o_${prodCatalogCategory_index}" value=(prodCatalogCategory.thruDate!) size=13 />
                             </@td>
                             <@td>
-                                <@field type="input" name="sequenceNum_o_${prodCatalogCategory_index}" value="${prodCatalogCategory.sequenceNum!}" size=10 maxlength=20 />
+                                <@field type="input" name="sequenceNum_o_${prodCatalogCategory_index}" value=(prodCatalogCategory.sequenceNum!) size=10 maxlength=20 />
                             </@td>
                             <@td>
                                 <a href="<@ofbizUrl>EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_run_session} ${styles.action_update}">${uiLabelMap.ProductMakeTop}</a>

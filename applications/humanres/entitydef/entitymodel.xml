@@ -889,25 +889,25 @@ under the License.
         </relation>
     </entity>
     
-    <!-- Scipio: New fields for JobRequisition -->
+    <!-- SCIPIO: New fields for JobRequisition -->
     <extend-entity entity-name="JobRequisition">
-        <!-- Scipio: NOTE: this covers only the case where the requisition is for at most one position. It is conceivable
+        <!-- SCIPIO: NOTE: this covers only the case where the requisition is for at most one position. It is conceivable
             that a job req could link to multiple positions, in which case we might want a a JobRequisitionEmplPosition
             entity for one-to-many (or many-to-many), but I think it may be overkill. Can always add later.
             NOTE: explicitly rejected having EmplPosition.jobRequisitionId because it also seems conceivable to have multiple
             requisitions for one position, in theory. -->
         <field name="emplPositionId" type="id">
-            <description>Scipio: Single specific position for this requisition (not strictly required but usually wanted)</description>
+            <description>SCIPIO: Single specific position for this requisition (not strictly required but usually wanted)</description>
         </field>
         <field name="jobDescription" type="very-long">
-            <description>Scipio: Job description, which may be tailored to this requisition</description>
+            <description>SCIPIO: Job description, which may be tailored to this requisition</description>
         </field>
         <relation type="one-nofk" fk-name="JOB_REQ_APP_POS" rel-entity-name="EmplPosition">
             <key-map field-name="emplPositionId"/>
         </relation>
     </extend-entity>
     
-    <!-- Scipio: New view-entity for JobRequisition to link with Position -->
+    <!-- SCIPIO: New view-entity for JobRequisition to link with Position -->
     <view-entity entity-name="JobRequisitionAndEmplPosition"
           package-name="org.ofbiz.humanres.recruitment"
           title="Job Requisition and Position">
@@ -942,7 +942,7 @@ under the License.
         </relation>
     </view-entity>
     
-    <!-- Scipio: TODO: inevitably will need multiple skill requirements per job requisition:
+    <!-- SCIPIO: TODO: inevitably will need multiple skill requirements per job requisition:
     <entity entity-name="JobRequisitionSkillType">
     ...
     </entity>

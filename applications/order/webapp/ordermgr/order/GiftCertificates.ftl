@@ -24,7 +24,7 @@ under the License.
       <#if giftCardProductList?has_content>
         <@heading relLevel=+1>${uiLabelMap.OrderSelectGiftAmount}</@heading>
         <#list giftCardProductList?sort_by("price") as giftCardProduct>
-          <@field type="input" name="add_product_id" label="${giftCardProduct.productId!}&nbsp;:&nbsp;${giftCardProduct.productName!}" id="productId_${giftCardProduct.price!}" value=(giftCardProduct.productId!) checked=true />
+          <@field type="input" name="add_product_id" label="${rawString(giftCardProduct.productId!)} : ${rawString(giftCardProduct.productName!)}" id="productId_${giftCardProduct.price!}" value=(giftCardProduct.productId!) checked=true />
         </#list>
         <@field type="input" label=uiLabelMap.OrderRecipientEmailAdd id="emailAddress" name="answers_1002" value="" />
         <@field type="input" label=uiLabelMap.OrderRecipientName id="recipientName" name="answers_1001" value="" />

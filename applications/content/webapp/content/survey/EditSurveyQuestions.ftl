@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.PageTitleEditSurveyQuestions} ${uiLabelMap.ContentSurveySurveyId} ${surveyId}">
+<@section title="${rawLabel('PageTitleEditSurveyQuestions')} ${rawLabel('ContentSurveySurveyId')} ${rawString(surveyId)}">
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
         <@thead>
         <@tr class="header-row">
@@ -128,7 +128,7 @@ under the License.
 </@section>
 <#-- apply question from category -->
 <#if surveyQuestionCategory?has_content>
-    <@section title="${uiLabelMap.ContentSurveyApplyQuestionFromCategory} - ${surveyQuestionCategory.description!} [${surveyQuestionCategory.surveyQuestionCategoryId}]">
+    <@section title="${rawLabel('ContentSurveyApplyQuestionFromCategory')} - ${rawString(surveyQuestionCategory.description!)} [${rawString(surveyQuestionCategory.surveyQuestionCategoryId)}]">
         <a name="appl">
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
           <@thead>
@@ -207,22 +207,22 @@ under the License.
 
   <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
-    <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionCategory}</#assign>
+    <#assign sectionTitle = uiLabelMap.ContentSurveyCreateQuestionCategory/>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>  
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </@menu>
     </#macro>
   <#else>
     <#if surveyQuestionId?has_content>
-      <#assign sectionTitle>${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</#assign>
+      <#assign sectionTitle>${rawLabel('CommonEdit')} ${rawLabel('ContentSurveyQuestion')}</#assign>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>  
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
         </@menu>
       </#macro>
     <#else>
-      <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestion}</#assign>
+      <#assign sectionTitle = uiLabelMap.ContentSurveyCreateQuestion/>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>  
         </@menu>
@@ -232,7 +232,7 @@ under the License.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         ${menuContent}
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y") text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')} ${rawLabel('ContentSurveryCategory')}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </@menu>
     </#macro>
   </#if>
@@ -244,8 +244,8 @@ under the License.
   </#if>
 </@section>
 
-<#if (surveyQuestion?has_content && surveyQuestion.surveyQuestionTypeId?default("") == "OPTION")>
-  <@section title="${uiLabelMap.ContentSurveyOptions} - ${uiLabelMap.CommonId} ${surveyQuestion.surveyQuestionId!}">
+<#if (surveyQuestion?has_content && (surveyQuestion.surveyQuestionTypeId!"") == "OPTION")>
+  <@section title="${rawLabel('ContentSurveyOptions')} - ${rawLabel('CommonId')}) ${rawString(surveyQuestion.surveyQuestionId!)}">
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
      <@thead>
       <@tr class="header-row">
@@ -274,16 +274,16 @@ under the License.
   </@section>
 
     <#if !surveyQuestionOption?has_content>
-      <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionOption}</#assign>
+      <#assign sectionTitle = uiLabelMap.ContentSurveyCreateQuestionOption/>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
         </@menu>
       </#macro>
     <#else>
-      <#assign sectionTitle>${uiLabelMap.ContentSurveyEditQuestionOption}</#assign>
+      <#assign sectionTitle = uiLabelMap.ContentSurveyEditQuestionOption/>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}") text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]" class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}") text="[${rawLabel('CommonNew')} ${rawLabel('ContentSurveyOption')}]" class="+${styles.action_nav!} ${styles.action_add!}" />
         </@menu>
       </#macro>
     </#if>

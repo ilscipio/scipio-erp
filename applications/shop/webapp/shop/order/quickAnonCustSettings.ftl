@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "ordercommon.ftl">
 
-<#-- Scipio: DEPRECATED TEMPLATE -->
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <#macro fieldErrors fieldName>
   <#if errorMessageList?has_content>
@@ -30,7 +30,7 @@ under the License.
     </ul>
   </#if>
 </#macro>
-<#-- Scipio: invoker usable with @field pre/PostWidgetContent -->
+<#-- SCIPIO: invoker usable with @field pre/PostWidgetContent -->
 <#macro fieldErrorsInvoker args={}>
   <@fieldErrors fieldName=args.fieldName />
 </#macro>
@@ -44,7 +44,7 @@ under the License.
     </ul>
   </#if>
 </#macro>
-<#-- Scipio: invoker usable with @field pre/PostWidgetContent -->
+<#-- SCIPIO: invoker usable with @field pre/PostWidgetContent -->
 <#macro fieldErrorsMultiInvoker args={}>
   <@fieldErrorsMulti fieldName1=args.fieldName1 fieldName2=args.fieldName2 fieldName3=args.fieldName3 fieldName4=args.fieldName4 />
 </#macro>
@@ -61,32 +61,32 @@ under the License.
       <@cell columns=6 last=true>
         <@section title=uiLabelMap.PartyNameAndConactInfo>
 
-          <@field type="input" label="${uiLabelMap.PartyFirstName}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"firstName"}
+          <@field type="input" label=uiLabelMap.PartyFirstName required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"firstName"}
               name="firstName" id="firstName" value=(parameters.firstName!) size="30" maxlength="30"/>
 
-          <@field type="input" label="${uiLabelMap.PartyMiddleInitial}"
+          <@field type="input" label=uiLabelMap.PartyMiddleInitial
               name="middleName" value=(parameters.middleName!) size="4" maxlength="4"/>
-          <@field type="input" label="${uiLabelMap.PartyLastName}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"lastName"}
+          <@field type="input" label=uiLabelMap.PartyLastName required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"lastName"}
               name="lastName" value=(parameters.lastName!) size="30" maxlength="30"/>
           <@field type="display">
               [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
           </@field>
-          <@field type="generic" label="${uiLabelMap.PartyHomePhone}" required=true preWidgetContent=fieldErrorsMultiInvoker prePostContentArgs={"fieldName1":"homeCountryCode", "fieldName2":"homeAreaCode", "fieldName3":"homeContactNumber", "fieldName4":"homeExt"}>
+          <@field type="generic" label=uiLabelMap.PartyHomePhone required=true preWidgetContent=fieldErrorsMultiInvoker prePostContentArgs={"fieldName1":"homeCountryCode", "fieldName2":"homeAreaCode", "fieldName3":"homeContactNumber", "fieldName4":"homeExt"}>
                 <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>
-                <@field type="input" inline=true required=true name="homeCountryCode" value="${parameters.homeCountryCode!}" size="4" maxlength="10"/>
-                -&nbsp;<@field type="input" inline=true required=true name="homeAreaCode" value="${parameters.homeAreaCode!}" size="4" maxlength="10"/>
-                -&nbsp;<@field type="input" inline=true required=true name="homeContactNumber" value="${parameters.homeContactNumber!}" size="15" maxlength="15"/>
-                -&nbsp;<@field type="input" inline=true name="homeExt" value="${parameters.homeExt!}" size="6" maxlength="10"/>
+                <@field type="input" inline=true required=true name="homeCountryCode" value=(parameters.homeCountryCode!) size="4" maxlength="10"/>
+                -&nbsp;<@field type="input" inline=true required=true name="homeAreaCode" value=(parameters.homeAreaCode!) size="4" maxlength="10"/>
+                -&nbsp;<@field type="input" inline=true required=true name="homeContactNumber" value=(parameters.homeContactNumber!) size="15" maxlength="15"/>
+                -&nbsp;<@field type="input" inline=true name="homeExt" value=(parameters.homeExt!) size="6" maxlength="10"/>
           </@field>
-          <@field type="generic" label="${uiLabelMap.PartyBusinessPhone}">
+          <@field type="generic" label=uiLabelMap.PartyBusinessPhone>
               <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
-              <@field type="input" inline=true name="workCountryCode" value="${parameters.workCountryCode!}" size="4" maxlength="10"/>
-              -&nbsp;<@field type="input" inline=true name="workAreaCode" value="${parameters.workAreaCode!}" size="4" maxlength="10"/>
-              -&nbsp;<@field type="input" inline=true name="workContactNumber" value="${parameters.workContactNumber!}" size="15" maxlength="15"/>
-              -&nbsp;<@field type="input" inline=true name="workExt" value="${parameters.workExt!}" size="6" maxlength="10"/>
+              <@field type="input" inline=true name="workCountryCode" value=(parameters.workCountryCode!) size="4" maxlength="10"/>
+              -&nbsp;<@field type="input" inline=true name="workAreaCode" value=(parameters.workAreaCode!) size="4" maxlength="10"/>
+              -&nbsp;<@field type="input" inline=true name="workContactNumber" value=(parameters.workContactNumber!) size="15" maxlength="15"/>
+              -&nbsp;<@field type="input" inline=true name="workExt" value=(parameters.workExt!) size="6" maxlength="10"/>
           </@field>
           <input type="hidden" name="emailContactMechId" value="${parameters.emailContactMechId!}"/>
-          <@field type="input" label="${uiLabelMap.PartyEmailAddress}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"emailAddress"}
+          <@field type="input" label=uiLabelMap.PartyEmailAddress required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"emailAddress"}
               class="+validate-email" name="emailAddress" value=(parameters.emailAddress!) size="40" maxlength="255"/>
         </@section>
       </@cell>
@@ -98,17 +98,17 @@ under the License.
       <@cell columns=6>
         <@section title=uiLabelMap.OrderShippingAddress>
      
-              <@field type="input" label="${uiLabelMap.PartyToName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToName"}
+              <@field type="input" label=uiLabelMap.PartyToName preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToName"}
                   name="shipToName" id="shipToName" value=(parameters.shipToName!) size="30" maxlength="30"/>
-              <@field type="input" label="${uiLabelMap.PartyAttentionName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToAttnName"}
+              <@field type="input" label=uiLabelMap.PartyAttentionName preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToAttnName"}
                   id="shipToAttnName" name="shipToAttnName" value=(parameters.shipToAttnName!) size="30" maxlength="30"/>
-              <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToAddress1"}
+              <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToAddress1"}
                   size="30" maxlength="30" id="shipToAddress1" name="shipToAddress1" value=(parameters.shipToAddress1!) />
-              <@field type="input" label="${uiLabelMap.PartyAddressLine2}"
+              <@field type="input" label=uiLabelMap.PartyAddressLine2
                   size="30" maxlength="30" id="shipToAddress2" name="shipToAddress2" value=(parameters.shipToAddress2!) />
-              <@field type="input" label="${uiLabelMap.PartyCity}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToCity"}
+              <@field type="input" label=uiLabelMap.PartyCity required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToCity"}
                   size="30" maxlength="30" id="shipToCity" name="shipToCity" value=(parameters.shipToCity!) />
-              <@field type="select" label="${uiLabelMap.PartyState}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToStateProvinceGeoId"}
+              <@field type="select" label=uiLabelMap.PartyState required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToStateProvinceGeoId"}
                   name="shipToStateProvinceGeoId" id="shipToStateProvinceGeoId">
                 <#if (parameters.shipToStateProvinceGeoId)??>
                    <option>${parameters.shipToStateProvinceGeoId}</option>
@@ -118,9 +118,9 @@ under the License.
                 </#if>
                    <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
               </@field>
-              <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToPostalCode"}
+              <@field type="input" label=uiLabelMap.PartyZipCode required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToPostalCode"}
                   size="12" maxlength="10" id="shipToPostalCode" name="shipToPostalCode" value=(parameters.shipToPostalCode!) />
-              <@field type="select" label="${uiLabelMap.CommonCountry}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToCountryGeoId"}
+              <@field type="select" label=uiLabelMap.CommonCountry required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToCountryGeoId"}
                   name="shipToCountryGeoId" id="shipToCountryGeoId">
                 <#if (parameters.shipToCountryGeoId)??>
                    <option>${parameters.shipToCountryGeoId}</option>
@@ -134,17 +134,17 @@ under the License.
         <@section title=uiLabelMap.PartyBillingAddress>
               <@field type="checkbox" id="useShippingPostalAddressForBilling" name="useShippingPostalAddressForBilling" value="Y" label=uiLabelMap.FacilityBillingAddressSameShipping/>
       
-              <@field type="input" label="${uiLabelMap.PartyToName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToName"}
+              <@field type="input" label=uiLabelMap.PartyToName preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToName"}
                   id="billToName" name="billToName" value=(parameters.billToName!) size="30" maxlength="30"/>
-              <@field type="input" label="${uiLabelMap.PartyAttentionName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToAttnName"}
+              <@field type="input" label=uiLabelMap.PartyAttentionName preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToAttnName"}
                   id="billToAttnName" name="billToAttnName" value=(parameters.billToAttnName!) size="30" maxlength="30"/>
-              <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true
+              <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true
                   id="billToAddress1" size="30" maxlength="30" name="billToAddress1" value=(parameters.billToAddress1!) />
-              <@field type="input" label="${uiLabelMap.PartyAddressLine2}"
+              <@field type="input" label=uiLabelMap.PartyAddressLine2
                   id="billToAddress2" size="30" maxlength="30" name="billToAddress2" value=(parameters.billToAddress2!) />
-              <@field type="input" label="${uiLabelMap.PartyCity}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToCity"}
+              <@field type="input" label=uiLabelMap.PartyCity required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToCity"}
                   id="billToCity" size="30" maxlength="30" name="billToCity" value=(parameters.billToCity!) />
-              <@field type="select" label="${uiLabelMap.PartyState}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToStateProvinceGeoId"}
+              <@field type="select" label=uiLabelMap.PartyState required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToStateProvinceGeoId"}
                   name="billToStateProvinceGeoId" id="billToStateProvinceGeoId">
                 <#if (parameters.billToStateProvinceGeoId)??>
                    <option>${parameters.billToStateProvinceGeoId}</option>
@@ -154,9 +154,9 @@ under the License.
                 </#if>
                    <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
               </@field>
-              <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToPostalCode"}
+              <@field type="input" label=uiLabelMap.PartyZipCode required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToPostalCode"}
                   size="12" maxlength="10" id="billToPostalCode" name="billToPostalCode" value=(parameters.billToPostalCode!) />
-              <@field type="select" label="${uiLabelMap.CommonCountry}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToCountryGeoId"}
+              <@field type="select" label=uiLabelMap.CommonCountry required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToCountryGeoId"}
                   name="billToCountryGeoId" id="billToCountryGeoId">
                 <#if (parameters.billToCountryGeoId)??>
                    <option>${parameters.billToCountryGeoId}</option>
@@ -168,7 +168,7 @@ under the License.
       </@cell>
     </@row>
 
-    <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text="${uiLabelMap.CommonContinue}"/>
+    <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue/>
 
   </form>
 </@section>

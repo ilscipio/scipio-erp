@@ -21,7 +21,7 @@ under the License.
 
 <#-- SCIPIO: FIXME: Lots of data labels can't localize (some from groovy) -->
 
-<#-- Scipio: TODO: rewrite virtual JS -->
+<#-- SCIPIO: TODO: rewrite virtual JS -->
 ${virtualJavaScript!}
 <#assign addedJavaScript = requestAttributes.addedJavaScript!"N"/>
 <#if ("N" == addedJavaScript)>
@@ -41,8 +41,8 @@ ${virtualJavaScript!}
 
         if (window[fieldName] == "_NONE_") {
             hack = document.createElement('span');
-            hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
+            hack.innerHTML="${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}";
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonNoDetailImageAvailableToDisplay, 'js')}");
             return;
         }
         window[fieldName] = window[fieldName].replace(/\&\#47;/g, "/");
@@ -180,7 +180,7 @@ ${virtualJavaScript!}
             if (element.name.substring(0, index) == fieldName) {
                  if (element.value == '' || element.value == 'NULL') {
                     option.checked = false;
-                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");
+                    showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonPleaseSelectAllFeaturesFirst, 'js')}");
                     return false;
                 }
             }
@@ -276,7 +276,7 @@ ${virtualJavaScript!}
 <#macro amountField>
     <#local fieldStyle = "">
     <#if (product.requireAmount!"N") != "Y">
-        <#-- Scipio: Issues with css
+        <#-- SCIPIO: Issues with css
         <#assign hiddenStyle = styles.hidden!/>-->
         <#local fieldStyle = "display: none;">
     </#if>
@@ -285,7 +285,7 @@ ${virtualJavaScript!}
 
   <@row>
     <@cell small=9>
-        <#--<@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>-->
+        <#--<@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>-->
         <#assign inStock = true>
         <#if (product.isVirtual!?upper_case) == "Y">
           <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
@@ -352,7 +352,7 @@ ${virtualJavaScript!}
       </#if>
       <#if productLargeImageUrl?string?has_content>
         <input type="hidden" name="detailImage${inlineCounter}" value="${firstDetailImage!(mainDetailImageUrl!("_NONE_"))}"/>
-        <a href="javascript:popupDetailInline('${inlineCounter}');" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage${inlineCounter}" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
+        <a href="javascript:popupDetailInline('${inlineCounter}');" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl ctxPrefix=true>${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage${inlineCounter}" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
     </@cell>
   </@row>
@@ -400,7 +400,7 @@ ${virtualJavaScript!}
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" alt="" /></a>
+                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" alt="" /></a>
                   <br />
                   <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>

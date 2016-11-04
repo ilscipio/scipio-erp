@@ -38,7 +38,7 @@ under the License.
 <#-- order list -->
 <@section>
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
-      <#-- Scipio: Use alt/simple checkboxes, currently implied by default-alt1
+      <#-- SCIPIO: Use alt/simple checkboxes, currently implied by default-alt1
         FIXME: here, manually override checkboxType for now to preserve the old look (because default-alt1 is slightly non-standard) but really it should be left to styles hash! 
             Needs to be sorted out globally... -->
       <@fields type="default-alt1" checkboxType="simple-standard"> 
@@ -50,19 +50,19 @@ under the License.
             <@field type="checkbox" name="viewapproved" value="Y" checked=(state.hasStatus('viewapproved')) label=uiLabelMap.CommonApproved/>
             <@field type="checkbox" name="viewhold" value="Y" checked=(state.hasStatus('viewhold')) label=uiLabelMap.CommonHeld/>
             <@field type="checkbox" name="viewcompleted" value="Y" checked=(state.hasStatus('viewcompleted')) label=uiLabelMap.CommonCompleted/>
-            <#--@field type="checkbox" name="viewsent" value="Y" checked=(state.hasStatus('viewsent')) label="${uiLabelMap.CommonSent}"/>-->
+            <#--@field type="checkbox" name="viewsent" value="Y" checked=(state.hasStatus('viewsent')) label=uiLabelMap.CommonSent/>-->
             <@field type="checkbox" name="viewrejected" value="Y" checked=(state.hasStatus('viewrejected')) label=uiLabelMap.CommonRejected/>
             <@field type="checkbox" name="viewcancelled" value="Y" checked=(state.hasStatus('viewcancelled')) label=uiLabelMap.CommonCancelled/>
         </@field>
         <@field type="generic" label=uiLabelMap.CommonType>
-            <@field type="checkbox" name="view_SALES_ORDER" value="Y" checked=(state.hasType('view_SALES_ORDER')) label="${descr_SALES_ORDER}"/>
-            <@field type="checkbox" name="view_PURCHASE_ORDER" value="Y" checked=(state.hasType('view_PURCHASE_ORDER')) label="${descr_PURCHASE_ORDER}"/>
+            <@field type="checkbox" name="view_SALES_ORDER" value="Y" checked=(state.hasType('view_SALES_ORDER')) label=(descr_SALES_ORDER)/>
+            <@field type="checkbox" name="view_PURCHASE_ORDER" value="Y" checked=(state.hasType('view_PURCHASE_ORDER')) label=(descr_PURCHASE_ORDER)/>
         </@field>
         <@field type="generic" label=uiLabelMap.CommonFilter>
             <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=(state.hasFilter('filterInventoryProblems')) label=uiLabelMap.OrderFilterInventoryProblems/>
             <@field type="checkbox" name="filterAuthProblems" value="Y" checked=(state.hasFilter('filterAuthProblems')) label=uiLabelMap.OrderFilterAuthProblems/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.CommonFilter} (${uiLabelMap.OrderFilterPOs})">
+        <@field type="generic" label="${rawLabel('CommonFilter')} (${rawLabel('OrderFilterPOs')})">
             <@field type="checkbox" name="filterPartiallyReceivedPOs" value="Y" checked=(state.hasFilter('filterPartiallyReceivedPOs')) label=uiLabelMap.OrderFilterPartiallyReceivedPOs/>
             <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=(state.hasFilter('filterPOsOpenPastTheirETA')) label=uiLabelMap.OrderFilterPOsOpenPastTheirETA/>
             <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=(state.hasFilter('filterPOsWithRejectedItems')) label=uiLabelMap.OrderFilterPOsWithRejectedItems/>
@@ -138,19 +138,19 @@ under the License.
               <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
               <@td>
                   <#if filterInventoryProblems.contains(orderHeader.orderId)>
-                    Inv&nbsp;
+                    Inv 
                   </#if>
                   <#if filterAuthProblems.contains(orderHeader.orderId)>
-                   Aut&nbsp;
+                    Aut 
                   </#if>
                   <#if filterPOsOpenPastTheirETA.contains(orderHeader.orderId)>
-                    ETA&nbsp;
+                    ETA 
                   </#if>
                   <#if filterPOsWithRejectedItems.contains(orderHeader.orderId)>
-                    Rej&nbsp;
+                    Rej 
                   </#if>
                   <#if filterPartiallyReceivedPOs.contains(orderHeader.orderId)>
-                    Part&nbsp;
+                    Part 
                   </#if>
               </@td>
               <#else>

@@ -61,10 +61,13 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromos"/>
-                <set field="activeSubMenuItem" value="EditProductPromo"/>
+                <!-- SCIPIO: if not editing existing, the find one is selected, which has same label
+                <set field="activeSubMenuItem" value="EditProductPromo"/>-->
                 <set field="productPromoId" from-field="parameters.productPromoId"/>
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>
-                <set field="labelTitleProperty" value="${groovy: (context.productPromo || (parameters.productPromoId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductPromotion' : 'ProductNewPromotion'}"/>
+                <set field="isCreateProductPromo" type="Boolean" value="${groovy: !(context.productPromo || (parameters.productPromoId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateProductPromo ? 'ProductNewPromotion' : 'ProductPromotion'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.productPromoId ? 'EditProductPromo' : 'FindProductPromo'}"/>                
             </actions>
             <widgets>
                 <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
@@ -249,24 +252,14 @@ under the License.
                 
                 <set field="usePromoCodeTitle" type="Boolean" value="true"/>
                 
-                <set field="labelTitleProperty" value="${groovy: (context.productPromoCode || (parameters.productPromoCodeId &amp;&amp; parameters.isCreate != 'true')) ? 'ProductPromotionCode' : 'ProductNewPromotionCode'}"/>
+                <set field="isCreateProductPromoCode" type="Boolean" value="${groovy: !(context.productPromoCode || (parameters.productPromoCodeId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateProductPromoCode ? 'ProductNewPromotionCode' : 'ProductPromotionCode'}"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/promo/EditProductPromoCode.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPromoCodeDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container>
-                            <section>
-                                <condition>
-                                    <not><if-empty field="productPromoCode" /></not>
-                                </condition>
-                                <widgets>
-                                    <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}">
-                                        <parameter param-name="productPromoId" from-field="productPromoCode.productPromoId"/>
-                                    </link>
-                                </widgets>
-                            </section>
-                        </container>
+                        <include-menu name="PromoCodeSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml" />
                         <screenlet><!--  title="${uiLabelMap.PageTitleEditProductPromotionCode}" -->
                             <include-form name="EditProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
                         </screenlet>

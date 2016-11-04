@@ -27,6 +27,8 @@
 
         <auto-fields-service service-name="updateProductFeature" map-name=""/>
 
+        <field name="isCreate" use-when="productFeature==null"><hidden value="true"/></field><!-- SCIPIO: new -->
+
         <field use-when="productFeature!=null" name="productFeatureId" title="${uiLabelMap.ProductFeatureId}" tooltip="${uiLabelMap.ProductChangeWithoutProductCatalog}"><display/></field>
         <field use-when="productFeature==null&amp;&amp;productFeatureId!=null" name="productFeatureId" title="${uiLabelMap.ProductFeatureId}" tooltip="${uiLabelMap.ProductCouldNotFindProductConfigItem} [${productFeatureId}]"><text size="20" maxlength="20"/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
@@ -47,13 +49,15 @@
                 </entity-options>
             </drop-down>
         </field>
+        <!-- SCIPIO: now redundant (in sub tab bar)
         <field name="categoryAction" title=" " use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null" widget-style="${styles.link_nav} ${styles.action_update}">
-            <hyperlink target="/EditFeatureCategoryFeatures" target-type="intra-app" description="${uiLabelMap.ProductGoToFeatureCategory} ${productFeature.productFeatureCategoryId}" also-hidden="false">
+            <hyperlink target="EditFeatureCategoryFeatures" description="${uiLabelMap.ProductGoToFeatureCategory} ${productFeature.productFeatureCategoryId}" also-hidden="false">
                 <parameter param-name="productFeatureCategoryId" from-field="productFeature.productFeatureCategoryId"/>
             </hyperlink>
         </field>
+        -->
 
-        <field name="description" title="${uiLabelMap.CommonDescription}"/>
+        <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"/>
         <field name="uomId" title="${uiLabelMap.ProductUnitOfMeasureId}"/>
         <field name="numberSpecified" title="${uiLabelMap.ProductNumberQuantity}"/>
         <field name="defaultAmount" title="${uiLabelMap.ProductDefaultAmount}"/>
@@ -151,6 +155,9 @@
         <auto-fields-entity entity-name="ProductFeatureType"/>
         <field use-when="productFeatureType!=null" name="productFeatureTypeId" title="${uiLabelMap.ProductFeatureType}"><display/></field>
         <field use-when="productFeatureType==null&amp;&amp;productFeatureTypeId!=null" name="productFeatureTypeId" title="${uiLabelMap.ProductFeatureType}" tooltip="${uiLabelMap.ProductCouldNotFindProductFeatureType} [${productFeatureTypeId}]"><text size="20" maxlength="20"/></field>
+
+        <field name="isCreate" use-when="productFeatureType==null"><hidden value="true"/></field><!-- SCIPIO: new -->
+
         <field name="parentTypeId" title="${uiLabelMap.ProductParentType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductFeatureType" key-field-name="productFeatureTypeId" description="${description}">
@@ -205,6 +212,7 @@
         </form>
     <form name="EditFeatureInterAction" type="single" target="createProductFeatureIactn" title="" default-map-name="productFeatureIactn"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="isCreate"><hidden value="true"/></field><!-- SCIPIO: new -->
         <field name="productFeatureId">
             <drop-down allow-empty="true">
                 <entity-options description="${description} [${productFeatureId}]" entity-name="ProductFeature">
@@ -319,6 +327,7 @@
     </form>
 
     <form name="CreateProductFeature" type="single" target="CreateFeatureCategory">
+        <field name="isCreate"><hidden value="true"/></field><!-- SCIPIO: new -->
         <field name="description" title="${uiLabelMap.CommonDescription}*"><text size="25"></text></field>
         <field name="parentCategory" title="${uiLabelMap.ProductParentCategory}">
             <drop-down allow-empty="true">
@@ -357,6 +366,7 @@
         <actions>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>
+        <field name="isCreate"><hidden value="true"/></field><!-- SCIPIO: new -->
         <field name="productFeatureId"><hidden/></field>
         <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}">
             <drop-down allow-empty="false" no-current-selected-key="DEFAULT_PRICE">

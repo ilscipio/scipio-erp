@@ -27,6 +27,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListQuantityBreaks"/>
                 <set field="activeSubMenuItem" value="ListQuantityBreaks"/>
+                <set field="labelTitleProperty" value="ProductQuantityBreaks"/>
 
                 <entity-condition entity-name="QuantityBreak" list="quantityBreaks">
                     <order-by field-name="quantityBreakId"/>
@@ -52,6 +53,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListShipmentMethodTypes"/>
                 <set field="activeSubMenuItem" value="ListShipmentMethodTypes"/>
+                <set field="labelTitleProperty" value="ProductShipmentMethodTypes"/>
 
                 <entity-condition entity-name="ShipmentMethodType" list="shipmentMethodTypes">
                     <order-by field-name="sequenceNum"/>
@@ -79,6 +81,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListCarrierShipmentMethods"/>
                 <set field="activeSubMenuItem" value="ListCarrierShipmentMethods"/>
+                <set field="labelTitleProperty" value="ProductCarrierShipmentMethods"/>
 
                 <entity-condition entity-name="CarrierShipmentMethod" list="carrierShipmentMethods">
                     <order-by field-name="sequenceNumber"/>

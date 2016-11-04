@@ -5,11 +5,13 @@
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenu" value="TOP"/><!-- this selects a sub-menu in the main menu(s) (or TOP special value for the top level) -->
+                <set field="activeSubMenuItem" value="main"/><!-- this selects a menu-item in the (sub-)menu designated by activeSubMenu in the main menu(s) -->
+                <set field="activeMainMenuItem" value="main"/><!-- this selects a top-level menu-item in the main menu(s), when sub-menu is not applicable or available -->
             </actions>
             <widgets>
-                <decorator-screen name="@component-resource-name@CommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <!-- SCIPIO: NOTE: The Common@component-resource-name@AppDecorator decorator is meant to be included using hardcoded location -->
+                <decorator-screen name="Common@component-resource-name@AppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     </decorator-section>
                 </decorator-screen>

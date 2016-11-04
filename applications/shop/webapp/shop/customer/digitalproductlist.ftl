@@ -57,5 +57,5 @@ under the License.
     </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission menuContent=menuContent>
-    <#-- Scipio: what goes here? -->
+    <#-- SCIPIO: what goes here? -->
 </@section>

@@ -25,31 +25,42 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeature"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="activeSubMenuItem" value="Feature"/>
+                <set field="activeSubMenuItem2" value="Feature"/>
+                <set field="productFeatureId" from-field="parameters.productFeatureId"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
                 <entity-and entity-name="SupplierProductFeature" list="supplierProductFeatures">
                     <field-map field-name="productFeatureId" from-field="parameters.productFeatureId"/>
                 </entity-and>
+                <set field="isCreateFeature" type="Boolean" value="${groovy: !(context.productFeature || (parameters.productFeatureId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateFeature ? 'ProductNewFeature' : 'ProductFeature'}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSpecificFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductEditFeature} : ${productFeature.description}">
+                        <screenlet><!-- title="${uiLabelMap.ProductEditFeature} : ${productFeature.description}" -->
                             <include-form name="EditProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleEditFeaturePrice}">
-                            <include-form name="ListFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleAddFeaturePrice}">
-                            <include-form name="CreateFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.ProductSupplierSpecificFeatureInformation}">
-                            <include-form name="EditSupplierProductFeatures" location="component://product/widget/catalog/FeatureForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.ProductCreateInformationNewSupplier}">
-                            <include-form name="CreateSupplierProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
-                        </screenlet>
+                        <!-- SCIPIO: these require a feature... -->
+                        <section>
+                            <condition>
+                                <not><if-empty field="productFeature"/></not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleEditFeaturePrice}">
+                                    <include-form name="ListFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.PageTitleAddFeaturePrice}">
+                                    <include-form name="CreateFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.ProductSupplierSpecificFeatureInformation}">
+                                    <include-form name="EditSupplierProductFeatures" location="component://product/widget/catalog/FeatureForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.ProductCreateInformationNewSupplier}">
+                                    <include-form name="CreateSupplierProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -58,9 +69,11 @@
     <screen name="EditFeatureTypes">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditFeatureTypes"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="PageTitleEditFeatureTypes"/>-->
+                <set field="titleProperty" value="ProductFeatureTypes"/>
                 <set field="activeSubMenuItem" value="FeatureType"/>
+                <set field="activeSubMenuItem2" value="FeatureTypes"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
@@ -69,9 +82,7 @@
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditFeatureType" text="${uiLabelMap.ProductNewFeatureType}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
+                                        <include-menu name="FeatureTypeSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindFeatureType" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -90,15 +101,23 @@
     <screen name="EditFeatureType">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditFeatureType"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="activeSubMenuItem" value="FeatureType"/>
+                <set field="activeSubMenuItem2" value="FeatureType"/>
                 <set field="productFeatureTypeId" from-field="parameters.productFeatureTypeId"/>
                 <entity-one entity-name="ProductFeatureType" value-field="productFeatureType"/>
+                
+                <set field="isCreateFeatureType" type="Boolean" value="${groovy: !(context.productFeatureType || (parameters.productFeatureTypeId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateFeatureType ? 'ProductNewFeatureType' : 'ProductFeatureType' }"/>
+                
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productFeatureTypeId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <include-menu name="FeatureTypeSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                         <screenlet>
                             <include-form name="EditFeatureType" location="component://product/widget/catalog/FeatureForms.xml"/>
                         </screenlet>
@@ -110,9 +129,11 @@
     <screen name="EditFeatureInterActions">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditFeatureInterActions"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="PageTitleEditFeatureInterActions"/>-->
+                <set field="titleProperty" value="ProductFeatureInterActions"/>
                 <set field="activeSubMenuItem" value="FeatureInterAction"/>
+                <set field="activeSubMenuItem2" value="FeatureInterActions"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
@@ -121,9 +142,7 @@
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditFeatureInterAction" text="${uiLabelMap.ProductNewFeatureInterAction}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
+                                        <include-menu name="FeatureInterActionSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindFeatureInterAction" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -142,19 +161,26 @@
     <screen name="EditFeatureInterAction">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditFeatureInterAction"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="activeSubMenuItem" value="FeatureInterAction"/>
+                <set field="activeSubMenuItem2" value="FeatureInterAction"/>
 
                 <set field="productFeatureId" from-field="parameters.productFeatureId"/>
                 <set field="productFeatureIdTo" from-field="parameters.productFeatureIdTo"/>
                 <entity-one entity-name="ProductFeatureIactn" value-field="productFeatureIactn"/>
-
+                
+                <set field="isCreateFeatureInterAction" type="Boolean" value="${groovy: !(context.productFeatureIactn || (parameters.productFeatureId &amp;&amp; parameters.productFeatureIdTo &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateFeatureInterAction ? 'ProductNewFeatureInterAction' : 'ProductFeatureInterAction'}"/>
+                
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productFeatureTypeId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleAddFeatureInterAction}">
+                        <include-menu name="FeatureInterActionSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                        <screenlet><!-- title="${uiLabelMap.PageTitleAddFeatureInterAction}" -->
                             <include-form name="EditFeatureInterAction" location="component://product/widget/catalog/FeatureForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -165,14 +191,16 @@
     <screen name="CreateProductFeature">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductFeatureCategories"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="PageTitleEditProductFeatureCategories"/>-->
+                <!--<set field="titleProperty" value="ProductFeatureCategories"/>-->
+                <set field="titleProperty" value="ProductNewFeatureCategory"/>
                 <set field="activeSubMenuItem" value="FeatureCategory"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditFeatureType}">
+                        <screenlet><!-- title="${uiLabelMap.PageTitleEditFeatureType}" -->
                             <include-form name="CreateProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -183,8 +211,9 @@
     <screen name="EditFeatureCategories">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductFeatureCategories"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="PageTitleEditProductFeatureCategories"/>-->
+                <set field="titleProperty" value="ProductFeatureCategories"/>
                 <set field="activeSubMenuItem" value="FeatureCategory"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE_1" type="Integer" default-value="10"/>
@@ -219,8 +248,10 @@
     <screen name="EditFeatureCategoryFeatures">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditFeatureCategoryFeatures"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="PageTitleEditFeatureCategoryFeatures"/>-->
+                <set field="titleProperty" value="ProductFeatureCategoryFeatures"/>
+
                 <set field="activeSubMenuItem" value="FeatureCategory"/>
 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -242,8 +273,10 @@
     <screen name="EditFeatureGroups">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductFeatureGroups"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="PageTitleEditProductFeatureGroups"/>-->
+                <set field="titleProperty" value="ProductFeatureGroups"/>
+
                 <set field="activeSubMenuItem" value="FeatureGroup"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeatureGroups.groovy"/>
@@ -262,8 +295,10 @@
     <screen name="EditFeatureGroupAppls">
         <section>
             <actions>
-                <set field="titleProperty" value="ProductEditFeatureGroupAppls"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="ProductEditFeatureGroupAppls"/>-->
+                <set field="titleProperty" value="ProductFeatureGroupAppls"/>
+                
                 <set field="activeSubMenuItem" value="FeatureGroup"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -303,8 +338,9 @@
     <screen name="QuickAddProductFeatures">
         <section>
             <actions>
-                <set field="titleProperty" value="ProductAddProductFeatureInBulk"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--<set field="titleProperty" value="ProductAddProductFeatureInBulk"/>-->
+                <set field="titleProperty" value="ProductAddFeatureInBulk"/>
                 <set field="featureNum" from-field="parameters.featureNum" type="Integer"/>
                 <set field="productFeatureCategoryId" from-field="parameters.productFeatureCategoryId"/>
                 <set field="activeSubMenuItem" value="FeatureCategory"/>
@@ -325,11 +361,12 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeaturePrice"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
-                <set field="activeSubMenuItem" value="FeaturePrice"/>
+                <set field="labelTitleProperty" value="FormFieldTitle_featurePrice"/>
+                <set field="activeSubMenuItem" value="Feature"/>
+                <set field="activeSubMenuItem2" value="FeaturePrice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSpecificFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditFeaturePrice}">
                             <include-form name="ListFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -344,8 +381,13 @@
     </screen>
     <screen name="CreateFeaturePrice">
         <section>
+           <actions>
+                <set field="titleProperty" value="FormFieldTitle_featurePrice"/><!-- PageTitleEditFeature -->
+                <set field="activeSubMenuItem" value="Feature"/>
+                <set field="activeSubMenuItem2" value="FeaturePrice"/>
+            </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSpecificFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ProductQuickApplyFeature}">
                             <include-form name="CreateFeaturePrice" location="component://product/widget/catalog/FeatureForms.xml"/>
@@ -359,16 +401,20 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeature"/>
-                <set field="activeMainMenuItem" value="featurecats"/>
+                <set field="labelTitleProperty" value="ProductFeature"/>
+                <set field="activeSubMenuItem" value="Feature"/>
+                <set field="activeSubMenuItem2" value="Feature"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
                 <entity-and entity-name="SupplierProductFeature" list="supplierProductFeatures">
                     <field-map field-name="productFeatureId" from-field="parameters.productFeatureId"/>
                 </entity-and>
+                <set field="isCreateFeature" type="Boolean" value="${groovy: !(context.productFeature || (parameters.productFeatureId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateFeature ? 'ProductNewFeature' : 'ProductFeature'}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSpecificFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductEditFeature} : ${productFeature.description}">
+                        <screenlet><!-- title="${uiLabelMap.ProductEditFeature} : ${productFeature.description}" -->
                             <include-form name="EditProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
                         </screenlet>
                     </decorator-section>

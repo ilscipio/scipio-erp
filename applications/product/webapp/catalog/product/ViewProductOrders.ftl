@@ -26,7 +26,7 @@ under the License.
 </@script>
 
 <@section title=uiLabelMap.OrderOrderFound>
-    <#-- Scipio: using @paginate, but loop still relevant
+    <#-- SCIPIO: using @paginate, but loop still relevant
     <form name="paginationForm" method="post" action="<@ofbizUrl>viewProductOrder</@ofbizUrl>">
       <input type="hidden" name="viewSize"/>
       <input type="hidden" name="viewIndex"/>-->

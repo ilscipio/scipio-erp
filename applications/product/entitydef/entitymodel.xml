@@ -3839,9 +3839,9 @@ under the License.
         <key-map field-name="storeCreditAccountEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
-    <!-- Scipio: New fields for ProductStore -->
+    <!-- SCIPIO: New fields for ProductStore -->
     <extend-entity entity-name="ProductStore">
-      <field name="reqPayMethForFreeOrders" type="indicator"><description>Scipio: Default Y. If set to N, orders with total zero may go through without payment method selected.</description></field>
+      <field name="reqPayMethForFreeOrders" type="indicator"><description>SCIPIO: Default Y. If set to N, orders with total zero may go through without payment method selected.</description></field>
     </extend-entity>
     <entity entity-name="ProductStoreCatalog"
             package-name="org.ofbiz.product.store"

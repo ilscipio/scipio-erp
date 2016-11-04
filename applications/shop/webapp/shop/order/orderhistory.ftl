@@ -43,7 +43,7 @@ under the License.
           <#assign invoices = delegator.findByAnd("OrderItemBilling", {"orderId":"${orderHeader.orderId}"}, Static["org.ofbiz.base.util.UtilMisc"].toList("invoiceId"), false) />
           <#assign distinctInvoiceIds = Static["org.ofbiz.entity.util.EntityUtil"].getFieldListFromEntityList(invoices, "invoiceId", true)>
           <@td>
-            <#-- Scipio: NOTE: There is more than one kind of invoice, the PDF accessible upon creation, and additional invoices
+            <#-- SCIPIO: NOTE: There is more than one kind of invoice, the PDF accessible upon creation, and additional invoices
                 created upon order completion. Just show it all for now (final invoice may have more information). -->
             <a href="<@ofbizUrl>order.pdf?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${orderHeader.orderId} (${uiLabelMap.CommonPdf})</a>
             <#if distinctInvoiceIds?has_content>
@@ -94,14 +94,14 @@ under the License.
 
 <#-- show it for now due to the order completion notice
 <#if hasOrderDownloads>-->
-  <#assign sectionTitle>${uiLabelMap.EcommerceDownloadsAvailableTitle}</#assign>
+  <#assign sectionTitle = uiLabelMap.EcommerceDownloadsAvailableTitle/>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
       <@menuitem type="link" href=makeOfbizUrl("orderdownloads") class="+${styles.action_nav!} ${styles.action_export!}" text=uiLabelMap.EcommerceViewAll />
     </@menu>
   </#macro>
   <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
-    <#-- Scipio: NOTE: Here we currently render the full widget. 
+    <#-- SCIPIO: NOTE: Here we currently render the full widget. 
         Alternatively, we could show a smaller summary here and leave full details to the dedicated page. -->
     <@render resource="component://shop/widget/OrderScreens.xml#orderdownloadscontent" />
   </@section>

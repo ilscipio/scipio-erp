@@ -43,10 +43,10 @@
                             <@td>${roleType.description}</@td>
                             <@td>${prodCatalogRole.fromDate?string('yyyy-MM-dd')}</@td>
                             <@td>
-                                <@field type="datetime" name="thruDate_o_${prodCatalogRole_index}" value="${prodCatalogRole.thruDate!}" size=13 />
+                                <@field type="datetime" name="thruDate_o_${prodCatalogRole_index}" value=(prodCatalogRole.thruDate!) size=13 />
                             </@td>
                             <@td>
-                                <@field type="input" name="sequenceNum_o_${prodCatalogRole_index}" value="${prodCatalogRole.sequenceNum!}" size=10 maxlength=20 />
+                                <@field type="input" name="sequenceNum_o_${prodCatalogRole_index}" value=(prodCatalogRole.sequenceNum!) size=10 maxlength=20 />
                             </@td>
                             <@td>
                                 <@field type="submit" submitType="link" href="javascript:document.forms['UpdateProdCatalogToParty'].elements['_rowSubmit_o_${prodCatalogRole_index}'].value = 'Y';document.UpdateProdCatalogToParty.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>                                                                                           

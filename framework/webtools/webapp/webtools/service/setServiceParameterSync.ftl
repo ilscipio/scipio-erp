@@ -22,13 +22,13 @@ under the License.
       <input type="hidden" name="${scheduleOption.name}" value="${scheduleOption.value}"/>
     </#list>
 
-  <#-- Scipio: leave room for the label area because service parameter names can be long -->
+  <#-- SCIPIO: leave room for the label area because service parameter names can be long -->
   <@fields fieldArgs={"labelColumns":4}>
     <#list serviceParameters as serviceParameter>
       <#-- NOTE: defaultValue is actually a private member and getDefaultValue is invoked instead -->
-      <#assign defaultValStr = serviceParameter.defaultValue!?string>
+      <#assign defaultValStr = serviceParameter.defaultValue!>
       <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#assign>
-      <@field type="input" label=fieldLabel size="20" name="${serviceParameter.name}" value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
+      <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
     </#list>
   </@fields>
 

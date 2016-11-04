@@ -29,14 +29,14 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://content/widget/content/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>

@@ -90,7 +90,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Superseded by CheckoutProgressFull
+    <!-- SCIPIO: Superseded by CheckoutProgressFull
     <screen name="anonymousCheckoutLinks">
         <section>
             <actions>
@@ -104,7 +104,7 @@ under the License.
 
     <!-- =========== Top-Level and Stand-Alone Screens =========== -->
 
-    <!-- Scipio: Base common decorator for all checkout pages of all types
+    <!-- SCIPIO: Base common decorator for all checkout pages of all types
         Currently all types are implemented in this single controller so may be able to determine dynamically,
         but each checkout type (full vs quick vs onepage) could also have its own that extends this instead (e.g. the stock anonymousCheckoutDecorator that was removed) -->
     <screen name="CommonCheckoutDecorator">
@@ -137,7 +137,7 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                                     <!-- NOTE: override-by-auto-include="true" allows decorators to override this pre-body manually if they need. -->
                                     <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
                                         <section>
@@ -157,7 +157,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
                                         <label style="common-msg-error" text="${uiLabelMap.EcommerceYourShoppingCartEmpty}."/>
                                         <container>
@@ -169,7 +169,7 @@ under the License.
                         </section>
                     </widgets>
                     <fail-widgets>
-                        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                        <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
                             </decorator-section>
@@ -191,9 +191,9 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CustSettings.groovy"/>
                 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="legacy-anon" /> <!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="legacy-anon" /> <!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="customer" />
-                <!-- Scipio: NOTE: This is the only screen in the anon checkout that doesn't need userIsKnown check -->
+                <!-- SCIPIO: NOTE: This is the only screen in the anon checkout that doesn't need userIsKnown check -->
                 <set field="checkoutAllowAnonUnknown" type="Boolean" value="true" />
             </actions>
             <widgets>
@@ -217,7 +217,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/ShipSettings.groovy"/>
                 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="legacy-anon" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="legacy-anon" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
@@ -241,7 +241,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OptionSettings.groovy"/>
                 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="legacy-anon" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="legacy-anon" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingOptions" />
             </actions>
             <widgets>
@@ -266,7 +266,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
                 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="legacy-anon" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="legacy-anon" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="billing" />
             </actions>
             <widgets>
@@ -279,7 +279,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: TODO? Merge with paymentoptions? -->
+    <!-- SCIPIO: TODO? Merge with paymentoptions? -->
     <screen name="paymentinformation">
         <section>
             <actions>
@@ -292,7 +292,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
                 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="legacy-anon" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="legacy-anon" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="billingInfo" />
             </actions>
             <widgets>
@@ -313,7 +313,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutReview.groovy"/>
                 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="legacy-anon" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="legacy-anon" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="orderReview" />
             </actions>
             <widgets>
@@ -338,9 +338,9 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
 
                 <set field="checkoutType" value="full" />
-                <!-- Scipio: WARN: This screen was actually used by both primary and legacy-anon (which is why
+                <!-- SCIPIO: WARN: This screen was actually used by both primary and legacy-anon (which is why
                     decorator would need to find a way to detect automatically)... -->
-                <set field="checkoutMode" value="primary" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="primary" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="billing" />
             </actions>
             <widgets>
@@ -353,7 +353,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: NOTE: This is the "quick" checkout, currently unsupported and unmaintained
+    <!-- SCIPIO: NOTE: This is the "quick" checkout, currently unsupported and unmaintained
         Leave for reference (if need to prevent access, comment controller view-map instead) -->
     <screen name="checkoutoptions">
         <section>
@@ -365,7 +365,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
 
                 <set field="checkoutType" value="quick" />
-                <set field="checkoutMode" value="primary" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="primary" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="checkoutAllowAnonUnknown" type="Boolean" value="true" />
             </actions>
             <widgets>
@@ -381,7 +381,7 @@ under the License.
     <screen name="checkoutshippingaddress">
         <section>
             <actions>
-                <!-- Scipio: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
+                <!-- SCIPIO: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
                     if the checkout process has not reached this point or the data was invalidated by modification of a prior step. 
                     It is NOT sufficient to do this in events due to view overrides. -->
                 <set field="rightbarScreenName" value="rightbar"/>
@@ -389,15 +389,15 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
                 
-                <!-- Scipio: CustSettings script is new, required because of inline anon user creation support -->
+                <!-- SCIPIO: CustSettings script is new, required because of inline anon user creation support -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CustSettings.groovy"/>
                 
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutShippingAddress.groovy"/>
 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="primary" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="primary" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingAddress" />
-                <!-- Scipio: NOTE: This is the only screen in the regular full checkout that does not need userIsKnown check -->
+                <!-- SCIPIO: NOTE: This is the only screen in the regular full checkout that does not need userIsKnown check -->
                 <set field="checkoutAllowAnonUnknown" type="Boolean" value="true" />
             </actions>
             <widgets>
@@ -413,7 +413,7 @@ under the License.
     <screen name="checkoutshippingoptions">
         <section>
             <actions>
-                <!-- Scipio: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
+                <!-- SCIPIO: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
                     if the checkout process has not reached this point or the data was invalidated by modification of a prior step. 
                     It is NOT sufficient to do this in events due to view overrides. -->
                 <set field="rightbarScreenName" value="rightbar"/>
@@ -423,7 +423,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutShippingOptions.groovy"/>
 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="primary" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="primary" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingOptions" />
             </actions>
             <widgets>
@@ -443,7 +443,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SplitShip.groovy"/>
 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="primary" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="primary" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
@@ -456,11 +456,11 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Imported from ordermgr -->
+    <!-- SCIPIO: Imported from ordermgr -->
     <screen name="checkoutpayment">
         <section>
             <actions>
-                <!-- Scipio: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
+                <!-- SCIPIO: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
                     if the checkout process has not reached this point or the data was invalidated by modification of a prior step. 
                     It is NOT sufficient to do this in events due to view overrides. -->
                 <set field="rightbarScreenName" value="rightbar"/>
@@ -471,7 +471,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
                 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="primary" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="primary" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="billing" />
             </actions>
             <widgets>
@@ -492,7 +492,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutReview.groovy"/>
 
                 <set field="checkoutType" value="full" />
-                <set field="checkoutMode" value="primary" /><!-- Scipio: FIXME?: This is currently forced... -->
+                <set field="checkoutMode" value="primary" /><!-- SCIPIO: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="orderReview" />
             </actions>
             <widgets>
@@ -513,7 +513,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -542,7 +542,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderHistory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -571,11 +571,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderHistory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <!-- Scipio: NOTE: this should probably really be userHasAccount, but leaving for now,
+                                <!-- SCIPIO: NOTE: this should probably really be userHasAccount, but leaving for now,
                                     because otherwise anon user can't download anything (even though maybe login should
                                     be required for those kinds of products) -->
                                 <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
@@ -613,7 +613,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -642,7 +642,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: NOTE: This is informal - not necessarily a valid invoice like the PDF -->
+    <!-- SCIPIO: NOTE: This is informal - not necessarily a valid invoice like the PDF -->
     <screen name="orderprint">
         <section>
             <actions>
@@ -683,7 +683,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/RequestReturn.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -724,7 +724,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: "quick" checkout is currently unsupported, but leave here for reference... -->
+    <!-- SCIPIO: "quick" checkout is currently unsupported, but leave here for reference... -->
     <screen name="quickAnonCheckoutDecorator">
         <section>
             <actions>
@@ -921,7 +921,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
-                        <!-- Scipio: NOTE: Supports full anon -->
+                        <!-- SCIPIO: NOTE: Supports full anon -->
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/OnePageCheckoutProcess.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>

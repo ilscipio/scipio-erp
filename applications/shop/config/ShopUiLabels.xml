@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Scipio: UI Labels new to Shop application
+SCIPIO: UI Labels new to Shop application
 ALL NEW SHOP LABELS SHOULD GO HERE 
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -45,7 +45,7 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="zh_CN">你没有权限查看此页</value>
         <value xml:lang="zh_TW">你無權檢視這個頁面.</value>
     </property>     
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="ShopSaveGoBackExplanation">
         <value xml:lang="de">Wenn Sie mit Ihren Änderungen zufrieden sind, klicken Sie unten auf "Speichern".
              Danach klicken Sie auf "Zurück", um zur vorherigen Ziel zurückzukehren.</value>

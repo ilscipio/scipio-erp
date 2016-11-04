@@ -356,7 +356,8 @@ unlike @ofbizUrl this function was primarily intended to manipulate unescaped st
 
 NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed in the near future; for the current time, 
     it better to use #rawString explicitly on the result ''if'' you explicitly need a raw unescapted value;
-    this may be set to return an auto-html-wrapped string instead. In most cases such as passing the URL to other
+    this may be set to return an auto-html-wrapped string instead. If you need to encure escaping, #escapeVal automatically
+    handles such auto-escaped values in prevision of the future. In most cases such as passing the URL to other
     macros, there is no significant impact (and is only made possible) because of other improvements in 1.14.2.
 
   * Parameters *

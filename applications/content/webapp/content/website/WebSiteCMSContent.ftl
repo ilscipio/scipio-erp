@@ -64,7 +64,7 @@
                 form.submit();
             </#if>
         } else {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CannotFindCmsform}");
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CannotFindCmsform, 'js')}");
         }
 
         return false;
@@ -344,7 +344,7 @@
               <@td></@td>
               <@td>
                 <#if ((content.contentId)?has_content)>
-                    <@renderContentAsText contentId="${content.contentId}" ignoreTemplate="true"/>
+                    <@renderContentAsText contentId=content.contentId ignoreTemplate="true"/>
                 </#if>
               </@td>
             </@tr>

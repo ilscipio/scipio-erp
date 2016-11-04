@@ -63,13 +63,16 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindApInvoices"/>
-                <set field="activeSubMenuItem" value="viewInvoices"/>
+                <set field="activeSubMenuItem" value="PARENT"/><!-- viewInvoices -->
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>
                     <field-map field-name="orderBy" value="invoiceDate DESC"/>
                 </service>
-                <set field="invoices" from-field="result.listIt"/>
+                <!-- SCIPIO: DON'T DO THIS; causes exceptions. ugly workaround below...
+                <set field="invoices" from-field="result.listIt"/> -->
+                <set field="dummy" value="${groovy: globalContext.tempVal = (context.result?.listIt != null) ? context.result.listIt.getCompleteList() : []; context.result.listIt.close(); return '';}"/>
+                <set field="invoices" from-field="tempVal"/>
                 
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
                 <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${parameters.organizationPartyId}"/>
@@ -110,7 +113,7 @@ under the License.
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewPurchaseInvoice" location="component://accounting/widget/InvoiceForms.xml"/>

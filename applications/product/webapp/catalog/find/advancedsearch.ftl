@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title=uiLabelMap.ProductAdvancedSearchInCategory>
     <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
-      <#-- Scipio: don't hardcode these
+      <#-- SCIPIO: don't hardcode these
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <input type="hidden" name="PAGING" value="Y"/>-->
       <input type="hidden" name="noConditionFind" value="Y"/>
@@ -36,7 +36,7 @@ under the License.
             <@field type="select" label=uiLabelMap.ProductCatalog name="SEARCH_CATALOG_ID">
               <option value="">- ${uiLabelMap.ProductAnyCatalog} -</option>
               <#list prodCatalogs as prodCatalog>
-                <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}")>
+                  <#assign displayDesc = prodCatalog.catalogName!(uiLabelMap.ProductNoDescription)>
                   <#if 18 < displayDesc?length>
                     <#assign displayDesc = displayDesc[0..15] + "...">
                   </#if>
@@ -60,7 +60,7 @@ under the License.
             <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny/>
             <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.ProductFeatureCategory} ${uiLabelMap.CommonIds}">
+        <@field type="generic" label="${rawLabel('ProductFeatureCategory')} ${rawLabel('CommonIds')}">
             <div>
               <@field type="input" name="SEARCH_PROD_FEAT_CAT1" size="15" value=(requestParameters.SEARCH_PROD_FEAT_CAT1!)/>&nbsp;
               <@field type="radio" name="SEARCH_PROD_FEAT_CAT_EXC1" value="" checked=true label=uiLabelMap.CommonInclude/>
@@ -80,7 +80,7 @@ under the License.
               <@field type="radio" name="SEARCH_PROD_FEAT_CAT_EXC3" value="N" label=uiLabelMap.CommonAlwaysInclude/>
             </div>
         </@field>
-        <@field type="generic" label="${uiLabelMap.ProductFeatureGroup} ${uiLabelMap.CommonIds}">
+        <@field type="generic" label="${rawLabel('ProductFeatureGroup')} ${rawLabel('CommonIds')}">
             <div>
               <@field type="input" name="SEARCH_PROD_FEAT_GRP1" size="15" value=(requestParameters.SEARCH_PROD_FEAT_GRP1!)/>&nbsp;
               <@field type="radio" name="SEARCH_PROD_FEAT_GRP_EXC1" value="" checked=true label=uiLabelMap.CommonInclude/>
@@ -101,7 +101,7 @@ under the License.
             </div>
         </@field>
 
-        <@field type="generic" label="${uiLabelMap.ProductFeatures} ${uiLabelMap.CommonIds}">
+        <@field type="generic" label="${rawLabel('ProductFeatures')} ${rawLabel('CommonIds')}">
             <div>
               <@field type="input" name="SEARCH_FEAT1" size="15" value=(requestParameters.SEARCH_FEAT1!)/>&nbsp;
               <@field type="radio" name="SEARCH_FEAT_EXC1" value="" checked=true label=uiLabelMap.CommonInclude/>
@@ -129,10 +129,10 @@ under the License.
           <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
           <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
           <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-          <@field type="select" label="${(productFeatureType.get('description',locale))!}" name="pft_${productFeatureTypeId}">
+          <@field type="select" label=((productFeatureType.get('description',locale))!) name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description?default("${uiLabelMap.ProductNoDescription}")} [${productFeature.productFeatureId}]</option>
+              <option value="${productFeature.productFeatureId}">${productFeature.description!(uiLabelMap.ProductNoDescription)} [${productFeature.productFeatureId}]</option>
               </#list>
           </@field>
         </#list>

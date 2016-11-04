@@ -34,7 +34,7 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://metro-theme/includes/themeTemplate.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/metro-theme/images/favicon.ico" sequenceId="01"/>
 
-    <!-- Scipio: The following includes can be used to override specific default pages
+    <!-- SCIPIO: The following includes can be used to override specific default pages
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://metro-theme/includes/login.ftl" sequenceId="01"/> // Custom Login Page
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://metro-theme/includes/error.ftl" sequenceId="01"/> // Custom Error Page
      -->

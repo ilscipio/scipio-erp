@@ -2,6 +2,8 @@
 * 
 * The Grid
 *
+* [[[<img src="http://www.scipioerp.com/files/2016/05/grid-1024x141.png" alt=""/>]]]
+*
 * Displaying content within a (flexible) grid is a way of structuring content on a website.
 * The grid itself works as a layer on top of the basic html structure. Everything visible is grouped inside 
 * columns and individual cells. The SCIPIO framework uses the standard 12 column grid that is used by  
@@ -37,8 +39,10 @@ to this one.
     id                      = Container ID
     attribs                 = ((map)) Other attributes for div 
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra attributes for div
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign container_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "elem":"", "attribs":{}, "passArgs":{}
@@ -65,7 +69,7 @@ to this one.
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
+    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -97,8 +101,10 @@ Creates a grid row.
     selected                = ((boolean), default: false) If true row is marked selected
     attribs                 = ((map)) Extra  attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra  attributes
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign row_defaultArgs = {
   "class":"", "id":"", "style":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true, 
@@ -142,8 +148,8 @@ Creates a grid row.
 <#macro row_markup open=true close=true class="" collapse=false id="" style="" alt="" selected="" 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt/>
   </#if>
       <#nested />
   <#if close>
@@ -202,8 +208,10 @@ Creates a grid cell.
                               NOTE: This is often optional in CSS frameworks; affects float alignment.
     attribs                 = ((map)) Extra  attributes
                               Needed for names containing dashes.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
     inlineAttribs...        = ((inline-args)) Extra  attributes
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
+                              NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
 -->
 <#assign cell_defaultArgs = {
   "columns":-1, "small":-1, "medium":-1, "large":-1, "offset":-1, "smallOffset":-1, "mediumOffset":-1, 
@@ -267,8 +275,8 @@ Creates a grid cell.
 <#macro cell_markup open=true close=true class="" id="" style="" last=false collapse=false 
     attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -450,12 +458,12 @@ Since this is very foundation specific, this function may be dropped in future i
   </@container>
   <@script>
    $(function() {
-      $('#${id}').freetile({
+      $('#${escapeVal(id, 'js')}').freetile({
           selector: '.${styles.tile_wrap!}'
       });
       <#--
       Alternative implementation of gridster.js
-      $('#${id}').gridster({
+      $('#${escapeVal(id, 'js')}').gridster({
           widget_selector: '.${styles.tile_wrap!}',
           min_cols:${columns},
           autogenerate_stylesheet:false
@@ -486,6 +494,8 @@ Since this is very foundation specific, this function may be dropped in future i
 * Tile
 ************
 Creates a very basic wrapper for tiles (can be used in metro designs).
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/tiles.png" alt=""/>]]]
 
 Please be aware that this is neither based on standard bootstrap, nor foundation. 
 It is loosely based on http://metroui.org.ua/tiles.html 
@@ -520,6 +530,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
                               * {{{none}}}: Prevents color class.
     icon                    = Icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image                   = Background image URL (icon won't be shown if not empty)
+                              WARN: 2016-10-10: '''Do not pass''' any unsafe input in this link at this time!
+                                  Escaping protection is only partial (html but not css).
     imageType               = (|default|..., default: default) Image type for styling
                               Scipio standard supported types (extensible by theme):
                               * {{{cover}}}: This is currently the default. fills tile.
@@ -592,10 +604,10 @@ It is loosely based on http://metroui.org.ua/tiles.html
 
   <#-- lookup styles -->
   <#local class = addClassArg(class, styles.tile_wrap!)>
-  <#local class = addClassArg(class, "${styles.tile_wrap!}-${size!}")>
+  <#local class = addClassArg(class, "${styles.tile_wrap!}-${size}")>
   <#local color = color?string>
   <#if color?has_content && color != "none">
-    <#local colorClass = "${styles.tile_color_prefix!}${color!}">
+    <#local colorClass = "${styles.tile_color_prefix!}${color}">
   <#else>
     <#local colorClass = "">
   </#if>
@@ -610,7 +622,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#local overlayClass = addClassArg(overlayClass, styles.tile_overlay!)>
   <#local overlayBgColor = overlayBgColor?string>
   <#if overlayBgColor?has_content && overlayBgColor != "none">
-    <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor!}">
+    <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor}">
   <#else>
     <#local overlayBgColorClass = "">
   </#if>
@@ -622,7 +634,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#local imageClass = addClassArg(imageClass, styles.tile_image!)>
   <#local imageBgColor = imageBgColor?string>
   <#if imageBgColor?has_content && imageBgColor != "none">
-    <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor!}">
+    <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor}">
   <#else>
     <#local imageBgColorClass = "">
   </#if>
@@ -634,7 +646,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#local titleClass = addClassArg(titleClass, styles.tile_title!)>
   <#local titleBgColor = titleBgColor?string>
   <#if titleBgColor?has_content && titleBgColor != "none">
-    <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor!}">
+    <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor}">
   <#else>
     <#local titleBgColorClass = "">
   </#if>
@@ -675,13 +687,14 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <div class="${styles.tile_content!}">
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
-        <div class="${imageClass}<#if imageBgColorClass?has_content> ${imageBgColorClass}</#if>" style="background-image: url(${image!});"></div>
+        <#-- WARN/FIXME: style escaping may be incomplete! -->
+        <div class="${escapeVal(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapeVal(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'css-html')});"></div>
       </#if>
-      <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
-      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
+      <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
+      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapeVal(icon, 'html')}"></i></span></#if>
       <#local nestedContent><#nested></#local>
-      <#if nestedContent?has_content><span class="${overlayClass}<#if overlayBgColorClass?has_content> ${overlayBgColorClass}</#if>">${nestedContent}</span></#if>
-      <#if title?has_content><span class="${titleClass}<#if titleBgColorClass?has_content> ${titleBgColorClass}</#if>">${title!}</span></#if>
+      <#if nestedContent?has_content><span class="${escapeVal(overlayClass, 'html')}<#if overlayBgColorClass?has_content> ${escapeVal(overlayBgColorClass, 'html')}</#if>">${nestedContent}</span></#if>
+      <#if title?has_content><span class="${escapeVal(titleClass, 'html')}<#if titleBgColorClass?has_content> ${escapeVal(titleBgColorClass, 'html')}</#if>">${escapeVal(title, 'htmlmarkup')}</span></#if>
       <#if link?has_content></a></#if>
     </div>
   </@container>
@@ -763,6 +776,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
                               * {{{string}}} (HTML markup): Should be <li> elements only, generated manually or using <@menu type="section" ... inlineItems=true>.
                                 WARN: if using @menu to pre-generate the menu as string/html, the menu arguments such as "type" are lost and 
                                     assumed to be "section" or "section-inline".
+                              NOTE: Not escaped by macro.
     menuLayoutTitle         = (post-title|pre-title|inline-title, default: -from global styles-, fallback default: post-title) 
                               This is a low-level control; avoid where possible.   
     menuLayoutGeneral       = (top|bottom|top-bottom, default: -from global styles-, fallback default: top)  
@@ -787,6 +801,9 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     hasContent              = ((boolean), default: true) Optional content hint
                               When false, will add classes to indicate content is empty or treat as logically empty 
                               (workaround for lack of CSS :blank and possibly other browser limitations)
+                              
+  * History *
+    Enhanced/standardized for 1.14.2.
 -->
 <#assign section_defaultArgs = {
   "type":"", "id":"", "title":"", "style":"", "cellClass":-1, "class":-1, "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
@@ -974,7 +991,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#local titleContainerClass = addClassArgDefault(titleContainerClass, styles["section_" + styleName + "_" + menuLayoutTitleStyleName + "_titlecontainerclass"]!styles["section_default_" + menuLayoutTitleStyleName + "_titlecontainerclass"]!)>
     <#local menuContainerClass = addClassArgDefault(menuContainerClass, styles["section_" + styleName + "_" + menuLayoutTitleStyleName + "_menucontainerclass"]!styles["section_default_" + menuLayoutTitleStyleName + "_menucontainerclass"]!)>
   
-    <#-- Scipio: we support menuContent as string (html), macro or hash definitions.
+    <#-- SCIPIO: we support menuContent as string (html), macro or hash definitions.
         When string, menuContent is not wrapped in UL when it's received here from macro renderer... 
         NOTE: with recent patch, menuContent passed by renderer is rendered by macro renderer (was not the case before - used old html renderer). -->
     <#if isObjectType("string", menuContent)> <#-- DEV NOTE: WARN: ?is_string would not always work here -->
@@ -1097,8 +1114,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       
       <#if hasTitle>
         <#local titleMarkup>
-          <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
-            containerClass=titleHeadingContainerClass passArgs=passArgs>${title}</@heading>
+          <@heading level=hLevel title=title elemType=titleElemType class=titleClass containerElemType=titleContainerElemType 
+            containerClass=titleHeadingContainerClass passArgs=passArgs />
         </#local>
       </#if> 
     </#if>
@@ -1194,16 +1211,16 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     collapsible=false collapsed=false javaScriptEnabled=false contentId="" saveCollapsed=false expandToolTip="" 
     collapseToolTip="" fullUrlString="" fromScreenDef=false catchArgs...>
   <#return {"preMenuItems":[], "postMenuItems":[]}>
-  <#-- Scipio: TODO: translate this into vars above if/once needed again (as @menuitem args maps within lists)
+  <#-- SCIPIO: TODO: translate this into vars above if/once needed again (as @menuitem args maps within lists)
   <#local preMenuItems></#local>
   <#local postMenuItems>
     <#if menuLayoutTitle != "pre-title" && menuLayoutTitle != "inline-title">
     <#if collapsible>
     <li class="<#rt/>
     <#if collapsed>
-    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${contentId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
+    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapeVal(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if expandToolTip?has_content> title="${escapeVal(expandToolTip, 'js-html')}"</#if>
     <#else>
-    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${contentId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
+    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${escapeVal(contentId, 'js-html')}', '${saveCollapsed?string}', '${escapeVal(expandToolTip, 'js-html')}', '${escapeVal(collapseToolTip, 'js-html')}');"<#else>href="${escapeFullUrl(fullUrlString, 'js-html')}"</#if><#if collapseToolTip?has_content> title="${escapeVal(collapseToolTip, 'js-html')}"</#if>
     </#if>
     >&nbsp;</a></li>
     </#if>
@@ -1227,11 +1244,11 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#rt>
-        <#lt><#if style?has_content> style="${style}"<#elseif containerStyle?has_content> style="${containerStyle}"</#if><#rt>
+    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#rt>
+        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"<#elseif containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
-      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
+      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapeVal(title, 'htmlmarkup')}</p></#if>
       -->
       <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>
@@ -1244,7 +1261,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
           <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
           <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
           <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
-          <div<#if contentId?has_content> id="${contentId}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${contentStyle}"</#if><#rt>
+          <div<#if contentId?has_content> id="${escapeVal(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapeVal(contentStyle, 'html')}"</#if><#rt>
           <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>>
   </#if>
             <#nested>

@@ -33,9 +33,9 @@ your template file:
 <#macro DateField formName="" fieldName="" fieldValue="" fieldClass="">
   <@fields type="default-manual-widgetonly">
     <#if javaScriptEnabled>
-      <@field type="datetime" required=containsStyleName(fieldClass, "required") name=fieldName event=(event!) action=(action!) class="+${fieldClass}" value=fieldValue!'' size="25" maxlength="30" id="${fieldName}1" />
+      <@field type="datetime" required=containsStyleName(fieldClass, "required") name=fieldName event=(event!) action=(action!) class="+${fieldClass}" value=fieldValue!'' size="25" maxlength="30" id="${rawString(fieldName)}1" />
     <#else>
-      <@field type="input" required=containsStyleName(fieldClass, "required") name="${fieldName}" value=(fieldValue!) class="+${fieldClass}" maxlength="25" size="25"/>
+      <@field type="input" required=containsStyleName(fieldClass, "required") name=fieldName value=(fieldValue!) class="+${fieldClass}" maxlength="25" size="25"/>
     </#if>
   </@fields>
 </#macro>
@@ -52,7 +52,7 @@ your template file:
 
 <#macro HourOfDayField fieldName="" fieldValue=-1 fieldClass="">
   <@fields type="default-manual-widgetonly">
-    <@field type="select" name="${fieldName}" class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
+    <@field type="select" name=fieldName class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
       <#list 0..23 as i>
         <option value="${i}"<#if i == fieldValue> selected="selected"</#if>>${i}</option>
       </#list>
@@ -62,7 +62,7 @@ your template file:
 
 <#macro MinuteField fieldName="" fieldValue=-1 fieldClass="">
   <@fields type="default-manual-widgetonly">
-    <@field type="select" name="${fieldName}" class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
+    <@field type="select" name=fieldName class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
       <#list 0..59 as i>
         <option value="${i}"<#if i == fieldValue> selected="selected"</#if>>${i}</option>
       </#list>
@@ -72,7 +72,7 @@ your template file:
 
 <#macro DayOfWeekField fieldName="" fieldValue=-1 fieldClass="">
   <@fields type="default-manual-widgetonly">
-    <@field type="select" name="${fieldName}" class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
+    <@field type="select" name=fieldName class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
       <#list dayValueList as dayValue>
         <option value="${dayValue.value}"<#if dayValue.value == fieldValue> selected="selected"</#if>>${dayValue.description}</option>
       </#list>
@@ -82,7 +82,7 @@ your template file:
 
 <#macro DayOfMonthField fieldName="" fieldValue=-1 fieldClass="">
   <@fields type="default-manual-widgetonly">
-    <@field type="select" name="${fieldName}" class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
+    <@field type="select" name=fieldName class="+${fieldClass}" required=containsStyleName(fieldClass, "required")>
       <#list 1..31 as i>
         <option value="${i}"<#if i == fieldValue> selected="selected"</#if>>${i}</option>
       </#list>

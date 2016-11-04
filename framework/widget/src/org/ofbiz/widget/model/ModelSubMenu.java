@@ -64,7 +64,7 @@ public class ModelSubMenu extends ModelWidget {
     
     private final String itemsSortMode;
 
-    private final FlexibleStringExpander shareScope;
+    private final FlexibleStringExpander shareScope; // SCIPIO: NOTE: 2016-11-02: default is now TRUE    
     
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
@@ -113,8 +113,8 @@ public class ModelSubMenu extends ModelWidget {
         
         if (!modelAddress.isEmpty()) {
             ModelLocation menuLoc = ModelLocation.fromAddress(modelAddress);
-            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(), topModelMenu.getMenuLocation(), 
-                    subMenuElement, buildArgs.genBuildArgs);
+            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(), 
+                    subMenuElement, buildArgs.genBuildArgs); // topModelMenu.getMenuLocation()
         }
         
         // figure out our name
@@ -430,8 +430,7 @@ public class ModelSubMenu extends ModelWidget {
     
     public boolean shareScope(Map<String, Object> context) {
         String shareScopeString = this.shareScope.expandString(context);
-        // defaults to false, so anything but true is false
-        return !"false".equals(shareScopeString);
+        return "true".equals(shareScopeString); // NOTE: 2016-11-02: default is now TRUE
     }
 
     public void renderSubMenuString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)

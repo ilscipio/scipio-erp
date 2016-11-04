@@ -819,10 +819,7 @@ public class ModelTree extends ModelWidget {
             public String getText(Map<String, Object> context) {
                 String text = this.textExdr.expandString(context);
                 // FIXME: Encoding should be done by the renderer, not by the model.
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null) {
-                    text = simpleEncoder.encode(text);
-                }
+                text = WidgetWorker.getEarlyEncoder(context).encode(text); // SCIPIO: simplified
                 return text;
             }
 
@@ -973,13 +970,8 @@ public class ModelTree extends ModelWidget {
             }
 
             public String getTarget(Map<String, Object> context) {
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null) {
-                    return this.targetExdr.expandString(UtilCodec.HtmlEncodingMapWrapper.getHtmlEncodingMapWrapper(context,
-                            simpleEncoder));
-                } else {
-                    return this.targetExdr.expandString(context);
-                }
+                return this.targetExdr.expandString(UtilCodec.EncodingMapWrapper.getEncodingMapWrapper(context,
+                        WidgetWorker.getEarlyEncoder(context))); // SCIPIO: simplified
             }
 
             public String getTargetWindow(Map<String, Object> context) {
@@ -989,20 +981,14 @@ public class ModelTree extends ModelWidget {
             public String getText(Map<String, Object> context) {
                 String text = this.textExdr.expandString(context);
                 // FIXME: Encoding should be done by the renderer, not by the model.
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null) {
-                    text = simpleEncoder.encode(text);
-                }
+                text = WidgetWorker.getEarlyEncoder(context).encode(text); // SCIPIO: simplified
                 return text;
             }
 
             public String getTitle(Map<String, Object> context) {
                 String title = this.titleExdr.expandString(context);
                 // FIXME: Encoding should be done by the renderer, not by the model.
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null) {
-                    title = simpleEncoder.encode(title);
-                }
+                title = WidgetWorker.getEarlyEncoder(context).encode(title); // SCIPIO: simplified
                 return title;
             }
 

@@ -93,7 +93,7 @@ under the License.
                 <#assign check = "false"/>
             </#if>
             <#assign curEntityName = modelEntity.getEntityName()/>
-            <li><@field type="checkbox" name="entityName" checked="${check}" id="${curEntityName}" value=curEntityName label="${curEntityName}" norows=true nocells=true/></li>
+            <li><@field type="checkbox" name="entityName" checked=check id=curEntityName value=curEntityName label=(curEntityName) norows=true nocells=true/></li>
           </#list>
     </@grid>
 

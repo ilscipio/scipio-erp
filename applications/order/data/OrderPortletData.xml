@@ -69,7 +69,7 @@
     <PortalPageColumn portalPageId="OrderPortalPage" columnSeqId="00002"/>
 
     <PortalPagePortlet portalPageId="OrderPortalPage" portalPortletId="ListSalesOrders" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
-    <!-- Scipio: put in column 2 by default... otherwise column 2 empty space -->
+    <!-- SCIPIO: put in column 2 by default... otherwise column 2 empty space -->
     <PortalPagePortlet portalPageId="OrderPortalPage" portalPortletId="BestSellingProducts" portletSeqId="00001" columnSeqId="00002" sequenceNum="1"/>
 
     <!-- Order Reports -->

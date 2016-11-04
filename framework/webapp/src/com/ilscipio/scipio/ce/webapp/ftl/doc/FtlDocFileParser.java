@@ -14,20 +14,25 @@ public abstract class FtlDocFileParser {
     
     protected final String libFilename;
     protected final File srcFile;
+    protected final String inFileExtension;
+    protected final String outFileExtension;
     
-    protected FtlDocFileParser(String libFilename, File srcFile) {
+    protected FtlDocFileParser(String libFilename, File srcFile, String inFileExtension, String outFileExtension) {
         this.libFilename = libFilename;
         this.srcFile = srcFile;
+        this.inFileExtension = (inFileExtension != null) ? inFileExtension : "";
+        this.outFileExtension = (outFileExtension != null) ? outFileExtension : "";
     }
 
     public void setMsgHandler(MsgHandler msgHandler) {
         this.msgHandler = msgHandler;
     }
 
-    public static FtlDocFileParser getInstance(String libFilename, File srcFile, String defaultLibFormat) {
+    public static FtlDocFileParser getInstance(String libFilename, File srcFile, 
+            String inFileExtension, String outFileExtension, String defaultLibFormat) {
         // TODO?: currently only supports one defaultLibFormat
         if (FtlDocCompiler.SCIPIO_LIB_FORMAT.equals(defaultLibFormat)) {
-            return new ScipioLibFtlDocFileParser(libFilename, srcFile);
+            return new ScipioLibFtlDocFileParser(libFilename, srcFile, inFileExtension, outFileExtension);
         }
         else {
             throw new IllegalArgumentException("Invalid lib format: " + defaultLibFormat);
@@ -61,7 +66,7 @@ public abstract class FtlDocFileParser {
     }
     
     public String getLibDocPath() {
-        return FtlDocUtil.replaceExtension(libFilename, FtlDocCompiler.outFileExtension);
+        return FtlDocUtil.replaceExtension(libFilename, outFileExtension);
     }
     
     public abstract String getLibFormat();

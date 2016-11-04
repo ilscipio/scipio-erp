@@ -80,11 +80,10 @@
     </service>
 
     <!-- DataCategory services -->
-    <service name="createDataCategory" engine="simple" default-entity-name="DataCategory" auth="true"
-            location="component://content/script/org/ofbiz/content/data/DataServices.xml" invoke="createDataCategory">
+    <service name="createDataCategory" engine="entity-auto" default-entity-name="DataCategory" auth="true" invoke="create">
         <description>Create a DataCategory</description>
         <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateDataCategory" engine="simple" default-entity-name="DataCategory" auth="true"
@@ -511,7 +510,7 @@
 
     <service name="findContentParents" engine="java"
         transaction-timeout="7200"
-            location="org.ofbiz.content.ContentServices" invoke="findContentParents" auth="true">
+            location="org.ofbiz.content.content.ContentServices" invoke="findContentParents" auth="true">
         <attribute mode="IN" name="contentId" optional="false" type="String"/>
         <attribute mode="IN" name="contentAssocTypeId" optional="false" type="String"/>
         <attribute mode="IN" name="direction" optional="true" type="String"/>

@@ -35,7 +35,7 @@ under the License.
         <#else>
             <#assign LookupFacilityLocationView="LookupFacilityLocation">
         </#if>
-        <@field type="lookup" label=uiLabelMap.ProductLocationSeqId formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
+        <@field type="lookup" label=uiLabelMap.ProductLocationSeqId formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName=LookupFacilityLocationView/>
         <@field type="input" label=uiLabelMap.CommonArea name="areaId" value="" size="19" maxlength="20" />
         <@field type="input" label=uiLabelMap.ProductAisle name="aisleId" value="" size="19" maxlength="20" />
         <@field type="input" label=uiLabelMap.ProductSection name="sectionId" value="" size="19" maxlength="20" />
@@ -45,7 +45,7 @@ under the License.
     </form>
 
     <#if foundLocations??>
-      <#assign sectionTitle>${uiLabelMap.CommonFound}:&nbsp;${foundLocations.size()}&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility??>${(facility.facilityName)!}</#if> [ID:${facilityId!}]</#assign>
+      <#assign sectionTitle>${rawLabel('CommonFound')}: ${foundLocations.size()} ${rawLabel('ProductLocationsFor')} <#if facility??>${rawString((facility.facilityName)!)}</#if> [${rawString(facilityId!)}]</#assign>
       <@section title=sectionTitle>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
         <@thead>

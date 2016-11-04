@@ -47,7 +47,7 @@ under the License.
                     <@tr>
                         <@td>${shipmentPackage.shipmentPackageSeqId}</@td>                        
                         <@td>
-                            <@field type="input" size="5" name="weight" value="${shipmentPackage.weight!}"/>
+                            <@field type="input" size="5" name="weight" value=(shipmentPackage.weight!)/>
                         </@td>
                         <@td>                            
                             <@field type="select" name="weightUomId">
@@ -71,7 +71,7 @@ under the License.
                             </@field>
                         </@td>
                         <@td>
-                            <@field type="input" size="5" name="insuredValue" value="${shipmentPackage.insuredValue!}"/>
+                            <@field type="input" size="5" name="insuredValue" value=(shipmentPackage.insuredValue!)/>
                         </@td>
                         <@td>${(shipmentPackage.dateCreated?string('yyyy-MM-dd HH:mm')!)}</@td>
                         <@td><a href="#" id="shipmentPackageContent_${shipmentPackageData_index}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonContent}</a></@td>
@@ -117,7 +117,7 @@ under the License.
     <#list shipmentPackageDatas as shipmentPackageData>        
         <#assign shipmentPackageContents = shipmentPackageData.shipmentPackageContents!>            
         <@modal id="shipmentPackageContent_${shipmentPackageData_index}">
-            <#assign sectionTitle="${uiLabelMap.ProductPackage} ${uiLabelMap.ContentContents}"/>
+            <#assign sectionTitle="${rawLabel('ProductPackage')} ${rawLabel('ContentContents')}"/>
             <@section title=sectionTitle>
                 <#-- Scipio FIXME: Does makes sense to show this if all items have been packed already? -->
                 <@section>

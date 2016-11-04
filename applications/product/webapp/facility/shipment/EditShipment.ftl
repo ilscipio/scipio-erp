@@ -19,7 +19,7 @@
             <#assign shipmentType = delegator.findOne("ShipmentType", {"shipmentTypeId":shipment.shipmentTypeId}, true)!/>
             <@field type="display" name="shipmentTypeId" label=uiLabelMap.ProductShipmentTypeId value=shipmentType.description />
         </#if>
-        <@field type="text" name="primaryShipGroupSeqId" value="${(shipment.primaryShipGroupSeqId)!}" label=uiLabelMap.ProductPrimaryShipGroupSeqId />        
+        <@field type="text" name="primaryShipGroupSeqId" value=((shipment.primaryShipGroupSeqId)!) label=uiLabelMap.ProductPrimaryShipGroupSeqId />        
         <@field type="select" name="statusId" label=uiLabelMap.ProductStatusId>
             <#if currentStatus?has_content>
                 <option value="${currentStatus.statusId}" selected="selected">${currentStatus.description}</option>
@@ -36,7 +36,7 @@
                 </#list>
             </#if>
         </@field>
-        <!-- FIXME: Scipio: I'm not sure we should allow to change the orderId while editing... -->
+        <#-- SCIPIO: FIXME: I'm not sure we should allow to change the orderId while editing... -->
         <#if shipment?has_content>
             <@field type="display" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId value=(shipment.primaryOrderId!)>
                 <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@ofbizInterWebappUrl>">${shipment.primaryOrderId}</a>

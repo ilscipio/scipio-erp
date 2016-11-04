@@ -76,7 +76,7 @@ under the License.
                                             </#list>
                                             </ul>
                                         </#if>
-                                        <#-- Scipio: order by ProductContent.sequenceNum -->
+                                        <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                         <#if downloadContents?has_content>
                                            <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload class="${styles.link_nav!} ${styles.action_export!}">
@@ -125,7 +125,7 @@ under the License.
                                         </#if>
                                     </#assign>
                                     <#if productItemStatus?has_content>
-                                        <@modal id="${productId}_st" label="${currentItemStatus.get('description',locale)!(currentItemStatus.statusId)}">${productItemStatus!}</@modal>
+                                        <@modal id="${productId}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
                                     <#else>
                                         ${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}
                                     </#if>
@@ -166,7 +166,7 @@ under the License.
                                                             <#assign shortfalledQuantity = shortfalledQuantity + orderItemShipGrpInvRes.quantityNotAvailable/>
                                                         </#if>
                                                     </#list>
-                                        <@modal id="${productId}_q" label="${(orderItem.quantity!0)?string.number}">    
+                                        <@modal id="${productId}_q" label=(orderItem.quantity!0)?string.number>    
                                             <@table type="data-complex"> <#-- orig: class="" -->
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>
@@ -300,8 +300,8 @@ under the License.
                                     / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/>
                                 </@td>
                                 <@td class="${styles.text_right!}" valign="top" nowrap="nowrap">
-                                    <#assign modallabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
-                                    <@modal id="${productId}_adj" label=modallabel>
+                                    <#assign modalLabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
+                                    <@modal id="${productId}_adj" label=modalLabel>
                                         <@table type="data-complex" class="+grid"> <#-- orig: class="grid" -->
                                             <@thead>
                                                 <@tr>
@@ -518,7 +518,7 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}]
-                                        ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
+                                        ${shipGroupAddress.address1!(uiLabelMap.OrderNotShipped)}
                                     </@td>
                                     <@td align="center">
                                         ${shipGroupAssoc.quantity?string.number}&nbsp;

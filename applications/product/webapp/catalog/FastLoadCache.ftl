@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductLoadingCatalogCaches}...">
+<@section title="${rawLabel('ProductLoadingCatalogCaches')}...">
         <#list messageList as message>
             <p>${message}</p>
         </#list>

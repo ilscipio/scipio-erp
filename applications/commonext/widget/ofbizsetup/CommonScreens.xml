@@ -20,6 +20,20 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+    
     <screen name="main-decorator">
         <section>
             <actions>
@@ -46,7 +60,7 @@
                 <set field="applicationTitle" value="${uiLabelMap.SetupApp}" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
@@ -57,9 +71,27 @@
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
+    <screen name="CommonSetupAppDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-screen name="CommonSetupAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -72,7 +104,7 @@
     <screen name="CommonPartyDecorator">
         <section>
             <widgets>
-                <include-screen name="CommonSetupDecorator"/>
+                <decorator-screen name="CommonSetupDecorator"/>
             </widgets>
         </section>
     </screen>
@@ -80,7 +112,7 @@
     <screen name="CommonSetupDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://commonext/widget/ofbizsetup/Menus.xml#SetupSub" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://commonext/widget/ofbizsetup/Menus.xml#Setup" />
                 <entity-condition entity-name="PartyRole" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
@@ -89,7 +121,7 @@
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and context.activeMainMenuItem != 'init'}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -98,10 +130,10 @@
                                 </and>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://commonext/widget/ofbizsetup/CommonScreens.xml"/>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                             </widgets>
                         </section>
-                        <!-- Scipio: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
+                        <!-- SCIPIO: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
                        <!--  <section>
                             <condition>
                                 <not><if-empty field="partyId"/></not>
@@ -163,7 +195,7 @@
                 <set field="activeMainMenuItem" value="export"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <platform-specific>
@@ -176,7 +208,7 @@
         </section>
     </screen>
     
-    <!-- SCIPIO: Main SideBar Menu (see for component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) -->
+    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>
             <actions>
@@ -198,6 +230,21 @@
             </actions>
             <widgets>
                 <include-screen name="MainSideBarMenu"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
+        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
+    <screen name="CommonSetupAppSideBarMenu">
+        <section>
+            <actions>
+                <!-- FIXME? no permission checks on any of the screens? maybe not needed...? -->
+                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value=""/>
+                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value=""/>
+            </actions>
+            <widgets>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

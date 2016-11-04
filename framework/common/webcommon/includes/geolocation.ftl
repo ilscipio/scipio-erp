@@ -16,8 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#-- SCIPIO: TODO: JS escaping review -->
 <#if geoChart?has_content>
-      <#-- ================================= Golbal Init ======================================-->
+      <#-- ================================= Global Init ======================================-->
     <#if geoChart.id?has_content>
         <#assign id = geoChart.id>
     <#else>
@@ -56,7 +57,7 @@ under the License.
                 }
             }
             
-            var map = new google.maps.Map(document.getElementById("${id}"),
+            var map = new google.maps.Map(document.getElementById("${escapeVal(id, 'js')}"),
             <#if geoChart.points?has_content>
               { center: new google.maps.LatLng(${center.lat}, ${center.lon}),
                 zoom: ${zoom},
@@ -70,7 +71,7 @@ under the License.
                 <#if point.link?has_content>
                   var infoWindow = new google.maps.InfoWindow();
                   google.maps.event.addListener(marker_${point_index}, "click", function() {
-                    infoWindow.setContent(("<div style=\"width:210px; padding-right:10px;\"><a href=${point.link.url}>${point.link.label}</a></div>"));
+                    infoWindow.setContent(("<div style=\"width:210px; padding-right:10px;\"><a href=\"${escapeFullUrl(point.link.url, 'html-js')}\">${escapeVal(point.link.label, 'html-js')}</a></div>"));
                     infoWindow.setPosition(marker_${point_index}.getPosition());
                     infoWindow.open(map);
                   });
@@ -84,20 +85,20 @@ under the License.
               showAllMarkers(map, latlngs);
             </#if>
         </@script>
-      <#elseif  geoChart.dataSourceId == "GEOPT_YAHOO">
-      <#elseif  geoChart.dataSourceId == "GEOPT_MICROSOFT">
-      <#elseif  geoChart.dataSourceId == "GEOPT_MAPTP">
-      <#elseif  geoChart.dataSourceId == "GEOPT_ADDRESS_GOOGLE">
+      <#elseif geoChart.dataSourceId == "GEOPT_YAHOO">
+      <#elseif geoChart.dataSourceId == "GEOPT_MICROSOFT">
+      <#elseif geoChart.dataSourceId == "GEOPT_MAPTP">
+      <#elseif geoChart.dataSourceId == "GEOPT_ADDRESS_GOOGLE">
         <@script>
             var geocoder = new google.maps.Geocoder();
-            var map = new google.maps.Map(document.getElementById("${id}"),
+            var map = new google.maps.Map(document.getElementById("${escapeVal(id, 'js')}"),
               { center: new google.maps.LatLng(38, 15),
                 zoom: 15, // 0=World, 19=max zoom in
                 mapTypeId: google.maps.MapTypeId.ROADMAP
               });
-            geocoder.geocode({'address': "${pointAddress}"}, function(result, status) {
+            geocoder.geocode({'address': "${escapeVal(pointAddress, 'js')}"}, function(result, status) {
               if (status != google.maps.GeocoderStatus.OK) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonAddressNotFound}");
+                showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.CommonAddressNotFound, 'js')}");
               } else {
                 var position = result[0].geometry.location;
                 map.setCenter(position);
@@ -114,7 +115,7 @@ under the License.
         <#-- due to https://github.com/openlayers/openlayers/issues/1025 rather use a local version loaded by framework/common/widget/CommonScreens.xml -->
         <#-- script src="//www.openlayers.org/api/OpenLayers.js"></script-->
         <@script>
-          map = new OpenLayers.Map("${id}");           
+          map = new OpenLayers.Map("${escapeVal(id, 'js')}");           
           map.addLayer(new OpenLayers.Layer.OSM());
             var zoom = ${zoom};
             var center= new OpenLayers.LonLat(${center.lon},${center.lat})

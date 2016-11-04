@@ -21,43 +21,9 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
         
-
-    <screen name="CommonBillingAccountDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#BillingAccount" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.billingAccountId}" override-by-auto-include="true">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    <!-- SCIPIO: NOTE: The old parameters.billingAccountDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
+        
     <screen name="FindBillingAccount">
         <section>
             <actions>
@@ -65,7 +31,7 @@ under the License.
                 <set field="activeMainMenuItem" value="billingaccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -117,7 +83,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccount"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
@@ -126,7 +91,7 @@ under the License.
                 <set field="roleTypeId" from-field="parameters.roleTypeId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
+                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="">
                             <include-form name="EditBillingAccount" location="component://accounting/widget/BillingAccountForms.xml"/>
@@ -139,13 +104,13 @@ under the License.
     <screen name="EditBillingAccountRoles">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="EditBillingAccountRoles"/>
                 <set field="titleProperty" value="PageTitleEditBillingAccountRoles"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
+                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleAddBillingAccountRoles}">
                             <include-form name="AddBillingAccountRole" location="component://accounting/widget/BillingAccountForms.xml"/>
@@ -161,14 +126,14 @@ under the License.
     <screen name="EditBillingAccountTerms">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="EditBillingAccountTerms"/>
                 <set field="titleProperty" value="PageTitleEditBillingAccountTerms"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <set field="billingAccountTermId" from-field="parameters.billingAccountTermId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
+                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">                        
                         <screenlet title="${uiLabelMap.PageTitleAddBillingAccountTerms}">
                             <include-form name="EditBillingAccountTerms" location="component://accounting/widget/BillingAccountForms.xml"/>
@@ -185,7 +150,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountInvoices"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="BillingAccountInvoices"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
@@ -193,7 +157,7 @@ under the License.
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
+                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingFindInvoices}">
                             <include-form name="lookupInvoicesStatus" location="component://accounting/widget/InvoiceForms.xml"/>
@@ -210,7 +174,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountOrders"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="BillingAccountOrders"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
@@ -218,7 +181,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/order/BillingAccountOrders.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
+                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>         
                             <widgets>                
@@ -236,7 +199,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountPayments"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="BillingAccountPayments"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
@@ -250,7 +212,7 @@ under the License.
                 <set field="billToCustomer" from-field="billToCustomers[0]"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
+                <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleAddBillingAccountPayments}">
                             <include-form name="CreateIncomingBillingAccountPayment" location="component://accounting/widget/BillingAccountForms.xml"/>

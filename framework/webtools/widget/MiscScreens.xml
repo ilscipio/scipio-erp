@@ -20,6 +20,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: include-screens test -->
+    <include-screens location="component://webtools/widget/MiscExtraScreens.xml"/>
 
     <screen name="viewdatafile">
         <section>
@@ -37,6 +39,29 @@ under the License.
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="WebtoolsLayoutDemoCommonActions">
+        <section>
+            <actions>
+                <!-- These are included by include-actions directive. -->
+                <set field="commonActionField1" value="This value 1 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
+                <set field="commonActionField2" value="This value 2 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive, but should get overridden by another include. [ERROR]"/>
+                
+                <!-- SCIPIO: NEW: flexible locations for <script> location -->
+                <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
+                <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemoWidgetTests.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <actions>
+                        <!-- These are NOT included by include-actions directive. -->
+                        <set field="nonCommonActionField4" value="This value 4 was set in WebtoolsLayoutDemoCommonActions outside its top section and should not be included by include-actions. [ERROR]"/>
+                    </actions>
+                    <widgets/>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -78,21 +103,12 @@ under the License.
                 <set field="tableStyle" value="${styles.table_data_list} light-grid"/>
                 <set field="ofbizWidgetsLayoutScreenLocation" value="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemoOfbizWidgets" />
                 <set field="parameters.showLeftColumn" value="Y" />
+                <set field="complexCharString" value="&amp; &lt; &gt; ' &quot; [] () ü ö ä Ä Ü Ö ß"/>
+                <set field="demoScreenContentUri" value="/admin/images/does_not_exist.jpg?param1=value1&amp;param2=value2"/><!-- NOTE: the &amp; only bypasses this xml, not html -->
+                <set field="contentPathPrefix" value="https://ilscipio.com/images"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty parameters.showLeftColumn and parameters.showLeftColumn == 'Y'}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="component://webtools/widget/CommonScreens.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -122,7 +138,15 @@ under the License.
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
             <actions>
-        
+                <set field="commonActionField1" value="This value should get overridden... [ERROR]"/>
+                <set field="commonActionField2" value="This value should get overridden... [ERROR]"/>
+                <set field="nonCommonActionField4" value="This value should keep its original value from WebtoolsLayoutDemoOfbizWidgets. [SUCCESS]"/>
+                <set field="commonActionField5" value="This value should get overridden... [ERROR]"/>
+                <!-- Scipio directive to easily reuse screen actions -->
+                <include-screen-actions name="WebtoolsLayoutDemoCommonActions"/>
+                <!-- It's even possible to include actions from different widget types! -->
+                <include-form-actions name="LayoutDemoActionsIncludeTest2" location="component://webtools/widget/MiscForms.xml"/>
+                <include-menu-actions name="WebtoolsMenuActionsDemo4" location="component://webtools/widget/Menus.xml"/>
             </actions>
             <widgets>
                 <!-- 
@@ -175,6 +199,19 @@ under the License.
                     </widgets>
                 </section>
                 -->
+                <screenlet title="Widget language tests">
+                    <screenlet title="include-actions directive">
+                        <label text="commonActionField1 value: ${commonActionField1}"/>
+                        <label text="commonActionField2 value: ${commonActionField2}"/>
+                        <label text="commonActionField3 value: ${commonActionField3}"/>
+                        <label text="nonCommonActionField4 value: ${nonCommonActionField4}"/>
+                        <label text="commonActionField5 value: ${commonActionField5}"/>
+                        <label text="commonActionField6 value: ${commonActionField6}"/>
+                        <label text="commonActionField7 value: ${commonActionField7}"/>
+                        <label text="commonActionField8 value: ${commonActionField8}"/>
+                        <label text="commonActionField9 value: ${commonActionField9}"/>
+                    </screenlet>
+                </screenlet>
                 <screenlet title="Screenlets" id="my-widget-screenlet-parent" navigation-menu-name="WebtoolsInlineSectionMenuDemo">
                     <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsInlineSectionMenuDemo"/>
                     <label text="This section/screenlet has a special legacy Ofbiz navigation menu, rendered as section-inline menu type by default."/>
@@ -201,7 +238,7 @@ under the License.
                 </screenlet>
                 <screenlet title="Specific markup labels">
                     <label style="generic" text="Generic markup"/>
-                    <label text="Default markup"/> <!-- Scipio: NOTE: at time of writing this defaults to "p" -->
+                    <label text="Default markup"/> <!-- SCIPIO: NOTE: at time of writing this defaults to "p" -->
                     <label style="p" text="Paragraph"/>
                     <label style="span" text="Span"/>
                     <label style="div" text="Div"/>
@@ -248,6 +285,11 @@ under the License.
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="1"/>
                         <label text="sub-menus 'none' filter (same as max-depth 1)" style="heading"/>
                         <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1" sub-menus="none"/>
+                    </screenlet>
+                    
+                    <screenlet title="Screen widget include-screens directive test">
+                        <include-screen name="DemoExtraWidget1"/>
+                        <include-screen name="DemoExtraWidget2"/>
                     </screenlet>
                 </screenlet>
             </widgets>

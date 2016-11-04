@@ -22,11 +22,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleOrderInits"/>
-                <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckInits.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderEntryBaseDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkinits.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -39,11 +38,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleOrderAgreements"/>
-                <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/OrderAgreements.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderEntryBaseDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/orderagreements.ftl"/></html></platform-specific>
                     </decorator-section>

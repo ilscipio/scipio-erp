@@ -18,37 +18,42 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+SCIPIO: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
+
+NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
+    As a result all macros here must take care to html-escape as well as js-escape values.
+    Use escapeVal/escapeFullUrl for this.
 -->
 <#macro renderField text extraArgs...>
   <#-- delegate to scipio libs -->
   <@field_generic_widget text=text />
 </#macro>
 
-<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=""collapse=false fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt="" collapse=false fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
-  <@field_display_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt fieldTitleBlank=fieldTitleBlank />
+  <@field_display_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert 
+    inPlaceEditorUrl=inPlaceEditorUrl inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
 </#macro>
 <#macro renderHyperlinkField extraArgs...></#macro>
 
-<#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
     <#local events = {}>
   </#if>
-  <@field_input_widget name=name class=className alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank />
+  <@field_input_widget name=name class=className alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true language="" buttons="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false maxlength="" extraArgs...>
+<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true language="" buttons="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false maxlength="" requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
-  <@field_textarea_widget name=name class=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable buttons=buttons language=language tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse fieldTitleBlank=fieldTitleBlank maxlength=maxlength/>
+  <@field_textarea_widget name=name class=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable buttons=buttons language=language tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse fieldTitleBlank=fieldTitleBlank maxlength=maxlength required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
@@ -59,71 +64,71 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if shortDateInput>
     <#local dateDisplayType = "date">
   </#if>
-  <@field_datetime_widget name=name class=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <@field_datetime_widget name=name class=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
     <#local events = {}>
   </#if>
-  <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=firstInList currentValue=currentValue currentDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent inlineSelected=(dDFCurrent?has_content && "selected" == dDFCurrent) defaultValue=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
+  <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=firstInList currentValue=currentValue currentDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent inlineSelected=(dDFCurrent?has_content && "selected" == dDFCurrent) defaultValue=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
     <#local events = {}>
   </#if>
-  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
+  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true required=renderFieldIsRequired(requiredField)/>
   <#-- old
   <#list items as item>
     <div class="switch small">
     <span <@renderClass className alert />><#rt/>
-      <input type="checkbox"<#if (item_index == 0)> id="${id}"</#if><#rt/>
-        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+      <input type="checkbox"<#if (item_index == 0)> id="${escapeVal(id, 'html')}"</#if><#rt/>
+        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${escapeVal(tooltip, 'html')}"</#if><#rt/>
         <#if allChecked?has_content && allChecked> checked="checked" <#elseif allChecked?has_content && !allChecked>
           <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if> 
-          name="${(name!"")?html}" value="${(item.value!"")?html}" <#if item.event?has_content> ${item.event}="${item.action!}"<#elseif event?has_content> ${event}="${action}"</#if>/><#rt/>
-          <label for="${id!}"></label>
+          name="${escapeVal(name, 'html')}" value="${escapeVal(item.value!"", 'html')}" <#if item.event?has_content> ${escapeVal(item.event, 'html')}="${escapeVal(item.action!, 'html')}"<#elseif event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if>/><#rt/>
+          <label for="${escapeVal(id, 'html')}"></label>
     </span>
     </div>
   </#list>
   -->
 </#macro>
 
-<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
     <#local events = {}>
   </#if>
-  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
+  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false id="" extraArgs...>
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
   <#local progressOptions = "">
   <#if !(showProgress?is_boolean && showProgress == false) && 
      ((showProgress?is_boolean && showProgress == true) ||
-      ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
-    <#local baseId = htmlFormRenderFormInfo.name!"" + "_scipiouplprogform">       
+      ((formInfo.formType)! == "upload" && (formInfo.showProgress)! == true))>
+    <#local baseId = rawString(formInfo.name!"") + "_scipiouplprogform">       
     <#local progressOptions = {
-      "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
-      "progBarId" : "${baseId}_progbar",
-      "progTextBoxId" : "${baseId}_textbox",
+      "formSel" : "form[name=${rawString(formInfo.name)}]",<#-- NOTE: escaped later -->
+      "progBarId" : "${rawString(baseId)}_progbar",
+      "progTextBoxId" : "${rawString(baseId)}_textbox",
       
       "expectedResultContainerSel" : "#main-content",
       "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
       "errorResultAddWrapper" : false
     }>
-    <#if htmlFormRenderFormInfo.progressSuccessAction?has_content>
-      <#local action = compileProgressSuccessAction(htmlFormRenderFormInfo.progressSuccessAction)>
+    <#if formInfo.progressSuccessAction?has_content>
+      <#local action = compileProgressSuccessAction(formInfo.progressSuccessAction)>
     <#else>
       <#local action = "">
     </#if>
@@ -135,9 +140,9 @@ WARN: no code run here or indirectly from here should assume full current contex
       <#local progressOptions = concatMaps(progressOptions, { "successReloadWindow" : true })>
     </#if>
     
-    <#if htmlFormRenderFormInfo.progressOptions?has_content>
+    <#if formInfo.progressOptions?has_content>
       <#-- json is valid freemarker map -->
-      <#local addOpts = evalToSimpleMap(htmlFormRenderFormInfo.progressOptions)>
+      <#local addOpts = evalToSimpleMap(formInfo.progressOptions)>
       <#if addOpts?has_content>
         <#local progressOptions = progressOptions + addOpts>  
       </#if>
@@ -172,8 +177,8 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderFieldTitle style title id fieldHelpText="" for="" extraArgs...>
 <#if (renderFormatFieldRowTitleCellOpened!false) != true>
-  <#-- <label<#if for?has_content> for="${for}"</#if><#if fieldHelpText?has_content> title="${fieldHelpText}"</#if><#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>><#t/> -->
-    ${title}<#t/>
+  <#-- <label<#if for?has_content> for="${escapeVal(for, 'html')}"</#if><#if fieldHelpText?has_content> title="${escapeVal(fieldHelpText, 'html')}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>><#t/> -->
+    ${escapeVal(title, 'htmlmarkup')}<#t/>
   <#-- </label><#t/> -->
 </#if>
   <#global renderFieldTitleCurrentTitle = title>
@@ -183,13 +188,14 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderSingleFormFieldTitle extraArgs...></#macro>
 
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" extraArgs...>
+<#-- SCIPIO: formScope values: general, item; formSpread values: general, single-cell (html ok), multi-cell (may be bad html) -->
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" formScope="general" formSpread="general" extraArgs...>
   <#if !method?has_content>
     <#local method = "post">
   </#if>
   <#-- showProgress=false progressOptions="" progressSuccessAction=""  -->
   <#-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
-  <#-- Scipio: process extra attribs -->
+  <#-- SCIPIO: process extra attribs -->
   <#local showProgress = (attribs.showProgress)!false>
   <#if !showProgress?is_boolean>
     <#if showProgress?has_content>
@@ -198,37 +204,53 @@ WARN: no code run here or indirectly from here should assume full current contex
       <#local showProgress = false>
     </#if>
   </#if>
-  <#-- Scipio: support fieldsType="xxx" in form widget extra attribs, equivalent to setting @fields type="xxx" -->
+  <#-- SCIPIO: support fieldsType="xxx" in form widget extra attribs, equivalent to setting @fields type="xxx" -->
   <#if attribs.fieldsType?has_content>
     <@fields type=attribs.fieldsType open=true close=false />
   </#if>
   <#local progressOptions = (attribs.progressOptions)!{}><#-- NOTE: this may be a string repr of a map! -->
   <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
-  <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : progressOptions, "progressSuccessAction" : progressSuccessAction, "attribs":attribs}>
-  <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
-  <form method="${method}" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
+  <#local formInfo = {"name":name, "formType":formType, "formScope":formScope, "formSpread":formSpread,
+    "showProgress":showProgress, "progressOptions":progressOptions, "progressSuccessAction":progressSuccessAction, "attribs":attribs}>
+  <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
+<#-- SCIPIO: TODO/FIXME: prevent invalid html; (SHOULD BE) handled by renderSubmitForm
+    CURRENTLY PROBLEMATIC; adding this condition prevents <form> between cells,
+    BUT the form MAY be currently still needed for jQuery validate (see renderFormClose) and untold other lookups
+    based on form name/id and presence of form element.
+<#if !(formType == "list" && formScope == "item" && formSpread == "multi-cell")>
+-->
+  <form method="${escapeVal(method, 'html')}" action="${escapeFullUrl(linkUrl, 'html')}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#rt/>
+      <#lt/><#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if>
+      <#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if> class=<#if containerStyle?has_content>"${escapeVal(containerStyle, 'html')}"<#else>"basic-form"</#if>
+      <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);"<#if autocomplete?has_content> autocomplete="${escapeVal(autocomplete, 'html')}"</#if> name="${escapeVal(name, 'html')}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
     </#if>
     <#-- SCIPIO: moved this OUTSIDE the useRowSubmit check -->
     <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
-      <input type="hidden" name="${viewIndexField}" value="${viewIndex}"/>
+      <input type="hidden" name="${escapeVal(viewIndexField, 'html')}" value="${viewIndex}"/>
     </#if>
     <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
-      <input type="hidden" name="${viewSizeField}" value="${viewSize}"/>
+      <input type="hidden" name="${escapeVal(viewSizeField, 'html')}" value="${viewSize}"/>
     </#if>
+<#-- 
+</#if>
+-->
 </#macro>
-<#-- Scipio: WARN: also exists renderMultiFormClose below -->
+<#-- SCIPIO: WARN: also exists renderMultiFormClose below -->
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField extraArgs...>
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#local formInfo = popRequestStack("htmlFormRenderFormStack")>
+<#-- SCIPIO: TODO/FIXME: prevent invalid html; (SHOULD BE) handled by renderSubmitForm
+<#if !((formInfo.formType!) == "list" && (formInfo.formScope!) == "item" && (formInfo.formSpread!) == "multi-cell")>
+-->
   </form><#lt/>
-  <#if (htmlFormRenderFormInfo.attribs.fieldsType)?has_content>
-    <@fields type=htmlFormRenderFormInfo.attribs.fieldsType open=false close=true />
+  <#if (formInfo.attribs.fieldsType)?has_content>
+    <@fields type=formInfo.attribs.fieldsType open=false close=true />
   </#if>
   <#if focusFieldName?has_content>
     <@script>
-      var form = document.${formName};
-      form.${focusFieldName}.focus();
+      var form = document['${escapeVal(formName, 'js')}'];
+      form["${escapeVal(focusFieldName, 'js')}"].focus();
       <#-- enable the validation plugin for all generated forms
       only enable the validation if min one field is marked as 'required' -->
       if (jQuery(form).find(".required").size() > 0) {
@@ -238,7 +260,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   </#if>
   <#if containerId?has_content && hasRequiredField?has_content>
     <@script>
-      jQuery("#${containerId}").validate({
+      jQuery("#${escapeVal(containerId, 'js')}").validate({
         submitHandler:
           function(form) {
             form.submit();
@@ -246,28 +268,33 @@ WARN: no code run here or indirectly from here should assume full current contex
       });
     </@script>
   </#if>
-  <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
+<#--
+<#else>
+  <#- SCIPIO: TODO/FIXME: in this case we have to omit the <form> element, but are then missing
+    the .validate call (also TODO: recheck the validate call above) ->
+</#if>
+-->
 </#macro>
 <#macro renderMultiFormClose extraArgs...>
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#local formInfo = popRequestStack("htmlFormRenderFormStack")!{}>
   </form><#lt/>
-  <#if (htmlFormRenderFormInfo.attribs.fieldsType)?has_content>
-    <@fields type=htmlFormRenderFormInfo.attribs.fieldsType open=false close=true />
+  <#if (formInfo.attribs.fieldsType)?has_content>
+    <@fields type=formInfo.attribs.fieldsType open=false close=true />
   </#if>
 </#macro>
 
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} extraArgs...>
-  <#-- Scipio: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
-  <#if !htmlFormRenderFormInfo?has_content>
-    <#local htmlFormRenderFormInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
-    <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
+  <#-- SCIPIO: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
+  <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
+  <#if !formInfo?has_content>
+    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
+    <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
   </#if>
 
   <#-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#local styleSet = splitStyleNamesToSet(style)>
-  <#-- Scipio: support setting and removing responsive/scrollable settings from widget table via style attribute -->
-  <#local responsive = ""> <#-- Scipio: empty string means table type default takes effect -->
+  <#-- SCIPIO: support setting and removing responsive/scrollable settings from widget table via style attribute -->
+  <#local responsive = ""> <#-- SCIPIO: empty string means table type default takes effect -->
   <#if styleSet.contains("responsive")>
     <#local responsive = true>
     <#local style = removeStyleNames(style, "responsive")>
@@ -283,7 +310,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local scrollable = false>
     <#local style = removeStyleNames(style, "non-scrollable")>
   </#if>
-  <#-- Scipio: use @table macro to open -->
+  <#-- SCIPIO: use @table macro to open -->
   <#if style?has_content>
     <#-- specified style will replace default class from @table (unless prefixed with "+" in widget defs) -->
     <#-- always added below <#local class = addClassArg(style, styles.table_formwidget_type!)>-->
@@ -296,7 +323,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local class = addClassArg(class, styles.table_formwidget_type!)>
   <#local tableType = mapOfbizFormTypeToTableType(formType)>
   <#-- table:
-    type: ${tableType}
+    type: ${escapeVal(tableType, 'html')}
     responsive: ${responsive?string} 
     scrollable: ${scrollable?string} -->
   <@table open=true close=false type=tableType class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
@@ -315,19 +342,19 @@ WARN: no code run here or indirectly from here should assume full current contex
   <@table close=true open=false />
   <#-- save the table info for post-table stuff -->
   <#local dummy = setRequestVar("renderFormLastTableInfo", stackValues)>
-  <#-- TABLE ID: ${stackValues.tableId}, ${getRequestVar("scipioLastTableInfo").id} -->
-  <#-- Scipio: unset form info, but only if it was the list wrapper that set it -->
-  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
-  <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>
-    <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
+  <#-- TABLE ID: ${escapeVal(stackValues.tableId, 'html')}, ${escapeVal(getRequestVar("scipioLastTableInfo").id, 'html')} -->
+  <#-- SCIPIO: unset form info, but only if it was the list wrapper that set it -->
+  <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
+  <#if (formInfo.setByListWrapper!false) == true>
+    <#local dummy = popRequestStack("htmlFormRenderFormStack")>
   </#if>
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style extraArgs...>
-<#-- Scipio: TODO: translate all thead/td/th/td/etc to @thead open/close
+<#-- SCIPIO: TODO: translate all thead/td/th/td/etc to @thead open/close
      I've done @thead because required by responsive tables at the moment -->
   <@thead open=true close=false />
-    <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
+    <tr class="<#if style?has_content>${escapeVal(style, 'html')}<#else>header-row</#if>">
 </#macro>
 <#macro renderFormatHeaderRowClose extraArgs...>
     </tr>
@@ -335,7 +362,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...>
   <#global renderFormatHeaderRowCellOpened = true>
-  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
+  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose extraArgs...>
   </th>
@@ -343,53 +370,53 @@ WARN: no code run here or indirectly from here should assume full current contex
 </#macro>
 
 <#macro renderFormatHeaderRowFormCellOpen style extraArgs...>
-  <th<#if style?has_content> class="${style}"</#if>>
+  <th<#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowFormCellClose extraArgs...>
   </th>
 </#macro>
 <#macro renderFormatHeaderRowFormCellTitleSeparator style isLast extraArgs...>
-  <#if style?has_content><span class="${style}"></#if> - <#if style?has_content></span></#if>
+  <#if style?has_content><span class="${escapeVal(style, 'html')}"></#if> - <#if style?has_content></span></#if>
 </#macro>
 
 <#macro renderFormatFooterRowOpen style extraArgs...>
-<#-- Scipio: TODO: translate all tfoot/td/th/td/etc to @thead open/close -->
+<#-- SCIPIO: TODO: translate all tfoot/td/th/td/etc to @thead open/close -->
 <tfoot>
-  <tr class="<#if style?has_content>${style}<#else>footer-row</#if>">
+  <tr class="<#if style?has_content>${escapeVal(style, 'html')}<#else>footer-row</#if>">
 </#macro>
 <#macro renderFormatFooterRowClose extraArgs...>
   </tr>
-  </tfoot>
+</tfoot>
 </#macro>
 
 <#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle extraArgs...>
-  <#-- Scipio: translate stock "alternate-row" odd-row-style to odd+even -->
+  <#-- SCIPIO: translate stock "alternate-row" odd-row-style to odd+even -->
   <#local oddRowStyleSet = splitStyleNamesToSet(oddRowStyle)>
   <#if oddRowStyleSet.contains("alternate-row")>
     <#local remOddRowStyles = removeStyleNames(oddRowStyle, "alternate-row")>
     <#local oddRowStyle = (styles.row_alt! + " " + remOddRowStyles)?trim>
     <#local evenRowStyle = (styles.row_reg! + " " + removeStyleNames(evenRowStyle, "even-row"))?trim>
   </#if>
-  <tr<#if itemIndex?has_content><#if (itemIndex%2 == 0)><#if evenRowStyle?has_content> class="${evenRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if><#else><#if oddRowStyle?has_content> class="${oddRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if></#if></#if>>
+  <tr<#if itemIndex?has_content><#if (itemIndex%2 == 0)><#if evenRowStyle?has_content> class="${escapeVal(evenRowStyle, 'html')}<#if altRowStyles?has_content> ${escapeVal(altRowStyles, 'html')}</#if>"<#elseif altRowStyles?has_content> class="${escapeVal(altRowStyles, 'html')}"</#if><#else><#if oddRowStyle?has_content> class="${escapeVal(oddRowStyle, 'html')}<#if altRowStyles?has_content> ${escapeVal(altRowStyles, 'html')}</#if>"<#elseif altRowStyles?has_content> class="${escapeVal(altRowStyles, 'html')}"</#if></#if></#if>>
 </#macro>
 <#macro renderFormatItemRowClose formName extraArgs...>
   </tr>
 </#macro>
 <#macro renderFormatItemRowCellOpen fieldName style positionSpan extraArgs...>
-  <td<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
+  <td<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatItemRowCellClose fieldName extraArgs...>
   </td>
 </#macro>
 <#macro renderFormatItemRowFormCellOpen style="" extraArgs...>
-  <td<#if style?has_content> class="${style}"</#if>>
+  <td<#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatItemRowFormCellClose extraArgs...>
   </td>
 </#macro>
 
 <#macro renderFormatSingleWrapperOpen formName style="" extraArgs...>
-  <#--<table cellspacing="0"<#if style?has_content> class="${style}"</#if>>-->
+  <#--<table cellspacing="0"<#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>-->
 </#macro>
 <#macro renderFormatSingleWrapperClose formName extraArgs...>
   <#--</table>-->
@@ -413,7 +440,7 @@ WARN: no code run here or indirectly from here should assume full current contex
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...>
   <#-- extra form field attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
-  <#-- Scipio: save common field info
+  <#-- SCIPIO: save common field info
       NOTE: because of the way these are organized, following macros may need to add extra info to this map. -->
   <#local htmlFormRenderFieldInfo = { "attribs":attribs }>
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", htmlFormRenderFieldInfo)> <#-- unset in renderFormatFieldRowWidgetCellClose -->
@@ -432,10 +459,11 @@ WARN: no code run here or indirectly from here should assume full current contex
 <#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
-  <#--positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
+  <#--positions: ${positions} position: ${position} positionSpan: ${positionSpan} nextPositionInRow: ${nextPositionInRow} lastPositionInRow: ${lastPositionInRow} -->
   <#local gridSize = 12>
   <#local markLast = false>
   <#local fieldEntryOffset = 0>
+  <#local required = renderFieldIsRequired(requiredField, requiredStyle)>
   <#if positions?has_content && positionSpan?has_content && position?has_content>
     <#-- note: positionSpan is one less than you'd expect -->
     <#local posSpan = positionSpan + 1>
@@ -456,12 +484,12 @@ WARN: no code run here or indirectly from here should assume full current contex
   </#if>
   
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
-  <#-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} posSpan: ${posSpan!} markLast: ${markLast!?string}
+  <#-- positions: ${positions} position: ${position} positionSpan: ${positionSpan} nextPositionInRow: ${nextPositionInRow} lastPositionInRow: ${lastPositionInRow} posSpan: ${posSpan} markLast: ${markLast?string}
        fieldEntryOffset: ${fieldEntryOffset}
        renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
-       fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
+       fieldEntrySize: ${fieldEntrySize} gridSize: ${gridSize} -->
   
-  <#-- Scipio: widget-area-style now supports a more complex syntax similar to @heading, mainly to be able to add extra containers 
+  <#-- SCIPIO: widget-area-style now supports a more complex syntax similar to @heading, mainly to be able to add extra containers 
       e.g. widget-area-style="area-class;container:sub-div-class" -->
   <#local styleParts = style?split(";")>
   <#local extraContainerStyles = []>
@@ -473,19 +501,19 @@ WARN: no code run here or indirectly from here should assume full current contex
   
   <#local fieldEntryTypeClass = "field-entry-type-" + mapOfbizFieldTypeToStyleName(fieldType)>
   <#local outerClassDefault>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#local>
-  <#local outerClass = "">  <#-- can't specify for now -->
+  <#local outerClass = ""><#-- can't specify for now -->
   <#if markLast> 
     <#local outerClass = addClassArg(outerClass, styles.grid_end!)>
   </#if>
   <#-- NOTE: using explicit version for compatibility! -->
   <#local outerClasses = compileClassArgExplicit(outerClass, outerClassDefault)>
 
-  <#-- Scipio: TODO: form widgets currently only support left-position grid-like label arrangement; @field supports much more;
+  <#-- SCIPIO: TODO: form widgets currently only support left-position grid-like label arrangement; @field supports much more;
       not currently sure if easy way to reuse the stuff in @field here -->
   <@cell open=true close=false class=outerClasses />
-    <@row open=true close=false class="+form-field-entry ${fieldEntryTypeClass}" />
+    <@row open=true close=false class=("+form-field-entry " + rawString(fieldEntryTypeClass)) />
     
-  <#-- Scipio: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
+  <#-- SCIPIO: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
   <#-- Column size factors: <@objectAsScript lang="raw" escape=false object=absColSizes /> -->
   <#-- All parent/current col sizes: <@objectAsScript lang="raw" escape=false object=getAllContainerSizes()![] /> -->
@@ -500,15 +528,15 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
-      <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}")>
+      <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${rawString(fieldEntryTypeClass)}")>
       <#local titleAreaClassDefault = defaultGridStyles.labelArea>
       <#-- NOTE: using explicit version for compatibility! -->
       <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
         <#-- TODO: currently not making use of:
           renderFieldTitleCurrentFieldHelpText
         -->
-        <@field_markup_labelarea label=renderFieldTitleCurrentTitle!"" labelDetail=renderFieldTitleCurrentTitleDetail!"" 
-          required=renderAsterisksIsRequired(requiredField, requiredStyle) 
+        <@field_markup_labelarea label=(renderFieldTitleCurrentTitle!"") labelDetail=(renderFieldTitleCurrentTitleDetail!"") 
+          required=required 
           collapse=false fieldId=renderFieldTitleCurrentForId!""
           labelType="horizontal" labelPosition="left" 
           fieldType=mapOfbizFieldTypeToScipioFieldType(fieldType)
@@ -516,25 +544,25 @@ WARN: no code run here or indirectly from here should assume full current contex
       </div>
   </#if>
   <#local innerClass = style>
-  <#local innerClass = addClassArg(innerClass, "field-entry-widget ${fieldEntryTypeClass}")>
+  <#local innerClass = addClassArg(innerClass, "field-entry-widget ${rawString(fieldEntryTypeClass)}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local innerClassDefault = defaultGridStyles.widgetPostfixArea>
   <#else>
-      <#-- Scipio: NOTE: This must be 12 hardcoded, NOT totalColumns -->
+      <#-- SCIPIO: NOTE: This must be 12 hardcoded, NOT totalColumns -->
       <#local innerClassDefault>${styles.grid_small!}12 ${styles.grid_end!}</#local>
   </#if>
       <#-- NOTE: using explicit version for compatibility! -->
       <@cell open=true close=false class=compileClassArgExplicit(innerClass, innerClassDefault) />
         <#if extraContainerStyles?has_content>
           <#list extraContainerStyles as containerEntry>
-            <#local parts = containerEntry?trim?split(":")>
+            <#local parts = rawString(containerEntry)?trim?split(":")>
             <#local elem = parts[0]?trim>
             <#if elem?has_content>
               <#if elem == "container">
                 <#local elem = "div">
               </#if>
-              <${elem}<#if (parts?size > 1) && parts[1]?trim?has_content> class="${parts[1]?trim}"</#if>>
+              <${elem}<#if (parts?size > 1) && parts[1]?trim?has_content> class="${escapeVal(parts[1]?trim, 'html')}"</#if>>
             </#if>
           </#list>
         </#if>
@@ -560,22 +588,22 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", {})>
 </#macro>
 
-<#-- Scipio: only render empty space if not running within title open section -->
+<#-- SCIPIO: only render empty space if not running within title open section -->
 <#macro renderFormatEmptySpace extraArgs...><#if (renderFormatFieldRowTitleCellOpened!false) != true>&nbsp;<#else><#global renderFieldTitleCurrentTitle = "&nbsp;"></#if></#macro>
 
-<#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false hideOptions=false extraArgs...>
+<#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false hideOptions=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
-  <@field_textfind_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains opIsEmpty=opIsEmpty opNotEqual=opNotEqual class=className alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle hideIgnoreCase=hideIgnoreCase ignoreCase=ignCase ignoreCaseMsg=ignoreCase title=title fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions/>
+  <@field_textfind_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains opIsEmpty=opIsEmpty opNotEqual=opNotEqual class=className alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle hideIgnoreCase=hideIgnoreCase ignoreCase=ignCase ignoreCaseMsg=ignoreCase title=title fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty extraArgs...>
+<#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
-  <@field_datefind_widget class=className alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty />
+  <@field_datefind_widget class=className alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru extraArgs...>
+<#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
-  <@field_rangefind_widget class=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru />
+  <@field_rangefind_widget class=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
 <#--
@@ -611,7 +639,7 @@ Parameter: showDescription, String, optional - If the showDescription parameter 
 Parameter: initiallyCollapsed, Not used.
 Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true, the contents of lastViewName will be appended to the Ajax URL.
 -->
-<#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main" title="" fieldType="" fieldTitleBlank=false tooltip="" extraArgs...>
+<#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main" title="" fieldType="" fieldTitleBlank=false tooltip="" requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
@@ -623,10 +651,10 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl 
     ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground 
     clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName 
-    title=title fieldTitleBlank=fieldTitleBlank tooltip=tooltip />
+    title=title fieldTitleBlank=fieldTitleBlank tooltip=tooltip required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#-- Scipio: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
+<#-- SCIPIO: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
      paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false paginateOn=true ajaxPaginateOnUrl="" paginateOnUrl="" paginateOnStyle="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffStyle="" paginateOffLabel="" lowIndex=0 realHighIndex=-1 position="" extraArgs...>
   <#-- delegate to scipio libs -->
@@ -636,29 +664,29 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     paginateNextLabel=paginateNextLabel paginateLastClass=paginateLastStyle ajaxLastUrl=ajaxLastUrl lastUrl=lastUrl paginateLastLabel=paginateLastLabel paginateViewSizeLabel=paginateViewSizeLabel enabled=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl=ajaxPaginateOnUrl paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnStyle paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffStyle paginateOffLabel=paginateOffLabel position=position/>
 </#macro>
 
-<#macro renderFileField className alert name value size maxlength autocomplete id="" title="" fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderFileField className alert name value size maxlength autocomplete id="" title="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
-  <@field_file_widget class=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_file_widget class=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
 </#macro>
-<#macro renderPasswordField className alert name value size maxlength id autocomplete title="" fieldType="" fieldTitleBlank=false extraArgs...>
+<#macro renderPasswordField className alert name value size maxlength id autocomplete title="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
-  <@field_password_widget class=className alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_password_widget class=className alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
 </#macro>
 <#macro renderImageField value description alternate style event action title="" fieldType="" fieldTitleBlank=false extraArgs...>
-  <img<#if value?has_content> src="${value}"</#if><#if description?has_content> title="${description}"</#if> alt="<#if alternate?has_content>${alternate}"</#if><#if style?has_content> class="${style}"</#if><#if event?has_content> ${event?html}="${action}" </#if>/>
+  <img<#if value?has_content> src="${escapeFullUrl(value, 'html')}"</#if><#if description?has_content> title="${escapeVal(description, 'html')}"</#if> alt="<#if alternate?has_content>${escapeVal(alternate, 'html')}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#if event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}" </#if>/>
 </#macro>
 
 <#macro renderBanner style leftStyle rightStyle leftText text rightText extraArgs...>
   <table width="100%">
     <tr><#rt/>
-      <#if leftText?has_content><td align="left"><#if leftStyle?has_content><div class="${leftStyle}"></#if>${leftText}<#if leftStyle?has_content></div></#if></td><#rt/></#if>
-      <#if text?has_content><td align="center"><#if style?has_content><div class="${style}"></#if>${text}<#if style?has_content></div></#if></td><#rt/></#if>
-      <#if rightText?has_content><td align="right"><#if rightStyle?has_content><div class="${rightStyle}"></#if>${rightText}<#if rightStyle?has_content></div></#if></td><#rt/></#if>
+      <#if leftText?has_content><td align="left"><#if leftStyle?has_content><div class="${escapeVal(leftStyle, 'html')}"></#if>${escapeVal(leftText, 'htmlmarkup')}<#if leftStyle?has_content></div></#if></td><#rt/></#if>
+      <#if text?has_content><td align="center"><#if style?has_content><div class="${escapeVal(style, 'html')}"></#if>${escapeVal(text, 'htmlmarkup')}<#if style?has_content></div></#if></td><#rt/></#if>
+      <#if rightText?has_content><td align="right"><#if rightStyle?has_content><div class="${escapeVal(rightStyle, 'html')}"></#if>${escapeVal(rightText, 'htmlmarkup')}<#if rightStyle?has_content></div></#if></td><#rt/></#if>
     </tr>
   </table>
 </#macro>
 
-<#macro renderContainerField id className extraArgs...><div id="${id}" class="${className}"></div></#macro>
+<#macro renderContainerField id className extraArgs...><div id="${escapeVal(id, 'html')}" class="${escapeVal(className, 'html')}"></div></#macro>
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible extraArgs...>
     <#-- delegate to scipio libs -->
@@ -670,12 +698,12 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N" extraArgs...>
-  <#-- Scipio: only render immediately if not falling within title open/close -->
+  <#-- SCIPIO: only render immediately if not falling within title open/close -->
   <#local titleDetail>
-    <#if showSelectAll="Y"><input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${name}');"/></#if>
+    <#if showSelectAll="Y"><input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${escapeVal(name, 'js-html')}');"/></#if>
   </#local>
   <#if (renderFormatFieldRowTitleCellOpened!false) != true>
-    <#if title?has_content>${title}<br /></#if>
+    <#if title?has_content>${escapeVal(title, 'htmlmarkup')}<br /></#if>
     ${titleDetail}
   <#else>
     <#--<#global renderFieldTitleCurrentTitle = content>-->
@@ -685,54 +713,59 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderSortField style title linkUrl ajaxEnabled tooltip="" extraArgs...>
-  <a<#if style?has_content> class="${style}"</#if> href="<#if ajaxEnabled?has_content && ajaxEnabled>javascript:ajaxUpdateAreas('${linkUrl}')<#else>${linkUrl}</#if>"<#if tooltip?has_content> title="${tooltip}"</#if>>${title}</a>
+  <a<#if style?has_content> class="${escapeVal(style, 'html')}"</#if> href="<#if ajaxEnabled?has_content && ajaxEnabled>javascript:ajaxUpdateAreas('${escapeFullUrl(linkUrl, 'js-html')}')<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"<#if tooltip?has_content> title="${escapeVal(tooltip, 'html')}"</#if>>${escapeVal(title, 'htmlmarkup')}</a>
 </#macro>
 
-<#macro formatBoundaryComment boundaryType widgetType widgetName><!-- ${boundaryType}  ${widgetType}  ${widgetName} --></#macro>
+<#macro formatBoundaryComment boundaryType widgetType widgetName><!-- ${escapeVal(boundaryType, 'html')}  ${escapeVal(widgetType, 'html')}  ${escapeVal(widgetName, 'html')} --></#macro>
 
 <#macro renderTooltip tooltip tooltipStyle extraArgs...>
-  <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${tooltipStyle}<#else>tooltip</#if>">${tooltip}</span><#rt/></#if>
+  <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${escapeVal(tooltipStyle, 'html')}<#else>tooltip</#if>">${escapeVal(tooltip, 'htmlmarkup')}</span><#rt/></#if>
 </#macro>
 
 <#macro renderClass className alert="false" extraArgs...>
-  <#if className?has_content || alert?string == "true"> class="${className!}<#if alert?string == "true"> alert</#if>" </#if>
+  <#if className?has_content || alert?string == "true"> class="${escapeVal(className, 'html')}<#if alert?string == "true"> alert</#if>" </#if>
 </#macro>
 
-<#-- Scipio: new macro to isolate this code -->
+<#-- SCIPIO: new macro to isolate this code -->
 <#macro renderAsterisksCommon requiredField requiredStyle extraArgs...>
+  <#-- SCIPIO: 2016-10-10: the asterix logic is delegated to Scipio macros, so this is counterproductive
   <#if requiredField?string == "true"><#if !requiredStyle?has_content><span class="form-field-input-asterisk">*</span></#if></#if>
+  -->
+  <#if requiredField?string == "true"><span class="form-field-input-asterisk">*</span></#if>
 </#macro>
 
-<#-- Scipio: function to isolate this if-required logic -->
-<#function renderAsterisksIsRequired requiredField requiredStyle>
-  <#return requiredField?string == "true" && !requiredStyle?has_content>
+<#-- SCIPIO: function to isolate this if-required logic -->
+<#function renderFieldIsRequired requiredField requiredStyle="">
+  <#-- SCIPIO: 2016-10-10: the asterix logic is delegated to Scipio macros, so this is counterproductive
+  <#return requiredField?string == "true" && !requiredStyle?has_content>-->
+  <#return requiredField?string == "true">
 </#function>
 
 <#macro renderAsterisks requiredField requiredStyle extraArgs...>
-  <#-- Scipio: don't run this here anymore; see widget cell open
+  <#-- SCIPIO: don't run this here anymore; see widget cell open
   <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /> -->
 </#macro>
 
 <#macro makeHiddenFormLinkForm actionUrl name parameters targetWindow>
-  <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${name}">
+  <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapeVal(name, 'html')}">
     <#list parameters as parameter>
-      <input name="${parameter.name}" value="${parameter.value}" type="hidden"/>
+      <input name="${escapeVal(parameter.name, 'html')}" value="${escapeVal(parameter.value, 'html')}" type="hidden"/>
     </#list>
   </form>
 </#macro>
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description confirmation>
-  <a<#if linkStyle?has_content> class="${linkStyle}"</#if> href="javascript:document.${hiddenFormName}.submit()"
-    <#if action?has_content && event?has_content> ${event}="${action}"</#if>
-    <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}')"</#if>>
-      <#if imgSrc?has_content><img src="${imgSrc}" alt=""/></#if>${description}</a>
+  <a<#if linkStyle?has_content> class="${escapeVal(linkStyle, 'html')}"</#if> href="javascript:document['${escapeVal(hiddenFormName, 'js-html')}'].submit()"
+    <#if action?has_content && event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if>
+    <#if confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}')"</#if>>
+      <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt=""/></#if>${escapeVal(description, 'htmlmarkup')}</a>
 </#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation>
-    <a<#if linkStyle?has_content> class="${linkStyle}"</#if> 
-      href="${linkUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if>
-      <#if action?has_content && event?has_content> ${event}="${action}"</#if>
-      <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}')"</#if>
-      <#if imgSrc?length == 0 && title?has_content> title="${title}"</#if>>
-        <#if imgSrc?has_content><img src="${imgSrc}" alt="${alternate}" title="${title}"/></#if>${description}</a>
+    <a<#if linkStyle?has_content> class="${escapeVal(linkStyle, 'html')}"</#if> 
+      href="${escapeFullUrl(linkUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if>
+      <#if action?has_content && event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if>
+      <#if confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}')"</#if>
+      <#if imgSrc?length == 0 && title?has_content> title="${escapeVal(title, 'html')}"</#if>>
+        <#if imgSrc?has_content><img src="${escapeFullUrl(imgSrc, 'html')}" alt="${escapeVal(alternate, 'html')}" title="${escapeVal(title, 'html')}"/></#if>${escapeVal(description, 'htmlmarkup')}</a>
 </#macro>
 
 <#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns extraArgs...>
@@ -762,25 +795,24 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     <@script>
         jQuery(document).ready(function() {
           <#if useRowSubmit>
-            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+            var submitForm = $('form[name="${escapeVal(hiddenFormName, 'js')}"]');
           <#else>
-            var submitForm = $("form[name=${escapePart(formName, 'js')}]");
+            var submitForm = $('form[name="${escapeVal(formName, 'js')}"]');
           </#if>
             
             if (submitForm) {
               <#list submitEntries as submitEntry>
-                <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
-                <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
+                <#local submitFieldNameJs = escapeVal(submitEntry.submitFieldName, 'js')>
+                <#local submitFieldIdJs = escapeVal(submitEntry.submitFieldId, 'js')>
                
-
                 var submitField = $("#${submitFieldIdJs}");
                 $(submitField).click(function(e) {
                     e.preventDefault();
                   <#if useRowSubmit>
-                    <#local selectFieldNamePrefixJs = escapePart(submitEntry.selectFieldNamePrefix, 'js')><#-- selectAction -->
+                    <#local selectFieldNamePrefixJs = escapeVal(submitEntry.selectFieldNamePrefix, 'js')><#-- selectAction -->
                     var checked = false;
               
-                    $("#${escapePart(tableId, 'js')}").find("input[type=radio][name^=${selectFieldNamePrefixJs}],"+ 
+                    $("#${escapeVal(tableId, 'js')}").find("input[type=radio][name^=${selectFieldNamePrefixJs}],"+ 
                         "input[type=checkbox][name^=${selectFieldNamePrefixJs}]").each(function (j, r) {
 
                         if ($(r).is(":checked")) {
@@ -802,7 +834,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
                     if (checked) {
                         submitForm.submit();
                     } else {
-                        alert("${escapePart(uiLabelMap.CommonNoRowSelected, 'js')}");
+                        alert("${escapeVal(uiLabelMap.CommonNoRowSelected, 'js')}");
                     }
                   <#else>
                     submitForm.submit();
@@ -817,16 +849,16 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#elseif submitEntries?has_content>
     <@script>
         jQuery(document).ready(function() {
-            var submitForm = $("form[name=${escapePart(hiddenFormName, 'js')}]");
+            var submitForm = $('form[name="${escapeVal(hiddenFormName, 'js')}"]');
             if (submitForm) {
               <#list submitEntries as submitEntry>
-                <#local submitFieldNameJs = escapePart(submitEntry.submitFieldName, 'js')>
-                <#local submitFieldIdJs = escapePart(submitEntry.submitFieldId, 'js')>
+                <#local submitFieldNameJs = escapeVal(submitEntry.submitFieldName, 'js')>
+                <#local submitFieldIdJs = escapeVal(submitEntry.submitFieldId, 'js')>
    
                 var id = $("[id^=${submitFieldIdJs}]");
                 $(id).click(function(e) {
                     e.preventDefault();
-                    
+
                     <#-- makeHiddenFieldsForHiddenForm -->
                     $(this).closest("tr").find("input[type=text], input[type=hidden], input[type=radio],"+ 
                             "input[type=checkbox], select, textarea").each(function (i, e) {
@@ -849,11 +881,10 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </@script>
   </#if>
   <#if submitEntries?has_content && (useRowSubmit || !useMasterSubmitField)>
-  <#-- TODO: can't use here yet: escapeFullUrl(targetUrl, 'html') because individual params already escaped by renderer, but don't really want that anymore... -->
-  <form method="post" action="${targetUrl}"<#if targetWindow?has_content> target="${escapePart(targetWindow, 'html')}"</#if><#rt/>
-    <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapePart(hiddenFormName, 'html')}">
+  <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if><#rt/>
+    <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapeVal(hiddenFormName, 'html')}">
     <#list mapKeys(params) as paramName>
-      <input type="hidden" name="${escapePart(paramName, 'html')}" value="${escapePart(params[escapePart(paramName, 'html')], 'html')}" />
+      <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[escapeVal(paramName, 'html')], 'html')}" />
     </#list>
     <#if useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>

@@ -21,7 +21,7 @@ under the License.
 <#assign associatedProducts = Static["org.ofbiz.order.shoppingcart.product.ProductDisplayWorker"].getRandomCartProductAssoc(request, true)!>
 <#if associatedProducts?has_content>
 
-  <@section id="miniassocproducts" title="${uiLabelMap.EcommerceYouMightLike}...">
+  <@section id="miniassocproducts" title="${rawLabel('EcommerceYouMightLike')}...">
         <#-- random complementary products -->
         <ul class="browsecategorylist">
         <#list associatedProducts as miniProduct>

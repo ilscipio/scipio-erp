@@ -23,7 +23,7 @@ under the License.
 
     <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
     
-      <#-- Scipio: NOTE: Not all divs below need to be @sections, only those that had "screenlet" -->
+      <#-- SCIPIO: NOTE: Not all divs below need to be @sections, only those that had "screenlet" -->
     
       <div id="checkoutPanel">
 
@@ -34,7 +34,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="shippingPanel" title="${uiLabelMap.EcommerceStep} 2: ${uiLabelMap.FacilityShipping}">
+        <@section id="shippingPanel" title="${rawLabel('EcommerceStep')} 2: ${rawLabel('FacilityShipping')}">
           <div id="shippingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel id="shippingCompleted">
@@ -127,8 +127,8 @@ under the License.
                 </fieldset>
                 <#--<fieldset>-->
                   <@field type="submitarea">
-                    <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${uiLabelMap.EcommerceContinueToStep} 3"/>
-                    <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                    <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${rawLabel('EcommerceContinueToStep')} 3"/>
+                    <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${rawLabel('EcommercePleaseWait')}..."/>
                   </@field>
                 <#--</fieldset>-->
             </form>
@@ -136,7 +136,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="shippingOptionPanel" title="${uiLabelMap.EcommerceStep} 3: ${uiLabelMap.PageTitleShippingOptions}">
+        <@section id="shippingOptionPanel" title="${rawLabel('EcommerceStep')} 3: ${rawLabel('PageTitleShippingOptions')}">
           <div id="shippingOptionSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingOptionPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel class="+completed" id="shippingOptionCompleted">
@@ -160,8 +160,8 @@ under the License.
               </fieldset>
               <#--<fieldset>-->
                 <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${uiLabelMap.EcommerceContinueToStep} 4"/>
-                  <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${rawLabel('EcommerceContinueToStep')} 4"/>
+                  <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${rawLabel('EcommercePleaseWait')}..."/>
                 </@field>
               <#--</fieldset>-->
             </form>
@@ -169,7 +169,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section id="billingPanel" title="${uiLabelMap.EcommerceStep} 4: ${uiLabelMap.AccountingBilling}">
+        <@section id="billingPanel" title="${rawLabel('EcommerceStep')} 4: ${rawLabel('AccountingBilling')}">
           <div id="billingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openBillingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <@panel class="+completed" id="billingCompleted">
@@ -222,7 +222,7 @@ under the License.
                   <div id="billingFormServerError" class="errorMessage"></div>
                 </@alert>
                 
-                <#-- Scipio: default is now Y if billToContactMechId was not set on page load. Only case we don't is if there was an initial billing contact mech different from ship contact mech.
+                <#-- SCIPIO: default is now Y if billToContactMechId was not set on page load. Only case we don't is if there was an initial billing contact mech different from ship contact mech.
                     old: checked=((useShippingAddressForBilling!"")=="Y") 
                     NOTE: The values will be loaded by Javascript, which we can get away with and need to do anyway because the user may have changed
                         the ship address since this page was loaded, so no point in doing statically 
@@ -293,8 +293,8 @@ under the License.
               </fieldset>
               <#--<fieldset>-->
                 <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${uiLabelMap.EcommerceContinueToStep} 5"/>
-                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${rawLabel('EcommerceContinueToStep')} 5"/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${rawLabel('EcommercePleaseWait')}..."/>
                 </@field>
               <#--</fieldset>-->
             </form>
@@ -302,7 +302,7 @@ under the License.
         </@section>
 
 <#-- ========================================================================================================================== -->
-        <@section title="${uiLabelMap.EcommerceStep} 5: ${uiLabelMap.OrderSubmitOrder}">
+        <@section title="${rawLabel('EcommerceStep')} 5: ${rawLabel('OrderSubmitOrder')}">
           <div id="orderSubmitPanel" style="display: none;">
             <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
                 <#--<fieldset>-->

@@ -113,12 +113,12 @@
     <screen name="EditEmplPositionTypes">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindPositionTypes"/>
                 <set field="activeMainMenuItem" value="EmplPositionTypes"/>
                 <set field="activeSubMenuItem" value="EmplPositionTypes"/>
                 <set field="activeSubMenuItem2" value="EditEmplPositionType"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
                 <entity-one entity-name="EmplPositionType" value-field="emplPositionType"/>
+                <set field="titleProperty" value="${groovy: context.emplPositionType ? 'HumanResEditEmplPositionType' : 'HumanResNewEmplPositionType'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -133,7 +133,7 @@
                                 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPositionTypeTabBar"/>
                             </widgets>
                         </section>
-                        <screenlet title="${uiLabelMap.HumanResEditEmplPositionType}">
+                        <screenlet>
                             <section>
                                 <widgets>
                                     <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
@@ -171,7 +171,7 @@
     <screen name="EditTerminationReasons">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResAddTerminationReason"/>
+                <set field="titleProperty" value="HumanResTerminationReason"/>
                 <set field="activeSubMenuItem" value="TerminationReason"/>
                 <set field="terminationReasonId" from-field="parameters.terminationReasonId"/>
                 <entity-one entity-name="TerminationReason" value-field="terminationReason"/>
@@ -251,9 +251,10 @@
     <screen name="EditEmplLeaveReasonTypes">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResEditEmplReasonype"/>
+                <set field="titleProperty" value="HumanResEmplReasonType"/>
                 <set field="activeMainMenuItem" value="GlobalHRSettings"/>
-                <set field="activeSubMenuItem" value="EmplLeaveReasonType"/>
+                <!--<set field="activeSubMenuItem" value="EmplLeaveReasonType"/>-->
+                <set field="activeSubMenuItem" value="EmplLeaveType"/>
                 <set field="emplLeaveReasonTypeId" from-field="parameters.emplLeaveReasonTypeId"/>
                 <entity-one entity-name="EmplLeaveReasonType" value-field="emplreasonType"/>
             </actions>

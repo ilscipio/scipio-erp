@@ -21,50 +21,8 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- Custom apps can use their own financial account decorator by specifying its
-         location in parameters.finAccountDecoratorLocation -->
-    <screen name="CommonFinAccountDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FinAccount" />
-                <set field="activeMainMenuItem" value="FindFinAccount"/>
-                <entity-one value-field="finAccount" entity-name="FinAccount"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field="finAccountId"/></not></condition>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <include-screen name="DefMainSideBarMenu" location="component://accounting/widget/CommonScreens.xml"/>
-                                    </fail-widgets>
-                                </section>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <not><if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/></not>
-                            </condition>
-                            <widgets>
-                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
-                            </widgets>
-                        </section>
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    <!-- SCIPIO: NOTE: The old parameters.finAccountDecoratorLocation pattern that existed here has been supplanted
+        by the decorator default-fallback-location pattern for parameters.mainDecoratorLocation (see CommonScreens.xml). -->
 
     <screen name="FindFinAccount">
         <section>
@@ -77,7 +35,7 @@ under the License.
                 <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -122,7 +80,7 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -162,7 +120,7 @@ under the License.
                 <set field="fromDate" from-field="parameters.fromDate"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.AccountingEditFinAccountRoleFor}"/>
                         <screenlet id="FinAccountRolePanel" collapsible="true">
@@ -185,7 +143,7 @@ under the License.
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!-- <label style="heading" text="${uiLabelMap.AccountingEditFinAccountTransactionFor}"/> -->
                         <screenlet id="FinAccountTransPanel" collapsible="true">
@@ -208,7 +166,7 @@ under the License.
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="FinAccountAuthsPanel" title="${uiLabelMap.AccountingEditFinAccountAuthorityFor}]" collapsible="true">
                             <include-form name="AddFinAccountAuth" location="component://accounting/widget/FinAccountForms.xml"/>
@@ -235,7 +193,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/DepositWithdrawPayments.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -270,7 +228,7 @@ under the License.
                 <set field="activeSubMenuItem" value="finAccountMain"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-portal-page id="FinAccountPortalPage"/>                        
                     </decorator-section>
@@ -313,7 +271,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -352,7 +310,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -394,7 +352,7 @@ under the License.
                 <script location="component://accounting/webapp/ar/WEB-INF/actions/BatchPayments.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -436,7 +394,7 @@ under the License.
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_nav} ${styles.action_add}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
@@ -476,7 +434,7 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_nav} ${styles.action_add}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
@@ -546,7 +504,7 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                             <label style="heading" text="${uiLabelMap.AccountingCreateNewDepositPaymentFor}"/>
                         <screenlet id="EditDepositPaymentPanel" collapsible="true">
@@ -568,7 +526,7 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="EditWithdrawalPaymentPanel" collapsible="true" title="${uiLabelMap.AccountingCreateNewWithdrawalPaymentFor}">
                             <include-form name="EditWithdrawalPayment" location="component://accounting/widget/FinAccountForms.xml"/>
@@ -589,7 +547,7 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="FinAccountReconciliationsTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <section>
@@ -649,7 +607,7 @@ under the License.
                 <set field="previousClosingBalance" from-field="previousReconciliationClosingBalance.closingBalance"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                             <include-menu location="component://accounting/widget/AccountingMenus.xml" name="FinAccountReconciliationsTabBar"/>
                         <screenlet title="${uiLabelMap.AccountingCurrentBankReconciliation}">
@@ -693,7 +651,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="FinAccountReconciliationsTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">

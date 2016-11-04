@@ -21,6 +21,18 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <screen name="CommonPortletDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="showPortlet">
         <section>
             <widgets>
@@ -46,7 +58,7 @@ under the License.
     <screen name="showPortletMainDecorator">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPortletDecorator">
                     <decorator-section name="body">
                         <include-screen name="showPortlet"/>
                     </decorator-section>
@@ -76,7 +88,7 @@ under the License.
                 <set field="title" from-field="portalPage.portalPageName"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPortletDecorator">
                     <decorator-section name="body">
                         <container id="portalContainerId">
                             <include-portal-page id="${parameters.portalPageId}" conf-mode="${parameters.confMode}" use-private="${parameters.usePrivate}"/>
@@ -97,7 +109,7 @@ under the License.
                 <set field="portalPages" value="${groovy:org.ofbiz.widget.portal.PortalPageWorker.getPortalPages(parameters.parentPortalPageId,context)}"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPortletDecorator">
                     <decorator-section name="body">
                         <screenlet id="PortalPagesList" title="${uiLabelMap.CommonPortalPagesForApplication}: ${parameters.parentPortalPageId}" collapsible="true">
                             <container style="button-bar">
@@ -131,7 +143,7 @@ under the License.
                 <script location="component://common/webcommon/WEB-INF/actions/includes/ListPortalPortlets.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPortletDecorator">
                     <decorator-section name="body">
                         <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/></container>
                         <screenlet title="${uiLabelMap.CommonPortalCategoryPage}: ${parameters.parentPortalPageId}">
@@ -198,7 +210,7 @@ under the License.
                 <entity-one entity-name="PortalPortlet" value-field="portalPortlet"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPortletDecorator">
                     <decorator-section name="body">
                         <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/></container>
                         <screenlet title="${uiLabelMap.CommonEditPortletAttributes}: ${portalPortlet.portletName}">
@@ -215,7 +227,7 @@ under the License.
                 <entity-one entity-name="PortalPageColumn" value-field="portalPageColumn"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPortletDecorator">
                     <decorator-section name="body">
                         <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/></container>
                         <screenlet title="Set column width: ${portalPortlet.portletName}">
@@ -229,7 +241,7 @@ under the License.
     <screen name="NewPortalPage">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPortletDecorator">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="ManagePortalPages" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}">

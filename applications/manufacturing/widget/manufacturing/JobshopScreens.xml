@@ -22,8 +22,31 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     <screen name="CommonJobshopDecorator">
         <section>
+            <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="jobshop"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="ProductionRun"/>
+                <set field="titleFormat" value="\${finalTitle} ${context.productionRunId}"/>
+            </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <!-- override default left-column because extra productionRun check is needed -->
+                        <section>
+                            <!-- do check for MANUFACTURING, _VIEW permission -->
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                                    <not><if-empty field="productionRun"/></not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for MANUFACTURING, _VIEW permission -->
@@ -31,6 +54,7 @@ under the License.
                                 <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
                             </condition>
                             <widgets>
+                                <!-- SCIPIO: use sidebar
                                 <section>
                                     <condition>
                                         <not><if-empty field="productionRun"/></not>
@@ -38,8 +62,10 @@ under the License.
                                     <widgets>
                                         <include-menu name="ProductionRunTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                                     </widgets>
-                                </section>
-                                <label style="heading">[${uiLabelMap.CommonId} ${productionRunId}]</label>
+                                </section>-->
+                                <!-- SCIPIO: combine into title, like other apps do
+                                <label style="heading">[${uiLabelMap.CommonId} ${productionRunId}]</label>-->
+                                <!-- SCIPIO: TODO: REVIEW: maybe don't need this on every screen? -->
                                 <container style="button-bar">
                                     <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_nav} ${styles.action_add}"/>
                                 </container>
@@ -61,7 +87,7 @@ under the License.
                 <set field="activeMainMenuItem" value="jobshop"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="CreateProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
@@ -76,7 +102,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingEditProductionRun"/>
                 <set field="activeSubMenuItem" value="edit"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -106,7 +131,7 @@ under the License.
                 <decorator-screen name="CommonJobshopDecorator" location="${parameters.commonJobshopDecorator}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ManufacturingProductionRunId} ${productionRunId}"  navigation-menu-name="ProductionRunStatusAction">
-                            <include-menu name="ProductionRunStatusTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
+                            <include-menu name="ProductionRunStatusSubTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                             <include-form name="UpdateProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                         </screenlet>
                         <section>
@@ -154,7 +179,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingProductionRunDeclaration"/>
                 <set field="activeSubMenuItem" value="declaration"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -185,7 +209,7 @@ under the License.
                 <decorator-screen name="CommonJobshopDecorator" location="${parameters.commonJobshopDecorator}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ManufacturingProductionRunId} ${productionRunId}" navigation-menu-name="ProductionRunStatusAction">
-                            <include-menu name="ProductionRunStatusTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
+                            <include-menu name="ProductionRunStatusSubTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                             <include-form name="ShowProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                         </screenlet>
                         <section>
@@ -301,7 +325,6 @@ under the License.
                 <set field="titleProperty" value="ManufacturingProductionRunAssocs"/>
                 <set field="activeSubMenuItem" value="assocs"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
-                <set field="activeMainMenuItem" value="jobshop"/>
 
                 <set field="productionRunId" from-field="parameters.productionRunId"/>
                 <entity-one entity-name="WorkEffort" value-field="productionRun">
@@ -341,7 +364,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingProductionRunTasks"/>
                 <set field="activeSubMenuItem" value="tasks"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -359,7 +381,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonJobshopDecorator" location="${parameters.commonJobshopDecorator}">
                     <decorator-section name="body">
-                        <screenlet id="EditProductionRunRoutingTaskPanel" title="${uiLabelMap.ManufacturingProductionRunTasks}" collapsible="true">
+                        <screenlet id="EditProductionRunRoutingTaskPanel" collapsible="true"><!-- SCIPIO: redundant: title="${uiLabelMap.ManufacturingProductionRunTasks}" -->
                             <include-form name="EditProductionRunRoutingTask" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                         </screenlet>
                         <include-form name="ListProductionRunRoutingTasks" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
@@ -373,7 +395,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingProductionRunComponents"/>
                 <set field="activeSubMenuItem" value="components"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -387,16 +408,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonJobshopDecorator" location="${parameters.commonJobshopDecorator}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ManufacturingProductionRunComponents}">
+                        <screenlet><!-- SCIPIO: redundant: title="${uiLabelMap.ManufacturingProductionRunComponents}" -->
                             <include-form name="AddProductionRunComponent" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                         </screenlet>
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunTasksInfo.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunTasksInfo.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -407,7 +424,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingProductionRunActualComponents"/>
                 <set field="activeSubMenuItem" value="actualComponents"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -437,7 +453,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingProductionRunFixedAssets"/>
                 <set field="activeSubMenuItem" value="fixedAssets"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -454,13 +469,9 @@ under the License.
                         <screenlet title="${uiLabelMap.ManufacturingTaskFixedAssets}">
                             <include-form name="AddProductionRunTaskFixedAsset" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                         </screenlet>
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunTasksInfo.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunTasksInfo.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -471,7 +482,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingProductionRunCosts"/>
                 <set field="activeSubMenuItem" value="costs"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
 
                 <set field="productionRunId" from-field="parameters.productionRunId"/>
                 <entity-one entity-name="WorkEffort" value-field="productionRun">
@@ -482,13 +492,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonJobshopDecorator" location="${parameters.commonJobshopDecorator}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunCosts.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunCosts.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -497,9 +503,8 @@ under the License.
     <screen name="ProductionRunContent">
         <section>
             <actions>
-                <set field="titleProperty" value="ManufacturingProductionRunContent"/>
+                <set field="titleProperty" value="ManufacturingProductionRunContent"/><!-- SCIPIO: doesn't exist: ManufacturingProductionRunContent -->
                 <set field="activeSubMenuItem" value="content"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
 
                 <set field="productionRunId" from-field="parameters.productionRunId"/>
                 <entity-one entity-name="WorkEffort" value-field="productionRun">
@@ -510,15 +515,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonJobshopDecorator" location="${parameters.commonJobshopDecorator}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-form name="ListProductionRunContent" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
-                                <screenlet title="Import Content From Product ${delivProductId}">
-                                    <include-form name="FindDelivProductContent" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
-                                    <include-form name="ListDelivProductContent" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <include-form name="ListProductionRunContent" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
+                        <screenlet title="Import Content From Product ${delivProductId}">
+                            <include-form name="FindDelivProductContent" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
+                            <include-form name="ListDelivProductContent" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -529,7 +530,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleProductionRunLink"/>
                 <set field="activeSubMenuItem" value="assocs"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
                 <set field="productionRunId" from-field="parameters.productionRunId"/>
                 <entity-one entity-name="WorkEffort" value-field="productionRun">
                     <field-map field-name="workEffortId" from-field="productionRunId"/>
@@ -556,7 +556,8 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- SCIPIO: NOTE: if this use main-decorator, means jobshop sub-menu only show after a prod. run is chosens -->
+                <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -598,10 +599,28 @@ under the License.
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/WorkWithShipmentPlans.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ManufacturingWorkWithShipmentPlans}">
+                        <container>
+                            <!-- SCIPIO: added by us (otherwise no indication of where these come from / how to create)
+                                TODO: review -->
+                            <link url-mode="inter-app" target="/facility/control/FindShipment" text="${uiLabelMap.FacilityFacility} ${uiLabelMap.FacilityShipments}" style="${styles.link_nav}"/>
+                        </container>
+                        <screenlet><!-- title="${uiLabelMap.ManufacturingWorkWithShipmentPlans}" -->
                             <include-form name="listShipmentPlans" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
+                            <!-- SCIPIO: added this, but probably redundant as long as there is link above
+                            <section>
+                                <condition>
+                                    <and>
+                                        <if-empty field="shipmentPlans"/>
+                                        <if-empty field="shipment"/>
+                                    </and>
+                                </condition>
+                                <widgets>
+                                    <label style="common-msg-info" text="${uiLabelMap.ManufacturingNoShipmentPlansInstructions}"/>
+                                </widgets>
+                            </section>
+                            -->
                         </screenlet>
                         <section>
                             <condition>

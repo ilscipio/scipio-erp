@@ -57,18 +57,18 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<@section title="${uiLabelMap.OrderHowShallWeShipIt}?"><#-- Scipio: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
+<@section title="${rawLabel('OrderHowShallWeShipIt')}?"><#-- SCIPIO: No numbers for multi-page checkouts, make checkout too rigid: 2) ${uiLabelMap.OrderHowShallWeShipIt}? -->
     <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
         <#--<fieldset>-->
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>
 
-            <#-- Scipio: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
+            <#-- SCIPIO: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
             <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
-            <@field type="generic" label="<strong>${uiLabelMap.OrderShippingMethod}</strong>" required=true>
+            <@field type="generic" label=wrapAsRaw("<strong>${uiLabelMap.OrderShippingMethod}</strong>", 'htmlmarkup') required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
-                <#-- Scipio: For shop, will not show ship methods whose shipping estimates returned an error.
+                <#-- SCIPIO: For shop, will not show ship methods whose shipping estimates returned an error.
                     Selecting them here causes the next events to fail (offline calc for these was not supported in ecommerce). 
                     Some stores may want to let customers place
                     orders with offline calculation, but we know the failure is very likely to be misconfiguration
@@ -84,14 +84,14 @@ function submitForm(form, mode, value) {
                     <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                   </#assign>
                   <#--<@commonInvField type="generic" labelContent=labelContent>-->
-                  <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=labelContent /><#--inline=true -->
+                  <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=wrapAsRaw(labelContent, 'htmlmarkup') /><#--inline=true -->
                   <#--</@commonInvField>-->
                 </#if>
               </#list>
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
                 <#--<@commonInvField type="generic" labelContent=labelContent>-->
-                <@field type="radio" name="shipping_method" value="Default" checked=true label=labelContent/><#--inline=true -->
+                <@field type="radio" name="shipping_method" value="Default" checked=true label=wrapAsRaw(labelContent, 'htmlmarkup')/><#--inline=true -->
                 <#--</@commonInvField>-->
               </#if>
             </@fields>
@@ -100,10 +100,10 @@ function submitForm(form, mode, value) {
             <br/>
             <#--<hr />-->
               
-            <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+            <@field type="generic" label="${rawLabel('OrderShipAllAtOnce')}?">
               <@fields inlineItems=false>
-              <@field type="radio" checked=("Y" != (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}."/>
-              <@field type="radio" checked=("Y" == (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}."/>
+              <@field type="radio" checked=("Y" != (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${rawLabel('OrderPleaseWaitUntilBeforeShipping')}."/>
+              <@field type="radio" checked=("Y" == (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${rawLabel('OrderPleaseShipItemsBecomeAvailable')}."/>
               </@fields>
             </@field>
               <#--<hr />-->

@@ -15,9 +15,9 @@
             <@tr>
                 <@td>${item.termDays!}</@td>
                 <@td>${(itemType.get("description",locale))!}</@td>
-                <@td><@ofbizCurrency isoCode=item.uomId amount=(item.termvalue!)/></@td>
-                <@td>${item.FormFieldTitle_textData!}</@td>
-                <@td>${item.FormFieldTitle_textValue!}</@td>
+                <@td><@ofbizCurrency isoCode=item.uomId amount=(item.termValue!0)/></@td>
+                <@td>${item.description!}</@td><#-- TODO: REVIEW: this field name was invalid, I can only guess: ${item.textData!} -->
+                <@td>${item.textValue!}</@td>
             </@tr>
         </#list>
 

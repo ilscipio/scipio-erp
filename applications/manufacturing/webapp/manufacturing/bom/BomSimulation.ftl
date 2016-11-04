@@ -20,12 +20,12 @@ under the License.
 <#if requestParameters.lookupFlag?default("N") == "Y">
 
 <#if selectedFeatures?has_content>
-  <#assign sectionTitle>${uiLabelMap.ManufacturingSelectedFeatures}</#assign>
+  <#assign sectionTitle = uiLabelMap.ManufacturingSelectedFeatures/>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs></@menu>
   </#macro>
 <#else>
-  <#assign sectionTitle>${uiLabelMap.ManufacturingBomSimulation}</#assign>
+  <#assign sectionTitle = uiLabelMap.ManufacturingBomSimulation/>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs></@menu>
   </#macro>

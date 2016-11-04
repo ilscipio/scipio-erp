@@ -17,7 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- Scipio: Common Theme Type Defs are isolated to own file for easier reloading -->
+<!-- SCIPIO: Common Theme Type Defs are isolated to own file for easier reloading -->
 <entity-engine-xml>
 
     <!-- Visual Themes seed data -->
@@ -46,7 +46,7 @@ under the License.
     <Enumeration enumId="VT_LOGIN_TMPLT_LOC" description="Login Template Location" enumTypeId="VT_RES_TYPE" sequenceId="21"/>
     <Enumeration enumId="VT_ERROR_TMPLT_LOC" description="Full Page Error Template Location" enumTypeId="VT_RES_TYPE" sequenceId="22"/>
 
-    <!-- Scipio: new visual theme types -->
+    <!-- SCIPIO: new visual theme types -->
     <Enumeration enumId="VT_THEME_DATA_RES" description="Theme seed data resource location" enumTypeId="VT_RES_TYPE" sequenceId="50"/>
     <Enumeration enumId="VT_STL_VAR_LOC" description="Style Template Location used to include theme specific variables and override defaults - default/general" enumTypeId="VT_RES_TYPE" sequenceId="51"/>
     <Enumeration enumId="VT_STL_TMPLT_LOC" description="Style Template Location used to include theme specific templating macros and override defaults - default/general" enumTypeId="VT_RES_TYPE" sequenceId="52"/>

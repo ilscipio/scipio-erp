@@ -22,7 +22,7 @@ under the License.
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
   
 <@section title=uiLabelMap.ProductAdvancedSearchInCategory>
-    <#-- Scipio: don't hardcode these
+    <#-- SCIPIO: don't hardcode these
     <input type="hidden" name="VIEW_SIZE" value="10" />-->
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
     <#if searchCategory?has_content>
@@ -42,7 +42,7 @@ under the License.
       <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <@field type="select" label="${(productFeatureType.get('description',locale))!}" name="pft_${productFeatureTypeId}">
+      <@field type="select" label=((productFeatureType.get('description',locale))!) name="pft_${productFeatureTypeId}">
           <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
         <#list productFeatures as productFeature>
           <option value="${productFeature.productFeatureId}">${productFeature.get("description",locale)?default(productFeature.productFeatureId)}</option>
@@ -88,7 +88,7 @@ under the License.
   <#if searchOptionsHistoryList?has_content>
     <hr />
 
-    <@section title="${uiLabelMap.OrderLastSearches}...">
+    <@section title="${rawLabel('OrderLastSearches')}...">
 
     <div>
       <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>

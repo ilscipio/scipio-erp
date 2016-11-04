@@ -179,18 +179,18 @@ under the License.
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-  <#assign shipGroup = shipGroup> <#-- Scipio: make this global so macro can access - ftl kludge -->
+  <#assign shipGroup = shipGroup> <#-- SCIPIO: make this global so macro can access - ftl kludge -->
     <#macro menuContent menuArgs={}>
        <@menu args=menuArgs>
-         <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" class="+${styles.action_run_local!} ${styles.action_hide!}" />-->
-         <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
+         <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${escapeVal(rawLabel('CommonExpand'), 'js')}', '${escapeVal(rawLabel('CommonCollapse'), 'js')}');" text=" " title="Collapse" class="+${styles.action_run_local!} ${styles.action_hide!}" />-->
+         <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${rawLabel('OrderShipGroup')} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
-           <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}&amp;view=OISGA") text=uiLabelMap.OrderShipmentInformationByOrderItem class="+${styles.action_run_sys!} ${styles.action_view!}" />
+           <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}&view=OISGA") text=uiLabelMap.OrderShipmentInformationByOrderItem class="+${styles.action_run_sys!} ${styles.action_view!}" />
          </#if>
        </@menu>
     </#macro>
-    <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}" menuContent=menuContent>
+    <@section title="${rawLabel('OrderShipmentInformation')} - ${rawString(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
         <@fields type="default-manual">
             <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                     <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">

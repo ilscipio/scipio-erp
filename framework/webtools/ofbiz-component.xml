@@ -35,7 +35,7 @@ under the License.
         location="webapp/webtools"
         base-permission="OFBTOOLS,WEBTOOLS"
         mount-point="/admin"/>  
-    <!-- Scipio: Legacy mount-point redirect -->
+    <!-- SCIPIO: Legacy mount-point redirect -->
     <webapp name="webtools"
         title="WebTools"
         menu-name="secondary"

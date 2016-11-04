@@ -17,6 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#if mrpName??>
-  <@heading>${uiLabelMap.ManufacturingMrpName} ${mrpName!}</@heading>
+<#if mrpName?has_content>
+  <@heading>${uiLabelMap.ManufacturingMrpName}: ${mrpName}</@heading>
 </#if>

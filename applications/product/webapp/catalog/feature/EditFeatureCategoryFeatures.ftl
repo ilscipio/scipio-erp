@@ -21,7 +21,7 @@ under the License.
     <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuContent=menuContent>
+<@section title="${rawLabel('ProductEditFeaturesForFeatureCategory')} \"${rawString((curProductFeatureCategory.description)!)}\"" menuContent=menuContent>
     <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
       <div>
         ${uiLabelMap.CommonAdd}

@@ -135,17 +135,17 @@ public abstract class ProductUtil {
                     dispatchContext.put("isPhysical", isPhysical);
 
                 FastMap<String, String> title = new FastMap<String, String>();
-                String detitle = productContentDe.get("PRODUCT_NAME", "string").toString();
+                String detitle = productContentDe.get("PRODUCT_NAME");
                 if (detitle != null)
                     title.put("de", detitle);
                 else if (product.get("productName") != null)
                     title.put("de", (String) product.get("productName"));
-                String entitle = productContentEn.get("PRODUCT_NAME", "string").toString();
+                String entitle = productContentEn.get("PRODUCT_NAME");
                 if (entitle != null)
                     title.put("en", entitle);
                 else if (product.get("productName") != null)
                     title.put("en", (String) product.get("productName"));
-                String frtitle = productContentFr.get("PRODUCT_NAME", "string").toString();
+                String frtitle = productContentFr.get("PRODUCT_NAME");
                 if (frtitle != null)
                     title.put("fr", frtitle);
                 else if (product.get("productName") != null)
@@ -153,25 +153,25 @@ public abstract class ProductUtil {
                 dispatchContext.put("title", title);
 
                 Map<String, String> description = new FastMap<String, String>();
-                String dedescription = productContentDe.get("DESCRIPTION", "string").toString();
+                String dedescription = productContentDe.get("DESCRIPTION");
                 if (dedescription != null)
                     description.put("de", dedescription);
-                String endescription = productContentEn.get("DESCRIPTION", "string").toString();
+                String endescription = productContentEn.get("DESCRIPTION");
                 if (endescription != null)
                     description.put("en", endescription);
-                String frdescription = productContentFr.get("DESCRIPTION", "string").toString();
+                String frdescription = productContentFr.get("DESCRIPTION");
                 if (frdescription != null)
                     description.put("fr", frdescription);
                 dispatchContext.put("description", description);
 
                 FastMap<String, String> longDescription = new FastMap<String, String>();
-                String delongDescription = productContentDe.get("LONG_DESCRIPTION", "string").toString();
+                String delongDescription = productContentDe.get("LONG_DESCRIPTION");
                 if (delongDescription != null)
                     longDescription.put("de", delongDescription);
-                String enlongDescription = productContentEn.get("LONG_DESCRIPTION", "string").toString();
+                String enlongDescription = productContentEn.get("LONG_DESCRIPTION");
                 if (enlongDescription != null)
                     longDescription.put("en", enlongDescription);
-                String frlongDescription = productContentFr.get("LONG_DESCRIPTION", "string").toString();
+                String frlongDescription = productContentFr.get("LONG_DESCRIPTION");
                 if (frlongDescription != null)
                     longDescription.put("fr", frlongDescription);
                 dispatchContext.put("longDescription", longDescription);

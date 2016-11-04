@@ -25,7 +25,7 @@ under the License.
 </#if>
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
-<#assign logo><img src="<@ofbizContentUrl><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@ofbizContentUrl>"/></#assign>
+<#assign logo><img src="<@ofbizContentUrl escapeAs='html'><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@ofbizContentUrl>"/></#assign>
 <#assign username = requestParameters.USERNAME!(sessionAttributes.autoUserLogin.userLoginId)!"">
 <#if username != "">
   <#assign focusName = false>
@@ -53,12 +53,12 @@ under the License.
        <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
        <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
        <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
-       <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
-       <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=(labelPassword!)/>
+       <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=wrapAsRaw({'htmlmarkup':labelUsername, 'raw':rawLabel('CommonUsername')})/>
+       <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=wrapAsRaw({'htmlmarkup':labelPassword, 'raw':rawLabel('CommonPassword')})/>
 
           <#if ("Y" == useMultitenant) >
               <#--<#if !requestAttributes.userTenantId??>-->
-              <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=(labelTenant!)/>
+              <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=wrapAsRaw({'htmlmarkup':labelTenant, 'raw':rawLabel('CommonTenantId')})/>
               <#--<#else>
                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
               </#if>-->

@@ -20,13 +20,13 @@ under the License.
 
 <entity-engine-xml>
 
-    <!-- Scipio: This file is for catalog definitions that are transient or temporary in nature,
+    <!-- SCIPIO: This file is for catalog definitions that are transient or temporary in nature,
         i.e. in a real store would be calculated but for which we need static demo data for testing.
         e.g. Best-selling -->
 
     <!-- CATEGORIES (organizational) -->
 
-    <!-- Scipio: NOTE: These still remaining their old IDs -->
+    <!-- SCIPIO: NOTE: These still remaining their old IDs -->
     <ProductCategory productCategoryId="BEST-SELL-1" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Electronics"/>
     <ProductCategory productCategoryId="BEST-SELL-2" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Other"/>
   
@@ -83,11 +83,11 @@ under the License.
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="CAM-2644" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="KB-5569" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/> 
-    <!-- Scipio: This doesn't make sense (percent off gift cards)
+    <!-- SCIPIO: This doesn't make sense (percent off gift cards)
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
     -->
-    <!-- Scipio: This is too strange to promote
+    <!-- SCIPIO: This is too strange to promote
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="FA-001" fromDate="2001-05-13 12:00:00.0"/>
     -->
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PC-1000" fromDate="2001-05-13 12:00:00.0"/>

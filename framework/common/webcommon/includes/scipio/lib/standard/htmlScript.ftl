@@ -54,8 +54,8 @@ IMPL NOTE: Beware of whitespace.
 
 <#-- @htmlHeadOpen main markup - theme override -->
 <#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} passArgs={} catchArgs...>
-<!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
-<html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
+<!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${escapeVal(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapeVal(langDir, 'html')}"</#if>><![endif]-->
+<html class="no-js"<#if docLangAttr?has_content> lang="${escapeVal(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapeVal(langDir, 'html')}"</#if>>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -151,10 +151,10 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
 <#-- @script main markup - theme override -->
 <#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} passArgs={} catchArgs...>
   <#if src?has_content>
-    <script type="${type}" src="${src}"></script>
+    <script type="${escapeVal(type, 'html')}" src="${escapeFullUrl(src, 'html')}"></script>
   <#else>
     <#if htmlwrap>
-      <script type="${type}">
+      <script type="${escapeVal(type, 'html')}">
       <#if cdata>//<![CDATA[</#if>
     </#if>
         <#nested>
@@ -207,7 +207,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
               var commonOfbizUrls = {};
           }
           </#if>
-          commonOfbizUrls["${uri?js_string}"] = "${makeOfbizUrl(uri)?js_string}";
+          commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makeOfbizUrl(rawString(uri)), 'js')}";
           
         </@script>
       <#else>
@@ -232,7 +232,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${uri?js_string}"] = "${makeOfbizUrl(uri)?js_string}";
+      commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makeOfbizUrl(rawString(uri)), 'js')}";
       </#list>
 
     </@script>
@@ -246,11 +246,14 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 Prints a string of JS events as HTML element attributes for common macro HTML elements.
 Accepts attrib names as both "onxxx" and "xxx".
 
+NOTE: 2016-09-28: The attributes are now automatically HTML-escaped, but NOT javascript-escaped;
+    caller must identify and escape the JS parts as needed (not trivial).
+
   * Parameters *
     events                  = ((map)) Map of event names to actions
 -->
-<#macro commonElemEventAttribStr events>
-  <@elemAttribStr attribs=events attribNamePrefix="on" alwaysAddPrefix=false /><#t>
+<#macro commonElemEventAttribStr events escapeLang="html">
+  <@elemAttribStr attribs=events attribNamePrefix="on" alwaysAddPrefix=false escapeLang=escapeLang /><#t>
 </#macro>
 
 <#-- 
@@ -260,8 +263,10 @@ Accepts attrib names as both "onxxx" and "xxx".
 Prints a string of element attributes for common macro HTML elements.
 This is nearly the same as elemAttribStr but with different defaults and with more versatile attribs map.
 
-NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE_}}} are now considered deprecated;
+NOTE: 2016-08-30: The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE_}}} are now considered deprecated;
     use #attribSpecialVal instead.
+    
+NOTE: 2016-09-30: This now automatically HTML-escapes attribute values by default; see {{{escapeLang}}} parameter.
 
   * Parameters *
     attribs                 = ((map)) Attribs map
@@ -271,8 +276,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     (other)                 = See @elemAttribStr; mostly same parameters but with different defaults.
 -->
 <#macro commonElemAttribStr attribs includeEmpty=false emptyValToken="_EMPTY_VALUE_" noValToken="_NO_VALUE_" exclude=[] noExclude=[]
-  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>
+  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true escapeLang="html">
   <#t><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken noValToken=noValToken exclude=getAttribMapAllExcludes(attribs, exclude, noExclude)
     attribNamePrefix=attribNamePrefix alwaysAddPrefix=alwaysAddPrefix attribNamePrefixStrip=attribNamePrefixStrip 
-    attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames /><#t>
+    attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames escapeLang=escapeLang/><#t>
 </#macro>

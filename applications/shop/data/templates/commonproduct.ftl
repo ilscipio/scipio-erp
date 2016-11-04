@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <#--
-Scipio: Template for generic Scipio Shop products.
+SCIPIO: Template for generic Scipio Shop products.
 
 TODO: Should group entities together so faster data load, but can't without globals
 NOTE: This template does not support globals as-is (#global)

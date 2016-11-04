@@ -31,10 +31,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -1417,4 +1419,78 @@ public class UtilHttp {
         request.setAttribute("UNIQUE_ID", Integer.valueOf(uniqueIdNumber.intValue() + 1));
         return "autoId_" + uniqueIdNumber;
     }
+    
+    /**
+     * SCIPIO: Checks if the given uri is a full URL, with strict test.
+     * <p>
+     * It is a full URL if it starts with a protocol such as "http://", "https://",
+     * or simply "//".
+     * <p>
+     * TODO?: add other protocols as needed...
+     */
+    public static boolean isFullUrl(String uri) {
+        return (uri.startsWith("http://") || uri.startsWith("https://") || uri.startsWith("//"));
+    }
+    
+    /**
+     * SCIPIO: Checks if the given uri is a full URL, permissively, attempting to allow
+     * some types of language encodings.
+     * <p>
+     * <strong>WARN</strong>: This method is imprecise and should be avoided where
+     * possible by proper design and using post-escaping instead of pre-escaping, to avoid
+     * escaped strings being encountered in such logic as isFullUrl calls.
+     * <p>
+     * In other words, isFullUrlPerm is currently needed for cases in Ofbiz where escaping happens too early.
+     * <p>
+     * Currently (2016-10-19), this only handles HTML and Javascript (based on behavior of
+     * UtilCodec and Freemarker builtins).
+     * <p>
+     * FIXME: does nothing for CSS
+     */
+    public static boolean isFullUrlPerm(String uri) {
+        for(String prefix : fullUrlPermPrefixes) {
+            if (uri.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * SCIPIO: builds a list of prefixes used for checking full URL presence in permissive fashion.
+     * <p>
+     * WARN/FIXME?: Imprecise, bad, potential security risk, does not handle CSS
+     * 
+     * @see #isFullUrlPerm
+     */
+    private static List<String> makeFullUrlPermPrefixes() {
+        Set<String> prefixes = new LinkedHashSet<>(); // the Set will eliminate duplicates
+        prefixes.add("http://");
+        prefixes.add("https://");
+        prefixes.add("//");
+        
+        for(String encoderName : new String[] { "html" }) {
+            UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderName);
+            prefixes.add(encoder.encode("http://"));
+            prefixes.add(encoder.encode("https://"));
+            prefixes.add(encoder.encode("//"));
+        }
+        
+        // SPECIAL CASE: the encoders don't deal with javascript properly, where the frontslashes
+        // may be escaped by backslashes. even worse, in Freemarker, only the first slash is escaped...
+        prefixes.add("\\/\\/");
+        prefixes.add("\\//");
+        
+        // FIXME: Doesn't handle CSS!
+        
+        ArrayList<String> prefixList = new ArrayList<>(prefixes);
+        prefixList.trimToSize();
+        return prefixList;
+    }
+    
+    /**
+     * SCIPIO: pre-built list of static full URL permissive prefixes
+     */
+    private static final List<String> fullUrlPermPrefixes = makeFullUrlPermPrefixes();
+
 }

@@ -31,12 +31,12 @@ under the License.
       <#assign requireCreate = true>
       <@section title=uiLabelMap.PartyCreateNewContactInfo>
         <form method="post" action="<@ofbizUrl>editcontactmechnosave?DONE_PAGE=${donePage}</@ofbizUrl>" name="createcontactmechform">
-            <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
+            <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
               <#list contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </@field>
-          <#-- Scipio: make it part of menu further below, otherwise looks strange
+          <#-- SCIPIO: make it part of menu further below, otherwise looks strange
             <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
           -->
         </form>
@@ -45,7 +45,7 @@ under the License.
     </#if>
   </#if>
 
-<#-- Scipio: If we are editing an address currently selected for shipping in cart, show this warning.
+<#-- SCIPIO: If we are editing an address currently selected for shipping in cart, show this warning.
     This is mostly needed for checkout payment, but we'll just show for all cases to be safe. -->
 <#if contactMech??>
   <#if !cart?? && sessionAttributes.shoppingCart??>
@@ -56,7 +56,7 @@ under the License.
   </#if>
 </#if>
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
@@ -68,7 +68,12 @@ under the License.
     <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else><#-- Scipio: duplicate: ${uiLabelMap.PartyEditContactInfo}--></#if></#assign>
+<#if !contactMech??>
+  <#assign sectionTitle = uiLabelMap.PartyCreateNewContactInfo>
+<#else>
+  <#-- SCIPIO: duplicate: <#assign sectionTitle = uiLabelMap.PartyEditContactInfo>-->
+  <#assign sectionTitle = "">
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
     
     <#if contactMech??>
@@ -121,7 +126,7 @@ under the License.
         </@field>
     </#if>
     
-  <#-- Scipio: NOTE: The target depends on whether creating or updating. When creating, want to return, whereas updating want to get redirected to donepage. -->  
+  <#-- SCIPIO: NOTE: The target depends on whether creating or updating. When creating, want to return, whereas updating want to get redirected to donepage. -->  
   <#if contactMech??>
     <#assign targetParamStr>&amp;targetPageResponse=redirect-done</#assign>
   <#else>
@@ -143,7 +148,7 @@ under the License.
     </#if>
 
     <#if contactMechTypeId == "POSTAL_ADDRESS">
-      <#-- Scipio: Delegated -->
+      <#-- SCIPIO: Delegated -->
         <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
             ctxVars={
               "pafFieldNamePrefix":"",
@@ -153,14 +158,18 @@ under the License.
     <#elseif contactMechTypeId == "TELECOM_NUMBER">
       <@telecomNumberField label=uiLabelMap.PartyPhoneNumber countryCode=((telecomNumberData.countryCode)!) areaCode=((telecomNumberData.areaCode)!) 
         contactNumber=((telecomNumberData.contactNumber)!) extension=((partyContactMechData.extension)!) />
-      <#-- Scipio: use tooltips
+      <#-- SCIPIO: use tooltips
       <@field type="display">
           [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
       </@field>
       -->
     <#elseif contactMechTypeId == "EMAIL_ADDRESS">
-      <#assign fieldValue><#if tryEntity>${contactMech.infoString!}<#else>${requestParameters.emailAddress!}</#if></#assign>
-      <@field type="input" label="${uiLabelMap.PartyEmailAddress}" required=true size="60" maxlength="255" name="emailAddress" value=fieldValue />
+      <#if tryEntity>
+        <#assign fieldValue = contactMech.infoString!>
+      <#else>
+        <#assign fieldValue = requestParameters.emailAddress!>
+      </#if>
+      <@field type="input" label=uiLabelMap.PartyEmailAddress required=true size="60" maxlength="255" name="emailAddress" value=fieldValue />
     <#else>
       <@field type="input" label=(contactMechType.get("description",locale)!) required=true size="60" maxlength="255" name="infoString" value=(contactMechData.infoString!) />
     </#if>

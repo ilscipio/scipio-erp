@@ -25,7 +25,7 @@ under the License.
   </@menu>
 <#else>
 
-<#-- Scipio: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
@@ -35,7 +35,12 @@ under the License.
     <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle><#if !creditCard??>${uiLabelMap.AccountingAddNewCreditCard}<#else><#-- Scipio: duplicate: ${uiLabelMap.AccountingEditCreditCard}--></#if></#assign>
+<#if !creditCard??>
+  <#assign sectionTitle = uiLabelMap.AccountingAddNewCreditCard/>
+<#else>
+  <#-- SCIPIO: duplicate: <#assign sectionTitle = uiLabelMap.AccountingEditCreditCard/>-->
+  <#assign sectionTitle = ""/>
+</#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
   <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editcreditcardform">
@@ -46,7 +51,7 @@ under the License.
 
      <@render resource="component://shop/widget/CustomerScreens.xml#creditCardFields" />
      <@field type="generic" label=uiLabelMap.PartyBillingAddress>
-        <#-- Scipio: Factored out for reuse -->
+        <#-- SCIPIO: Factored out for reuse -->
         <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
             ctxVars={"bapfUseNewAddr":true, "bapfNewAddrInline":false, "bapfFieldNamePrefix":""}/>
      </@field>

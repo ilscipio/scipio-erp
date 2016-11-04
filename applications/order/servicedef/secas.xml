@@ -151,7 +151,7 @@ under the License.
 
     <!-- cancel order items -->
     <eca service="cancelOrderItem" event="global-commit-post-run">
-        <!-- Scipio: STOCK BUGFIX: Added run-as-user system because otherwise this ECA
+        <!-- SCIPIO: STOCK BUGFIX: Added run-as-user system because otherwise this ECA
             may fail on storefront item cancellations triggered by unprivileged users. 
             cancelOrderItems makes the necessary permission check already. -->
         <action service="recreateOrderAdjustments" mode="sync" run-as-user="system" />

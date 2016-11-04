@@ -18,9 +18,13 @@ under the License.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
-Scipio: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+SCIPIO: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
+
+NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros.
+    As a result all macros here must take care to html-escape as well as js-escape values.
+    Use escapeVal/escapeFullUrl for this.
 -->
 
 <#-- 
@@ -41,7 +45,7 @@ TODO/FIXME:
   on how much end up using and where
 -->
 
-<#-- Scipio: One-shot macro full menu
+<#-- SCIPIO: One-shot macro full menu
   Data structure (indented means member of): 
   items: List of maps, each entry corresponding to old @renderMenuItemBegin arguments
     (item)
@@ -61,7 +65,7 @@ TODO/FIXME:
   
   TODO?: menu-container-style does not currently fully support the standard Scipio +/= class prefix; generally, "+" will be assumed.
 -->
-<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] selected=false selectedAncestor=false extraArgs...>
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] selected=false selectedAncestor=false titleStyle="" extraArgs...>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -154,8 +158,8 @@ TODO/FIXME:
     </#if>
   </#if>
   
-  <#local mainButtonClass = "">
-  <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
+  <#-- NOTE: DEPRECATED mainButtonClass (was never documented) -->
+  <#local titleClass = addClassArgDefault(titleStyle, styles["menu_" + styleName + "_title"]!styles["menu_" + styleName + "_mainbutton"]!styles["menu_default_title"]!"")>
   
   <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, 
     "menuIdNum":menuIdNum, "menuCtxRole":menuCtxRole, "inlineEntries":inlineEntries, "htmlwrap":htmlwrap,
@@ -172,7 +176,7 @@ TODO/FIXME:
     </#list>
   <#else>
     <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs 
-        excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title 
+        excludeAttribs=["class", "id", "style"] inlineItems=false titleClass=titleClass mainButtonClass=titleClass title=title 
         htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType
         isNestedMenu=isNestedMenu menuLevel=menuLevel active=active activeTarget=activeTarget>
       <#list items as item>
@@ -199,7 +203,7 @@ TODO/FIXME:
 </#if>
 </#macro>
 
-<#-- Scipio: Render full menu item. Separate macro required due to recursive nested menus. 
+<#-- SCIPIO: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! 
     NOTE (2016-08-26): The items arg is no longer populated; instead, an explicit subMenuList is now passed.
         The subMenuStyle/subMenuTitle/subMenuId are now considered deprecated and appear as style/title/id on the subMenuList
@@ -275,17 +279,17 @@ Only those not marked DEPRECATED should still be used.
 -->
 
 <#macro renderImage src id style width height border menuCtxRole="" extraArgs...>
-  <img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
+  <img src="${escapeFullUrl(src, 'html')}"<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${escapeVal(border, 'html')}"</#if> />
 </#macro>
 
-<#-- Scipio: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
+<#-- SCIPIO: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
 <#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false selectedAncestor=false itemIndex=0 menuInfo={} extraArgs...>
   <#local class = style>
   <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
   <#local hasImg = imgArgs?has_content || imgStr?has_content>
   <#local isText = !isLink && !hasImg && text?has_content>
   <#-- isLink: ${isLink?string} hasImg: ${hasImg?string} isText: ${isText?string} -->
-  <#-- Scipio: hack: for screenlet nav menus, always impose buttons if no style specified, 
+  <#-- SCIPIO: hack: for screenlet nav menus, always impose buttons if no style specified, 
        because can't centralize these menus easily anywhere else. -->
   <#if menuCtxRole == "screenlet-nav-menu">
     <#if !class?has_content && isLink>
@@ -294,16 +298,16 @@ Only those not marked DEPRECATED should still be used.
   </#if>
   <#if linkType?has_content && "hidden-form" == linkType>
     <#local hiddenFormContent>
-      <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}" class="menu-widget-action-form"><#t>
+      <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapeVal(uniqueItemName, 'html')}" class="menu-widget-action-form"><#t>
         <#list parameterList as parameter>
-          <input name="${parameter.name}" value="${parameter.value}" type="hidden"/><#t>
+          <input name="${escapeVal(parameter.name, 'html')}" value="${escapeVal(parameter.value, 'html')}" type="hidden"/><#t>
         </#list>
       </form><#t>
     </#local>
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#local dummy = setRequestVar("renderMenuHiddenFormContent", renderMenuHiddenFormContent+hiddenFormContent)>
   </#if>
-  <#local innerContent> <#-- Scipio: WARN: this capture is only safe because nested sub-menus are outside link (outside this call) -->
+  <#local innerContent> <#-- SCIPIO: WARN: this capture is only safe because nested sub-menus are outside link (outside this call) -->
     <#if imgArgs?has_content>
       <@renderImage src=imgArgs.src id=imgArgs.id style=imgArgs.style width=imgArgs.width height=imgArgs.height 
           border=imgArgs.border menuCtxRole=imgArgs.menuCtxRole /><#t>
@@ -311,7 +315,7 @@ Only those not marked DEPRECATED should still be used.
       ${imgStr}<#t>
     </#if>
     <#if text?has_content>
-      ${text}<#t>
+      ${escapeVal(text, 'htmlmarkup')}<#t>
     </#if>
   </#local>
 
@@ -321,7 +325,12 @@ Only those not marked DEPRECATED should still be used.
   </#if>
   
   <#if isLink>
-    <#local href><#if linkType == "hidden-form">javascript:document.forms['${uniqueItemName}'].submit()<#else>${linkUrl}</#if></#local>
+    <#if linkType == "hidden-form">
+        <#-- SCIPIO: NOTE: only JS escaped here; macro markup does the html part -->
+        <#local href>javascript:document['${escapeVal(uniqueItemName, 'js')}'].submit()</#local>
+    <#else>
+        <#local href = linkUrl>
+    </#if>
     <#if disabled>
       <#-- FIXME: this static method of disabling links means the link loses information and not easily toggleable! -->
       <#local href = styles.menu_link_href_default!"">
@@ -345,7 +354,7 @@ Only those not marked DEPRECATED should still be used.
   </#if>
 </#macro>
 
-<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- SCIPIO: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
   <#local remStyle = "">
@@ -404,7 +413,7 @@ Only those not marked DEPRECATED should still be used.
 </#macro>
 -->
 
-<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- SCIPIO: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
   <#local menu = popRequestStack("renderMenuStack")>
@@ -450,12 +459,12 @@ Only those not marked DEPRECATED should still be used.
 </#macro>
 -->
 
-<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- SCIPIO: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuItemBegin style toolTip="" linkStr="" containsNestedMenus=false menuCtxRole="">
         <li<#if style?has_content> class="${style}"</#if><#if toolTip?has_content> title="${toolTip}"</#if>><#if linkStr?has_content>${linkStr}</#if><#if containsNestedMenus><ul></#if><#rt/>
 </#macro>-->
 
-<#-- Scipio: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
+<#-- SCIPIO: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuItemEnd containsNestedMenus=false menuCtxRole="">
 <#if containsNestedMenus></ul></#if></li>
 </#macro>-->
@@ -468,7 +477,7 @@ Only those not marked DEPRECATED should still be used.
 WARN: No longer maintained.
 -->
 
-<#-- Scipio: Delegating implementation of one shot menu - used as reference
+<#-- SCIPIO: Delegating implementation of one shot menu - used as reference
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
   <@renderMenuBegin boundaryComment=boundaryComment id=id style=style title=title inlineEntries=inlineEntries menuCtxRole=menuCtxRole />
   <#list items as item>

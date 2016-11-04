@@ -21,7 +21,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- Scipio: new -->
+    <!-- SCIPIO: new -->
     <screen name="customerBasicFields">
         <section>
             <actions>
@@ -33,7 +33,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: new -->
+    <!-- SCIPIO: new -->
     <screen name="eftAccountFields">
         <section>
             <actions>
@@ -45,7 +45,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Original: component://accounting/widget/CommonScreens.xml#creditCardFields -->
+    <!-- SCIPIO: Original: component://accounting/widget/CommonScreens.xml#creditCardFields -->
     <screen name="creditCardFields">
         <section>
             <actions>
@@ -58,7 +58,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Based on a combination of editcreditcard and editcontactmech -->
+    <!-- SCIPIO: Based on a combination of editcreditcard and editcontactmech -->
     <screen name="billaddresspickfields">
         <section>
             <actions>
@@ -101,7 +101,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: new -->
+    <!-- SCIPIO: new -->
     <screen name="postalAddressFields">
         <section>
             <actions>
@@ -135,7 +135,7 @@ under the License.
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -167,7 +167,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditPaymentMethod.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -192,7 +192,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditPaymentMethod.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -217,7 +217,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditPaymentMethod.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -243,7 +243,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/ChangePassword.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -271,7 +271,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditPerson.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -297,7 +297,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/GiftCardBalance.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/customer/giftcardbalance.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -312,7 +312,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/GiftCardLink.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/customer/giftcardlink.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -328,7 +328,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/CustomerSurvey.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/customer/customersurvey.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -347,7 +347,7 @@ under the License.
                 <set field="submitRequest" value="contactsubmit"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/customer/newmsg.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -361,7 +361,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleMessageList"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -409,7 +409,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -442,7 +442,7 @@ under the License.
                 <set field="partyIdTo" from-field="communicationEvent.partyIdFrom"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -471,7 +471,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -535,7 +535,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -692,7 +692,7 @@ under the License.
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
@@ -718,7 +718,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/ViewProfile.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -748,7 +748,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/NewCustomer.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -772,7 +772,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditEmailAndTelecomNumber.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/ViewProfile.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -792,7 +792,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditEmailAndTelecomNumber.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -824,7 +824,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/ViewProfile.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -856,7 +856,7 @@ under the License.
                 <set field="submitRequest" value="contactsubmit"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/customer/AnonContactus.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -887,7 +887,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Scipio: Duplicated from: component://marketing/widget/ContactListScreens.xml#OptOutResponse -->
+    <!-- SCIPIO: Duplicated from: component://marketing/widget/ContactListScreens.xml#OptOutResponse -->
     <screen name="OptOutResponse">
         <section>
             <actions>
@@ -904,11 +904,11 @@ under the License.
         </section>
     </screen>
     
-    <!-- Scipio: Duplicated from: component://marketing/widget/ContactListScreens.xml#DefaultOptOutScreen -->
+    <!-- SCIPIO: Duplicated from: component://marketing/widget/ContactListScreens.xml#DefaultOptOutScreen -->
     <screen name="DefaultOptOutScreen">
         <section>            
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="Opt-Out Results">
                             <container>

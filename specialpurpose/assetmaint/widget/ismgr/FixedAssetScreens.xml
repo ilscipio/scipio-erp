@@ -30,7 +30,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditComputerHardware" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -44,19 +44,15 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="IsMgrFindComputerHardware"/>
-                <set field="activeMainMenuItem" value="ComputerHardware"/>
-                <set field="activeSubMenuItem" value="EditComputerHardware"/>
+                <!-- SCIPIO: redundant/incorrect:
+                <set field="activeSubMenuItem" value="EditComputerHardware"/>-->
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
-                                     </widgets>
-                                </section>
+                                <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindComputerHardwareOptions" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
@@ -75,12 +71,11 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditComputerSoftware"/>
-                <set field="activeMainMenuItem" value="ComputerSoftware"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonComputerSoftwareDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonComputerSoftwareDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditComputerSoftware" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -94,18 +89,13 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="IsMgrFindComputerSoftware"/>
-                <set field="activeMainMenuItem" value="ComputerSoftware"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonComputerSoftwareDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
-                                     </widgets>
-                                </section>
+                                <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindComputerSoftwareOptions" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
@@ -159,7 +149,7 @@ under the License.
                 <set field="fixedAssetTypeId" value="COMPUTER_HARDWARE"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ChildrenFixedAssets" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -178,7 +168,7 @@ under the License.
                 <set field="fixedAssetTypeId" value="COMPUTER_SOFTWARE"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ChildrenFixedAssets" location="component://assetmaint/widget/ismgr/FixedAssetForms.xml"/>
                     </decorator-section>

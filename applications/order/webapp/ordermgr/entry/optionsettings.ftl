@@ -20,7 +20,7 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <#assign columns=6>
 
-  <#-- Scipio: Warning to prevent confusion... -->
+  <#-- SCIPIO: Warning to prevent confusion... -->
   <#if cart.getOrderType() != "PURCHASE_ORDER" && (!carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0)>
     <@alert type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.OrderNoShipMethodAvailable} ${uiLabelMap.OrderMayNotProceedWithOrder}</@alert>
   </#if>
@@ -36,7 +36,7 @@ under the License.
 </#if>
 <#assign supplierPartyId = cart.getSupplierPartyId(shipGroupIndex)!>
 <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":supplierPartyId}, false)! />
-  <#assign sectionTitle>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}<#if supplier?has_content> - ${supplier.groupName!(supplier.partyId)}</#if></#assign>
+  <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawString(supplier.groupName!(supplier.partyId))}</#if></#assign>
   <@section title=sectionTitle>   
     <@row>
         <@cell columns=columns>
@@ -60,7 +60,7 @@ under the License.
                         </#if>
                       </#if>
                     </#assign>
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=radioText checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=wrapAsRaw(radioText, 'htmlmarkup') checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
                 </#list>
                 <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="Default" checked=true label=uiLabelMap.FacilityNoOtherShippingMethods/>

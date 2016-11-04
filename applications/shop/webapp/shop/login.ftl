@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Scipio: now points to shop -->
+<#-- SCIPIO: now points to shop -->
 <#assign janrainEnabled = getPropertyValue("shop.properties", "janrain.enabled")!"">
 <#assign appName = getPropertyValue("shop.properties", "janrain.appName")!"">
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
@@ -72,12 +72,12 @@ under the License.
                        <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
                        <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
                        <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
-                       <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
-                       <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=(labelPassword!)/>
+                       <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=wrapAsRaw({'htmlmarkup':labelUsername, 'raw':rawLabel('CommonUsername')})/>
+                       <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=wrapAsRaw({'htmlmarkup':labelPassword, 'raw':rawLabel('CommonPassword')})/>
                 
                           <#if ("Y" == useMultitenant) >
                               <#if !requestAttributes.userTenantId??>
-                              <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=(labelTenant!)/>
+                              <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=wrapAsRaw({'htmlmarkup':labelTenant, 'raw':rawLabel('CommonTenantId')})/>
                               <#else>
                                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
                               </#if>
@@ -91,7 +91,7 @@ under the License.
                                         <@row>
                                             <@cell class="${styles.grid_large!}centered">
                                                 <@section title=uiLabelMap.CommonPassword>
-                                                    <#-- Scipio: WARN: Proper HTML-escaping of params high importance here -->
+                                                    <#-- SCIPIO: WARN: Proper HTML-escaping of params high importance here -->
                                                     <form method="post" action="${escapeFullUrl(makeOfbizUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
                                                         <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
                                                         <@row>
@@ -109,7 +109,7 @@ under the License.
                                 </small>
                              </@cell>
                             <@cell class="+${styles.text_right!}" columns=3>
-                                <#-- Scipio: workaround for form-within-form and form fields getting mixed up (form closed earlier):
+                                <#-- SCIPIO: workaround for form-within-form and form fields getting mixed up (form closed earlier):
                                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>-->
                                 <@field type="submit" submitType="link" href="javascript:document.loginform.submit();" widgetOnly=true value=uiLabelMap.CommonLogin class="${styles.link_run_session!} ${styles.action_login!}"/>
                             </@cell>

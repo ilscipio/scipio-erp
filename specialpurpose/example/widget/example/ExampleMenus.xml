@@ -46,7 +46,8 @@ under the License.
             <link target="ExampleBarChart"/>
         </menu-item>
     </menu>
-    <menu name="ExampleAppSideBar" title="${uiLabelMap.ExampleApplication}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ExampleAppSideBar" title="${uiLabelMap.ExampleApplication}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="ExampleAppBar" recursive="full" />
     </menu>
 

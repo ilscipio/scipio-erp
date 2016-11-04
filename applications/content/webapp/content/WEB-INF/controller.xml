@@ -1930,7 +1930,7 @@ under the License.
     <view-map name="EditBlogArticle" page="component://content/widget/forum/BlogScreens.xml#EditArticle" type="screen"/>
     <view-map name="ViewResponse" page="component://content/widget/forum/BlogScreens.xml#BlogMain" type="screen"/>
     
-    <!-- Scipio: These screens no longer exist - divert to error if someone can still reach this
+    <!-- SCIPIO: These screens no longer exist - divert to error if someone can still reach this
     <view-map name="RespondBlog" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#AddBlogResponse"/>
     <view-map name="EditBlogText" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#EditBlogResponse"/>
     <view-map name="EditBlogImage" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#EditBlogResponse"/>

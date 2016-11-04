@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- Scipio: To be removed -->
+<!-- SCIPIO: To be removed -->
 <!-- <trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-tree.xsd">
     <tree name="FacilityTree" root-node-name="node-root" entity-name="Facility" default-render-style="expand-collapse">

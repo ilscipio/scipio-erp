@@ -25,13 +25,13 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#ShipmentGatewayConfig" />
-                <set field="activeMainMenuItem" value="ShipmentGatewayConfig"/> 
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ShipmentGatewayConfig"/> 
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="component://product/widget/facility/CommonScreens.xml"/>
+                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
                 <!-- body is the primary display for this page and is called recursively -->
                     <decorator-section name="body">
@@ -53,7 +53,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindShipmentGatewayConfig"/>
-                <set field="activeSubMenuItem" value="shipmentGatewayConfigTab"/> 
+                <set field="activeSubMenuItem" value="shipmentGatewayConfigTab"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>

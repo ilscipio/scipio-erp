@@ -87,22 +87,36 @@ public class FreeMarkerWorker {
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
     
     /**
-     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types.
+     * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
+     */
+    private static final ObjectWrapper defaultOfbizSimpleMapWrapper;
+    static {
+        BeansWrapperBuilder builder = new BeansWrapperBuilder(version);
+        builder.setSimpleMapWrapper(true);
+        defaultOfbizSimpleMapWrapper = builder.build();
+    }
+    
+    /**
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
+     * using adapters for collections.
      */
     private static final ObjectWrapper defaultSimpleTypeWrapper;
     static {
         DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
         builder.setUseAdaptersForContainers(true);
+        builder.setSimpleMapWrapper(true); // NOTE: this shouldn't really be used
         defaultSimpleTypeWrapper = builder.build();
     }
     
     /**
-     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, as copies.
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
+     * using copies for collections.
      */
     private static final ObjectWrapper defaultSimpleTypeCopyingWrapper;
     static {
         DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
         builder.setUseAdaptersForContainers(false);
+        builder.setSimpleMapWrapper(true); // NOTE: this shouldn't really be used
         defaultSimpleTypeCopyingWrapper = builder.build();
     }
     
@@ -114,6 +128,13 @@ public class FreeMarkerWorker {
     
     public static BeansWrapper getDefaultOfbizWrapper() {
         return defaultOfbizWrapper;
+    }
+    
+    /**
+     * SCIPIO: Get version of getDefaultOfbizWrapper that is the same but produces simple maps.
+     */
+    public static ObjectWrapper getDefaultOfbizSimpleMapWrapper() {
+        return defaultOfbizSimpleMapWrapper;
     }
     
     /**

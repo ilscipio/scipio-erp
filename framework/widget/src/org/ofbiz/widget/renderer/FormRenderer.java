@@ -495,50 +495,66 @@ public class FormRenderer {
                         formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
                     }
                     if (innerFormFields.size() > 0) {
-                        // SCIPIO: FIXME?: the renderFormatHeaderRowFormCellOpen calls here always pass position span 1,
-                        // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
-                        
-                        // TODO: manage colspan
-                        formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
-                        // SCIPIO: There is currently an issue where sometimes the title separator gets printed
-                        // in BETWEEN cell items. I don't know what started causing this, but am adding a sanity
-                        // check boolean that will fix at least that specific problem (but there could be others).
-                        boolean cellOpened = true;
-                        Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
-                        
-                        while (innerFormFieldsIt.hasNext()) {
-                            ModelFormField modelFormField = innerFormFieldsIt.next();
-
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && !cellOpened) {
-                                // SCIPIO: use th element always for this from now on
-                                //formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
-                                formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
-                                cellOpened = true;
-                            }
-
-                            // render title (unless this is a submit or a reset field)
-                            formStringRenderer.renderFieldTitle(writer, context, modelFormField);
-
-                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && cellOpened) {
-                                // SCIPIO: use th element always for this from now on
-                                //formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
-                                formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
-                                cellOpened = false;
-                            }
-
-                            if (innerFormFieldsIt.hasNext()) {
-                                // TODO: determine somehow if this is the last one... how?
-                                if (!modelForm.getSeparateColumns() && !modelFormField.getSeparateColumn()) {
-                                    // SCIPIO: ONLY do this if we know we have an open cell
-                                    if (cellOpened) {
-                                        formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
-                                            modelFormField, false);
-                                    }
-                                }
+                        // SCIPIO: we have to pre-parse this part due to modelFormField.getSeparateColumn()
+                        boolean hasSepColumns = false;
+                        for(ModelFormField modelFormField : innerFormFields) {
+                            if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                                hasSepColumns = true;
+                                break;
                             }
                         }
-                        // SCIPIO: clean this up but only if not already closed (this test fixes ofbiz bug that lets in extra closing </th>)
-                        if (cellOpened) {
+                        
+                        // SCIPIO: FIXME?: the renderFormatHeaderRow(Form)CellOpen calls here always pass position span 1,
+                        // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
+
+                        // SCIPIO: rearranged this completely. it's the modelFormField.getSeparateColumn() option that complicates this.
+                        if (hasSepColumns) {
+                            boolean cellOpen = false;
+                            boolean firstInCell = true;
+                            Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
+                            ModelFormField modelFormField = null;
+                            while (innerFormFieldsIt.hasNext()) {
+                                modelFormField = innerFormFieldsIt.next();
+                                boolean fieldHasSepColumn = (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn());
+                                if (cellOpen && fieldHasSepColumn) {
+                                    formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
+                                    cellOpen = false;
+                                }
+                                if (fieldHasSepColumn || !cellOpen) {
+                                    formStringRenderer.renderFormatHeaderRowCellOpen(writer, context, modelForm, modelFormField, 1); // positionSpan hardcoded...
+                                    cellOpen = true;
+                                    firstInCell = true;
+                                }
+                                if (!fieldHasSepColumn && !firstInCell) {
+                                    formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
+                                            modelFormField, false); // TODO: can't really do isLast properly (!innerFormFieldsIt.hasNext() not good enough)
+                                }
+
+                                // render title (unless this is a submit or a reset field)
+                                formStringRenderer.renderFieldTitle(writer, context, modelFormField);
+                                firstInCell = false;
+                                
+                                if (fieldHasSepColumn) {
+                                    formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
+                                    cellOpen = false;
+                                }
+                            }
+                            if (cellOpen) {
+                                formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
+                                cellOpen = false;
+                            }
+                        } else { // SCIPIO: simple case. here renderFormatHeaderRowFormCellOpen is used (but otherwise would produce same as previous).
+                            formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm); // TODO: manage colspan
+                            boolean firstInCell = true;
+                            for(ModelFormField modelFormField : innerFormFields) {
+                                if (!firstInCell) {
+                                    formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
+                                            modelFormField, false);
+                                } 
+                                // render title (unless this is a submit or a reset field)
+                                formStringRenderer.renderFieldTitle(writer, context, modelFormField);
+                                firstInCell = false;
+                            }
                             formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                         }
                     }
@@ -620,6 +636,7 @@ public class FormRenderer {
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd, List<ModelFormField> mainFieldList, int position,
             int numOfColumns) throws IOException {
         
+        boolean renderedHiddenFields = false;
         // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
         int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
         
@@ -688,46 +705,87 @@ public class FormRenderer {
 
             // The form cell is rendered only if there is at least an input field
             if (innerFormFields.size() > 0) {
-                // SCIPIO: FIXME?: the renderFormatItemRowCellOpen calls here always pass position span 1,
-                // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
+                // SCIPIO: we have to pre-parse this part due to modelFormField.getSeparateColumn()
+                boolean hasSepColumns = false;
+                for(ModelFormField modelFormField : innerFormFields) {
+                    if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                        hasSepColumns = true;
+                        break;
+                    }
+                }
                 
-                // render the "form" cell                
-                formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
-                // SCIPIO: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
-                boolean cellOpen = true;
-
+                // SCIPIO: only support this if no separate columns at all.
+                if (!hasSepColumns) {
+                    // render the "form" cell                
+                    formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
+                }
                 if (formPerItem) {
+                    // SCIPIO: special flags
+                    localContext.put("renderForm_formScope", "item");
+                    localContext.put("renderForm_formSpread", hasSepColumns ? "multi-cell" : "single-cell");
                     formStringRenderer.renderFormOpen(writer, localContext, modelForm);
+                    localContext.remove("renderForm_formScope");
+                    localContext.remove("renderForm_formSpread");
                 }
 
-                // do all of the hidden fields...
-                this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
-
-                Iterator<ModelFormField> innerFormFieldIter = innerFormFields.iterator();
-                while (innerFormFieldIter.hasNext()) {
-                    ModelFormField modelFormField = innerFormFieldIter.next();
-                    if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && !cellOpen) {
-                        formStringRenderer.renderFormatItemRowCellOpen(writer, localContext, modelForm, modelFormField, 1);
-                        cellOpen = true;
+                if (hasSepColumns) {
+                    boolean cellOpen = false;
+                    Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
+                    ModelFormField modelFormField = null;
+                    while (innerFormFieldsIt.hasNext()) {
+                        modelFormField = innerFormFieldsIt.next();
+                        boolean fieldHasSepColumn = (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn());
+                        if (cellOpen && fieldHasSepColumn) {
+                            formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
+                            cellOpen = false;
+                        }
+                        if (fieldHasSepColumn || !cellOpen) {
+                            formStringRenderer.renderFormatItemRowCellOpen(writer, localContext, modelForm, modelFormField, 1); // positionSpan hardcoded
+                            cellOpen = true;
+                            // SCIPIO: make an effort to put the hidden fields inside the first cell, so a little less invalid html...
+                            if (!renderedHiddenFields) {
+                                // do all of the hidden fields...
+                                this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
+                                renderedHiddenFields = true;
+                            }
+                        }
+                        // render field widget
+                        if ((!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType()))
+                                || modelFormField.shouldUse(localContext)) {
+                            modelFormField.renderFieldString(writer, localContext, formStringRenderer);
+                        }
+                        if (fieldHasSepColumn) {
+                            formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
+                            cellOpen = false;
+                        }
                     }
-                    // render field widget
-                    if ((!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType()))
-                            || modelFormField.shouldUse(localContext)) {
-                        modelFormField.renderFieldString(writer, localContext, formStringRenderer);
+                    if (!renderedHiddenFields) { // should already have been done, but call again just in case
+                        // do all of the hidden fields...
+                        this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
+                        renderedHiddenFields = true;
                     }
-
-                    if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && cellOpen) {
+                    if (cellOpen) {
                         formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
                         cellOpen = false;
+                    }
+                } else { // simple case
+                    // do all of the hidden fields...
+                    this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
+                    renderedHiddenFields = true;
+                    for(ModelFormField modelFormField : innerFormFields) {
+                        if ((!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType()))
+                                || modelFormField.shouldUse(localContext)) {
+                            modelFormField.renderFieldString(writer, localContext, formStringRenderer);
+                        }
                     }
                 }
 
                 if (formPerItem) {
                     formStringRenderer.renderFormClose(writer, localContext, modelForm);
                 }
-
-                if (cellOpen)
+                if (!hasSepColumns) {
                     formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
+                }
             }
 
             // render the rest of the display/hyperlink fields
@@ -741,6 +799,15 @@ public class FormRenderer {
                     formStringRenderer.renderFormatItemRowCellOpen(writer, localContext, modelForm, modelFormField,
                             numOfColumnsToSpan);
                 }
+                
+                // SCIPIO: 2016-11-02: if there were no editable "middle" fields to render, there's still the case where
+                // we have only hidden fields with a submit button (such as delete action).
+                // in that case we just insert them into the next cell.
+                if (!renderedHiddenFields) {
+                    this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
+                    renderedHiddenFields = true;
+                }
+                
                 if ((!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType()))
                         || modelFormField.shouldUse(localContext)) {
                     modelFormField.renderFieldString(writer, localContext, formStringRenderer);
@@ -750,6 +817,7 @@ public class FormRenderer {
         } else {
             // do all of the hidden fields...
             this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
+            renderedHiddenFields = true;
 
             Iterator<ModelFormField> mainFieldIter = mainFieldList.iterator();
             while (mainFieldIter.hasNext()) {

@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -85,8 +86,16 @@ public class PartyContentWrapper implements ContentWrapper {
         return getPartyContentAsText(party, contentTypeId, locale, mimeTypeId, party.getDelegator(), dispatcher, useCache, encoderType);
     }
 
-    public StringUtil.StringWrapper get(String contentTypeId, String encoderType) {
-        return StringUtil.makeStringWrapper(get(contentTypeId, true, encoderType));
+    // SCIPIO: changed return type, parameter, and encoding largely removed
+    public String get(String contentTypeId, String encoderType) {
+        return get(contentTypeId, true, encoderType);
+    }
+    
+    /**
+     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
+     */
+    public String get(String contentTypeId) {
+        return get(contentTypeId, true, "raw");
     }
 
     public String getId(String contentTypeId) {
@@ -136,7 +145,7 @@ public class PartyContentWrapper implements ContentWrapper {
             return null;
         }
         
-        UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(partyContentTypeId);
         String cacheKey;
         if (contentId != null) {

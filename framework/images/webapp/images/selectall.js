@@ -373,31 +373,79 @@ function submitFormInBackground(form, areaId, submitUrl) {
 */
 function ajaxSubmitFormUpdateAreas(form, areaCsvString) {
    waitSpinnerShow();
-   hideErrorContainer = function() {
-       jQuery('#content-messages').html('');
-       jQuery('#content-messages').removeClass('errorMessage').fadeIn('fast');
-   }
+   var msgContainerId = 'content-messages';
+   var msgContainerIdSel = '#'+msgContainerId;
+   var msgTemplateId = 'content-messages-error-template';
+   var msgContentClass = 'content-message-content';
+   //var errorMsgClass = 'errorMessage'; // SCIPIO: no longer needed
+   // SCIPIO: dont want this behavior hardcoded
+   //hideErrorContainer = function() {
+   //    jQuery('#content-messages').html('');
+   //    jQuery('#content-messages').removeClass('errorMessage').fadeIn('fast');
+   //}
    updateFunction = function(data) {
        if (data._ERROR_MESSAGE_LIST_ != undefined || data._ERROR_MESSAGE_ != undefined) {
-           if (!jQuery('#content-messages').length) {
-              //add this div just after app-navigation
-              if(jQuery('#content-main-section')){
-                  jQuery('#content-main-section' ).before('<div id="content-messages" onclick="hideErrorContainer()"></div>');
-              }
+           if (!jQuery(msgContainerIdSel).length) {
+               // SCIPIO: NOTE: the FTLs/themes should usually have an empty content-messages div present so this part never runs,
+               // but this is still needed as emergency. however, changed the default fallback here to place as child of main-content.
+               ////add this div just after app-navigation
+               //if(jQuery('#content-main-section')){
+               //    jQuery('#content-main-section' ).before('<div id="content-messages" onclick="hideErrorContainer()"></div>');
+               //}
+               var parentContentId = 'main-content';
+               if(jQuery('#'+parentContentId)){
+                   jQuery('#'+parentContentId).prepend('<div id="'+msgContainerId+'"></div>'); // SCIPIO: not like this: onclick="hideErrorContainer()
+               }
            }
-           jQuery('#content-messages').addClass('errorMessage');
-          if (data._ERROR_MESSAGE_LIST_ != undefined && data._ERROR_MESSAGE_ != undefined) {
-              jQuery('#content-messages' ).html(data._ERROR_MESSAGE_LIST_ + " " + data._ERROR_MESSAGE_);
-          } else if (data._ERROR_MESSAGE_LIST_ != undefined) {
-              jQuery('#content-messages' ).html(data._ERROR_MESSAGE_LIST_);
-          } else {
-              jQuery('#content-messages' ).html(data._ERROR_MESSAGE_);
-          }
-          jQuery('#content-messages').fadeIn('fast');
+           //jQuery(msgContainerIdSel).addClass(errorMsgClass);
+           // SCIPIO: we use templates
+           //if (data._ERROR_MESSAGE_LIST_ != undefined && data._ERROR_MESSAGE_ != undefined) {
+           //    jQuery(msgContainerIdSel).html(data._ERROR_MESSAGE_LIST_ + " " + data._ERROR_MESSAGE_);
+           //} else if (data._ERROR_MESSAGE_LIST_ != undefined) {
+           //    jQuery(msgContainerIdSel).html(data._ERROR_MESSAGE_LIST_);
+           //} else {
+           //    jQuery(msgContainerIdSel).html(data._ERROR_MESSAGE_);
+           //}
+           var errorMsgContent;
+           if (data._ERROR_MESSAGE_LIST_ != undefined && data._ERROR_MESSAGE_ != undefined) {
+               errorMsgContent = data._ERROR_MESSAGE_LIST_ + " " + data._ERROR_MESSAGE_;
+           } else if (data._ERROR_MESSAGE_LIST_ != undefined) {
+               errorMsgContent = data._ERROR_MESSAGE_LIST_;
+           } else {
+               errorMsgContent = data._ERROR_MESSAGE_;
+           }
+           if (!errorMsgContent) {
+               errorMsgContent = "";
+           }
+           var msgTemplateParent = jQuery('#'+msgTemplateId);
+           var msgTemplateContent;
+           // we write to the content-messages container UNLESS there's a main-alert sub-box there already
+           var targetMsgContainer = jQuery(msgContainerIdSel);
+           // can only use templates if present and has a child element with the msgContentClass class
+           if (msgTemplateParent.length && jQuery('.'+msgContentClass, msgTemplateParent).length) {
+               msgTemplateContent = jQuery(msgTemplateParent.html()); // clone() for safety, shouldn't change anything
+               var extraDivId = msgTemplateParent.attr('content-messages-type-wrapper-id'); // custom html attribute
+               if (extraDivId) {
+                   var extraDiv = jQuery('#'+extraDivId);
+                   if (extraDiv.length) {
+                       targetMsgContainer = extraDiv;
+                   } else {
+                       msgTemplateContent = jQuery('<div id="'+extraDivId+'"></div>').html(msgTemplateContent);
+                   }
+               }
+               jQuery('.'+msgContentClass, msgTemplateContent).html(errorMsgContent);
+           } else {
+               // no templates, use this fallback WARN: has no extra div!
+               msgTemplateContent = jQuery('<div class="'+msgContentClass+'"></div>');
+               msgTemplateContent.html(errorMsgContent);
+           }
+           targetMsgContainer.html(msgTemplateContent);
+           jQuery(msgContainerIdSel).fadeIn('fast');
        } else {
-           if (jQuery('#content-messages').length) {
-               jQuery('#content-messages').html('');
-               jQuery('#content-messages').removeClass('errorMessage').fadeIn("fast");
+           if (jQuery(msgContainerIdSel).length) {
+               jQuery(msgContainerIdSel).html('');
+               //jQuery(msgContainerIdSel).removeClass(errorMsgClass);
+               jQuery(msgContainerIdSel).fadeIn("fast");
            }
            ajaxUpdateAreas(areaCsvString);
        }

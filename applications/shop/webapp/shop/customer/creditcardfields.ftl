@@ -18,7 +18,7 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Scipio: DUPLICATED FROM:
+<#-- SCIPIO: DUPLICATED FROM:
 <#include "component://accounting/webapp/accounting/common/creditcardfields.ftl">
 -->
 
@@ -26,7 +26,7 @@ under the License.
   <#assign ccfParams = parameters>
 </#if>
 
-<#-- Scipio: Do this on individual field-by-field basis instead
+<#-- SCIPIO: Do this on individual field-by-field basis instead
 <#if !creditCard?has_content>
     <#assign creditCard = requestParameters>
 </#if>
@@ -36,7 +36,7 @@ under the License.
 </#if>
 -->
 
-<#-- Scipio: include fieldset in parent if desired
+<#-- SCIPIO: include fieldset in parent if desired
 <@fieldset>
 -->
     <@field type="input" size="30" maxlength="60" name="${fieldNamePrefix}companyNameOnCard" value=(ccfParams["${fieldNamePrefix}companyNameOnCard"]!(creditCard.companyNameOnCard)!(ccfFallbacks.companyNameOnCard)!) label=uiLabelMap.AccountingCompanyNameCard/>     
@@ -93,7 +93,7 @@ under the License.
         <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber) label=uiLabelMap.AccountingCardNumber required=true/>
     </#if>
     
-  <#-- Scipio: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->
+  <#-- SCIPIO: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->
   <#if showSecurityCodeField>
     <@field type="input" size="5" maxlength="10" name="${fieldNamePrefix}cardSecurityCode" value="" label=uiLabelMap.AccountingCardSecurityCode />
   </#if>

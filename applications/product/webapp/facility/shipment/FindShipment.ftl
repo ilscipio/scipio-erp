@@ -36,7 +36,7 @@ function lookupShipments() {
     <#--<@menuitem type="link" href="javascript:lookupShipments();" text=uiLabelMap.ProductFindShipment class="+${styles.action_nav!} ${styles.action_find!}" />-->
   </@menu>
 </#macro>
-<@section id="findOrders" menuContent=menuContent> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
+<@section id="findOrders" menuContent=menuContent> <#-- title=uiLabelMap.ProductFindShipmentTitle -->
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
               <@field type="input" label=uiLabelMap.ProductShipmentId name="shipmentId" value=(shipmentId!) />
@@ -125,7 +125,7 @@ function lookupShipments() {
             <#assign destinationFacility = delegator.findOne("Facility", {"facilityId":shipment.destinationFacilityId}, true)! />
             <#assign statusItem = delegator.findOne("StatusItem", {"statusId":shipment.statusId}, true)!/>
             <#assign shipmentType = delegator.findOne("ShipmentType", {"shipmentTypeId":shipment.shipmentTypeId}, true)!/>
-            <@th>
+            <@tr>
               <@td><a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
               <@td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</@td>
               <@td>${(statusItem.get("description",locale))?default(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>

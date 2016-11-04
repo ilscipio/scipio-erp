@@ -1,32 +1,50 @@
 package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.ftl.EscapingModel;
 import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
+import org.ofbiz.webapp.ftl.ExtendedWrapper;
+
+import com.ilscipio.scipio.ce.webapp.ftl.lang.WrappingOptions.RewrapMode;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
+import freemarker.template.AdapterTemplateModel;
 import freemarker.template.DefaultArrayAdapter;
 import freemarker.template.DefaultListAdapter;
 import freemarker.template.DefaultMapAdapter;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.ObjectWrapperAndUnwrapper;
 import freemarker.template.SimpleHash;
+import freemarker.template.SimpleScalar;
 import freemarker.template.SimpleSequence;
+import freemarker.template.Template;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
@@ -54,6 +72,11 @@ public abstract class LangFtlUtil {
 
     public static final String module = LangFtlUtil.class.getName();
     
+    // NOTE: there's no _real_ need to synchronize on these. if two templates are built for one builtin its not big deal.
+    private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
+    private static Template stringBuiltInCall = null;
+    private static final Map<String, Template> functionCalls = new ConcurrentHashMap<>();
+
     /**
      * Used for TemplateModel <-> unwrapped/raw value conversions.
      */
@@ -1399,77 +1422,92 @@ public abstract class LangFtlUtil {
     }
     
     /**
-     * Generic rewrapObject abstracted implementation.
-     * <p>
-     * Rewraps objects with different wrappers.
-     * <p>
-     * curObjectWrapper should usually be gotten from environment.
-     * If targetObjectWrapper is non-null, it overrides the method's decisions for the wrapper to use
-     * for the model itself (and, if deep, for the models it returns).
+     * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels.
+     * 
+     * @see org.ofbiz.webapp.ftl.EscapingModel
      */
-    public static Object rewrapObject(TemplateModel model, RewrapMode mode, Environment env, 
-        ObjectWrapper curObjectWrapper) throws TemplateModelException {
-        if (model instanceof TemplateHashModel) {
-            return rewrapMap((TemplateHashModel) model, mode, env, curObjectWrapper);
+    public static String getAsString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
+        if (nonEscaping && (model instanceof EscapingModel)) {
+            return (String) ((EscapingModel) model).getWrappedObject();
         } else {
-            if (mode.simple && mode.raw && mode.deep) {
-                Object unwrapped = LangFtlUtil.unwrapAlways(model);
-                ObjectWrapper objectWrapper = LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
-                return objectWrapper.wrap(unwrapped);
-            }
-            
-            throw new TemplateModelException("Scipio: rewrapObject doesn't support given object type or mode");
+            return model.getAsString();
         }
     }
     
-    public static Object rewrapMap(TemplateHashModel model, RewrapMode mode, Environment env, 
-            ObjectWrapper curObjectWrapper) throws TemplateModelException {
-        if (mode.simple) {
-            if (mode.force) {
+    /**
+     * Standard/"dumb" (re-)wrapping method. will deep-unwrap the value if necessary (if TemplateModel).
+     * <p>
+     * Failure to unwrap TemplateModel first will throw exception.
+     */
+    public static TemplateModel wrapObjectStd(Object value, String wrapper, Environment env) throws TemplateModelException {
+        return ObjectWrapperUtil.getObjectWrapperByName(wrapper, env).wrap(unwrap(value));
+    }
+    
+    public static TemplateModel wrapObjectStd(Object value, String wrapper) throws TemplateModelException {
+        return wrapObjectStd(value, wrapper, FreeMarkerWorker.getCurrentEnvironment());
+    }
+
+    /**
+     * Full-featured rewrapObject implementation. Rewraps objects with different wrappers and options.
+     * <p>
+     * TODO: 2016-10-20: this is currently very limited to the cases which we currently have in scipio,
+     * but other cases may pop up anytime.
+     * The non-deep is currently mainly handled by toSimpleMap in an imperfect way.
+     */
+    public static Object rewrapObject(TemplateModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
+        if (opts.rewrapMode.deep) {
+            if (opts.rewrapMode.always) {
+                // simplest case (default), just fully unwrap and rewrap
+                Object unwrapped = LangFtlUtil.unwrapAlways(model);
+                return opts.targetWrapper.wrap(unwrapped);
+            } else {
+                // TODO
+                throw new UnsupportedOperationException();
+            }
+        } else {
+            if (opts.rewrapMode.always) {
+                // TODO
+                throw new UnsupportedOperationException();
+            } else {
+                // TODO
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+    
+    /* obsoleted, remove later when rewrapObject is fully implemented
+    public static Object rewrapMap(TemplateHashModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
+        RewrapMode mode = opts.rewrapMode;
+        if (mode.always) {
+            return alwaysRewrapMap(model, opts, env);
+        } else {
+            
+            if (mode.deep) {
+                // WARN: Here we make one VERY delicate optimization:
+                // if the map is a simple hash, we do nothing to it.
+                // In theory this is WRONG but it works in most practical cases.
+                // Caller can force if it doesn't work right in his case.
+                if (model instanceof SimpleHash) {
+                    return model;
+                }
+                
+                // FIXME: Here we are forced to rewrap in most cases because Freemarker interface
+                // does not allow inspecting which object wrapper an object is using!
                 return alwaysRewrapMap(model, mode, env, curObjectWrapper);
             } else {
-                if (mode.raw) {
-                    if (mode.deep) {
-                        // WARN: Here we make one VERY delicate optimization:
-                        // if the map is a simple hash, we do nothing to it.
-                        // In theory this is WRONG but it works in most practical cases.
-                        // Caller can force if it doesn't work right in his case.
-                        if (model instanceof SimpleHash) {
-                            return model;
-                        }
-                        
-                        // FIXME: Here we are forced to rewrap in most cases because Freemarker interface
-                        // does not allow inspecting which object wrapper an object is using!
-                        return alwaysRewrapMap(model, mode, env, curObjectWrapper);
-                    } else {
-                        // Can't do raw without doing deep
-                        throw new TemplateModelException("Scipio: rewrapMap mode unsupported");
-                    }
-                } else {
-                    if (mode.deep) {
-                        // TODO: This mode is desirable but it requires implementing a new DefaultObjectWrapper
-                        // that would preserve the wrapping mode curObjectWrapper is doing.
-                        // Currently, to do deep, you must also do raw.
-                        throw new TemplateModelException("Scipio: rewrapMap mode not yet implemented");
-                    } else {
-                        // Shallow re-wrap to simple, non-(necessarily-)raw map. 
-                        // This is the rare case we can currently optimize...
-                        return toSimpleMap(model, mode.copy, curObjectWrapper);
-                    }
-                }
+                // Shallow re-wrap to simple, non-(necessarily-)raw map. 
+                // This is the rare case we can currently optimize...
+                return toSimpleMap(model, mode.copy, curObjectWrapper);
             }
-            
-        } else {
-            throw new TemplateModelException("Scipio: rewrapMap currently only supports simple target maps");
         }
     }
     
-    public static Object alwaysRewrapMap(TemplateHashModel model, RewrapMode mode, Environment env, 
-            ObjectWrapper curObjectWrapper) throws TemplateModelException {
+    public static Object alwaysRewrapMap(TemplateHashModel model, WrappingOptions opts, Environment env) throws TemplateModelException {
         Map<?, ?> unwrapped = (Map<?, ?>) LangFtlUtil.unwrapAlways(model);
-
-        if (mode.raw) {
-            if (mode.deep) {
+        return 
+        
+        if (opts.rewrapMode.raw) {
+            if (opts.rewrapMode.deep) {
                 ObjectWrapper modelWrapper = mode.copy ? 
                         LangFtlUtil.getSimpleTypeCopyingNonEscapingObjectWrapper(curObjectWrapper) : LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
                 return modelWrapper.wrap(unwrapped);
@@ -1478,19 +1516,254 @@ public abstract class LangFtlUtil {
                 throw new TemplateModelException("Scipio: rewrapMap mode unsupported");
             }
         } else {
-            if (mode.deep) {
+            if (opts.rewrapMode.deep) {
                 // TODO: This mode is desirable but it requires implementing a new DefaultObjectWrapper
                 // that would preserve the wrapping mode curObjectWrapper is doing.
                 // as-is, to do deep, you must also do raw.
                 throw new TemplateModelException("Scipio: rewrapMap mode not yet implemented");
             } else {
-                if (mode.copy) {
-                    return new SimpleHash(unwrapped, curObjectWrapper);
-                } else {
-                    return new SimpleMapModel(unwrapped, (BeansWrapper) curObjectWrapper);
-                }
+                return opts.targetWrapper.wrap(unwrapped);
+            }
+        }
+    }
+    */
+    
+    public static boolean isNullOrEmptyString(TemplateModel model) throws TemplateModelException {
+        // this doesn't work out: TemplateScalarModel.EMPTY_STRING.equals(model)
+        return (model == null || (model instanceof TemplateScalarModel && ((TemplateScalarModel) model).getAsString().isEmpty()));
+    }
+    
+    public static Locale getLocale(TemplateModel model) throws TemplateModelException {
+        if (isNullOrEmptyString(model)) {
+            return null;
+        }
+        if (!(model instanceof WrapperTemplateModel)) {
+            throw new TemplateModelException("Invalid locale object (not WrapperTemplateModel)");
+        }
+        return (Locale) ((WrapperTemplateModel) model).getWrappedObject();
+    }
+    
+    public static TimeZone getTimeZone(TemplateModel model) throws TemplateModelException {
+        if (isNullOrEmptyString(model)) {
+            return null;
+        }
+        if (!(model instanceof WrapperTemplateModel)) {
+            throw new TemplateModelException("Invalid locale object (not WrapperTemplateModel)");
+        }
+        return (TimeZone) ((WrapperTemplateModel) model).getWrappedObject();
+    }
+    
+
+    public static Template makeFtlCodeTemplate(String ftlCode) throws TemplateModelException {
+        Reader templateReader = new StringReader(ftlCode);
+        try {
+            return new Template(new UID().toString(), templateReader, FreeMarkerWorker.getDefaultOfbizConfig());
+        } catch (IOException e) {
+            throw new TemplateModelException(e);
+        } finally {
+            try {
+                templateReader.close();
+            } catch (IOException e) {
+                Debug.logError(e, module); // don't propagate
             }
         }
     }
     
+    public static void execFtlCode(Template ftlCode, Environment env) throws TemplateModelException {
+        try {
+            FreeMarkerWorker.includeTemplate(ftlCode, env);
+        } catch (TemplateException e) {
+            throw new TemplateModelException(e);
+        } catch (IOException e) {
+            throw new TemplateModelException(e);
+        }
+    }
+    
+    /**
+     * WARN: extremely slow, should be avoided! decompose into makeTemplate + executeFtlCode and cache the template instead.
+     */
+    public static void execFtlCode(String ftlCode, Environment env) throws TemplateModelException {
+        execFtlCode(makeFtlCodeTemplate(ftlCode), env);
+    }
+ 
+    /**
+     * Executes an arbitrary FTL built-in.
+     */
+    public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, TemplateModel[] builtInArgs, Environment env) throws TemplateModelException {
+        final int argCount = (builtInArgs != null) ? builtInArgs.length : 0;
+        return execBuiltIn(getBuiltInCall(builtInName, argCount, env), value, builtInArgs, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL built-in.
+     */
+    public static TemplateModel execBuiltIn(String builtInName, TemplateModel value, Environment env) throws TemplateModelException {
+        return execBuiltIn(builtInName, value, null, env);
+    }
+    
+    /**
+     * Gets an arbitrary FTL built-in call - non-abstracted version (for optimization only!).
+     */
+    public static Template getBuiltInCall(String builtInName, int argCount, Environment env) throws TemplateModelException {
+        final String cacheKey = builtInName + ":" + argCount;
+        Template builtInCall = builtInCalls.get(cacheKey);
+        if (builtInCall == null) {
+            // NOTE: there's no _real_ need to synchronize on this. if two templates are built for one builtin its ok, temporary only.
+            if (argCount > 0) {
+                String argVarsStr = "";
+                for(int i=0; i < argCount; i++) {
+                    argVarsStr += ",_scpEbiArg"+i;
+                }
+                builtInCall = makeFtlCodeTemplate("<#assign _scpEbiRes = _scpEbiVal?" + builtInName + "(" + argVarsStr.substring(1) + ")>");
+            } else {
+                builtInCall = makeFtlCodeTemplate("<#assign _scpEbiRes = _scpEbiVal?" + builtInName + ">");
+            }
+            builtInCalls.put(cacheKey, builtInCall);
+        }
+        return builtInCall;
+    }
+    
+    /**
+     * Executes an arbitrary FTL built-in - non-abstracted version (for optimization only!).
+     */
+    public static TemplateModel execBuiltIn(Template builtInCall, TemplateModel value, TemplateModel[] builtInArgs, Environment env) throws TemplateModelException {
+        final int argCount = (builtInArgs != null) ? builtInArgs.length : 0;
+        env.setVariable("_scpEbiVal", value);
+        for(int i=0; i < argCount; i++) {
+            env.setVariable("_scpEbiArg"+i, builtInArgs[i]);
+        }
+        execFtlCode(builtInCall, env);
+        return env.getVariable("_scpEbiRes");
+    }
+    
+    public static TemplateScalarModel execStringBuiltIn(TemplateModel value, Environment env) throws TemplateModelException {
+        if (stringBuiltInCall == null) {
+            // NOTE: no real need for synchronize here
+            stringBuiltInCall = getBuiltInCall("string", 0, env);
+        }
+        return (TemplateScalarModel) execBuiltIn(stringBuiltInCall, value, null, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL function.
+     */
+    public static TemplateModel execFunction(String functionName, TemplateModel[] args, Environment env) throws TemplateModelException {
+        final int argCount = (args != null) ? args.length : 0;
+        return execFunction(getFunctionCall(functionName, argCount, env), args, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL function.
+     */
+    public static TemplateModel execFunction(String functionName, Environment env) throws TemplateModelException {
+        return execFunction(getFunctionCall(functionName, 0, env), null, env);
+    }
+    
+    /**
+     * Gets an arbitrary FTL function call - non-abstracted version (for optimization only!).
+     */
+    public static Template getFunctionCall(String functionName, int argCount, Environment env) throws TemplateModelException {
+        final String cacheKey = functionName + ":" + argCount;
+        Template functionCall = functionCalls.get(cacheKey);
+        if (functionCall == null) {
+            String argVarsStr = "";
+            for(int i=0; i < argCount; i++) {
+                argVarsStr += ",_scpEfnArg"+i;
+            }
+            if (argCount > 0) {
+                argVarsStr = argVarsStr.substring(1);
+            }
+            functionCall = makeFtlCodeTemplate("<#assign _scpEfnRes = " + functionName + "(" + argVarsStr + ")>");
+            functionCalls.put(cacheKey, functionCall);
+        }
+        return functionCall;
+    }
+    
+    /**
+     * Executes an arbitrary FTL function - non-abstracted version (for optimization only!).
+     */
+    public static TemplateModel execFunction(Template functionCall, TemplateModel[] args, Environment env) throws TemplateModelException {
+        final int argCount = (args != null) ? args.length : 0;
+        for(int i=0; i < argCount; i++) {
+            env.setVariable("_scpEfnArg"+i, args[i]);
+        }
+        execFtlCode(functionCall, env);
+        return env.getVariable("_scpEfnRes");
+    }
+    
+    /**
+     * Executes an arbitrary FTL function - non-abstracted version (for optimization only!).
+     */
+    public static TemplateModel execFunction(Template functionCall, Environment env) throws TemplateModelException {
+        return execFunction(functionCall, null, env);
+    }
+    
+    
+    /**
+     * Gets a var from main namespace with fallback on globals/data-model, or null if doesn't exit or null.
+     * <p>
+     * Avoids local variables and emulates a simple Freemarker var read in the main namespace.
+     * <p>
+     * Similar to {@link freemarker.core.Environment.getVariable(String)} but skips local
+     * variables and always main namespace instead of current namespace.
+     * <p>
+     * NOTE: This probably makes the most sense to call from transforms as a means to read
+     * "context/global" variables (using term loosely, while providing possibility for
+     * templates to override using both #assign and #global directives.
+     */
+    public static TemplateModel getMainNsOrGlobalVar(String name, Environment env) throws TemplateModelException {
+        TemplateModel result = env.getMainNamespace().get(name);
+        if (result == null) {
+            result = env.getGlobalVariable(name);
+        }
+        return result;
+    }
+    
+    /**
+     * Gets a var from current namespace with fallback on globals/data-model, or null if doesn't exit or null.
+     * <p>
+     * Avoids local variables and emulates a simple Freemarker var read in the current namespace.
+     * <p>
+     * Similar to {@link freemarker.core.Environment.getVariable(String)} but skips local
+     * variables.
+     */
+    public static TemplateModel getCurrentNsOrGlobalVar(String name, Environment env) throws TemplateModelException {
+        TemplateModel result = env.getCurrentNamespace().get(name);
+        if (result == null) {
+            result = env.getGlobalVariable(name);
+        }
+        return result;
+    }
+    
+    public static TemplateBooleanModel toBooleanModel(boolean value, Environment env) throws TemplateModelException {
+        return value ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
+    }
+    
+    /**
+     * Performs the logical raw string operation on a single value.
+     */
+    public static TemplateScalarModel toRawString(TemplateModel value, Environment env) throws TemplateModelException {
+        if (value instanceof TemplateScalarModel) {
+            TemplateScalarModel strModel = (TemplateScalarModel) value;
+            String str = getAsStringNonEscaping(strModel);
+            return new SimpleScalar(str); // Emulates Freemarker ?string built-in
+        } else {
+            return execStringBuiltIn(value, env);
+        }
+    }
+    
+    /**
+     * Performs the logical raw string operation on multiple values, concatenating the result.
+     */
+    public static TemplateScalarModel toRawString(Collection<TemplateModel> values, Environment env) throws TemplateModelException {
+        StringBuilder sb = new StringBuilder();
+        for(TemplateModel value: values) {
+            if (value instanceof TemplateScalarModel) {
+                sb.append(getAsStringNonEscaping((TemplateScalarModel) value));
+            } else {
+                sb.append(execStringBuiltIn(value, env).getAsString());
+            }
+        }
+        return new SimpleScalar(sb.toString());
+    }
 }

@@ -499,3 +499,53 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
   -webkit-box-shadow: 0 1px 5px -1px rgba(0,0,0,.3);
 }
+
+/*Template API documentation (TODO: REVIEW)*/
+.tmpldoc-content table.entry-parameters {
+  width: 100%;
+  border: 1px outset black;
+}
+
+.tmpldoc-content table.entry-parameters td {
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border: 1px solid black;
+}
+
+.tmpldoc-content table.entry-parameters td.entry-paramname {
+  width: 20%;
+}
+
+.tmpldoc-content .lib-entry-detail {
+  font-style: italic;
+  font-size: 0.6em;
+}
+
+.tmpldoc-content .lib-entry-formalname {
+  font-weight: bold;
+}
+
+.tmpldoc-content .lib-entry-param-desc-extradesc {
+  font-size: 0.8em;
+}
+
+.tmpldoc-content .lib-entry-params-details {
+  font-size: 0.8em;
+}
+
+.tmpldoc-content ul {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
+
+.tmpldoc-content pre {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
+
+.tmpldoc-content .lib-page-intro h4 { /* specific to base and derived themes */
+  margin-top: 2em;
+  font-weight: bold;
+}

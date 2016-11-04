@@ -237,7 +237,7 @@
         <value xml:lang="zh">到今天为止</value>
         <value xml:lang="zh-TW">到今天為止</value>
     </property>
-    <!-- Scipio: TODO: localize -->
+    <!-- SCIPIO: TODO: localize -->
     <property key="like">
         <value xml:lang="de">Wie</value>
         <value xml:lang="en">Like</value>

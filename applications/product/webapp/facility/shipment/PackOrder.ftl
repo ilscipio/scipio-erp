@@ -105,8 +105,8 @@ under the License.
     </@section>
 
     <#if showInput != "N" && ((orderHeader?exists && orderHeader?has_content))>
-        <#assign sectionTitle>${uiLabelMap.ProductOrderId} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</#assign>
-        <@section title=sectionTitle>
+        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
+        <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
             <#if orderItemShipGroup?has_content>
                 <#if (orderItemShipGroup.contactMechId)?has_content>
                     <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
@@ -158,7 +158,7 @@ under the License.
     
             <#-- manual per item form -->
             <#if showInput != "N" && itemInfos?has_content>
-                <#assign sectionTitle="${uiLabelMap.ProductProduct} ${uiLabelMap.ProductToPack}"/>
+                <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
                     <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>">                    
                         <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
@@ -179,7 +179,7 @@ under the License.
     
                 <#-- auto grid form -->
                 <#assign itemInfos = packingSession.getItemInfos()!>
-                <#assign sectionTitle="${uiLabelMap.ProductProducts} ${uiLabelMap.ProductToPack}"/>
+                <#assign sectionTitle="${rawLabel('ProductProducts')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
                     <form name="multiPackForm" method="post" action="<@ofbizUrl>ProcessBulkPackOrder</@ofbizUrl>">
                         <@fields type="default-manual">
@@ -270,7 +270,7 @@ under the License.
                                     <@tr>
                                         <@td colspan="12">
                                             <@field type="submitarea">                                            
-                                                <@field type="submit" text="${uiLabelMap.CommonClear} (${uiLabelMap.CommonAll})" onClick="javascript:document.clearPackForm.submit();"/>
+                                                <@field type="submit" text="${rawLabel('CommonClear')} (${rawLabel('CommonAll')})" onClick="javascript:document.clearPackForm.submit();"/>
                                             </@field>
                                         </@td>
                                     </@tr>
@@ -308,7 +308,7 @@ under the License.
                                 <#list packageSeqIds as packageSeqId>
                                     <@tr>
                                         <@td>
-                                            <#assign packageWeightLabel>${uiLabelMap.ProductPackage} ${packageSeqId}</#assign>
+                                            <#assign packageWeightLabel>${rawLabel('ProductPackage')} ${rawString(packageSeqId)}</#assign>
                                             <@field type="input" size="7" name="packageWeight_${packageSeqId}" value=(packingSession.getPackageWeight(packageSeqId?int)!) label=packageWeightLabel/>
                                             <#if orderItemShipGroup?has_content>
                                                 <input type="hidden" name="shippingContactMechId" value="${orderItemShipGroup.contactMechId!}"/>
@@ -339,11 +339,11 @@ under the License.
                                             <@field type="textarea" name="handlingInstructions" rows="2" cols="30">${packingSession.getHandlingInstructions()!}</@field>
                                         </@td>
                                         <@td>
-                                            <#assign buttonName = "${uiLabelMap.ProductComplete}">
-                                            <#if forceComplete?default("false") == "true">
-                                                <#assign buttonName = "${uiLabelMap.ProductCompleteForce}">
+                                            <#assign buttonName = uiLabelMap.ProductComplete>
+                                            <#if (forceComplete!"false") == "true">
+                                                <#assign buttonName = uiLabelMap.ProductCompleteForce>
                                             </#if>
-                                            <@field type="submit" text="${buttonName}" onClick="javascript:document.completePackForm.submit();"/>
+                                            <@field type="submit" text=buttonName onClick="javascript:document.completePackForm.submit();"/>
                                         </@td>
                                     </@tr>
                                 </#list>
@@ -359,7 +359,7 @@ under the License.
         <#assign packageMap = linesByPackageResultMap.get("packageMap")!>
         <#assign sortedKeys = linesByPackageResultMap.get("sortedKeys")!>
         <#if ((packageMap?has_content) && (sortedKeys?has_content))>
-            <@section title="${uiLabelMap.ProductPackages} : ${sortedKeys.size()!}">
+            <@section title="${rawLabel('ProductPackages')} : ${sortedKeys.size()!}">
                 <#list sortedKeys as key>
                     <#assign packedLines = packageMap.get(key)>
                     <#if packedLines?has_content>

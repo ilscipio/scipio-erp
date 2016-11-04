@@ -21,7 +21,7 @@
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease" paymentCustomMethodId="GIFT_RELEASE_TEST"/>
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="PAYPAL_CONFIG"/>
 
-<!-- Scipio: now points to shop -->
+<!-- SCIPIO: now points to shop -->
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_CONFIRM" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice" xslfoAttachScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderConfirmNoticePdf" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_COMPLETE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@example.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@example.com"/>

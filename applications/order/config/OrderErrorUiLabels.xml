@@ -5175,7 +5175,7 @@
         <value xml:lang="zh">退货的修改不能大于给付的金额。</value>
         <value xml:lang="zh_TW">退貨的修改不能大于給付的金額。</value>
     </property>
-    <property key="checkevents.payment_cannot_be_greater_than_order"><!-- Scipio: TODO: Localize -->
+    <property key="checkevents.payment_cannot_be_greater_than_order"><!-- SCIPIO: TODO: Localize -->
         <value xml:lang="de">Die Zahlung insgesamt nicht größer sein als der Auftragssumme.</value>
         <value xml:lang="en">Payment total cannot be greater than the order total.</value>
     </property>
@@ -5751,7 +5751,7 @@
         <value xml:lang="zh_TW">沒有找到固定資產，固定資產ID：${fixedAssetId}</value>
     </property>
     <property key="item.maximum_number_of_person_renting"> 
-        <!-- Scipio: formatting changed -->
+        <!-- SCIPIO: formatting changed -->
         <value xml:lang="de">Die maximale Anzahl Personen für dieses Objekt beträgt ${reservMaxPersons}, Sie haben aber ${reservPersons} verlangt!</value>
         <value xml:lang="en">The maximum number of persons renting this object is ${reservMaxPersons} however you have requested ${reservPersons}!</value>
         <value xml:lang="es">El número máximo de personas para reservar este objeto es ${reservMaxPersons}. ¡No obstante ha solicitado ${reverPersons}!</value>
@@ -6270,7 +6270,7 @@
         <value xml:lang="vi">Bạn không thể thêm sản phẩm ảo ('Virtual' product) tại đây, bạn hãy chọn trong các hàng hóa liên quan (related variants).</value>
         <value xml:lang="zh">在这里你不能添加一个虚拟产品，请选择一个相关的变型。</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="OrderUnexpectedErrorHelp">
         <value xml:lang="de">Unerwarteter Fehler. Bitte versuchen Sie es später noch einmal oder kontaktieren Sie uns um Hilfe.</value>
         <value xml:lang="en">Unexpected error. Please try again later or contact us for help.</value>

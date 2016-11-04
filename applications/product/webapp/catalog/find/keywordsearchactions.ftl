@@ -24,7 +24,7 @@ under the License.
 
     <@render resource="component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsFormInclude" />
 
-    <@section title="${uiLabelMap.ProductRemoveResultsFrom} ${uiLabelMap.ProductCategory}">
+    <@section title="${rawLabel('ProductRemoveResultsFrom')} ${rawLabel('ProductCategory')}">
         <form method="post" action="<@ofbizUrl>searchRemoveFromCategory</@ofbizUrl>" name="searchRemoveFromCategory">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label=uiLabelMap.ProductCategory formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
@@ -32,7 +32,7 @@ under the License.
         </form>
     </@section>
 
-    <@section title="${uiLabelMap.ProductExpireResultsFrom} ${uiLabelMap.ProductCategory}">
+    <@section title="${rawLabel('ProductExpireResultsFrom')} ${rawLabel('ProductCategory')}">
         <form method="post" action="<@ofbizUrl>searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label=uiLabelMap.ProductCategory formName="searchExpireFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
@@ -41,7 +41,7 @@ under the License.
         </form>
     </@section>
 
-    <@section title="${uiLabelMap.ProductAddResultsTo} ${uiLabelMap.ProductCategory}">
+    <@section title="${rawLabel('ProductAddResultsTo')} ${rawLabel('ProductCategory')}">
         <form method="post" action="<@ofbizUrl>searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label=uiLabelMap.ProductCategory formName="searchAddToCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
@@ -87,7 +87,7 @@ under the License.
         <form method="post" action="" name="searchShowParams">
           <input type="hidden" name="clearSearch" value="N" />
           <#assign searchParams = Static["org.ofbiz.product.product.ProductSearchSession"].makeSearchParametersString(session)>
-          <#-- Scipio: TODO: Review the escaping here -->
+          <#-- SCIPIO: TODO: Review the escaping here -->
           <@field type="input" label=uiLabelMap.ProductPlainSearchParameters size="60" name="searchParameters" readonly=true value=rawString(searchParams) />
           <@field type="input" label=uiLabelMap.ProductHtmlSearchParameters size="60" name="searchParameters" readonly=true value=rawString(searchParams)?html />
         </form>

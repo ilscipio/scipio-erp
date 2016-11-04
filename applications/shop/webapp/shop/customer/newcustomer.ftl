@@ -18,8 +18,8 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Scipio: TODO?: Fields for business account (with party group) -->
-<#-- Scipio: TODO?: Some of this is redundant with customerbasicfields.ftl - investigate -->
+<#-- SCIPIO: TODO?: Fields for business account (with party group) -->
+<#-- SCIPIO: TODO?: Some of this is redundant with customerbasicfields.ftl - investigate -->
 
 <@script>
 
@@ -50,10 +50,10 @@ under the License.
          if (document.getElementById('UNUSEEMAIL').checked) {
              document.getElementById('USERNAME').value = jQuery('#CUSTOMER_EMAIL').val();
              <#-- don't disable, make the browser not submit the field: document.getElementById('USERNAME').disabled=true; -->
-             <#-- Scipio: ... but DO set disabled class so user sees as if was disabled -->
+             <#-- SCIPIO: ... but DO set disabled class so user sees as if was disabled -->
              jQuery('#USERNAME').slideUp('slow');
          } else {
-             if (noreset !== true) { <#-- Scipio: extra check -->
+             if (noreset !== true) { <#-- SCIPIO: extra check -->
                 document.getElementById('USERNAME').value='';
              }
              <#-- document.getElementById('USERNAME').disabled=false; -->
@@ -61,7 +61,7 @@ under the License.
          }
      }
      function hideShowUsaStates() {
-       <#-- Scipio: Don't do this here. if we ever do it it should be everywhere or nowhere. 
+       <#-- SCIPIO: Don't do this here. if we ever do it it should be everywhere or nowhere. 
          var customerStateElement = document.getElementById('newuserform_stateProvinceGeoId');
          var customerCountryElement = document.getElementById('newuserform_countryGeoId');
          if (customerCountryElement.value == "USA" || customerCountryElement.value == "UMI") {
@@ -77,7 +77,7 @@ under the License.
     jQuery(document).ready(function() {
         hideShowUsaStates();
         
-        <#-- Scipio: do this also on page load -->
+        <#-- SCIPIO: do this also on page load -->
         setEmailUsername(true);
     });
 
@@ -96,7 +96,7 @@ under the License.
   </@commonMsg>
 
 
-<#-- Scipio: NOTE: fieldErrors should be kept in the time there is no javascript validation.
+<#-- SCIPIO: NOTE: fieldErrors should be kept in the time there is no javascript validation.
     To remove these, simply toggle this bool. 
     NOTE: these do work fairly decently however. -->
 <#assign useServerFieldErrors = useServerFieldErrors!true>
@@ -142,8 +142,8 @@ under the License.
         <@allowSolicitationField name="CUSTOMER_EMAIL_ALLOW_SOL" />
       </@fields>
     </#macro>
-    <@field type="input" name="CUSTOMER_EMAIL" id="CUSTOMER_EMAIL" value="${parameters.CUSTOMER_EMAIL!}" 
-        onChange="changeEmail()" onkeyup="changeEmail()" label="${uiLabelMap.PartyEmailAddress}" required=true 
+    <@field type="input" name="CUSTOMER_EMAIL" id="CUSTOMER_EMAIL" value=(parameters.CUSTOMER_EMAIL!) 
+        onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true 
         postWidgetContent=extraFieldContent/>
 
     <#if getUsername>
@@ -152,7 +152,7 @@ under the License.
           <@fieldErrors fieldName="USERNAME"/>
         </#macro>
         <input type="hidden" name="USERNAME" id="USERNAME" value="${parameters.USERNAME!}"/>
-        <@field type="text" name="showUserName" id="showUserName" value="${parameters.USERNAME!}" disabled="disabled" label="${uiLabelMap.CommonUsername}" 
+        <@field type="text" name="showUserName" id="showUserName" value=(parameters.USERNAME!) disabled="disabled" label=uiLabelMap.CommonUsername 
             required=true postWidgetContent=extraFieldContent  />
       <#else>
         <#macro extraFieldContent args={}>
@@ -165,8 +165,8 @@ under the License.
         <#if ((parameters.UNUSEEMAIL!) == "on")>
           <#assign fieldStyle = "display:none;">
         </#if>
-        <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value="${parameters.USERNAME!}" onFocus="clickUsername();" onchange="changeEmail();" 
-            label="${uiLabelMap.CommonUsername}" required=true postWidgetContent=extraFieldContent />
+        <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(parameters.USERNAME!) onFocus="clickUsername();" onchange="changeEmail();" 
+            label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
       </#if>
     </#if>
 
@@ -175,19 +175,19 @@ under the License.
         <@fieldErrors fieldName="PASSWORD"/>
       </#macro>
       <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" 
-        label="${uiLabelMap.CommonPassword}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.CommonPassword required=true postWidgetContent=extraFieldContent />
 
       <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
       </#macro>
       <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" 
-        label="${uiLabelMap.PartyRepeatPassword}" required=true postWidgetContent=extraFieldContent />
+        label=uiLabelMap.PartyRepeatPassword required=true postWidgetContent=extraFieldContent />
 
       <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="PASSWORD_HINT"/>
       </#macro>
-      <@field type="input" name="PASSWORD_HINT" id="PASSWORD_HINT" value="${parameters.PASSWORD_HINT!}" 
-        maxlength="100"label="${uiLabelMap.PartyPasswordHint}" postWidgetContent=extraFieldContent/>
+      <@field type="input" name="PASSWORD_HINT" id="PASSWORD_HINT" value=(parameters.PASSWORD_HINT!) 
+        maxlength="100"label=uiLabelMap.PartyPasswordHint postWidgetContent=extraFieldContent/>
     <#else>
       <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     </#if>
@@ -207,26 +207,26 @@ under the License.
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_FIRST_NAME"/>
     </#macro>
-    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value="${parameters.USER_FIRST_NAME!}" 
-        label="${uiLabelMap.PartyFirstName}" required=true postWidgetContent=extraFieldContent />
+    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(parameters.USER_FIRST_NAME!) 
+        label=uiLabelMap.PartyFirstName required=true postWidgetContent=extraFieldContent />
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
     </#macro>
-    <@field type="input" name="USER_MIDDLE_NAME" id="USER_MIDDLE_NAME" value="${parameters.USER_MIDDLE_NAME!}" 
-        label="${uiLabelMap.PartyMiddleInitial}" postWidgetContent=extraFieldContent/>
+    <@field type="input" name="USER_MIDDLE_NAME" id="USER_MIDDLE_NAME" value=(parameters.USER_MIDDLE_NAME!) 
+        label=uiLabelMap.PartyMiddleInitial postWidgetContent=extraFieldContent/>
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_LAST_NAME"/>
     </#macro>
-    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value="${parameters.USER_LAST_NAME!}" 
-        label="${uiLabelMap.PartyLastName}" required=true postWidgetContent=extraFieldContent />
+    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(parameters.USER_LAST_NAME!) 
+        label=uiLabelMap.PartyLastName required=true postWidgetContent=extraFieldContent />
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_SUFFIX"/>
     </#macro>
-    <@field type="input" name="USER_SUFFIX" id="USER_SUFFIX" value="${parameters.USER_SUFFIX!}" 
-        label="${uiLabelMap.PartySuffix}" postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"/>
+    <@field type="input" name="USER_SUFFIX" id="USER_SUFFIX" value=(parameters.USER_SUFFIX!) 
+        label=uiLabelMap.PartySuffix postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"/>
 
   </fieldset>
   </@cell>
@@ -235,7 +235,7 @@ under the License.
 <@row>
   <@cell columns=6>
   <fieldset>
-    <#-- Scipio: NOTE: This is used both as GENERAL_LOCATION and SHIPPING_LOCATION
+    <#-- SCIPIO: NOTE: This is used both as GENERAL_LOCATION and SHIPPING_LOCATION
     <legend>${uiLabelMap.PartyShippingAddress}</legend>
     <legend>${getLabel("ContactMechType.description.POSTAL_ADDRESS", "PartyEntityLabels")}</legend>-->
     
@@ -244,26 +244,26 @@ under the License.
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
     </#macro>
-    <@field type="input" name="CUSTOMER_ADDRESS1" id="CUSTOMER_ADDRESS1" value="${parameters.CUSTOMER_ADDRESS1!}" 
-        label="${uiLabelMap.PartyAddressLine1}" required=true postWidgetContent=extraFieldContent/>
+    <@field type="input" name="CUSTOMER_ADDRESS1" id="CUSTOMER_ADDRESS1" value=(parameters.CUSTOMER_ADDRESS1!) 
+        label=uiLabelMap.PartyAddressLine1 required=true postWidgetContent=extraFieldContent/>
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
     </#macro>
-    <@field type="input" name="CUSTOMER_ADDRESS2" id="CUSTOMER_ADDRESS2" value="${parameters.CUSTOMER_ADDRESS2!}" 
-        label="${uiLabelMap.PartyAddressLine2}" postWidgetContent=extraFieldContent/>
+    <@field type="input" name="CUSTOMER_ADDRESS2" id="CUSTOMER_ADDRESS2" value=(parameters.CUSTOMER_ADDRESS2!) 
+        label=uiLabelMap.PartyAddressLine2 postWidgetContent=extraFieldContent/>
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_CITY"/>
     </#macro>
-    <@field type="input" name="CUSTOMER_CITY" id="CUSTOMER_CITY" value="${parameters.CUSTOMER_CITY!}" 
-        label="${uiLabelMap.PartyCity}" required=true postWidgetContent=extraFieldContent />
+    <@field type="input" name="CUSTOMER_CITY" id="CUSTOMER_CITY" value=(parameters.CUSTOMER_CITY!) 
+        label=uiLabelMap.PartyCity required=true postWidgetContent=extraFieldContent />
 
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
     </#macro>
-    <@field type="input" name="CUSTOMER_POSTAL_CODE" id="CUSTOMER_POSTAL_CODE" value="${parameters.CUSTOMER_POSTAL_CODE!}" 
-        label="${uiLabelMap.PartyZipCode}" required=true postWidgetContent=extraFieldContent />
+    <@field type="input" name="CUSTOMER_POSTAL_CODE" id="CUSTOMER_POSTAL_CODE" value=(parameters.CUSTOMER_POSTAL_CODE!) 
+        label=uiLabelMap.PartyZipCode required=true postWidgetContent=extraFieldContent />
   
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>

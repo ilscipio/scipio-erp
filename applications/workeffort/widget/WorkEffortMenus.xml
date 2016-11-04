@@ -32,8 +32,17 @@ under the License.
         <menu-item name="WorkEffortICalendar" title="${uiLabelMap.WorkEffortICalendar}"><link target="FindICalendars"/></menu-item>
     </menu>
     <menu name="WorkEffortAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
-        default-menu-item-name="task">
+        default-menu-item-name="task" always-expand-selected-or-ancestor="true">
         <include-elements menu-name="WorkEffortAppBar" recursive="full" />
+        <menu-item name="workeffort">
+            <sub-menu name="WorkEffort" include="WorkEffortSideBar"/>
+        </menu-item>
+        <menu-item name="timesheet">
+            <sub-menu name="Timesheet" include="component://workeffort/widget/TimesheetMenus.xml#TimesheetSideBar"/>
+        </menu-item>
+        <menu-item name="WorkEffortICalendar">
+            <sub-menu name="ICalendar" include="ICalendarSideBar"/>
+        </menu-item>
     </menu>
     
     <menu name="WorkEffortTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

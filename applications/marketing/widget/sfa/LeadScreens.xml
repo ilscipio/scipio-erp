@@ -26,12 +26,12 @@ under the License.
                 <set field="titleProperty" value="MarketingFindLeads"/>
                 <set field="currentUrl" value="FindLeads"/>
                 <set field="activeSubMenuItem" value="Leads"/>
-                <set field="setLeadtDescription" value="${groovy:session.setAttribute(&quot;leadDescription&quot;,activeMainMenuItem)}"/>
-                <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
-                <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
+                <set field="setLeadtDescription" value="${groovy:session.setAttribute('leadDescription', context.activeMainMenuItem)}"/>
+                <set field="removeAccountDescription" value="${groovy:session.removeAttribute('accountDescription')}"/>
+                <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
             </actions>
             <widgets>
-                <!-- <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}"> -->
+                <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}"> -->
                 <decorator-screen name="CommonLeadDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">              
                     <decorator-section name="body">
                         <section>

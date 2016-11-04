@@ -131,7 +131,7 @@ under the License.
       <@menuitem type="link" href="javascript:document.updateList.submit();" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
     </@menu>
   </#macro>
-  <@section title="${uiLabelMap.EcommerceShoppingListDetail} - ${shoppingList.listName}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceShoppingListDetail')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
         <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
             <input type="hidden" name="partyId" value="${shoppingList.partyId!}"/>
@@ -222,7 +222,7 @@ under the License.
       <@menuitem type="link" href="javascript:document.reorderinfo.submit();" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
     </@menu>
   </#macro>
-  <@section title=sectionTitle menuContent=menuContent>
+  <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
         <form name="reorderinfo" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
         <@fields type="default-manual-widgetonly">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
@@ -353,12 +353,12 @@ under the License.
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.OrderLastOrderedDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
-                          <@td>${lastOrderedString?default("${uiLabelMap.OrderNotYetOrdered}")}</@td>
+                          <@td>${lastOrderedString!(uiLabelMap.OrderNotYetOrdered)}</@td>
                         </@tr>
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.EcommerceEstimateNextOrderDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
-                          <@td>${nextTimeString?default("${uiLabelMap.EcommerceNotYetKnown}")}</@td>
+                          <@td>${nextTimeString!(uiLabelMap.EcommerceNotYetKnown)}</@td>
                         </@tr>
                       </@table>
                     </div>
@@ -374,10 +374,10 @@ under the License.
   <#if childShoppingListDatas?has_content>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddChildListsToCart />
+      <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddChildListsToCart />
     </@menu>
   </#macro>
-  <@section title="${uiLabelMap.EcommerceChildShoppingList} - ${shoppingList.listName}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
       <@tr>
         <@td><b>${uiLabelMap.EcommerceListName}</b></@td>
@@ -418,7 +418,7 @@ under the License.
       <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddListToCart />
     </@menu>
   </#macro>
-  <@section title="${uiLabelMap.EcommerceListItems} - ${shoppingList.listName}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceListItems')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->
         <@paginationControls/>
@@ -442,7 +442,7 @@ under the License.
               <@tr>
                 <@td>
                      <a href="<@ofbizUrl>product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${shoppingListItem.productId} -
-                     ${productContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION", "html")!}
+                     ${productContentWrapper.get("PRODUCT_NAME")!("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")!}
                 </@td>
                 <@td nowrap="nowrap" align="center">
                   <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}">
@@ -512,7 +512,7 @@ under the License.
                             <#assign variantProduct = productVariantAssoc.getRelatedOne("AssocProduct", true)>
                             <#if variantProduct??>
                             <#assign variantProductContentWrapper = Static["org.ofbiz.product.product.ProductContentWrapper"].makeProductContentWrapper(variantProduct, request)>
-                              <option value="${variantProduct.productId}">${variantproductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")} [${variantProduct.productId}]</option>
+                              <option value="${variantProduct.productId}">${variantproductContentWrapper.get("PRODUCT_NAME")!("No Name")} [${variantProduct.productId}]</option>
                             </#if>
                           </#list>
                       </select>
@@ -544,7 +544,7 @@ under the License.
     </#if>
   </@section>
 
-  <@section class="${uiLabelMap.EcommerceShoppingListPriceTotals} - ${shoppingList.listName}">
+  <@section title="${rawLabel('EcommerceShoppingListPriceTotals')} - ${rawString(shoppingList.listName)}">
       <@table type="fields"> <#-- orig: width="100%" border="0" cellspacing="1" cellpadding="1" -->
         <@tr>
           <@td width="5%" nowrap="nowrap">${uiLabelMap.EcommerceChildListTotalPrice}

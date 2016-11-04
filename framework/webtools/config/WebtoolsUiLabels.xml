@@ -1566,7 +1566,7 @@
         <value xml:lang="zh">定义位置</value>
         <value xml:lang="zh_TW">定義位置</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="WebtoolsDemoDataGeneratorServiceList">
         <value xml:lang="en">Data Generator Services</value>
     </property>
@@ -5925,7 +5925,7 @@
         <value xml:lang="zh">创建一个实体 ${entityName} ：输入值，然后点击新建.</value>
         <value xml:lang="zh_TW">新建一個資料實體 ${entityName} :輸入值,然後點擊新建.</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="WebtoolsEntityUtilityServices">
         <value xml:lang="de">Entity Utility Services</value>
         <value xml:lang="en">Entity Utility Services</value>
@@ -5934,7 +5934,7 @@
         <value xml:lang="de">Utility Services</value>
         <value xml:lang="en">Utility Services</value>
     </property>
-    <!-- Scipio: TODO: Localize -->
+    <!-- SCIPIO: TODO: Localize -->
     <property key="WebtoolsUtilityAndDataGen">
         <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
         <value xml:lang="en">Utility and Data Generation</value>
@@ -5957,6 +5957,12 @@
     <property key="WebtoolsGeneratedDataFailed">
         <value xml:lang="en">Failed</value>
     </property>
-    
-    
+    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
+        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
+        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
+    </property>
+    <property key="WebtoolsTemplateApiDocsTitle">
+        <value xml:lang="de">Templating Toolkit Dokumentation</value>
+        <value xml:lang="en">Templating Toolkit Documentation</value>
+    </property>
 </resource>

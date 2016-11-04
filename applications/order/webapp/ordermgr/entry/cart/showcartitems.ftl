@@ -23,7 +23,7 @@ under the License.
   <#assign assocProduct = (delegator.findOne("Product", {"productId" : productAssoc.productIdTo}, false))/>
   <#if assocProduct?has_content>
     <@td><a href="<@ofbizUrl>product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.link_nav_info_id!}">${productAssoc.productIdTo}</a></@td>
-    <@td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)!"Unknown"})</i></@td>
+    <@td>- ${(assocProduct.productName)!} <i>(${(productAssocType.description)!"Unknown"})</i></@td>
   </#if>
 </#macro>
 

@@ -66,7 +66,9 @@ under the License.
             <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
             <link target="FindPortalPage"/>
         </menu-item> -->
-        <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
+        <!-- TODO: REVIEW NAMES... contain a "& Doc"? maybe -->
+        <!--${uiLabelMap.WebtoolsLayoutDemo} / ${uiLabelMap.CommonDev}-->
+        <menu-item name="LayoutDemo" title="${uiLabelMap.CommonDevelopment}">
             <link target="WebtoolsLayoutDemo" />
         </menu-item>
         <menu-item name="solrAdmin" title="${uiLabelMap.WebtoolsSolrAdmin}">
@@ -93,7 +95,8 @@ under the License.
       * If the menu-items contain many conditions, it may be helpful to set
         <menu always-expand-selected-or-ancestor="true".../> to allow selected items to always display, regardless of conditions.
     -->
-    <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
         <include-elements menu-name="WebtoolsAppBar" recursive="full" />
         <menu-item name="server">
             <sub-menu name="Server" include="ServerSideBar"/>
@@ -432,7 +435,86 @@ under the License.
         <include-elements menu-name="geoManagementTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="LayoutDemoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <!-- SCIPIO: new -->
+    <menu name="TemplateApiDocTabBar" items-sort-mode="off" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
+        </actions>
+        <menu-item name="htmlTemplate" title="${docLibTitleMap['standard/htmlTemplate']}"><!-- SHOULD remain the first as contains the intro & read-first stuff -->
+            <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlStructure" title="${docLibTitleMap['standard/htmlStructure']}">
+            <link target="${basePageInterWebappUri}/standard/htmlStructure#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlContent" title="${docLibTitleMap['standard/htmlContent']}">
+            <link target="${basePageInterWebappUri}/standard/htmlContent#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlInfo" title="${docLibTitleMap['standard/htmlInfo']}">
+            <link target="${basePageInterWebappUri}/standard/htmlInfo#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlForm" title="${docLibTitleMap['standard/htmlForm']}">
+            <link target="${basePageInterWebappUri}/standard/htmlForm#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlNav" title="${docLibTitleMap['standard/htmlNav']}">
+            <link target="${basePageInterWebappUri}/standard/htmlNav#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="htmlScript" title="${docLibTitleMap['standard/htmlScript']}">
+            <link target="${basePageInterWebappUri}/standard/htmlScript#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="utilities" title="${docLibTitleMap['utilities']}">
+            <link target="${basePageInterWebappUri}/utilities#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+    </menu>
+    <menu name="TemplateApiDocSideBar" items-sort-mode="off" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="TemplateApiDocTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="TemplateApiDocSubTabBar" items-sort-mode="off" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
+            <set field="sideBarShown" type="Boolean" value="${context.widePage != true}"/>
+            <set field="sideBarOnOffLabel" value="${groovy: sideBarShown ? 'CommonOff' : 'CommonOn'}"/>
+        </actions>
+        <!-- TODO? the logic and decorators for this toggle work, but themes don't seem to respect context.widePage anymore
+        <menu-item name="toggleDocSideBar" title="${uiLabelMap.CommonSideBar}: ${uiLabelMap[sideBarOnOffLabel]}">
+            <condition>
+                <and>
+                    <not><if-empty field="targetLibPath"/></not>
+                    <not><if-empty field="userLogin"/></not>
+                </and>
+            </condition>
+            <link target="${basePageInterWebappUri}/${targetLibPath}?docWidePage=${sideBarShown}#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>-->
+        <menu-item name="reloadDataModel" title="Reload from source" widget-style="+${styles.action_run_session} ${styles.action_update}"><!--${uiLabelMap.CommonReload}-->
+            <condition>
+                <and>
+                    <not><if-empty field="targetLibPath"/></not>
+                    <!-- heavy session cache and processing, avoid abuse -->
+                    <not><if-empty field="userLogin"/></not>
+                    <if-has-permission permission="ENTITY_DATA_ADMIN"/>
+                </and>
+            </condition>
+            <link target="${basePageInterWebappUri}/${targetLibPath}?reloadDataModel=true#extLoginKey=OFF" url-mode="inter-app"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="LayoutDemoSideBar" items-sort-mode="off" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="WebtoolsLayoutDemo"/>
+            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
+        </actions>
+        <menu-item name="LayoutDemoDebug" title="Layout Demo (Debug)">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="debugMode" value="true"/>
+            </link>
+        </menu-item>
+        <menu-item name="LayoutDemo" title="Layout Demo">
+            <link target="${demoTargetUrl}"/>
+        </menu-item>
+        <menu-item name="templateApiDocs" title="${uiLabelMap.WebtoolsTemplateApiDocsTitle}">
+            <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
+            <sub-menu name="TemplateApiDoc" include="TemplateApiDocSideBar"/>
+        </menu-item>
         <!-- 
         <menu-item name="Selected" title="${uiLabelMap.CommonSelected}">
             <link target="${demoTargetUrl}">
@@ -456,17 +538,9 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <menu-item name="LayoutDemoDebug" title="Layout Demo (Debug)">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="debugMode" value="true"/>
-            </link>
-        </menu-item>
-        <menu-item name="LayoutDemo" title="Layout Demo">
-            <link target="${demoTargetUrl}"/>
-        </menu-item>
     </menu>
     
-    <!-- Scipio: DemoDataGenerator sidebar menu -->
+    <!-- SCIPIO: DemoDataGenerator sidebar menu -->
     <!-- SCIPIO: NOTE: this is not in use -->
     <menu name="DemoDataGeneratorSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ListDemoDataGeneratorServices" title="${uiLabelMap.WebtoolsDemoDataGeneratorServiceList}">
@@ -496,7 +570,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <!-- Scipio: nested menu test -->
+    <!-- SCIPIO: nested menu test -->
     <menu name="LayoutDemoNestedButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="top1" title="Toplevel1">
             <link target="${demoTargetUrl}">
@@ -531,7 +605,7 @@ under the License.
                         <parameter param-name="demoParam3"/>
                     </link>
                 </menu-item>
-                <!-- Scipio: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
+                <!-- SCIPIO: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
                 <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
                     <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
                         <link target="${demoTargetUrl}">
@@ -569,12 +643,12 @@ under the License.
         </menu-item>
     </menu>
     
-    <!-- Scipio: Just here to demonstrate sub-menu-model local lookup -->
+    <!-- SCIPIO: Just here to demonstrate sub-menu-model local lookup -->
     <menu name="LayoutDemoButtonDropdownMenuModel" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-link-style="+my-dropdown-item-link">
     </menu>
     
-    <!-- Scipio: button menu with nested button-dropdown test -->
+    <!-- SCIPIO: button menu with nested button-dropdown test -->
     <menu name="LayoutDemoButton2" menu-container-style="+my-special-button-menu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
         default-widget-style="+my-list-item">
         <menu-item name="top1" title="Toplevel1" widget-style="my-list-item-override-style">
@@ -591,7 +665,7 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <!-- Scipio: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
+        <!-- SCIPIO: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
             use sub-menu-title instead). sub-menu-model means the default styles will be fetched from the specified menu
             instead of this top-level menu. -->
         <menu-item name="top3">
@@ -612,7 +686,7 @@ under the License.
                 </menu-item>
             </sub-menu>
         </menu-item>
-        <!-- Scipio: DEPRECATED, OLD SYNTAX, DO NOT USE. ALWAYS USE SUB-MENU ELEMENT FROM NOW ON. -->
+        <!-- SCIPIO: DEPRECATED, OLD SYNTAX, DO NOT USE. ALWAYS USE SUB-MENU ELEMENT FROM NOW ON. -->
         <menu-item name="top3b" sub-menu-model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" sub-menu-title="Sub-menu, as button-dropdown (deprecated)">
             <menu-item name="nestednestednested1" title="Nestednestednested1">
                 <link target="${demoTargetUrl}">
@@ -803,7 +877,7 @@ under the License.
         <!-- To achieve this, we can force the scope of all sub-menus to exclude styling using "func" or "none" -->
         <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="none"/>
     </menu> 
-    
+
     <menu name="WebtoolsPlainSiteMapDemo2">
         <include-menu-items menu-name="WebtoolsAppSideBar"/>
     </menu> 
@@ -847,6 +921,39 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
+    </menu> 
+
+    <menu name="WebtoolsMenuActionsDemo1">
+        <actions>
+            <set field="commonActionField6" value="This value 6 was set in WebtoolsMenuActionsDemo1. [SUCCESS]"/>
+            <set field="commonActionField7" value="This value 7 was set in WebtoolsMenuActionsDemo1 but should be overridden... [ERROR]"/>
+            <set field="commonActionField8" value="This value 8 was set in WebtoolsMenuActionsDemo1 but should be overridden... [ERROR]"/>
+            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo1 but should be overridden... [ERROR]"/>
+        </actions>
+    </menu> 
+    
+    <menu name="WebtoolsMenuActionsDemo2">
+        <actions>
+            <set field="commonActionField7" value="This value 7 was set in WebtoolsMenuActionsDemo2. [SUCCESS]"/>
+            <set field="commonActionField8" value="This value 8 was set in WebtoolsMenuActionsDemo2 but should be overridden... [ERROR]"/>
+            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo2 but should be overridden... [ERROR]"/>
+        </actions>
+    </menu> 
+    
+    <menu name="WebtoolsMenuActionsDemo3">
+        <actions>
+            <set field="commonActionField8" value="This value 8 was set in WebtoolsMenuActionsDemo3. [SUCCESS]"/>
+            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo3 but should be overridden... [ERROR]"/>
+        </actions>
+    </menu> 
+    
+    <menu name="WebtoolsMenuActionsDemo4" extends="WebtoolsMenuActionsDemo1">
+        <!-- THREE possible ways to include actions here! -->
+        <include-actions menu-name="WebtoolsMenuActionsDemo2"/><!-- STATIC, textual include (this is rarely used) -->
+        <actions>
+            <include-menu-actions name="WebtoolsMenuActionsDemo3"/><!-- DYNAMIC, non-textual include -->
+            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo4. [SUCCESS]"/>
+        </actions>
     </menu> 
 
 </menus>

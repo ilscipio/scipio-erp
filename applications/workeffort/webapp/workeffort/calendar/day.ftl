@@ -23,7 +23,7 @@ under the License.
 <#macro menuContent menuArgs={}>
     <@calendarDateSwitcher period="day"/>
 </#macro>
-<@section title="${Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'EEEE MMMM d, yyyy', timeZone, locale)}"
+<@section title=Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'EEEE MMMM d, yyyy', timeZone, locale)
     menuContent=menuContent menuLayoutTitle="inline-title"><#--${uiLabelMap.WorkEffortDayView}: -->
 
 <#if periods?has_content>
@@ -42,7 +42,7 @@ under the License.
  <@thead>
   <@tr class="header-row">
     <@th width="15%">${uiLabelMap.CommonTime}</@th>
-    <@th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</@th>
+    <@th colspan=maxConcurrentEntries>${uiLabelMap.WorkEffortCalendarEntries}</@th>
   </@tr>
   </@thead>
   <#list periods as period>

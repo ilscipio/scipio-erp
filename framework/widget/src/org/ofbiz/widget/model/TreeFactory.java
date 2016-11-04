@@ -59,6 +59,10 @@ public class TreeFactory {
                     URL treeFileUrl = null;
                     treeFileUrl = FlexibleLocation.resolveLocation(resourceName); //, loader);
                     Document treeFileDoc = UtilXml.readXmlDocument(treeFileUrl, true, true);
+                    // SCIPIO: New: Save original location as user data in Document
+                    if (treeFileDoc != null) {
+                        WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName); 
+                    }
                     modelTreeMap = readTreeDocument(treeFileDoc, delegator, dispatcher, resourceName);
                     treeLocationCache.put(resourceName, modelTreeMap);
                 }

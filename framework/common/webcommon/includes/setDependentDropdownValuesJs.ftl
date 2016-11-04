@@ -16,20 +16,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign requestName><@ofbizUrl>${requestName}</@ofbizUrl></#assign>
+<#assign requestName = makeOfbizUrl(requestName)/>
 <@script>
 jQuery(document).ready(function() {
     <#-- SCIPIO: added depFormFieldPrefix as workaround for some form name issues -->
     <#if !depFormFieldPrefix??>
-      <#assign depFormFieldPrefix = dependentForm + "_">
+      <#assign depFormFieldPrefix = rawString(dependentForm) + "_">
     </#if>
-    if (jQuery('#${dependentForm}').length && jQuery('#${depFormFieldPrefix}${mainId}').length) {
-      jQuery('#${depFormFieldPrefix}${mainId}').change(function(e, data) {
-          getDependentDropdownValues('${requestName}', '${paramKey}', '${depFormFieldPrefix}${mainId}', '${depFormFieldPrefix}${dependentId}', '${responseName}', '${dependentKeyName}', '${descName}', '_previous_');
+    <#assign mainIdFull = rawString(depFormFieldPrefix) + rawString(mainId)>
+    <#assign depIdFull = rawString(depFormFieldPrefix) + rawString(dependentId)>
+    if (jQuery('#${escapeVal(dependentForm, 'js')}').length && jQuery('#${escapeVal(mainIdFull, 'js')}').length) {
+      jQuery('#${escapeVal(mainIdFull, 'js')}').change(function(e, data) {
+          getDependentDropdownValues('${escapeVal(requestName, 'js')}', 
+            '${escapeVal(paramKey, 'js')}', 
+            '${escapeVal(mainIdFull, 'js')}', 
+            '${escapeVal(depIdFull, 'js')}', 
+            '${escapeVal(responseName, 'js')}', 
+            '${escapeVal(dependentKeyName, 'js')}', 
+            '${escapeVal(descName, 'js')}', 
+            '_previous_');
       });
-      getDependentDropdownValues('${requestName}', '${paramKey}', '${depFormFieldPrefix}${mainId}', '${depFormFieldPrefix}${dependentId}', '${responseName}', '${dependentKeyName}', '${descName}', '${selectedDependentOption}');
+      getDependentDropdownValues('${escapeVal(requestName, 'js')}', 
+        '${escapeVal(paramKey, 'js')}', 
+        '${escapeVal(mainIdFull, 'js')}', 
+        '${escapeVal(depIdFull, 'js')}}', 
+        '${escapeVal(responseName, 'js')}', 
+        '${escapeVal(dependentKeyName, 'js')}', 
+        '${escapeVal(descName, 'js')}', 
+        '${escapeVal(selectedDependentOption, 'js')}');
       <#if (focusFieldName??)>
-        jQuery('#${focusFieldName}').focus();
+        jQuery('#${escapeVal(focusFieldName, 'js')}').focus();
       </#if>
     }
 })

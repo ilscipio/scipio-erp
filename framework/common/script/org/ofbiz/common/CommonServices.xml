@@ -213,7 +213,7 @@ under the License.
         <if-empty field="resourceList">
             <!-- if not found use the good old initial ofbiz theme so the system will at least start up and will be usable -->
             <log level="error" message="Could not find the '${visualThemeId}' theme, reverting back to the good old OFBiz theme..."></log>
-            <!-- Scipio: get the default theme ID from general.properties -->
+            <!-- SCIPIO: get the default theme ID from general.properties -->
             <set field="visualThemeId" value="" />
             <property-to-field resource="general" property="VISUAL_THEME" field="defaultVisualThemeId" />
             <if-not-empty field="defaultVisualThemeId">

@@ -24,11 +24,11 @@ under the License.
         if (clicked == 0) {
             clicked++;
             //window.location.replace("<@ofbizUrl>processorder</@ofbizUrl>");
-            document.${parameters.formNameValue}.processButton.value="${uiLabelMap.OrderSubmittingOrder}";
-            document.${parameters.formNameValue}.processButton.disabled=true;
-            document.${parameters.formNameValue}.submit();
+            document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.value="${escapeVal(uiLabelMap.OrderSubmittingOrder, 'js')}";
+            document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.disabled=true;
+            document["${escapeVal(parameters.formNameValue, 'js')}"].submit();
         } else {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.YoureOrderIsBeingProcessed}");
+            showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.YoureOrderIsBeingProcessed, 'js')}");
         }
     }
 </@script>
@@ -40,7 +40,7 @@ under the License.
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
   <@checkoutActionsMenu directLinks=true>
     <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
-      <#if (parameters.checkoutpage)?has_content><#-- Scipio: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
+      <#if (parameters.checkoutpage)?has_content><#-- SCIPIO: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
         <input type="hidden" name="checkoutpage" value="${parameters.checkoutpage}" /><#-- ${requestParameters.checkoutpage} -->
       </#if>
       <#if (requestAttributes.issuerId)?has_content>

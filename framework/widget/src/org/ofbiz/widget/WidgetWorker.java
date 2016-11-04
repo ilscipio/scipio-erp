@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -43,14 +42,10 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
-import org.ofbiz.widget.model.FieldInfo;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelFormField;
-import org.ofbiz.widget.renderer.FormStringRenderer;
-import org.owasp.esapi.Randomizer;
 
 public final class WidgetWorker {
 
@@ -72,7 +67,7 @@ public final class WidgetWorker {
             if (request != null && response != null) {
                 ServletContext servletContext = request.getSession().getServletContext();
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                externalWriter.append(rh.makeLink(request, response, "/" + localRequestName, fullPath, secure, encode));
+                externalWriter.append(rh.makeLink(request, response, localRequestName, fullPath, secure, encode)); // SCIPIO: doesn't need slash, only makes less clear errors:  "/" + localRequestName
             } else if (prefix != null) {
                 externalWriter.append(prefix);
                 externalWriter.append(localRequestName);
@@ -96,18 +91,24 @@ public final class WidgetWorker {
                 localWriter.append(externalLoginKey);
             }
             */
-            Appendable tempWriter = new StringWriter(); // SCIPIO: DON'T use localWriter
+            StringWriter tempWriter = new StringWriter(); // SCIPIO: DON'T use localWriter
             String fullTarget = localRequestName;
-            tempWriter.append(fullTarget);
-            String externalLoginKey = (String) request.getAttribute("externalLoginKey");
-            if (UtilValidate.isNotEmpty(externalLoginKey)) {
-                if (fullTarget.indexOf('?') < 0) {
-                    tempWriter.append('?');
-                } else {
-                    tempWriter.append("&amp;");
+
+            // SCIPIO: 2016-10-21: special "#extLoginKey=OFF" override to prevent adding ext login key
+            if (fullTarget.endsWith("#extLoginKey=OFF")) {
+                tempWriter.append(fullTarget, 0, fullTarget.length() - "#extLoginKey=OFF".length());
+            } else {
+                tempWriter.append(fullTarget);
+                String externalLoginKey = (String) request.getAttribute("externalLoginKey");
+                if (UtilValidate.isNotEmpty(externalLoginKey)) {
+                    if (fullTarget.indexOf('?') < 0) {
+                        tempWriter.append('?');
+                    } else {
+                        tempWriter.append("&amp;");
+                    }
+                    tempWriter.append("externalLoginKey=");
+                    tempWriter.append(externalLoginKey);
                 }
-                tempWriter.append("externalLoginKey=");
-                tempWriter.append(externalLoginKey);
             }
             if (request != null && response != null) {
                 // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this
@@ -166,11 +167,14 @@ public final class WidgetWorker {
                 }
                 externalWriter.append(parameter.getKey());
                 externalWriter.append('=');
-                UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-                if (simpleEncoder != null && parameterValue != null) {
+                // SCIPIO: simplified
+                UtilCodec.SimpleEncoder simpleEncoder = WidgetWorker.getEarlyEncoder(context);
+                if (parameterValue != null) { // simpleEncoder != null && 
                     externalWriter.append(simpleEncoder.encode(URLEncoder.encode(parameterValue, Charset.forName("UTF-8").displayName())));
-                } else {
-                    externalWriter.append(parameterValue);
+                //} else {
+                //    // SCIPIO: even if HTML encoding were disabled, the link param should have been URL-encoded; they're two different layers
+                //    //externalWriter.append(parameterValue);
+                //    externalWriter.append(URLEncoder.encode(parameterValue, Charset.forName("UTF-8").displayName()));
                 }
             }
         } else {
@@ -371,7 +375,7 @@ public final class WidgetWorker {
                 writer.append("\t\t\tsubmitForm.submit();\r\n");
                 writer.append("\t\t} else {\r\n");
                 String noRowMsg = UtilProperties.getMessage("CommonUiLabels", "CommonNoRowSelected", (Locale) context.get("locale"));
-                writer.append("\t\t\talert(\"" + encode(noRowMsg, context) + "\");\r\n");
+                writer.append("\t\t\talert(\"" + getEncoder(context).encode(noRowMsg) + "\");\r\n");
                 writer.append("\t\t}\r\n");
                 writer.append("\t\t});\r\n");
             }
@@ -449,7 +453,7 @@ public final class WidgetWorker {
                 writer.append("<input name=\"");
                 writer.append(parameter.getKey());
                 writer.append("\" value=\"");
-                writer.append(encode(parameter.getValue(), context));
+                writer.append(getEncoder(context).encode((parameter.getValue())));
                 writer.append("\" type=\"hidden\"/>");
             }
         }
@@ -595,19 +599,56 @@ public final class WidgetWorker {
     }
 
     /**
-     * SCIPIO: Encode helper method using encoder in context.
+     * SCIPIO: Returns the generic platform simpleEncoder from context, appropriate for point-of-use encoding and other purposes.
+     * If none, returns a dummy raw encoder so null tests never needed.
+     * <p>
+     * NOTE: For macro rendering, this is conceptually inappropriate to use in most cases 
+     * (because point-of-use is within the macros); all the java code is prior to point-of-use
+     * which means you should call {@link #getEarlyEncoder} instead, which we will disable
+     * by default in Scipio in favor of encoding from macros (point-of-use).
      */
-    public static String encode(String value, Map<String, Object> context) {
-        if (UtilValidate.isEmpty(value)) {
-            return value;
+    public static UtilCodec.SimpleEncoder getEncoder(Map<String, ?> context) {
+        UtilCodec.SimpleEncoder encoder = (context != null) ? (UtilCodec.SimpleEncoder) context.get("simpleEncoder") : null;
+        if (encoder == null) {
+            encoder = UtilCodec.getRawEncoder();
         }
-        UtilCodec.SimpleEncoder encoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
-        if (encoder != null) {
-            value = encoder.encode(value);
-        } else {
-            value = UtilCodec.getEncoder("string").encode(value);
-        }
-        return value;
+        return encoder;
     }
     
+    /**
+     * SCIPIO: Returns the renderer simpleEarlyEncoder, meant to encode widget values typically 
+     * at a point before their point-of-use (which is usually wrong in design, but here for legacy reasons). 
+     * If none, returns the platform encoder or a dummy raw encoder so null tests never needed.
+     * <p>
+     * This falls back to the generic platform encoder unless it is configured explicitly to use raw encoder.
+     * <p>
+     * This may be different from the generic platform simpleEncoder.
+     */
+    public static UtilCodec.SimpleEncoder getEarlyEncoder(Map<String, ?> context) {
+        UtilCodec.SimpleEncoder encoder = (context != null) ? (UtilCodec.SimpleEncoder) context.get("simpleEarlyEncoder") : null;
+        if (encoder == null) {
+            encoder = getEncoder(context);
+        }
+        return encoder;
+    }
+
+    private static final int minWidgetFolderPathLength = 
+            ("component://".length() + 1 + "/widget/".length());
+    
+    /**
+     * Returns base widget folder from component:// path, including terminating slash.
+     */
+    public static String getBaseWidgetFolderFromComponentPath(String path) throws IllegalArgumentException {
+        if (!path.startsWith("component://")) {
+            throw new IllegalArgumentException("Path '" + path + "' is not a valid component path");
+        }
+        if (path.length() < minWidgetFolderPathLength) {
+            throw new IllegalArgumentException("Path '" + path + "' is not a valid widget folder component path");
+        }
+        int i = path.indexOf("/widget/", "component://".length());
+        if (i < 0) {
+            throw new IllegalArgumentException("Path '" + path + "' is not a valid widget folder component path");
+        }
+        return path.substring(0, i + "/widget/".length());
+    }
 }

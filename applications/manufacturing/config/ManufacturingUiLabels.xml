@@ -5635,15 +5635,17 @@
         <value xml:lang="zh">查找规程</value>
         <value xml:lang="zh_TW">尋找規程</value>
     </property>
+    <!-- SCIPIO: renamed from "Find - Edit Routing Task" to "Find Routing Task"
+        FIXME: other languages -->
     <property key="PageTitleFindRoutingTask">
         <value xml:lang="de">Arbeitsgang suchen</value>
-        <value xml:lang="en">Find - Edit Routing Task</value>
-        <value xml:lang="es">Buscar - Editar tarea</value>
+        <value xml:lang="en">Find Routing Task</value>
+        <value xml:lang="es">Buscar tarea</value>
         <value xml:lang="fr">Modification des opérations de gamme</value>
         <value xml:lang="it">Ricerca - Aggiorna Operazione</value>
         <value xml:lang="ja">経路制御タスクを検索 - 編集</value>
-        <value xml:lang="pt_BR">Buscar - Editar tarefa de rota</value>
-        <value xml:lang="ro">Cauta - Actualizare Operatie</value>
+        <value xml:lang="pt_BR">Buscar tarefa de rota</value>
+        <value xml:lang="ro">Cauta Operatie</value>
         <value xml:lang="th">ค้นหา - แก้ไข งาน</value>
         <value xml:lang="vi">Tìm - Cập nhật Tác vụ - Đầu việc</value>
         <value xml:lang="zh">查找 - 编辑规程任务</value>
@@ -5746,9 +5748,18 @@
         <value xml:lang="zh">查找虚拟产品</value>
         <value xml:lang="zh_TW">尋找虛擬產品</value>
     </property>
-    <property key="PagetitleProductionRunLink">
+    <property key="PageTitleProductionRunLink"><!-- SCIPIO: fixed casing and langs -->
+        <value xml:lang="de">Link Produktionslauf</value>
         <value xml:lang="en">Link Production Run</value>
         <value xml:lang="nl">Productierun koppelen</value>
         <value xml:lang="zh_TW">連結生產運行</value>
+    </property>
+    <property key="ManufacturingProductionRunContent"><!-- SCIPIO: added missing label -->
+        <value xml:lang="de">Produktionslauf Inhalt</value>
+        <value xml:lang="en">Production Run Content</value>
+    </property>
+    <property key="ManufacturingNoShipmentPlansInstructions">
+        <value xml:lang="de">Siehe auch Lagersendungen, um Sendungspläne zu bearbeiten.</value>
+        <value xml:lang="en">See Warehouse shipments to edit shipment plans.</value>
     </property>
 </resource>

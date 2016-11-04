@@ -191,7 +191,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                                     should we allow modal windows to be opened that are located in any place of the grid?
                                 -->
                                 <#if payments?has_content>
-                                    <@modal id="displayPayments_${finAccountTrans.finAccountTransId}" label="${finAccountTrans.finAccountTransId}">
+                                    <@modal id="displayPayments_${finAccountTrans.finAccountTransId}" label=finAccountTrans.finAccountTransId>
                                         <@table type="data-list" autoAltRows=true inheritAltRows=true> <#-- orig: class="basic-table hover-bar" -->
                                             <@thead>
                                                 <@tr class="header-row-2">

@@ -1,5 +1,5 @@
 <#--
-Scipio: Local order template common defs
+SCIPIO: Local order template common defs
 -->
 <#include "../common/common.ftl">
 
@@ -17,7 +17,7 @@ Scipio: Local order template common defs
         <#if directLinks>
           <@menuitem type="link" href=makeOfbizUrl("showcart") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
         <#else>
-          <@menuitem type="link" href="javascript:submitForm(document.${formName?js_string}, 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
+          <@menuitem type="link" href="javascript:submitForm(document['${escapeVal(formName, 'js')}'], 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
         </#if>
         </@menu>
       </@cell>
@@ -34,9 +34,9 @@ Scipio: Local order template common defs
           </#if>
           <#local class = "+${styles.action_run_session!} ${styles.action_continue!}">
           <#if directLinks>
-            <#local href = "javascript:document.${formName?js_string}.submit();">
+            <#local href = "javascript:document['${escapeVal(formName, 'js')}'].submit();">
           <#else>
-            <#local href = "javascript:submitForm(document.${formName?js_string}, 'DN', '');">
+            <#local href = "javascript:submitForm(document['${escapeVal(formName, 'js')}'], 'DN', '');">
           </#if>
           <@menuitem type="link" href=href class=class text=text />
         </@menu>

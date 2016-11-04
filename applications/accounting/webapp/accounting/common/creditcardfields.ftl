@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Scipio: NOTE: do NOT wrap in @fields, so that caller may specify his own -->
+<#-- SCIPIO: NOTE: do NOT wrap in @fields, so that caller may specify his own -->
 
-<#-- Scipio: Do this on individual field-by-field basis instead
+<#-- SCIPIO: Do this on individual field-by-field basis instead
 <#if !creditCard?has_content>
     <#assign creditCard = requestParameters>
 </#if>
@@ -29,17 +29,17 @@ under the License.
 </#if>
 -->
 
-<#-- Scipio: include fieldset in parent if desired
+<#-- SCIPIO: include fieldset in parent if desired
 <@fieldset>
 -->
     <@field type="input" size="30" maxlength="60" name="${fieldNamePrefix}companyNameOnCard" value=(parameters["${fieldNamePrefix}companyNameOnCard"]!(creditCard.companyNameOnCard)!(ccfFallbacks.companyNameOnCard)!) label=uiLabelMap.AccountingCompanyNameCard/>     
     <@field type="select" name="${fieldNamePrefix}titleOnCard" label=uiLabelMap.AccountingPrefixCard>
         <option value="">${uiLabelMap.CommonSelectOne}</option>
         <#assign ccfTitleOnCard = parameters["${fieldNamePrefix}titleOnCard"]!(creditCard.titleOnCard)!(ccfFallbacks.titleOnCard)!"">
-        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleMr}" || ccfTitleOnCard == "Mr."> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
-        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleMrs}" || ccfTitleOnCard == "Mrs."> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
-        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleMs}" || ccfTitleOnCard == "Ms."> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
-        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleDr}" || ccfTitleOnCard == "Dr."> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
+        <option<#if ccfTitleOnCard == rawLabel('CommonTitleMr') || ccfTitleOnCard == "Mr."> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
+        <option<#if ccfTitleOnCard == rawLabel('CommonTitleMrs') || ccfTitleOnCard == "Mrs."> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
+        <option<#if ccfTitleOnCard == rawLabel('CommonTitleMs') || ccfTitleOnCard == "Ms."> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
+        <option<#if ccfTitleOnCard == rawLabel('CommonTitleDr') || ccfTitleOnCard == "Dr."> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
     </@field>    
     <@field type="input" size="20" maxlength="60" name="${fieldNamePrefix}firstNameOnCard" value=(parameters["${fieldNamePrefix}firstNameOnCard"]!(creditCard.firstNameOnCard)!(ccfFallbacks.firstNameOnCard)!) label=uiLabelMap.AccountingFirstNameCard required=true/>     
     <@field type="input" size="15" maxlength="60" name="${fieldNamePrefix}middleNameOnCard" value=(parameters["${fieldNamePrefix}middleNameOnCard"]!(creditCard.middleNameOnCard)!(ccfFallbacks.middleNameOnCard)!) label=uiLabelMap.AccountingMiddleNameCard />    
@@ -91,7 +91,7 @@ under the License.
         <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber) label=uiLabelMap.AccountingCardNumber required=true/>
     </#if>
     
-  <#-- Scipio: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->
+  <#-- SCIPIO: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->
   <#if showSecurityCodeField>
     <@field type="input" size="5" maxlength="10" name="${fieldNamePrefix}cardSecurityCode" value="" label=uiLabelMap.AccountingCardSecurityCode />
   </#if>

@@ -267,8 +267,7 @@ type as the parent and sub-menus that are a different type as the parent, which 
 handling.
 
 The submenu's main class may be set as altnested in global styles. 
-          
-                    
+    
   * Parameters *
     type                    = (generic|section|section-inline|main|sidebar|tab|subtab|button|..., default: generic) The menu type
                               For nested menus, this will inherit the type of the parent.
@@ -333,7 +332,10 @@ The submenu's main class may be set as altnested in global styles.
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               NOTE: Previously this was named "mainButtonClass"; mainButtonClass is deprecated, and
-                                  will get the same value as titleClass now.                
+                                  will get the same value as titleClass now.
+                                  
+  * History *
+    Enhanced for 1.14.2.             
 -->
 <#assign menu_defaultArgs = {
   "type":"", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
@@ -1608,6 +1610,12 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                               * {{{jstree}}}: {{{jstree-folder}}} (in standard theme)
                               NOTE: Currently, this will only be used for nested jstree format.
                                   It does not apply to the flat data format (with parent: attributes).
+                                  
+  * Related *
+    @treeitem
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#assign treemenu_defaultArgs = {
   "type":"", "nestedFirst":false, "library":"", "data":{}, "settings": {}, "plugins": [], "inlineItems":false, "id":"", "attribs":{}, 
@@ -1845,6 +1853,12 @@ Supports nested or flat format for hierarchy.
                               normally case-insensitive.
     nestedFirst             = ((boolean), default: false) For children items: if true, use nested items before items list, otherwise items list always first
                               Usually should use only one of alternatives, but is versatile.
+                              
+  * Related *
+    @treemenu
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#assign treeitem_defaultArgs = {
   "type":"", "nestedFirst":false, "attribs":{}, 

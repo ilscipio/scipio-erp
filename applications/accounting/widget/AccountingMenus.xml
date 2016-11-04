@@ -433,9 +433,10 @@
     </menu>
     
     <menu name="BillingAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant
         <menu-item name="FindBillingAccount" title="${uiLabelMap.CommonFind}">
             <link target="FindBillingAccount" />
-        </menu-item>
+        </menu-item> -->
         <menu-item name="EditBillingAccount" title="${uiLabelMap.CommonAccount}">
             <link target="EditBillingAccount">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
@@ -474,9 +475,11 @@
 
     <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="EditBudget">
+        <!-- SCIPIO: redundant
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
             <link target="ListBudgets" />
         </menu-item>
+        -->
         <menu-item name="BudgetOverview" title="${uiLabelMap.AccountingBudgetOverview}">
             <link target="BudgetOverview">
                 <parameter param-name="budgetId" />
@@ -737,7 +740,7 @@
     </menu>
 
     <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
+        ><!-- selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint" -->
         <include-elements menu-name="FixedAssetMaintTabBar" recursive="includes-only" />
     </menu>
 
@@ -779,11 +782,12 @@
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
+        <!-- SCIPIO: Makes navigation problematic; TODO: REVIEW
         <menu-item name="EditFixedAssetMeters" title="${uiLabelMap.AccountingFixedAssetMeters}">
             <link target="EditFixedAssetMeters">
                 <parameter param-name="fixedAssetId" />
             </link>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="ListFixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}">
             <link target="ListFixedAssetMaints">
                 <parameter param-name="fixedAssetId" />
@@ -1725,6 +1729,7 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
+        <!-- SCIPIO: FIXME: link target PaymentAcctgTransEntriesPdf does not exist...??
         <menu-item name="acctgTransEntriesPDF" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <and>
@@ -1741,18 +1746,20 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
+          -->
     </menu>
 
     <menu name="PaymentGroupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: redundant/problematic
         <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}" sort-mode="off">
-            <link target="FindPaymentsGroup" />
-        </menu-item>
+            <link target="FindPaymentGroup" />
+        </menu-item>-->
         <menu-item name="PaymentGroupOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup} ${uiLabelMap.AccountingPaymentTabOverview}">
             <link target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId" from-field="paymentGroup.paymentGroupId" />
             </link>
         </menu-item>
-        <menu-item name="EditPaymentGroup" title="${uiLabelMap.CommonEdit} ${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}">
+        <menu-item name="EditPaymentGroup" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}"><!--${uiLabelMap.CommonEdit} -->
             <condition>
                 <not>
                     <if-empty field="paymentGroup.paymentGroupId" />

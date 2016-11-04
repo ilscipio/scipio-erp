@@ -57,11 +57,12 @@
     <screen name="EditPayGrade">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResEditPayGrade"/>
                 <set field="activeSubMenuItem" value="PayGrade"/>
                 <set field="activeSubMenu2Item" value="EditPayGrade"/>
                 <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <entity-one entity-name="PayGrade" value-field="payGrade"/>
+                <set field="titleProperty" value="${groovy: context.payGrade ? 'HumanResEditPayGrade' : 'HumanResNewPayGrade'}"/>
+                <set field="titleFormat" value="\${finalTitle} ${payGradeId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -74,7 +75,7 @@
                                 <include-menu name="SalaryBar" location="component://humanres/widget/HumanresMenus.xml"/>
                             </widgets>
                         </section>
-                        <screenlet title="${uiLabelMap.HumanResEditPayGrade} [${payGradeId}]">
+                        <screenlet>
                             <section>
                                 <widgets>
                                     <include-form name="EditPayGrade" location="component://humanres/widget/forms/PayGradeForms.xml"/>
@@ -90,8 +91,10 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditSalaryStep"/>
-                <set field="activeMainMenuItem" value="PayGrade"/>
-                <set field="activeSubMenuItem" value="EditSalaryStep"/>
+                <!--<set field="activeMainMenuItem" value="PayGrade"/>  -->
+                <!-- 
+                <set field="activeSubMenuItem" value="EditSalaryStep"/> -->
+                <set field="activeSubMenuItem" value="PayGrade"/> 
                 <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <set field="salaryStepSeqId" from-field="parameters.salaryStepSeqId"/>
             </actions>

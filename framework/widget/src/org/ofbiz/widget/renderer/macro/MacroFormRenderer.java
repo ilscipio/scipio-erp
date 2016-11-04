@@ -1413,6 +1413,16 @@ public final class MacroFormRenderer implements FormStringRenderer {
         
         // SCIPIO: form method
         String method = modelForm.getMethod(context);
+        
+        // SCIPIO: special flags
+        String formScope = (String) context.get("renderForm_formScope");
+        if (UtilValidate.isEmpty(formScope)) {
+            formScope = "general";
+        }
+        String formSpread = (String) context.get("renderForm_formSpread");
+        if (UtilValidate.isEmpty(formSpread)) {
+            formSpread = "general";
+        }
 
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormOpen ");
@@ -1444,6 +1454,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(attribs);
         sr.append(") method=");
         sr.append(ftlFmt.makeStringLiteral(method));
+        sr.append(" formScope=");
+        sr.append(ftlFmt.makeStringLiteral(formScope));
+        sr.append(" formSpread=");
+        sr.append(ftlFmt.makeStringLiteral(formSpread));
         sr.append(" />");
         
         executeMacro(writer, sr.toString());

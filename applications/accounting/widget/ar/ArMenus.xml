@@ -79,6 +79,7 @@ under the License.
         </menu-item>
         <menu-item name="paymentGroups" title="${uiLabelMap.AccountingArPaymentGroupMenu}">
             <link target="FindArPaymentGroups"/>
+            <sub-menu name="PaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/>
         </menu-item>
         <menu-item name="reports" title="${uiLabelMap.AccountingReports}">
             <link target="ListReports"/>

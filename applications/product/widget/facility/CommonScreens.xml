@@ -125,22 +125,7 @@ under the License.
                                         </or>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <condition><not><if-empty field="facilityMenu"/></not></condition>
-                                            <widgets>
-                                                <section share-scope="false">
-                                                    <actions>
-                                                        <set field="activeSubMenu" from-field="facilityMenu"/>
-                                                    </actions>
-                                                    <widgets>
-                                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                                    </widgets>
-                                                </section>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                            </fail-widgets>
-                                        </section>
+                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                                     </widgets>
                                     <fail-widgets>
                                         <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
@@ -177,6 +162,25 @@ under the License.
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- generates the subtab of [Scheduling] using FacilityScheduleTabBar -->
+    <screen name="CommonFacilityScheduleDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Scheduling"/> 
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/facility/facility/FacilityScheduleTabBar.ftl"/></html>
+                        </platform-specific>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

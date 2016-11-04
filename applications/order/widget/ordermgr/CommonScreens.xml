@@ -330,7 +330,7 @@ under the License.
                                     <not><if-empty field="custRequest"/></not>
                                 </condition>
                                 <widgets>
-                                    <label style="heading">${custRequest.custRequestName} [${uiLabelMap.CommonId}:${custRequest.custRequestId}] </label>
+                                    <label style="heading">${custRequest.custRequestName} [${custRequest.custRequestId}] </label>
                                 </widgets>
                             </section>
                         </container>

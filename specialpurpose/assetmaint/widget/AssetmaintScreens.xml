@@ -141,6 +141,7 @@
                 </entity-and>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.AccountingFixedAssetMaint}: ${fixedAsset.fixedAssetName}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.fixedAssetMaint ? 'EditFixedAssetMaint' : 'PARENT-NOSUB'}"/>
             </actions>
             <widgets>
                 <section>
@@ -148,7 +149,7 @@
                     <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
                     <widgets/>
                 </section>
-                <decorator-screen name="CommonFixedAssetMaintDecorator">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
@@ -176,12 +177,14 @@
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEfforts"/>
+                <!--
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEfforts"/>  -->
+                <set field="activeSubMenuItem" value="EditWorkEfforts"/>
                 <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/workeffort/EditWorkEfforts.groovy"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -264,7 +267,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortTimeEntries"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEffortTimeEntries"/>
+                <!--
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEffortTimeEntries"/>  -->
+                <set field="activeSubMenuItem" value="EditWorkEffortTimeEntries"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -272,7 +277,7 @@
                 <entity-one entity-name="FixedAssetMaint" value-field="fixedAssetMaint"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-time-entry" title="${uiLabelMap.PageTitleAddWorkEffortTimeEntry}" collapsible="true">
                             <include-form name="AddWorkEffortTimeEntry" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
@@ -289,7 +294,9 @@
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleListWorkEffortNotes"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEffortNotes"/>
+                <!-- 
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEffortNotes"/> -->
+                <set field="activeSubMenuItem" value="EditWorkEffortNotes"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -298,7 +305,7 @@
                 <set field="noteId" from-field="parameters.noteId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-workeffort-note" title="${uiLabelMap.PageTitleAddWorkEffortNotes}" collapsible="true">
                             <include-form name="AddWorkEffortNote" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
@@ -314,7 +321,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListItemIssuance"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditItemIssuances"/>
+                <!-- 
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditItemIssuances"/> -->
+                <set field="activeSubMenuItem" value="EditItemIssuances"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
@@ -324,7 +333,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-item-issuance" title="${uiLabelMap.PageTitleAddItemIssuance}" collapsible="true">
                             <include-form name="AddItemIssuance" location="component://assetmaint/widget/forms/FixedAssetForms.xml"/>

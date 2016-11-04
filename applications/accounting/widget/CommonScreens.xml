@@ -185,6 +185,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#BillingAccount" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="billingaccount"/>
                 
                 <!-- sidebar additional condition -->
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.billingAccountId}"/>
@@ -366,7 +367,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>

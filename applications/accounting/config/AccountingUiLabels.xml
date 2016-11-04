@@ -22379,4 +22379,9 @@
         <value xml:lang="de">Wartung Jobs</value>
         <value xml:lang="en">Maintenance Jobs</value>
     </property>
+    <property key="AccountingVendors">
+        <value xml:lang="de">Verkäufer</value>
+        <value xml:lang="en">Vendors</value>
+        <value xml:lang="fr">Vendeurs</value>
+    </property>
 </resource>

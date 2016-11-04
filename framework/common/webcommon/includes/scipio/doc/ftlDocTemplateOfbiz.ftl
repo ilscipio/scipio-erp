@@ -109,6 +109,12 @@
       </#if>
     </#if>
     
+    <#if libName == "standard/htmlTemplate">
+      <p><em><#-- Version: -->${getPropertyValue('scipiometainfo', 'scipio.release.desc')!"Scipio ERP"} 
+        ${getPropertyValue('scipiometainfo', 'scipio.release.version')!"v?"} 
+        (${getPropertyValue('scipiometainfo', 'scipio.release.branch')!("branch ?")}), 
+        Freemarker ${.version!}</em></p>
+    </#if>
       
     <div class="lib-pagetitledesc">
       <#-- duplicate
@@ -118,6 +124,12 @@
       -->
       
       <div class="tmpldoc-options-menu">
+        <#-- FIXME: rewrite this whole part with @menu -->
+        <style type="text/css">
+            div div.tmpldoc-options-menu select, div div.tmpldoc-options-menu ul {
+                margin-top:0;
+            } 
+        </style>
         <div style="float:left;"><#-- FIXME? floats? -->
           <#-- WARN: use escapeVal on docPurpose if ever printed  -->
         <form method="get" action="<@ofbizWebappUrl uri=currPageIntraWebappUri escapeAs="html"/>">
@@ -130,7 +142,7 @@
           </@field>
         </form>
         </div>
-        <div style="float:left; margin-left:1em;">
+        <div style="float:left; margin-left:0.6em;">
           <@render type="menu" resource="component://webtools/widget/Menus.xml#TemplateApiDocSubTabBar" />
         </div>
         <div style="clear:both;"></div>

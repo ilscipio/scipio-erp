@@ -320,7 +320,7 @@ under the License.
                 <parameter param-name="productionRunId"/>
             </link>
         </menu-item>
-        <menu-item name="print" title="${uiLabelMap.CommonPrint}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+        <menu-item name="print" title="${uiLabelMap.CommonPrint} (${uiLabelMap.CommonPdf})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <link target="PrintProductionRun" target-window="_BLANK">
                 <parameter param-name="productionRunId"/>
             </link>
@@ -346,12 +346,22 @@ under the License.
     </menu>
 
     <menu name="CalendarTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- it would need a session hack for this one, not worth it
+        <actions>
+            <!- SCIPIO: workaround to help smoother browsing here ->
+            <set field="dummy" value="${groovy: globalContext.CalendarTabBar_tempVal = context.techDataCalendar ?: 
+                    (parameters.calendarId ? delegator.findOne('TechDataCalendar', [calendarId:parameters.calendarId], false) : null)}"/>
+            <set field="techDataCalendar" from-field="CalendarTabBar_tempVal"/>
+        </actions>-->
         <!-- SCIPIO: redundant
         <menu-item name="Calendar" title="${uiLabelMap.ManufacturingCalendars}">
             <link target="FindCalendar"/>
         </menu-item>-->
         <menu-item name="CalendarWeek" title="${uiLabelMap.ManufacturingCalendarWeeks}">
-            <link target="ListCalendarWeek"/>
+            <link target="ListCalendarWeek" />
+                <!-- SCIPIO: if uncommenting the above...
+                <parameter param-name="calendarId" from-field="techDataCalendar.calendarId"/>
+            </link> -->
         </menu-item>
         <menu-item name="calendar" title="${uiLabelMap.ManufacturingCalendar}" always-expand-selected-or-ancestor="false"><!-- ${uiLabelMap.CommonEdit} -->
             <condition>

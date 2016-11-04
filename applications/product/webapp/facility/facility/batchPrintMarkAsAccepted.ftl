@@ -41,4 +41,6 @@ under the License.
   }
 </@script>
 
-<input type="submit" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" value="${uiLabelMap.ProductMarkAsAccepted}" onclick="javascript:markAsAccepted()"/>
+<#if shipmentPackageRouteSegments?has_content><#-- SCIPIO: added -->
+  <input type="submit" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" value="${uiLabelMap.ProductMarkAsAccepted}" onclick="javascript:markAsAccepted()"/>
+</#if>

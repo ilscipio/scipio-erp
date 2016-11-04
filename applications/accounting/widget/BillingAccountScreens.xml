@@ -83,7 +83,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccount"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
@@ -105,8 +104,8 @@ under the License.
     <screen name="EditBillingAccountRoles">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="EditBillingAccountRoles"/>
                 <set field="titleProperty" value="PageTitleEditBillingAccountRoles"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
             </actions>
@@ -127,8 +126,8 @@ under the License.
     <screen name="EditBillingAccountTerms">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="EditBillingAccountTerms"/>
                 <set field="titleProperty" value="PageTitleEditBillingAccountTerms"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <set field="billingAccountTermId" from-field="parameters.billingAccountTermId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
@@ -151,7 +150,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountInvoices"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="BillingAccountInvoices"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
@@ -176,7 +174,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountOrders"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="BillingAccountOrders"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
@@ -202,7 +199,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountPayments"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="activeSubMenuItem" value="BillingAccountPayments"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>

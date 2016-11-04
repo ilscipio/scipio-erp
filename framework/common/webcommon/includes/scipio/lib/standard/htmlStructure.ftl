@@ -801,6 +801,9 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     hasContent              = ((boolean), default: true) Optional content hint
                               When false, will add classes to indicate content is empty or treat as logically empty 
                               (workaround for lack of CSS :blank and possibly other browser limitations)
+                              
+  * History *
+    Enhanced/standardized for 1.14.2.
 -->
 <#assign section_defaultArgs = {
   "type":"", "id":"", "title":"", "style":"", "cellClass":-1, "class":-1, "padded":false, "autoHeadingLevel":true, "headingLevel":"", 

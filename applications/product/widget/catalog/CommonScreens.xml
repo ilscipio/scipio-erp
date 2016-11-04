@@ -126,9 +126,8 @@ under the License.
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.prodCatalogId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.prodCatalogId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -209,9 +208,8 @@ under the License.
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productCategoryId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productCategoryId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -295,13 +293,12 @@ under the License.
                 <set field="product" from-field="product" global="true"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <!-- FIXME: Special lookup for labels currently missing "Product " prefix. this does not work properly in many languages. -->
-                <set field="qualifiedLabel" value="${uiLabelMap[titleKey]}"/>
-                <set field="titleKey" value="${groovy: (context.labelTitlePropertyFull == true || !context.labelTitleProperty)? context.titleKey : 'ProductProductQualifiedLabel'}"/>
-                
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="qualifiedLabel" value="\${finalTitle}"/>
+                <set field="prefixedQualifiedLabel" value="${uiLabelMap.ProductProductQualifiedLabel}"/><!-- this label references ${qualifiedLabel} -->
+                <set field="titleFormatPrefix" value="${groovy: (context.labelTitlePropertyFull == true || !context.labelTitleProperty) ? context.qualifiedLabel : context.prefixedQualifiedLabel}"/>
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="${titleFormatPrefix} ${parameters.productId} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/SetProductLastProduct.groovy"/>
@@ -411,9 +408,8 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.configItemId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.configItemId} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/GetProductLastProduct.groovy"/>
@@ -541,9 +537,8 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productFeatureId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productFeatureId} ${${extraFunctionName}}"/>
                 
                 <set field="productFeatureId" from-field="productFeatureId" default-value="${parameters.productFeatureId}"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
@@ -567,9 +562,8 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="promos" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productPromoId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productPromoId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">                
@@ -614,9 +608,8 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- ONLY the edit screen should do this -->
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="promoCodeTitle" value="${uiLabelMap[titleKey]} ${parameters.productPromoCodeId}" />
-                <set field="title" from-field="title" default-value="${groovy: (context.usePromoCodeTitle == true) ? context.promoCodeTitle : null}"/>
+                <set field="promoCodeTitleFormat" value="\${finalTitle} ${parameters.productPromoCodeId} ${${extraFunctionName}}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="${groovy: (context.usePromoCodeTitle == true) ? context.promoCodeTitleFormat : ''}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPromoDecorator">
@@ -646,10 +639,9 @@ under the License.
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
-
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${productStoreId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${productStoreId} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid
                     NOTE: this is generally placed because some fallbacks don't have an accessible points -->
@@ -730,10 +722,9 @@ under the License.
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
-                
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${productStoreId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${productStoreId} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
@@ -799,9 +790,8 @@ under the License.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${productStoreId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${productStoreId} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
@@ -853,9 +843,8 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="pricerules"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.productPriceRuleId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productPriceRuleId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -915,10 +904,9 @@ under the License.
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
-                
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
@@ -988,9 +976,8 @@ under the License.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
@@ -1351,9 +1338,8 @@ under the License.
                 <entity-one entity-name="Subscription" value-field="subscription"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.subscriptionId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.subscriptionId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1421,9 +1407,8 @@ under the License.
                 <entity-one entity-name="SubscriptionResource" value-field="subscriptionResource"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.subscriptionResourceId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.subscriptionResourceId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">

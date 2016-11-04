@@ -102,9 +102,8 @@ under the License.
                 <property-map resource="IsMgrUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ComputerHardware"/>
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${fixedAssetId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${fixedAssetId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonIsMgrAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -196,9 +195,8 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem" default-value="" />
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${fixedAssetId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${fixedAssetId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonIsMgrAppDecorator" location="${parameters.mainDecoratorLocation}">

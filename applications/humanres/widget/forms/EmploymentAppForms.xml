@@ -148,7 +148,7 @@ under the License.
     
     <!-- SCIPIO: WARN: Unfortunately this had to be duplicated from AddEmploymentApp -->
     <form name="EditEmploymentApp" type="single" target="updateEmploymentAppSingle" default-entity-name="EmploymentApp" 
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row" default-map-name="employmentApp"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>

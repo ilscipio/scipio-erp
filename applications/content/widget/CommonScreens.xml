@@ -380,9 +380,8 @@ under the License.
                 <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -547,9 +546,8 @@ under the License.
                 <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
                 
-                <set field="titleKey" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="title" from-field="title" default-value="${uiLabelMap[titleKey]} ${parameters.webSiteId}"/>
-                <set field="title" value="${title} ${${extraFunctionName}}" />
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">

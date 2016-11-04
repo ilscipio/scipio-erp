@@ -106,6 +106,9 @@ TODO: Reimplement as transform.
                               See widget-menu.xsd {{{include-menu}}} element for details.
     subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
                               See widget-menu.xsd {{{include-menu}}} element for details.
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
     asString=false maxDepth="" subMenus="">
@@ -157,36 +160,58 @@ TODO: Reimplement as transform.
 *************
 * ofbizUrl
 ************
-Builds an Ofbiz navigation URL.
+Builds an Ofbiz navigation URL - for direct output into template document (primarily).
 
-STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
+STOCK OFBIZ UTILITY. It is highly modified with enhanced capabilities for Scipio.
 
-See also the function version, #makeOfbizUrl; #makeOfbizUrl should be used instead when passing URLs to other macros
-(rather than trying to capture the output of @ofbizUrl) and in other cases.
+See also the function version, #makeOfbizUrl; #makeOfbizUrl should be used instead of @ofbizUrl 
+when passing fully-built URLs to other macros (rather than trying to capture the output of @ofbizUrl) 
+and in some other cases; meanwhile @ofbizUrl is more appropriate for writing generate URLs directly
+to document output in templates (no intermediate captures). To this end, their default behaviors differ.
 
-WARN: HTML/Javascript escaping: By default, this utility and all similar link-generating utilities 
-    do NOT escape the URLs for HTML or javascript!
-    If the screen html auto-escaping is insufficient or inappropriate (often relied upon in stock Ofbiz templates, but often inappropriate),
-    and you are not passing the URL to another Scipio macro, you may need to use #escapeFullUrl 
-    in addition to @ofbizUrl - in which case #makeOfbizUrl may be more appropriate, or alternatively the {{{escapeAs}}} parameter
-    on @ofbizUrl.
-    In general, @ofbizUrl and sister macros were written to work in "pre-escaping" mode, where nested input
-    is pre-escaped in HTML or other language (most often by screen html auto-escaping) - however, this poses serious
-    drawbacks. 
-    It is generally more better and more correct to post-escape using either {{{escapeFullUrl(makeOfbizUrl(...))}}}
-    or {{{<@ofbizUrl escapeAs='lang'.../>}}} or equivalents.
-    
-NOTE: Auto-escaping exception: 2016-10-17: Because of the legacy usage of this macro in Ofbiz, by default,
-    this macro's string parameters are currently not subject to auto-escaping bypass with #rawString (in other words, stock behavior is preserved);
-    caller must currently call #rawString if needed, or specify the {{{rawParams}}} parameter to change. 
-    The default may be changed in the future (TODO?).
-    HOWEVER, the ''function'' version of this macro, #makeOfbizUrl, automatically calls #rawString on its
-    string parameters (uri), and can be exploited as an easier alternative to this macro in various cases.
+'''(Non-)HTML/JS escaping behavior:''' By default, neither @ofbizUrl, #makeOfbizUrl nor any of their variants
+perform any HTML or Javascript escaping on their input URIs or parameters - it is not their responsibility.
+HTML/JS escaping must be done either (preferably) using #escapeFullUrl, #escapeVal, or (simplest) the ''optional'' {{{escapeAs}}} parameter added 
+to the URL utilities for Scipio 1.14.2, OR (often problematic) by letting screen html auto-escaping handle it.
+
+'''Auto-escaping bypass behavior''': '''The macro URL builders behave differently than their function counterparts.'''
+For legacy-compatibility reasons, as an exception to Scipio macros (see >>>standard/htmlTemplate<<<), @ofbizUrl 
+does '''not''' perform an implied #rawString call on its parameters, and is thus subject to receiving context/data-model
+values html-escaped to its inputs due to the renderer's automatic html escaping. By ofbiz's design, @ofbizUrl
+historically received almost exclusively pre-html-escaped values as inputs in ofbiz templates and code.
+
+In contrast, #makeOfbizUrl automatically calls #rawString on its parameters like standard Scipio html macros, such
+that the caller only needs to call #rawString if he is composing strings before passing them to the function.
+Furthermore, as noted, #makeOfbizUrl performs no extra language escaping by default, so its result remains unescaped.
+This means the result must be passed to another macro which performs escaping or to #escapeFullUrl - otherwise
+it would be unsafe to output. Ultimately the goal is point-of-use escaping.
+
+''Note that the previous paragraphs describe default behaviors only''; the Scipio-modified utilities (all of them) support
+extra parameters to handle escaping and switch the uri parameter handling: 
+  escapeAs, rawParams, strict.
+Specifically, {{{rawParams}}} if set to true will make @ofbizUrl behave like #makeOfbizUrl does by default
+- and it is made safe by using {{{escapeAs}}} to apply html escaping on the final result. Conveniently,
+specifying {{{escapeAs}}} automatically turns on {{{rawParams}}}, so it's the only one to remember.
+
+In most cases it comes down to using the right tool for the job. #makeOfbizUrl is perfect for passing URLs
+to Scipio macros which generally now (since 1.14.2) perform html escaping automatically on their parameters. 
+So the following suffices for a simple hardcoded URL (for parameter values coming from screen context/data-model, you may
+need to use #rawString):
+
+  <@menuitem type="link" href=makeOfbizUrl('myRequest?param1=val1&param2=val2') ... />
+
+Meanwhile, URLs outputted directly into templates or text are usually most quickly done using 
+@ofbizUrl, but in newer code it is better done by specifying the {{{escapeAs}}} parameter, 
+which will then escape the resulting URL in the given language ''and'' turn on the 
+{{{rawParams}}} option. Such that, to illustrate, unlike stock ofbiz
+there is no need to pre-escape special characters like the parameter delimiter ("&" vs "&amp;"):
+
+  <a href="<@ofbizUrl uri='myRequest?param1=val1&param2=val2' escapeAs='html' />">some text</a>
+
+'''Boolean parameters:''' In Scipio, boolean arguments can be given as booleans, string representation of booleans
+or empty string (ternary, signifying defaults or emulating null).
 
 WARN: {{{fullPath}}} and {{{secure}}} parameters have different behavior than stock Ofbiz!
-
-With Scipio, boolean arguments can be given as booleans, string representation of booleans
-or empty string (signifies use defaults).
 
 '''fullPath behavior change:''' In Scipio, when fullPath is specified for a controller request, if the 
 request is defined as secure, a secure URL will be created. This method will now never allow an 
@@ -299,6 +324,9 @@ if not requested, however.
                               NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
                               NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
                                   pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
+
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="" rawParams="" escapeAs="" strict="">
@@ -309,19 +337,16 @@ if not requested, however.
 *************
 * makeOfbizUrl
 ************
-Builds an Ofbiz navigation URL. Function version of the @ofbizUrl macro.
+Builds an Ofbiz navigation URL - for passing to other utilities (primarily).
 
-This is useful to prevent bloating templates with {{{<#assign...><@ofbizUrl.../></#assign>}}} captures
-which is very frequent due to use of macros.
+Function version of the @ofbizUrl macro, supporting all the same parameters,
+but with slight differences in defaults and default behavior.
 
-NOTE: This function's string arguments (uri) are coded to bypass screen auto-escaping with #rawString,
-    as per standard Scipio macro behavior.
-    This may be different from the macro version of this function (@ofbizUrl).
-    In other words, the @ofbizUrl parameter {{{rawParams}}} is {{{true}}} by default for this function
-    and similar functions.
-    In general, this function version expects to deal with non-escaped values; however,
-    for reasons of legacy support, pre-escaped parameter delimiters ({{{&amp;}}}) are handled
-    automatically where possible.
+This is useful to avoid bloating templates with heavy {{{<#assign...><@ofbizUrl.../></#assign>}}} captures
+and instead passing results directly to other macros and functions.
+
+'''This function's default escaping behavior is different from the default behavior of its macro counterpart, @ofbizUrl'''; 
+unlike @ofbizUrl this function was primarily intended to manipulate unescaped strings at input. See @ofbizUrl for details.
 
   * Parameters *
     args                    = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
@@ -337,6 +362,9 @@ NOTE: This function's string arguments (uri) are coded to bypass screen auto-esc
    
   * Related *                           
     @ofbizUrl
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#function makeOfbizUrl args>
   <#if isObjectType("map", args)><#-- ?is_hash doesn't work right with context var strings and hashes -->
@@ -368,13 +396,16 @@ but this is normally used to access another servlet, such as /products/PH-1000.
 
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
 
-NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
+NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
 
   * Parameters *
     (other)                 = See @ofbizUrl
 
   * Related *                           
     @ofbizUrl
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="" strict="" escapeAs="">
   <@ofbizUrl uri=uri absPath=absPath interWebapp=false controller=controller 
@@ -392,7 +423,7 @@ but this is normally used to access another servlet, such as /products/PH-1000.
 
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
 
-NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
 
   * Parameters *
     (other)                 = See #makeOfbizUrl, @ofbizWebappUrl
@@ -400,6 +431,9 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
   * Related * 
     @ofbizWebappUrl                          
     @ofbizUrl
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
@@ -433,13 +467,16 @@ OR requesturi if webSiteId is specified and is a controller request.
 This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
 by the implementation or can be overridden; controller is left to interpretation or can be specified.
 
-NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
+NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
 
   * Parameters *
     (other)                 = See @ofbizUrl
 
   * Related * 
     @ofbizUrl
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="" strict="" escapeAs="">
   <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
@@ -461,7 +498,7 @@ by the implementation or can be overridden; controller is left to interpretation
 NOTE: If args is specified as map, "webSiteId" must be passed in args, not as argument.
     (This is intentional, to be consistent with macro invocations, emulated for functions)
 
-NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
 
   * Parameters *
     (other)                 = See #makeOfbizUrl, @ofbizInterWebappUrl
@@ -469,6 +506,9 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
   * Related * 
     @ofbizInterWebappUrl
     @ofbizUrl
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
@@ -508,7 +548,7 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
     they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
     (in such cases, parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
 
-NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
+NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
 
   * Parameters *
     uri                     = (string) URI or path as parameter; alternative to nested
@@ -558,6 +598,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
                               NOTE: The function version of this macro, #makeOfbizContentUrl, uses
                                   true as default for this parameter, unlike this macro.
                               (New in Scipio) 
+                              
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentUrl ...>
@@ -570,7 +613,7 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
 ************
 Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl macro.
 
-NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
 
   * Parameters *
     rawParams               = ((boolean), default: true) Whether macro should call #rawString on string parameters (mainly {{{uri}}})
@@ -582,6 +625,9 @@ NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
 
   * Related * 
     @ofbizContentUrl
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#function makeOfbizContentUrl args variant="">
   <#if isObjectType("map", args)>
@@ -611,11 +657,14 @@ Version of #makeOfbizContentUrl that is preset to recognize the {{{contentPathPr
 Same as (shorthand for):
   makeOfbizContentUrl({"uri":someUri, "ctxPrefix":true, ...})
 
-NOTE: This is subject to the same escaping behavior noted for #makeOfbizUrl.
+NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
 
   * Related * 
     #makeOfbizContentUrl
     @ofbizContentUrl
+    
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#function makeOfbizContentCtxPrefixUrl args variant="">
   <#if isObjectType("map", args)>
@@ -644,7 +693,7 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
     they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
     (parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
 
-NOTE: This is subject to the same escaping behavior and exceptions noted for @ofbizUrl.
+NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
 
   * Parameters *
     contentId               = (string) Content ID
@@ -664,6 +713,9 @@ NOTE: This is subject to the same escaping behavior and exceptions noted for @of
                               NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
                                   pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
                               See @ofbizUrl for description.
+                              
+  * History *
+    Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentAltUrl ...>
@@ -1049,6 +1101,9 @@ Shorthand for {{{rawString(getLabel(...))}}}.
   * Related *
     #getLabel
     #rawString
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function rawLabel name resource="" msgArgs=true>
   <#return rawString(getLabel(name, resource, msgArgs))>
@@ -1688,7 +1743,10 @@ NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}
                                     rawString(var1) + " " + rawString(var2)
                                   except the former is more efficient.
   * Related *
-    #rewrapStringStd                             
+    #rewrapStringStd  
+    
+  * History *
+    Enhanced for 1.14.2.                        
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function rawString value...>
@@ -1723,6 +1781,9 @@ WARN: this works using FTL's primitive ?is_string test, which may return TRUE fo
 
   * Parameters *
     value                   = (required) The value to return as string
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function toStringIfNot value>
   <#if value?is_string>
@@ -1781,7 +1842,6 @@ NOTE: 2016-10-20: Currently only supports "always" (deep) rewrapping mode; ideal
     However optimization of this requires many assumptions and risks.
     In non-deep cases, for maps, you may also use #toSimpleMap instead, which is more constrained.
     
-
   * Parameters *
     object                  = ((object), required) The source object
     wrapper                 = (current|complex-default|complex-extended|simple|simple-copy|..., default: current) Name/type of wrapper to use
@@ -1832,6 +1892,9 @@ NOTE: 2016-10-20: Currently only supports "always" (deep) rewrapping mode; ideal
                                   behavior (for some reason), you should pass it explicitly, but in most cases you
                                   should not specify it or you should pass explicit empty.
                               TODO: add support for always (non-deep), needed, needed-deep and some "fast"/dangerous variants
+
+  * History *
+    Rewritten for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function rewrapObject object mode="">
@@ -1851,6 +1914,9 @@ screen renderer html auto-escaping (if enabled) for a specific value.
 
   * Related *
     #rewrapObject
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function rewrapString object mode="">
@@ -1867,6 +1933,9 @@ Alias for #rewrapObject but expected to receive only maps.
 
   * Related *
     #rewrapObject
+    
+  * History *
+    Rewritten for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function rewrapMap object mode="">
@@ -2172,6 +2241,9 @@ The value stored is the last one returned by the function. By default, starts at
   * Parameters *
     name                    = ((string), required) The global request var name
     start                   = ((int), default: 1) The initial value
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function getRequestNextElemIndex name start=1>
   <#-- set as request attrib so survives template environments and screens.render -->
@@ -2358,7 +2430,10 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
 
   * Related *
     #escapeVal
-    #escapeFullUrl                          
+    #escapeFullUrl 
+    
+  * History *
+    Added for 1.14.2.                     
 -->
 <#function wrapAsRaw value lang="">
   <#if isObjectType("map", value)>
@@ -2383,6 +2458,9 @@ NOTE: This has no functional relationship to Ofbiz's StringWrapper ({{{StringUti
     
   * Related *
     #wrapAsRaw
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function isWrappedAsRaw object lang="">
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].isRawScript(object, lang)>
@@ -2402,6 +2480,9 @@ If not applicable, returns void (use default operator, {{{!}}}).
     
   * Related *
     #wrapAsRaw
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function getRawWrappedForLang object lang="">
   <#local res = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].getValueForLang(object, lang)!false>
@@ -2426,6 +2507,9 @@ Alias for {{{#wrapAsRaw(value, "script")}}}, and easier to remember in relation 
   * Related *
     @objectAsScript
     #wrapAsRaw
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function wrapRawScript value>
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].wrap(value?string, "script")>
@@ -2436,7 +2520,9 @@ Alias for {{{#wrapAsRaw(value, "script")}}}, and easier to remember in relation 
 * isRawScript
 ************
 Checks if the value was wrapped using {{{#wrapAsRaw(object, "script")}}}.
-                                      
+
+''Added for 1.14.2''.
+            
   * Parameters *
     object                  = the object to check
     
@@ -2557,6 +2643,9 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
     #rawString
     #wrapAsRaw
     #escapeFullUrl
+    
+  * History *
+    Added for 1.14.2, previously known as {{{escapePart}}}.
 -->
 <#function escapeVal value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
@@ -3149,6 +3238,9 @@ TODO: implement as transform.
   * Related *
     #makeAttribMapFromArgs
     @elemAttribStr
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function getFilteredAttribMap attribs={} exclude=[] noExclude=[]>
   <#local allExcludes = getAttribMapAllExcludes(attribs, exclude, noExclude)>
@@ -3661,6 +3753,9 @@ If the stack doesn't exist, returns void, so can be used to check if a stack exi
   * Parameters *
     name                    = (required) Global request stack var name
                               Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
+                              
+  * History *
+    Added for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function getRequestStackSize name>
@@ -3814,6 +3909,9 @@ macros (works via @elemAttribStr).
   * Related *
     @elemAttribStr
     #isAttribSpecialVal
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function attribSpecialVal type>
   <#-- old (deprecated, should not even be here)
@@ -3841,6 +3939,9 @@ Checks if a value is one returned by #attribSpecialVal.
 
   * Related *
     #attribSpecialVal
+    
+  * History *
+    Added for 1.14.2.
 -->
 <#function isAttribSpecialVal val type="">
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.AttribSpecialValue"].isSpecialValue(val, type)>

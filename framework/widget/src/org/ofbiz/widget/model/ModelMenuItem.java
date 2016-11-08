@@ -112,8 +112,8 @@ public class ModelMenuItem extends ModelWidget {
     @Deprecated
     private final String subMenuTitle;  // SCIPIO: DEPRECATED - use ModelSubMenu instead (no relation to subMenu)
 
-    private transient ModelMenu styleModelMenu; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
-    private transient ModelMenu funcModelMenu; // SCIPIO: records which model menu should be used for functional fields
+    private transient ModelMenu styleModelMenu = null; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
+    private transient ModelMenu funcModelMenu = null; // SCIPIO: records which model menu should be used for functional fields
  
     private final Map<String, ModelSubMenu> subMenuMap; // SCIPIO: new sub-menu models (order preserved)
     private final List<ModelSubMenu> subMenuList; // SCIPIO: new sub-menu models
@@ -919,20 +919,28 @@ public class ModelMenuItem extends ModelWidget {
      * SCIPIO: Returns THIS item's alt model menu for style fields.
      */
     public ModelMenu getStyleModelMenu() {
-        if (this.styleModelMenu == null) {
-            this.styleModelMenu = parentSubMenu != null ? parentSubMenu.getStyleModelMenu() : this.getModelMenu();
+        // WARN: special fast thread-safe read pattern in use here (single atomic read of instance variable (which is immutable object)
+        // using local variable); no synchronized block used because single calculation/assignment not important.
+        ModelMenu result = this.styleModelMenu;
+        if (result == null) {
+            result = (parentSubMenu != null) ? parentSubMenu.getStyleModelMenu() : this.getModelMenu();
+            this.styleModelMenu = result;
         }
-        return this.styleModelMenu;
+        return result;
     }
     
     /**
      * SCIPIO: Returns THIS item's alt model menu for functional/logic fields.
      */
     public ModelMenu getFuncModelMenu() {
-        if (this.funcModelMenu == null) {
-            this.funcModelMenu = parentSubMenu != null ? parentSubMenu.getFuncModelMenu() : this.getModelMenu();
+        // WARN: special fast thread-safe read pattern in use here (single atomic read of instance variable (which is immutable object)
+        // using local variable); no synchronized block used because single calculation/assignment not important.
+        ModelMenu result = this.funcModelMenu;
+        if (result == null) {
+            result = (parentSubMenu != null) ? parentSubMenu.getFuncModelMenu() : this.getModelMenu();
+            this.funcModelMenu = result;
         }
-        return this.funcModelMenu;
+        return result;
     }
 
     /**

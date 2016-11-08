@@ -59,8 +59,8 @@ public class ModelSubMenu extends ModelWidget {
     private final FlexibleStringExpander title;
     private final ModelMenu model;
     private final String modelScope;
-    private transient ModelMenu styleModelMenu; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
-    private transient ModelMenu funcModelMenu; // SCIPIO: records which model menu should be used for functional fields
+    private transient ModelMenu styleModelMenu = null; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
+    private transient ModelMenu funcModelMenu = null; // SCIPIO: records which model menu should be used for functional fields
     
     private final String itemsSortMode;
 
@@ -72,9 +72,6 @@ public class ModelSubMenu extends ModelWidget {
         ModelMenu topModelMenu = parentMenuItem.getModelMenu();
         List<? extends Element> extraMenuItems = buildArgs.extraMenuItems;
         this.parentMenuItem = parentMenuItem;
-        
-        this.styleModelMenu = null;
-        this.funcModelMenu = null;
         
         ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
         
@@ -240,8 +237,6 @@ public class ModelSubMenu extends ModelWidget {
         this.title = existingSubMenu.title;
         this.model = existingSubMenu.model;
         this.modelScope = UtilValidate.isNotEmpty(buildArgs.forceSubMenuModelScope) ? buildArgs.forceSubMenuModelScope : existingSubMenu.modelScope;
-        this.styleModelMenu = null;
-        this.funcModelMenu = null;
         
         this.itemsSortMode = existingSubMenu.itemsSortMode;
         this.shareScope = existingSubMenu.shareScope;
@@ -384,14 +379,17 @@ public class ModelSubMenu extends ModelWidget {
      * DEV NOTE: Can only be called only after the ModelMenu is fully constructed.
      */
     public ModelMenu getStyleModelMenu() {
-        if (this.styleModelMenu == null) {
-            ModelMenu styleModelMenu = this.parentMenuItem.getStyleModelMenu();
+        // WARN: special fast thread-safe read pattern in use here (single atomic read of instance variable (which is immutable object)
+        // using local variable); no synchronized block used because single calculation/assignment not important.
+        ModelMenu result = this.styleModelMenu;
+        if (result == null) {
+            result = this.parentMenuItem.getStyleModelMenu();
             if (model != null && isModelStyleScope()) {
                 styleModelMenu = model;
             }
-            this.styleModelMenu = styleModelMenu;
+            this.styleModelMenu = result;
         }
-        return this.styleModelMenu;
+        return result;
     }
     
     /**
@@ -400,14 +398,17 @@ public class ModelSubMenu extends ModelWidget {
      * DEV NOTE: Can only be called only after the ModelMenu is fully constructed.
      */
     public ModelMenu getFuncModelMenu() {
-        if (this.funcModelMenu == null) {
-            ModelMenu funcModelMenu = this.parentMenuItem.getFuncModelMenu();
+        // WARN: special fast thread-safe read pattern in use here (single atomic read of instance variable (which is immutable object)
+        // using local variable); no synchronized block used because single calculation/assignment not important.
+        ModelMenu result = this.funcModelMenu;
+        if (result == null) {
+            result = this.parentMenuItem.getFuncModelMenu();
             if (model != null && isModelFuncScope()) {
-                funcModelMenu = model;
+                result = model;
             }
-            this.funcModelMenu = funcModelMenu;
+            this.funcModelMenu = result;
         }
-        return this.funcModelMenu;
+        return result;
     }
     
     public String getItemsSortMode() {

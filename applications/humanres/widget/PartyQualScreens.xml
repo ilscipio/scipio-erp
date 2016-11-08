@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPartyQual"/>
-                <set field="activeMainMenuItem" value="PartyQual"/>
+                <set field="activeMainMenuItem" value="Employees"/><!-- PartyQual -->
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualTypeId" from-field="parameters.partyQualTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
@@ -59,7 +59,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyQual"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditPartyQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
@@ -80,7 +79,7 @@
     <screen name="NewPartyQual">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PartyQual"/>
+                <set field="activeMainMenuItem" value="Employees"/><!-- PartyQual -->
                 <entity-one entity-name="PartyQual" value-field="partyQual"/>
             </actions>
             <widgets>

@@ -54,7 +54,6 @@
     <screen name="EditPerfReviews">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="activeSubMenuItem" value="EditPerfReview"/>
                 <set field="titleProperty" value="PageTitleListPartyReview"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>
@@ -80,7 +79,6 @@
     <screen name="EditPerfReviewItems">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="titleProperty" value="PageTitleEditPartyReviewItem"/>
                 <set field="activeSubMenuItem" value="EditPerfReviewItems"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>

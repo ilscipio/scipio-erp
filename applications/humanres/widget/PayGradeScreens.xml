@@ -24,7 +24,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPayGrade"/>
-                <set field="activeMainMenuItem" value="GlobalHRSettingMenus"/>
                 <set field="activeSubMenuItem" value="PayGrade"/>
                 <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <set field="payGradeCtx" from-field="parameters"/>

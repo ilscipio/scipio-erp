@@ -27,8 +27,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmploymentApp"/>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="employmentAppCtx" from-field="parameters"/>
+                <!-- no sub-menu currently
+                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -61,7 +62,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewEmploymentApp"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditEmploymentApps"/>
                 <set field="referredByPartyId" from-field="parameters.partyId"/>
                 <set field="employmentAppCtx.applicationId" from-field="parameters.applicationId"/>
@@ -85,7 +85,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResNewEmploymentApp"/>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>
@@ -108,7 +107,6 @@
     <screen name="EditEmploymentApp">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>
@@ -166,7 +164,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEmploymentApplication"/>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>

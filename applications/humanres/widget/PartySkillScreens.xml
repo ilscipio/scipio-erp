@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPartySkill"/>
-                <set field="activeMainMenuItem" value="EmplSkills"/>
+                <set field="activeMainMenuItem" value="Employees"/><!-- EmplSkills -->
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partySkillsCtx" from-field="parameters"/>
             </actions>
@@ -57,7 +57,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySkill"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditPartySkills"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
@@ -80,7 +79,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartySkill"/>
-                <set field="activeMainMenuItem" value="PartySkills"/>
+                <set field="activeMainMenuItem" value="Employees"/><!-- EmplSkills -->
                 <set field="partyId" from-field="parameters.employeePartyId"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <entity-one entity-name="PartySkill" value-field="partySkill"/>

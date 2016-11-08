@@ -196,37 +196,16 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="EmplPosition"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.emplPosition}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.emplPosition}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for EmplPosition, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
     <screen name="CommonEmploymentDecorator">
         <section>
             <actions>
@@ -247,50 +226,40 @@ under the License.
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for Employment, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                                <not><if-empty field="parameters.partyIdFrom"/></not>
                             </condition>
+                            <actions>
+                                <entity-one entity-name="PartyNameView" value-field="emplName">
+                                    <field-map field-name="partyId" from-field="parameters.partyIdTo"/>
+                                </entity-one>
+                                <entity-one entity-name="PartyNameView" value-field="orgName">
+                                    <field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
+                                </entity-one>
+                            </actions>
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not><if-empty field="parameters.partyIdFrom"/></not>
+                                        <not><if-empty field="parameters.fromDate"/></not>
                                     </condition>
-                                    <actions>
-                                        <entity-one entity-name="PartyNameView" value-field="emplName">
-                                            <field-map field-name="partyId" from-field="parameters.partyIdTo"/>
-                                        </entity-one>
-                                        <entity-one entity-name="PartyNameView" value-field="orgName">
-                                            <field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
-                                        </entity-one>
-                                    </actions>
                                     <widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="parameters.fromDate"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <include-menu name="EmploymentBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                                                <container style="button-bar">
-                                                    <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.link_nav} ${styles.action_add}"/>
-                                                </container>
-                                                <label style="heading" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
-                                                <label style="heading" text="${orgName.groupName} [${orgName.partyId}]"></label>
-                                            </widgets>
-                                        </section>
+                                        <include-menu name="EmploymentBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                        <container style="button-bar">
+                                            <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.link_nav} ${styles.action_add}"/>
+                                        </container>
+                                        <label style="heading" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
+                                        <label style="heading" text="${orgName.groupName} [${orgName.partyId}]"></label>
                                     </widgets>
                                 </section>
-                                <decorator-section-include name="body"/>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
     <!-- SCIPIO: NEW: previously EmploymentApp screens included CommonEmploymentDecorator, but this causes some factoring issues -->
     <screen name="CommonEmploymentAppDecorator">
         <section>
@@ -299,51 +268,46 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentAppSideBar" />
                 -->
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="EmploymentApp"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${activeMainMenuItem}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator"/>
             </widgets>
         </section>
-    </screen>    
+    </screen>   
+     
     <screen name="CommonPerfReviewDecorator">
         <section>
             <actions>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>
                 <entity-one entity-name="PerfReview" value-field="perfReview"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PerfReview"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                                <not><if-empty field="perfReview"/></not>
                             </condition>
+                            <actions>
+                                <entity-one value-field="partyNameView" entity-name="PartyNameView">
+                                    <field-map field-name="partyId" from-field="perfReview.employeePartyId"/>
+                                </entity-one>
+                            </actions>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="perfReview"/></not>
-                                    </condition>
-                                    <actions>
-                                        <entity-one value-field="partyNameView" entity-name="PartyNameView">
-                                            <field-map field-name="partyId" from-field="perfReview.employeePartyId"/>
-                                        </entity-one>
-                                    </actions>
-                                    <widgets>
-                                        <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                                        <label style="heading" text="${uiLabelMap.HumanResPerfReview} [${perfReview.perfReviewId}] ${partyNameView.lastName} ${partyNameView.firstName} ${partyNameView.middleName}"></label>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                <label style="heading" text="${uiLabelMap.HumanResPerfReview} [${perfReview.perfReviewId}] ${partyNameView.lastName} ${partyNameView.firstName} ${partyNameView.middleName}"></label>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.HumanResViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
     <screen name="EmployeeDecorator">
     <!-- Decorator for Employee edit/view screen set. partyId in this context is a Party in Employee Role and in Employment relationship with internal organization  -->
         <section>
@@ -353,82 +317,58 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
+                
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.partyId}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
+                        <!--
                         <section>
-                            <condition>
-                                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                            </condition>
+                            <condition><not><if-empty field="partyId"/></not></condition>
                             <widgets>
-                                <section>
-                                    <condition><not><if-empty field="partyId"/></not></condition>
-                                    <widgets>
-                                        <container style="heading">
-                                            <section>
-                                                <condition><not><if-empty field="lookupPerson"/></not></condition>
-                                                <widgets>
-                                                    <label style="heading" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} [${partyId}]"/>
-                                                </widgets>
-                                                <fail-widgets>
-                                                    <label style="heading" text="${uiLabelMap.HumanResNewEmployee}"/>
-                                                </fail-widgets>
-                                            </section>
-                                        </container>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <container style="heading">
+                                    <section>
+                                        <condition><not><if-empty field="lookupPerson"/></not></condition>
+                                        <widgets>
+                                            <!- SCIPIO: inlined in title instead
+                                            <label style="heading" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} [${partyId}]"/> ->
+                                        </widgets>
+                                        <fail-widgets>
+                                            <!- SCIPIO: doesn't belong here
+                                            <label style="heading" text="${uiLabelMap.HumanResNewEmployee}"/> ->
+                                        </fail-widgets>
+                                    </section>
+                                </container>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        </section>  -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
-
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmployeeProfile" />
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Employees"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.partyId}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <!-- do check for PARTYMGR, _VIEW permission -->
                             <widgets>
@@ -472,12 +412,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -529,19 +463,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission action="_VIEW" permission="HUMANRES"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

@@ -47,11 +47,11 @@
             </widgets>
         </section>
     </screen>
+    <!-- SCIPIO: NOTE: this belongs more in EmployeeScreens? -->
     <screen name="ListEmplPositionsParty">
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
-                <set field="activeMainMenuItem" value="EmplPosition"/>
                 <set field="activeSubMenuItem" value="ListEmplPositions"/>
             </actions>
             <widgets>

@@ -1325,7 +1325,7 @@
         <value xml:lang="zh_TW">團體評定</value>
     </property>
     <property key="HumanResEditPartySkill">
-        <value xml:lang="en">Edit party Skill</value>
+        <value xml:lang="en">Edit Party Skill</value>
         <value xml:lang="fr">Modifier les compétences de l'acteur</value>
         <value xml:lang="it">Aggiorna Abilità Soggetto</value>
         <value xml:lang="ja">取引先スキルを編集</value>
@@ -1540,6 +1540,7 @@
         <value xml:lang="zh_TW">員工離職原因類型</value>
     </property>
     <property key="HumanResEmployee">
+        <value xml:lang="de">ein Angestellter</value>
         <value xml:lang="en">an employee</value>
         <value xml:lang="es">un empleado</value>
         <value xml:lang="fr">un employé</value>
@@ -3415,5 +3416,10 @@
         <value xml:lang="fr">Demande d'emploi</value>
         <value xml:lang="it">Candidatura d'impiego</value>
         <value xml:lang="pt_BR">Candidatura ao emprego</value>
+    </property>
+    <property key="HumanResEmployeeProfile">
+        <value xml:lang="de">Mitarbeiterprofil</value>
+        <value xml:lang="en">Employee Profile</value>
+        <value xml:lang="fr">Profil de l'employé</value>
     </property>
 </resource>

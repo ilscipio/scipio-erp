@@ -657,6 +657,11 @@ under the License.
         <response name="success" type="view" value="EditEmployeeLeaves"/>
         <response name="error" type="view" value="EditEmployeeLeaves"/>
     </request-map>
+    
+    <request-map uri="viewprofile"><!-- SCIPIO: missing in stock ofbiz -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewprofile"/>
+    </request-map>
 
     <!-- ===================Responsibility Request============== -->
     <request-map uri="EditResponsibilityTypes">

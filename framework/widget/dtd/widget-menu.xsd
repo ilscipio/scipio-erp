@@ -285,7 +285,12 @@ Features and Modifications:
                         if it is the selected one or an ancestor of the selected one.
                         This can be coded manually in condition elements (see its description) but is easier to
                         turn on here. 
-                        Default: false</xs:documentation>
+                        Default: false
+                        NOTE: 2016-10: This is currently ONLY honored on the top menu element during a menu render.
+                            It is currently IGNORED if set on the menu elements of included sub-menus (HOWEVER
+                            it is honored on single menu-items).
+                            TODO: revisit implementation (subject to change).
+                    </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

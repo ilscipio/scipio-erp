@@ -2719,7 +2719,7 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#return value?xml>
       <#break>
     <#case "url">
-      <#return value?url>
+      <#return value?url("UTF-8")><#-- FIXME: lang should not be hardcoded, ofbiz config issue -->
       <#break>
     <#case "css">
       <#-- FIXME: too aggressive

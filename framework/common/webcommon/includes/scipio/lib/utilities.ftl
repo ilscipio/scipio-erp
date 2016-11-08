@@ -182,9 +182,15 @@ historically received almost exclusively pre-html-escaped values as inputs in of
 
 In contrast, #makeOfbizUrl automatically calls #rawString on its parameters like standard Scipio html macros, such
 that the caller only needs to call #rawString if he is composing strings before passing them to the function.
-Furthermore, as noted, #makeOfbizUrl performs no extra language escaping by default, so its result remains unescaped.
+Furthermore, as noted, #makeOfbizUrl performs no extra language escaping by default, so its result remains unescaped
 This means the result must be passed to another macro which performs escaping or to #escapeFullUrl - otherwise
 it would be unsafe to output. Ultimately the goal is point-of-use escaping.
+
+NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed in the near future; for the current time, 
+    it better to use #rawString explicitly on the result ''if'' you explicitly need a raw unescapted value;
+    this may be set to return an auto-html-wrapped string instead. If you need to encure escaping, #escapeVal automatically
+    handles such auto-escaped values in prevision of the future. In most cases such as passing the URL to other
+    macros, there is no significant impact (and is only made possible) because of other improvements in 1.14.2.
 
 ''Note that the previous paragraphs describe default behaviors only''; the Scipio-modified utilities (all of them) support
 extra parameters to handle escaping and switch the uri parameter handling: 
@@ -345,8 +351,14 @@ but with slight differences in defaults and default behavior.
 This is useful to avoid bloating templates with heavy {{{<#assign...><@ofbizUrl.../></#assign>}}} captures
 and instead passing results directly to other macros and functions.
 
-'''This function's default escaping behavior is different from the default behavior of its macro counterpart, @ofbizUrl'''; 
+'''This function's default escaping behavior is different from the default behavior of its macro counterpart''', @ofbizUrl; 
 unlike @ofbizUrl this function was primarily intended to manipulate unescaped strings at input. See @ofbizUrl for details.
+
+NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed in the near future; for the current time, 
+    it better to use #rawString explicitly on the result ''if'' you explicitly need a raw unescapted value;
+    this may be set to return an auto-html-wrapped string instead. If you need to encure escaping, #escapeVal automatically
+    handles such auto-escaped values in prevision of the future. In most cases such as passing the URL to other
+    macros, there is no significant impact (and is only made possible) because of other improvements in 1.14.2.
 
   * Parameters *
     args                    = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
@@ -2707,7 +2719,7 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#return value?xml>
       <#break>
     <#case "url">
-      <#return value?url>
+      <#return value?url("UTF-8")><#-- FIXME: lang should not be hardcoded, ofbiz config issue -->
       <#break>
     <#case "css">
       <#-- FIXME: too aggressive

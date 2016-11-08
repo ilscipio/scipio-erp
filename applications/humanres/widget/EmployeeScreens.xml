@@ -35,22 +35,14 @@ under the License.
                             <actions>
                                 <service service-name="findParty" auto-field-map="true"/>
                                 <set field="activeSubMenuItem" value="Employee"/>
+                                <!-- SCIPIO: without this we display too much all the time -->
+                                <set field="findEmplQueryRan" type="Boolean" value="${groovy: (parameters.doFindQuery == 'Y' || (parameters.doFindQuery != 'N' &amp;&amp; context.requestMethod == 'POST'))}"/>
                             </actions>
                             <widgets>
-                                <container style="button-bar">
-                                    <link target="NewEmployee" text="${uiLabelMap.HumanResNewEmployee}" style="${styles.link_nav} ${styles.action_add}"/>
-                                </container>
-                                <section>
-                                    <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://humanres/webapp/humanres/humanres/findEmployee.ftl"/></html>
-                                        </platform-specific>
-                                    </widgets>
-                                </section>
+                                <platform-specific>
+                                    <html><html-template location="component://humanres/webapp/humanres/humanres/findEmployee.ftl"/></html>
+                                </platform-specific>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -68,11 +60,7 @@ under the License.
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet><!-- SCIPIO: title="${uiLabelMap.HumanResNewEmployee}" -->
-                            <section>
-                                <widgets>
-                                    <include-form name="NewEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="NewEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -82,13 +70,13 @@ under the License.
     <screen name="EmployeeProfile">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
                 <set field="activeSubMenuItem" value="EmployeeProfile"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
+                <set field="titleProperty" value="HumanResEmployeeProfile"/><!-- PageTitleViewPartyProfile -->
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
@@ -104,14 +92,14 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_run_sys} ${styles.action_hide}">
+                                            <link target="EmployeeProfile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_run_sys} ${styles.action_hide}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                             </link>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_run_sys} ${styles.action_show}">
+                                            <link target="EmployeeProfile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_run_sys} ${styles.action_show}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                                 <parameter param-name="SHOW_OLD" value="true"/>
                                             </link>
@@ -173,7 +161,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyQual"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditEmployeeQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
@@ -231,7 +218,7 @@ under the License.
     <screen name="EditEmployeeResumes">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PartyResume"></set>
+                <!--<set field="activeMainMenuItem" value="PartyResume"/>-->
                 <set field="activeSubMenuItem" value="EditEmployeeResumes"/>
                 <set field="resumeId" from-field="parameters.resumeId"/>
                 <set field="partyId" from-field="parameters.partyId"/>

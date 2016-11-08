@@ -16321,4 +16321,8 @@
         <value xml:lang="de">Aus</value>
         <value xml:lang="en">Off</value>
     </property>
+    <property key="CommonExtraFields">
+        <value xml:lang="de">Zusätzliche Felder</value>
+        <value xml:lang="en">Extra Fields</value>
+    </property>
 </resource>

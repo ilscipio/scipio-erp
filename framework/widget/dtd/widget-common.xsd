@@ -33,6 +33,8 @@ under the License.
             <xs:element ref="if-compare-field" />
             <xs:element ref="if-regexp" />
             <xs:element ref="if-empty" />
+            <xs:element ref="if-true" />
+            <xs:element ref="if-false" />
         </xs:choice>
     </xs:complexType>
     <xs:element name="AllConditionals" abstract="true" />

@@ -239,6 +239,26 @@ under the License.
             <xs:attribute type="xs:string" name="field" use="required" />
         </xs:complexType>
     </xs:element>
+    <xs:element name="if-true" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates to true if and only if the field is Boolean true
+                OR the string value "true" (case-sensitive).
+                2016-11-09: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="if-false" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates to true if and only if the field is Boolean false
+                OR the string value "false" (case-sensitive).
+                2016-11-09: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" use="required" />
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="AllActions" abstract="true" />
     <xs:element name="set" substitutionGroup="AllActions">

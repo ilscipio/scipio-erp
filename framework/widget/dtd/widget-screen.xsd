@@ -189,6 +189,8 @@ Features and Modifications:
             <xs:element ref="if-regexp" />
             <xs:element ref="if-empty" />
             <xs:element ref="if-empty-section" />
+            <xs:element ref="if-true" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-false" /><!-- SCIPIO: 2016-11-09: new -->
         </xs:choice>
     </xs:complexType>
 

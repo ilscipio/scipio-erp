@@ -158,7 +158,7 @@
         </#if>
 
         <#-- Shipping -->
-        <#-- Migreated to Shipment Information
+        <#-- Migreated to Shipment Information-->
             <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
               <@menuitem type="generic">
                  <form action="<@ofbizUrl>createOrderItemShipGroup</@ofbizUrl>" method="post">
@@ -166,7 +166,7 @@
                     <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderCreateShipGroup}"/>
                  </form>
               </@menuitem>
-            </#if>-->
+            </#if>
             <#if security.hasEntityPermission("FACILITY","_CREATE", session)>
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
                     <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
